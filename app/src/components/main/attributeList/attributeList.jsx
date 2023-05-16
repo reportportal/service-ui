@@ -82,6 +82,7 @@ export const AttributeList = track()(
     backgroundDark,
     tracking,
     eventsInfo,
+    maxCellWidth,
   }) => (
     <Fragment>
       {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -99,6 +100,7 @@ export const AttributeList = track()(
           valueURLCreator={valueURLCreator}
           customClass={customClass}
           backgroundDark={backgroundDark}
+          maxCellWidth={maxCellWidth}
         />
       ))}
       {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
@@ -133,6 +135,7 @@ AttributeList.propTypes = {
     getTrackingData: PropTypes.func,
   }).isRequired,
   eventsInfo: PropTypes.object,
+  maxCellWidth: PropTypes.number,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -151,4 +154,5 @@ AttributeList.defaultProps = {
   editable: true,
   backgroundDark: false,
   eventsInfo: {},
+  maxCellWidth: 132,
 };

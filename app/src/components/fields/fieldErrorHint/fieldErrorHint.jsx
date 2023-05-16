@@ -62,10 +62,6 @@ const messages = defineMessages({
     id: 'FiltersPage.filterNameDuplicateHint',
     defaultMessage: 'Filter with the same name already exists in system.',
   },
-  sharedWidgetSearchHint: {
-    id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
-    defaultMessage: 'Value should have size from 3 to 256.',
-  },
   launchNameHint: {
     id: 'LaunchMergeModal.launchNameHint',
     defaultMessage: 'Launch name should have size from 1 to 256.',
@@ -161,11 +157,11 @@ const messages = defineMessages({
   },
   attributeKeyLengthHint: {
     id: 'AttributeEditor.attributeKeyLengthHint',
-    defaultMessage: 'Attribute key should have size from 1 to 128',
+    defaultMessage: 'Key should have size from 1 to 512 symbols',
   },
   attributeValueLengthHint: {
     id: 'AttributeEditor.attributeValueLengthHint',
-    defaultMessage: 'Attribute value should have size from 1 to 128',
+    defaultMessage: 'Value should have size not more than 512 symbols',
   },
   uniqueAttributeKeyHint: {
     id: 'AttributeEditor.uniqueAttributeKeyHint',
@@ -277,6 +273,7 @@ export class FieldErrorHint extends Component {
     if (staticHint) {
       return !!error;
     }
+
     return !!error && active;
   };
 

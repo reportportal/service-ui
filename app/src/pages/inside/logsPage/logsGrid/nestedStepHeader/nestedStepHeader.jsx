@@ -69,7 +69,11 @@ export class NestedStepHeader extends Component {
 
   onToggle = () => {
     const { onToggle, collapsed } = this.props;
-    if (collapsed) this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NESTED_STEP_EXPAND);
+
+    if (collapsed) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NESTED_STEP_EXPAND);
+    }
+
     onToggle();
   };
 

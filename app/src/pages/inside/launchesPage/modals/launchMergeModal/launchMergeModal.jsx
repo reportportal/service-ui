@@ -215,6 +215,13 @@ export class LaunchMergeModal extends Component {
   };
 
   mergeAndCloseModal = (closeModal) => (values) => {
+    const { mergeType, tracking } = this.props;
+    tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnMergeButtonInMergeModalEvent(
+        mergeType === MERGE_TYPE_BASIC ? 'linear' : 'deep',
+      ),
+    );
+
     this.props.showScreenLockAction();
     fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
@@ -245,7 +252,6 @@ export class LaunchMergeModal extends Component {
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
-        tracking.trackEvent(LAUNCHES_MODAL_EVENTS.MERGE_BTN_MERGE_MODAL);
         handleSubmit(this.mergeAndCloseModal(closeModal))();
       },
     };

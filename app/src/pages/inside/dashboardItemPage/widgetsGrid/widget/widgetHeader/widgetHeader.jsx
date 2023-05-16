@@ -19,18 +19,9 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import {
-  userIdSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
-import { canEditWidget, canDeleteWidget } from 'common/utils/permissions';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
-import GlobeIcon from 'common/img/globe-icon-inline.svg';
-import ShareIcon from 'common/img/share-icon-inline.svg';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import {
@@ -52,28 +43,12 @@ const messages = defineMessages({
     id: 'WidgetHeader.forceUpdate',
     defaultMessage: 'Update',
   },
-  widgetIsShared: {
-    id: 'WidgetHeader.widgetIsShared',
-    defaultMessage: 'Your widget is shared',
-  },
-  sharedWidget: {
-    id: 'WidgetHeader.sharedWidget',
-    defaultMessage: 'Widget was created by { owner }',
-  },
 });
 
 @injectIntl
-@connect((state) => ({
-  userId: userIdSelector(state),
-  userRole: userAccountRoleSelector(state),
-  projectRole: activeProjectRoleSelector(state),
-}))
 export class WidgetHeader extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
-    userRole: PropTypes.string,
-    projectRole: PropTypes.string,
     data: PropTypes.object,
     onRefresh: PropTypes.func,
     onDelete: PropTypes.func,
@@ -81,19 +56,15 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
-    dashboardOwner: PropTypes.string,
   };
   static defaultProps = {
     data: {},
-    userRole: '',
-    projectRole: '',
     onRefresh: () => {},
     onDelete: () => {},
     onEdit: () => {},
     onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
-    dashboardOwner: '',
   };
 
   renderMetaInfo = () =>
@@ -113,23 +84,14 @@ export class WidgetHeader extends Component {
     const {
       intl,
       data,
-      userId,
-      userRole,
-      projectRole,
       onRefresh,
       onDelete,
       onEdit,
       onForceUpdate,
       customClass,
       isPrintMode,
-      dashboardOwner,
     } = this.props;
 
-    const isOwner = data.owner === userId;
-    const isDashboardOwner = dashboardOwner === userId;
-    const isWidgetDeletable = data.owner
-      ? canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner)
-      : true;
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
     const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
@@ -143,19 +105,6 @@ export class WidgetHeader extends Component {
               {data.description && (
                 <div className={cx('icon')}>
                   <DescriptionTooltipIcon tooltipContent={data.description} />
-                </div>
-              )}
-              {data.shared && isOwner && (
-                <div className={cx('icon')} title={intl.formatMessage(messages.widgetIsShared)}>
-                  {Parser(ShareIcon)}
-                </div>
-              )}
-              {data.shared && !isOwner && (
-                <div
-                  className={cx('icon')}
-                  title={intl.formatMessage(messages.sharedWidget, { owner: data.owner })}
-                >
-                  {Parser(GlobeIcon)}
                 </div>
               )}
             </div>
@@ -193,7 +142,7 @@ export class WidgetHeader extends Component {
                   </div>
                 </div>
               )}
-              {canEditWidget(userRole, projectRole, isOwner) && !isEditControlHidden && data.type && (
+              {!isEditControlHidden && data.type && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
@@ -203,11 +152,9 @@ export class WidgetHeader extends Component {
                   {Parser(RefreshIcon)}
                 </div>
               )}
-              {isWidgetDeletable && (
-                <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                  {Parser(CrossIcon)}
-                </div>
-              )}
+              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
+                {Parser(CrossIcon)}
+              </div>
             </div>
           </div>
         )}

@@ -97,7 +97,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
         )}
         <div
           className={cx('edit-icon')}
-          onClick={() => onClickEdit(events.onEditEvent && events.onEditEvent(eventData, 'Edit'))}
+          onClick={() => onClickEdit(events.onEditEvent && events.onEditEvent(eventData, 'edit'))}
         >
           {Parser(PencilIcon)}
         </div>

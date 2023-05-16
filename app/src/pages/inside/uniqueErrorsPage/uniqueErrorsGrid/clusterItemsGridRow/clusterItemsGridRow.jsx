@@ -91,20 +91,25 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
   const selectedItems = useSelector(selectedClusterItemsSelector);
 
   const onToggle = () => {
+    if (collapsed) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_CLUSTER_ITEM_ARROW);
+    }
+
     dispatch(requestClusterItemsAction({ id }));
-    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_CLUSTER_ITEM_ARROW);
   };
   const loadMore = () => {
     dispatch(loadMoreClusterItemsAction({ id }));
   };
   const handleAllItemsSelection = () => {
-    trackEvent(
-      UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(selectedItems.length !== content.length),
-    );
+    if (selectedItems.length !== content.length) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     dispatch(toggleAllClusterItemsAction(content));
   };
   const handleOneItemSelection = (value) => {
-    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!selectedItems.includes(value)));
+    if (!selectedItems.includes(value)) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     dispatch(toggleClusterItemSelectionAction(value));
   };
   const modifyColumnsSettings = {

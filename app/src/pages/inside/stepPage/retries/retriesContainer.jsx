@@ -17,21 +17,28 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { ERROR } from 'common/constants/logLevels';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { activeProjectSelector } from 'controllers/user';
 import { Retries } from './retries';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@track()
 export class RetriesContainer extends Component {
   static propTypes = {
     testItemId: PropTypes.number.isRequired,
-    activeProject: PropTypes.string,
-    retries: PropTypes.arrayOf(PropTypes.object).isRequired,
     collapsed: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    activeProject: PropTypes.string,
+    retries: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
@@ -63,6 +70,7 @@ export class RetriesContainer extends Component {
   };
 
   handleRetrySelect = (retry) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLICK_ON_PARTICULAR_RETRY_BTN);
     this.setState({
       selectedIndex: this.props.retries.findIndex((item) => item.id === retry.id),
     });

@@ -64,25 +64,6 @@
     }
   }
 
-  .icon-holder {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-  }
-
-  .shared {
-    height: 40px;
-    position: relative;
-    border-top: 1px solid $COLOR--gray-91;
-    background: $COLOR--white;
-    color: $COLOR--charcoal-grey;
-    padding: 0 15px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    box-sizing: border-box;
-  }
-
   .owner {
     display: none;
   }
@@ -132,12 +113,6 @@
   text-decoration: none;
   font-weight: bold;
   font-family: $FONT-CONDBOLD, sans-serif;
-}
-
-.shared-text {
-  font-size: 13px;
-  line-height: 40px;
-  margin-left: 22px;
 }
 
 .preview {

@@ -19,14 +19,7 @@ export {
   FILTERS_PAGE,
   getAddEditFilterModalEvents,
 } from './filtersPageEvents';
-export {
-  LAUNCHES_PAGE_EVENTS,
-  LAUNCHES_MODAL_EVENTS,
-  LAUNCHES_PAGE,
-  getRunAnalysisAnalysisModalEvent,
-  getRunAnalysisPatternAnalysisModalEvent,
-  getCriteriaToggler,
-} from './launchesPageEvents';
+export { LAUNCHES_PAGE_EVENTS, LAUNCHES_MODAL_EVENTS, LAUNCHES_PAGE } from './launchesPageEvents';
 export { LOGIN_PAGE_EVENTS, LOGIN_PAGE } from './loginPageEvents';
 export {
   SIDEBAR_EVENTS,
@@ -54,14 +47,8 @@ export {
   getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';
-export { STEP_PAGE, STEP_PAGE_EVENTS, getChangeItemStatusEvent } from './stepPageEvents';
-export {
-  LOG_PAGE,
-  LOG_PAGE_EVENTS,
-  LogViewMode,
-  getHideAllPassedLogs,
-  getHistoryLineCheckbox,
-} from './logPageEvents';
+export { STEP_PAGE, STEP_PAGE_EVENTS } from './stepPageEvents';
+export { LOG_PAGE, LOG_PAGE_EVENTS } from './logPageEvents';
 export { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from './dashboardsPageEvents';
 export { HISTORY_PAGE, HISTORY_PAGE_EVENTS } from './historyPageEvents';
 export { ADMIN_ALL_USERS_PAGE_EVENTS } from './adminAllUsersPageEvents';

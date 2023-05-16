@@ -40,11 +40,6 @@ export const URLS = {
       'page.page': 1,
       'page.size': 300,
     })}`,
-  dashboardsShared: (activeProject) =>
-    `${urlBase}${activeProject}/dashboard/shared${getQueryParams({
-      'page.page': 1,
-      'page.size': 300,
-    })}`,
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
   widgetMultilevel: (activeProject, widgetId, params) =>
@@ -52,14 +47,6 @@ export const URLS = {
       ...params,
     })}`,
   widgetPreview: (activeProject) => `${urlBase}${activeProject}/widget/preview`,
-  sharedWidget: (activeProject, params) =>
-    `${urlBase}${activeProject}/widget/shared${getQueryParams({
-      ...params,
-    })}`,
-  sharedWidgetSearch: (activeProject, params) =>
-    `${urlBase}${activeProject}/widget/shared/search${getQueryParams({
-      ...params,
-    })}`,
 
   dashboardWidget: (activeProject, dashboardId, widgetId) =>
     `${urlBase}${activeProject}/dashboard/${dashboardId}/${widgetId}`,
@@ -117,7 +104,7 @@ export const URLS = {
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
-  launchesInfoUpdate: (activeProject) => `${urlBase}${activeProject}/launch/info`,
+  launchesInfo: (activeProject) => `${urlBase}${activeProject}/launch/info`,
   launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesItemsUpdate: (activeProject, id, type) =>
     `${urlBase}${activeProject}/${type}/${id}/update`,
@@ -195,7 +182,7 @@ export const URLS = {
       type,
       'filter.eq.id': id,
     })}`,
-  testItemsInfoUpdate: (activeProject) => `${urlBase}${activeProject}/item/info`,
+  testItemsInfo: (activeProject) => `${urlBase}${activeProject}/item/info`,
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
   testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') =>
@@ -257,7 +244,7 @@ export const URLS = {
   userInviteExternal: () => `${urlBase}user/bid`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
-  generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
+  generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
   getFileById: (projectId, dataId, loadThumbnail) =>
     `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 

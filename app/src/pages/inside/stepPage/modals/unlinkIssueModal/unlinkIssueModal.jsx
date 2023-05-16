@@ -91,15 +91,14 @@ export class UnlinkIssueModal extends Component {
       data: { items, fetchFunc, eventsInfo = {} },
       tracking: { trackEvent },
     } = this.props;
+
     const dataToSend = items.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
         acc.ticketIds = acc.ticketIds.concat(
           item.issue.externalSystemIssues.map((issue) => issue.ticketId),
         );
-        item.issue.autoAnalyzed
-          ? trackEvent(eventsInfo.unlinkAutoAnalyzedTrue)
-          : trackEvent(eventsInfo.unlinkAutoAnalyzedFalse);
+        trackEvent(eventsInfo.unlinkBtn(item.issue.autoAnalyzed));
         return acc;
       },
       {

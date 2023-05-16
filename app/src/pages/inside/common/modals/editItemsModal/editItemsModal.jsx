@@ -47,6 +47,12 @@ const DESCRIPTION_LEAVE = 'LEAVE';
 const DESCRIPTION_UPDATE = 'UPDATE';
 const DESCRIPTION_CREATE = 'CREATE';
 
+const DESCRIPTION_ACTIONS_TITLES = {
+  [DESCRIPTION_LEAVE]: 'dont_change',
+  [DESCRIPTION_UPDATE]: 'add',
+  [DESCRIPTION_CREATE]: 'replace',
+};
+
 const messages = defineMessages({
   modalHeader: {
     id: 'EditItemsModal.modalHeader',
@@ -302,10 +308,14 @@ export class EditItemsModal extends Component {
       data: { type, fetchFunc, eventsInfo },
       tracking,
     } = this.props;
+    tracking.trackEvent(
+      eventsInfo.getSaveBtnEditItemsEvent(DESCRIPTION_ACTIONS_TITLES[descriptionAction]),
+    );
+
     const fetchUrl =
       type === LAUNCH_ITEM_TYPES.launch
-        ? URLS.launchesInfoUpdate(currentProject)
-        : URLS.testItemsInfoUpdate(currentProject);
+        ? URLS.launchesInfo(currentProject)
+        : URLS.testItemsInfo(currentProject);
     const data = {
       ids,
       attributes: attributes.filter((attribute) =>
@@ -318,10 +328,6 @@ export class EditItemsModal extends Component {
         action: descriptionAction,
         comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description || ''}`,
       };
-      tracking.trackEvent({
-        ...eventsInfo.editDescription,
-        label: `${eventsInfo.editDescription.label}${formatMessage(messages[descriptionAction])}`,
-      });
     }
 
     fetch(fetchUrl, { method: 'put', data })
@@ -353,16 +359,14 @@ export class EditItemsModal extends Component {
       descriptionAction,
       uniqueAttributes,
       handleSubmit,
-      data: { type, eventsInfo },
+      data: { type },
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => handleSubmit(this.updateItemsAndCloseModal(closeModal))(),
-      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -374,7 +378,6 @@ export class EditItemsModal extends Component {
         })}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))

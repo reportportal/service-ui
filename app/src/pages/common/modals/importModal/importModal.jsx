@@ -321,6 +321,7 @@ export class ImportModal extends Component {
       intl,
       data: { type, title, tip, noteMessage, eventsInfo, singleImport },
     } = this.props;
+
     const { files } = this.state;
     const validFiles = this.getValidFiles();
     const loading = this.isUploadInProgress();
@@ -361,7 +362,7 @@ export class ImportModal extends Component {
           {files.length > 0 && (
             <div className={cx('files-list')}>
               {files.map((item) => (
-                <ImportFileIcon {...item} onDelete={this.onDelete} key={item.id} fileType={type} />
+                <ImportFileIcon {...item} onDelete={this.onDelete} key={item.id} />
               ))}
             </div>
           )}

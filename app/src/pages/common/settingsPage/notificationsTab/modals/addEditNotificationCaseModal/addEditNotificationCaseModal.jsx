@@ -134,9 +134,11 @@ export class AddEditNotificationCaseModal extends Component {
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: () => {
-            handleSubmit(onConfirm)();
+            handleSubmit((data) => {
+              eventsInfo.saveBtn(data);
+              onConfirm(data);
+            })();
           },
-          eventInfo: eventsInfo.saveBtn,
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

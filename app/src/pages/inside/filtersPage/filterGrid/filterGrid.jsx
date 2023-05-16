@@ -22,10 +22,8 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
-import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
-import { ShareFilter } from './shareFilter';
 import { DisplayFilter } from './displayFilter';
 import { DeleteFilterButton } from './deleteFilterButton';
 import styles from './filterGrid.scss';
@@ -35,7 +33,6 @@ const messages = defineMessages({
   nameCol: { id: 'MembersGrid.nameCol', defaultMessage: 'Filter name' },
   optionsCol: { id: 'MembersGrid.optionsCol', defaultMessage: 'Options' },
   ownerCol: { id: 'MembersGrid.ownerCol', defaultMessage: 'Owner' },
-  sharedCol: { id: 'MembersGrid.sharedCol', defaultMessage: 'Shared' },
   displayCol: { id: 'MembersGrid.displayCol', defaultMessage: 'Display on launches' },
   deleteCol: { id: 'MembersGrid.deleteCol', defaultMessage: 'Delete' },
 });
@@ -47,16 +44,12 @@ const NameColumn = ({ className, value, customProps }) => (
       filter={value}
       onClickName={customProps.onClickName}
       onEdit={customProps.onEdit}
-      userId={customProps.userId}
       nameLink={{
         type: PROJECT_LAUNCHES_PAGE,
         payload: { projectId: customProps.activeProject, filterId: value.id },
       }}
       isLink
       isBold
-      noShareIcons
-      userRole={customProps.userRole}
-      projectRole={customProps.projectRole}
     />
   </div>
 );
@@ -99,21 +92,6 @@ OwnerColumn.defaultProps = {
   value: {},
 };
 
-const SharedColumn = ({ className, value, customProps }) => (
-  <div className={cx('shared-col', className)}>
-    <ShareFilter userId={customProps.userId} filter={value} onEdit={customProps.onEdit} />
-  </div>
-);
-SharedColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-};
-SharedColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
-
 const DisplayOnLaunchColumn = ({ className, value, customProps }) => (
   <div className={cx('display-col', className)}>
     <DisplayFilter
@@ -135,15 +113,7 @@ DisplayOnLaunchColumn.defaultProps = {
 
 const DeleteColumn = ({ className, value, customProps }) => (
   <div className={cx('delete-col', className)}>
-    <DeleteFilterButton
-      filter={value}
-      canDelete={canDeleteFilter(
-        customProps.accountRole,
-        customProps.projectRole,
-        customProps.userId === value.owner,
-      )}
-      onDelete={customProps.onDelete}
-    />
+    <DeleteFilterButton filter={value} onDelete={customProps.onDelete} />
   </div>
 );
 DeleteColumn.propTypes = {
@@ -167,7 +137,6 @@ export class FilterGrid extends Component {
     userId: PropTypes.string,
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
-    projectRole: PropTypes.string,
     onDelete: PropTypes.func,
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
@@ -185,7 +154,6 @@ export class FilterGrid extends Component {
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     userId: '',
-    projectRole: '',
     onDelete: () => {},
     accountRole: '',
     loading: false,
@@ -212,10 +180,7 @@ export class FilterGrid extends Component {
           this.props.onEdit(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
         },
-        userId: this.props.userId,
         activeProject: this.props.activeProject,
-        userRole: this.props.accountRole,
-        projectRole: this.props.projectRole,
       },
     },
     {
@@ -231,21 +196,6 @@ export class FilterGrid extends Component {
         full: this.props.intl.formatMessage(messages.ownerCol),
       },
       component: OwnerColumn,
-    },
-    {
-      id: 'shared',
-      title: {
-        full: this.props.intl.formatMessage(messages.sharedCol),
-      },
-      align: ALIGN_CENTER,
-      component: SharedColumn,
-      customProps: {
-        userId: this.props.userId,
-        onEdit: (filter) => {
-          this.props.onEdit(filter);
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_SHARED_ICON);
-        },
-      },
     },
     {
       id: 'display',
@@ -276,9 +226,6 @@ export class FilterGrid extends Component {
           this.props.onDelete(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
         },
-        accountRole: this.props.accountRole,
-        projectRole: this.props.projectRole,
-        userId: this.props.userId,
       },
     },
   ];

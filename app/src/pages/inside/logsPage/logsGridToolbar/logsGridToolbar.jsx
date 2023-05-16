@@ -28,16 +28,11 @@ import {
   getLogViewMode,
   setLogViewMode,
   DETAILED_LOG_VIEW,
-  isLogPageWithOutNestedSteps,
   isLogPageWithNestedSteps,
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import {
-  getHideAllPassedLogs,
-  LOG_PAGE_EVENTS,
-  LogViewMode,
-} from 'components/main/analytics/events';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { ErrorLogsControl } from './errorLogsControl';
@@ -82,7 +77,6 @@ const messages = defineMessages({
 @track()
 @connect((state) => ({
   userId: userIdSelector(state),
-  isLogView: isLogPageWithOutNestedSteps(state),
   isNestedStepsView: isLogPageWithNestedSteps(state),
 }))
 export class LogsGridToolbar extends Component {
@@ -106,7 +100,6 @@ export class LogsGridToolbar extends Component {
     onHideEmptySteps: PropTypes.func,
     onHidePassedLogs: PropTypes.func,
     logPageMode: PropTypes.string,
-    isLogView: PropTypes.bool,
     isNestedStepsView: PropTypes.bool,
     withAttachments: PropTypes.bool,
     isEmptyStepsHidden: PropTypes.bool,
@@ -123,7 +116,6 @@ export class LogsGridToolbar extends Component {
     onHideEmptySteps: () => {},
     onHidePassedLogs: () => {},
     logPageMode: DETAILED_LOG_VIEW,
-    isLogView: true,
     isNestedStepsView: false,
     withAttachments: false,
     isEmptyStepsHidden: false,
@@ -141,16 +133,12 @@ export class LogsGridToolbar extends Component {
 
   toggleLogViewMode = (targetViewMode) => {
     const { logViewMode } = this.state;
-
     const newLogViewMode = logViewMode === targetViewMode ? DEFAULT : targetViewMode;
+
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnLogViewModeEvent(targetViewMode, newLogViewMode === targetViewMode),
+    );
     setLogViewMode(this.props.userId, newLogViewMode);
-
-    if (targetViewMode === MARKDOWN) {
-      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === MARKDOWN, MARKDOWN));
-    } else if (targetViewMode === CONSOLE) {
-      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === CONSOLE, CONSOLE));
-    }
-
     this.setState({
       logViewMode: newLogViewMode,
     });
@@ -163,17 +151,22 @@ export class LogsGridToolbar extends Component {
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.logLevelFilterEvent(newLogLevel.label));
     if (newLogLevel.id !== activeLogLevel.id) {
       onChangeLogLevel(userId, newLogLevel);
     }
+  };
+
+  trackLogLevelFilterClick = (newLogLevel) => {
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnLogLevelFilterEvent(newLogLevel.trackingName),
+    );
   };
 
   toggleWithAttachments = () => {
     const { onChangeWithAttachments, withAttachments } = this.props;
 
     this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.logWithAttachmentCheckboxEvent(!withAttachments),
+      LOG_PAGE_EVENTS.getClickOnLogsWithAttachmentsCheckboxEvent(!withAttachments),
     );
     onChangeWithAttachments(!withAttachments);
   };
@@ -181,8 +174,10 @@ export class LogsGridToolbar extends Component {
   toggleHidePassedLogs = () => {
     const { onHidePassedLogs, isPassedLogsHidden } = this.props;
 
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnHidePassedLogsCheckboxEvent(!isPassedLogsHidden),
+    );
     onHidePassedLogs(!isPassedLogsHidden);
-    this.props.tracking.trackEvent(getHideAllPassedLogs(!isPassedLogsHidden));
   };
 
   toggleHideEmptySteps = () => {
@@ -192,9 +187,9 @@ export class LogsGridToolbar extends Component {
   };
 
   isConsoleViewMode = () => {
-    const { isLogView } = this.props;
+    const { isNestedStepsView } = this.props;
     const { logViewMode } = this.state;
-    return logViewMode === CONSOLE && isLogView;
+    return logViewMode === CONSOLE && !isNestedStepsView;
   };
 
   render() {
@@ -206,7 +201,6 @@ export class LogsGridToolbar extends Component {
       onChangePage,
       logLevel,
       logPageMode,
-      isLogView,
       isNestedStepsView,
       withAttachments,
       isPassedLogsHidden,
@@ -222,15 +216,22 @@ export class LogsGridToolbar extends Component {
         <div ref={this.panelRef} className={cx('panel')}>
           <div className={cx('aside')}>
             <div className={cx('log-level')}>
-              <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
-            </div>
-            <div className={cx('aside-element')}>
-              <ErrorLogsControl
-                errorLogs={errorLogs}
-                highlightErrorLog={highlightErrorLog}
-                errorLogIndex={errorLogIndex}
+              <InputSlider
+                options={LOG_LEVELS}
+                value={logLevel}
+                onChange={this.changeLogLevel}
+                trackChange={this.trackLogLevelFilterClick}
               />
             </div>
+            {logPageMode === DETAILED_LOG_VIEW && (
+              <div className={cx('aside-element')}>
+                <ErrorLogsControl
+                  errorLogs={errorLogs}
+                  highlightErrorLog={highlightErrorLog}
+                  errorLogIndex={errorLogIndex}
+                />
+              </div>
+            )}
           </div>
           <div className={cx('aside')}>
             <div className={cx('aside-element-block')}>
@@ -267,7 +268,7 @@ export class LogsGridToolbar extends Component {
               >
                 {Parser(MarkdownIcon)}
               </button>
-              {isLogView && (
+              {!isNestedStepsView && (
                 <button
                   className={cx('mode-button', 'console', { active: logViewMode === CONSOLE })}
                   onClick={this.toggleConsoleView}

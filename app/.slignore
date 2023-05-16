@@ -18,3 +18,4 @@ vendor*.js
 runtime*.js
 inline*.js
 **/polyfills*.js
+**/*.spec.js

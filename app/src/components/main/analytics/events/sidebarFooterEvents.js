@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from './common/ga4Utils';
+
 const SIDEBAR = 'sidebar';
+
+const basicEventParameters = {
+  ...getBasicClickEventParameters(SIDEBAR),
+  place: SIDEBAR,
+};
+
 export const SIDEBAR_EVENTS = {
+  // GA4 events
+  CLICK_LAUNCH_ICON: {
+    ...basicEventParameters,
+    icon_name: 'launches',
+  },
+  // GA3 events
   CLICK_MEMBERS_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu Btn Members',
@@ -30,11 +44,6 @@ export const SIDEBAR_EVENTS = {
     category: SIDEBAR,
     action: 'Click on Menu button Dashboards',
     label: 'Transition on Dashboards Page',
-  },
-  CLICK_LAUNCHES_BTN: {
-    category: SIDEBAR,
-    action: 'Click on Menu Button Launches',
-    label: 'Transition to Launches Page',
   },
   CLICK_FILTERS_BTN: {
     category: SIDEBAR,

@@ -209,6 +209,9 @@ export class LogItemInfoTabs extends Component {
         component: StackTrace,
         componentProps: {
           logItem,
+          eventsInfo: {
+            onOpenStackTraceEvent: () => LOG_PAGE_EVENTS.EXPAND_STACK_TRACE,
+          },
         },
       },
       {
@@ -248,7 +251,7 @@ export class LogItemInfoTabs extends Component {
   };
 
   toggleSauceLabsIntegrationContent = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SAUCE_LABS_BTN);
+    // TODO: Handle SauceLabs integration as independent tab
     this.props.setActiveTabId('logs');
     this.props.onToggleSauceLabsIntegrationView();
   };

@@ -261,7 +261,7 @@ export const logViewModeSelector = (state) => {
   return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
 };
 
-export const isLogPageWithOutNestedSteps = createSelector(
+const isLogPageWithoutNestedSteps = createSelector(
   logItemsSelector,
   pagePropertiesSelector,
   (items, pageQuery) => {
@@ -272,6 +272,6 @@ export const isLogPageWithOutNestedSteps = createSelector(
   },
 );
 export const isLogPageWithNestedSteps = createSelector(
-  isLogPageWithOutNestedSteps,
+  isLogPageWithoutNestedSteps,
   (value) => !value,
 );

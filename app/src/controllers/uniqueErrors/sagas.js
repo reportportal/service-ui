@@ -37,6 +37,7 @@ import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
+import { locationSelector } from 'controllers/pages/selectors';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
@@ -48,6 +49,7 @@ import { setPageLoadingAction } from './actionCreators';
 function* getPlugin() {
   let plugins = yield select(pluginsSelector);
   if (!plugins.length) {
+    yield put(fetchDataAction(PLUGINS_NAMESPACE)(URLS.plugin()));
     const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
     plugins = response.payload;
   }

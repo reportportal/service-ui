@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { Attachments } from 'pages/inside/logsPage/logItemInfo/logItemInfoTabs/attachments';
 import { LOG_VIEW } from 'controllers/testItem';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 
 export class TestItemLogsToolbar extends Component {
@@ -59,7 +60,7 @@ export class TestItemLogsToolbar extends Component {
 
     return (
       <Fragment>
-        <InfoPanel viewMode={LOG_VIEW} data={parentItem} />
+        <InfoPanel viewMode={LOG_VIEW} data={parentItem} events={LOG_PAGE_EVENTS} />
         <Attachments isMobileView={isMobileView} />
       </Fragment>
     );

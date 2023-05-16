@@ -57,31 +57,26 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { StepGrid } from './stepGrid';
 
-const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkAutoAnalyzedFalse:
-    STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
-  unlinkAutoAnalyzedTrue:
-    STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
-  unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+const getUnlinkIssueEventsInfo = (place) => ({
+  unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
   cancelBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-};
+});
 
-const POST_ISSUE_EVENTS_INFO = {
-  postBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
-  logsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
-  commentSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+const getPostIssueEventsInfo = (place) => ({
+  postBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
   cancelBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-};
+});
 
-const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+const getLinkIssueEventsInfo = (place) => ({
+  loadBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
+    place,
+  ),
   closeIcon: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-};
+});
 
 @connect(
   (state) => ({
@@ -250,32 +245,27 @@ export class StepPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
         eventsInfo: {
-          saveBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
-          cancelBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          detailsTab: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.DETAILS_TAB_EVENT,
-          stackTraceTab: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
-          addAttribute: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.ADD_ATTRIBUTE,
-          onOpenStackTraceEvent: () => STEP_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
+          saveBtn: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.SAVE_BTN,
+          detailsTab: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.DETAILS_TAB,
+          stackTraceTab: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.STACK_TRACE_TAB,
+          onOpenStackTraceEvent: () =>
+            STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.EXPAND_STACK_TRACE,
         },
       },
     });
   };
 
   handleAllStepsSelection = () => {
-    this.props.tracking.trackEvent(
-      STEP_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
-        this.props.selectedItems.length !== this.props.steps.length,
-      ),
-    );
+    if (this.props.selectedItems.length !== this.props.steps.length) {
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     this.props.toggleAllStepsAction(this.props.steps);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(
-      STEP_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedItems.includes(value)),
-    );
+    if (!this.props.selectedItems.includes(value)) {
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     this.props.toggleStepSelection(value);
   };
 
@@ -293,7 +283,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
     this.props.unlinkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getUnlinkIssueEventsInfo(),
     });
   };
 
@@ -312,20 +302,20 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_SINGLE_ISSUE);
     this.props.unlinkIssueAction(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getUnlinkIssueEventsInfo(),
     });
   };
 
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: LINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getLinkIssueEventsInfo(),
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: POST_ISSUE_EVENTS_INFO,
+      eventsInfo: getPostIssueEventsInfo(),
     });
 
   handleIgnoreInAA = () => {
@@ -353,15 +343,19 @@ export class StepPage extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems } = this.props;
+    const { selectedItems, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const MAKE_DECISION = 'make_decision';
+
+    tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+
     this.props.editDefectsAction(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
         editDefectsEvents: STEP_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
-        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-        postIssueEvents: POST_ISSUE_EVENTS_INFO,
-        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+        unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
+        postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
+        linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
       },
     });
   };

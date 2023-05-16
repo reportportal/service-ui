@@ -21,6 +21,7 @@ import { track } from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
@@ -64,7 +65,6 @@ export class EmptyUniqueErrors extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -74,20 +74,20 @@ export class EmptyUniqueErrors extends Component {
     showDefaultErrorNotification: () => {},
     parentLaunch: {},
     loading: false,
-    events: {},
   };
 
   openModal = () => {
-    const { tracking, events } = this.props;
+    const { tracking } = this.props;
     this.props.showModal({
       id: 'uniqueErrorsAnalyzeModal',
       data: {
         launch: this.props.parentLaunch,
         updateLaunchLocally: (data) => this.props.fetchParentLaunchSuccessAction(data),
-        events,
+        events: UNIQUE_ERRORS_PAGE_EVENTS,
       },
     });
-    events.CLICK_RUN_BUTTON && tracking.trackEvent(events.CLICK_RUN_BUTTON);
+    UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON &&
+      tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON);
   };
 
   getBody = () => {

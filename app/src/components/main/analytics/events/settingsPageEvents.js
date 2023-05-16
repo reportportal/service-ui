@@ -138,11 +138,11 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Cancel in Edit Rule Notification modal on tab Notifications',
     label: 'Close Edit Rule Notification modal on tab Notifications',
   },
-  SAVE_EDIT_RULE_NOTIFICATIONS: {
+  SAVE_EDIT_RULE_NOTIFICATIONS: (label) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Save in Edit Rule Notification modal on tab Notifications',
-    label: 'Save Rule Notification in Edit Rule Notification modal on tab Notifications',
-  },
+    label,
+  }),
   CLOSE_ICON_ADD_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Add Rule Notification',
@@ -153,11 +153,11 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Cancel in Add Rule Notification modal on tab Notifications',
     label: 'Close Add Rule Notification modal on tab Notifications',
   },
-  SAVE_ADD_RULE_NOTIFICATIONS: {
+  SAVE_ADD_RULE_NOTIFICATIONS: (label) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Save in Add Rule Notification modal on tab Notifications',
-    label: 'Save Rule Notification in Add Rule Notification modal on tab Notifications',
-  },
+    label,
+  }),
   EDIT_INPUT_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
     action: 'Edit input Email notifications on tab Notifications',

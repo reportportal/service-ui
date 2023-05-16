@@ -17,8 +17,8 @@
 import {
   ANALYICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
-  GA_MEASUREMENT_ID,
   OLD_HISTORY_KEY,
+  GA_MEASUREMENT_ID,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};

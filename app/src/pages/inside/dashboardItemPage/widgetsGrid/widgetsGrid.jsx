@@ -58,7 +58,6 @@ export class WidgetsGrid extends Component {
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      owner: PropTypes.string,
     }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -72,7 +71,6 @@ export class WidgetsGrid extends Component {
     dashboard: {
       widgets: [],
       id: '',
-      owner: '',
     },
     showWidgetWizard: () => {},
     isPrintMode: false,
@@ -186,17 +184,11 @@ export class WidgetsGrid extends Component {
 
   renderItems = () => {
     const {
-      dashboard: { widgets = [], owner },
-      currentUser,
+      dashboard: { widgets = [] },
     } = this.props;
 
     if (widgets.length) {
-      const newWidgets =
-        this.props.isPrintMode && owner !== currentUser
-          ? widgets.filter((item) => item.share)
-          : widgets;
-
-      return newWidgets.map(
+      return widgets.map(
         ({
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
@@ -224,7 +216,6 @@ export class WidgetsGrid extends Component {
               observer={this.observer}
               isPrintMode={this.props.isPrintMode}
               onDelete={this.onDeleteWidget}
-              dashboardOwner={owner}
             />
           </div>
         ),
@@ -274,7 +265,6 @@ export class WidgetsGrid extends Component {
       <EmptyWidgetGrid
         action={this.props.showWidgetWizard}
         isDisable={isFullscreen || isPrintMode}
-        dashboard={dashboard}
       />
     );
   };

@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from './common/ga4Utils';
 import {
-  getLinkIssueActionEvent,
-  getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
-  getClickOnPlusMinusEvents,
-  getCommonActionEvents,
+  getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
+  getClickDefectTooltipEvents,
+  getClickOnExpandEvent,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
+  getChangeItemStatusEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
-  getEditDefectModalEvents,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
@@ -36,99 +37,213 @@ import {
 
 export const LOG_PAGE = 'log';
 
-export const LogViewMode = (state, view) => ({
-  category: LOG_PAGE,
-  action: `Click on icon "${view.charAt(0).toUpperCase() + view.slice(1)} Mode"`,
-  label: state ? 'On' : 'Off',
-});
-export const getHideAllPassedLogs = (state) => ({
-  category: LOG_PAGE,
-  action: 'Click on checkbox "Hide All Passed Logs"',
-  label: state ? 'On' : 'Off',
-});
-export const getHistoryLineCheckbox = (state) => ({
-  category: LOG_PAGE,
-  action: 'Click on History line checkbox',
-  label: state ? 'On' : 'Off',
-});
+const basicLogPageClickEventParameters = getBasicClickEventParameters(LOG_PAGE);
+const basicLogPageChooseEventParameters = getBasicChooseEventParameters(LOG_PAGE);
+const basicHistoryLineClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'history_line',
+};
+const basicContainerWithDefectsClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'container_with_defects',
+};
+const basicAttachmentSectionClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'attachment_section',
+};
+const basicLogMessageClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'log_message',
+};
+const basicNestedStepsClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'nested_steps',
+};
 
 export const LOG_PAGE_EVENTS = {
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
-  ALL_LABEL_BREADCRUMB: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
+  // GA4 events
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
+  ...getClickDefectTooltipEvents(LOG_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(LOG_PAGE),
+  ...getClickBreadcrumbsEvents(LOG_PAGE),
+  getClickOnHistoryLineCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'history_line_checkbox',
+    status: isChecked ? 'active' : 'disable',
+  }),
   PREVIOUS_ITEM_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn prev Method',
-    label: 'Transition to prev Method Item',
+    ...basicLogPageClickEventParameters,
+    element_name: 'previous_method',
   },
   NEXT_ITEM_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn next Method',
-    label: 'Transition to next Method Item',
+    ...basicLogPageClickEventParameters,
+    element_name: 'next_method',
   },
-  REFRESH_BTN: getCommonActionEvents(LOG_PAGE).REFRESH_BTN,
+  HISTORY_LINE_ITEM: {
+    ...basicHistoryLineClickEventParameters,
+    element_name: 'history_execution_tab',
+  },
+  CLICK_ON_MORE_BTN: {
+    ...basicHistoryLineClickEventParameters,
+    element_name: 'more',
+  },
+  getClickOnDefectDetailsTogglerEvent: (isExpanded) => ({
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: isExpanded ? 'more' : 'show_less',
+  }),
+  POST_ISSUE_ACTION: {
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: 'post',
+  },
+  LINK_ISSUE_ACTION: {
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: 'link',
+  },
+  STACK_TRACE_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'stack_trace',
+  },
+  LOGS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'all_logs',
+  },
+  ATTACHMENT_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'attachments',
+  },
+  ITEM_DETAILS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'item_details',
+  },
+  ACTIONS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'history_of_actions',
+  },
+  EXPAND_LOG_MSG: getClickOnExpandEvent(LOG_PAGE, 'all_logs'),
+  EXPAND_STACK_TRACE: getClickOnExpandEvent(LOG_PAGE, 'stack_trace'),
+  getClickOnLogLevelFilterEvent: (logLevel) => ({
+    ...basicLogPageClickEventParameters,
+    icon_name: 'level_filter',
+    element_name: logLevel,
+  }),
+  getClickOnHighlightErrorLogEvent: (hasDirection) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: hasDirection ? 'show_error_logs' : 'show',
+  }),
+  getClickOnLogsWithAttachmentsCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'logs_with_attachments',
+    status: isChecked ? 'check' : 'uncheck',
+  }),
+  getClickOnHidePassedLogsCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'hide_all_passed_logs',
+    status: isChecked ? 'check' : 'uncheck',
+  }),
+  getClickOnLogViewModeEvent: (viewMode, isActive) => ({
+    ...basicLogPageClickEventParameters,
+    icon_name: `${viewMode}_mode`,
+    status: isActive ? 'on' : 'off',
+  }),
+  CLICK_JUMP_TO_ERROR_LOG: {
+    ...basicLogPageClickEventParameters,
+    place: 'stack_trace',
+    icon_name: 'jump_to',
+  },
+  NESTED_STEP_EXPAND: {
+    ...basicNestedStepsClickEventParameters,
+    icon_name: 'expand_nested_step',
+  },
+  CLICK_HISTORY_RELEVANT_ITEM_LINK: {
+    ...basicLogPageClickEventParameters,
+    place: 'history_of_actions',
+    link_name: 'item',
+  },
+  PREVIOUS_ATTACHMENT_ICON: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'previous_attachment',
+  },
+  NEXT_ATTACHMENT_ICON: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'next_attachment',
+  },
+  ATTACHMENT_THUMBNAIL: {
+    ...basicAttachmentSectionClickEventParameters,
+    icon_name: 'thumbnail_attachment',
+  },
+  ATTACHMENT_IN_CAROUSEL: {
+    DOWNLOAD: {
+      ...basicAttachmentSectionClickEventParameters,
+      icon_name: 'download',
+    },
+    OPEN_IN_NEW_TAB: {
+      ...basicAttachmentSectionClickEventParameters,
+      icon_name: 'open_in_new_tab',
+    },
+  },
+  ATTACHMENT_IN_LOG_MSG: {
+    OPEN_IN_MODAL: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'attachment',
+    },
+    DOWNLOAD: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'download',
+    },
+    OPEN_IN_NEW_TAB: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'open_in_new_tab',
+    },
+  },
+  ATTACHMENT_CODE_MODAL: {
+    OPEN_IN_NEW_TAB: {
+      ...basicLogPageClickEventParameters,
+      modal: 'attachment',
+      icon_name: 'open_in_new_tab',
+    },
+  },
+  ALL_STATUSES_DROPDOWN: {
+    OPEN: {
+      ...basicLogPageClickEventParameters,
+      icon_name: 'all_statuses',
+    },
+    getChangeStatusEvent: (status) => ({
+      ...basicLogPageChooseEventParameters,
+      place: 'nested_steps',
+      icon_name: 'all_statuses',
+      type: status,
+    }),
+  },
+  RETRY_CLICK: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'retries',
+  },
+  getClickOnLoadMoreLogsEvent: (direction) => ({
+    ...basicNestedStepsClickEventParameters,
+    icon_name: `load_${direction}_300`,
+  }),
+  LOAD_CURRENT_STEP: {
+    ...basicNestedStepsClickEventParameters,
+    icon_name: 'load_current_step',
+  },
+  TIME_SORTING: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'sort_time',
+  },
+  SAUCE_LABS_BTN: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'sauce_labs',
+  },
+  PLAY_SAUCE_LABS_VIDEO: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'play_video_sauce_labs',
+  },
+  getChangeItemStatusEvent: getChangeItemStatusEventCreator(LOG_PAGE),
+  // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
     label: 'Arise Modal Edit Defect type',
-  },
-  HISTORY_LINE_ITEM: {
-    category: LOG_PAGE,
-    action: 'Click on History execution tab',
-    label: 'Transition to item log page',
-  },
-  STACK_TRACE_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Stack Trace tab',
-    label: 'Open Stack Trace tab',
-  },
-  LOGS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Logs tab',
-    label: 'Open Logs tab',
-  },
-  ATTACHMENT_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Attachments tab',
-    label: 'Open Attachments tab',
-  },
-  ITEM_DETAILS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Item Details tab',
-    label: 'Open Item Details tab',
-  },
-  ACTIONS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on History of Actions tab',
-    label: 'Open History of Actions tab',
-  },
-  logLevelFilterEvent: (logLevel) => ({
-    category: LOG_PAGE,
-    action: 'Select Log level filter in dropdown',
-    label: `Filter by ${logLevel}`,
-  }),
-  logWithAttachmentCheckboxEvent: (value) => ({
-    category: LOG_PAGE,
-    action: 'Click on checkbox Logs with attachments',
-    label: `${value ? 'check' : 'uncheck'} logs with attachments`,
-  }),
-  selectDropDownStatusEvent: (oldStatus, newStatus) => ({
-    category: LOG_PAGE,
-    action: 'Select Test Item Status from Drop-down List',
-    label: `Change status from ${oldStatus} to ${newStatus}`,
-  }),
-  CLICK_ON_MORE_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Button More in History Line',
-    label: '',
   },
   PREVIOUS_LOG_MSG_PAGE: {
     category: LOG_PAGE,
@@ -145,60 +260,8 @@ export const LOG_PAGE_EVENTS = {
     action: 'Enter filter parameter in Log message input',
     label: 'Filter log messages by parameter',
   },
-  ALL_STATUSES: {
-    category: LOG_PAGE,
-    action: 'Click on Icon Sorting on "All Statuses" in Log Message',
-    label: 'Sort Logs',
-  },
-  TIME_SORTING: {
-    category: LOG_PAGE,
-    action: 'Click on icon Sorting on Time in Log Message',
-    label: 'Sort logs',
-  },
-  ATTACHMENT_IN_LOG_MSG: {
-    OPEN_IN_MODAL: {
-      category: LOG_PAGE,
-      action: 'Click on Attachment in Log Message',
-      label: 'Open Attachment in modal',
-    },
-    DOWNLOAD: {
-      category: LOG_PAGE,
-      action: 'Click on Download Attachment icon in Log Message',
-      label: 'Download Attachment',
-    },
-    OPEN_IN_NEW_TAB: {
-      category: LOG_PAGE,
-      action: 'Click on Open Attachment in new tab icon in Log Message',
-      label: 'Open Attachment in new browser tab',
-    },
-  },
-  ATTACHMENT_IN_CAROUSEL: {
-    OPEN_IN_MODAL: {
-      category: LOG_PAGE,
-      action: 'Click on Attachment in Attachments section',
-      label: 'Open Attachment in modal',
-    },
-    DOWNLOAD: {
-      category: LOG_PAGE,
-      action: 'Click on Download Attachment icon in Attachments section',
-      label: 'Download Attachment',
-    },
-    OPEN_IN_NEW_TAB: {
-      category: LOG_PAGE,
-      action: 'Click on Open Attachment in new tab icon in Attachments section',
-      label: 'Open Attachment in new browser tab',
-    },
-  },
-  EXPAND_LOG_MSG: {
-    category: LOG_PAGE,
-    action: 'Click on icon Expand in Log Message',
-    label: 'Expand/close log',
-  },
-  POST_ISSUE_ACTION: getPostIssueActionEvent(LOG_PAGE),
-  LINK_ISSUE_ACTION: getLinkIssueActionEvent(LOG_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
-  EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(LOG_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     LOG_PAGE,
   ),
@@ -212,33 +275,6 @@ export const LOG_PAGE_EVENTS = {
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(LOG_PAGE),
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
-  // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(LOG_PAGE),
-  MORE: {
-    category: LOG_PAGE,
-    action: 'Click on button "More"',
-    label: 'Container with defects shows',
-  },
-  SHOW_LESS: {
-    category: LOG_PAGE,
-    action: 'Click on button "Show Less"',
-    label: 'Container with defects hides',
-  },
-  PREVIOUS_ATTACHMENT_ICON: {
-    category: LOG_PAGE,
-    action: 'Click on icon Previous Attachment',
-    label: 'Show Previous Attachment',
-  },
-  NEXT_ATTACHMENT_ICON: {
-    category: LOG_PAGE,
-    action: 'Click on icon Next Attachment',
-    label: 'Show Next Attachment',
-  },
-  ATTACHMENT_THUMBNAIL: {
-    category: LOG_PAGE,
-    action: 'Click on thumbnail of Attachment',
-    label: 'Show this Attachment',
-  },
   CLOSE_ICON_ATTACHMENT_MODAL: {
     category: LOG_PAGE,
     action: 'Click on icon Close on Modal Attachment',
@@ -279,30 +315,10 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on button Cancel in Modal "Send defect to the last item"',
     label: 'Close Modal "Send defect to the last item"',
   },
-  RETRY_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on retry',
-    label: 'Transition to retry log page',
-  },
   LOAD_MORE_CLICK_STACK_TRACE: {
     category: LOG_PAGE,
     action: 'Click on Load more in Stake Trace',
     label: 'Load more logs in Stak Trace tab on Log view',
-  },
-  NESTED_STEP_EXPAND: {
-    category: LOG_PAGE,
-    action: 'Click on Nested step',
-    label: 'Expand Nested step',
-  },
-  SAUCE_LABS_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Sauce labs button',
-    label: 'Open Sauce Labs section',
-  },
-  PLAY_SAUCE_LABS_VIDEO: {
-    category: LOG_PAGE,
-    action: 'Click on Play button on Sauce Labs video',
-    label: 'Play Sauce Labs video',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(LOG_PAGE),

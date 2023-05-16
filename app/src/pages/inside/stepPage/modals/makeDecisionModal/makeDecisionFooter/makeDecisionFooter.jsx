@@ -42,7 +42,7 @@ export const MakeDecisionFooter = ({
       const defectFromTIGroup = isBulkOperation
         ? undefined
         : modalState.currentTestItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-      trackEvent(eventsInfo.onExpandFooter(defectFromTIGroup));
+      trackEvent(eventsInfo.getExpandFooterEvent(defectFromTIGroup));
     }
   };
   const wrapperRef = useRef();

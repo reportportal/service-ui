@@ -88,16 +88,19 @@ export class LogStatusBlock extends Component {
   };
 
   getStatusLabel = () => {
-    const arr = this.getLogStatusArray();
-    if (!arr.length || arr.length === this.statusArray.length) {
+    const activeStatuses = this.getLogStatusArray();
+
+    if (!activeStatuses.length || this.getIsAllStatusesActive(activeStatuses)) {
       return this.formatStatus(ALL_STATUSES).toUpperCase();
     }
 
-    return arr
+    return activeStatuses
       .map(this.formatStatus)
       .join(', ')
       .toUpperCase();
   };
+
+  getIsAllStatusesActive = (activeStatuses) => activeStatuses.length === this.statusArray.length;
 
   formatStatus = (status) =>
     messages[`status${status}`]
@@ -109,32 +112,54 @@ export class LogStatusBlock extends Component {
   statusArray = [PASSED, FAILED, SKIPPED, WARN, INFO];
 
   toggleDropdown = () => {
-    this.setState((prevState) => ({
-      opened: !prevState.opened,
-    }));
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ALL_STATUSES);
+    this.setState((prevState) => {
+      const isOpened = !prevState.opened;
+
+      if (isOpened) {
+        this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ALL_STATUSES_DROPDOWN.OPEN);
+      }
+
+      return {
+        opened: isOpened,
+      };
+    });
   };
 
   toggleCheckbox = (value) => {
-    const { onChangeLogStatusFilter } = this.props;
-    let arr = this.getLogStatusArray();
-    if (this.isCheckboxActive(value)) {
-      arr = arr.filter((status) => status !== value);
-    } else {
-      arr = [...arr, value];
-    }
-    const status = arr.length ? arr.join(',') : undefined;
-    onChangeLogStatusFilter(status);
+    const activeStatuses = this.getLogStatusArray();
+    const newActiveStatuses = this.isCheckboxActive(value)
+      ? activeStatuses.filter((status) => status !== value)
+      : [...activeStatuses, value];
+
+    this.handleStatusChange(newActiveStatuses);
   };
 
   toggleAll = () => {
-    const { onChangeLogStatusFilter } = this.props;
-    const arr = this.getLogStatusArray();
-    let status = this.statusArray.join(',');
-    if (arr.length === this.statusArray.length) {
-      status = undefined;
+    const activeStatuses = this.getLogStatusArray();
+    const newActiveStatuses = this.getIsAllStatusesActive(activeStatuses)
+      ? []
+      : [...this.statusArray];
+
+    this.handleStatusChange(newActiveStatuses);
+  };
+
+  handleStatusChange = (activeStatuses) => {
+    const isSomeActive = !!activeStatuses.length;
+    let logTrackingStatus;
+
+    if (this.getIsAllStatusesActive(activeStatuses)) {
+      logTrackingStatus = 'all';
+    } else if (isSomeActive) {
+      logTrackingStatus = activeStatuses.map((status) => status.toLowerCase()).join('#');
     }
-    onChangeLogStatusFilter(status);
+
+    if (logTrackingStatus) {
+      this.props.tracking.trackEvent(
+        LOG_PAGE_EVENTS.ALL_STATUSES_DROPDOWN.getChangeStatusEvent(logTrackingStatus),
+      );
+    }
+
+    this.props.onChangeLogStatusFilter(isSomeActive ? activeStatuses.join(',') : undefined);
   };
 
   isCheckboxActive = (value) => this.getLogStatusArray().includes(value);

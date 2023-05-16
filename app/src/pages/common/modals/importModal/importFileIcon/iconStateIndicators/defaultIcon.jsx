@@ -18,17 +18,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './iconStateIndicators.scss';
-import { ACCEPT_FILE_TYPES_ABBR } from '../../constants';
 
 const cx = classNames.bind(styles);
 
-export const DefaultIcon = ({ fileType }) => (
-  <div className={cx('indicator-default')}>{`.${ACCEPT_FILE_TYPES_ABBR[fileType]}`}</div>
+export const DefaultIcon = ({ fileExtension }) => (
+  <div className={cx('indicator-default')}>{`.${fileExtension}`}</div>
 );
 
 DefaultIcon.propTypes = {
-  fileType: PropTypes.string,
+  fileExtension: PropTypes.string,
 };
 DefaultIcon.defaultProps = {
-  fileType: '',
+  fileExtension: '',
 };

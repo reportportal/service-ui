@@ -15,8 +15,6 @@
  */
 
 import React from 'react';
-import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { withTooltip } from 'components/main/tooltips/tooltip';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { COLOR_DEEP_RED, COLOR_PASSED } from 'common/constants/colors';
@@ -25,58 +23,38 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-const NameColumnAttribute = ({ value, onClickAttribute, isClickableAttribute, minPassingRate }) => {
-  const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
-
-  return (
-    <div
-      className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
-      onClick={
-        isClickableAttribute
-          ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
-          : undefined
-      }
-    >
-      <span>{value.attributeValue}</span>
-    </div>
-  );
-};
-NameColumnAttribute.propTypes = {
-  value: PropTypes.object,
-  onClickAttribute: PropTypes.func,
-  isClickableAttribute: PropTypes.bool,
-  minPassingRate: PropTypes.number,
-};
-NameColumnAttribute.defaultProps = {
-  value: {},
-  onClickAttribute: () => {},
-  isClickableAttribute: false,
-  minPassingRate: 0,
-};
-
-const NameColumnAttributeWithTooltip = withTooltip({
-  TooltipComponent: TextTooltip,
-  data: {
-    dynamicWidth: true,
-    placement: 'right',
-  },
-})(NameColumnAttribute);
+const MAX_VALUE_LENGTH = 50;
+const CHARACTERS_COUNT_BEFORE_ELLIPSIS = 45;
+const CHARACTERS_COUNT_AFTER_ELLIPSIS = 5;
 
 export const NameColumn = (
   { className, value },
   name,
   { minPassingRate, formatMessage, onClickAttribute, isClickableAttribute },
 ) => {
+  const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
+  const { attributeValue } = value;
+
+  const attributeValueToDisplay =
+    attributeValue && attributeValue.length > MAX_VALUE_LENGTH
+      ? `${attributeValue.slice(0, CHARACTERS_COUNT_BEFORE_ELLIPSIS)} ... ${attributeValue.slice(
+          -CHARACTERS_COUNT_AFTER_ELLIPSIS,
+        )}`
+      : attributeValue;
+
   return (
     <div className={cx('name-col', className)}>
-      {value.attributeValue ? (
-        <NameColumnAttributeWithTooltip
-          tooltipContent={value.attributeValue}
-          onClickAttribute={onClickAttribute}
-          isClickableAttribute={isClickableAttribute}
-          minPassingRate={minPassingRate}
-          value={value}
-        />
+      {attributeValue ? (
+        <div
+          className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
+          onClick={
+            isClickableAttribute
+              ? () => onClickAttribute(attributeValue, value.passingRate, color)
+              : undefined
+          }
+        >
+          <span title={attributeValue}>{attributeValueToDisplay}</span>
+        </div>
       ) : (
         <span className={cx('name-total', 'total-item')}>
           {formatMessage(hintMessages.nameTotal)}

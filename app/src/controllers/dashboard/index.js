@@ -32,6 +32,7 @@ export {
   activeDashboardItemSelector,
   dashboardFullScreenModeSelector,
   loadingSelector,
+  totalDashboardsSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,

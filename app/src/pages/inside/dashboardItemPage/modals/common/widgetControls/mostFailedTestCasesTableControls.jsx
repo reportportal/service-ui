@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   ItemsValidationError: {
     id: 'MostFailedTestCasesTableControls.ItemsValidationError',
-    defaultMessage: 'Items count should have value from 2 to 600',
+    defaultMessage: 'Items count should have value from 2 to 100',
   },
   LaunchNamesValidationError: {
     id: 'MostFailedTestCasesTableControls.LaunchNamesValidationError',

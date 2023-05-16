@@ -146,12 +146,13 @@ export class CompareWithFilterControl extends Component {
   };
 
   handleSearchValueChange = debounce((value) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.FILTERS_DROPDOWN_SEARCH_FILTER);
     return this.fetchFilter({ page: 1, searchValue: value });
   }, 300);
 
   handleFilterListChange = (event) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CHOOSE_FILTER_FOR_COMPARE);
+    this.props.tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.getChooseFilterForCompareEvent(!!this.state.searchValue),
+    );
     const filter = this.getFilterById(event.target.value);
     this.props.onChangeActiveFilter(filter);
     this.toggleFilterList();
@@ -173,13 +174,13 @@ export class CompareWithFilterControl extends Component {
   };
 
   resetActiveFilter = () => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLEAR_COMPARE_FILTER_CROSS_BTN);
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CROSS_BTN_NEAR_COMPARE_FILTER);
     this.props.onChangeActiveFilter(null);
   };
 
   toggleFilterList = () => {
     if (!this.state.filterListShown) {
-      this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.COMPARE_WITH_FILTER_BTN);
+      this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_COMPARE_WITH_FILTER_BTN);
     }
 
     this.setState({

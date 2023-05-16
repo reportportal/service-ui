@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-export const ADMIN_SERVER_SETTINGS_PAGE = 'Server settings';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 
-export const submitAnalyticsBtn = (label) => ({
-  category: ADMIN_SERVER_SETTINGS_PAGE,
-  action: 'Click on Bttn Submit on tab Analytics',
-  label,
+export const ADMIN_SERVER_SETTINGS_PAGE = 'server_settings';
+
+const basicClickEventParametersAdminServerSettingsPage = getBasicClickEventParameters(
+  ADMIN_SERVER_SETTINGS_PAGE,
+);
+
+export const submitAnalyticsBtn = (status) => ({
+  ...basicClickEventParametersAdminServerSettingsPage,
+  element_name: 'submit',
+  status,
 });
 
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
@@ -29,9 +35,8 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     label: 'Open tab Authorization Configuration',
   },
   ANALYTICS_TAB: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on tab Analytics',
-    label: 'Open tab Analytics',
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'analytics',
   },
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,

@@ -62,7 +62,7 @@ export const DropdownOption = ({
       );
     } else {
       component = (
-        <div className={cx('single-option')} onClick={onChangeHandler}>
+        <div className={cx('single-option')} title={label} onClick={onChangeHandler}>
           {label}
         </div>
       );

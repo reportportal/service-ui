@@ -23,13 +23,19 @@ node {
         stage('Checkout') {
             checkout scm
         }
-        
+
         stage('Build Docker Image') {
             withEnv(["NODE_OPTIONS=--max_old_space_size=4096", "AWS_URI=${AWS_URI}"]) {
-                sh 'make IMAGE_NAME=$AWS_URI/service-ui:$VERSION-RC-$BUILD_NUMBER build-image-dev v=$VERSION-RC-$BUILD_NUMBER'
+                sh """
+                BUILD_VER=$VERSION-RC-$BUILD_NUMBER
+                IMAGE_NAME=$AWS_URI/service-ui:\$BUILD_VER
+                COMMIT_SHA=\$(git rev-parse HEAD | git hash-object --stdin)
+                BUILD_DATE=\$(date +%FT%T%z)
+                docker build -t \$IMAGE_NAME --build-arg version=\$VERSION --build-arg build_date=\$BUILD_DATE --build-arg branch=\$BRANCH-\$COMMIT_SHA .
+                """
             }
         }
-        
+
         stage('Push to ECR') {
             withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}", "TAG=${VERSION}"]) {
                 def image = env.AWS_URI + '/service-ui:' + env.TAG + '-RC-' + env.BUILD_NUMBER

@@ -269,6 +269,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.sunday',
     defaultMessage: 'Sunday',
   },
+  KEY: {
+    id: 'Common.key',
+    defaultMessage: 'Key',
+  },
+  VALUE: {
+    id: 'Common.value',
+    defaultMessage: 'Value',
+  },
 });
 
 export const months = [

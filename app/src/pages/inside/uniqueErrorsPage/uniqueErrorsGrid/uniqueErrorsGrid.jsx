@@ -33,7 +33,7 @@ import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
 
-export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest }) => {
+export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
   const { formatMessage } = useIntl();
   const query = useSelector(querySelector);
   const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
@@ -90,7 +90,7 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest 
           )}
         </>
       ) : (
-        <EmptyUniqueErrors parentLaunch={parentLaunch} events={events} />
+        <EmptyUniqueErrors parentLaunch={parentLaunch} />
       )}
     </>
   );
@@ -99,11 +99,9 @@ UniqueErrorsGrid.propTypes = {
   parentLaunch: PropTypes.object,
   data: PropTypes.array,
   loading: PropTypes.bool,
-  events: PropTypes.object,
 };
 UniqueErrorsGrid.defaultProps = {
   parentLaunch: {},
   data: [],
   loading: false,
-  events: {},
 };

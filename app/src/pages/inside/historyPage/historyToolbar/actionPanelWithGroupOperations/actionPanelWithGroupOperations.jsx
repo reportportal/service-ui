@@ -47,33 +47,32 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { ActionPanel } from '../actionPanel';
+import { HistoryActionPanel } from '../actionPanel';
 
-const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkAutoAnalyzedFalse:
-    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
-  unlinkAutoAnalyzedTrue:
-    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
-  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+const getUnlinkIssueEventsInfo = (place) => ({
+  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
+    place,
+  ),
   cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-};
+});
 
-const POST_ISSUE_EVENTS_INFO = {
-  postBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
-  logsSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
-  commentSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+const getPostIssueEventsInfo = (place) => ({
+  postBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
+    place,
+  ),
   cancelBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-};
+});
 
-const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+const getLinkIssueEventsInfo = (place) => ({
+  loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
+    place,
+  ),
   closeIcon: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-};
+});
 
 @connect(
   (state) => ({
@@ -158,6 +157,7 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   onEditItems = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_ITEMS_ACTION);
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -166,13 +166,15 @@ export class ActionPanelWithGroupOperations extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndRefreshItems,
         eventsInfo: {
-          cancelBtn: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+          getSaveBtnEditItemsEvent:
+            HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });
+  };
+
+  onClickActionsButton = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_ACTIONS_BTN);
   };
 
   getActionDescriptors = () => {
@@ -216,6 +218,7 @@ export class ActionPanelWithGroupOperations extends Component {
         title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
         items={actionDescriptors}
         disabled={!selectedItems.length}
+        onClick={this.onClickActionsButton}
       />,
     ];
   };
@@ -239,7 +242,7 @@ export class ActionPanelWithGroupOperations extends Component {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
     this.props.onUnlinkIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndRefreshItems,
-      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getUnlinkIssueEventsInfo(),
     });
   };
 
@@ -247,7 +250,7 @@ export class ActionPanelWithGroupOperations extends Component {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.LINK_ISSUE_ACTION);
     this.props.onLinkIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndRefreshItems,
-      eventsInfo: LINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getLinkIssueEventsInfo(),
     });
   };
 
@@ -255,7 +258,7 @@ export class ActionPanelWithGroupOperations extends Component {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.onPostIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndRefreshItems,
-      eventsInfo: POST_ISSUE_EVENTS_INFO,
+      eventsInfo: getPostIssueEventsInfo(),
     });
   };
 
@@ -270,18 +273,18 @@ export class ActionPanelWithGroupOperations extends Component {
     tracking.trackEvent(HISTORY_PAGE_EVENTS.DELETE_ACTION);
 
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
-      onConfirm: (items) =>
+      onConfirm: (items) => {
+        tracking.trackEvent(
+          HISTORY_PAGE_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+        );
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndRefreshItems,
-        }),
+        });
+      },
       userId,
       parentLaunch: this.props.parentLaunch,
-      eventsInfo: {
-        closeIcon: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
-        cancelBtn: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
-        deleteBtn: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-      },
+      eventsInfo: {},
     });
 
     deleteHistoryItems(selectedItems, parameters);
@@ -290,22 +293,26 @@ export class ActionPanelWithGroupOperations extends Component {
   handleEditDefects = (eventData) => {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const MAKE_DECISION = 'make_decision';
+
     tracking.trackEvent(
-      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
-          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          ? items[0].issue && items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        'ActionMenu',
+        'actions',
       ),
     );
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
       debugMode,
       eventsInfo: {
         editDefectsEvents: HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
-        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-        postIssueEvents: POST_ISSUE_EVENTS_INFO,
-        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+        unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
+        postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
+        linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
       },
     });
   };
@@ -348,7 +355,7 @@ export class ActionPanelWithGroupOperations extends Component {
             onClose={onUnselectAll}
           />
         )}
-        <ActionPanel
+        <HistoryActionPanel
           onRefresh={onRefresh}
           buttons={this.getActionButtons()}
           customBlock={this.getCustomBlock(hasErrors)}

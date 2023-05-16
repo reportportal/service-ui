@@ -97,10 +97,12 @@ class AttachmentsSlider extends Component {
         thumbConfig = { currentThumb: nextItemId };
       }
     } else {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NEXT_ATTACHMENT_ICON);
+
       thumbConfig =
         activeItemId + 1 >= currentThumb + visibleThumbs ? { currentThumb: nextItemId } : null;
     }
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NEXT_ATTACHMENT_ICON);
+
     this.props.changeActiveItem(nextItemId, thumbConfig);
   };
 
@@ -118,10 +120,13 @@ class AttachmentsSlider extends Component {
       carouselStore.setStoreState({ currentSlide: prevItemId });
       thumbConfig = { currentThumb: prevItemId };
     } else {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.PREVIOUS_ATTACHMENT_ICON);
+
       const thumbToUpdate = currentThumb - visibleThumbs < 0 ? 0 : currentThumb - visibleThumbs;
+
       thumbConfig = activeItemId <= currentThumb ? { currentThumb: thumbToUpdate } : null;
     }
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.PREVIOUS_ATTACHMENT_ICON);
+
     this.props.changeActiveItem(prevItemId, thumbConfig);
   };
 
