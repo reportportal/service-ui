@@ -17,15 +17,16 @@
 import {
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
-  SET_API_TOKEN,
+  SET_API_KEYS,
   SET_PHOTO_TIME_STAMP,
   ASSIGN_TO_RROJECT,
   ASSIGN_TO_RROJECT_SUCCESS,
   ASSIGN_TO_RROJECT_ERROR,
   UNASSIGN_FROM_PROJECT,
   UNASSIGN_FROM_PROJECT_SUCCESS,
-  FETCH_API_TOKEN,
-  GENERATE_API_TOKEN,
+  FETCH_API_KEYS,
+  ADD_API_KEY,
+  DELETE_API_KEYS,
   FETCH_USER_SUCCESS,
   FETCH_USER,
   FETCH_USER_ERROR,
@@ -46,12 +47,9 @@ export const setPhotoTimeStampAction = (timeStamp) => ({
   payload: timeStamp,
 });
 
-export const setApiTokenAction = (token) => ({
-  type: SET_API_TOKEN,
-  payload: {
-    type: token.token_type,
-    value: token.access_token,
-  },
+export const setApiKeysAction = (apiKeys) => ({
+  type: SET_API_KEYS,
+  payload: apiKeys,
 });
 
 export const setActiveProjectAction = (project) => ({
@@ -59,12 +57,17 @@ export const setActiveProjectAction = (project) => ({
   payload: project,
 });
 
-export const generateApiTokenAction = ({ successMessage, errorMessage } = {}) => ({
-  type: GENERATE_API_TOKEN,
-  payload: { successMessage, errorMessage },
+export const addApiKeyAction = ({ name, successMessage, errorMessage, onSuccess }) => ({
+  type: ADD_API_KEY,
+  payload: { name, successMessage, errorMessage, onSuccess },
 });
 
-export const fetchApiTokenAction = () => ({ type: FETCH_API_TOKEN });
+export const deleteApiKeysAction = ({ apiKeyId, successMessage, errorMessage, onSuccess }) => ({
+  type: DELETE_API_KEYS,
+  payload: { apiKeyId, successMessage, errorMessage, onSuccess },
+});
+
+export const fetchApiKeysAction = () => ({ type: FETCH_API_KEYS });
 
 export const fetchUserAction = () => ({ type: FETCH_USER });
 

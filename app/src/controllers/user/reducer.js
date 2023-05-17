@@ -20,7 +20,6 @@ import {
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
-  SET_API_TOKEN,
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
@@ -91,18 +90,8 @@ export const activeProjectReducer = (state = '', { type, payload }) => {
   }
 };
 
-export const apiTokenReducer = (state = {}, { type, payload }) => {
-  switch (type) {
-    case SET_API_TOKEN:
-      return payload;
-    default:
-      return state;
-  }
-};
-
 export const userReducer = combineReducers({
   info: userInfoReducer,
   activeProject: activeProjectReducer,
   settings: settingsReducer,
-  token: apiTokenReducer,
 });

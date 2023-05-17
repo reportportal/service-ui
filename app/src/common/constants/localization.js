@@ -29,6 +29,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.close',
     defaultMessage: 'Close',
   },
+  COPY_TO_CLIPBOARD: {
+    id: 'Common.copyToClipboard',
+    defaultMessage: 'Copy to Clipboard',
+  },
   UPDATE: {
     id: 'Common.update',
     defaultMessage: 'Update',
@@ -40,6 +44,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   CONFIRM: {
     id: 'Common.confirm',
     defaultMessage: 'Confirm',
+  },
+  GENERATE: {
+    id: 'Common.generate',
+    defaultMessage: 'Generate',
   },
   SEND: {
     id: 'Common.send',

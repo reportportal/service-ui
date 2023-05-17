@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-.warning {
-  margin-bottom: 10px;
-  color: $COLOR--orange-red;
-  text-transform: uppercase;
-  font-family: $FONT-SEMIBOLD;
+.description {
+  color: $COLOR--black-3;
   font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 24px;
 }
-.text {
-  font-size: 13px;
+
+.input {
+  margin-bottom: 34px;
 }

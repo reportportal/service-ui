@@ -57,8 +57,17 @@ export const availableProjectsSelector = createSelector(
   },
 );
 
-const apiTokenSelector = (state) => userSelector(state).token || '';
-export const apiTokenValueSelector = (state) => apiTokenSelector(state).value;
-export const apiTokenTypeSelector = (state) => apiTokenSelector(state).type;
-export const apiTokenStringSelector = (state) =>
-  `${apiTokenTypeSelector(state)} ${apiTokenValueSelector(state)}`;
+// todo remove data
+const data = [
+  { id: 1, name: 'key1', hash: 'token1', created_at: 1684238171000 },
+  { id: 2, name: 'key2', hash: 'token2', created_at: 1684230971000 },
+  { id: 3, name: 'key3', hash: 'token3', created_at: 1684058171000 },
+  { id: 4, name: 'key4', hash: 'token4', created_at: 1684065611000 },
+  { id: 5, name: 'key5', hash: 'token5', created_at: 1234567 },
+  { id: 6, name: 'key6', hash: 'token6', created_at: 12345678 },
+  { id: 7, name: 'key7', hash: 'token7', created_at: 123456789 },
+  { id: 8, name: 'key8', hash: 'token8', created_at: 1684224215125 },
+];
+
+// todo change data to []
+export const apiKeysSelector = (state) => userSelector(state).apiKeys || data;

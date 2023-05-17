@@ -1,5 +1,5 @@
-/*
- * Copyright 2019 EPAM Systems
+/*!
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,32 @@
  * limitations under the License.
  */
 
-export { ProfilePage } from './profilePage';
-export { DeleteImageModal } from './modals/deleteImageModal';
-export { ChangePasswordModal } from './modals/changePasswordModal';
-export { ForceUpdateModal } from './modals/forceUpdateModal';
-export { EditPersonalInformationModal } from './modals/editPersonalInfoModal';
-export { GenerateApiKeyModal } from './modals/generateApiKeyModal';
-export { ApiKeyGeneratedModal } from './modals/apiKeyGeneratedModal';
-export { RevokeApiKeyModal } from './modals/revokeApiKeyModal';
+.description {
+  color: $COLOR--black-3;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 24px;
+}
+
+.form {
+  margin-right: 70px;
+}
+
+.apiKeyName {
+  margin-left: 127px;
+  margin-top: -7px;
+  display: flex;
+  align-items: center;
+}
+
+.counter {
+  margin: -14px 0 0 114px;
+  color: $COLOR--gray-60;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.loader-block {
+  margin: 64px auto 42px;
+}

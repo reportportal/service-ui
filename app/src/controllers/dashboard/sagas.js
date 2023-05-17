@@ -20,11 +20,10 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectSelector, apiTokenStringSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { hideModalAction } from 'controllers/modal';
-import { fetch, updateToken } from 'common/utils/fetch';
+import { fetch } from 'common/utils/fetch';
 import { setStorageItem } from 'common/utils/storageUtils';
-import { tokenSelector } from 'controllers/auth';
 import {
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PAGE,
@@ -51,11 +50,7 @@ import {
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
 } from './constants';
-import {
-  dashboardFullScreenModeSelector,
-  dashboardItemsSelector,
-  querySelector,
-} from './selectors';
+import { dashboardItemsSelector, querySelector } from './selectors';
 import {
   addDashboardSuccessAction,
   deleteDashboardSuccessAction,
@@ -198,10 +193,7 @@ function changeVisibilityType({ payload: visibilityType }) {
 }
 
 function* updateTokenAccordingToFullscreenMode() {
-  const fullScreenMode = yield select(dashboardFullScreenModeSelector);
-  const selector = fullScreenMode ? apiTokenStringSelector : tokenSelector;
-  const token = yield select(selector);
-  yield call(updateToken, token);
+  // fixme
 }
 
 export function* dashboardSagas() {

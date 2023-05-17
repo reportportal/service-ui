@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { apiTokenValueSelector, activeProjectSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
@@ -26,25 +26,22 @@ import { BlockContainerBody } from '../blockContainer';
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-
+const TOKEN = '<TOKEN_OF_YOUR_API_KEY>';
 @connect((state) => ({
-  token: apiTokenValueSelector(state),
   activeProject: activeProjectSelector(state),
   login: userIdSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
-    token: PropTypes.string,
     login: PropTypes.string,
     activeProject: PropTypes.string,
   };
   static defaultProps = {
-    token: '',
     login: '',
     activeProject: '',
   };
   render() {
-    const { token, activeProject, login } = this.props;
+    const { activeProject, login } = this.props;
     return (
       <div className={cx('config-example-block')}>
         <BlockContainerBody>
@@ -52,11 +49,11 @@ export class ConfigExamplesBlock extends Component {
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(token, activeProject, login),
-                TabsConfig.rubyConfig(token, activeProject, login),
-                TabsConfig.soapUiConfig(token, activeProject, login),
+                TabsConfig.javaConfig(TOKEN, activeProject, login),
+                TabsConfig.rubyConfig(TOKEN, activeProject, login),
+                TabsConfig.soapUiConfig(TOKEN, activeProject, login),
                 TabsConfig.dotNetConfig,
-                TabsConfig.nodejsConfig(token, activeProject, login),
+                TabsConfig.nodejsConfig(TOKEN, activeProject, login),
               ]}
             />
           </div>
