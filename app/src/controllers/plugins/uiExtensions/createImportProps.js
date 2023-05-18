@@ -177,6 +177,7 @@ import { FieldText } from 'componentLibrary/fieldText';
 import {
   FieldElement,
   RuleList as RuleListComponent,
+  DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
@@ -192,6 +193,7 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { withTooltip as withNewTooltip } from 'componentLibrary/tooltip';
 
 const BUTTONS = {
   GhostButton,
@@ -244,6 +246,7 @@ export const createImportProps = (pluginName) => ({
     ...BUTTONS,
     ...INPUTS,
     NavigationTabs,
+    DraggableRuleList,
     Tabs,
     NoCasesBlock,
     ItemList,
@@ -293,6 +296,7 @@ export const createImportProps = (pluginName) => ({
   },
   HOCs: {
     withTooltip,
+    withNewTooltip,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from 'componentLibrary/toggle';
+import PropTypes from 'prop-types';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
@@ -31,6 +32,7 @@ export const RuleItem = ({
   content,
   onClick,
   onRuleNameClick,
+  isDragging,
 }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
@@ -39,6 +41,10 @@ export const RuleItem = ({
   const onToggleActive = (val) => {
     onToggle(val, item);
   };
+
+  if (isDragging && shown) {
+    setShown(false);
+  }
 
   const onClickHandler = () => {
     onClick(!shown);
@@ -51,16 +57,21 @@ export const RuleItem = ({
   };
 
   return (
-    <div className={cx('container')} data-automation-id="listItem">
-      <span className={cx('toggle')}>
-        <Toggle
-          value={enabled}
-          onChange={(e) => onToggleActive(e.target.checked)}
-          disabled={disabled}
-          dataAutomationId="enabledToggle"
-        />
-      </span>
-      <div className={cx('panel-wrapper')}>
+    <div
+      className={cx('container', { 'dragging-container': isDragging })}
+      data-automation-id="listItem"
+    >
+      {!isDragging && (
+        <span className={cx('toggle')}>
+          <Toggle
+            value={enabled}
+            onChange={(e) => onToggleActive(e.target.checked)}
+            disabled={disabled}
+            dataAutomationId="enabledToggle"
+          />
+        </span>
+      )}
+      <div className={cx('panel-wrapper', { 'dragging-wrapper': isDragging })}>
         <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name-wrapper')} title={name}>
             {isRuleNameClickable ? (
@@ -71,7 +82,7 @@ export const RuleItem = ({
               <>{name}</>
             )}
           </span>
-          {actions.length > 0 && !disabled && (
+          {actions.length > 0 && !disabled && !isDragging && (
             <span className={cx('actions')}>
               {actions.map(({ icon, handler, dataAutomationId, customIcon: CustomIcon, id }) => {
                 return (
@@ -101,5 +112,6 @@ export const RuleItem = ({
     </div>
   );
 };
-RuleItem.propTypes = ruleItemPropTypes;
-RuleItem.defaultProps = ruleItemDefaultProps;
+
+RuleItem.propTypes = { ...ruleItemPropTypes, isDragging: PropTypes.bool };
+RuleItem.defaultProps = { ...ruleItemDefaultProps, isDragging: false };

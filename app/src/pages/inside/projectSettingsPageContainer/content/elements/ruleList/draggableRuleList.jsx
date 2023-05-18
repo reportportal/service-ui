@@ -24,6 +24,7 @@ const DraggableRuleListComponent = ({
   actions,
   onToggle,
   disabled,
+  dragControlComponent,
   ruleItemContent,
   handleRuleItemClick,
   onRuleNameClick,
@@ -51,6 +52,7 @@ const DraggableRuleListComponent = ({
           onClick={handleRuleItemClick}
           onRuleNameClick={onRuleNameClick}
           onDrop={onDrop}
+          dragControlComponent={dragControlComponent}
         />
       ))}
     </Fragment>
@@ -59,10 +61,12 @@ const DraggableRuleListComponent = ({
 DraggableRuleListComponent.propTypes = {
   ...ruleListPropTypes,
   onRuleDrop: PropTypes.func,
+  dragControlComponent: PropTypes.func,
 };
 DraggableRuleListComponent.defaultProps = {
   ...ruleListDefaultProps,
   onRuleDrop: () => {},
+  dragControlComponent: () => {},
 };
 
 export const DraggableRuleList = memo(DraggableRuleListComponent);

@@ -14,24 +14,38 @@
  * limitations under the License.
  */
 
-.draggable-rule-item {
-  display: flex;
-
-  &.drop-target-top {
-    padding-top: 5px;
-    border-top: 2px solid $COLOR--topaz-focused;
-  }
-  &.drop-target-bottom {
-    padding-bottom: 5px;
-    border-bottom: 2px solid $COLOR--topaz-focused;
-  }
+@mixin drawDropArea {
+  content: '';
+  position: absolute;
+  width: calc(100% - 80px);
+  left: 48px;
+  border-radius: 2px;
 }
 
-.drag-control {
-  display: inline-block;
-  width: 5px;
-  height: auto;
-  border-radius: 2px;
-  background-color: $COLOR--topaz;
-  cursor: move;
+.draggable-rule-item {
+  display: flex;
+  align-items: flex-start;
+  column-gap: 13px;
+  position: relative;
+  width: 100%;
+
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+
+  &.drop-target-top::after {
+    @include drawDropArea;
+    top: -3px;
+    border-top: 2px solid $COLOR--topaz-focused;
+  }
+
+  &.drop-target-bottom::after {
+    @include drawDropArea;
+    bottom: -3px;
+    border-bottom: 2px solid $COLOR--topaz-focused;
+  }
+
+  &.dragging-rule-item {
+    column-gap: 0;
+  }
 }

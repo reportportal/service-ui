@@ -34,6 +34,7 @@ export const withTooltip = ({
   side,
   noArrow,
   dataAutomationId,
+  closeOnMouseDown = false,
 }) => (WrappedComponent) => (props) => {
   const [isOpened, setOpened] = useState(false);
   const [currentTimeout, setCurrentTimeout] = useState(null);
@@ -41,6 +42,15 @@ export const withTooltip = ({
   const clientWidth = document.documentElement.clientWidth;
   const maxWidth = !styleWidth ? clientWidth - SAFE_ZONE : styleWidth;
   const tooltipRoot = document.getElementById('tooltip-root');
+
+  const handleMouseDown = () => {
+    if (currentTimeout) {
+      clearInterval(currentTimeout);
+    }
+
+    setOpened(false);
+  };
+
   return (
     <Manager>
       <Reference>
@@ -48,6 +58,7 @@ export const withTooltip = ({
           <div
             ref={ref}
             className={cx('with-tooltip', tooltipWrapperClassName)}
+            onMouseDown={closeOnMouseDown ? handleMouseDown : null}
             onMouseEnter={() => {
               setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS));
             }}
