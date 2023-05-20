@@ -36,6 +36,10 @@
     width: 16px;
     fill: $iconColor;
   }
+
+  &:focus:not(.disabled) {
+    outline: none;
+  }
 }
 
 .attribute-editor {
@@ -44,7 +48,7 @@
 }
 
 .separator {
-  margin: 8px 8px 0;
+  margin: 8px 7px 0;
   color: $COLOR--almost-black;
   font-size: 16px;
 }

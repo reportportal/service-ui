@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { formatAttributeWithSpacedDivider } from 'common/utils/attributeUtils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import styles from './attribute.scss';
 
@@ -34,7 +34,7 @@ export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass,
       className={cx('attribute', variant, customClass, { disabled })}
       onClick={disabled ? undefined : onClick}
     >
-      <div className={cx('label', variant)}>{formatAttribute(attribute)}</div>
+      <div className={cx('label', variant)}>{formatAttributeWithSpacedDivider(attribute)}</div>
       {!disabled && (
         <div className={cx('remove-icon', variant)} onClick={onClickRemove}>
           {Parser(CrossIcon)}

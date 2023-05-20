@@ -86,6 +86,15 @@ export class SingleAutocomplete extends Component {
       ...rest,
     });
 
+  handleKeyDown = (event, isOpen, setHighlightedIndex) => {
+    const tabKeyCode = 9;
+
+    if (event.keyCode === tabKeyCode && isOpen) {
+      event.preventDefault();
+      setHighlightedIndex(this.props.options.length);
+    }
+  };
+
   render() {
     const {
       onStateChange,
@@ -122,10 +131,10 @@ export class SingleAutocomplete extends Component {
           {({
             getInputProps,
             getItemProps,
+            setHighlightedIndex,
             isOpen,
             inputValue,
             highlightedIndex,
-            openMenu,
             selectItem,
           }) => (
             <div>
@@ -137,9 +146,10 @@ export class SingleAutocomplete extends Component {
                         placeholder: !disabled ? placeholder : '',
                         maxLength,
                         onFocus: () => {
-                          !value && openMenu();
                           onFocus();
                         },
+                        onKeyDown: (event) =>
+                          this.handleKeyDown(event, isOpen, setHighlightedIndex),
                         onBlur: (e) => {
                           const newValue = inputValue.trim();
 

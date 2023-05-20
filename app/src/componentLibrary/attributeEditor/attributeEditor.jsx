@@ -134,6 +134,16 @@ export const AttributeEditor = ({
   };
   const handleAttributeKeyInputChange = (text) => setState({ ...state, isKeyEdited: !!text });
 
+  const isValidForm = !isFormValid();
+
+  const handleKeyDown = (handler) => ({ keyCode }) => {
+    const enterKeyCode = 13;
+
+    if (keyCode === enterKeyCode) {
+      handler();
+    }
+  };
+
   return (
     <div className={cx('attribute-editor')}>
       <FieldErrorHint
@@ -185,15 +195,19 @@ export const AttributeEditor = ({
       </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
-          className={cx('check-btn', { disabled: !isFormValid() })}
-          onClick={isFormValid() ? handleSubmit : null}
+          tabIndex={isValidForm ? -1 : 0}
+          className={cx('check-btn', { disabled: isValidForm })}
+          onClick={isValidForm ? null : handleSubmit}
+          onKeyDown={isValidForm ? null : handleKeyDown(handleSubmit)}
           data-automation-id={'saveAttributeButton'}
         >
           {Parser(CheckIcon)}
         </div>
         <div
+          tabIndex={0}
           className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
           onClick={handleCancel}
+          onKeyDown={handleKeyDown(handleCancel)}
           data-automation-id={'cancelAttributeButton'}
         >
           {Parser(CrossIcon)}
