@@ -32,7 +32,7 @@ export const RuleItem = ({
   content,
   onClick,
   onRuleNameClick,
-  isDragging,
+  isPreview,
 }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
@@ -42,7 +42,7 @@ export const RuleItem = ({
     onToggle(val, item);
   };
 
-  if (isDragging && shown) {
+  if (isPreview && shown) {
     setShown(false);
   }
 
@@ -58,10 +58,10 @@ export const RuleItem = ({
 
   return (
     <div
-      className={cx('container', { 'dragging-container': isDragging })}
+      className={cx('container', { 'preview-container': isPreview })}
       data-automation-id="listItem"
     >
-      {!isDragging && (
+      {!isPreview && (
         <span className={cx('toggle')}>
           <Toggle
             value={enabled}
@@ -71,7 +71,7 @@ export const RuleItem = ({
           />
         </span>
       )}
-      <div className={cx('panel-wrapper', { 'dragging-wrapper': isDragging })}>
+      <div className={cx('panel-wrapper', { 'preview-wrapper': isPreview })}>
         <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name-wrapper')} title={name}>
             {isRuleNameClickable ? (
@@ -82,7 +82,7 @@ export const RuleItem = ({
               <>{name}</>
             )}
           </span>
-          {actions.length > 0 && !disabled && !isDragging && (
+          {actions.length > 0 && !disabled && !isPreview && (
             <span className={cx('actions')}>
               {actions.map(({ icon, handler, dataAutomationId, customIcon: CustomIcon, id }) => {
                 return (
@@ -113,5 +113,5 @@ export const RuleItem = ({
   );
 };
 
-RuleItem.propTypes = { ...ruleItemPropTypes, isDragging: PropTypes.bool };
-RuleItem.defaultProps = { ...ruleItemDefaultProps, isDragging: false };
+RuleItem.propTypes = { ...ruleItemPropTypes, isPreview: PropTypes.bool };
+RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false };

@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDrag, useDrop } from 'react-dnd';
+import { withTooltip } from 'componentLibrary/tooltip';
 import { RuleItem, ruleItemPropTypes, ruleItemDefaultProps } from '../plain';
 import { RULE_DRAG_SOURCE_TYPE } from './constants';
 import styles from './draggableRuleItem.scss';
-import DragAndDropIcon from './img/drag-n-drop-inline.svg';
+import { DragControl } from './dragControl';
 
 const cx = classNames.bind(styles);
 
-export const DraggableRuleItem = ({ item, onDrop, dragControlComponent, ...restRuleItemProps }) => {
+export const DraggableRuleItem = ({ item, onDrop, tooltipComponent, ...restRuleItemProps }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
@@ -68,7 +69,17 @@ export const DraggableRuleItem = ({ item, onDrop, dragControlComponent, ...restR
     setIsDragging(false);
   };
 
-  const DragControl = dragControlComponent;
+  const DragControlComponent = useMemo(
+    () =>
+      tooltipComponent
+        ? withTooltip({
+            ContentComponent: tooltipComponent,
+            width: 250,
+            tooltipWrapperClassName: cx('tooltip-wrapper'),
+          })(DragControl)
+        : DragControl,
+    [tooltipComponent],
+  );
 
   return (
     <div
@@ -76,16 +87,15 @@ export const DraggableRuleItem = ({ item, onDrop, dragControlComponent, ...restR
       style={{ opacity: isInDraggingState ? 0 : 1 }}
       className={cx('draggable-rule-item', {
         [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
-        'dragging-rule-item': isDragging,
+        'is-dragging': isDragging,
       })}
     >
-      <RuleItem item={item} isDragging={isDragging} {...restRuleItemProps} />
-      <DragControl
+      <RuleItem item={item} isPreview={isDragging} {...restRuleItemProps} />
+      <DragControlComponent
         dragRef={dragRef}
         handleDragStart={handleDragStart}
         handleDragEnd={handleDragEnd}
         isDragging={isDragging}
-        icon={DragAndDropIcon}
       />
     </div>
   );
@@ -93,10 +103,10 @@ export const DraggableRuleItem = ({ item, onDrop, dragControlComponent, ...restR
 DraggableRuleItem.propTypes = {
   ...ruleItemPropTypes,
   onDrop: PropTypes.func,
-  dragControlComponent: PropTypes.func,
+  tooltipComponent: PropTypes.func,
 };
 DraggableRuleItem.defaultProps = {
   ...ruleItemDefaultProps,
   onDrop: () => {},
-  dragControlComponent: () => {},
+  tooltipComponent: null,
 };

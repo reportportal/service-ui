@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Manager, Popper, Reference } from 'react-popper';
 import classNames from 'classnames/bind';
 import ReactDOM from 'react-dom';
@@ -34,21 +34,24 @@ export const withTooltip = ({
   side,
   noArrow,
   dataAutomationId,
-  closeOnMouseDown = false,
 }) => (WrappedComponent) => (props) => {
   const [isOpened, setOpened] = useState(false);
-  const [currentTimeout, setCurrentTimeout] = useState(null);
+  const timeoutId = useRef(null);
   const styleWidth = dynamicWidth ? null : { width };
   const clientWidth = document.documentElement.clientWidth;
   const maxWidth = !styleWidth ? clientWidth - SAFE_ZONE : styleWidth;
   const tooltipRoot = document.getElementById('tooltip-root');
 
-  const handleMouseDown = () => {
-    if (currentTimeout) {
-      clearInterval(currentTimeout);
+  const handleHideTooltip = () => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
     }
 
     setOpened(false);
+  };
+
+  const handleShowTooltip = () => {
+    timeoutId.current = setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS);
   };
 
   return (
@@ -58,16 +61,9 @@ export const withTooltip = ({
           <div
             ref={ref}
             className={cx('with-tooltip', tooltipWrapperClassName)}
-            onMouseDown={closeOnMouseDown ? handleMouseDown : null}
-            onMouseEnter={() => {
-              setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS));
-            }}
-            onMouseLeave={() => {
-              if (currentTimeout) {
-                clearTimeout(currentTimeout);
-              }
-              setOpened(false);
-            }}
+            onMouseDown={handleHideTooltip}
+            onMouseEnter={handleShowTooltip}
+            onMouseLeave={handleHideTooltip}
           >
             <WrappedComponent isTooltipOpen={isOpened} {...props} />
           </div>

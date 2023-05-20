@@ -193,7 +193,6 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
-import { withTooltip as withNewTooltip } from 'componentLibrary/tooltip';
 
 const BUTTONS = {
   GhostButton,
@@ -246,7 +245,6 @@ export const createImportProps = (pluginName) => ({
     ...BUTTONS,
     ...INPUTS,
     NavigationTabs,
-    DraggableRuleList,
     Tabs,
     NoCasesBlock,
     ItemList,
@@ -294,9 +292,9 @@ export const createImportProps = (pluginName) => ({
     Breadcrumbs,
     PlainTable,
   },
+  componentLibrary: { DraggableRuleList },
   HOCs: {
     withTooltip,
-    withNewTooltip,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
