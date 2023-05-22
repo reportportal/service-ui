@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { connect, useDispatch } from 'react-redux';
 import { formValueSelector, reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
@@ -76,28 +76,28 @@ const formSelector = formValueSelector('generateApiKeyForm');
 const lengthAndUniqueNameValidator = (existNames) =>
   composeBoundValidators([
     commonValidators.requiredField,
-    bindMessageToValidator(validate.apiKey, 'apiKeyNameWrongSizeHint'),
+    bindMessageToValidator(validate.apiKeyName, 'apiKeyNameWrongSizeHint'),
     bindMessageToValidator(validate.uniqueApiKeyName(existNames), 'apiKeyNameUniqueHint'),
   ]);
 
-const GenerateApiKey = ({ invalid, handleSubmit, name }) => {
+const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  const onSuccessfulGeneration = (token) => {
+  const onSuccessfulGeneration = (apiKey) => {
     setLoading(false);
-    dispatch(showModalAction({ id: 'apiKeyGeneratedModal', data: { token } }));
+    dispatch(showModalAction({ id: 'apiKeyGeneratedModal', data: { apiKey } }));
   };
 
   const generate = () => {
     dispatch(
-      addApiKeyAction({
-        name,
-        successMessage: formatMessage(messages.successNotification),
-        errorMessage: formatMessage(messages.notificationFail),
-        onSuccess: onSuccessfulGeneration,
-      }),
+      addApiKeyAction(
+        apiKeyName,
+        formatMessage(messages.successNotification),
+        formatMessage(messages.notificationFail),
+        onSuccessfulGeneration,
+      ),
     );
   };
 
@@ -123,9 +123,7 @@ const GenerateApiKey = ({ invalid, handleSubmit, name }) => {
         <LoaderBlock text={formatMessage(messages.loaderText)} className={cx('loader-block')} />
       ) : (
         <>
-          <div className={cx('description')}>
-            <FormattedMessage {...messages.description} />
-          </div>
+          <div className={cx('description')}>{formatMessage(messages.description)}</div>
           <form className={cx('form')}>
             <ModalField label={formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>
               <FieldProvider name="apiKeyName">
@@ -136,8 +134,8 @@ const GenerateApiKey = ({ invalid, handleSubmit, name }) => {
             </ModalField>
           </form>
           <div className={cx('counter')}>
-            <FormattedMessage {...messages.counterText} />
-            {MAX_NAME_LENGTH - name.length}
+            {formatMessage(messages.counterText)}
+            {MAX_NAME_LENGTH - apiKeyName.length}
           </div>
         </>
       )}
@@ -147,7 +145,7 @@ const GenerateApiKey = ({ invalid, handleSubmit, name }) => {
 GenerateApiKey.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
-  name: PropTypes.string,
+  apiKeyName: PropTypes.string,
   apiKeys: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -155,14 +153,14 @@ GenerateApiKey.propTypes = {
   ),
 };
 GenerateApiKey.defaultProps = {
-  name: '',
+  apiKeyName: '',
   apiKeys: [],
 };
 
 export const GenerateApiKeyModal = withModal('generateApiKeyModal')(
   connect(
     (state) => ({
-      name: formSelector(state, 'apiKeyName'),
+      apiKeyName: formSelector(state, 'apiKeyName'),
       apiKeys: apiKeysSelector(state),
     }),
     {
@@ -171,9 +169,9 @@ export const GenerateApiKeyModal = withModal('generateApiKeyModal')(
   )(
     reduxForm({
       form: 'generateApiKeyForm',
-      validate: (values, props) => {
+      validate: (values, ownProps) => {
         const { apiKeyName } = values;
-        const { apiKeys } = props;
+        const { apiKeys } = ownProps;
         const names = apiKeys.map((key) => key.name);
         return {
           apiKeyName: lengthAndUniqueNameValidator(names)(apiKeyName),

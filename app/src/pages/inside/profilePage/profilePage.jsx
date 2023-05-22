@@ -30,7 +30,7 @@ import {
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { PersonalInfoBlock } from './personalInfoBlock';
-import { AccessTokenBlock } from './accessTokenBlock';
+import { ApiKeys } from './apiKeys';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
 import { ConfigExamplesBlock } from './configExamplesBlock';
 import { LocalizationBlock } from './localizationBlock';
@@ -73,7 +73,7 @@ const getNavigationTabsConfig = (formatMessage) => ({
   [API_KEYS_ROUTE]: {
     name: formatMessage(messages.profilePageProjectApiKeysTab),
     link: getProfilePageLink(API_KEYS_ROUTE),
-    component: <AccessTokenBlock />,
+    component: <ApiKeys />,
   },
   [CONFIG_EXAMPLES_ROUTE]: {
     name: formatMessage(messages.profilePageConfigurationExamplesTab),

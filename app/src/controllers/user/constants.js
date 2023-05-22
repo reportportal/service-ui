@@ -37,5 +37,5 @@ export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
 export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';
 
 export const ADD_API_KEY = 'addApiKey';
-export const DELETE_API_KEYS = 'deleteApiKeys';
+export const DELETE_API_KEY = 'deleteApiKey';
 export const FETCH_API_KEYS = 'fetchApiKeys';

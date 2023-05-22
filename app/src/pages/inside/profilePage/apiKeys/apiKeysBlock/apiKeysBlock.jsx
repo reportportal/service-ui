@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { useIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
@@ -23,29 +23,30 @@ import { showModalAction } from 'controllers/modal';
 import { BlockContainerBody, BlockContainerHeader } from 'pages/inside/profilePage/blockContainer';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { daysFromNow } from 'common/utils';
+import { GhostButton } from 'components/buttons/ghostButton';
 import styles from './apiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   generateApiKey: {
-    id: 'AccessTokenBlock.ApiKeysBlock.generateButton',
+    id: 'ApiKeys.ApiKeysBlock.generateButton',
     defaultMessage: 'Generate API Key',
   },
   description: {
-    id: 'AccessTokenBlock.ApiKeysBlock.description',
+    id: 'ApiKeys.ApiKeysBlock.description',
     defaultMessage:
       'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent.',
   },
   headerNameCol: {
-    id: 'AccessTokenBlock.ApiKeysBlock.headerNameCol',
+    id: 'ApiKeys.ApiKeysBlock.headerNameCol',
     defaultMessage: 'API key name',
   },
   headerDateCol: {
-    id: 'AccessTokenBlock.ApiKeysBlock.headerDateCol',
+    id: 'ApiKeys.ApiKeysBlock.headerDateCol',
     defaultMessage: 'created',
   },
   revoke: {
-    id: 'AccessTokenBlock.ApiKeysBlock.revoke',
+    id: 'ApiKeys.ApiKeysBlock.revoke',
     defaultMessage: 'Revoke',
   },
 });
@@ -54,21 +55,16 @@ export const ApiKeysBlock = ({ apiKeys }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
+  const onGenerateClick = () => dispatch(showModalAction({ id: 'generateApiKeyModal' }));
+  const onRevokeClick = (key) => dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
+
   return (
     <div className={cx('api-keys-block')}>
-      <div className={cx('description')}>
-        <FormattedMessage {...messages.description} />
-      </div>
-      <button
-        className={cx('generate-button')}
-        onClick={() => {
-          dispatch(showModalAction({ id: 'generateApiKeyModal' }));
-        }}
-        title={formatMessage(messages.generateApiKey)}
-      >
-        <FormattedMessage {...messages.generateApiKey} />
-      </button>
-      <div className={cx('api-keys-block')}>
+      <div className={cx('description')}>{formatMessage(messages.description)}</div>
+      <GhostButton onClick={onGenerateClick} title={formatMessage(messages.generateApiKey)}>
+        {formatMessage(messages.generateApiKey)}
+      </GhostButton>
+      <div className={cx('api-keys')}>
         <BlockContainerHeader>
           <div className={cx('name-col')}>{formatMessage(messages.headerNameCol)}</div>
           <div className={cx('date-col')}>{formatMessage(messages.headerDateCol)}</div>
@@ -77,23 +73,16 @@ export const ApiKeysBlock = ({ apiKeys }) => {
         <ScrollWrapper autoHeight autoHeightMax={370}>
           <BlockContainerBody>
             {apiKeys.map((key) => (
-              <div key={key.name} className={cx('key-item')}>
+              <div key={key.id} className={cx('key-item')}>
                 <div className={cx('name-col')}>{key.name}</div>
                 <div className={cx('date-col')}>{daysFromNow(key.created_at)}</div>
                 <div className={cx('revoke-col')}>
                   <button
                     className={cx('revoke-button')}
-                    onClick={() => {
-                      dispatch(
-                        showModalAction({
-                          id: 'revokeApiKeyModal',
-                          data: { ...key },
-                        }),
-                      );
-                    }}
+                    onClick={() => onRevokeClick(key)}
                     title={formatMessage(messages.revoke)}
                   >
-                    <FormattedMessage {...messages.revoke} />
+                    {formatMessage(messages.revoke)}
                   </button>
                 </div>
               </div>

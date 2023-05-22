@@ -24,12 +24,14 @@ import {
   SET_PHOTO_TIME_STAMP,
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
+  SET_API_KEYS,
 } from './constants';
 import {
   settingsReducer,
   userInfoReducer,
   activeProjectReducer,
   userAssignedProjectReducer,
+  apiKeysReducer,
 } from './reducer';
 
 describe('user reducer', () => {
@@ -104,6 +106,26 @@ describe('user reducer', () => {
         payload,
       });
       expect(newState).toEqual(payload);
+    });
+
+    describe('apiKeysReducer', () => {
+      test('should return initial state', () => {
+        expect(apiKeysReducer(undefined, {})).toEqual([]);
+      });
+
+      test('should return old state on unknown action', () => {
+        const oldState = { type: 'bearer', value: 'apiKey' };
+        expect(apiKeysReducer(oldState, { type: 'foo' })).toBe(oldState);
+      });
+
+      test('should handle SET_API_KEYS', () => {
+        expect(
+          apiKeysReducer(undefined, {
+            type: SET_API_KEYS,
+            payload: { type: 'bearer', value: 'apiKey' },
+          }),
+        ).toEqual({ type: 'bearer', value: 'apiKey' });
+      });
     });
   });
 

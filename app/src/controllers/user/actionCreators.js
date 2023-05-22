@@ -26,7 +26,7 @@ import {
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_API_KEYS,
   ADD_API_KEY,
-  DELETE_API_KEYS,
+  DELETE_API_KEY,
   FETCH_USER_SUCCESS,
   FETCH_USER,
   FETCH_USER_ERROR,
@@ -57,13 +57,13 @@ export const setActiveProjectAction = (project) => ({
   payload: project,
 });
 
-export const addApiKeyAction = ({ name, successMessage, errorMessage, onSuccess }) => ({
+export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({
   type: ADD_API_KEY,
   payload: { name, successMessage, errorMessage, onSuccess },
 });
 
-export const deleteApiKeysAction = ({ apiKeyId, successMessage, errorMessage, onSuccess }) => ({
-  type: DELETE_API_KEYS,
+export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuccess) => ({
+  type: DELETE_API_KEY,
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
 });
 

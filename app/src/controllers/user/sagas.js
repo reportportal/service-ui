@@ -27,7 +27,7 @@ import {
   SET_ACTIVE_PROJECT,
   ADD_API_KEY,
   FETCH_API_KEYS,
-  DELETE_API_KEYS,
+  DELETE_API_KEY,
   FETCH_USER,
 } from './constants';
 import {
@@ -130,7 +130,6 @@ function* fetchUserWorker() {
     savedActiveProject && savedActiveProject in user.assignedProjects
       ? savedActiveProject
       : Object.keys(user.assignedProjects)[0];
-  yield put(fetchApiKeysAction());
   yield put(setActiveProjectAction(activeProject));
 }
 
@@ -150,8 +149,7 @@ function* addApiKey({ payload = {} }) {
         name,
       },
     });
-    // todo check token
-    onSuccess(response.token);
+    onSuccess(response.api_key);
     if (successMessage) {
       yield put(
         showNotification({
@@ -160,7 +158,6 @@ function* addApiKey({ payload = {} }) {
         }),
       );
     }
-    // todo check update state
     yield put(fetchApiKeysAction());
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
@@ -191,12 +188,12 @@ function* fetchApiKeys() {
   }
 }
 
-function* deleteApiKeys({ payload = {} }) {
+function* deleteApiKey({ payload = {} }) {
   const { apiKeyId, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
 
   try {
-    yield call(fetch, URLS.deleteApiKeys(user.userId, apiKeyId), {
+    yield call(fetch, URLS.apiKeyById(user.userId, apiKeyId), {
       method: 'delete',
     });
     onSuccess();
@@ -208,7 +205,6 @@ function* deleteApiKeys({ payload = {} }) {
         }),
       );
     }
-    // todo check update state
     yield put(fetchApiKeysAction());
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
@@ -231,8 +227,8 @@ function* watchFetchApiKeys() {
   yield takeEvery(FETCH_API_KEYS, fetchApiKeys);
 }
 
-function* watchDeleteApiKeys() {
-  yield takeEvery(DELETE_API_KEYS, deleteApiKeys);
+function* watchDeleteApiKey() {
+  yield takeEvery(DELETE_API_KEY, deleteApiKey);
 }
 
 function* watchSetActiveProject() {
@@ -259,6 +255,6 @@ export function* userSagas() {
     watchSetActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),
-    watchDeleteApiKeys(),
+    watchDeleteApiKey(),
   ]);
 }

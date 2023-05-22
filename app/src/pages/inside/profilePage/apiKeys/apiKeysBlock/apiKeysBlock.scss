@@ -26,29 +26,8 @@
   margin-bottom: 24px;
 }
 
-.generate-button {
-  display: block;
-  border: 1px solid $COLOR--topaz;
-  padding: 5px 0 7px;
-  background-color: $COLOR--white-two;
-  height: 30px;
-  width: 145px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--topaz;
-  text-align: center;
-  cursor: pointer;
-  margin-bottom: 28px;
-
-  &:hover {
-    border-color: $COLOR--topaz-hover;
-    color: $COLOR--topaz-hover;
-  }
-
-  &:active {
-    border-color: $COLOR--topaz-active;
-    color: $COLOR--topaz-active;
-  }
+.api-keys {
+  margin: 28px auto 0;
 }
 
 .revoke-button {

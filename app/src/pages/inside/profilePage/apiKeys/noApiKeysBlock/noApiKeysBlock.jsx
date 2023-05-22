@@ -15,24 +15,25 @@
  */
 
 import React from 'react';
-import { useIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
+import { GhostButton } from 'components/buttons/ghostButton';
 import styles from './noApiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   header: {
-    id: 'AccessTokenBlock.noApiKeys.header',
+    id: 'ApiKeys.noApiKeys.header',
     defaultMessage: 'No API Keys',
   },
   generateApiKey: {
-    id: 'AccessTokenBlock.noApiKeys.generateButton',
+    id: 'ApiKeys.noApiKeys.generateButton',
     defaultMessage: 'Generate API Key',
   },
   description: {
-    id: 'NoApiKeysBlock.noApiKeys.description',
+    id: 'ApiKeys.noApiKeys.description',
     defaultMessage:
       'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent.',
   },
@@ -42,24 +43,18 @@ export const NoApiKeysBlock = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
+  const onGenerateClick = () => dispatch(showModalAction({ id: 'generateApiKeyModal' }));
+
   return (
     <div className={cx('no-api-keys-block')}>
       <div className={cx('image-holder')} />
-      <div className={cx('header')}>
-        <FormattedMessage {...messages.header} />
+      <div className={cx('header')}>{formatMessage(messages.header)}</div>
+      <div className={cx('description')}>{formatMessage(messages.description)}</div>
+      <div className={cx('generate-button')}>
+        <GhostButton onClick={onGenerateClick} title={formatMessage(messages.generateApiKey)}>
+          {formatMessage(messages.generateApiKey)}
+        </GhostButton>
       </div>
-      <div className={cx('description')}>
-        <FormattedMessage {...messages.description} />
-      </div>
-      <button
-        className={cx('generate-button')}
-        onClick={() => {
-          dispatch(showModalAction({ id: 'generateApiKeyModal' }));
-        }}
-        title={formatMessage(messages.generateApiKey)}
-      >
-        <FormattedMessage {...messages.generateApiKey} />
-      </button>
     </div>
   );
 };

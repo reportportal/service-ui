@@ -31,7 +31,7 @@ export {
   setStartTimeFormatAction,
   addApiKeyAction,
   fetchApiKeysAction,
-  deleteApiKeysAction,
+  deleteApiKeyAction,
   setPhotoTimeStampAction,
   assignToProjectAction,
   assignToProjectErrorAction,

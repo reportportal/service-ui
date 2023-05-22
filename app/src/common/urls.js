@@ -121,7 +121,7 @@ export const URLS = {
   sessionToken: () => `${uatBase}sso/me`,
 
   apiKeys: (userId) => `${urlBase}user/${userId}/api-keys`,
-  deleteApiKeys: (userId, apiKeyId) => `${URLS.apiKeys(userId)}/${apiKeyId}`,
+  apiKeyById: (userId, apiKeyId) => `${urlBase}user/${userId}/api-keys/${apiKeyId}`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,

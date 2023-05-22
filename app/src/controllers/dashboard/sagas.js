@@ -45,8 +45,6 @@ import {
   UPDATE_DASHBOARD,
   UPDATE_DASHBOARD_WIDGETS,
   REMOVE_DASHBOARD_SUCCESS,
-  CHANGE_FULL_SCREEN_MODE,
-  TOGGLE_FULL_SCREEN_MODE,
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
 } from './constants';
@@ -192,10 +190,6 @@ function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
 
-function* updateTokenAccordingToFullscreenMode() {
-  // fixme
-}
-
 export function* dashboardSagas() {
   yield all([
     yield takeEvery(FETCH_DASHBOARDS, fetchDashboards),
@@ -206,9 +200,5 @@ export function* dashboardSagas() {
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
-    yield takeEvery(
-      [CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE],
-      updateTokenAccordingToFullscreenMode,
-    ),
   ]);
 }

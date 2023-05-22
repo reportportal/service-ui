@@ -15,14 +15,14 @@
  */
 
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { LoaderBlock } from 'pages/inside/profilePage/modals/loaderBlock';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { deleteApiKeysAction } from 'controllers/user';
+import { deleteApiKeyAction } from 'controllers/user';
 import styles from './revokeApiKeyModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,12 +62,12 @@ const RevokeApiKey = ({ data }) => {
   const onRevoke = (closeModal) => {
     setLoading(true);
     dispatch(
-      deleteApiKeysAction({
-        apiKeyId: id,
-        successMessage: formatMessage(messages.successNotification),
-        errorMessage: formatMessage(messages.notificationFail),
-        onSuccess: () => closeModal(),
-      }),
+      deleteApiKeyAction(
+        id,
+        formatMessage(messages.successNotification),
+        formatMessage(messages.notificationFail),
+        closeModal,
+      ),
     );
   };
 
@@ -92,9 +92,7 @@ const RevokeApiKey = ({ data }) => {
       {loading ? (
         <LoaderBlock text={formatMessage(messages.loaderText)} className={cx('loader-block')} />
       ) : (
-        <div className={cx('description')}>
-          <FormattedMessage {...messages.description} values={{ name }} />
-        </div>
+        <div className={cx('description')}>{formatMessage(messages.description, { name })}</div>
       )}
     </ModalLayout>
   );
@@ -103,11 +101,7 @@ RevokeApiKey.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-  }),
+  }).isRequired,
 };
 
-export const RevokeApiKeyModal = withModal('revokeApiKeyModal')(
-  connect(null, {
-    deleteApiKeysAction,
-  })(RevokeApiKey),
-);
+export const RevokeApiKeyModal = withModal('revokeApiKeyModal')(RevokeApiKey);

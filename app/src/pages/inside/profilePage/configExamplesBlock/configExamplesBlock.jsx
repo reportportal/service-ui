@@ -26,7 +26,7 @@ import { BlockContainerBody } from '../blockContainer';
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-const TOKEN = '<TOKEN_OF_YOUR_API_KEY>';
+const API_KEY = '<YOUR_API_KEY>';
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
   login: userIdSelector(state),
@@ -49,11 +49,11 @@ export class ConfigExamplesBlock extends Component {
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(TOKEN, activeProject, login),
-                TabsConfig.rubyConfig(TOKEN, activeProject, login),
-                TabsConfig.soapUiConfig(TOKEN, activeProject, login),
+                TabsConfig.javaConfig(API_KEY, activeProject, login),
+                TabsConfig.rubyConfig(API_KEY, activeProject, login),
+                TabsConfig.soapUiConfig(API_KEY, activeProject, login),
                 TabsConfig.dotNetConfig,
-                TabsConfig.nodejsConfig(TOKEN, activeProject, login),
+                TabsConfig.nodejsConfig(API_KEY, activeProject, login),
               ]}
             />
           </div>
