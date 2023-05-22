@@ -25,6 +25,10 @@
 .container {
   display: flex;
   flex: 1;
+
+  &.preview-container {
+    justify-content: flex-end;
+  }
 }
 
 .toggle {
@@ -36,6 +40,13 @@
   background: $COLOR--bg-000;
   box-shadow: 0 1px 3px $COLOR--item-shadow;
   border-radius: 4px;
+
+  &.preview-wrapper {
+    width: 60%;
+    box-shadow: 0 8px $COLOR--item-shadow;
+    border-bottom-right-radius: unset;
+    border-top-right-radius: unset;
+  }
 
   &:hover {
     box-shadow: 0 1px 3px $COLOR--item-shadow-hover;

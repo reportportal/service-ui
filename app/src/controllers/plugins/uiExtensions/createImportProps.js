@@ -177,6 +177,7 @@ import { FieldText } from 'componentLibrary/fieldText';
 import {
   FieldElement,
   RuleList as RuleListComponent,
+  DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
@@ -291,6 +292,7 @@ export const createImportProps = (pluginName) => ({
     Breadcrumbs,
     PlainTable,
   },
+  componentLibrary: { DraggableRuleList },
   HOCs: {
     withTooltip,
   },

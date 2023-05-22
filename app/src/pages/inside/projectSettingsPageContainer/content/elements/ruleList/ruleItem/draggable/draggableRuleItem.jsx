@@ -14,23 +14,32 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDrag, useDrop } from 'react-dnd';
+import { withTooltip } from 'componentLibrary/tooltip';
 import { RuleItem, ruleItemPropTypes, ruleItemDefaultProps } from '../plain';
 import { RULE_DRAG_SOURCE_TYPE } from './constants';
 import styles from './draggableRuleItem.scss';
+import { DragControl } from './dragControl';
 
 const cx = classNames.bind(styles);
 
-export const DraggableRuleItem = ({ item, onDrop, ...restRuleItemProps }) => {
-  const [{ isDragging }, dragRef, dragPreviewRef] = useDrag(
+export const DraggableRuleItem = ({
+  item,
+  onDrop,
+  dragControlTooltipContent,
+  ...restRuleItemProps
+}) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
     () => ({
       type: RULE_DRAG_SOURCE_TYPE,
       item: { id: item.id, index: item.index },
       collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
+        isInDraggingState: monitor.isDragging(),
       }),
     }),
     [item],
@@ -57,24 +66,52 @@ export const DraggableRuleItem = ({ item, onDrop, ...restRuleItemProps }) => {
 
   const dropTargetType = draggedItemIndex > item.index ? 'top' : 'bottom';
 
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  const DragControlComponent = useMemo(
+    () =>
+      dragControlTooltipContent
+        ? withTooltip({
+            ContentComponent: dragControlTooltipContent,
+            width: 250,
+            tooltipWrapperClassName: cx('tooltip-wrapper'),
+          })(DragControl)
+        : DragControl,
+    [dragControlTooltipContent],
+  );
+
   return (
     <div
       ref={(node) => dropRef(dragPreviewRef(node))}
-      style={{ opacity: isDragging ? 0.2 : 1 }}
+      style={{ opacity: isInDraggingState ? 0 : 1 }}
       className={cx('draggable-rule-item', {
         [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
+        'is-dragging': isDragging,
       })}
     >
-      <RuleItem item={item} {...restRuleItemProps} />
-      <span ref={dragRef} className={cx('drag-control')} />
+      <RuleItem item={item} isPreview={isDragging} {...restRuleItemProps} />
+      <DragControlComponent
+        dragRef={dragRef}
+        handleDragStart={handleDragStart}
+        handleDragEnd={handleDragEnd}
+        isDragging={isDragging}
+      />
     </div>
   );
 };
 DraggableRuleItem.propTypes = {
   ...ruleItemPropTypes,
   onDrop: PropTypes.func,
+  dragControlTooltipContent: PropTypes.func,
 };
 DraggableRuleItem.defaultProps = {
   ...ruleItemDefaultProps,
   onDrop: () => {},
+  dragControlTooltipContent: null,
 };
