@@ -26,7 +26,12 @@ import { DragControl } from './dragControl';
 
 const cx = classNames.bind(styles);
 
-export const DraggableRuleItem = ({ item, onDrop, tooltipComponent, ...restRuleItemProps }) => {
+export const DraggableRuleItem = ({
+  item,
+  onDrop,
+  dragControlTooltipContent,
+  ...restRuleItemProps
+}) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
@@ -71,14 +76,14 @@ export const DraggableRuleItem = ({ item, onDrop, tooltipComponent, ...restRuleI
 
   const DragControlComponent = useMemo(
     () =>
-      tooltipComponent
+      dragControlTooltipContent
         ? withTooltip({
-            ContentComponent: tooltipComponent,
+            ContentComponent: dragControlTooltipContent,
             width: 250,
             tooltipWrapperClassName: cx('tooltip-wrapper'),
           })(DragControl)
         : DragControl,
-    [tooltipComponent],
+    [dragControlTooltipContent],
   );
 
   return (
@@ -103,10 +108,10 @@ export const DraggableRuleItem = ({ item, onDrop, tooltipComponent, ...restRuleI
 DraggableRuleItem.propTypes = {
   ...ruleItemPropTypes,
   onDrop: PropTypes.func,
-  tooltipComponent: PropTypes.func,
+  dragControlTooltipContent: PropTypes.func,
 };
 DraggableRuleItem.defaultProps = {
   ...ruleItemDefaultProps,
   onDrop: () => {},
-  tooltipComponent: null,
+  dragControlTooltipContent: null,
 };

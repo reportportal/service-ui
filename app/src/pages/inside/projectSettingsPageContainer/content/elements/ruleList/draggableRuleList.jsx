@@ -28,7 +28,7 @@ const DraggableRuleListComponent = ({
   handleRuleItemClick,
   onRuleNameClick,
   onRuleDrop,
-  tooltipComponent,
+  dragControlTooltipContent,
 }) => {
   const onDrop = (fromIndex, toIndex) => {
     const updatedItems = [...items];
@@ -52,7 +52,7 @@ const DraggableRuleListComponent = ({
           onClick={handleRuleItemClick}
           onRuleNameClick={onRuleNameClick}
           onDrop={onDrop}
-          tooltipComponent={tooltipComponent}
+          dragControlTooltipContent={dragControlTooltipContent}
         />
       ))}
     </Fragment>
@@ -61,12 +61,12 @@ const DraggableRuleListComponent = ({
 DraggableRuleListComponent.propTypes = {
   ...ruleListPropTypes,
   onRuleDrop: PropTypes.func,
-  tooltipComponent: PropTypes.func,
+  dragControlTooltipContent: PropTypes.func,
 };
 DraggableRuleListComponent.defaultProps = {
   ...ruleListDefaultProps,
   onRuleDrop: () => {},
-  tooltipComponent: null,
+  dragControlTooltipContent: null,
 };
 
 export const DraggableRuleList = memo(DraggableRuleListComponent);
