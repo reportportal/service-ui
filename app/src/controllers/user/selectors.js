@@ -57,8 +57,4 @@ export const availableProjectsSelector = createSelector(
   },
 );
 
-const apiTokenSelector = (state) => userSelector(state).token || '';
-export const apiTokenValueSelector = (state) => apiTokenSelector(state).value;
-export const apiTokenTypeSelector = (state) => apiTokenSelector(state).type;
-export const apiTokenStringSelector = (state) =>
-  `${apiTokenTypeSelector(state)} ${apiTokenValueSelector(state)}`;
+export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];

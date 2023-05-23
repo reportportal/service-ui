@@ -22,16 +22,16 @@ import {
   SETTINGS_INITIAL_STATE,
   START_TIME_FORMAT_ABSOLUTE,
   SET_PHOTO_TIME_STAMP,
-  SET_API_TOKEN,
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
+  SET_API_KEYS,
 } from './constants';
 import {
   settingsReducer,
   userInfoReducer,
   activeProjectReducer,
-  apiTokenReducer,
   userAssignedProjectReducer,
+  apiKeysReducer,
 } from './reducer';
 
 describe('user reducer', () => {
@@ -107,25 +107,25 @@ describe('user reducer', () => {
       });
       expect(newState).toEqual(payload);
     });
-  });
 
-  describe('apiTokenReducer', () => {
-    test('should return initial state', () => {
-      expect(apiTokenReducer(undefined, {})).toEqual({});
-    });
+    describe('apiKeysReducer', () => {
+      test('should return initial state', () => {
+        expect(apiKeysReducer(undefined, {})).toEqual([]);
+      });
 
-    test('should return old state on unknown action', () => {
-      const oldState = { type: 'bearer', value: 'token' };
-      expect(apiTokenReducer(oldState, { type: 'foo' })).toBe(oldState);
-    });
+      test('should return old state on unknown action', () => {
+        const oldState = { type: 'bearer', value: 'apiKey' };
+        expect(apiKeysReducer(oldState, { type: 'foo' })).toBe(oldState);
+      });
 
-    test('should handle SET_API_TOKEN', () => {
-      expect(
-        apiTokenReducer(undefined, {
-          type: SET_API_TOKEN,
-          payload: { type: 'bearer', value: 'token' },
-        }),
-      ).toEqual({ type: 'bearer', value: 'token' });
+      test('should handle SET_API_KEYS', () => {
+        expect(
+          apiKeysReducer(undefined, {
+            type: SET_API_KEYS,
+            payload: { type: 'bearer', value: 'apiKey' },
+          }),
+        ).toEqual({ type: 'bearer', value: 'apiKey' });
+      });
     });
   });
 

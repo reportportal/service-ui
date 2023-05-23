@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-export { ProfilePage } from './profilePage';
-export { DeleteImageModal } from './modals/deleteImageModal';
-export { ChangePasswordModal } from './modals/changePasswordModal';
-export { ForceUpdateModal } from './modals/forceUpdateModal';
-export { EditPersonalInformationModal } from './modals/editPersonalInfoModal';
-export { GenerateApiKeyModal } from './modals/generateApiKeyModal';
-export { ApiKeyGeneratedModal } from './modals/apiKeyGeneratedModal';
-export { RevokeApiKeyModal } from './modals/revokeApiKeyModal';
+export { ApiKeys } from './apiKeys';

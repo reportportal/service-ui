@@ -132,6 +132,10 @@ const messages = defineMessages({
     id: 'TestItemsPage.successMultiple',
     defaultMessage: 'Items were deleted',
   },
+  fetchApiKeysError: {
+    id: 'ProfilePage.apiKeys.fetchApiKeysError',
+    defaultMessage: 'An error occurred during fetch API keys',
+  },
 });
 
 @injectIntl
