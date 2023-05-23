@@ -180,7 +180,7 @@ function* fetchApiKeys() {
   const user = yield select(userInfoSelector);
   try {
     const response = yield call(fetch, URLS.apiKeys(user.id));
-    yield put(setApiKeysAction(response.items.sort((a, b) => b.created_at - a.created_at)));
+    yield put(setApiKeysAction(response.items));
   } catch ({ message }) {
     yield put(
       showNotification({

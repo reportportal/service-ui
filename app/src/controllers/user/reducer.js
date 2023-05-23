@@ -96,7 +96,7 @@ export const activeProjectReducer = (state = '', { type, payload }) => {
 export const apiKeysReducer = (state = [], { type, payload }) => {
   switch (type) {
     case SET_API_KEYS:
-      return payload;
+      return payload.sort((a, b) => b.created_at - a.created_at);
     case ADD_API_KEY_SUCCESS:
       return [payload, ...state];
     case DELETE_API_KEY_SUCCESS:
