@@ -35,7 +35,7 @@ const messages = defineMessages({
   description: {
     id: 'ApiKeys.noApiKeys.description',
     defaultMessage:
-      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent.',
+      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to report with agent.',
   },
 });
 

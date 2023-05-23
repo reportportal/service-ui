@@ -105,7 +105,7 @@
   "ApiKeyGeneratedModal.header": "Ключ API сгенерирован",
   "ApiKeyGeneratedModal.loaderText": "ГЕНЕРАЦИЯ",
   "ApiKeyGeneratedModal.successNotification": "Ключ API успешно скопирован",
-  "ApiKeys.ApiKeysBlock.description": "Чтобы обеспечить безопасность вашего собственного доменного пароля, вы можете использовать ключ пользователя — чтобы подтвердить свою учетную запись, чтобы иметь возможность войти в систему с помощью агента.",
+  "ApiKeys.ApiKeysBlock.description": "Чтобы обеспечить безопасность вашего собственного доменного пароля, вы можете использовать ключ пользователя — чтобы подтвердить свою учетную запись, чтобы иметь возможность отправлять результаты при помощи агента.",
   "ApiKeys.ApiKeysBlock.generateButton": "Создать ключ API",
   "ApiKeys.ApiKeysBlock.headerDateCol": "создан",
   "ApiKeys.ApiKeysBlock.headerNameCol": "Имя ключа API",

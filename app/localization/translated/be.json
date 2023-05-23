@@ -105,7 +105,7 @@
   "ApiKeyGeneratedModal.header": "Створаны ключ API",
   "ApiKeyGeneratedModal.loaderText": "ГЕНЕРЫРУЮЦЬ",
   "ApiKeyGeneratedModal.successNotification": "Ключ API быў паспяхова скапіраваны",
-  "ApiKeys.ApiKeysBlock.description": "Каб забяспечыць бяспеку пароля вашага ўласнага дамена, вы можаце выкарыстоўваць ключ карыстальніка — каб пацвердзіць свой уліковы запіс і мець магчымасць увайсці з дапамогай агента.",
+  "ApiKeys.ApiKeysBlock.description": "Каб забяспечыць бяспеку пароля вашага ўласнага дамена, вы можаце выкарыстоўваць ключ карыстальніка — каб пацвердзіць свой уліковы запіс і мець магчымасць адпраўляць вынікі пры дапамозе агента.",
   "ApiKeys.ApiKeysBlock.generateButton": "Стварыць ключ API",
   "ApiKeys.ApiKeysBlock.headerDateCol": "створаны",
   "ApiKeys.ApiKeysBlock.headerNameCol": "Назва ключа API",

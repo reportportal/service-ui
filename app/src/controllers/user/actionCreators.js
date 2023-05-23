@@ -30,6 +30,8 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_USER,
   FETCH_USER_ERROR,
+  DELETE_API_KEY_SUCCESS,
+  ADD_API_KEY_SUCCESS,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -47,7 +49,7 @@ export const setPhotoTimeStampAction = (timeStamp) => ({
   payload: timeStamp,
 });
 
-export const setApiKeysAction = (apiKeys) => ({
+export const setApiKeysAction = (apiKeys = []) => ({
   type: SET_API_KEYS,
   payload: apiKeys,
 });
@@ -62,9 +64,19 @@ export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) =
   payload: { name, successMessage, errorMessage, onSuccess },
 });
 
+export const addApiKeySuccessAction = (apiKey) => ({
+  type: ADD_API_KEY_SUCCESS,
+  payload: apiKey,
+});
+
 export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuccess) => ({
   type: DELETE_API_KEY,
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
+});
+
+export const deleteApiKeySuccessAction = (apiKeyId) => ({
+  type: DELETE_API_KEY_SUCCESS,
+  payload: apiKeyId,
 });
 
 export const fetchApiKeysAction = () => ({ type: FETCH_API_KEYS });

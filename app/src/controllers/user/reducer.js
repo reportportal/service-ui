@@ -24,6 +24,8 @@ import {
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
   SET_API_KEYS,
+  ADD_API_KEY_SUCCESS,
+  DELETE_API_KEY_SUCCESS,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
@@ -95,6 +97,10 @@ export const apiKeysReducer = (state = [], { type, payload }) => {
   switch (type) {
     case SET_API_KEYS:
       return payload;
+    case ADD_API_KEY_SUCCESS:
+      return [payload, ...state];
+    case DELETE_API_KEY_SUCCESS:
+      return state.filter((key) => key.id !== payload);
     default:
       return state;
   }

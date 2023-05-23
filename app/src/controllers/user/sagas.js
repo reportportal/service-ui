@@ -20,7 +20,7 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { apiKeysSelector, userIdSelector, userInfoSelector } from './selectors';
+import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_RROJECT,
   UNASSIGN_FROM_PROJECT,
@@ -38,6 +38,8 @@ import {
   fetchUserSuccessAction,
   fetchUserErrorAction,
   setApiKeysAction,
+  addApiKeySuccessAction,
+  deleteApiKeySuccessAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -142,7 +144,7 @@ function* addApiKey({ payload = {} }) {
   const { name, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
   try {
-    const response = yield call(fetch, URLS.apiKeys(user.userId), {
+    const response = yield call(fetch, URLS.apiKeys(user.id), {
       method: 'post',
       data: {
         name,
@@ -150,7 +152,7 @@ function* addApiKey({ payload = {} }) {
     });
 
     // eslint-disable-next-line camelcase
-    const { id, name: newName, created_at, api_key } = response;
+    const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {
       yield put(
@@ -160,10 +162,7 @@ function* addApiKey({ payload = {} }) {
         }),
       );
     }
-    const apiKeys = yield select((state) => apiKeysSelector(state));
-    const updatedApiKeys = [...apiKeys];
-    updatedApiKeys.unshift({ id, name: newName, created_at });
-    yield put(setApiKeysAction(updatedApiKeys));
+    yield put(addApiKeySuccessAction({ id, name, created_at }));
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
     if (errorMessage) {
@@ -180,8 +179,8 @@ function* addApiKey({ payload = {} }) {
 function* fetchApiKeys() {
   const user = yield select(userInfoSelector);
   try {
-    const response = yield call(fetch, URLS.apiKeys(user.userId));
-    yield put(setApiKeysAction(response));
+    const response = yield call(fetch, URLS.apiKeys(user.id));
+    yield put(setApiKeysAction(response.items.sort((a, b) => b.created_at - a.created_at)));
   } catch ({ message }) {
     yield put(
       showNotification({
@@ -198,7 +197,7 @@ function* deleteApiKey({ payload = {} }) {
   const user = yield select(userInfoSelector);
 
   try {
-    yield call(fetch, URLS.apiKeyById(user.userId, apiKeyId), {
+    yield call(fetch, URLS.apiKeyById(user.id, apiKeyId), {
       method: 'delete',
     });
     onSuccess();
@@ -210,9 +209,7 @@ function* deleteApiKey({ payload = {} }) {
         }),
       );
     }
-    const apiKeys = yield select((state) => apiKeysSelector(state));
-    const updatedApiKeys = apiKeys.filter((key) => key.id !== apiKeyId);
-    yield put(setApiKeysAction(updatedApiKeys));
+    yield put(deleteApiKeySuccessAction(apiKeyId));
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
     if (errorMessage) {

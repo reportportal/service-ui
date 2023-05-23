@@ -35,7 +35,7 @@ const messages = defineMessages({
   description: {
     id: 'ApiKeys.ApiKeysBlock.description',
     defaultMessage:
-      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent.',
+      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to report with agent.',
   },
   headerNameCol: {
     id: 'ApiKeys.ApiKeysBlock.headerNameCol',
@@ -83,7 +83,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
                     transparentBorder
                     transparentBackground
                     transparentBorderHover
-                    color={'red'}
+                    color="red"
                   >
                     {formatMessage(messages.revoke)}
                   </GhostButton>
