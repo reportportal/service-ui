@@ -43,7 +43,6 @@ ApiKeysBase.propTypes = {
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-      hash: PropTypes.string,
       created_at: PropTypes.number,
     }),
   ).isRequired,

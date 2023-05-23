@@ -20,7 +20,7 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { userIdSelector, userInfoSelector } from './selectors';
+import { apiKeysSelector, userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_RROJECT,
   UNASSIGN_FROM_PROJECT,
@@ -38,7 +38,6 @@ import {
   fetchUserSuccessAction,
   fetchUserErrorAction,
   setApiKeysAction,
-  fetchApiKeysAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -149,7 +148,10 @@ function* addApiKey({ payload = {} }) {
         name,
       },
     });
-    onSuccess(response.api_key);
+
+    // eslint-disable-next-line camelcase
+    const { id, name: newName, created_at, api_key } = response;
+    onSuccess(api_key);
     if (successMessage) {
       yield put(
         showNotification({
@@ -158,7 +160,10 @@ function* addApiKey({ payload = {} }) {
         }),
       );
     }
-    yield put(fetchApiKeysAction());
+    const apiKeys = yield select((state) => apiKeysSelector(state));
+    const updatedApiKeys = [...apiKeys];
+    updatedApiKeys.unshift({ id, name: newName, created_at });
+    yield put(setApiKeysAction(updatedApiKeys));
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
     if (errorMessage) {
@@ -205,7 +210,9 @@ function* deleteApiKey({ payload = {} }) {
         }),
       );
     }
-    yield put(fetchApiKeysAction());
+    const apiKeys = yield select((state) => apiKeysSelector(state));
+    const updatedApiKeys = apiKeys.filter((key) => key.id !== apiKeyId);
+    yield put(setApiKeysAction(updatedApiKeys));
   } catch ({ message }) {
     const showingMessage = errorMessage || message;
     if (errorMessage) {

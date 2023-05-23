@@ -77,13 +77,16 @@ export const ApiKeysBlock = ({ apiKeys }) => {
                 <div className={cx('name-col')}>{key.name}</div>
                 <div className={cx('date-col')}>{daysFromNow(key.created_at)}</div>
                 <div className={cx('revoke-col')}>
-                  <button
-                    className={cx('revoke-button')}
+                  <GhostButton
                     onClick={() => onRevokeClick(key)}
                     title={formatMessage(messages.revoke)}
+                    transparentBorder
+                    transparentBackground
+                    transparentBorderHover
+                    color={'red'}
                   >
                     {formatMessage(messages.revoke)}
-                  </button>
+                  </GhostButton>
                 </div>
               </div>
             ))}
