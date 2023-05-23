@@ -57,6 +57,10 @@ const messages = defineMessages({
     id: 'GenerateApiKeyModal.counterText',
     defaultMessage: 'Number of characters remaining: ',
   },
+  exceededCounterText: {
+    id: 'GenerateApiKeyModal.exceededCounterText',
+    defaultMessage: 'You used {used} of {allowed} symbols',
+  },
   loaderText: {
     id: 'GenerateApiKeyModal.loaderText',
     defaultMessage: 'GENERATING',
@@ -113,6 +117,8 @@ const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
+  const symbolsLeft = MAX_NAME_LENGTH - apiKeyName.length;
+
   return (
     <ModalLayout
       title={formatMessage(messages.header)}
@@ -134,8 +140,17 @@ const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
             </ModalField>
           </form>
           <div className={cx('counter')}>
-            {formatMessage(messages.counterText)}
-            {MAX_NAME_LENGTH - apiKeyName.length}
+            {symbolsLeft < 0 ? (
+              formatMessage(messages.exceededCounterText, {
+                used: apiKeyName.length,
+                allowed: MAX_NAME_LENGTH,
+              })
+            ) : (
+              <>
+                {formatMessage(messages.counterText)}
+                {symbolsLeft}
+              </>
+            )}
           </div>
         </>
       )}

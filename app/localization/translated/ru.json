@@ -736,6 +736,7 @@
   "GenerateApiKeyModal.apiKeyNameUniqueHint": "Ключ API с таким именем уже существует",
   "GenerateApiKeyModal.apiKeyNameWrongSizeHint": "Имя ключа API должно иметь размер от 1 до 40 символов.",
   "GenerateApiKeyModal.counterText": "Количество оставшихся символов: ",
+  "GenerateApiKeyModal.exceededCounterText": "Вы ввели {used} из {allowed} символов",
   "GenerateApiKeyModal.description": "Будет сгенерирован новый ключ API. Сохраните этот ключ. Мы не рекомендуем делать этот ключ общедоступным.",
   "GenerateApiKeyModal.header": "Сгенерировать API-ключ",
   "GenerateApiKeyModal.loaderText": "ГЕНЕРАЦИЯ",
