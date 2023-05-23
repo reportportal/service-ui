@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ENTER_KEY_CODE, ESCAPE_KEY_CODE } from 'common/constants/keyCodes';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
@@ -53,15 +54,21 @@ export const DarkModalLayout = ({
     }
   };
   const onKeydown = (e) => {
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESCAPE_KEY_CODE) {
       closeModalWindow();
     }
-    if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+    if (
+      (e.ctrlKey && e.keyCode === ENTER_KEY_CODE) ||
+      (e.metaKey && e.keyCode === ENTER_KEY_CODE)
+    ) {
       setIsCtrlEnterPress(true);
     }
   };
   const onKeyup = (e) => {
-    if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+    if (
+      (e.ctrlKey && e.keyCode === ENTER_KEY_CODE) ||
+      (e.metaKey && e.keyCode === ENTER_KEY_CODE)
+    ) {
       setIsCtrlEnterPress(false);
     }
   };

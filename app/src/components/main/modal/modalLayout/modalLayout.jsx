@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ENTER_KEY_CODE, ESCAPE_KEY_CODE } from 'common/constants/keyCodes';
 import { ModalContent } from './modalContent';
 import { ModalFooter } from './modalFooter';
 import { ModalHeader } from './modalHeader';
@@ -114,10 +115,13 @@ export class ModalLayout extends Component {
   }
   onKeydown = (e) => {
     const { okButton, customButton } = this.props;
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESCAPE_KEY_CODE) {
       this.closeModal();
     }
-    if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+    if (
+      (e.ctrlKey && e.keyCode === ENTER_KEY_CODE) ||
+      (e.metaKey && e.keyCode === ENTER_KEY_CODE)
+    ) {
       (okButton && okButton.onClick && okButton.onClick(this.closeModalWithOk)) ||
         (customButton && customButton.onClick && customButton.onClick(this.closeModalWithOk));
     }

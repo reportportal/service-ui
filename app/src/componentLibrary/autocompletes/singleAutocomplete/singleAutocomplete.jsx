@@ -19,6 +19,7 @@ import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
+import { TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 
 const DEFAULT_OPTIONS_INDEX = 0;
@@ -87,9 +88,7 @@ export class SingleAutocomplete extends Component {
     });
 
   handleKeyDown = (event, isOpen, setHighlightedIndex) => {
-    const tabKeyCode = 9;
-
-    if (event.keyCode === tabKeyCode && isOpen) {
+    if (event.keyCode === TAB_KEY_CODE && isOpen) {
       event.preventDefault();
       setHighlightedIndex(this.props.options.length);
     }

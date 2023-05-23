@@ -16,6 +16,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useRef } from 'react';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './checkbox.scss';
 
 const cx = classNames.bind(styles);
@@ -35,15 +36,13 @@ export const Checkbox = ({
 
   const handleKeyDown = (event) => {
     const { keyCode } = event;
-    const spaceKeyCode = 32;
-    const enterKeyCode = 13;
 
-    if (keyCode === spaceKeyCode) {
+    if (keyCode === SPACE_KEY_CODE) {
       event.preventDefault();
       return;
     }
 
-    if (keyCode === enterKeyCode) {
+    if (keyCode === ENTER_KEY_CODE) {
       event.preventDefault();
       inputRef.current.click();
     }

@@ -22,14 +22,11 @@ import { Manager, Reference, Popper } from 'react-popper';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useOnClickOutside } from 'common/hooks';
 import { useSelect } from 'downshift';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { DropdownOption } from './dropdownOption';
 import ArrowIcon from './img/arrow-inline.svg';
 import styles from './dropdown.scss';
-import {
-  CLOSE_DROPDOWN_KEY_CODES_MAP,
-  ENTER_KEY_CODE,
-  OPEN_DROPDOWN_KEY_CODES_MAP,
-} from './constants';
+import { CLOSE_DROPDOWN_KEY_CODES_MAP, OPEN_DROPDOWN_KEY_CODES_MAP } from './constants';
 import { calculateDefaultIndex, calculateNextIndex, calculatePrevIndex } from './utils';
 
 const cx = classNames.bind(styles);

@@ -23,6 +23,7 @@ import classNames from 'classnames/bind';
 import { pageSelector } from 'controllers/pages';
 import { Input } from 'components/inputs/input';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './pageSizeControl.scss';
 
 const cx = classNames.bind(styles);
@@ -85,7 +86,7 @@ export class PageSizeControl extends Component {
 
   handleEnterKey = (e) => {
     const value = this.state.inputValue;
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER_KEY_CODE) {
       this.setState({ inputVisible: false, inputValue: '' });
       this.props.onChangePageSize(Number(this.normalizeInput(value)));
       this.props.tracking.trackEvent(FOOTER_EVENTS.editNumberPerPage(value, this.props.page));

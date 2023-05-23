@@ -20,12 +20,12 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { motion, AnimatePresence } from 'framer-motion';
 import classNames from 'classnames/bind';
 import { useOnClickOutside, useWindowResize } from 'common/hooks';
+import { ESCAPE_KEY_CODE } from 'common/constants/keyCodes';
 import { ModalContent } from './modalContent';
 import { ModalFooter } from './modalFooter';
 import { ModalHeader } from './modalHeader';
 import styles from './modalLayout.scss';
 
-const ESC_KEYCODE = 27;
 const MODAL_MAX_RATIO = 0.9;
 const MODAL_HEADER_AND_FOOTER_HEIGHT = 176;
 const cx = classNames.bind(styles);
@@ -66,7 +66,7 @@ export const ModalLayout = ({
   };
 
   const onKeydown = (e) => {
-    if (e.keyCode === ESC_KEYCODE) {
+    if (e.keyCode === ESCAPE_KEY_CODE) {
       setShown(false);
     }
   };

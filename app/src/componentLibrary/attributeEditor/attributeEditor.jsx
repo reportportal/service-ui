@@ -28,6 +28,7 @@ import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import CheckIcon from 'common/img/check-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -134,12 +135,10 @@ export const AttributeEditor = ({
   };
   const handleAttributeKeyInputChange = (text) => setState({ ...state, isKeyEdited: !!text });
 
-  const isValidForm = !isFormValid();
+  const isValidForm = isFormValid();
 
   const handleKeyDown = (handler) => ({ keyCode }) => {
-    const enterKeyCode = 13;
-
-    if (keyCode === enterKeyCode) {
+    if (keyCode === ENTER_KEY_CODE) {
       handler();
     }
   };
@@ -195,10 +194,10 @@ export const AttributeEditor = ({
       </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
-          tabIndex={isValidForm ? -1 : 0}
-          className={cx('check-btn', { disabled: isValidForm })}
-          onClick={isValidForm ? null : handleSubmit}
-          onKeyDown={isValidForm ? null : handleKeyDown(handleSubmit)}
+          tabIndex={isValidForm ? 0 : -1}
+          className={cx('check-btn', { disabled: !isValidForm })}
+          onClick={isValidForm ? handleSubmit : null}
+          onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
           data-automation-id={'saveAttributeButton'}
         >
           {Parser(CheckIcon)}
