@@ -114,17 +114,17 @@ describe('user reducer', () => {
       });
 
       test('should return old state on unknown action', () => {
-        const oldState = { type: 'bearer', value: 'apiKey' };
+        const oldState = [{ id: '123', name: 'apiKey' }];
         expect(apiKeysReducer(oldState, { type: 'foo' })).toBe(oldState);
       });
 
-      test('should handle SET_API_KEYS', () => {
+      test('should handle SET_API_KEYS action', () => {
         expect(
           apiKeysReducer(undefined, {
             type: SET_API_KEYS,
-            payload: { type: 'bearer', value: 'apiKey' },
+            payload: [{ id: '123', name: 'apiKey' }],
           }),
-        ).toEqual({ type: 'bearer', value: 'apiKey' });
+        ).toEqual([{ id: '123', name: 'apiKey' }]);
       });
     });
   });
