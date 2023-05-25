@@ -81,13 +81,10 @@ export class Footer extends Component {
           >
             <FormattedMessage id={'Footer.documentation'} defaultMessage={'Documentation'} />
           </a>
-          {authExtensions.epam && (
+          {(authExtensions.epam || authExtensions.saas) && (
             <Fragment>
               <a href={referenceDictionary.rpEpamPolicy} target="_blank">
                 <FormattedMessage id={'Footer.privacy'} defaultMessage={'Privacy Policy'} />
-              </a>
-              <a href={referenceDictionary.rpEpamNotice} target="_blank">
-                <FormattedMessage id={'Footer.notice'} defaultMessage={'Privacy Notice'} />
               </a>
             </Fragment>
           )}

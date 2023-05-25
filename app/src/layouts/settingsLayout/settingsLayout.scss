@@ -31,3 +31,48 @@
   width: 100%;
   background: $COLOR--bg-100;
 }
+
+.section-content {
+  height: calc(100% - 48px);
+  width: 100%;
+}
+
+.footer {
+  height: 48px;
+  width: 100%;
+}
+
+.footer-left-items, .footer-right-items {
+  display: inline-block;
+  margin: 0 28px;
+}
+
+.footer-left-items {
+  float: left;
+}
+
+.footer-right-items {
+  float: right;
+}
+
+.footer-item {
+  display: inline-block;
+  color: $COLOR--e-300;
+  font-size: 11px;
+  line-height: 16px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  margin: 16px 8px;
+
+  a {
+    text-decoration: none;
+    color: $COLOR--e-300;
+
+    &:hover {
+      color: $COLOR--e-400;
+    }
+
+    &:active {
+      color: $COLOR--e-200;
+    }
+  }
+}
