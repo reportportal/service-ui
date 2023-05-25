@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-import {
-  ARROW_DOWN_KEY_CODE,
-  ENTER_KEY_CODE,
-  ESCAPE_KEY_CODE,
-  SPACE_KEY_CODE,
-  TAB_KEY_CODE,
-} from 'common/constants/keyCodes';
-
-export const OPEN_DROPDOWN_KEY_CODES_MAP = {
-  [ENTER_KEY_CODE]: 'ENTER',
-  [SPACE_KEY_CODE]: 'SPACE',
-  [ARROW_DOWN_KEY_CODE]: 'ARROW_DOWN',
-};
-
-export const CLOSE_DROPDOWN_KEY_CODES_MAP = {
-  [ESCAPE_KEY_CODE]: 'ESCAPE',
-  [TAB_KEY_CODE]: 'TAB',
-};
+export const TAB_KEY_CODE = 9;
+export const ENTER_KEY_CODE = 13;
+export const ESCAPE_KEY_CODE = 27;
+export const SPACE_KEY_CODE = 32;
+export const ARROW_DOWN_KEY_CODE = 40;

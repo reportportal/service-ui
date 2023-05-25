@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -28,6 +28,7 @@ import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import CheckIcon from 'common/img/check-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -56,6 +57,8 @@ export const AttributeEditor = ({
     value: attribute.edited && valueTouched && attributeValueValidator(value),
   });
 
+  const keyEditorRef = useRef(null);
+
   const [state, setState] = useState({
     key: attribute.key,
     value: attribute.value,
@@ -64,6 +67,12 @@ export const AttributeEditor = ({
   });
 
   const clearInputValues = () => setState({ key: '', value: '', errors: '', isKeyEdited: false });
+
+  useEffect(() => {
+    if (keyEditorRef.current) {
+      keyEditorRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     const { key, value } = attribute;
@@ -134,6 +143,18 @@ export const AttributeEditor = ({
   };
   const handleAttributeKeyInputChange = (text) => setState({ ...state, isKeyEdited: !!text });
 
+  const isValidForm = isFormValid();
+
+  const handleKeyDown = (handler) => ({ keyCode }) => {
+    if (keyCode === ENTER_KEY_CODE) {
+      handler();
+    }
+  };
+
+  const refFunction = (node) => {
+    keyEditorRef.current = node;
+  };
+
   return (
     <div className={cx('attribute-editor')}>
       <FieldErrorHint
@@ -144,6 +165,7 @@ export const AttributeEditor = ({
         dataAutomationId={'keyField'}
       >
         <AttributeInput
+          refFunction={refFunction}
           attributes={attributes}
           minLength={1}
           attributeComparator={byKeyComparator}
@@ -185,15 +207,19 @@ export const AttributeEditor = ({
       </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
-          className={cx('check-btn', { disabled: !isFormValid() })}
-          onClick={isFormValid() ? handleSubmit : null}
+          tabIndex={isValidForm ? 0 : -1}
+          className={cx('check-btn', { disabled: !isValidForm })}
+          onClick={isValidForm ? handleSubmit : null}
+          onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
           data-automation-id={'saveAttributeButton'}
         >
           {Parser(CheckIcon)}
         </div>
         <div
+          tabIndex={0}
           className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
           onClick={handleCancel}
+          onKeyDown={handleKeyDown(handleCancel)}
           data-automation-id={'cancelAttributeButton'}
         >
           {Parser(CrossIcon)}

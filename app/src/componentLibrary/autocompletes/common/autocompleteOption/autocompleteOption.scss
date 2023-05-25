@@ -38,6 +38,34 @@
   }
 }
 
+@mixin draw-button-border($displayValue, $width) {
+  content: '';
+  display: block;
+  position: absolute;
+  width: $width;
+  height: 25px;
+  border-radius: 4px;
+  border: 1px solid $COLOR--topaz-focused;
+  top: 0;
+  left: 0;
+  transform: translate(-2px, -2px);
+}
+
+@mixin button-active-state($width) {
+  .button-active:not(.disabled, :hover) {
+    position: relative;
+    color: $COLOR--topaz-focused;
+
+    &::after {
+      @include draw-button-border(block, $width);
+    }
+
+    svg * {
+      fill: $COLOR--topaz-focused;
+    }
+  }
+}
+
 .item {
   display: inline-flex;
   align-items: center;
@@ -49,8 +77,14 @@
   box-sizing: border-box;
   cursor: pointer;
 
-  &.active {
+  &.active:hover {
     background-color: $COLOR--bg-100;
+  }
+
+  &.active:not(:hover) {
+    background-color: $COLOR--bg-100;
+    border: 1px solid $COLOR--topaz-focused;
+    padding: 3px 11px;
   }
 }
 
@@ -74,15 +108,23 @@
 .key-variant {
   @include option-state($COLOR--tag-key-text, $COLOR--tag-key-background);
 
-  &.active {
+  &.active:hover {
     background-color: $COLOR--bg-200;
+  }
+
+  &:not(:hover) {
+    @include button-active-state(80px);
   }
 }
 
 .value-variant {
   @include option-state($COLOR--tag-value-text, $COLOR--tag-value-background);
 
-  &.active {
+  &.active:hover {
     background-color: $COLOR--bg-200;
+  }
+
+  &:not(:hover) {
+    @include button-active-state(88px);
   }
 }

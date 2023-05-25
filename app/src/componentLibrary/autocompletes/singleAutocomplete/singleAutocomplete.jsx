@@ -19,6 +19,7 @@ import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
+import { TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 
 const DEFAULT_OPTIONS_INDEX = 0;
@@ -49,6 +50,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: PropTypes.string,
     icon: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    refFunction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -75,6 +77,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: '',
     icon: null,
     isOptionUnique: null,
+    refFunction: () => {},
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -85,6 +88,13 @@ export class SingleAutocomplete extends Component {
       isSelected: selectedItem === item,
       ...rest,
     });
+
+  handleKeyDown = (event, setHighlightedIndex) => {
+    if (event.keyCode === TAB_KEY_CODE) {
+      event.preventDefault();
+      setHighlightedIndex(this.props.options.length);
+    }
+  };
 
   render() {
     const {
@@ -108,6 +118,7 @@ export class SingleAutocomplete extends Component {
       icon,
       options,
       isOptionUnique,
+      refFunction,
       ...props
     } = this.props;
     return (
@@ -122,10 +133,10 @@ export class SingleAutocomplete extends Component {
           {({
             getInputProps,
             getItemProps,
+            setHighlightedIndex,
             isOpen,
             inputValue,
             highlightedIndex,
-            openMenu,
             selectItem,
           }) => (
             <div>
@@ -137,8 +148,13 @@ export class SingleAutocomplete extends Component {
                         placeholder: !disabled ? placeholder : '',
                         maxLength,
                         onFocus: () => {
-                          !value && openMenu();
                           onFocus();
+                        },
+                        refFunction,
+                        onKeyDown: (event) => {
+                          if (inputValue && isOpen) {
+                            this.handleKeyDown(event, setHighlightedIndex);
+                          }
                         },
                         onBlur: (e) => {
                           const newValue = inputValue.trim();

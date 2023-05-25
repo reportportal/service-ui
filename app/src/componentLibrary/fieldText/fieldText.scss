@@ -200,7 +200,7 @@
   }
 
   &.placeholder {
-    @include input-text($COLOR--e-300);
+    @include input-text($COLOR--e-200);
     position: absolute;
     top: 2px;
     left: 0;
@@ -210,6 +210,7 @@
       @include asterisk();
       right: -7px;
       content: '*';
+      color: $COLOR--red-focused;
     }
   }
 

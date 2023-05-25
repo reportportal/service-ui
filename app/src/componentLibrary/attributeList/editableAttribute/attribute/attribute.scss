@@ -65,7 +65,7 @@
 .light {
   &.attribute {
     @include attribute($COLOR--bg-200);
-    @include disabled-state($COLOR--almost-black, $COLOR--e-100);
+    @include disabled-state($COLOR--e-300, $COLOR--e-100);
   }
   &.label {
     @include label($COLOR--darkmode-gray-200);
