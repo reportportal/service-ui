@@ -22,6 +22,7 @@ import 'promise-polyfill/src/polyfill';
 import 'polyfill-array-includes';
 import areIntlLocalesSupported from 'intl-locales-supported';
 import objectValues from 'object.values';
+import { all, call } from 'redux-saga/effects';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
 if (window.NodeList && !NodeList.prototype.forEach) {
@@ -43,7 +44,7 @@ if (!String.prototype.startsWith) {
     value: function(searchString, position) {
       position = position || 0;
       return this.indexOf(searchString, position) === position;
-    }
+    },
   });
 }
 
@@ -81,11 +82,11 @@ if (typeof Object.assign !== 'function') {
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
-Number.isInteger = Number.isInteger || function(value) {
-  return typeof value === 'number' &&
-    isFinite(value) &&
-    Math.floor(value) === value;
-};
+Number.isInteger =
+  Number.isInteger ||
+  function(value) {
+    return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+  };
 
 if (!Object.values) {
   objectValues.shim();
@@ -108,9 +109,9 @@ if (!Object.entries) {
 }
 
 if (!Object.fromEntries) {
-  Object.fromEntries = function fromEntries(entries){
+  Object.fromEntries = function fromEntries(entries) {
     var res = {};
-    for(var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
+    for (var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
     return res;
   };
 }
@@ -118,7 +119,11 @@ if (!Object.fromEntries) {
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {
-    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])) {
+    if (
+      window.Intl.PluralRules &&
+      window.Intl.RelativeTimeFormat &&
+      areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])
+    ) {
       resolve();
       return;
     }
@@ -155,3 +160,16 @@ export const polyfillLocales = () =>
       },
     );
   });
+
+export const allSettled = (effects) =>
+  all(
+    effects.map((effect) =>
+      call(function*() {
+        try {
+          return { status: 'fulfilled', value: yield effect };
+        } catch (error) {
+          return { status: 'rejected', reason: error };
+        }
+      }),
+    ),
+  );

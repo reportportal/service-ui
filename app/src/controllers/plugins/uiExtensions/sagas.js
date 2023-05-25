@@ -1,7 +1,8 @@
-import { select, call, all, put } from 'redux-saga/effects';
+import { select, call, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
+import { allSettled } from 'common/polyfills';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -49,13 +50,15 @@ export function* fetchUiExtensions() {
     return;
   }
   yield put(extensionLoadStartAction());
-  const results = yield all(calls);
-  try {
-    results.forEach((r) => {
-      eval(r); // eslint-disable-line no-eval
-    });
-  } catch (err) {
-    console.error('Plugin load error'); // eslint-disable-line no-console
-  }
+  const results = yield allSettled(calls);
+
+  results.forEach((result) => {
+    if (result.status === 'fulfilled') {
+      eval(result.value); // eslint-disable-line no-eval
+    } else {
+      console.error(result.reason); // eslint-disable-line no-console
+    }
+  });
+
   yield put(extensionLoadFinishAction());
 }
