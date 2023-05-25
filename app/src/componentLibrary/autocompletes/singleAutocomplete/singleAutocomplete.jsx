@@ -50,6 +50,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: PropTypes.string,
     icon: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    refFunction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -76,6 +77,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: '',
     icon: null,
     isOptionUnique: null,
+    refFunction: () => {},
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -87,8 +89,8 @@ export class SingleAutocomplete extends Component {
       ...rest,
     });
 
-  handleKeyDown = (event, isOpen, setHighlightedIndex) => {
-    if (event.keyCode === TAB_KEY_CODE && isOpen) {
+  handleKeyDown = (event, setHighlightedIndex) => {
+    if (event.keyCode === TAB_KEY_CODE) {
       event.preventDefault();
       setHighlightedIndex(this.props.options.length);
     }
@@ -116,6 +118,7 @@ export class SingleAutocomplete extends Component {
       icon,
       options,
       isOptionUnique,
+      refFunction,
       ...props
     } = this.props;
     return (
@@ -147,8 +150,12 @@ export class SingleAutocomplete extends Component {
                         onFocus: () => {
                           onFocus();
                         },
-                        onKeyDown: (event) =>
-                          this.handleKeyDown(event, isOpen, setHighlightedIndex),
+                        refFunction,
+                        onKeyDown: (event) => {
+                          if (inputValue && isOpen) {
+                            this.handleKeyDown(event, setHighlightedIndex);
+                          }
+                        },
                         onBlur: (e) => {
                           const newValue = inputValue.trim();
 

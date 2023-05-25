@@ -38,7 +38,7 @@
   }
 }
 
-@mixin drawButtonBorder($displayValue, $width) {
+@mixin draw-button-border($displayValue, $width) {
   content: '';
   display: block;
   position: absolute;
@@ -57,7 +57,7 @@
     color: $COLOR--topaz-focused;
 
     &::after {
-      @include drawButtonBorder(block, $width);
+      @include draw-button-border(block, $width);
     }
 
     svg * {

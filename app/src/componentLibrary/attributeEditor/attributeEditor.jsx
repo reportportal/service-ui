@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -57,6 +57,8 @@ export const AttributeEditor = ({
     value: attribute.edited && valueTouched && attributeValueValidator(value),
   });
 
+  const keyEditorRef = useRef(null);
+
   const [state, setState] = useState({
     key: attribute.key,
     value: attribute.value,
@@ -65,6 +67,12 @@ export const AttributeEditor = ({
   });
 
   const clearInputValues = () => setState({ key: '', value: '', errors: '', isKeyEdited: false });
+
+  useEffect(() => {
+    if (keyEditorRef.current) {
+      keyEditorRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     const { key, value } = attribute;
@@ -143,6 +151,10 @@ export const AttributeEditor = ({
     }
   };
 
+  const refFunction = (node) => {
+    keyEditorRef.current = node;
+  };
+
   return (
     <div className={cx('attribute-editor')}>
       <FieldErrorHint
@@ -153,6 +165,7 @@ export const AttributeEditor = ({
         dataAutomationId={'keyField'}
       >
         <AttributeInput
+          refFunction={refFunction}
           attributes={attributes}
           minLength={1}
           attributeComparator={byKeyComparator}
