@@ -216,7 +216,7 @@ export const AttributeEditor = ({
           {Parser(CheckIcon)}
         </div>
         <div
-          tabIndex={0}
+          tabIndex={!isCancelButtonDisabled ? 0 : -1}
           className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
           onClick={handleCancel}
           onKeyDown={handleKeyDown(handleCancel)}
