@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,4 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  height: 100%;
-  background: $COLOR--bg-000;
-}
-
-.navigation {
-  flex-shrink: 0;
-  width: 353px;
-  border-right: 1px solid $COLOR--e-100;
-  box-sizing: border-box;
-}
-
-.section {
-  width: 100%;
-  background: $COLOR--bg-100;
-}
-
-.section-content {
-  height: calc(100% - 48px);
-  width: 100%;
-}
+export { Footer } from './footer';
