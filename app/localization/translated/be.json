@@ -110,7 +110,7 @@
   "ApiKeys.ApiKeysBlock.headerDateCol": "створаны",
   "ApiKeys.ApiKeysBlock.headerNameCol": "Назва ключа API",
   "ApiKeys.ApiKeysBlock.revoke": "Адклікаць",
-  "ApiKeys.noApiKeys.description": "Каб забяспечыць бяспеку пароля вашага ўласнага дамена, вы можаце выкарыстоўваць ключ карыстальніка — каб пацвердзіць свой уліковы запіс і мець магчымасць увайсці з дапамогай агента.",
+  "ApiKeys.noApiKeys.description": "Каб забяспечыць бяспеку пароля вашага ўласнага дамена, вы можаце выкарыстоўваць ключ карыстальніка — каб пацвердзіць свой уліковы запіс і мець магчымасць адпраўляць вынікі пры дапамозе агента.",
   "ApiKeys.noApiKeys.generateButton": "Стварыць ключ API",
   "ApiKeys.noApiKeys.header": "Няма ключоў API",
   "ApiPage.title": "Дакументацыя API",
