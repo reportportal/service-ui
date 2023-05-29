@@ -45,7 +45,7 @@
 }
 
 .date-col {
-  width: 30%;
+  width: 25%;
   display: inline-block;
   box-sizing: border-box;
   vertical-align: top;
@@ -58,13 +58,11 @@
 }
 
 .revoke-col {
-  width: 10%;
+  width: 15%;
   display: inline-block;
   box-sizing: border-box;
   vertical-align: top;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-left: 20px;
+  text-align: right;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -78,7 +76,6 @@
   border-bottom: 1px solid $COLOR--gray-91;
   box-sizing: border-box;
   line-height: 35px;
-  text-transform: uppercase;
   white-space: nowrap;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
