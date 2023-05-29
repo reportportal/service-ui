@@ -148,6 +148,10 @@ export const AttributeEditor = ({
   const handleKeyDown = (handler) => ({ keyCode }) => {
     if (keyCode === ENTER_KEY_CODE) {
       handler();
+
+      if (keyEditorRef.current) {
+        keyEditorRef.current.focus();
+      }
     }
   };
 
