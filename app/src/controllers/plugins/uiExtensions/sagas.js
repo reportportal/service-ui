@@ -1,8 +1,7 @@
-import { select, call, put } from 'redux-saga/effects';
+import { select, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { allSettled } from 'common/utils/allSettled';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -40,7 +39,7 @@ export function* fetchUiExtensions() {
         url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
       }
 
-      return call(fetch, url, {
+      return fetch(url, {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
@@ -50,15 +49,24 @@ export function* fetchUiExtensions() {
     return;
   }
   yield put(extensionLoadStartAction());
-  const results = yield allSettled(calls);
 
-  results.forEach((result) => {
-    if (result.status === 'fulfilled') {
-      eval(result.value); // eslint-disable-line no-eval
-    } else {
-      console.error(result.reason); // eslint-disable-line no-console
-    }
-  });
+  try {
+    const results = yield Promise.allSettled(calls);
+
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        try {
+          eval(result.value); // eslint-disable-line no-eval
+        } catch {
+          console.error('Failed to execute the code'); // eslint-disable-line no-console
+        }
+      } else {
+        console.error(result.reason); // eslint-disable-line no-console
+      }
+    });
+  } catch (error) {
+    console.error('Plugin load error'); // eslint-disable-line no-console
+  }
 
   yield put(extensionLoadFinishAction());
 }
