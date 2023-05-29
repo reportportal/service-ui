@@ -64,7 +64,6 @@
 }
 
 .additional-content {
-  margin-top: 4px;
   .error-text {
     @include additional-text($COLOR--red-failed-2);
   }
