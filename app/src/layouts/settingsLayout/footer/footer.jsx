@@ -16,9 +16,8 @@
 
 import React, { Fragment } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { referenceDictionary } from 'common/utils';
 import { uiBuildVersionSelector } from 'controllers/appInfo';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
@@ -61,10 +60,12 @@ const messages = defineMessages({
   },
 });
 
-const FooterBase = ({ buildVersion, instanceType, date }) => {
+export const Footer = () => {
   const { formatMessage } = useIntl();
+  const buildVersion = useSelector(uiBuildVersionSelector);
+  const instanceType = useSelector(instanceTypeSelector);
 
-  const currentYear = date.getFullYear();
+  const currentYear = new Date().getFullYear();
 
   const footerLeftItems = [
     formatMessage(messages.build, {
@@ -129,16 +130,3 @@ const FooterBase = ({ buildVersion, instanceType, date }) => {
     </div>
   );
 };
-
-FooterBase.propTypes = {
-  buildVersion: PropTypes.string.isRequired,
-  instanceType: PropTypes.string.isRequired,
-  date: PropTypes.instanceOf(Date),
-};
-FooterBase.defaultProps = {
-  date: new Date(),
-};
-export const Footer = connect((state) => ({
-  buildVersion: uiBuildVersionSelector(state),
-  instanceType: instanceTypeSelector(state),
-}))(FooterBase);

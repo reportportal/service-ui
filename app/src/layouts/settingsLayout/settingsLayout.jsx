@@ -31,7 +31,6 @@ export const SettingsLayout = ({ navigation, children }) => (
     </div>
   </div>
 );
-
 SettingsLayout.propTypes = {
   navigation: PropTypes.node,
   header: PropTypes.node,
