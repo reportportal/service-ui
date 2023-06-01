@@ -8,7 +8,7 @@ ARG branch
 ARG build_date
 RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
-FROM node:12-alpine AS build-frontend
+FROM node:14-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
