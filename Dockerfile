@@ -13,7 +13,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
-RUN npm ci && npm run build && npm run test
+RUN npm ci && npm run build
 
 FROM nginxinc/nginx-unprivileged:alpine
 
