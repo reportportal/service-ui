@@ -30,7 +30,7 @@ import {
   deleteProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
-import { SETTINGS, MEMBERS } from 'common/constants/projectSections';
+import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { messages } from '../messages';
@@ -121,6 +121,11 @@ export class ProjectMenu extends Component {
         value: 'action-settings',
       },
       {
+        onClick: this.navigateToEventsMonitoring,
+        label: intl.formatMessage(messages.monitoring),
+        value: 'action-monitoring',
+      },
+      {
         type: SEPARATOR_ITEM,
       },
       {
@@ -162,6 +167,14 @@ export class ProjectMenu extends Component {
     } = this.props;
     tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
     this.props.navigateToProjectSection(projectName, SETTINGS);
+  };
+
+  navigateToEventsMonitoring = () => {
+    const {
+      project: { projectName },
+    } = this.props;
+
+    this.props.navigateToProjectSection(projectName, MONITORING);
   };
 
   render() {

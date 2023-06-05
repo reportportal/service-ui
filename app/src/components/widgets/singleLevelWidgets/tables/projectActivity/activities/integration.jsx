@@ -27,6 +27,7 @@ import {
 } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
+import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -61,10 +62,10 @@ const messages = defineMessages({
 export class Integration extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
   };
   static defaultProps = {
-    activity: {},
+    ...activityItemPropDefaultProps,
   };
 
   getIntegrationName = () => {

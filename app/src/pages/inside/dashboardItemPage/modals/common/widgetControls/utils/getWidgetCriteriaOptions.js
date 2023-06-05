@@ -52,6 +52,8 @@ import {
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  ASSIGN_USER,
+  UNASSIGN_USER,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -105,6 +107,15 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.create_user',
     defaultMessage: 'Add, register user',
   },
+  [ASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.assign_user',
+    defaultMessage: 'Assign, invite user',
+  },
+  [UNASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.unassign_user',
+    defaultMessage: 'Unassign user',
+  },
+
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',
     defaultMessage: 'Update dashboard',
@@ -229,6 +240,8 @@ const getUserActionOptions = (formatMessage) => [
   { value: DELETE_LAUNCH, label: formatMessage(messages[DELETE_LAUNCH]) },
   { value: ACTIONS_WITH_ISSUES, label: formatMessage(messages[ACTIONS_WITH_ISSUES]) },
   { value: CREATE_USER, label: formatMessage(messages[CREATE_USER]) },
+  { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
+  { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
