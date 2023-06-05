@@ -24,6 +24,7 @@ import { fetch, arrayDiffer } from 'common/utils';
 import { UNLINK_ISSUE, LINK_ISSUE, POST_ISSUE } from 'common/constants/actionTypes';
 import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
+import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -54,10 +55,10 @@ const messages = defineMessages({
 export class TestItem extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
   };
   static defaultProps = {
-    activity: {},
+    ...activityItemPropDefaultProps,
   };
   state = {
     testItem: null,

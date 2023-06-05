@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames/bind';
 import styles from './common.scss';
 import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const CreateUser = ({ activity }) => (
-  <div className={cx('create-user', 'clearfix')}>
-    <span className={cx('new-user-name')}>{activity.details.objectName}, </span>
-    <FormattedMessage id="CreateUser.welcome" defaultMessage="welcome to Report Portal!" />
-  </div>
+export const UnassignUser = ({
+  activity: {
+    user,
+    details: { objectName },
+  },
+}) => (
+  <>
+    <span className={cx('user-name')}>{objectName}</span>
+    <FormattedMessage id="UnassignUser.by" defaultMessage="was unassigned from the project by" />
+    <span className={cx('user-name')}> {user}</span>
+  </>
 );
-CreateUser.propTypes = {
+UnassignUser.propTypes = {
   ...activityItemPropTypes,
 };
-CreateUser.defaultProps = {
+UnassignUser.defaultProps = {
   ...activityItemPropDefaultProps,
 };

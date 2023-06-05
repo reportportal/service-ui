@@ -43,6 +43,8 @@ import {
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  ASSIGN_USER,
+  UNASSIGN_USER,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -59,6 +61,8 @@ import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
+import { AssignUser } from './activities/assignUser';
+import { UnassignUser } from './activities/unassignUser';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -245,6 +249,7 @@ export class ProjectActivity extends Component {
 
   selectActivitiesComponent = (activity) => {
     const actionGroup = ACTION_TO_GROUP_MAP[activity.actionType] || activity.actionType;
+
     switch (actionGroup) {
       case ACTIONS_WITH_ISSUES:
         return <TestItem activity={activity} />;
@@ -279,6 +284,13 @@ export class ProjectActivity extends Component {
         );
       case CREATE_USER:
         return <CreateUser activity={activity} />;
+
+      case ASSIGN_USER:
+        return <AssignUser activity={activity} />;
+
+      case UNASSIGN_USER:
+        return <UnassignUser activity={activity} />;
+
       default:
         return null;
     }

@@ -15,7 +15,6 @@
  */
 
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
@@ -23,6 +22,7 @@ import { ANALYSIS } from 'common/constants/settingsTabs';
 import { GENERATE_INDEX } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
+import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -49,8 +49,8 @@ export const AnalysisConfigurations = ({ activity }) => (
 );
 
 AnalysisConfigurations.propTypes = {
-  activity: PropTypes.object,
+  ...activityItemPropTypes,
 };
 AnalysisConfigurations.defaultProps = {
-  activity: {},
+  ...activityItemPropDefaultProps,
 };

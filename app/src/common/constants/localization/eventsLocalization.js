@@ -67,6 +67,8 @@ import {
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  ASSIGN_USER,
+  UNASSIGN_USER,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -130,6 +132,14 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createUser',
     defaultMessage: 'Create user',
   },
+  [ASSIGN_USER]: {
+    id: 'EventActions.assignUser',
+    defaultMessage: 'Assign',
+  },
+  [UNASSIGN_USER]: {
+    id: 'EventActions.unassignUser',
+    defaultMessage: 'Unassign',
+  },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
@@ -168,7 +178,7 @@ export const actionMessages = defineMessages({
   },
   [UPDATE_ANALYZER]: {
     id: 'EventActions.updateAnalyzer',
-    defaultMessage: 'Update analizer',
+    defaultMessage: 'Update analyzer',
   },
   [GENERATE_INDEX]: {
     id: 'EventActions.generateIndex',

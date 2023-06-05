@@ -15,7 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
-import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
+import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
 
 export const messages = defineMessages({
   statisticButtonTooltip: {
@@ -50,9 +50,21 @@ export const messages = defineMessages({
     id: 'ProjectDetailsPageMembers.title',
     defaultMessage: 'Members',
   },
-  [`${EVENTS}Title`]: {
+  [`${MONITORING}Title`]: {
     id: 'ProjectDetailsPageEvents.title',
-    defaultMessage: 'Events',
+    defaultMessage: 'Monitoring',
+  },
+  [`${SETTINGS}HeaderButton`]: {
+    id: 'ProjectDetailsPageSettings.headerButton',
+    defaultMessage: 'Project Settings',
+  },
+  [`${MEMBERS}HeaderButton`]: {
+    id: 'ProjectDetailsPageMembers.headerButton',
+    defaultMessage: 'Project Members',
+  },
+  [`${MONITORING}HeaderButton`]: {
+    id: 'ProjectDetailsPageEvents.headerButton',
+    defaultMessage: 'Project Monitoring',
   },
   deleteProjectsCount: {
     id: 'ProjectsPage.deleteProjectsCount',
@@ -109,6 +121,10 @@ export const messages = defineMessages({
   delete: {
     id: 'ProjectPanel.delete',
     defaultMessage: 'Delete',
+  },
+  monitoring: {
+    id: 'ProjectPanel.monitoring',
+    defaultMessage: 'Monitoring',
   },
   unassignFromPersonal: {
     id: 'ProjectPanel.unassignFromPersonal',
