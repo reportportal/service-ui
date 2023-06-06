@@ -31,11 +31,16 @@
     height: 44px;
   }
 
-  &:hover {
+  &.disabled {
+    @include fill-svg($COLOR--e-200);
+    cursor: pointer;
+  }
+
+  &:hover:not(.disabled) {
     @include fill-svg($COLOR--e-400);
   }
 
-  &:active {
+  &:active:not(.disabled) {
     @include fill-svg($COLOR--topaz-pressed);
   }
 
