@@ -52,6 +52,7 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
+  duplicateInputValueOption,
   ...props
 }) => {
   let updatePosition;
@@ -203,7 +204,10 @@ export const MultipleAutocomplete = ({
                 updatePosition = scheduleUpdate;
                 const filteredOptions = options.filter(
                   (item) =>
-                    value.indexOf(item) < 0 && item.toLowerCase() !== inputValue.toLowerCase(),
+                    value.indexOf(item) < 0 &&
+                    (duplicateInputValueOption ||
+                      item.toLowerCase() !== inputValue.toLowerCase() ||
+                      !getAdditionalCreationCondition(inputValue)),
                 );
                 return (
                   <AutocompleteMenu
@@ -258,6 +262,7 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
+  duplicateInputValueOption: PropTypes.bool,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -289,4 +294,5 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
+  duplicateInputValueOption: false,
 };

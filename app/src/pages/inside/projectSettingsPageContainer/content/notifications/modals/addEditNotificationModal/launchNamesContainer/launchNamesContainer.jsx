@@ -74,6 +74,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
         existingItemsMap={existingItemsMap}
         highlightUnStoredItem={highlightUnStoredItem}
         value={value}
+        duplicateInputValueOption
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>
