@@ -17,7 +17,6 @@
 export {
   START_TIME_FORMAT_ABSOLUTE,
   START_TIME_FORMAT_RELATIVE,
-  SET_API_TOKEN,
   ASSIGN_TO_RROJECT,
   ASSIGN_TO_RROJECT_SUCCESS,
   ASSIGN_TO_RROJECT_ERROR,
@@ -30,8 +29,11 @@ export {
   fetchUserAction,
   setActiveProjectAction,
   setStartTimeFormatAction,
-  generateApiTokenAction,
-  fetchApiTokenAction,
+  addApiKeyAction,
+  addApiKeySuccessAction,
+  fetchApiKeysAction,
+  deleteApiKeyAction,
+  deleteApiKeySuccessAction,
   setPhotoTimeStampAction,
   assignToProjectAction,
   assignToProjectErrorAction,
@@ -51,8 +53,8 @@ export {
   activeProjectRoleSelector,
   userAccountRoleSelector,
   photoTimeStampSelector,
-  apiTokenValueSelector,
-  apiTokenStringSelector,
+  apiKeysSelector,
   photoIdSelector,
+  availableProjectsSelector,
 } from './selectors';
 export { userSagas } from './sagas';

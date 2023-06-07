@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-export { AccessTokenBlock } from './accessTokenBlock';
+.api-keys {
+  width: 100%;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+  padding: 0 30px;
+}

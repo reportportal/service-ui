@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-.warning {
-  margin-bottom: 10px;
-  color: $COLOR--orange-red;
-  text-transform: uppercase;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
-}
-.text {
-  font-size: 13px;
-}
+export { ApiKeyGeneratedModal } from './apiKeyGeneratedModal';

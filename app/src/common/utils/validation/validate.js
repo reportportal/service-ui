@@ -124,3 +124,6 @@ export const createNotificationRecipientsValidator = (informOwner) => (value = [
 };
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
+export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);
+export const uniqueApiKeyName = (names) => (value) =>
+  names.every((name) => name.toLowerCase() !== value.trim().toLowerCase());

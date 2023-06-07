@@ -236,6 +236,14 @@ const messages = defineMessages({
     id: 'EditItemModal.descriptionHint',
     defaultMessage: "Description should have size from '0' to '2048' symbols",
   },
+  apiKeyNameWrongSizeHint: {
+    id: 'GenerateApiKeyModal.apiKeyNameWrongSizeHint',
+    defaultMessage: 'API Key name should have size from 1 to 40 characters',
+  },
+  apiKeyNameUniqueHint: {
+    id: 'GenerateApiKeyModal.apiKeyNameUniqueHint',
+    defaultMessage: 'API Key with the same name already exists',
+  },
 });
 
 @injectIntl

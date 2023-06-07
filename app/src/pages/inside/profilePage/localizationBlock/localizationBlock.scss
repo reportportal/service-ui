@@ -15,13 +15,17 @@
  */
 
 .localization-block {
-  margin: 30px 0 30px 15px;
+  box-sizing: border-box;
+  padding: 15px 45px;
   display: flex;
   align-items: flex-start;
   @media (max-width: $SCREEN_SM_MAX) {
     margin: 30px 0 0 15px;
   }
+
+  border-top: 2px solid $COLOR--gray-91;
 }
+
 .label {
   margin-right: 30px;
   margin-top: 5px;
@@ -42,19 +46,23 @@
   display: flex;
   align-items: center;
 }
-.note {
-  margin-top: 5px;
-  line-height: 18px;
-  font-size: 13px;
-  color: $COLOR--tealish;
-}
-.text {
-  line-height: 18px;
-  color: $COLOR--charcoal-grey;
-  font-size: 12px;
-  a {
-    color: $COLOR--topaz;
-    cursor: pointer;
-    text-decoration: none;
+.description {
+  margin-left: 15px;
+
+  .note {
+    line-height: 18px;
+    font-size: 13px;
+    color: $COLOR--tealish;
+  }
+
+  .text {
+    line-height: 18px;
+    color: $COLOR--charcoal-grey;
+    font-size: 12px;
+    a {
+      color: $COLOR--topaz;
+      cursor: pointer;
+      text-decoration: none;
+    }
   }
 }

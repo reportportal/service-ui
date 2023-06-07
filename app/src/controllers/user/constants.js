@@ -29,12 +29,15 @@ export const SETTINGS_INITIAL_STATE = {
   photoTimeStamp: Date.now(),
 };
 
-export const SET_API_TOKEN = 'setApiToken';
 export const ASSIGN_TO_RROJECT = 'assignToProject';
 export const ASSIGN_TO_RROJECT_SUCCESS = 'assignToProjectSuccess';
 export const ASSIGN_TO_RROJECT_ERROR = 'assignToProjectError';
 export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
 export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';
 
-export const GENERATE_API_TOKEN = 'generateApiToken';
-export const FETCH_API_TOKEN = 'fetchApiToken';
+export const FETCH_API_KEYS = 'fetchApiKeys';
+export const SET_API_KEYS = 'setApiKeys';
+export const ADD_API_KEY = 'addApiKey';
+export const ADD_API_KEY_SUCCESS = 'addApiKeySuccess';
+export const DELETE_API_KEY = 'deleteApiKey';
+export const DELETE_API_KEY_SUCCESS = 'deleteApiKeySuccess';

@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   headerNameCol: {
     id: 'AssignedProjectsBlock.headerNameCol',
-    defaultMessage: 'Assigned on projects',
+    defaultMessage: 'Projects',
   },
   headerRoleCol: {
     id: 'AssignedProjectsBlock.headerRoleCol',
@@ -60,8 +60,7 @@ export class AssignedProjectsBlock extends Component {
           </div>
           <div className={cx('role-col')}>{intl.formatMessage(messages.headerRoleCol)}</div>
         </BlockContainerHeader>
-
-        <ScrollWrapper autoHeight autoHeightMax={350}>
+        <ScrollWrapper autoHeight autoHeightMax={370}>
           <BlockContainerBody>
             {Object.keys(projects).map((project) => (
               <div key={project} className={cx('project-item')}>

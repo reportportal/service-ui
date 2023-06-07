@@ -15,10 +15,12 @@
  */
 
 .assigned-projects-block {
+  box-sizing: border-box;
   width: 100%;
+  padding: 0 30px;
 }
 .name-col {
-  width: 66%;
+  width: 80%;
   overflow: hidden;
   display: inline-block;
   box-sizing: border-box;
@@ -31,7 +33,7 @@
   }
 }
 .role-col {
-  width: 33%;
+  width: 20%;
   display: inline-block;
   box-sizing: border-box;
   vertical-align: top;

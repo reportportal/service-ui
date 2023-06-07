@@ -137,7 +137,12 @@ export class MembersPage extends Component {
           onFilterChange={this.searchUser}
           onInvite={this.props.fetchMembersAction}
         />
-        <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
+        <MembersGrid
+          data={members}
+          fetchData={this.props.fetchMembersAction}
+          loading={loading}
+          filter={filter}
+        />
         {!loading && this.renderPageSectionFooter()}
       </Fragment>
     );

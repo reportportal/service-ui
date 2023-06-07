@@ -39,6 +39,7 @@ export {
   currentPathSelector,
   pluginPageSelector,
   pluginRouteSelector,
+  userProfileRouteSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
@@ -67,6 +68,7 @@ export {
   PROJECT_USERDEBUG_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
   USER_PROFILE_PAGE,
+  USER_PROFILE_SUB_PAGE,
   LOGIN_PAGE,
   REGISTRATION_PAGE,
   HISTORY_PAGE,

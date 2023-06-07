@@ -119,8 +119,10 @@ export const URLS = {
     })}`,
   launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
   login: () => `${uatBase}sso/oauth/token`,
-  apiToken: () => `${uatBase}sso/me/apitoken`,
   sessionToken: () => `${uatBase}sso/me`,
+
+  apiKeys: (userId) => `${urlBase}user/${userId}/api-keys`,
+  apiKeyById: (userId, apiKeyId) => `${urlBase}user/${userId}/api-keys/${apiKeyId}`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,

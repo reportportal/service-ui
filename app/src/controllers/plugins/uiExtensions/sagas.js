@@ -1,4 +1,4 @@
-import { select, call, all, put } from 'redux-saga/effects';
+import { select, call, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
@@ -32,8 +32,7 @@ export function* fetchExtensionsMetadata(action) {
   const calls = uiExtensionPlugins.map((plugin) => {
     const isPluginPublic = plugin.details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
     const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
-    return call(
-      fetch,
+    return fetch(
       isPluginPublic
         ? URLS.pluginPublicFile(plugin.name, metadataFile)
         : URLS.pluginFile(plugin.name, metadataFile),
@@ -48,15 +47,17 @@ export function* fetchExtensionsMetadata(action) {
   }
 
   try {
-    const results = yield all(calls);
-    const metadataArray = results.map((metadata, index) => ({
-      ...metadata,
-      pluginName: uiExtensionPlugins[index].name,
-      isPublic: uiExtensionPlugins[index].details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE,
-    }));
+    const results = yield Promise.allSettled(calls);
+    const metadataArray = results
+      .filter((result) => result.status === 'fulfilled')
+      .map((metadata, index) => ({
+        ...metadata,
+        pluginName: uiExtensionPlugins[index].name,
+        isPublic: uiExtensionPlugins[index].details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE,
+      }));
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
-  } catch (err) {
+  } catch (error) {
     console.error('Plugins metadata load error'); // eslint-disable-line no-console
   }
 }
@@ -97,7 +98,7 @@ export function* fetchUiExtensions() {
         url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
       }
 
-      return call(fetch, url, {
+      return fetch(url, {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
@@ -107,13 +108,24 @@ export function* fetchUiExtensions() {
     return;
   }
   yield put(extensionLoadStartAction());
-  const results = yield all(calls);
+
   try {
-    results.forEach((r) => {
-      eval(r); // eslint-disable-line no-eval
+    const results = yield Promise.allSettled(calls);
+
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        try {
+          eval(result.value); // eslint-disable-line no-eval
+        } catch {
+          console.error('Failed to execute the code'); // eslint-disable-line no-console
+        }
+      } else {
+        console.error(result.reason); // eslint-disable-line no-console
+      }
     });
-  } catch (err) {
+  } catch (error) {
     console.error('Plugin load error'); // eslint-disable-line no-console
   }
+
   yield put(extensionLoadFinishAction());
 }

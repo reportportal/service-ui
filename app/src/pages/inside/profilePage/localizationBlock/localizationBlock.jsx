@@ -175,16 +175,15 @@ export class LocalizationBlock extends Component {
             value={this.props.lang}
             onChange={this.onChangeLanguage}
           />
-
-          {this.props.lang !== DEFAULT_LANGUAGE && (
-            <div className={cx('description')}>
-              <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
-              <p className={cx('text')}>
-                {Parser(this.props.intl.formatMessage(messages.contribute))}
-              </p>
-            </div>
-          )}
         </div>
+        {this.props.lang !== DEFAULT_LANGUAGE && (
+          <div className={cx('description')}>
+            <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
+            <p className={cx('text')}>
+              {Parser(this.props.intl.formatMessage(messages.contribute))}
+            </p>
+          </div>
+        )}
       </div>
     );
   }

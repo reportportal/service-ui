@@ -24,6 +24,8 @@ import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -32,6 +34,7 @@ import { ForgotPasswordBlock } from './pageBlocks/forgotPasswordBlock';
 import { ChangePasswordBlock } from './pageBlocks/changePasswordBlock';
 import { ServiceVersionsBlock } from './pageBlocks/serviceVersionsBlock';
 import { MultipleAuthBlock } from './pageBlocks/multipleAuthBlock';
+import { PolicyBlock } from './pageBlocks/policyBlock';
 
 const cx = classNames.bind(styles);
 
@@ -45,6 +48,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     extensions: uiExtensionLoginPageSelector(state),
+    instanceType: instanceTypeSelector(state),
   }),
   {
     showDefaultErrorNotification,
@@ -60,6 +64,7 @@ export class LoginPage extends PureComponent {
     registration: PropTypes.string,
     extensions: PropTypes.array,
     showDefaultErrorNotification: PropTypes.func,
+    instanceType: PropTypes.string.isRequired,
   };
   static defaultProps = {
     forgotPass: '',
@@ -110,8 +115,8 @@ export class LoginPage extends PureComponent {
   };
 
   render() {
+    const { registration, instanceType } = this.props;
     const currentBlock = this.getCurrentBlock();
-    const { registration } = this.props;
 
     return (
       <div className={cx('login-page')}>
@@ -126,6 +131,7 @@ export class LoginPage extends PureComponent {
           <LoginPageSection>
             {currentBlock}
             {!registration && <ServiceVersionsBlock />}
+            {(instanceType === EPAM || instanceType === SAAS) && <PolicyBlock />}
           </LoginPageSection>
         </div>
       </div>

@@ -17,54 +17,43 @@ import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { apiTokenValueSelector, activeProjectSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
-import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
+import { BlockContainerBody } from '../blockContainer';
+
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-
+const API_KEY = '<YOUR_API_KEY>';
 @connect((state) => ({
-  token: apiTokenValueSelector(state),
   activeProject: activeProjectSelector(state),
   login: userIdSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
-    token: PropTypes.string,
     login: PropTypes.string,
     activeProject: PropTypes.string,
   };
   static defaultProps = {
-    token: '',
     login: '',
     activeProject: '',
   };
   render() {
-    const { token, activeProject, login } = this.props;
+    const { activeProject, login } = this.props;
     return (
       <div className={cx('config-example-block')}>
-        <BlockContainerHeader>
-          <span className={cx('header')}>
-            <FormattedMessage
-              id={'ConfigExamplesBlock.header'}
-              defaultMessage={'Configuration examples'}
-            />
-          </span>
-        </BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('content-container')}>
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(token, activeProject, login),
-                TabsConfig.rubyConfig(token, activeProject, login),
-                TabsConfig.soapUiConfig(token, activeProject, login),
+                TabsConfig.javaConfig(API_KEY, activeProject, login),
+                TabsConfig.rubyConfig(API_KEY, activeProject, login),
+                TabsConfig.soapUiConfig(API_KEY, activeProject, login),
                 TabsConfig.dotNetConfig,
-                TabsConfig.nodejsConfig(token, activeProject, login),
+                TabsConfig.nodejsConfig(API_KEY, activeProject, login),
               ]}
             />
           </div>
