@@ -26,8 +26,8 @@ const cx = classNames.bind(styles);
 export const DragControl = ({ dragRef, handleDragStart, handleDragEnd, isDragging, disabled }) => (
   <i
     ref={dragRef}
-    onDragStart={handleDragStart}
-    onDragEnd={handleDragEnd}
+    onDragStart={disabled ? null : handleDragStart}
+    onDragEnd={disabled ? null : handleDragEnd}
     className={cx('drag-control', { 'dragging-control': isDragging, disabled })}
   >
     {Parser(DragAndDropIcon)}

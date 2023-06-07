@@ -69,9 +69,7 @@ export const DraggableRuleItem = ({
   const dropTargetType = draggedItemIndex > item.index ? 'top' : 'bottom';
 
   const handleDragStart = () => {
-    if (!disabled) {
-      setIsDragging(true);
-    }
+    setIsDragging(true);
   };
 
   const handleDragEnd = () => {
