@@ -22,6 +22,7 @@ import Link from 'redux-first-router-link';
 import { secondsToDays } from 'common/utils';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -56,11 +57,11 @@ const messages = defineMessages({
 export class DefaultProjectSettings extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
     lang: PropTypes.string,
   };
   static defaultProps = {
-    activity: {},
+    ...activityItemDefaultProps,
     lang: 'en',
   };
 

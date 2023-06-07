@@ -57,7 +57,7 @@ import {
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
-import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
+import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
@@ -116,7 +116,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${MONITORING})?/:settingsTab?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
