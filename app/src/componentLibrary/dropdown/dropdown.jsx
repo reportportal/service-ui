@@ -193,7 +193,7 @@ export const Dropdown = ({
             <div
               {...getToggleButtonProps({
                 ref,
-                tabIndex: 0,
+                tabIndex: disabled ? -1 : 0,
                 className: cx(variant, 'dropdown', toggleButtonClassName, {
                   'transparent-background': transparentBackground,
                   opened: isOpened,
