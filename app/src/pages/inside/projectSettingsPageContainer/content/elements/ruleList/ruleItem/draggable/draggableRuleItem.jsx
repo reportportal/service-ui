@@ -30,6 +30,7 @@ export const DraggableRuleItem = ({
   item,
   onDrop,
   dragControlTooltipContent,
+  disabled,
   ...restRuleItemProps
 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -41,6 +42,7 @@ export const DraggableRuleItem = ({
       collect: (monitor) => ({
         isInDraggingState: monitor.isDragging(),
       }),
+      canDrag: () => !disabled,
     }),
     [item],
   );
@@ -95,12 +97,13 @@ export const DraggableRuleItem = ({
         'is-dragging': isDragging,
       })}
     >
-      <RuleItem item={item} isPreview={isDragging} {...restRuleItemProps} />
+      <RuleItem item={item} isPreview={isDragging} disabled={disabled} {...restRuleItemProps} />
       <DragControlComponent
         dragRef={dragRef}
         handleDragStart={handleDragStart}
         handleDragEnd={handleDragEnd}
         isDragging={isDragging}
+        disabled={disabled}
       />
     </div>
   );
