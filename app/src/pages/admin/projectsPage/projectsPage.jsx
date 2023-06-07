@@ -29,12 +29,12 @@ import {
   projectSectionSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
-import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
+import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
-// import ProjectEventsIcon from 'common/img/project-events-inline.svg';
+import ProjectMonitoringIcon from 'common/img/project-monitoring-inline.svg';
 import { MembersPage } from 'pages/common/membersPage';
 import {
   addProjectAction,
@@ -51,17 +51,17 @@ const cx = classNames.bind(styles);
 
 const HEADER_BUTTONS = [
   {
-    key: MEMBERS,
-    icon: ProjectUsersIcon,
+    key: MONITORING,
+    icon: ProjectMonitoringIcon,
   },
   {
     key: SETTINGS,
     icon: ProjectSettingsIcon,
   },
-  // {
-  //   key: EVENTS,
-  //   icon: ProjectEventsIcon,
-  // },
+  {
+    key: MEMBERS,
+    icon: ProjectUsersIcon,
+  },
 ];
 
 @connect(
@@ -131,7 +131,7 @@ export class ProjectsPage extends Component {
 
     if (section) {
       breadcrumbs.push({
-        title: formatMessage(messages[`${section}Title`]),
+        title: formatMessage(messages[section]),
       });
     }
 
@@ -178,9 +178,9 @@ export class ProjectsPage extends Component {
             disabled={section === key}
             icon={icon}
             onClick={this.onHeaderButtonClick(key)}
-            title={formatMessage(messages[`${key}Title`])}
+            title={formatMessage(messages[`${key}HeaderButton`])}
           >
-            {formatMessage(messages[`${key}Title`])}
+            {formatMessage(messages[`${key}HeaderButton`])}
           </GhostButton>
         ))}
       </div>
@@ -199,7 +199,7 @@ export class ProjectsPage extends Component {
         return <AdminProjectSettingsPageContainer projectId={projectId} />;
       case MEMBERS:
         return <MembersPage />;
-      case EVENTS:
+      case MONITORING:
         return <ProjectEventsPage />;
       default:
         return <ProjectStatusPage projectId={projectId} />;
