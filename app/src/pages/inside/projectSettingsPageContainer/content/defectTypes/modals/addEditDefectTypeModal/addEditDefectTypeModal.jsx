@@ -16,8 +16,8 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm } from 'redux-form';
-import { useDispatch } from 'react-redux';
+import { getFormInitialValues, getFormValues, reduxForm } from 'redux-form';
+import { connect, useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
@@ -110,13 +110,17 @@ const AddEditDefectTypeModal = ({
   data: { onSave, defectType, defectTypes },
   handleSubmit,
   initialize,
-  dirty,
   change,
+  currentValue,
+  initialValue,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const [color, setColor] = useState();
+
+  const isFormChanged =
+    JSON.stringify(currentValue).toLowerCase() !== JSON.stringify(initialValue).toLowerCase();
 
   useEffect(() => {
     initialize(defectType);
@@ -177,7 +181,7 @@ const AddEditDefectTypeModal = ({
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
-      allowCloseOutside={!dirty}
+      allowCloseOutside={!isFormChanged}
     >
       {actionType === ACTION_TYPE_ADD && formatMessage(messages.description)}
       <div className={cx('content')}>
@@ -222,9 +226,7 @@ const AddEditDefectTypeModal = ({
           name={COLOR_FIELD_KEY}
           className={cx('color-picker')}
           dataAutomationId={COLOR_FIELD_KEY + FIELD}
-          onChange={(value) => {
-            setColor(value);
-          }}
+          onChange={setColor}
           value={color}
         >
           <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
@@ -243,27 +245,35 @@ AddEditDefectTypeModal.propTypes = {
   }),
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  dirty: PropTypes.bool.isRequired,
   change: PropTypes.func.isRequired,
+  currentValue: PropTypes.object,
+  initialValue: PropTypes.object,
 };
 AddEditDefectTypeModal.defaultProps = {
   data: {},
+  currentValue: {},
+  initialValue: {},
 };
 
 export const AddEditDefectTypeModalComponent = withModal('addEditDefectTypeModal')(
-  reduxForm({
-    form: 'DefectTypeForm',
-    validate: ({ longName, shortName }) => {
-      return {
-        longName: composeBoundValidators([
-          bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
-          bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
-        ])(longName),
-        shortName: composeBoundValidators([
-          bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
-          bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
-        ])(shortName),
-      };
-    },
-  })(AddEditDefectTypeModal),
+  connect((state) => ({
+    currentValue: getFormValues('DefectTypeForm')(state),
+    initialValue: getFormInitialValues('DefectTypeForm')(state),
+  }))(
+    reduxForm({
+      form: 'DefectTypeForm',
+      validate: ({ longName, shortName }) => {
+        return {
+          longName: composeBoundValidators([
+            bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
+            bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
+          ])(longName),
+          shortName: composeBoundValidators([
+            bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
+            bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
+          ])(shortName),
+        };
+      },
+    })(AddEditDefectTypeModal),
+  ),
 );
