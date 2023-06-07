@@ -202,13 +202,20 @@ export const MultipleAutocomplete = ({
             >
               {({ placement, ref, style, scheduleUpdate }) => {
                 updatePosition = scheduleUpdate;
-                const filteredOptions = options.filter(
-                  (item) =>
-                    value.indexOf(item) < 0 &&
+                const filteredOptions = options.filter((option) => {
+                  const isOptionSelect = value.indexOf(option) !== -1;
+                  const isOptionEqualInputValue = option.toLowerCase() === inputValue.toLowerCase();
+                  const isInputValueMatchAdditionalCreationCondition = getAdditionalCreationCondition(
+                    inputValue,
+                  );
+
+                  return (
+                    !isOptionSelect &&
                     (duplicateInputValueOption ||
-                      item.toLowerCase() !== inputValue.toLowerCase() ||
-                      !getAdditionalCreationCondition(inputValue)),
-                );
+                      !isOptionEqualInputValue ||
+                      !isInputValueMatchAdditionalCreationCondition)
+                  );
+                });
                 return (
                   <AutocompleteMenu
                     isOpen={isOpen}
