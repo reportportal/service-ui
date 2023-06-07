@@ -50,7 +50,7 @@ export function* fetchExtensionsMetadata(action) {
     const results = yield Promise.allSettled(calls);
     const metadataArray = results
       .filter((result) => result.status === 'fulfilled')
-      .map((metadata, index) => ({
+      .map(({ value: metadata }, index) => ({
         ...metadata,
         pluginName: uiExtensionPlugins[index].name,
         isPublic: uiExtensionPlugins[index].details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE,
