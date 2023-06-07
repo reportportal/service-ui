@@ -42,18 +42,6 @@ export const messages = defineMessages({
     id: 'ProjectsPage.projectLengthHint',
     defaultMessage: 'Project name ',
   },
-  [`${SETTINGS}Title`]: {
-    id: 'ProjectDetailsPageSettings.title',
-    defaultMessage: 'Settings',
-  },
-  [`${MEMBERS}Title`]: {
-    id: 'ProjectDetailsPageMembers.title',
-    defaultMessage: 'Members',
-  },
-  [`${MONITORING}Title`]: {
-    id: 'ProjectDetailsPageEvents.title',
-    defaultMessage: 'Monitoring',
-  },
   [`${SETTINGS}HeaderButton`]: {
     id: 'ProjectDetailsPageSettings.headerButton',
     defaultMessage: 'Project Settings',

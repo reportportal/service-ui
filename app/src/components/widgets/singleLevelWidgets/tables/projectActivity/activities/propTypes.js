@@ -30,7 +30,7 @@ export const activityItemPropTypes = {
   }),
 };
 
-export const activityItemPropDefaultProps = {
+export const activityItemDefaultProps = {
   activity: {
     actionType: '',
     details: { history: [], objectName: '' },

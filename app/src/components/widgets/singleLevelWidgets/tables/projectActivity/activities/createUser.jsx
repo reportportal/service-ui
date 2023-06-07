@@ -18,7 +18,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -28,9 +28,5 @@ export const CreateUser = ({ activity }) => (
     <FormattedMessage id="CreateUser.welcome" defaultMessage="welcome to Report Portal!" />
   </div>
 );
-CreateUser.propTypes = {
-  ...activityItemPropTypes,
-};
-CreateUser.defaultProps = {
-  ...activityItemPropDefaultProps,
-};
+CreateUser.propTypes = activityItemPropTypes;
+CreateUser.defaultProps = activityItemDefaultProps;

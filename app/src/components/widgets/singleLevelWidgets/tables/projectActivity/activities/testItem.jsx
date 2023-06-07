@@ -24,7 +24,7 @@ import { fetch, arrayDiffer } from 'common/utils';
 import { UNLINK_ISSUE, LINK_ISSUE, POST_ISSUE } from 'common/constants/actionTypes';
 import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -57,9 +57,8 @@ export class TestItem extends Component {
     intl: PropTypes.object.isRequired,
     ...activityItemPropTypes,
   };
-  static defaultProps = {
-    ...activityItemPropDefaultProps,
-  };
+  static defaultProps = activityItemDefaultProps;
+
   state = {
     testItem: null,
   };

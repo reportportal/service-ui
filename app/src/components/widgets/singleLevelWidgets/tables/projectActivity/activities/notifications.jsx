@@ -22,7 +22,7 @@ import Link from 'redux-first-router-link';
 import { NOTIFICATIONS } from 'common/constants/settingsTabs';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -43,9 +43,8 @@ export class Notifications extends Component {
     intl: PropTypes.object.isRequired,
     ...activityItemPropTypes,
   };
-  static defaultProps = {
-    ...activityItemPropDefaultProps,
-  };
+  static defaultProps = activityItemDefaultProps;
+
   render() {
     const { activity, intl } = this.props;
     return (

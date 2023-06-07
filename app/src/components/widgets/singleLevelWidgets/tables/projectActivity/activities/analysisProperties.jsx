@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { ANALYSIS } from 'common/constants/settingsTabs';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -92,9 +92,7 @@ export class AnalysisProperties extends Component {
     ...activityItemPropTypes,
   };
 
-  static defaultProps = {
-    ...activityItemPropDefaultProps,
-  };
+  static defaultProps = activityItemDefaultProps;
 
   getActivityHistory = (activity) => {
     const from = this.props.intl.formatMessage(messages.from);

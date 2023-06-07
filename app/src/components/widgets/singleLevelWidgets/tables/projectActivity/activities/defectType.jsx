@@ -23,7 +23,7 @@ import { DEFECT } from 'common/constants/settingsTabs';
 import { DELETE_DEFECT, UPDATE_DEFECT, CREATE_DEFECT } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -52,9 +52,8 @@ export class DefectType extends Component {
     intl: PropTypes.object.isRequired,
     ...activityItemPropTypes,
   };
-  static defaultProps = {
-    ...activityItemPropDefaultProps,
-  };
+  static defaultProps = activityItemDefaultProps;
+
   state = {
     testItem: null,
   };

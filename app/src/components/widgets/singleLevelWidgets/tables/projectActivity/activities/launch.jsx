@@ -30,7 +30,7 @@ import {
 } from 'common/constants/actionTypes';
 import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -67,9 +67,7 @@ export class Launch extends Component {
     intl: PropTypes.object.isRequired,
     ...activityItemPropTypes,
   };
-  static defaultProps = {
-    ...activityItemPropDefaultProps,
-  };
+  static defaultProps = activityItemDefaultProps;
 
   getLaunchesPageLink = (projectId) => ({
     type: PROJECT_LAUNCHES_PAGE,

@@ -131,7 +131,7 @@ export class ProjectsPage extends Component {
 
     if (section) {
       breadcrumbs.push({
-        title: formatMessage(messages[`${section}Title`]),
+        title: formatMessage(messages[section]),
       });
     }
 

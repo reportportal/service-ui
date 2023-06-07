@@ -17,7 +17,7 @@
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -33,9 +33,5 @@ export const UnassignUser = ({
     <span className={cx('user-name')}> {user}</span>
   </>
 );
-UnassignUser.propTypes = {
-  ...activityItemPropTypes,
-};
-UnassignUser.defaultProps = {
-  ...activityItemPropDefaultProps,
-};
+UnassignUser.propTypes = activityItemPropTypes;
+UnassignUser.defaultProps = activityItemDefaultProps;

@@ -18,7 +18,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ASSIGN_USER } from 'common/constants/actionTypes';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -55,9 +55,6 @@ export const AssignUser = ({
     </>
   );
 };
-AssignUser.propTypes = {
-  ...activityItemPropTypes,
-};
-AssignUser.defaultProps = {
-  ...activityItemPropDefaultProps,
-};
+AssignUser.propTypes = activityItemPropTypes;
+
+AssignUser.defaultProps = activityItemDefaultProps;

@@ -22,7 +22,7 @@ import { ANALYSIS } from 'common/constants/settingsTabs';
 import { GENERATE_INDEX } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -48,9 +48,5 @@ export const AnalysisConfigurations = ({ activity }) => (
   </Fragment>
 );
 
-AnalysisConfigurations.propTypes = {
-  ...activityItemPropTypes,
-};
-AnalysisConfigurations.defaultProps = {
-  ...activityItemPropDefaultProps,
-};
+AnalysisConfigurations.propTypes = activityItemPropTypes;
+AnalysisConfigurations.defaultProps = activityItemDefaultProps;

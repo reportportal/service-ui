@@ -22,7 +22,7 @@ import Link from 'redux-first-router-link';
 import { secondsToDays } from 'common/utils';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
-import { activityItemPropDefaultProps, activityItemPropTypes } from './propTypes';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -61,7 +61,7 @@ export class DefaultProjectSettings extends Component {
     lang: PropTypes.string,
   };
   static defaultProps = {
-    ...activityItemPropDefaultProps,
+    ...activityItemDefaultProps,
     lang: 'en',
   };
 
