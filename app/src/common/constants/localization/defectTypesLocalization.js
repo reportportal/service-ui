@@ -46,22 +46,22 @@ export const defectTypesLocalization = defineMessages({
   },
   PRODUCT_BUG_TOTAL: {
     id: 'DefectTypes.PRODUCT_BUG_TOTAL',
-    defaultMessage: 'Product bugs group',
+    defaultMessage: 'Product Bug Group',
   },
   AUTOMATION_BUG_TOTAL: {
     id: 'DefectTypes.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Automation bugs group',
+    defaultMessage: 'Automation Bug Group',
   },
   SYSTEM_ISSUE_TOTAL: {
     id: 'DefectTypes.SYSTEM_ISSUE_TOTAL',
-    defaultMessage: 'System issues group',
+    defaultMessage: 'System Issue Group',
   },
   TO_INVESTIGATE_TOTAL: {
     id: 'DefectTypes.TO_INVESTIGATE_TOTAL',
-    defaultMessage: 'To investigate group',
+    defaultMessage: 'To Investigate Group',
   },
   NO_DEFECT_TOTAL: {
     id: 'DefectTypes.NO_DEFECT_TOTAL',
-    defaultMessage: 'No defects group',
+    defaultMessage: 'No Defect Group',
   },
 });
