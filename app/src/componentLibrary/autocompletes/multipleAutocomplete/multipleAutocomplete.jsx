@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
@@ -56,6 +56,7 @@ export const MultipleAutocomplete = ({
 }) => {
   let updatePosition;
   const placeholderIfEmptyField = value.length === 0 && !disabled ? placeholder : '';
+  const inputRef = useRef(null);
 
   const handleChange = (...args) => {
     updatePosition && updatePosition();
@@ -87,6 +88,14 @@ export const MultipleAutocomplete = ({
     } else {
       selectItem(inputValue);
       clearSelection();
+    }
+  };
+
+  const onRemoveItem = (cb) => (item) => {
+    cb(item);
+
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   };
 
@@ -134,7 +143,7 @@ export const MultipleAutocomplete = ({
                     >
                       <SelectedItems
                         items={value}
-                        onRemoveItem={removeItem}
+                        onRemoveItem={onRemoveItem(removeItem)}
                         disabled={disabled}
                         mobileDisabled={mobileDisabled}
                         parseValueToString={parseValueToString}
@@ -147,6 +156,7 @@ export const MultipleAutocomplete = ({
                       />
                       <input
                         {...getInputProps({
+                          ref: inputRef,
                           placeholder: placeholderIfEmptyField,
                           maxLength,
                           onFocus: () => {
