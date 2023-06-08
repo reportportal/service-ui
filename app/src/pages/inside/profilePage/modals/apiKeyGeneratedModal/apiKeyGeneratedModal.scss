@@ -15,7 +15,16 @@
  */
 
 .description {
+  font-family: $FONT-ROBOTO-REGULAR;
   color: $COLOR--black-3;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 8px;
+}
+
+.description-note {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  color: $COLOR--japanese-koi;
   font-size: 13px;
   line-height: 20px;
   margin-bottom: 24px;
