@@ -48,13 +48,16 @@ export function* fetchExtensionsMetadata(action) {
 
   try {
     const results = yield Promise.allSettled(calls);
-    const metadataArray = results
-      .filter((result) => result.status === 'fulfilled')
-      .map(({ value: metadata }, index) => ({
-        ...metadata,
+    const metadataArray = results.reduce((acc, result, index) => {
+      if (result.status !== 'fulfilled') {
+        return acc;
+      }
+      return acc.concat({
+        ...result.value,
         pluginName: uiExtensionPlugins[index].name,
         isPublic: uiExtensionPlugins[index].details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE,
-      }));
+      });
+    }, []);
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
   } catch (error) {
