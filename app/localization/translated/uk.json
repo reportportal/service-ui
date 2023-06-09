@@ -1026,7 +1026,7 @@
   "LinkIssueModal.linkIssueSuccess": "Посилання на помилку успішно додано",
   "LinkIssueModal.urlHint": "Посилання має веб-сайту відповідати дійсному адресою",
   "LocalizationBlock.belarusian": "Білоруська",
-  "LocalizationBlock.contribute": "Українська мова знаходиться в бета-версії. Будь ласка, допоможіть нам з перекладом відправте Ваш ПР <a target='_blank' href ='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/ua.json'>файл</a>.",
+  "LocalizationBlock.contribute": "Українська мова знаходиться в бета-версії. Будь ласка, допоможіть нам з перекладом відправте Ваш ПР <a target='_blank' href ='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/uk.json'>файл</a>.",
   "LocalizationBlock.english": "Англійська (Сполучені Штати)",
   "LocalizationBlock.label": "Мова",
   "LocalizationBlock.note": "До відома",
