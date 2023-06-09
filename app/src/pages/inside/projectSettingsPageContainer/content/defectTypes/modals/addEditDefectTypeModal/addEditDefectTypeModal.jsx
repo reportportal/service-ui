@@ -16,7 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getFormInitialValues, getFormValues, reduxForm } from 'redux-form';
+import { getFormValues, reduxForm } from 'redux-form';
 import { connect, useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
@@ -112,15 +112,14 @@ const AddEditDefectTypeModal = ({
   initialize,
   change,
   currentValue,
-  initialValue,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
-  const [color, setColor] = useState();
+  const [color, setColor] = useState(defectType.color);
 
   const isFormChanged =
-    JSON.stringify(currentValue).toLowerCase() !== JSON.stringify(initialValue).toLowerCase();
+    JSON.stringify(currentValue).toLowerCase() !== JSON.stringify(defectType).toLowerCase();
 
   useEffect(() => {
     initialize(defectType);
@@ -247,18 +246,15 @@ AddEditDefectTypeModal.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   currentValue: PropTypes.object,
-  initialValue: PropTypes.object,
 };
 AddEditDefectTypeModal.defaultProps = {
   data: {},
   currentValue: {},
-  initialValue: {},
 };
 
 export const AddEditDefectTypeModalComponent = withModal('addEditDefectTypeModal')(
   connect((state) => ({
     currentValue: getFormValues('DefectTypeForm')(state),
-    initialValue: getFormInitialValues('DefectTypeForm')(state),
   }))(
     reduxForm({
       form: 'DefectTypeForm',
