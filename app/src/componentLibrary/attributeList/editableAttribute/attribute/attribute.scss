@@ -23,6 +23,7 @@
   border-radius: 6px;
   cursor: pointer;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 @mixin label($color) {
@@ -31,10 +32,26 @@
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   line-height: 18px;
-  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
-  @supports (word-break: break-word) {
-    word-break: break-word;
+  .key, .value, .value-without-key {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 20px;
+    vertical-align: middle;
+  }
+
+  .separator {
+    display: inline-block;
+    margin: auto 4px;
+  }
+
+  .value-without-key {
+    max-width: 100%;
   }
 }
 

@@ -17,13 +17,20 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { formatAttributeWithSpacedDivider } from 'common/utils/attributeUtils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import styles from './attribute.scss';
 
 const cx = classNames.bind(styles);
 
-export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass, variant }) => {
+export const Attribute = ({
+  attribute,
+  onClick,
+  onRemove,
+  disabled,
+  customClass,
+  variant,
+  maxCellWidth,
+}) => {
   const onClickRemove = (e) => {
     e.stopPropagation();
     onRemove();
@@ -34,7 +41,21 @@ export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass,
       className={cx('attribute', variant, customClass, { disabled })}
       onClick={disabled ? undefined : onClick}
     >
-      <div className={cx('label', variant)}>{formatAttributeWithSpacedDivider(attribute)}</div>
+      <div className={cx('label', variant)}>
+        {attribute.key ? (
+          <>
+            <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
+              {attribute.key}
+            </div>
+            <div className={cx('separator')}>:</div>
+            <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
+              {attribute.value}
+            </div>
+          </>
+        ) : (
+          <div className={cx('value-without-key')}>{attribute.value}</div>
+        )}
+      </div>
       {!disabled && (
         <div className={cx('remove-icon', variant)} onClick={onClickRemove}>
           {Parser(CrossIcon)}
@@ -51,6 +72,7 @@ Attribute.propTypes = {
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
   variant: PropTypes.string,
+  maxCellWidth: PropTypes.number,
 };
 
 Attribute.defaultProps = {
@@ -60,4 +82,5 @@ Attribute.defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   variant: 'light',
+  maxCellWidth: 162,
 };
