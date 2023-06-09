@@ -211,10 +211,8 @@ export const MultipleAutocomplete = ({
             >
               {({ placement, ref, style, scheduleUpdate }) => {
                 updatePosition = scheduleUpdate;
-                const filteredOptions = options.filter(
-                  (item) =>
-                    value.indexOf(item) < 0 && item.toLowerCase() !== inputValue.toLowerCase(),
-                );
+                const filteredOptions = options.filter((option) => value.indexOf(option) < 0);
+
                 return (
                   <AutocompleteMenu
                     isOpen={isOpen}
