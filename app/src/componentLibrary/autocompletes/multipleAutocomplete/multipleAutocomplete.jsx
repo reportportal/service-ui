@@ -52,7 +52,6 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
-  duplicateInputValueOption,
   ...props
 }) => {
   let updatePosition;
@@ -257,7 +256,6 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
-  duplicateInputValueOption: PropTypes.bool,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -289,5 +287,4 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
-  duplicateInputValueOption: false,
 };
