@@ -17,6 +17,7 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 dotenv.config();
 
@@ -65,6 +66,9 @@ module.exports = () => {
         },
       ],
     },
+    optimization: {
+      runtimeChunk: 'single',
+    },
     plugins: [
       new CircularDependencyPlugin({
         exclude: /a\.js|node_modules/,
@@ -72,6 +76,7 @@ module.exports = () => {
         allowAsyncCycles: false,
         cwd: process.cwd(),
       }),
+      new ReactRefreshWebpackPlugin(),
     ],
     devServer: {
       static: {
