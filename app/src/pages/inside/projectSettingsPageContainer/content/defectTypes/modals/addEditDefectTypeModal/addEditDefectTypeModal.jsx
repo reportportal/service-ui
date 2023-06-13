@@ -116,7 +116,7 @@ const AddEditDefectTypeModal = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
-  const [color, setColor] = useState();
+  const [color, setColor] = useState(defectType.color);
 
   useEffect(() => {
     initialize(defectType);
@@ -167,6 +167,10 @@ const AddEditDefectTypeModal = ({
 
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+  };
+
+  const normalizeColor = (currentColor) => {
+    return currentColor.toLowerCase();
   };
 
   return (
@@ -222,10 +226,9 @@ const AddEditDefectTypeModal = ({
           name={COLOR_FIELD_KEY}
           className={cx('color-picker')}
           dataAutomationId={COLOR_FIELD_KEY + FIELD}
-          onChange={(value) => {
-            setColor(value);
-          }}
+          onChange={setColor}
           value={color}
+          normalize={normalizeColor}
         >
           <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
         </FieldElement>
