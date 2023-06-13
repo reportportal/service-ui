@@ -79,18 +79,6 @@ const DeleteAccountFeedback = () => {
   const [otherValue, setOtherValue] = useState('');
   const [error, setError] = useState('');
 
-  const onContinue = () => {
-    dispatch(
-      showModalAction({
-        id: 'deleteAccountModal',
-        data: {
-          options,
-          otherValue,
-        },
-      }),
-    );
-  };
-
   const disabledContinueButton = () => {
     let isAnyOptionChecked = false;
     Object.keys(options).forEach((key) => {
@@ -101,8 +89,16 @@ const DeleteAccountFeedback = () => {
 
   const continueButton = {
     text: formatMessage(messages.continue),
-    onClick: (closeModal) => {
-      onContinue(closeModal);
+    onClick: () => {
+      dispatch(
+        showModalAction({
+          id: 'deleteAccountModal',
+          data: {
+            options,
+            otherValue,
+          },
+        }),
+      );
     },
     disabled: disabledContinueButton(),
   };
