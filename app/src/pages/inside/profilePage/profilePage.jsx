@@ -29,6 +29,7 @@ import {
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
+import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { ApiKeys } from './apiKeys';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
@@ -116,7 +117,10 @@ export class ProfilePage extends Component {
               onChangeTab={this.props.dispatch}
             />
           </div>
-          <LocalizationBlock />
+          <div className={cx('footer')}>
+            <DeleteAccountBlock />
+            <LocalizationBlock />
+          </div>
         </section>
       </div>
     </PageLayout>

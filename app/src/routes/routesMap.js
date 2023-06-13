@@ -54,6 +54,7 @@ import {
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_SUB_PAGE,
+  LOGIN_PAGE_AFTER_REMOVE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -105,6 +106,7 @@ const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
 
   [LOGIN_PAGE]: '/login',
+  [LOGIN_PAGE_AFTER_REMOVE]: '/accountRemoved',
   [REGISTRATION_PAGE]: '/registration',
   [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
