@@ -26,34 +26,34 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { Image } from 'components/main/image';
 import Logo from 'common/img/logo.svg';
 import DeleteAccountImg from './img/deleteAccount.png';
-import styles from './loginPageAfterRemove.scss';
+import styles from './accountRemovedPage.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   header: {
-    id: 'LoginPageAfterRemove.header',
+    id: 'AccountRemovedPage.header',
     defaultMessage: 'the account has been deleted',
   },
   description: {
-    id: 'LoginPageAfterRemove.description',
+    id: 'AccountRemovedPage.description',
     defaultMessage:
       "Your account and personal data have been deleted from ReportPortal database.\nWe're sorry to see you go. An email notification has been sent to the email address associated with your account.",
   },
   message: {
-    id: 'LoginPageAfterRemove.message',
+    id: 'AccountRemovedPage.message',
     defaultMessage: 'Thank you for using ReportPortal',
   },
   login: {
-    id: 'LoginPageAfterRemove.login',
+    id: 'AccountRemovedPage.login',
     defaultMessage: 'Log in',
   },
   signup: {
-    id: 'LoginPageAfterRemove.signup',
+    id: 'AccountRemovedPage.signup',
     defaultMessage: 'Sign up',
   },
 });
 
-export const LoginPageAfterRemove = () => {
+export const AccountRemovedPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -68,7 +68,7 @@ export const LoginPageAfterRemove = () => {
   };
 
   return (
-    <div className={cx('login-page-after-remove')}>
+    <div className={cx('account-removed-page')}>
       <div className={cx('content')}>
         <Image className={cx('logo')} src={Logo} />
         <Image className={cx('image')} src={DeleteAccountImg} />

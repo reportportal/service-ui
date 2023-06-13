@@ -109,7 +109,7 @@ const DeleteAccountFeedback = () => {
   const onOtherValueChange = (e) => {
     const currentValue = e.target.value;
     setOtherValue(currentValue);
-    setOptions({ ...options, [OTHER]: !!currentValue });
+    setOptions((prevState) => ({ ...prevState, [OTHER]: !!currentValue }));
     setError(currentValue.length > 128 ? formatMessage(messages.inputError) : '');
   };
 
@@ -117,7 +117,7 @@ const DeleteAccountFeedback = () => {
     Object.keys(options).map((key) => {
       const checked = options[key];
       const onChange = () => {
-        setOptions({ ...options, [key]: !checked });
+        setOptions((prevState) => ({ ...prevState, [key]: !checked }));
       };
       return (
         <li key={key} className={cx('option')}>

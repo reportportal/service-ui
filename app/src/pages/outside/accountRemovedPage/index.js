@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LoginPageAfterRemove } from './loginPageAfterRemove';
+export { AccountRemovedPage } from './accountRemovedPage';

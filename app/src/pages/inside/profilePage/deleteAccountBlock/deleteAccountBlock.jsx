@@ -58,7 +58,9 @@ Button.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
 };
-const TooltipContent = ({ formatMessage }) => <span>{formatMessage(messages.tooltipText)}</span>;
+const TooltipContent = ({ formatMessage }) => (
+  <div className={cx('tooltip-content')}>{formatMessage(messages.tooltipText)}</div>
+);
 TooltipContent.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
@@ -66,7 +68,6 @@ TooltipContent.propTypes = {
 const ButtonWithTooltip = withTooltip({
   ContentComponent: TooltipContent,
   side: 'top',
-  noArrow: false,
   tooltipWrapperClassName: cx('tooltip-wrapper'),
 })(Button);
 
@@ -87,13 +88,9 @@ export const DeleteAccountBlock = () => {
   return (
     <div className={cx('delete-account-block')}>
       {isAdmin ? (
-        <ButtonWithTooltip
-          onClick={onDeleteAccountClick}
-          formatMessage={formatMessage}
-          disabled={isAdmin}
-        />
+        <ButtonWithTooltip formatMessage={formatMessage} disabled />
       ) : (
-        <Button onClick={onDeleteAccountClick} formatMessage={formatMessage} disabled={isAdmin} />
+        <Button onClick={onDeleteAccountClick} formatMessage={formatMessage} />
       )}
     </div>
   );

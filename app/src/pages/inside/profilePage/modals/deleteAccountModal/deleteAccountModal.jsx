@@ -25,7 +25,7 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
-import { LOGIN_PAGE_AFTER_REMOVE } from 'controllers/pages';
+import { ACCOUNT_REMOVED_PAGE } from 'controllers/pages';
 import styles from './deleteAccountModal.scss';
 
 const cx = classNames.bind(styles);
@@ -61,13 +61,11 @@ const DeleteAccount = ({ data }) => {
   const { options, otherValue } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [isConfirmed, setIsConfirmed] = useState(false);
   const [value, setValue] = useState('');
 
   const onChange = (e) => {
     const currentValue = e.target.value;
     setValue(currentValue);
-    setIsConfirmed(currentValue === DELETE);
   };
 
   const onDelete = (closeModal) => {
@@ -75,16 +73,14 @@ const DeleteAccount = ({ data }) => {
     // todo send 'options' and 'otherValue' to GA4
     // todo dispatch delete account action with delete request
     dispatch(logoutAction());
-    dispatch(redirect({ type: LOGIN_PAGE_AFTER_REMOVE }));
+    dispatch(redirect({ type: ACCOUNT_REMOVED_PAGE }));
   };
 
   const deleteButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    onClick: (closeModal) => {
-      onDelete(closeModal);
-    },
+    onClick: onDelete,
     danger: true,
-    disabled: !isConfirmed,
+    disabled: value !== DELETE,
   };
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
