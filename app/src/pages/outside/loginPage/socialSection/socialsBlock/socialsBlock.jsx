@@ -69,10 +69,10 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_VK_ICON)}
-          href={referenceDictionary.rpVk}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_LINKEDIN_ICON)}
+          href={referenceDictionary.rpLinkedin}
           target="_blank"
-          className={cx('social-link', 'vk-icon')}
+          className={cx('social-link', 'linkedin-icon')}
         >
           {}
         </a>

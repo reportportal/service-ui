@@ -41,10 +41,10 @@ export const LOGIN_PAGE_EVENTS = {
     action: 'Click on Icon YouTube on Welcome screen',
     label: 'Transition to YouTube',
   },
-  CLICK_VK_ICON: {
+  CLICK_LINKEDIN_ICON: {
     category: LOGIN_PAGE,
-    action: 'Click on Icon VK on Welcome screen',
-    label: 'Transition to VK',
+    action: 'Click on Icon Linkedin on Welcome screen',
+    label: 'Transition to Linkedin',
   },
   CLICK_SLACK_ICON: {
     category: LOGIN_PAGE,
