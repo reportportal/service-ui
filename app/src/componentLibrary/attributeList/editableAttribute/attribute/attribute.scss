@@ -14,16 +14,37 @@
  * limitations under the License.
  */
 
+@mixin draw-attribute-border($width, $height, $translateX: 0, $translateY: 0) {
+  &:not(.disabled, :active) {
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+      width: $width;
+      height: $height;
+      border-radius: 6px;
+      border: 2px solid $COLOR--topaz-focused;
+      transform: translate($translateX, $translateY);
+    }
+  }
+}
+
 @mixin attribute($bgColor) {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 28px;
-  padding: 4px 8px;
   background-color: $bgColor;
   border-radius: 6px;
   cursor: pointer;
   box-sizing: border-box;
   max-width: 100%;
+  column-gap: 8px;
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 @mixin label($color) {
@@ -35,8 +56,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  padding: 4px 8px;
 
-  .key, .value, .value-without-key {
+  .key,
+  .value,
+  .value-without-key {
     display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -71,7 +95,7 @@
   display: inline-block;
   height: 10px;
   width: 10px;
-  margin-left: 20px;
+  margin-right: 8px;
   line-height: 8px;
 
   svg {
@@ -83,12 +107,30 @@
   &.attribute {
     @include attribute($COLOR--bg-200);
     @include disabled-state($COLOR--e-300, $COLOR--e-100);
+
+    &:focus-visible:not(:hover) {
+      @include draw-attribute-border(99%, 85%);
+    }
   }
   &.label {
+    position: relative;
     @include label($COLOR--darkmode-gray-200);
+
+    &:focus:not(.disabled),
+    &:focus-visible:not(.disabled) {
+      outline: none;
+      @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);
+    }
   }
   &.remove-icon {
+    position: relative;
     @include remove-icon($COLOR--darkmode-gray-200);
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      @include draw-attribute-border(120%, 140%, -3px, -4px);
+    }
   }
 }
 

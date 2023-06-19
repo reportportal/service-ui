@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -22,10 +22,23 @@ import { notSystemAttributePredicate } from 'common/utils/attributeUtils';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
 import { Button } from 'componentLibrary/button';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { EditableAttribute } from './editableAttribute';
 import styles from './attributeList.scss';
 
 const cx = classNames.bind(styles);
+
+const attributeKeyValueRef = 'attributeKeyValueRef';
+const crossIconRef = 'crossIconRef';
+const attributeWrapperRef = 'attributeWrapperRef';
+
+const scheduleUpdate = (update, timer = 0) => setTimeout(update, timer);
+
+const handleChangeFocus = (node) => {
+  if (node) {
+    node.focus();
+  }
+};
 
 export const AttributeList = ({
   attributes,
@@ -42,6 +55,39 @@ export const AttributeList = ({
   attributesListClassname,
   editorDefaultOpen,
 }) => {
+  const addNewAttrRef = useRef(null);
+  const attributesRefs = useRef(null);
+
+  const addNewAttButtonRefCb = (node) => {
+    addNewAttrRef.current = node;
+  };
+
+  const getAttributesRefsMap = () => {
+    if (!attributesRefs.current) {
+      attributesRefs.current = new Map();
+    }
+
+    return attributesRefs.current;
+  };
+
+  const addToAttributesRefsMap = (key, value) => {
+    const attributesRefsMap = getAttributesRefsMap();
+
+    if (attributesRefsMap.has(key)) {
+      attributesRefsMap.set(key, Object.assign(attributesRefsMap.get(key), value));
+    } else {
+      attributesRefsMap.set(key, value);
+    }
+  };
+
+  const handleAddNewAttrFocus = () => {
+    scheduleUpdate(() => {
+      if (addNewAttrRef.current) {
+        addNewAttrRef.current.focus();
+      }
+    });
+  };
+
   const getExistEditableAttr = () => {
     return attributes.find((attr) => attr.edited);
   };
@@ -56,6 +102,7 @@ export const AttributeList = ({
     const { edited, ...newAttribute } = attribute;
     newAttributes[index] = newAttribute;
     onChange(newAttributes);
+    handleAddNewAttrFocus();
   };
 
   const createRemoveHandler = (index) => () => {
@@ -75,6 +122,8 @@ export const AttributeList = ({
       newAttributes[index] = attribute;
     }
     onChange(newAttributes);
+    handleAddNewAttrFocus();
+
     return newAttributes;
   };
 
@@ -91,6 +140,7 @@ export const AttributeList = ({
       ...newAttributes[index],
       edited: true,
     };
+    handleAddNewAttrFocus();
     onChange(newAttributes);
   };
 
@@ -102,6 +152,79 @@ export const AttributeList = ({
       attributes.filter((attribute) => notSystemAttributePredicate(attribute) && !attribute.new),
     [attributes],
   );
+
+  const removeFromAttributesRefsMap = (key) => {
+    const attributesRefsMap = getAttributesRefsMap();
+
+    attributesRefsMap.delete(key);
+  };
+
+  const createAttributeElementRefCb = (uniqueIdentifier, refName) => (node) => {
+    if (node) {
+      addToAttributesRefsMap(uniqueIdentifier, { [refName]: node });
+    } else {
+      removeFromAttributesRefsMap(uniqueIdentifier);
+    }
+  };
+
+  const getAttributesMapValue = (uniqueIdentifier, refName) => {
+    const attributesRefsMap = getAttributesRefsMap();
+
+    return attributesRefsMap.get(uniqueIdentifier)[refName];
+  };
+
+  const getAttributeUniqueKey = ({ key, value }) => (key ? `${key}_${value}` : value);
+
+  const updateFocusOnRemove = (uniqueIdentifier) => {
+    const attributesRefsMap = getAttributesRefsMap();
+    const attributesRefsKeys = Array.from(attributesRefsMap.keys());
+    const offsetIndexToLength = 1;
+
+    const uniqueIdentifierIndex = attributesRefsKeys.findIndex((key) => key === uniqueIdentifier);
+
+    const isLastAttributeRemoved =
+      uniqueIdentifierIndex + offsetIndexToLength === attributesRefsKeys.length;
+
+    if (isLastAttributeRemoved) {
+      handleAddNewAttrFocus();
+    } else {
+      const nextItemIndex = uniqueIdentifierIndex + 1;
+      const nextAttributeUniqueIdentifier = attributesRefsKeys[nextItemIndex];
+
+      scheduleUpdate(() => {
+        handleChangeFocus(
+          getAttributesMapValue(nextAttributeUniqueIdentifier, attributeWrapperRef),
+        );
+      });
+    }
+  };
+
+  const createAttributeContentKeyDownHandler = (uniqueIdentifier, handler, refName) => (event) => {
+    const { keyCode, shiftKey } = event;
+
+    if (keyCode === ENTER_KEY_CODE) {
+      handler();
+
+      if (refName === attributeKeyValueRef) {
+        updateFocusOnRemove(uniqueIdentifier);
+      }
+
+      return;
+    }
+
+    if (keyCode === TAB_KEY_CODE && !shiftKey) {
+      event.preventDefault();
+      handleChangeFocus(getAttributesMapValue(uniqueIdentifier, refName));
+    }
+  };
+
+  const createAttributeWrapperKeyDownHandler = (uniqueIdentifier) => (event) => {
+    const { keyCode } = event;
+
+    if (keyCode === ENTER_KEY_CODE) {
+      handleChangeFocus(getAttributesMapValue(uniqueIdentifier, attributeKeyValueRef));
+    }
+  };
 
   return (
     <div className={cx(attributesListClassname)} data-automation-id={'attributesField'}>
@@ -122,24 +245,63 @@ export const AttributeList = ({
       <div className={cx('attributes-wrapper')}>
         {availableAttributes.length > 0 && (
           <span className={cx('attributes', { 'editable-attribute': editableAttr })}>
-            {availableAttributes.map((attribute, i) => (
-              <EditableAttribute
-                key={`${attribute.key}_${attribute.value}`}
-                attribute={attribute}
-                attributes={availableAttributes}
-                editMode={attribute.edited}
-                onChange={createChangeHandler()}
-                onRemove={createRemoveHandler(i)}
-                onEdit={editable && createEditHandler(i)}
-                onCancelEdit={createCancelEditHandler(i)}
-                disabled={disabled}
-                customClass={customClass}
-              />
-            ))}
+            {availableAttributes.map((attribute, i) => {
+              const keyAttrValue = getAttributeUniqueKey(attribute);
+              const editHandler = createEditHandler(i);
+              const removeHandler = createRemoveHandler(i);
+              const attributeCrossIconRefCb = createAttributeElementRefCb(
+                keyAttrValue,
+                crossIconRef,
+              );
+              const attributeKeyValueRefCb = createAttributeElementRefCb(
+                keyAttrValue,
+                attributeKeyValueRef,
+              );
+              const attributeWrapperRefCb = createAttributeElementRefCb(
+                keyAttrValue,
+                attributeWrapperRef,
+              );
+              const handleAttributeKeyValueKeyDown = createAttributeContentKeyDownHandler(
+                keyAttrValue,
+                editHandler,
+                crossIconRef,
+              );
+              const handleCrossIconKeyDown = createAttributeContentKeyDownHandler(
+                keyAttrValue,
+                removeHandler,
+                attributeKeyValueRef,
+              );
+              const handleAttributeWrapperKeyDown = createAttributeWrapperKeyDownHandler(
+                keyAttrValue,
+              );
+
+              return (
+                <EditableAttribute
+                  key={keyAttrValue}
+                  attribute={attribute}
+                  attributes={availableAttributes}
+                  editMode={attribute.edited}
+                  onChange={createChangeHandler()}
+                  onRemove={removeHandler}
+                  onEdit={editable && editHandler}
+                  onCancelEdit={createCancelEditHandler(i)}
+                  disabled={disabled}
+                  customClass={customClass}
+                  keyValueRefCallback={attributeKeyValueRefCb}
+                  crossIconRefCallback={attributeCrossIconRefCb}
+                  wrapperRefCallback={attributeWrapperRefCb}
+                  handleWrapperKeyDown={handleAttributeWrapperKeyDown}
+                  handleAttributeKeyValueKeyDown={handleAttributeKeyValueKeyDown}
+                  handleCrossIconKeyDown={handleCrossIconKeyDown}
+                />
+              );
+            })}
           </span>
         )}
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
+            refCallback={addNewAttButtonRefCb}
+            customClassName={cx('button-focused')}
             startIcon={PlusIcon}
             onClick={onAddNew}
             variant={'text'}

@@ -34,6 +34,7 @@ export const Button = ({
   title,
   customClassName,
   dataAutomationId,
+  refCallback,
 }) => {
   const classes = cx('button', variant, customClassName, {
     disabled,
@@ -44,6 +45,7 @@ export const Button = ({
 
   return (
     <button
+      ref={refCallback}
       type={type}
       disabled={disabled}
       className={classes}
@@ -71,6 +73,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   type: PropTypes.string,
   onClick: PropTypes.func,
+  refCallback: PropTypes.func,
   form: PropTypes.string,
   title: PropTypes.string,
   customClassName: PropTypes.string,
@@ -86,6 +89,7 @@ Button.defaultProps = {
   disabled: false,
   type: 'button',
   onClick: () => {},
+  refCallback: (node) => node,
   form: null,
   title: '',
   customClassName: '',
