@@ -29,9 +29,9 @@ const getPostContent = (text, entities) => {
   let result = '';
   let currentReplaceObject;
 
-  const parseEntitie = (curEntities, getHtml) => {
-    Object.keys(curEntities).map((objKentityey) => {
-      const entity = curEntities[objKentityey];
+  const parseEntity = (curEntities, getHtml) => {
+    Object.keys(curEntities).map((objEntityKey) => {
+      const entity = curEntities[objEntityKey];
       if (entity.indices[0] !== entity.indices[1]) {
         replaceObjects.push({
           start: entity.indices[0],
@@ -44,7 +44,7 @@ const getPostContent = (text, entities) => {
   };
 
   entities.urls &&
-    parseEntitie(
+    parseEntity(
       entities.urls,
       (entity) =>
         `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
@@ -52,7 +52,7 @@ const getPostContent = (text, entities) => {
         }</a>`,
     );
   entities.user_mentions &&
-    parseEntitie(
+    parseEntity(
       entities.user_mentions,
       (entity) =>
         `<a class=${cx(
@@ -62,7 +62,7 @@ const getPostContent = (text, entities) => {
         }</a>`,
     );
   entities.hashtags &&
-    parseEntitie(
+    parseEntity(
       entities.hashtags,
       (entity) =>
         `<a class=${cx('twit-link')} target="_blank" href="https://twitter.com/hashtag/${
@@ -70,7 +70,7 @@ const getPostContent = (text, entities) => {
         }">#${entity.text}</a>`,
     );
   entities.media &&
-    parseEntitie(
+    parseEntity(
       entities.media,
       (entity) =>
         `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
@@ -78,18 +78,20 @@ const getPostContent = (text, entities) => {
         }</a>`,
     );
   replaceObjects.sort((a, b) => a.start - b.start);
-  text.split('').forEach((letter, index) => {
+
+  const symbols = [...text];
+
+  symbols.forEach((symbol, index) => {
     if (!currentReplaceObject && replaceObjects.length) {
       currentReplaceObject = replaceObjects.shift();
     }
 
     if (!currentReplaceObject || index < currentReplaceObject.start) {
-      result += letter;
+      result += symbol;
     } else if (currentReplaceObject.start === index) {
       result += currentReplaceObject.html;
-    } else if (index >= currentReplaceObject.end) {
+    } else if (index === currentReplaceObject.end) {
       currentReplaceObject = null;
-      result += ' ';
     }
   });
 
