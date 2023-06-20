@@ -47,10 +47,10 @@ export class ConfigExamplesBlock extends Component {
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
                 TabsConfig.javaConfig(API_KEY, activeProject),
-                TabsConfig.rubyConfig(API_KEY, activeProject),
                 TabsConfig.pythonConfig(API_KEY, activeProject),
                 TabsConfig.dotNetConfig(API_KEY, activeProject),
                 TabsConfig.nodejsConfig(API_KEY, activeProject),
+                TabsConfig.rubyConfig(API_KEY, activeProject),
               ]}
             />
           </div>
