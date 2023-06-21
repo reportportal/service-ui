@@ -26,7 +26,6 @@ import { BlockContainerBody } from '../blockContainer';
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-const API_KEY = '<API_KEY>';
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
@@ -46,11 +45,11 @@ export class ConfigExamplesBlock extends Component {
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(API_KEY, activeProject),
-                TabsConfig.pythonConfig(API_KEY, activeProject),
-                TabsConfig.dotNetConfig(API_KEY, activeProject),
-                TabsConfig.nodejsConfig(API_KEY, activeProject),
-                TabsConfig.rubyConfig(API_KEY, activeProject),
+                TabsConfig.javaConfig(activeProject),
+                TabsConfig.pythonConfig(activeProject),
+                TabsConfig.dotNetConfig(activeProject),
+                TabsConfig.nodejsConfig(activeProject),
+                TabsConfig.rubyConfig(activeProject),
               ]}
             />
           </div>
