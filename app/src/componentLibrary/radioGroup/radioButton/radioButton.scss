@@ -58,6 +58,10 @@
       color: $COLOR--e-300;
     }
   }
+
+  &:focus-visible:not(.disabled) .toggler {
+    border: 2px solid $COLOR--topaz-focused;
+  }
 }
 
 .input {
@@ -127,14 +131,6 @@
 
   &:hover:after:not(.disabled) {
     background-color: $COLOR--topaz-hover;
-  }
-
-  &:focus {
-    border-color: $COLOR--topaz-focused;
-  }
-
-  &:focus:after {
-    background-color: $COLOR--topaz-pressed;
   }
 
   &.disabled {

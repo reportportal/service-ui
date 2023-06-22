@@ -15,24 +15,47 @@
  */
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
+import { useRef } from 'react';
 import styles from './radioButton.scss';
 
 const cx = classNames.bind(styles);
 
 export const RadioButton = ({ option, value, onChange, onFocus, onBlur, className, variant }) => {
+  const inputRef = useRef(null);
   const isChecked = option.value === value;
+
+  const handleKeyDown = (event) => {
+    const { keyCode } = event;
+
+    if (keyCode === SPACE_KEY_CODE) {
+      event.preventDefault();
+
+      return;
+    }
+
+    if (keyCode === ENTER_KEY_CODE) {
+      if (inputRef.current) {
+        inputRef.current.click();
+      }
+    }
+  };
 
   return (
     // eslint-disable-next-line
     <label
+      id="radio-label"
       className={cx(variant, className, 'radio-button', {
         disabled: option.disabled,
       })}
       onFocus={onFocus}
       onBlur={onBlur}
-      tabIndex="0"
+      tabIndex={option.disabled ? -1 : 0}
+      onKeyDown={option.disabled ? null : handleKeyDown}
     >
       <input
+        tabIndex={-1}
+        ref={inputRef}
         type="radio"
         className={cx('input')}
         disabled={option.disabled}
@@ -41,6 +64,9 @@ export const RadioButton = ({ option, value, onChange, onFocus, onBlur, classNam
         checked={isChecked}
       />
       <span
+        role="radio"
+        aria-labelledby="radio-label"
+        aria-checked={isChecked}
         className={cx(variant, 'toggler', {
           disabled: option.disabled,
           checked: isChecked,
