@@ -20,7 +20,6 @@ import { Attribute } from './attribute';
 export const EditableAttribute = ({ attribute, onChange, onEdit, onCancelEdit, ...rest }) => (
   <Attribute {...rest} attribute={attribute} onClick={onEdit} />
 );
-
 EditableAttribute.propTypes = {
   attribute: PropTypes.object,
   attributes: PropTypes.array,
@@ -31,6 +30,12 @@ EditableAttribute.propTypes = {
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
   onCancelEdit: PropTypes.func,
+  handleWrapperKeyDown: PropTypes.func,
+  handleAttributeKeyValueKeyDown: PropTypes.func,
+  handleCrossIconKeyDown: PropTypes.func,
+  wrapperRefCallback: PropTypes.func,
+  keyValueRefCallback: PropTypes.func,
+  crossIconRefCallback: PropTypes.func,
 };
 EditableAttribute.defaultProps = {
   attribute: {},
@@ -42,4 +47,10 @@ EditableAttribute.defaultProps = {
   onRemove: () => {},
   onChange: () => {},
   onCancelEdit: () => {},
+  handleWrapperKeyDown: () => {},
+  handleAttributeKeyValueKeyDown: () => {},
+  handleCrossIconKeyDown: () => {},
+  wrapperRefCallback: (node) => node,
+  keyValueRefCallback: (node) => node,
+  crossIconRefCallback: (node) => node,
 };

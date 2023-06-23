@@ -30,6 +30,12 @@ export const Attribute = ({
   customClass,
   variant,
   maxCellWidth,
+  keyValueRefCallback,
+  crossIconRefCallback,
+  handleWrapperKeyDown,
+  handleAttributeKeyValueKeyDown,
+  handleCrossIconKeyDown,
+  wrapperRefCallback,
 }) => {
   const onClickRemove = (e) => {
     e.stopPropagation();
@@ -38,10 +44,18 @@ export const Attribute = ({
 
   return (
     <div
+      ref={wrapperRefCallback}
+      tabIndex={disabled ? -1 : 0}
       className={cx('attribute', variant, customClass, { disabled })}
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled ? null : onClick}
+      onKeyDown={disabled ? null : handleWrapperKeyDown}
     >
-      <div className={cx('label', variant)}>
+      <div
+        ref={keyValueRefCallback}
+        tabIndex={-1}
+        className={cx('label', variant, { disabled })}
+        onKeyDown={disabled ? null : handleAttributeKeyValueKeyDown}
+      >
         {attribute.key ? (
           <>
             <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
@@ -57,7 +71,13 @@ export const Attribute = ({
         )}
       </div>
       {!disabled && (
-        <div className={cx('remove-icon', variant)} onClick={onClickRemove}>
+        <div
+          tabIndex={-1}
+          ref={crossIconRefCallback}
+          className={cx('remove-icon', variant)}
+          onClick={onClickRemove}
+          onKeyDown={handleCrossIconKeyDown}
+        >
           {Parser(CrossIcon)}
         </div>
       )}
@@ -73,6 +93,12 @@ Attribute.propTypes = {
   onRemove: PropTypes.func,
   variant: PropTypes.string,
   maxCellWidth: PropTypes.number,
+  keyValueRefCallback: PropTypes.func,
+  crossIconRefCallback: PropTypes.func,
+  handleWrapperKeyDown: PropTypes.func,
+  handleAttributeKeyValueKeyDown: PropTypes.func,
+  handleCrossIconKeyDown: PropTypes.func,
+  wrapperRefCallback: PropTypes.func,
 };
 
 Attribute.defaultProps = {
@@ -83,4 +109,10 @@ Attribute.defaultProps = {
   onRemove: () => {},
   variant: 'light',
   maxCellWidth: 162,
+  keyValueRefCallback: () => {},
+  crossIconRefCallback: () => {},
+  handleWrapperKeyDown: () => {},
+  handleAttributeKeyValueKeyDown: () => {},
+  handleCrossIconKeyDown: () => {},
+  wrapperRefCallback: () => {},
 };
