@@ -26,6 +26,7 @@ export const Breadcrumb = ({
   maxBreadcrumbWidth,
   titleTailNumChars,
   descriptor: { title, link, onClick },
+  isClickable,
 }) => {
   const ref = useRef();
   const [breadcrumbTitle, setBreadcrumbTitle] = useState(null);
@@ -41,11 +42,17 @@ export const Breadcrumb = ({
 
   return (
     <div className={cx('breadcrumb')} title={breadcrumbTitle}>
-      <NavLink className={cx('link')} to={link} onClick={onClick}>
+      {isClickable ? (
+        <NavLink className={cx('link')} to={link} onClick={onClick}>
+          <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
+            {title}
+          </div>
+        </NavLink>
+      ) : (
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
           {title}
         </div>
-      </NavLink>
+      )}
     </div>
   );
 };
@@ -58,9 +65,11 @@ Breadcrumb.propTypes = {
     link: PropTypes.object.isRequired,
     onClick: PropTypes.func,
   }).isRequired,
+  isClickable: PropTypes.bool,
 };
 
 Breadcrumb.defaultProps = {
   maxBreadcrumbWidth: 132,
   titleTailNumChars: 8,
+  isClickable: true,
 };
