@@ -87,6 +87,7 @@ export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
                       descriptor={descriptor}
                       maxBreadcrumbWidth={maxBreadcrumbWidth}
                       titleTailNumChars={titleTailNumChars}
+                      isClickable={index !== shownDescriptors.length - 1}
                     />
                   );
                 }
@@ -95,12 +96,13 @@ export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
             </>
           ) : (
             <>
-              {shownDescriptors.map((descriptor) => (
+              {shownDescriptors.map((descriptor, index) => (
                 <Breadcrumb
                   key={descriptor.id}
                   descriptor={descriptor}
                   maxBreadcrumbWidth={maxBreadcrumbWidth}
                   titleTailNumChars={titleTailNumChars}
+                  isClickable={index !== shownDescriptors.length - 1}
                 />
               ))}
             </>

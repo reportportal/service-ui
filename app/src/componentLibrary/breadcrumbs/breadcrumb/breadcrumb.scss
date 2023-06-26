@@ -32,7 +32,9 @@
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
+}
 
+.link .breadcrumb-text {
   &:hover {
     color: $COLOR--topaz-hover-2;
   }
