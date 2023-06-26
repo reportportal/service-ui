@@ -75,22 +75,21 @@ export class LoginPage extends PureComponent {
     clearErrorAuth: () => {},
   };
 
-  componentDidMount() {
+  showError = () => {
     if (this.props.errorAuth) {
       this.props.showDefaultErrorNotification({
         message: this.props.errorAuth,
       });
       this.props.clearErrorAuth();
     }
+  };
+
+  componentDidMount() {
+    this.showError();
   }
 
   componentDidUpdate() {
-    if (this.props.errorAuth) {
-      this.props.showDefaultErrorNotification({
-        message: this.props.errorAuth,
-      });
-      this.props.clearErrorAuth();
-    }
+    this.showError();
   }
 
   getCurrentBlock = () => {
