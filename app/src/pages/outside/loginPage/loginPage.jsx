@@ -36,12 +36,17 @@ import { PolicyBlock } from './pageBlocks/policyBlock';
 
 const cx = classNames.bind(styles);
 
-@connectRouter(({ forgotPass, reset, errorAuth, multipleAuth }) => ({
-  forgotPass,
-  reset,
-  errorAuth,
-  multipleAuth,
-}))
+@connectRouter(
+  ({ forgotPass, reset, errorAuth, multipleAuth }) => ({
+    forgotPass,
+    reset,
+    errorAuth,
+    multipleAuth,
+  }),
+  {
+    clearErrorAuth: () => ({ errorAuth: '' }),
+  },
+)
 @connect(
   (state) => ({
     instanceType: instanceTypeSelector(state),
@@ -59,6 +64,7 @@ export class LoginPage extends PureComponent {
     multipleAuth: PropTypes.string,
     showDefaultErrorNotification: PropTypes.func,
     instanceType: PropTypes.string.isRequired,
+    clearErrorAuth: PropTypes.func,
   };
   static defaultProps = {
     forgotPass: '',
@@ -66,6 +72,7 @@ export class LoginPage extends PureComponent {
     errorAuth: '',
     multipleAuth: '',
     showDefaultErrorNotification: () => {},
+    clearErrorAuth: () => {},
   };
 
   componentDidMount() {
@@ -73,14 +80,16 @@ export class LoginPage extends PureComponent {
       this.props.showDefaultErrorNotification({
         message: this.props.errorAuth,
       });
+      this.props.clearErrorAuth();
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.errorAuth !== prevProps.errorAuth) {
+  componentDidUpdate() {
+    if (this.props.errorAuth) {
       this.props.showDefaultErrorNotification({
         message: this.props.errorAuth,
       });
+      this.props.clearErrorAuth();
     }
   }
 
