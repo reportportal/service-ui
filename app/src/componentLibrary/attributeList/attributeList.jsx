@@ -96,13 +96,32 @@ export const AttributeList = ({
     return attributes.findIndex((attr) => attr.edited);
   };
 
+  const isNewAttribute = (attribute) => !attribute.value;
+
+  const getAttributesMapValue = (uniqueIdentifier, refName) => {
+    const attributesRefsMap = getAttributesRefsMap();
+
+    return attributesRefsMap.get(uniqueIdentifier)[refName];
+  };
+
+  const getAttributeUniqueKey = ({ key, value }) => (key ? `${key}_${value}` : value);
+
   const createChangeHandler = () => (attribute) => {
     const index = getIndexEditableAttr();
     const newAttributes = [...attributes];
     const { edited, ...newAttribute } = attribute;
     newAttributes[index] = newAttribute;
     onChange(newAttributes);
-    handleAddNewAttrFocus();
+
+    if (isNewAttribute(attributes[index])) {
+      handleAddNewAttrFocus();
+    } else {
+      scheduleUpdate(() =>
+        handleChangeFocus(
+          getAttributesMapValue(getAttributeUniqueKey(attribute), attributeWrapperRef),
+        ),
+      );
+    }
   };
 
   const createRemoveHandler = (index) => () => {
@@ -111,18 +130,24 @@ export const AttributeList = ({
     onChange(newAttributes);
   };
 
-  const isNewAttribute = (attribute) => !attribute.value;
-
   const createCancelEditHandler = (index) => () => {
     const newAttributes = [...attributes];
     if (isNewAttribute(attributes[index])) {
       newAttributes.splice(index, 1);
+
+      handleAddNewAttrFocus();
     } else {
       const { edited, ...attribute } = newAttributes[index];
       newAttributes[index] = attribute;
+
+      scheduleUpdate(() =>
+        handleChangeFocus(
+          getAttributesMapValue(getAttributeUniqueKey(attribute), attributeWrapperRef),
+        ),
+      );
     }
+
     onChange(newAttributes);
-    handleAddNewAttrFocus();
 
     return newAttributes;
   };
@@ -166,14 +191,6 @@ export const AttributeList = ({
       removeFromAttributesRefsMap(uniqueIdentifier);
     }
   };
-
-  const getAttributesMapValue = (uniqueIdentifier, refName) => {
-    const attributesRefsMap = getAttributesRefsMap();
-
-    return attributesRefsMap.get(uniqueIdentifier)[refName];
-  };
-
-  const getAttributeUniqueKey = ({ key, value }) => (key ? `${key}_${value}` : value);
 
   const updateFocusOnRemove = (uniqueIdentifier) => {
     const attributesRefsMap = getAttributesRefsMap();
