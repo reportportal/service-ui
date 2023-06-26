@@ -142,7 +142,7 @@ export const AttributeList = ({
 
       scheduleUpdate(() =>
         handleChangeFocus(
-          getAttributesMapValue(getAttributeUniqueKey(attributes[index]), attributeWrapperRef),
+          getAttributesMapValue(getAttributeUniqueKey(attribute), attributeWrapperRef),
         ),
       );
     }
