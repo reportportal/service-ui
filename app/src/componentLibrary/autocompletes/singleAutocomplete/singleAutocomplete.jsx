@@ -19,7 +19,7 @@ import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
-import { TAB_KEY_CODE } from 'common/constants/keyCodes';
+import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 
 const DEFAULT_OPTIONS_INDEX = 0;
@@ -152,6 +152,10 @@ export class SingleAutocomplete extends Component {
                         },
                         refFunction,
                         onKeyDown: (event) => {
+                          if (event.keyCode === ENTER_KEY_CODE) {
+                            event.preventDefault();
+                          }
+
                           if (inputValue && isOpen) {
                             this.handleKeyDown(event, setHighlightedIndex);
                           }
