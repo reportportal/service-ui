@@ -220,6 +220,7 @@ export const AttributeList = ({
     const { keyCode, shiftKey } = event;
 
     if (keyCode === ENTER_KEY_CODE) {
+      event.preventDefault();
       handler();
 
       if (refName === attributeKeyValueRef) {
