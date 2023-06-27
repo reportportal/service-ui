@@ -109,7 +109,7 @@
     @include disabled-state($COLOR--e-300, $COLOR--e-100);
 
     &:focus-visible:not(:hover) {
-      @include draw-attribute-border(calc(99% - 2px), 85%);
+      @include draw-attribute-border(calc(100% - 2px), 85%);
     }
   }
   &.label {
