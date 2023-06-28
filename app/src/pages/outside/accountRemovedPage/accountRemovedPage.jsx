@@ -72,9 +72,11 @@ export const AccountRemovedPage = () => {
       <div className={cx('content')}>
         <Image className={cx('logo')} src={Logo} />
         <Image className={cx('image')} src={DeleteAccountImg} />
-        <div className={cx('header')}>{formatMessage(messages.header)}</div>
-        <div className={cx('description')}>{formatMessage(messages.description)}</div>
-        <div className={cx('message')}>{formatMessage(messages.message)}</div>
+        <h1>{formatMessage(messages.header)}</h1>
+        <p>{formatMessage(messages.description)}</p>
+        <p>
+          <b>{formatMessage(messages.message)}</b>
+        </p>
         <div className={cx('buttons-block')}>
           <GhostButton transparentBackground onClick={onLoginClick}>
             {formatMessage(messages.login)}
