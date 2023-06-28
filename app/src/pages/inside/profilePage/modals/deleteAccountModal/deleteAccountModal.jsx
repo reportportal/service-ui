@@ -56,9 +56,8 @@ const messages = defineMessages({
 
 const DELETE = 'DELETE';
 
+// eslint-disable-next-line no-unused-vars
 const DeleteAccount = ({ data }) => {
-  // eslint-disable-next-line no-unused-vars
-  const { options, otherValue } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [value, setValue] = useState('');
@@ -70,7 +69,7 @@ const DeleteAccount = ({ data }) => {
 
   const onDelete = (closeModal) => {
     closeModal();
-    // todo send 'options' and 'otherValue' to GA4
+    // todo send 'data' to GA4
     // todo dispatch delete account action with delete request
     dispatch(logoutAction());
     dispatch(redirect({ type: ACCOUNT_REMOVED_PAGE }));
@@ -103,10 +102,7 @@ const DeleteAccount = ({ data }) => {
   );
 };
 DeleteAccount.propTypes = {
-  data: PropTypes.shape({
-    options: PropTypes.object,
-    otherValue: PropTypes.string,
-  }),
+  data: PropTypes.object,
 };
 DeleteAccount.defaultProps = {
   data: {},

@@ -118,8 +118,8 @@ export class ProfilePage extends Component {
             />
           </div>
           <div className={cx('footer')}>
-            <DeleteAccountBlock />
             <LocalizationBlock />
+            <DeleteAccountBlock />
           </div>
         </section>
       </div>

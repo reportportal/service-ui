@@ -552,7 +552,7 @@
   "DeleteAccountFeedbackModal.continue": "Працягнуць",
   "DeleteAccountFeedbackModal.description": "Чаму вы выдаляеце свой уліковы запіс?",
   "DeleteAccountFeedbackModal.header": "Выдаліць уліковы запіс",
-  "DeleteAccountFeedbackModal.inputError": "Памер поля павінен быць не больш за 128 сімвалаў.",
+  "DeleteAccountFeedbackModal.textMore128Hint": "Памер поля павінен быць не больш за 128 сімвалаў.",
   "DeleteAccountModal.firstDescription": "Працэс беспаваротны. Націснуўшы на <b>\"Выдаліць\"</b> кнопку вы згаджаецеся выдаліць усе <b>вашу асабістую інфармацыю, уключаючы імя ўліковага запісу, адрас электроннай пошты і фота</b> з нашай базы дадзеных.",
   "DeleteAccountModal.header": "Выдаліць уліковы запіс",
   "DeleteAccountModal.label": "Увядзіце \"<b>DELETE</b>\" для пацверджання",

@@ -552,7 +552,7 @@
   "DeleteAccountFeedbackModal.continue": "Continue",
   "DeleteAccountFeedbackModal.description": "Why are you deleting your account?",
   "DeleteAccountFeedbackModal.header": "Delete account",
-  "DeleteAccountFeedbackModal.inputError": "The field should have size not more than 128 symbols.",
+  "DeleteAccountFeedbackModal.textMore128Hint": "The field should have size not more than 128 symbols.",
   "DeleteAccountModal.firstDescription": "The process is irrevocable. By clicking on the <b>\"Delete\"</b> button you agree to remove all <b>your personal information including your account name, email and photo</b> from our database.",
   "DeleteAccountModal.header": "Delete account",
   "DeleteAccountModal.label": "Type \"<b>DELETE</b>\" to confirm",

@@ -552,7 +552,7 @@
   "DeleteAccountFeedbackModal.continue": "Продовжити",
   "DeleteAccountFeedbackModal.description": "Чому ви видаляєте свій акаунт?",
   "DeleteAccountFeedbackModal.header": "Видалити аккаунт",
-  "DeleteAccountFeedbackModal.inputError": "Поле має бути розміром не більше 128 символів.",
+  "DeleteAccountFeedbackModal.textMore128Hint": "Поле має бути розміром не більше 128 символів.",
   "DeleteAccountModal.firstDescription": "Процес безповоротний. Натиснувши на <b>\"Видалити\"</b> кнопку ви погоджуєтеся видалити всі <b>вашу особисту інформацію, включаючи ім’я облікового запису, адресу електронної пошти та фото</b> з нашої бази даних.",
   "DeleteAccountModal.header": "Видалити аккаунт",
   "DeleteAccountModal.label": "Введіть \"<b>DELETE</b>\" для підтвердження",

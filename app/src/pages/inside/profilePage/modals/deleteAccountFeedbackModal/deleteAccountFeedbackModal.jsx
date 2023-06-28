@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { showModalAction } from 'controllers/modal';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields';
+import { Input } from 'components/inputs/input';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { bindMessageToValidator } from 'common/utils/validation';
+import { showModalAction } from 'controllers/modal';
+import {
+  deleteAccountFeedbackAnyCheckboxIsChecked,
+  deleteAccountFeedbackOtherValue,
+} from 'common/utils/validation/validate';
 import styles from './deleteAccountFeedbackModal.scss';
 
 const cx = classNames.bind(styles);
@@ -56,84 +64,36 @@ const messages = defineMessages({
     id: 'DeleteAccountFeedbackModal.OTHER',
     defaultMessage: 'Other',
   },
-  inputError: {
-    id: 'DeleteAccountFeedbackModal.inputError',
-    defaultMessage: 'The field should have size not more than 128 symbols.',
-  },
 });
 
 const NO_NEEDED = 'NO_NEEDED';
 const DISSATISFIED = 'DISSATISFIED';
 const ALTERNATIVE = 'ALTERNATIVE';
 const OTHER = 'OTHER';
+const OTHER_VALUE = 'OTHER_VALUE';
 
-const DeleteAccountFeedback = () => {
+const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [options, setOptions] = useState({
-    [NO_NEEDED]: false,
-    [DISSATISFIED]: false,
-    [ALTERNATIVE]: false,
-    [OTHER]: false,
-  });
-  const [otherValue, setOtherValue] = useState('');
-  const [error, setError] = useState('');
-
-  const disabledContinueButton = () => {
-    let isAnyOptionChecked = false;
-    Object.keys(options).forEach((key) => {
-      isAnyOptionChecked = isAnyOptionChecked || options[key];
-    });
-    return !isAnyOptionChecked || !!error;
-  };
 
   const continueButton = {
     text: formatMessage(messages.continue),
     onClick: () => {
-      dispatch(
-        showModalAction({
-          id: 'deleteAccountModal',
-          data: {
-            options,
-            otherValue,
-          },
-        }),
-      );
+      handleSubmit((data) => {
+        dispatch(
+          showModalAction({
+            id: 'deleteAccountModal',
+            data: { data },
+          }),
+        );
+      })();
     },
-    disabled: disabledContinueButton(),
+    disabled: invalid,
+    attributes: { type: 'submit' },
   };
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
-
-  const onOtherValueChange = (e) => {
-    const currentValue = e.target.value;
-    setOtherValue(currentValue);
-    setOptions((prevState) => ({ ...prevState, [OTHER]: !!currentValue }));
-    setError(currentValue.length > 128 ? formatMessage(messages.inputError) : '');
-  };
-
-  const renderOptions = () =>
-    Object.keys(options).map((key) => {
-      const checked = options[key];
-      const onChange = () => {
-        setOptions((prevState) => ({ ...prevState, [key]: !checked }));
-      };
-      return (
-        <li key={key} className={cx('option')}>
-          <InputCheckbox value={checked} onChange={onChange}>
-            <div className={cx('label')}>{formatMessage(messages[key])}</div>
-          </InputCheckbox>
-          {key === OTHER && (
-            <div className={cx('input')}>
-              <FieldErrorHint active={!!error} error={error}>
-                <Input value={otherValue} onChange={onOtherValueChange} />
-              </FieldErrorHint>
-            </div>
-          )}
-        </li>
-      );
-    });
 
   return (
     <ModalLayout
@@ -142,11 +102,50 @@ const DeleteAccountFeedback = () => {
       cancelButton={cancelButton}
     >
       <div className={cx('description')}>{formatMessage(messages.description)}</div>
-      <ul className={cx('options')}>{renderOptions()}</ul>
+      <form>
+        <ul className={cx('options')}>
+          {[NO_NEEDED, DISSATISFIED, ALTERNATIVE, OTHER].map((variant) => (
+            <li key={variant} className={cx('option')}>
+              <div className={cx('input')}>
+                <FieldProvider name={variant} format={Boolean}>
+                  <InputCheckbox>
+                    <div className={cx('label')}>{formatMessage(messages[variant])}</div>
+                  </InputCheckbox>
+                </FieldProvider>
+              </div>
+              {variant === OTHER && (
+                <div className={cx('input')}>
+                  <FieldProvider name={OTHER_VALUE}>
+                    <FieldErrorHint>
+                      <Input />
+                    </FieldErrorHint>
+                  </FieldProvider>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </form>
     </ModalLayout>
   );
 };
+DeleteAccountFeedback.propTypes = {
+  invalid: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 export const DeleteAccountFeedbackModal = withModal('deleteAccountFeedbackModal')(
-  DeleteAccountFeedback,
+  reduxForm({
+    form: 'deleteAccountFeedbackForm',
+    validate: ({ OTHER_VALUE: value, ...checkBoxes }) => ({
+      [OTHER_VALUE]: bindMessageToValidator(
+        deleteAccountFeedbackOtherValue,
+        'textMore128Hint',
+      )(value),
+      [NO_NEEDED]: deleteAccountFeedbackAnyCheckboxIsChecked(checkBoxes),
+    }),
+    onChange: (data, dispatch, { change }) => {
+      dispatch(change(OTHER, data[OTHER] || !!data[OTHER_VALUE]));
+    },
+  })(DeleteAccountFeedback),
 );
