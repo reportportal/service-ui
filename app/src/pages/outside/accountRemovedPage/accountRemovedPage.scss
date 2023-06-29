@@ -14,32 +14,43 @@
  * limitations under the License.
  */
 
-.container {
-  background-color: $COLOR--white-two;
-  padding: 0 120px;
+.account-removed-page {
+  display: flex;
+  height: 100%;
+  width: 100%;
 
-  .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    max-width: 1370px;
-    margin: 0 auto;
-    .section-wrapper {
-      padding: 0 30px;
-    }
+  h1 {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-family: $FONT-SEMIBOLD;
+    line-height: 24px;
+    margin-bottom: 16px;
   }
 
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 35px;
-    border-top: 2px solid $COLOR--gray-91;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      flex-direction: column;
-      align-items: center;
-    }
+  p {
+    font-size: 14px;
+    font-family: $FONT-REGULAR;
+    line-height: 20px;
+    max-width: 528px;
+    margin-bottom: 16px;
   }
+
+  b {
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+
+.content {
+  text-align: center;
+  margin: auto;
+  color: $COLOR--charcoal-grey;
+}
+
+.logo, .image {
+  display: flex;
+  margin: 0 auto 32px;
+}
+
+.buttons-block :nth-child {
+  margin: 0 8px;
 }
