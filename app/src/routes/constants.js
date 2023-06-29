@@ -52,10 +52,12 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   UNIQUE_ERRORS_PAGE,
   USER_PROFILE_SUB_PAGE,
+  ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 import { RawContentAppLayout } from 'layouts/appLayout/rawContentAppLayout';
 import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
+import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -64,6 +66,11 @@ export const pageRendering = {
   [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
 
   LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  [ACCOUNT_REMOVED_PAGE]: {
+    component: AccountRemovedPage,
+    layout: EmptyLayout,
+    access: ANONYMOUS_ACCESS,
+  },
   REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },

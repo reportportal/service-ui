@@ -15,15 +15,9 @@
  */
 
 .localization-block {
-  box-sizing: border-box;
-  padding: 15px 45px;
-  display: flex;
-  align-items: flex-start;
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin: 30px 0 0 15px;
-  }
-
-  border-top: 2px solid $COLOR--gray-91;
+  padding: 3px 0;
+  display: inline-flex;
+  margin-left: 10px;
 }
 
 .label {

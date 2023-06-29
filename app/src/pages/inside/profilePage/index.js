@@ -22,3 +22,5 @@ export { EditPersonalInformationModal } from './modals/editPersonalInfoModal';
 export { GenerateApiKeyModal } from './modals/generateApiKeyModal';
 export { ApiKeyGeneratedModal } from './modals/apiKeyGeneratedModal';
 export { RevokeApiKeyModal } from './modals/revokeApiKeyModal';
+export { DeleteAccountModal } from './modals/deleteAccountModal';
+export { DeleteAccountFeedbackModal } from './modals/deleteAccountFeedbackModal';

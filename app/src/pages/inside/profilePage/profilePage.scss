@@ -31,4 +31,16 @@
       padding: 0 30px;
     }
   }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 35px;
+    border-top: 2px solid $COLOR--gray-91;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 }
