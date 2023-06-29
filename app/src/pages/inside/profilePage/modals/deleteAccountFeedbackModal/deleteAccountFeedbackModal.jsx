@@ -29,7 +29,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { bindMessageToValidator } from 'common/utils/validation';
 import { showModalAction } from 'controllers/modal';
 import {
-  deleteAccountFeedbackAnyCheckboxIsChecked,
+  anyOptionSelected,
   deleteAccountFeedbackOtherValue,
 } from 'common/utils/validation/validate';
 import styles from './deleteAccountFeedbackModal.scss';
@@ -48,29 +48,29 @@ const messages = defineMessages({
     id: 'DeleteAccountFeedbackModal.continue',
     defaultMessage: 'Continue',
   },
-  NO_NEEDED: {
-    id: 'DeleteAccountFeedbackModal.NO_NEEDED',
+  noNeeded: {
+    id: 'DeleteAccountFeedbackModal.noNeeded',
     defaultMessage: 'The account is no longer needed',
   },
-  DISSATISFIED: {
-    id: 'DeleteAccountFeedbackModal.DISSATISFIED',
+  dissatisfied: {
+    id: 'DeleteAccountFeedbackModal.dissatisfied',
     defaultMessage: 'Dissatisfied with the service',
   },
-  ALTERNATIVE: {
-    id: 'DeleteAccountFeedbackModal.ALTERNATIVE',
+  alternative: {
+    id: 'DeleteAccountFeedbackModal.alternative',
     defaultMessage: 'Found a better alternative',
   },
-  OTHER: {
-    id: 'DeleteAccountFeedbackModal.OTHER',
+  other: {
+    id: 'DeleteAccountFeedbackModal.other',
     defaultMessage: 'Other',
   },
 });
 
-const NO_NEEDED = 'NO_NEEDED';
-const DISSATISFIED = 'DISSATISFIED';
-const ALTERNATIVE = 'ALTERNATIVE';
-const OTHER = 'OTHER';
-const OTHER_VALUE = 'OTHER_VALUE';
+const NO_NEEDED = 'noNeeded';
+const DISSATISFIED = 'dissatisfied';
+const ALTERNATIVE = 'alternative';
+const OTHER = 'other';
+const OTHER_REASON = 'otherReason';
 
 const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
   const { formatMessage } = useIntl();
@@ -101,21 +101,21 @@ const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
       okButton={continueButton}
       cancelButton={cancelButton}
     >
-      <div className={cx('description')}>{formatMessage(messages.description)}</div>
+      <p className={cx('description')}>{formatMessage(messages.description)}</p>
       <form>
         <ul className={cx('options')}>
           {[NO_NEEDED, DISSATISFIED, ALTERNATIVE, OTHER].map((variant) => (
             <li key={variant} className={cx('option')}>
               <div className={cx('input')}>
                 <FieldProvider name={variant} format={Boolean}>
-                  <InputCheckbox>
-                    <div className={cx('label')}>{formatMessage(messages[variant])}</div>
+                  <InputCheckbox className={cx('checkbox')}>
+                    <span className={cx('label')}>{formatMessage(messages[variant])}</span>
                   </InputCheckbox>
                 </FieldProvider>
               </div>
               {variant === OTHER && (
                 <div className={cx('input')}>
-                  <FieldProvider name={OTHER_VALUE}>
+                  <FieldProvider name={OTHER_REASON}>
                     <FieldErrorHint>
                       <Input />
                     </FieldErrorHint>
@@ -137,15 +137,18 @@ DeleteAccountFeedback.propTypes = {
 export const DeleteAccountFeedbackModal = withModal('deleteAccountFeedbackModal')(
   reduxForm({
     form: 'deleteAccountFeedbackForm',
-    validate: ({ OTHER_VALUE: value, ...checkBoxes }) => ({
-      [OTHER_VALUE]: bindMessageToValidator(
+    validate: ({ otherReason, ...options }) => ({
+      [OTHER_REASON]: bindMessageToValidator(
         deleteAccountFeedbackOtherValue,
-        'textMore128Hint',
-      )(value),
-      [NO_NEEDED]: deleteAccountFeedbackAnyCheckboxIsChecked(checkBoxes),
+        'deleteAccountReasonSizeHint',
+      )(otherReason),
+      [NO_NEEDED]: !anyOptionSelected(options),
     }),
-    onChange: (data, dispatch, { change }) => {
-      dispatch(change(OTHER, data[OTHER] || !!data[OTHER_VALUE]));
+    onChange: (formValues, dispatch, { change }) => {
+      const isOtherOptionReasonExists = !!formValues[OTHER_REASON];
+      if (!formValues[OTHER] && isOtherOptionReasonExists) {
+        dispatch(change(OTHER, isOtherOptionReasonExists));
+      }
     },
   })(DeleteAccountFeedback),
 );

@@ -34,13 +34,13 @@ const messages = defineMessages({
     id: 'DeleteAccountModal.header',
     defaultMessage: 'Delete account',
   },
-  firstDescription: {
-    id: 'DeleteAccountModal.firstDescription',
+  deleteAccountNote: {
+    id: 'DeleteAccountModal.deleteAccountNote',
     defaultMessage:
       'The process is irrevocable. By clicking on the <b>"Delete"</b> button you agree to remove all <b>your personal information including your account name, email and photo</b> from our database.',
   },
-  secondDescription: {
-    id: 'DeleteAccountModal.secondDescription',
+  deletePersonalDataNote: {
+    id: 'DeleteAccountModal.deletePersonalDataNote',
     defaultMessage:
       'All the data that you have created or reported to ReportPortal will remain in the app, but will no longer be available to you. This includes any <b>launches, filters, widgets, dashboards, etc</b>.',
   },
@@ -60,11 +60,11 @@ const DELETE = 'DELETE';
 const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [value, setValue] = useState('');
+  const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
-    const currentValue = e.target.value;
-    setValue(currentValue);
+    const newValue = e.target.value;
+    setConfirmationValue(newValue);
   };
 
   const onDelete = (closeModal) => {
@@ -79,7 +79,7 @@ const DeleteAccount = ({ data }) => {
     text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: onDelete,
     danger: true,
-    disabled: value !== DELETE,
+    disabled: confirmationValue !== DELETE,
   };
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -91,12 +91,24 @@ const DeleteAccount = ({ data }) => {
       okButton={deleteButton}
       cancelButton={cancelButton}
     >
-      <div className={cx('description')}>{Parser(formatMessage(messages.firstDescription))}</div>
-      <div className={cx('description')}>{Parser(formatMessage(messages.secondDescription))}</div>
-      <div className={cx('description')}>{formatMessage(messages.question)}</div>
-      <div className={cx('label')}>{Parser(formatMessage(messages.label))}</div>
+      <p className={cx('description')}>
+        {formatMessage(messages.deleteAccountNote, {
+          b: (message) => Parser(`<b>${message}</b>`),
+        })}
+      </p>
+      <p className={cx('description')}>
+        {formatMessage(messages.deletePersonalDataNote, {
+          b: (message) => Parser(`<b>${message}</b>`),
+        })}
+      </p>
+      <p className={cx('description')}>{formatMessage(messages.question)}</p>
+      <p className={cx('label')}>
+        {formatMessage(messages.label, {
+          b: (message) => Parser(`<b>${message}</b>`),
+        })}
+      </p>
       <div className={cx('input')}>
-        <Input value={value} onChange={onChange} />
+        <Input value={confirmationValue} onChange={onChange} />
       </div>
     </ModalLayout>
   );

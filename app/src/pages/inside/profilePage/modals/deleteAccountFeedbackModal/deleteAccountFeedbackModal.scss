@@ -26,11 +26,11 @@
   &:first-child {
     margin-top: 0;
   }
+}
 
-  label {
-    display: inline-block;
-    vertical-align: middle;
-  }
+.checkbox {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .label {
