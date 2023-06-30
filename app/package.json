@@ -104,7 +104,7 @@
     "@storybook/addon-links": "5.2.3",
     "@storybook/addon-viewport": "5.2.3",
     "@storybook/addons": "5.2.3",
-    "@storybook/react": "5.2.3",
+    "@storybook/react": "7.0.24",
     "@storybook/theming": "5.2.3",
     "axios-mock-adapter": "1.17.0",
     "babel-eslint": "10.0.3",
