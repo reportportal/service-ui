@@ -72,6 +72,7 @@ const ButtonWithTooltip = withTooltip({
   TooltipComponent: TooltipContent,
   data: {
     align: 'top',
+    dark: true,
   },
 })(Button);
 
