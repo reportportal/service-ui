@@ -22,7 +22,7 @@ import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { FieldProvider } from 'components/fields';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

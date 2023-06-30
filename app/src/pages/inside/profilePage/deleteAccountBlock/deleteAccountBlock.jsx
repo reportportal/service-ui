@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { withTooltip } from 'componentLibrary/tooltip';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import { showModalAction } from 'controllers/modal';
 import { isAdminSelector } from 'controllers/user';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
@@ -54,9 +54,12 @@ const Button = ({ onClick, formatMessage, disabled }) => (
   </GhostButton>
 );
 Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
   formatMessage: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
+};
+Button.propTypes = {
+  onClick: () => {},
 };
 const TooltipContent = ({ formatMessage }) => (
   <div className={cx('tooltip-content')}>{formatMessage(messages.tooltipText)}</div>
@@ -66,9 +69,10 @@ TooltipContent.propTypes = {
 };
 
 const ButtonWithTooltip = withTooltip({
-  ContentComponent: TooltipContent,
-  side: 'top',
-  tooltipWrapperClassName: cx('tooltip-wrapper'),
+  TooltipComponent: TooltipContent,
+  data: {
+    align: 'top',
+  },
 })(Button);
 
 export const DeleteAccountBlock = () => {

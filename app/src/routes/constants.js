@@ -55,8 +55,6 @@ import {
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
-import { RawContentAppLayout } from 'layouts/appLayout/rawContentAppLayout';
-import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
