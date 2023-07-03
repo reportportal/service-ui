@@ -1010,7 +1010,7 @@
   "InstancesSection.uninstallPluginTitle": "Выдаліць плагін",
   "InstancesSection.unlinkAndSetupManuallyDescription": "Адлучыце бягучы праект ад глабальных налад і наладзьце сваю ўласную інтэграцыю. Вы заўсёды можаце вярнуцца да глабальных налад.",
   "InstancesSection.unlinkAndSetupManuallyTitle": "Адлучыцца і Наладзіць Уручную",
-  "IntegrationForm.configurationNotSpecifiedInfo": "Налады не зададзены.",
+  "IntegrationForm.configurationNotSpecifiedInfo": "Налады не зададзены",
   "IntegrationForm.configurationTitle": "Канфігурацыя",
   "IntegrationForm.configureTitle": "Канфігураваць",
   "IntegrationSettingsContainer.updateIntegrationSuccess": "Інтэграцыя паспяхова абноўлена",

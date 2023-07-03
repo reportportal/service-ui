@@ -156,7 +156,6 @@ export const IntegrationSettings = (props) => {
     </div>
   );
 };
-
 IntegrationSettings.propTypes = {
   data: PropTypes.object.isRequired,
   formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
@@ -168,7 +167,6 @@ IntegrationSettings.propTypes = {
   isGlobal: PropTypes.bool,
   formKey: PropTypes.string,
 };
-
 IntegrationSettings.defaultProps = {
   editAuthConfig: null,
   preventTestConnection: false,
