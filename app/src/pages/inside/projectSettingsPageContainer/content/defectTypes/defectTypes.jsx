@@ -170,7 +170,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
       <div className={cx('defect-types-list')} data-automation-id="defectTypeGroupsList">
         {DEFECT_TYPES_SEQUENCE.map((groupName) => {
           return (
-            <div key={groupName} className={cx('defect-type-group')} data-automation-id="listItem">
+            <div key={groupName} className={cx('defect-type-group')}>
               <div className={cx('group-info')}>
                 <div className={cx('group-type')}>
                   <i
