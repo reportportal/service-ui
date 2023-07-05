@@ -77,7 +77,12 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
       allowCloseOutside={!dirty}
     >
       <div className={cx('description')}>{formatMessage(messages.editPatternName)}</div>
-      <FieldElement name="name" label={formatMessage(messages.patternName)} isRequired>
+      <FieldElement
+        name="name"
+        label={formatMessage(messages.patternName)}
+        isRequired
+        dataAutomationId="patternNameField"
+      >
         <FieldErrorHint provideHint={false}>
           <FieldText maxLength={55} defaultWidth={false} />
         </FieldErrorHint>

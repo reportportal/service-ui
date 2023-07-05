@@ -69,7 +69,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       footerNode={
-        <FieldProvider name="enabled" format={(value) => !!value}>
+        <FieldProvider name="enabled" format={(value) => !!value} dataAutomationId="enabledToggle">
           <Toggle className={cx('toggle')}>
             {formatMessage(messages.createPatternModalToggle)}
           </Toggle>
@@ -78,7 +78,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
     >
       {formatMessage(messages.createPatternModalDescription)}
       <div className={cx('content')}>
-        <FieldProvider name="name" type="text">
+        <FieldProvider name="name" type="text" dataAutomationId="patternNameField">
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(messages.createPatternModalPatternName)}
@@ -92,6 +92,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           type="text"
           label={formatMessage(messages.createPatternModalType)}
           className={cx('dropdown')}
+          dataAutomationId="patternTypeField"
         >
           <Dropdown defaultWidth={false} options={PATTERN_TYPES} />
         </FieldElement>
@@ -100,6 +101,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           name="value"
           type="text"
           isRequired
+          dataAutomationId="patternConditionField"
         >
           <FieldErrorHint provideHint={false}>
             {selectedType === REGEX_PATTERN ? (

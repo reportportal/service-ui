@@ -105,5 +105,5 @@ EmptyStatePage.defaultProps = {
   handleDocumentationClick: null,
   imageType: 'plus',
   buttonDataAutomationId: '',
-  documentationDataAutomationId: '',
+  documentationDataAutomationId: 'emptyStatePageDocsLink',
 };

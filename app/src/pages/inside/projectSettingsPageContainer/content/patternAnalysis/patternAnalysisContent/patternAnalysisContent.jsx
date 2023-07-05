@@ -56,7 +56,9 @@ export const PatternAnalysisContent = ({
   useEffect(() => {
     setHeaderTitleNode(
       <span className={cx('button')} onClick={onAddPattern}>
-        <Button disabled={disabled}>{formatMessage(messages.createPatternModalHeader)}</Button>
+        <Button disabled={disabled} dataAutomationId={'createPatternButton'}>
+          {formatMessage(messages.createPatternModalHeader)}
+        </Button>
       </span>,
     );
 
@@ -140,14 +142,17 @@ export const PatternAnalysisContent = ({
     {
       icon: CopyIcon,
       handler: onClonePattern,
+      dataAutomationId: 'duplicatePatternIcon',
     },
     {
       icon: PencilIcon,
       handler: onRenamePattern,
+      dataAutomationId: 'editPatternIcon',
     },
     {
       icon: BinIcon,
       handler: showDeleteConfirmationDialog,
+      dataAutomationId: 'deletePatternIcon',
     },
   ];
 
@@ -157,6 +162,7 @@ export const PatternAnalysisContent = ({
         <FieldElement
           withoutProvider
           description={formatMessage(messages.autoPatternAnalysisDescription)}
+          dataAutomationId="patternEnabledCheckbox"
         >
           <Checkbox
             disabled={disabled}
@@ -174,6 +180,7 @@ export const PatternAnalysisContent = ({
           actions={actions}
           onToggle={onToggleHandler}
           ruleItemContent={PatternRuleContent}
+          dataAutomationId="patternsList"
         />
       </div>
     </>
