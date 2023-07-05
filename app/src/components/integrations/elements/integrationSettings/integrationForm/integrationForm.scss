@@ -24,6 +24,12 @@
     max-width: 100%;
     margin-bottom: 30px;
   }
+
+  &.configuration-not-specified-view {
+    align-self: center;
+    margin-left: 0;
+    margin-top: 54px;
+  }
 }
 
 .integration-form-fields {
@@ -43,10 +49,11 @@
 }
 
 .configuration-not-specified-info {
-  color: $COLOR--gray-60;
-  font-size: 13px;
+  color: $COLOR--e-400;
+  font-size: 20px;
   font-family: $FONT-REGULAR;
-  line-height: 1.54;
+  line-height: 31px;
+  text-align: center;
 }
 
 .controls-block {

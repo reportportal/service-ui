@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
   configurationNotSpecifiedInfo: {
     id: 'IntegrationForm.configurationNotSpecifiedInfo',
-    defaultMessage: 'Configuration not specified.',
+    defaultMessage: 'Configuration is not specified',
   },
 });
 
@@ -128,34 +128,40 @@ export class IntegrationForm extends Component {
     const isSupportsMultipleInstances = isIntegrationSupportsMultipleInstances(pluginName);
 
     const { disabled } = this.state;
-    const isConfigurationNotSpecified = blocked && isEmptyConfiguration;
+    const isConfigurationNotSpecified = (blocked || !isEditable) && isEmptyConfiguration;
     const shouldFieldsBeHidden = !connected && isSupportsMultipleInstances;
 
     return (
-      <form className={cx('integration-form')}>
+      <form
+        className={cx('integration-form', {
+          'configuration-not-specified-view': isConfigurationNotSpecified,
+        })}
+      >
         {!shouldFieldsBeHidden && (
           <>
-            <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
             {isConfigurationNotSpecified ? (
               <p className={cx('configuration-not-specified-info')}>
                 {formatMessage(messages.configurationNotSpecifiedInfo)}
               </p>
             ) : (
-              <div className={cx('integration-form-fields')}>
-                {!shouldFieldsBeHidden && (
-                  <FieldsComponent
-                    initialize={initialize}
-                    change={change}
-                    integrationId={id}
-                    initialData={integrationParameters}
-                    pluginDetails={integrationType.details}
-                    disabled={disabled}
-                    updateMetaData={this.updateMetaData}
-                    isGlobal={isGlobal}
-                    pluginName={pluginName}
-                  />
-                )}
-              </div>
+              <>
+                <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
+                <div className={cx('integration-form-fields')}>
+                  {!shouldFieldsBeHidden && (
+                    <FieldsComponent
+                      initialize={initialize}
+                      change={change}
+                      integrationId={id}
+                      initialData={integrationParameters}
+                      pluginDetails={integrationType.details}
+                      disabled={disabled}
+                      updateMetaData={this.updateMetaData}
+                      isGlobal={isGlobal}
+                      pluginName={pluginName}
+                    />
+                  )}
+                </div>
+              </>
             )}
             {!blocked && isEditable && (
               <div className={cx('controls-block')}>

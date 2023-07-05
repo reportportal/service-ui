@@ -1010,7 +1010,7 @@
   "InstancesSection.uninstallPluginTitle": "Видалити плагін",
   "InstancesSection.unlinkAndSetupManuallyDescription": "Від'єднайте поточний проект від глобальних налаштувань і настройте свою власну інтеграцію. Ви завжди можете повернутися до глобальних налаштувань.",
   "InstancesSection.unlinkAndSetupManuallyTitle": "Від'єднатися Налаштувати Вручну",
-  "IntegrationForm.configurationNotSpecifiedInfo": "Налаштування не задані.",
+  "IntegrationForm.configurationNotSpecifiedInfo": "Налаштування не задані",
   "IntegrationForm.configurationTitle": "Конфігурація",
   "IntegrationForm.configureTitle": "Конфігурувати",
   "IntegrationSettingsContainer.updateIntegrationSuccess": "Інтеграція успішно оновлено",
