@@ -154,7 +154,16 @@ export const NestedGridRow = track()(
     };
     const loadCurrentStepButton = (
       <LoadButton
-        customClassName={cx('overflowed-button')}
+        loading={loading}
+        clickHandler={loadCurrentStep}
+        label={formatMessage(messages.loadCurrentStep)}
+        icon={LoadList}
+      />
+    );
+
+    const additionalNameCellBlockButton = (
+      <LoadButton
+        customClassName={cx('overflowed-button', { 'overflowed-button-collapsed-view': collapsed })}
         loading={loading}
         clickHandler={loadCurrentStep}
         label={formatMessage(messages.loadCurrentStep)}
@@ -170,7 +179,7 @@ export const NestedGridRow = track()(
           loading={collapsed && loading}
           onToggle={requestStep}
           level={level}
-          additionalNameCellBlock={showLoadCurrentStepButton && loadCurrentStepButton}
+          additionalNameCellBlock={showLoadCurrentStepButton && additionalNameCellBlockButton}
         />
         {!collapsed && (
           <>
