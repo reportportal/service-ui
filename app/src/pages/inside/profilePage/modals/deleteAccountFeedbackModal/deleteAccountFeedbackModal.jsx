@@ -19,12 +19,14 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { bindMessageToValidator } from 'common/utils/validation';
 import { showModalAction } from 'controllers/modal';
@@ -72,18 +74,20 @@ const ALTERNATIVE = 'alternative';
 const OTHER = 'other';
 const OTHER_REASON = 'otherReason';
 
-const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
+const DeleteAccountFeedback = track()(({ invalid, handleSubmit, tracking }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const continueButton = {
     text: formatMessage(messages.continue),
     onClick: () => {
+      const { trackEvent } = tracking;
+      trackEvent(PROFILE_PAGE_EVENTS.CONTINUE_BTN_FEEDBACK_MODAL);
       handleSubmit((data) => {
         dispatch(
           showModalAction({
             id: 'deleteAccountModal',
-            data: { data },
+            data,
           }),
         );
       })();
@@ -128,10 +132,14 @@ const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
       </form>
     </ModalLayout>
   );
-};
+});
 DeleteAccountFeedback.propTypes = {
   invalid: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
 };
 
 export const DeleteAccountFeedbackModal = withModal('deleteAccountFeedbackModal')(

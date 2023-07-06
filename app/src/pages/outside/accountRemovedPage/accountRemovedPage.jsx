@@ -17,12 +17,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import track from 'react-tracking';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { redirect } from 'redux-first-router';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { LOGIN_PAGE, REGISTRATION_PAGE } from 'controllers/pages';
 import { SAAS } from 'controllers/appInfo/constants';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
 import Logo from 'common/img/logo.svg';
 import DeleteAccountImg from './img/deleteAccount.png';
@@ -53,17 +56,20 @@ const messages = defineMessages({
   },
 });
 
-export const AccountRemovedPage = () => {
+export const AccountRemovedPage = track()(({ tracking }) => {
+  const { trackEvent } = tracking;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const instanceType = useSelector(instanceTypeSelector);
 
   const onLoginClick = () => {
+    trackEvent(PROFILE_PAGE_EVENTS.CLICK_LOG_IN);
     dispatch(redirect({ type: LOGIN_PAGE }));
   };
 
   const onSignupClick = () => {
+    trackEvent(PROFILE_PAGE_EVENTS.CLICK_SIGN_UP);
     dispatch(redirect({ type: REGISTRATION_PAGE }));
   };
 
@@ -90,4 +96,10 @@ export const AccountRemovedPage = () => {
       </div>
     </div>
   );
+});
+AccountRemovedPage.propTypes = {
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
 };

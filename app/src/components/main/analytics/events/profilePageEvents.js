@@ -14,8 +14,47 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from 'components/main/analytics/events/common/ga4Utils';
+import { GA_4_FIELD_LIMIT } from 'components/main/analytics/constants';
+
 export const PROFILE_PAGE = 'profile';
+const basicClickEventParametersProfile = getBasicClickEventParameters(PROFILE_PAGE);
+
 export const PROFILE_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_DELETE_ACCOUNT: {
+    ...basicClickEventParametersProfile,
+    icon_name: 'delete_account',
+  },
+  CONTINUE_BTN_FEEDBACK_MODAL: {
+    ...basicClickEventParametersProfile,
+    element_name: 'continue',
+    modal: 'delete_account',
+  },
+  getDeleteBtnDeleteModalEvent: (checkboxes, otherReason) => ({
+    ...basicClickEventParametersProfile,
+    element_name: 'delete',
+    modal: 'delete_account',
+    status: checkboxes.join('#'),
+    type: otherReason.slice(0, GA_4_FIELD_LIMIT),
+    condition: otherReason.slice(GA_4_FIELD_LIMIT),
+  }),
+  DELETE_BTN_DELETE_MODAL_EPAM: {
+    ...basicClickEventParametersProfile,
+    element_name: 'delete',
+    modal: 'delete_account',
+  },
+  CLICK_LOG_IN: {
+    ...basicClickEventParametersProfile,
+    element_name: 'log_in',
+    place: 'page_delete_account',
+  },
+  CLICK_SIGN_UP: {
+    ...basicClickEventParametersProfile,
+    element_name: 'sign_up',
+    place: 'page_delete_account',
+  },
+  // GA3 events
   CHANGE_PASSWORD_CLICK: {
     category: PROFILE_PAGE,
     action: 'Click on Btn Change password',
