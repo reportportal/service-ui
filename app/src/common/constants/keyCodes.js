@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
+export const BACKSPACE_KEY_CODE = 8;
 export const TAB_KEY_CODE = 9;
 export const ENTER_KEY_CODE = 13;
 export const ESCAPE_KEY_CODE = 27;
 export const SPACE_KEY_CODE = 32;
+export const ARROW_LEFT_KEY_CODE = 37;
+export const ARROW_UP_KEY_CODE = 38;
+export const ARROW_RIGHT_KEY_CODE = 39;
 export const ARROW_DOWN_KEY_CODE = 40;
+export const DELETE_KEY_CODE = 46;
+
+export const NUM_LOCK_0_KEY_CODE = 96;
+export const NUM_LOCK_1_KEY_CODE = 97;
+export const NUM_LOCK_2_KEY_CODE = 98;
+export const NUM_LOCK_3_KEY_CODE = 99;
+export const NUM_LOCK_4_KEY_CODE = 100;
+export const NUM_LOCK_5_KEY_CODE = 101;
+export const NUM_LOCK_6_KEY_CODE = 102;
+export const NUM_LOCK_7_KEY_CODE = 103;
+export const NUM_LOCK_8_KEY_CODE = 104;
+export const NUM_LOCK_9_KEY_CODE = 105;

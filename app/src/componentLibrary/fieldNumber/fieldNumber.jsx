@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import MinusIcon from './img/minus-inline.svg';
 import PlusIcon from './img/plus-inline.svg';
-import { DEFAULT_WIDTH_CH, KEYCODES_MAP, MAX_WIDTH_CH } from './constants';
+import { DEFAULT_WIDTH_CH, KEY_CODES_MAP, MAX_WIDTH_CH } from './constants';
 import styles from './fieldNumber.scss';
 
 const cx = classNames.bind(styles);
@@ -54,9 +54,10 @@ export const FieldNumber = ({
   const handleKeyDown = (event) => {
     const { keyCode } = event;
 
-    if (Object.values(KEYCODES_MAP).includes(keyCode)) {
+    if (KEY_CODES_MAP[keyCode]) {
       return;
     }
+
     if (keyCode < 48 || keyCode > 57 || event.shiftKey) {
       event.preventDefault();
     }

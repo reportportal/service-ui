@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
+import * as keyCodes from 'common/constants/keyCodes';
+
 export const DEFAULT_WIDTH_CH = '5';
 export const MAX_WIDTH_CH = '16';
-export const KEYCODES_MAP = {
-  BACKSPACE: 8,
-  ARROW_LEFT: 37,
-  ARROW_UP: 38,
-  ARROW_RIGHT: 39,
-  ARROW_DOWN: 40,
-  DELETE: 46,
+
+export const KEY_CODES_MAP = {
+  [keyCodes.BACKSPACE_KEY_CODE]: 'BACKSPACE',
+  [keyCodes.ARROW_LEFT_KEY_CODE]: 'ARROW_LEFT',
+  [keyCodes.ARROW_UP_KEY_CODE]: 'ARROW_UP',
+  [keyCodes.ARROW_RIGHT_KEY_CODE]: 'ARROW_RIGHT',
+  [keyCodes.ARROW_DOWN_KEY_CODE]: 'ARROW_DOWN',
+  [keyCodes.DELETE_KEY_CODE]: 'DELETE',
+  [keyCodes.NUM_LOCK_0_KEY_CODE]: 'NUM_LOCK_0',
+  [keyCodes.NUM_LOCK_1_KEY_CODE]: 'NUM_LOCK_1',
+  [keyCodes.NUM_LOCK_2_KEY_CODE]: 'NUM_LOCK_2',
+  [keyCodes.NUM_LOCK_3_KEY_CODE]: 'NUM_LOCK_3',
+  [keyCodes.NUM_LOCK_4_KEY_CODE]: 'NUM_LOCK_4',
+  [keyCodes.NUM_LOCK_5_KEY_CODE]: 'NUM_LOCK_5',
+  [keyCodes.NUM_LOCK_6_KEY_CODE]: 'NUM_LOCK_6',
+  [keyCodes.NUM_LOCK_7_KEY_CODE]: 'NUM_LOCK_7',
+  [keyCodes.NUM_LOCK_8_KEY_CODE]: 'NUM_LOCK_8',
+  [keyCodes.NUM_LOCK_9_KEY_CODE]: 'NUM_LOCK_9',
 };
