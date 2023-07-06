@@ -32,6 +32,7 @@ import {
   FETCH_USER_ERROR,
   DELETE_API_KEY_SUCCESS,
   ADD_API_KEY_SUCCESS,
+  DELETE_USER_ACCOUNT,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -72,6 +73,11 @@ export const addApiKeySuccessAction = (apiKey) => ({
 export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuccess) => ({
   type: DELETE_API_KEY,
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
+});
+
+export const deleteUserAccountAction = (onSuccess) => ({
+  type: DELETE_USER_ACCOUNT,
+  payload: { onSuccess },
 });
 
 export const deleteApiKeySuccessAction = (apiKeyId) => ({

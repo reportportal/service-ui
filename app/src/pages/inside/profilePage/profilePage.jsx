@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
 import { userProfileRouteSelector, USER_PROFILE_SUB_PAGE } from 'controllers/pages';
+import { allowDeleteAccountSelector } from 'controllers/appInfo/selectors';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
@@ -85,6 +86,7 @@ const getNavigationTabsConfig = (formatMessage) => ({
 
 @connect((state) => ({
   activeTab: userProfileRouteSelector(state),
+  allowDeleteAccount: allowDeleteAccountSelector(state),
 }))
 @injectIntl
 @track({ page: PROFILE_PAGE })
@@ -93,11 +95,13 @@ export class ProfilePage extends Component {
     intl: PropTypes.object.isRequired,
     activeTab: PropTypes.string,
     dispatch: PropTypes.func,
+    allowDeleteAccount: PropTypes.bool,
   };
 
   static defaultProps = {
     activeTab: PROJECT_ASSIGNMENT_ROUTE,
     dispatch: () => {},
+    allowDeleteAccount: false,
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
@@ -119,7 +123,7 @@ export class ProfilePage extends Component {
           </div>
           <div className={cx('footer')}>
             <LocalizationBlock />
-            <DeleteAccountBlock />
+            {this.props.allowDeleteAccount && <DeleteAccountBlock />}
           </div>
         </section>
       </div>

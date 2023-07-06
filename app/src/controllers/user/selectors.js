@@ -48,7 +48,7 @@ export const availableProjectsSelector = createSelector(
   activeProjectSelector,
   isAdminSelector,
   ({ assignedProjects }, { entryType = INTERNAL }, activeProjectName, isAdmin) => {
-    const isAssignedToProject = assignedProjects[activeProjectName];
+    const isAssignedToProject = activeProjectName && assignedProjects[activeProjectName];
     const isPropagatedToUnassignedProject = isAdmin && !isAssignedToProject;
 
     return isPropagatedToUnassignedProject

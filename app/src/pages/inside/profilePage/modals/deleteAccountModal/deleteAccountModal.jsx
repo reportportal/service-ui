@@ -19,13 +19,13 @@ import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
 import { ACCOUNT_REMOVED_PAGE } from 'controllers/pages';
+import { deleteUserAccountAction } from 'controllers/user';
 import styles from './deleteAccountModal.scss';
 
 const cx = classNames.bind(styles);
@@ -67,12 +67,13 @@ const DeleteAccount = ({ data }) => {
     setConfirmationValue(newValue);
   };
 
-  const onDelete = (closeModal) => {
-    closeModal();
-    // todo send 'data' to GA4
-    // todo dispatch delete account action with delete request
-    dispatch(logoutAction());
-    dispatch(redirect({ type: ACCOUNT_REMOVED_PAGE }));
+  const onDelete = () => {
+    const onSuccess = () => {
+      // todo send 'data' to GA4
+      dispatch(logoutAction(ACCOUNT_REMOVED_PAGE));
+    };
+
+    dispatch(deleteUserAccountAction(onSuccess));
   };
 
   const deleteButton = {
