@@ -19,40 +19,11 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import DOMPurify from 'dompurify';
-import { marked } from 'marked-lts';
-
+import { marked } from 'marked';
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
 const HREF_TAG_NAME = 'A';
-
-export const renderer = {
-  link(href, text, title) {
-    if (text && title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
-    } else if (title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer"">${title}</a>`;
-    }
-    return `<a class=${cx(
-      'twit-link',
-    )} href="${href}" target="_blank" rel="noopener noreferrer"">${href}</a>`;
-  },
-};
-
-marked.use(
-  {
-    mangle: false,
-    headerIds: false,
-    breaks: true,
-  },
-  {
-    renderer,
-  },
-);
 
 const getPostContent = (text) => {
   const result = marked.parse(text);
