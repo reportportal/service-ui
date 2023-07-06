@@ -40,7 +40,7 @@ export const loginSuccessAction = (token) => ({
   payload: token,
 });
 
-export const logoutAction = () => ({ type: LOGOUT });
+export const logoutAction = (redirectedPage) => ({ type: LOGOUT, payload: redirectedPage });
 
 export const setTokenAction = (token) => ({
   type: SET_TOKEN,
