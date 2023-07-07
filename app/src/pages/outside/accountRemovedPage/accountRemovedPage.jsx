@@ -17,8 +17,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import track from 'react-tracking';
-import PropTypes from 'prop-types';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { redirect } from 'redux-first-router';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
@@ -56,10 +55,10 @@ const messages = defineMessages({
   },
 });
 
-export const AccountRemovedPage = track()(({ tracking }) => {
-  const { trackEvent } = tracking;
+export const AccountRemovedPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const instanceType = useSelector(instanceTypeSelector);
 
@@ -96,10 +95,4 @@ export const AccountRemovedPage = track()(({ tracking }) => {
       </div>
     </div>
   );
-});
-AccountRemovedPage.propTypes = {
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };

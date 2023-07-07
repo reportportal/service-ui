@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -74,14 +74,14 @@ const ALTERNATIVE = 'alternative';
 const OTHER = 'other';
 const OTHER_REASON = 'otherReason';
 
-const DeleteAccountFeedback = track()(({ invalid, handleSubmit, tracking }) => {
+const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const continueButton = {
     text: formatMessage(messages.continue),
     onClick: () => {
-      const { trackEvent } = tracking;
       trackEvent(PROFILE_PAGE_EVENTS.CONTINUE_BTN_FEEDBACK_MODAL);
       handleSubmit((data) => {
         dispatch(
@@ -132,14 +132,10 @@ const DeleteAccountFeedback = track()(({ invalid, handleSubmit, tracking }) => {
       </form>
     </ModalLayout>
   );
-});
+};
 DeleteAccountFeedback.propTypes = {
   invalid: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };
 
 export const DeleteAccountFeedbackModal = withModal('deleteAccountFeedbackModal')(

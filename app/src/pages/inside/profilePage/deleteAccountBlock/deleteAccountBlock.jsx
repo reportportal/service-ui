@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -78,14 +78,14 @@ const ButtonWithTooltip = withTooltip({
   },
 })(Button);
 
-export const DeleteAccountBlock = track()(({ tracking }) => {
+export const DeleteAccountBlock = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const isAdmin = useSelector(isAdminSelector);
   const instanceType = useSelector(instanceTypeSelector);
 
   const onDeleteAccountClick = () => {
-    const { trackEvent } = tracking;
     trackEvent(PROFILE_PAGE_EVENTS.CLICK_DELETE_ACCOUNT);
 
     if (instanceType === EPAM) {
@@ -104,10 +104,4 @@ export const DeleteAccountBlock = track()(({ tracking }) => {
       )}
     </div>
   );
-});
-DeleteAccountBlock.propTypes = {
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };

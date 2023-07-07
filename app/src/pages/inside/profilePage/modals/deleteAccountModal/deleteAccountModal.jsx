@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
@@ -58,9 +58,10 @@ const messages = defineMessages({
 
 const DELETE = 'DELETE';
 
-const DeleteAccount = track()(({ data, tracking }) => {
+const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
@@ -70,9 +71,9 @@ const DeleteAccount = track()(({ data, tracking }) => {
 
   const onDelete = () => {
     const onSuccess = () => {
-      const checkboxes = Object.keys(data).filter((key) => key !== 'otherReason');
-      const { trackEvent } = tracking;
-      Object.keys(data).length === 0
+      const dataKeys = Object.keys(data);
+      const checkboxes = dataKeys.filter((key) => key !== 'otherReason');
+      dataKeys.length === 0
         ? trackEvent(PROFILE_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL_EPAM)
         : trackEvent(
             PROFILE_PAGE_EVENTS.getDeleteBtnDeleteModalEvent(checkboxes, data.otherReason),
@@ -120,13 +121,9 @@ const DeleteAccount = track()(({ data, tracking }) => {
       </div>
     </ModalLayout>
   );
-});
+};
 DeleteAccount.propTypes = {
   data: PropTypes.object,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };
 DeleteAccount.defaultProps = {
   data: {},
