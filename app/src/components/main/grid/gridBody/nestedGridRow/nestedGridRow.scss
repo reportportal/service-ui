@@ -78,16 +78,21 @@ $LEVEL_OFFSET_STEP: 20px;
     position: absolute;
     top: 0;
     height: 100%;
+    right: 0;
     align-items: baseline;
     padding-top: 13px;
-    transform: translateX(-60%);
     justify-content: center;
-    width: 222px;
+    transform: translateX(48%);
+    width: 190px;
     background: linear-gradient(
       270deg,
       $COLOR--white-two 80%,
       rgba($color: $COLOR--white-two, $alpha: 0) 100%
     );
+
+    &-collapsed-view {
+      transform: translateX(16%);
+    }
   }
 }
 
