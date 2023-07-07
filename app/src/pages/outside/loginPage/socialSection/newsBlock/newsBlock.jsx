@@ -69,7 +69,7 @@ export class NewsBlock extends Component {
           <div className={cx('twitter-news')}>
             <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight}>
               {this.props.tweets.map((tweet, i) => (
-                // eslint-disable-next-line react/no-array-index-key
+                // eslint-disable-next-line
                 <PostBlock key={i} tweetData={tweet} tracking={this.props.tracking} />
               ))}
             </ScrollWrapper>
