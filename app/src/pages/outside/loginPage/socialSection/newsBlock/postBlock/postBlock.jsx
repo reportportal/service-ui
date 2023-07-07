@@ -37,8 +37,8 @@ const handleClick = (e, tracking) => {
   }
 };
 
-export const PostBlock = ({ tweetData, tracking, id }) => (
-  <div key={id} className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
+export const PostBlock = ({ tweetData, tracking }) => (
+  <div key={tweetData.text} className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
     {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
   </div>
 );
@@ -49,7 +49,6 @@ PostBlock.propTypes = {
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
   }).isRequired,
-  id: PropTypes.object,
 };
 
 PostBlock.defaultProps = {
