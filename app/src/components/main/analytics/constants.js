@@ -22,5 +22,3 @@ export const pageEventsMap = {
   [LEVEL_TEST]: TESTS_PAGE_EVENTS,
   [LEVEL_SUITE]: SUITES_PAGE_EVENTS,
 };
-
-export const GA_4_FIELD_LIMIT = 100;
