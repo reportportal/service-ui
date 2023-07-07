@@ -68,8 +68,8 @@ export class NewsBlock extends Component {
           </div>
           <div className={cx('twitter-news')}>
             <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight}>
-              {this.props.tweets.map((tweet, id) => (
-                <PostBlock key={id} tweetData={tweet} tracking={this.props.tracking} />
+              {this.props.tweets.map((tweet) => (
+                <PostBlock key={tweet.text} tweetData={tweet} tracking={this.props.tracking} />
               ))}
             </ScrollWrapper>
           </div>
