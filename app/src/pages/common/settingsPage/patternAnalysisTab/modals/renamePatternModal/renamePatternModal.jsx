@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   renamePatternMessage: {
     id: 'PatternAnalysis.renamePatternMessage',
-    defaultMessage: 'Rename pattern rule',
+    defaultMessage: 'Rename Pattern Rule',
   },
 });
 

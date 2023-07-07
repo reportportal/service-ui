@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
   headerTitle: {
     id: 'PatternAnalysis.headerTitle',
-    defaultMessage: 'Edit Pattern',
+    defaultMessage: 'Edit Pattern Rule',
   },
   editPatternName: {
     id: 'PatternAnalysis.editPatternName',

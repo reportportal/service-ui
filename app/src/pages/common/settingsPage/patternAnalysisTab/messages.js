@@ -33,7 +33,7 @@ export const messages = defineMessages({
   },
   createPatternTitle: {
     id: 'PatternAnalysis.createPatternMessage',
-    defaultMessage: 'Create pattern rule',
+    defaultMessage: 'Create Pattern Rule',
   },
   toggleLabel: {
     id: 'PatternAnalysis.title',
