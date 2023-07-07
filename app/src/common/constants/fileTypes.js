@@ -33,7 +33,5 @@ export const GZIP = 'gzip';
 export const PLAIN = 'plain';
 export const IMAGE = 'image';
 export const JAR = 'jar';
-export const WMV = 'wmv';
 export const GTAR = 'gtar';
 export const KML = 'kml';
-export const BIN = 'bin';
