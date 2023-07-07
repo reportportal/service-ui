@@ -102,5 +102,14 @@ export const FILE_ACTIONS_MAP = {
   ],
 };
 
+export const MIME_TYPE_TO_EXTENSION_MAP = {
+  'application/x-rar-compressed; version=4': FILE_TYPES.RAR,
+  'video/x-ms-wmv': FILE_TYPES.WMV,
+  'text/x-php': FILE_TYPES.PHP,
+  'application/x-gtar': FILE_TYPES.GTAR,
+  'application/vnd.google-earth.kml+xml': FILE_TYPES.KML,
+  'application/octet-stream': FILE_TYPES.BIN,
+};
+
 export const DEFAULT_PAGE_SIZE = 6;
 export const DEFAULT_LOADED_PAGES = 2;
