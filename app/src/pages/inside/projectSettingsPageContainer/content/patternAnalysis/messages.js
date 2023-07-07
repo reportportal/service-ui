@@ -28,7 +28,7 @@ export const messages = defineMessages({
   },
   createPatternModalHeader: {
     id: 'CreatePatternAnalysisModal.createPatternModalHeader',
-    defaultMessage: 'Create Pattern',
+    defaultMessage: 'Create Pattern Rule',
   },
   createPatternModalDescription: {
     id: 'CreatePatternAnalysisModal.createPatternModalDescription',
@@ -73,7 +73,7 @@ export const messages = defineMessages({
   },
   duplicate: {
     id: 'PatternAnalysis.duplicatePattern',
-    defaultMessage: 'Duplicate Pattern',
+    defaultMessage: 'Duplicate Pattern Rule',
   },
   deletePattern: {
     id: 'PatternAnalysis.deletePattern',
