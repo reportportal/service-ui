@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { extension as getExtension } from 'mime-types';
 import { URLS } from 'common/urls';
 import { IMAGE, PLAIN, TXT } from 'common/constants/fileTypes';
 import attachment from 'common/img/attachments/attachment.svg';
@@ -33,6 +34,7 @@ export const extractExtension = (contentType) => {
   const attachmentTypeConfig = getAttachmentTypeConfig(contentType);
 
   return (
+    getExtension(contentType) ||
     MIME_TYPE_TO_EXTENSION_MAP[contentType] ||
     attachmentTypeConfig[1] ||
     attachmentTypeConfig[0] ||
