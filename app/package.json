@@ -50,6 +50,7 @@
     "intl-locales-supported": "1.8.4",
     "marked": "^0.7.0",
     "marked-lts": "npm:marked@^5.1.1",
+    "mime-types": "2.1.35",
     "moment": "2.29.4",
     "object.values": "1.1.1",
     "perf-cascade": "2.5.4",
