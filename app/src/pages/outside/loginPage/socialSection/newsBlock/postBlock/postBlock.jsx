@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import DOMPurify from 'dompurify';
-import { marked } from 'marked';
+import { marked } from 'marked-lts';
 
 import styles from './postBlock.scss';
 
