@@ -15,7 +15,7 @@
  */
 
 import { getBasicClickEventParameters } from 'components/main/analytics/events/common/ga4Utils';
-import { GA_4_FIELD_LIMIT } from 'components/main/analytics/constants';
+import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
 
 export const PROFILE_PAGE = 'profile';
 const basicClickEventParametersProfile = getBasicClickEventParameters(PROFILE_PAGE);
