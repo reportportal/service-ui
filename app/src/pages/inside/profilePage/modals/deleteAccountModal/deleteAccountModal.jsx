@@ -16,11 +16,13 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
@@ -56,10 +58,10 @@ const messages = defineMessages({
 
 const DELETE = 'DELETE';
 
-// eslint-disable-next-line no-unused-vars
 const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
@@ -69,7 +71,13 @@ const DeleteAccount = ({ data }) => {
 
   const onDelete = () => {
     const onSuccess = () => {
-      // todo send 'data' to GA4
+      const dataKeys = Object.keys(data);
+      const checkboxes = dataKeys.filter((key) => key !== 'otherReason');
+      dataKeys.length === 0
+        ? trackEvent(PROFILE_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL_EPAM)
+        : trackEvent(
+            PROFILE_PAGE_EVENTS.getDeleteBtnDeleteModalEvent(checkboxes, data.otherReason),
+          );
       dispatch(logoutAction(ACCOUNT_REMOVED_PAGE));
     };
 
