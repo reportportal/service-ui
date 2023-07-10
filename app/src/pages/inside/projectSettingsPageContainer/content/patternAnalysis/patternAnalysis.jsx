@@ -79,7 +79,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
         <EmptyStatePage
           title={formatMessage(messages.noPatternAnalysisTitle)}
           description={formatMessage(messages.noPatternAnalysisDescription)}
-          buttonName={formatMessage(messages.createPatternModalHeader)}
+          buttonName={formatMessage(messages.create)}
           buttonDataAutomationId="createPatternButton"
           documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
           disableButton={!isAbleToCreate}

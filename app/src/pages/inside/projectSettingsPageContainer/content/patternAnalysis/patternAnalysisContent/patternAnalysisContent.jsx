@@ -57,7 +57,7 @@ export const PatternAnalysisContent = ({
     setHeaderTitleNode(
       <span className={cx('button')} onClick={onAddPattern}>
         <Button disabled={disabled} dataAutomationId="createPatternButton">
-          {formatMessage(messages.createPatternModalHeader)}
+          {formatMessage(messages.create)}
         </Button>
       </span>,
     );
