@@ -58,4 +58,4 @@ export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
-  environmentSelector(state)[ALLOW_DELETE_ACCOUNT];
+  environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
