@@ -22,7 +22,7 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  assignedProjectsSelector,
+  availableProjectsSelector,
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -34,10 +34,10 @@ import {
   PROJECT_USERDEBUG_PAGE,
   LAUNCHES_PAGE,
   PROJECT_FILTERS_PAGE,
-  USER_PROFILE_PAGE,
   ADMINISTRATE_PAGE,
   PROJECT_MEMBERS_PAGE,
   PROJECT_SETTINGS_PAGE,
+  USER_PROFILE_PAGE,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
@@ -53,7 +53,7 @@ import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
-  assignedProjects: assignedProjectsSelector(state),
+  availableProjects: availableProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensionComponents: uiExtensionSidebarComponentsSelector(state),
@@ -68,12 +68,12 @@ export class AppSidebar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    assignedProjects: PropTypes.object,
+    availableProjects: PropTypes.object,
     extensionComponents: PropTypes.array,
     onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
-    assignedProjects: {},
+    availableProjects: {},
     extensionComponents: [],
     onClickNavBtn: () => {},
   };
@@ -160,7 +160,9 @@ export class AppSidebar extends Component {
   createBottomSidebarItems = () => [
     {
       onClick: this.props.onClickNavBtn,
-      link: { type: USER_PROFILE_PAGE },
+      link: {
+        type: USER_PROFILE_PAGE,
+      },
       icon: ProfileIcon,
       message: <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />,
     },
@@ -173,12 +175,12 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { assignedProjects, activeProject } = this.props;
+    const { availableProjects, activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
     const mainBlock = (
       <ProjectSelector
-        projects={Object.keys(assignedProjects).sort()}
+        projects={Object.keys(availableProjects).sort()}
         activeProject={activeProject}
       />
     );

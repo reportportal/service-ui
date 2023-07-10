@@ -19,27 +19,27 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { ERROR_CODE_NOT_FOUND } from 'common/constants/apiErrorCodes';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_RROJECT,
   UNASSIGN_FROM_PROJECT,
   SET_ACTIVE_PROJECT,
-  GENERATE_API_TOKEN,
-  FETCH_API_TOKEN,
+  ADD_API_KEY,
+  FETCH_API_KEYS,
+  DELETE_API_KEY,
   FETCH_USER,
 } from './constants';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
   unassignFromProjectSuccessAction,
-  fetchApiTokenAction,
   setActiveProjectAction,
-  generateApiTokenAction,
-  setApiTokenAction,
   fetchUserSuccessAction,
   fetchUserErrorAction,
+  setApiKeysAction,
+  addApiKeySuccessAction,
+  deleteApiKeySuccessAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -131,7 +131,6 @@ function* fetchUserWorker() {
     savedActiveProject && savedActiveProject in user.assignedProjects
       ? savedActiveProject
       : Object.keys(user.assignedProjects)[0];
-  yield put(fetchApiTokenAction());
   yield put(setActiveProjectAction(activeProject));
 }
 
@@ -141,11 +140,20 @@ function* saveActiveProject({ payload: project }) {
   setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
 }
 
-function* generateApiToken({ payload = {} }) {
-  const { successMessage, errorMessage } = payload;
+function* addApiKey({ payload = {} }) {
+  const { name, successMessage, errorMessage, onSuccess } = payload;
+  const user = yield select(userInfoSelector);
   try {
-    const response = yield call(fetch, URLS.apiToken(), { method: 'post' });
-    yield put(setApiTokenAction(response));
+    const response = yield call(fetch, URLS.apiKeys(user.id), {
+      method: 'post',
+      data: {
+        name,
+      },
+    });
+
+    // eslint-disable-next-line camelcase
+    const { id, created_at, api_key } = response;
+    onSuccess(api_key);
     if (successMessage) {
       yield put(
         showNotification({
@@ -154,11 +162,13 @@ function* generateApiToken({ payload = {} }) {
         }),
       );
     }
-  } catch (err) {
+    yield put(addApiKeySuccessAction({ id, name, created_at }));
+  } catch ({ message }) {
+    const showingMessage = errorMessage || message;
     if (errorMessage) {
       yield put(
         showNotification({
-          message: errorMessage,
+          message: showingMessage,
           type: NOTIFICATION_TYPES.ERROR,
         }),
       );
@@ -166,23 +176,63 @@ function* generateApiToken({ payload = {} }) {
   }
 }
 
-function* fetchApiToken() {
+function* fetchApiKeys() {
+  const user = yield select(userInfoSelector);
   try {
-    const response = yield call(fetch, URLS.apiToken());
-    yield put(setApiTokenAction(response));
-  } catch ({ errorCode }) {
-    if (errorCode === ERROR_CODE_NOT_FOUND) {
-      yield put(generateApiTokenAction());
+    const response = yield call(fetch, URLS.apiKeys(user.id));
+    yield put(setApiKeysAction(response.items));
+  } catch ({ message }) {
+    yield put(
+      showNotification({
+        messageId: 'fetchApiKeysError',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { message },
+      }),
+    );
+  }
+}
+
+function* deleteApiKey({ payload = {} }) {
+  const { apiKeyId, successMessage, errorMessage, onSuccess } = payload;
+  const user = yield select(userInfoSelector);
+
+  try {
+    yield call(fetch, URLS.apiKeyById(user.id, apiKeyId), {
+      method: 'delete',
+    });
+    onSuccess();
+    if (successMessage) {
+      yield put(
+        showNotification({
+          message: successMessage,
+          type: NOTIFICATION_TYPES.SUCCESS,
+        }),
+      );
+    }
+    yield put(deleteApiKeySuccessAction(apiKeyId));
+  } catch ({ message }) {
+    const showingMessage = errorMessage || message;
+    if (errorMessage) {
+      yield put(
+        showNotification({
+          message: showingMessage,
+          type: NOTIFICATION_TYPES.ERROR,
+        }),
+      );
     }
   }
 }
 
-function* watchGenerateApiToken() {
-  yield takeEvery(GENERATE_API_TOKEN, generateApiToken);
+function* watchAddApiKey() {
+  yield takeEvery(ADD_API_KEY, addApiKey);
 }
 
-function* watchFetchApiToken() {
-  yield takeEvery(FETCH_API_TOKEN, fetchApiToken);
+function* watchFetchApiKeys() {
+  yield takeEvery(FETCH_API_KEYS, fetchApiKeys);
+}
+
+function* watchDeleteApiKey() {
+  yield takeEvery(DELETE_API_KEY, deleteApiKey);
 }
 
 function* watchSetActiveProject() {
@@ -207,7 +257,8 @@ export function* userSagas() {
     watchUnassignFromProject(),
     watchFetchUser(),
     watchSetActiveProject(),
-    watchGenerateApiToken(),
-    watchFetchApiToken(),
+    watchAddApiKey(),
+    watchFetchApiKeys(),
+    watchDeleteApiKey(),
   ]);
 }

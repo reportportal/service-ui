@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,54 +17,39 @@ import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { apiTokenValueSelector, activeProjectSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
-import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
+import { BlockContainerBody } from '../blockContainer';
+
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-
 @connect((state) => ({
-  token: apiTokenValueSelector(state),
   activeProject: activeProjectSelector(state),
-  login: userIdSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
-    token: PropTypes.string,
-    login: PropTypes.string,
     activeProject: PropTypes.string,
   };
   static defaultProps = {
-    token: '',
-    login: '',
     activeProject: '',
   };
   render() {
-    const { token, activeProject, login } = this.props;
+    const { activeProject } = this.props;
     return (
       <div className={cx('config-example-block')}>
-        <BlockContainerHeader>
-          <span className={cx('header')}>
-            <FormattedMessage
-              id={'ConfigExamplesBlock.header'}
-              defaultMessage={'Configuration examples'}
-            />
-          </span>
-        </BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('content-container')}>
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(token, activeProject, login),
-                TabsConfig.rubyConfig(token, activeProject, login),
-                TabsConfig.soapUiConfig(token, activeProject, login),
-                TabsConfig.dotNetConfig,
-                TabsConfig.nodejsConfig(token, activeProject, login),
+                TabsConfig.javaConfig(activeProject),
+                TabsConfig.pythonConfig(activeProject),
+                TabsConfig.dotNetConfig(activeProject),
+                TabsConfig.nodejsConfig(activeProject),
+                TabsConfig.rubyConfig(activeProject),
               ]}
             />
           </div>

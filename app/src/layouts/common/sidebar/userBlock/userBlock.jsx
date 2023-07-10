@@ -27,7 +27,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
-import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
+import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { Image } from 'components/main/image';
@@ -155,7 +155,9 @@ export class UserBlock extends Component {
               <div className={cx('details')}>{userDetails}</div>
             </div>
             <NavLink
-              to={{ type: USER_PROFILE_PAGE }}
+              to={{
+                type: USER_PROFILE_PAGE,
+              }}
               className={cx('menu-item')}
               activeClassName={cx('active')}
               onClick={() => this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROFILE_LINK)}

@@ -23,13 +23,13 @@ import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import {
   PROJECT_LAUNCHES_PAGE,
-  USER_PROFILE_PAGE,
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-} from 'controllers/pages/constants';
+  USER_PROFILE_PAGE,
+} from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import track, { useTracking } from 'react-tracking';
@@ -165,7 +165,9 @@ export class AdminSidebar extends Component {
     },
     {
       onClick: this.props.onClickNavBtn,
-      link: { type: USER_PROFILE_PAGE },
+      link: {
+        type: USER_PROFILE_PAGE,
+      },
       icon: ProfileIcon,
       message: <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />,
     },

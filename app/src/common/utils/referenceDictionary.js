@@ -20,11 +20,13 @@ export const referenceDictionary = {
   rpGitHub: 'https://github.com/reportportal',
   rpFacebook: 'https://www.facebook.com/ReportPortal.io',
   rpTwitter: 'http://twitter.com/ReportPortal_io',
-  rpYoutube: 'http://youtube.com/c/ReportPortalCommunity',
-  rpVk: 'https://vk.com/reportportal_io',
-  rpSlack: 'https://slack.epmrpp.reportportal.io/',
+  rpYoutube: 'https://youtube.com/c/ReportPortal',
+  rpLinkedin: 'https://linkedin.com/company/reportportal',
+  rpSlack: 'https://slack.epmrpp.reportportal.io',
   rpEmail: 'mailto:support@reportportal.io',
   rpEpam: 'https://www.epam.com/',
   rpEpamPolicy: 'https://privacy.epam.com/core/interaction/showpolicy?type=PrivacyPolicy',
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
+  rpEpamCommonPolicy:
+    'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
 };

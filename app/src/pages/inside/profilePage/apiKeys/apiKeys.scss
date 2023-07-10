@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-.warning {
-  margin-bottom: 10px;
-  color: $COLOR--orange-red;
-  text-transform: uppercase;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
-}
-.text {
-  font-size: 13px;
+.api-keys {
+  width: 100%;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+  padding: 0 30px;
 }

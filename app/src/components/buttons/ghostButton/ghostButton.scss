@@ -64,6 +64,23 @@
     }
   }
 
+  &.color-red {
+    color: $COLOR--tomato;
+    vertical-align: middle;
+
+    &.transparent-border {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    &.transparent-border-hover {
+      &:hover {
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
+  }
+
   &.color-topaz:not(.disabled) {
     border-color: $COLOR--topaz;
     color: $COLOR--topaz;

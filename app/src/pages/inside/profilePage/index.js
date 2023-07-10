@@ -19,4 +19,6 @@ export { DeleteImageModal } from './modals/deleteImageModal';
 export { ChangePasswordModal } from './modals/changePasswordModal';
 export { ForceUpdateModal } from './modals/forceUpdateModal';
 export { EditPersonalInformationModal } from './modals/editPersonalInfoModal';
-export { RegenerateAccessTokenModal } from './modals/regenerateAccessTokenModal';
+export { GenerateApiKeyModal } from './modals/generateApiKeyModal';
+export { ApiKeyGeneratedModal } from './modals/apiKeyGeneratedModal';
+export { RevokeApiKeyModal } from './modals/revokeApiKeyModal';

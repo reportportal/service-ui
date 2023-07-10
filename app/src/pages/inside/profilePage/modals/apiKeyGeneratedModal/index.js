@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-import { take, put, race } from 'redux-saga/effects';
-import { showModalAction, hideModalAction } from './actionCreators';
-import { HIDE_MODAL, CONFIRM_MODAL } from './constants';
-
-export function* confirmSaga(confirmationModalOptions) {
-  yield put(showModalAction(confirmationModalOptions));
-  const { confirmed } = yield race({
-    confirmed: take(CONFIRM_MODAL),
-    cancelled: take(HIDE_MODAL),
-  });
-  if (confirmed) {
-    yield put(hideModalAction());
-  }
-  return !!confirmed;
-}
+export { ApiKeyGeneratedModal } from './apiKeyGeneratedModal';

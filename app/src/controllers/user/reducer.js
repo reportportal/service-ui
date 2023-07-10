@@ -20,10 +20,12 @@ import {
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
-  SET_API_TOKEN,
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
+  SET_API_KEYS,
+  ADD_API_KEY_SUCCESS,
+  DELETE_API_KEY_SUCCESS,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
@@ -91,10 +93,14 @@ export const activeProjectReducer = (state = '', { type, payload }) => {
   }
 };
 
-export const apiTokenReducer = (state = {}, { type, payload }) => {
+export const apiKeysReducer = (state = [], { type, payload }) => {
   switch (type) {
-    case SET_API_TOKEN:
-      return payload;
+    case SET_API_KEYS:
+      return payload.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    case ADD_API_KEY_SUCCESS:
+      return [payload, ...state];
+    case DELETE_API_KEY_SUCCESS:
+      return state.filter((key) => key.id !== payload);
     default:
       return state;
   }
@@ -104,5 +110,5 @@ export const userReducer = combineReducers({
   info: userInfoReducer,
   activeProject: activeProjectReducer,
   settings: settingsReducer,
-  token: apiTokenReducer,
+  apiKeys: apiKeysReducer,
 });

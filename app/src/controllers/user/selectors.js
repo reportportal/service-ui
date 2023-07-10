@@ -15,6 +15,9 @@
  */
 
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { createSelector } from 'reselect';
+import { INTERNAL } from 'common/constants/accountType';
+import { projectInfoSelector } from 'controllers/project/selectors';
 import { START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
@@ -39,8 +42,19 @@ export const activeProjectRoleSelector = (state) => {
 };
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
 
-const apiTokenSelector = (state) => userSelector(state).token || '';
-export const apiTokenValueSelector = (state) => apiTokenSelector(state).value;
-export const apiTokenTypeSelector = (state) => apiTokenSelector(state).type;
-export const apiTokenStringSelector = (state) =>
-  `${apiTokenTypeSelector(state)} ${apiTokenValueSelector(state)}`;
+export const availableProjectsSelector = createSelector(
+  userInfoSelector,
+  projectInfoSelector,
+  activeProjectSelector,
+  isAdminSelector,
+  ({ assignedProjects }, { entryType = INTERNAL }, activeProjectName, isAdmin) => {
+    const isAssignedToProject = assignedProjects[activeProjectName];
+    const isPropagatedToUnassignedProject = isAdmin && !isAssignedToProject;
+
+    return isPropagatedToUnassignedProject
+      ? { ...assignedProjects, [activeProjectName]: { entryType } }
+      : assignedProjects;
+  },
+);
+
+export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];

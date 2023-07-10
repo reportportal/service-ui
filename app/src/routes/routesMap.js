@@ -53,6 +53,7 @@ import {
   clearPageStateAction,
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  USER_PROFILE_SUB_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -83,6 +84,11 @@ import { startSetViewMode } from 'controllers/administrate/projects/actionCreato
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
+import {
+  API_KEYS_ROUTE,
+  CONFIG_EXAMPLES_ROUTE,
+  PROJECT_ASSIGNMENT_ROUTE,
+} from 'common/constants/userProfileRoutes';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -104,7 +110,12 @@ const routesMap = {
   [NOT_FOUND]: '/notfound',
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: '/user-profile',
+  USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
+    type: USER_PROFILE_SUB_PAGE,
+    payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+  })),
+
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 
@@ -276,6 +287,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
   const userProjects = userInfo ? userInfo.assignedProjects : {};
+  const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
@@ -285,7 +297,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     (hashProject !== projectId || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (hashProject in userProjects) {
+    if (hashProject in userProjects || isAdmin) {
       dispatch(setActiveProjectAction(hashProject));
       dispatch(fetchProjectAction(hashProject));
       projectId = hashProject;
@@ -316,7 +328,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         }
         break;
       case ADMIN_ACCESS:
-        if (authorized && accountRole !== ADMINISTRATOR) {
+        if (authorized && !isAdmin) {
           dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
         } else if (!authorized) {
           setSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, redirectPath);
