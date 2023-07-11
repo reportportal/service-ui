@@ -52,6 +52,6 @@
   margin: 0 auto 32px;
 }
 
-.buttons-block button {
+.buttons-block > :nth-child(n) {
   margin: 0 8px;
 }
