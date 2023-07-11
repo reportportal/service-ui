@@ -61,6 +61,8 @@ export const AccountRemovedPage = () => {
   const { trackEvent } = useTracking();
 
   const instanceType = useSelector(instanceTypeSelector);
+  // TODO EPMRPP-82466 remove "false &&" after SignUpPlugin release
+  const isSaas = false && instanceType === SAAS;
 
   const onLoginClick = () => {
     trackEvent(PROFILE_PAGE_EVENTS.CLICK_LOG_IN);
@@ -86,7 +88,7 @@ export const AccountRemovedPage = () => {
           <GhostButton transparentBackground onClick={onLoginClick}>
             {formatMessage(messages.login)}
           </GhostButton>
-          {instanceType === SAAS && (
+          {isSaas && (
             <GhostButton transparentBackground onClick={onSignupClick}>
               {formatMessage(messages.signup)}
             </GhostButton>

@@ -46,11 +46,12 @@
   color: $COLOR--charcoal-grey;
 }
 
-.logo, .image {
+.logo,
+.image {
   display: flex;
   margin: 0 auto 32px;
 }
 
-.buttons-block :nth-child {
+.buttons-block > :nth-child(n) {
   margin: 0 8px;
 }
