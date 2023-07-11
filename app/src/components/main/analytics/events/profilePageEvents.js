@@ -31,7 +31,7 @@ export const PROFILE_PAGE_EVENTS = {
     element_name: 'continue',
     modal: 'delete_account',
   },
-  getDeleteBtnDeleteModalEvent: (checkboxes, otherReason) => ({
+  getDeleteBtnDeleteModalEvent: (checkboxes, otherReason = '') => ({
     ...basicClickEventParametersProfile,
     element_name: 'delete',
     modal: 'delete_account',
