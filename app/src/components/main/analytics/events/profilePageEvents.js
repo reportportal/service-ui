@@ -31,14 +31,19 @@ export const PROFILE_PAGE_EVENTS = {
     element_name: 'continue',
     modal: 'delete_account',
   },
-  getDeleteBtnDeleteModalEvent: (checkboxes, otherReason = '') => ({
-    ...basicClickEventParametersProfile,
-    element_name: 'delete',
-    modal: 'delete_account',
-    status: checkboxes.join('#'),
-    type: otherReason.slice(0, GA_4_FIELD_LIMIT),
-    condition: otherReason.slice(GA_4_FIELD_LIMIT),
-  }),
+  getDeleteBtnDeleteModalEvent: (checkboxes, otherReason = '') => {
+    const firstPartOfOtherReason = otherReason.slice(0, GA_4_FIELD_LIMIT);
+    const secondPartOfOtherReason = otherReason.slice(GA_4_FIELD_LIMIT);
+
+    return {
+      ...basicClickEventParametersProfile,
+      element_name: 'delete',
+      modal: 'delete_account',
+      status: checkboxes.join('#'),
+      type: firstPartOfOtherReason.length ? firstPartOfOtherReason : undefined,
+      condition: secondPartOfOtherReason.length ? secondPartOfOtherReason : undefined,
+    };
+  },
   DELETE_BTN_DELETE_MODAL_EPAM: {
     ...basicClickEventParametersProfile,
     element_name: 'delete',
