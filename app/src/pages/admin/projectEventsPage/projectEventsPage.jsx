@@ -20,24 +20,23 @@ import { connect } from 'react-redux';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import {
   eventsSelector,
   eventsPaginationSelector,
   loadingSelector,
 } from 'controllers/administrate/events';
-import { ENTITY_CREATION_DATE } from 'components/filterEntities/constants';
+import { ENTITY_CREATED_AT } from 'components/filterEntities/constants';
 import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
 import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
-  url: URLS.events(activeProjectSelector(state)),
+  url: URLS.events(),
   events: eventsSelector(state),
   loading: loadingSelector(state),
 }))
 @withSortingURL({
-  defaultFields: [ENTITY_CREATION_DATE],
+  defaultFields: [ENTITY_CREATED_AT],
   defaultDirection: SORTING_DESC,
 })
 @withPagination({

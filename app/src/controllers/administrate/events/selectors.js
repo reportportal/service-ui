@@ -15,7 +15,7 @@
  */
 
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
-import { createQueryParametersSelector } from 'controllers/pages';
+import { createReMappedQueryParametersSelector } from 'controllers/pages';
 import { DEFAULT_SORTING } from './constants';
 import { administrateDomainSelector } from '../selectors';
 
@@ -25,7 +25,7 @@ export const eventsPaginationSelector = (state) => domainSelector(state).paginat
 export const eventsSelector = (state) => domainSelector(state).events;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
-export const querySelector = createQueryParametersSelector({
+export const querySelector = createReMappedQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });

@@ -50,3 +50,20 @@ export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
 export const ENTITY_RETRY = 'hasRetries';
 export const ENTITY_NEW_FAILURE = 'newFailure';
+
+export const ENTITY_CREATED_AT = 'createdAt';
+export const ENTITY_EVENT_NAME = 'eventName';
+export const ENTITY_EVENTS_OBJECT_TYPE = 'objectType';
+export const ENTITY_SUBJECT_NAME = 'subjectName';
+export const ENTITY_SUBJECT_TYPE = 'subjectType';
+
+export const reMappedFilterEntityNamesMap = {
+  [ENTITY_ACTION]: ENTITY_EVENT_NAME,
+  [ENTITY_CREATION_DATE]: ENTITY_CREATED_AT,
+  [ENTITY_USER]: ENTITY_SUBJECT_NAME,
+  [ENTITY_OBJECT_TYPE]: ENTITY_EVENTS_OBJECT_TYPE,
+};
+
+export const reMappedOperationValuesMap = {
+  [CONDITION_NOT_CNT]: 'non_cnt',
+};
