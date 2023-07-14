@@ -105,18 +105,18 @@ export const Footer = () => {
 
   return (
     <div className={cx('footer')}>
-      <div className={cx('footer-left-items')}>
+      <div className={cx('footer-info-items')}>
         {footerLeftItems.map((item, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={`footer-left-item-${i}`} className={cx('footer-item')}>
+          <div key={`footer-info-item-${i}`} className={cx('footer-item')}>
             {item}
           </div>
         ))}
       </div>
-      <div className={cx('footer-right-items')}>
+      <div className={cx('footer-link-items')}>
         {footerRightItems.map((item, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Fragment key={`footer-right-item-${i}`}>
+          <Fragment key={`footer-link-item-${i}`}>
             {item && (
               <div className={cx('footer-item')}>
                 <a href={item.link} target="_blank" className={cx('link')}>
