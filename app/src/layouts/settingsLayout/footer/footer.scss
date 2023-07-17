@@ -15,30 +15,31 @@
  */
 
 .footer {
-  height: 48px;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: space-between;
   width: 100%;
+  box-sizing: border-box;
+  padding: 16px 32px 12px;
+
+  @media (max-width: $SCREEN_MD_MAX) {
+    justify-content: space-around;
+  }
 }
 
-.footer-left-items, .footer-right-items {
-  display: inline-block;
-  margin: 0 28px;
-}
-
-.footer-left-items {
-  float: left;
-}
-
-.footer-right-items {
-  float: right;
+.footer-info-items, .footer-link-items {
+  height: 16px;
+  margin-bottom: 4px;
 }
 
 .footer-item {
   display: inline-block;
-  color: $COLOR--e-300;
-  font-size: 11px;
   line-height: 16px;
+  color: $COLOR--e-300;
+  font-size: 9px;
   font-family: $FONT-ROBOTO-REGULAR;
-  margin: 16px 8px;
+  margin: 0 8px;
 
   a {
     text-decoration: none;
