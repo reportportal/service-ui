@@ -30,15 +30,15 @@ import {
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
-  ENTITY_ACTION,
-  ENTITY_OBJECT_TYPE,
-  ENTITY_USER,
   CONDITION_IN,
   CONDITION_BETWEEN,
   ACTIVITIES,
-  ENTITY_CREATION_DATE,
   CONDITION_CNT,
   ENTITY_OBJECT_NAME,
+  ENTITY_EVENT_NAME,
+  ENTITY_CREATED_AT,
+  ENTITY_SUBJECT_NAME,
+  ENTITY_EVENTS_OBJECT_TYPE,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -146,9 +146,9 @@ export class EventsEntities extends Component {
         removable: false,
       },
       {
-        id: ENTITY_ACTION,
+        id: ENTITY_EVENT_NAME,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_ACTION, {
+        value: this.bindDefaultValue(ENTITY_EVENT_NAME, {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.actionCol),
@@ -302,9 +302,9 @@ export class EventsEntities extends Component {
         },
       },
       {
-        id: ENTITY_CREATION_DATE,
+        id: ENTITY_CREATED_AT,
         component: EntityItemStartTime,
-        value: this.bindDefaultValue(ENTITY_CREATION_DATE, {
+        value: this.bindDefaultValue(ENTITY_CREATED_AT, {
           value: '',
           condition: CONDITION_BETWEEN,
         }),
@@ -316,9 +316,9 @@ export class EventsEntities extends Component {
         },
       },
       {
-        id: ENTITY_OBJECT_TYPE,
+        id: ENTITY_EVENTS_OBJECT_TYPE,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_OBJECT_TYPE, {
+        value: this.bindDefaultValue(ENTITY_EVENTS_OBJECT_TYPE, {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.objectTypeCol),
@@ -398,9 +398,9 @@ export class EventsEntities extends Component {
         removable: false,
       },
       {
-        id: ENTITY_USER,
+        id: ENTITY_SUBJECT_NAME,
         component: EntitySearch,
-        value: this.bindDefaultValue(ENTITY_USER, {
+        value: this.bindDefaultValue(ENTITY_SUBJECT_NAME, {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.userCol),

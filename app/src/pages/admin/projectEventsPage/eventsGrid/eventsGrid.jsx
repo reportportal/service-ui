@@ -27,11 +27,11 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
-  ENTITY_ACTION,
-  ENTITY_CREATION_DATE,
+  ENTITY_CREATED_AT,
+  ENTITY_EVENTS_OBJECT_TYPE,
+  ENTITY_EVENT_NAME,
   ENTITY_OBJECT_NAME,
-  ENTITY_OBJECT_TYPE,
-  ENTITY_USER,
+  ENTITY_SUBJECT_NAME,
 } from 'components/filterEntities/constants';
 
 import styles from './eventsGrid.scss';
@@ -49,7 +49,7 @@ const messages = defineMessages({
 
 const TimeColumn = ({ className, value }) => (
   <div className={cx('time-col', className)}>
-    <AbsRelTime startTime={value.lastModified} />
+    <AbsRelTime startTime={value.created_at} />
   </div>
 );
 TimeColumn.propTypes = {
@@ -61,7 +61,7 @@ TimeColumn.defaultProps = {
 };
 
 const UserColumn = ({ className, value }) => (
-  <div className={cx('user-col', className)}>{value.user}</div>
+  <div className={cx('user-col', className)}>{value.subject_name}</div>
 );
 UserColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -73,9 +73,9 @@ UserColumn.defaultProps = {
 
 const ActionColumn = ({ className, value, customProps: { formatMessage } }) => (
   <div className={cx('action-col', className)}>
-    {value.actionType && actionMessages[value.actionType]
-      ? formatMessage(actionMessages[value.actionType])
-      : value.actionType}
+    {value.event_name && actionMessages[value.event_name]
+      ? formatMessage(actionMessages[value.event_name])
+      : value.event_name}
   </div>
 );
 ActionColumn.propTypes = {
@@ -92,9 +92,9 @@ ActionColumn.defaultProps = {
 
 const ObjectTypeColumn = ({ className, value, customProps: { formatMessage } }) => (
   <div className={cx('object-type-col', className)}>
-    {value.objectType && objectTypesMessages[value.objectType]
-      ? formatMessage(objectTypesMessages[value.objectType])
-      : value.objectType}
+    {value.object_type && objectTypesMessages[value.object_type]
+      ? formatMessage(objectTypesMessages[value.object_type])
+      : value.object_type}
   </div>
 );
 ObjectTypeColumn.propTypes = {
@@ -110,7 +110,7 @@ ObjectTypeColumn.defaultProps = {
 };
 
 const ObjectNameColumn = ({ className, value }) => (
-  <div className={cx('object-name-col', className)}>{value.details.objectName}</div>
+  <div className={cx('object-name-col', className)}>{value.object_name}</div>
 );
 ObjectNameColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -162,7 +162,7 @@ export class EventsGrid extends PureComponent {
 
   getColumns = () => [
     {
-      id: ENTITY_CREATION_DATE,
+      id: ENTITY_CREATED_AT,
       title: {
         full: this.props.intl.formatMessage(messages.timeCol),
       },
@@ -171,7 +171,7 @@ export class EventsGrid extends PureComponent {
       component: TimeColumn,
     },
     {
-      id: ENTITY_USER,
+      id: ENTITY_SUBJECT_NAME,
       title: {
         full: this.props.intl.formatMessage(messages.userCol),
       },
@@ -179,7 +179,7 @@ export class EventsGrid extends PureComponent {
       component: UserColumn,
     },
     {
-      id: ENTITY_ACTION,
+      id: ENTITY_EVENT_NAME,
       title: {
         full: this.props.intl.formatMessage(messages.actionCol),
       },
@@ -190,7 +190,7 @@ export class EventsGrid extends PureComponent {
       },
     },
     {
-      id: ENTITY_OBJECT_TYPE,
+      id: ENTITY_EVENTS_OBJECT_TYPE,
       title: {
         full: this.props.intl.formatMessage(messages.objectTypeCol),
       },
