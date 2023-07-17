@@ -250,7 +250,7 @@ export const URLS = {
   authSettings: (authTypeOrId, id = '') => `${uatBase}settings/auth/${authTypeOrId}/${id}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
-  events: (projectId) => `${urlBase}${projectId}/activity`,
+  events: () => `${urlBase}activities/searches`,
   allUsers: () => `${urlBase}user/all`,
 
   exportUsers: (filterEntities) =>
