@@ -22,7 +22,7 @@ import { getStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
-import { getAppliedFilters, getQueryParams, getSearchCriteria, stringToArray } from './utils';
+import { stringToArray } from './utils';
 
 export const locationSelector = (state) => state.location || {};
 export const payloadSelector = (state) => locationSelector(state).payload || {};
@@ -128,25 +128,6 @@ export const launchIdSelector = (state) => {
   const testItemIds = testItemIdsArraySelector(state);
   return testItemIds && testItemIds[0];
 };
-
-export const createReMappedQueryParametersSelector = ({
-  namespace: staticNamespace,
-  defaultPagination,
-  defaultSorting,
-} = {}) =>
-  createSelector(
-    createQueryParametersSelector({ staticNamespace, defaultPagination, defaultSorting }),
-    projectIdSelector,
-    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...filters }, projectId) => {
-      const appliedFilters = getAppliedFilters(filters);
-      const queryParams = getQueryParams(sort, limit, pageNumber);
-
-      return {
-        appliedFilters: getSearchCriteria(appliedFilters, projectId),
-        queryParams,
-      };
-    },
-  );
 
 export const pathnameChangedSelector = (state) => {
   const pathName = state.location.pathname;

@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
-import { URLS } from 'common/urls';
 import {
   eventsSelector,
   eventsPaginationSelector,
@@ -31,7 +30,6 @@ import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
-  url: URLS.events(),
   events: eventsSelector(state),
   loading: loadingSelector(state),
 }))

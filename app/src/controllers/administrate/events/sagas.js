@@ -21,12 +21,12 @@ import { NAMESPACE, FETCH_EVENTS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchEvents() {
-  const { appliedFilters, queryParams } = yield select(querySelector);
+  const { appliedFilters, alternativePaginationAndSortParams } = yield select(querySelector);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.events(), {
       method: 'POST',
-      params: queryParams,
+      params: alternativePaginationAndSortParams,
       data: appliedFilters,
     }),
   );

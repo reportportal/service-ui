@@ -16,6 +16,7 @@
 
 export const CONDITION_CNT = 'cnt';
 export const CONDITION_NOT_CNT = '!cnt';
+export const CONDITION_NOT_CNT_EVENTS = 'non_cnt';
 export const CONDITION_EQ = 'eq';
 // TODO export const CONDITION_NOT_EQ = '!eq';
 export const CONDITION_NOT_EQ = 'ne';
@@ -57,13 +58,6 @@ export const ENTITY_EVENTS_OBJECT_TYPE = 'objectType';
 export const ENTITY_SUBJECT_NAME = 'subjectName';
 export const ENTITY_SUBJECT_TYPE = 'subjectType';
 
-export const reMappedFilterEntityNamesMap = {
-  [ENTITY_ACTION]: ENTITY_EVENT_NAME,
-  [ENTITY_CREATION_DATE]: ENTITY_CREATED_AT,
-  [ENTITY_USER]: ENTITY_SUBJECT_NAME,
-  [ENTITY_OBJECT_TYPE]: ENTITY_EVENTS_OBJECT_TYPE,
-};
-
 export const reMappedOperationValuesMap = {
-  [CONDITION_NOT_CNT]: 'non_cnt',
+  [CONDITION_NOT_CNT]: CONDITION_NOT_CNT_EVENTS,
 };

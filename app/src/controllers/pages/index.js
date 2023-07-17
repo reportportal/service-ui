@@ -26,7 +26,6 @@ export {
   testItemIdsSelector,
   testItemIdsArraySelector,
   createQueryParametersSelector,
-  createReMappedQueryParametersSelector,
   filterIdSelector,
   pathnameChangedSelector,
   logItemIdSelector,
