@@ -19,7 +19,8 @@ import PropTypes from 'prop-types';
 export const activityItemPropTypes = {
   activity: PropTypes.shape({
     actionType: PropTypes.string,
-    details: PropTypes.shape({ history: PropTypes.array, objectName: PropTypes.string }),
+    objectName: PropTypes.string,
+    details: PropTypes.shape({ history: PropTypes.array }),
     id: PropTypes.number,
     lastModified: PropTypes.number,
     loggedObjectId: PropTypes.number,
@@ -33,7 +34,8 @@ export const activityItemPropTypes = {
 export const activityItemDefaultProps = {
   activity: {
     actionType: '',
-    details: { history: [], objectName: '' },
+    objectName: '',
+    details: { history: [] },
     id: 0,
     lastModified: 0,
     loggedObjectId: 0,
