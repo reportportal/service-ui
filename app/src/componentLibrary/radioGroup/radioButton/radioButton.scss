@@ -108,6 +108,18 @@
   word-break: break-all;
   text-overflow: ellipsis;
   color: $COLOR--almost-black;
+
+  & a {
+    text-decoration: none;
+    color: $COLOR--topaz-2;
+  }
+
+  & a:focus,
+  & a:focus-visible {
+    outline: none;
+    color: $COLOR--topaz-focused;
+    text-decoration: underline;
+  }
 }
 
 .light {
