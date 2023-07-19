@@ -21,12 +21,7 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const UnassignUser = ({
-  activity: {
-    user,
-    details: { objectName },
-  },
-}) => (
+export const UnassignUser = ({ activity: { user, objectName } }) => (
   <>
     <span className={cx('user-name')}>{objectName}</span>
     <FormattedMessage id="UnassignUser.by" defaultMessage="was unassigned from the project by" />

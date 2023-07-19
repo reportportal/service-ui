@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 export const CreateUser = ({ activity }) => (
   <div className={cx('create-user', 'clearfix')}>
-    <span className={cx('new-user-name')}>{activity.details.objectName}, </span>
+    <span className={cx('new-user-name')}>{activity.objectName}, </span>
     <FormattedMessage id="CreateUser.welcome" defaultMessage="welcome to Report Portal!" />
   </div>
 );
