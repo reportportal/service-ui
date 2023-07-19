@@ -23,6 +23,7 @@ export const UNLINK_ISSUE = 'unlinkIssue';
 export const CREATE_USER = 'createUser';
 export const ASSIGN_USER = 'assignUser';
 export const UNASSIGN_USER = 'unassignUser';
+export const CHANGE_ROLE = 'changeRole';
 export const CREATE_DASHBOARD = 'createDashboard';
 export const UPDATE_DASHBOARD = 'updateDashboard';
 export const DELETE_DASHBOARD = 'deleteDashboard';

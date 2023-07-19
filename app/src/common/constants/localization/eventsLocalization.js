@@ -69,6 +69,7 @@ import {
   MATCHED_PATTERN,
   ASSIGN_USER,
   UNASSIGN_USER,
+  CHANGE_ROLE,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -140,6 +141,7 @@ export const actionMessages = defineMessages({
     id: 'EventActions.unassignUser',
     defaultMessage: 'Unassign',
   },
+  [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
