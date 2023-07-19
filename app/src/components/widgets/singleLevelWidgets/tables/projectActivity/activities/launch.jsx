@@ -89,7 +89,7 @@ export class Launch extends Component {
         {activity.actionType === DELETE_LAUNCH && (
           <Fragment>
             {` ${formatMessage(messages.launch)} `}
-            {activity.details.objectName}.
+            {activity.objectName}.
           </Fragment>
         )}
         {(activity.actionType === START_LAUNCH || activity.actionType === FINISH_LAUNCH) && (
@@ -100,7 +100,7 @@ export class Launch extends Component {
               className={cx('link')}
               target="_blank"
             >
-              {activity.details.objectName}.
+              {activity.objectName}.
             </Link>
           </Fragment>
         )}
@@ -110,7 +110,7 @@ export class Launch extends Component {
             className={cx('link')}
             target="_blank"
           >
-            {activity.details.objectName}.
+            {activity.objectName}.
           </Link>
         )}
       </Fragment>
