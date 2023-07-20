@@ -3,10 +3,10 @@
 FROM alpine:latest AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
-ARG version
-ARG branch
-ARG build_date
-RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
+ARG APP_VERSION=develop
+ARG BUILD_BRANCH
+ARG BUILD_DATE
+RUN echo {\"build\": { \"version\": \"${APP_VERSION}\", \"branch\": \"${BUILD_BRANCH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
 FROM node:12-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
