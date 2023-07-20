@@ -205,7 +205,7 @@ export const MultipleAutocomplete = ({
             <Popper
               placement="bottom-start"
               modifiers={{
-                preventOverflow: { enabled: true },
+                preventOverflow: { escapeWithReference: true },
                 flip: { enabled: true },
               }}
             >

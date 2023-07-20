@@ -218,7 +218,9 @@ export const Dropdown = ({
           placement="bottom-start"
           eventsEnabled={false}
           modifiers={{
-            preventOverflow: { enabled: true },
+            preventOverflow: {
+              escapeWithReference: true,
+            },
             flip: {
               enabled: true,
             },
