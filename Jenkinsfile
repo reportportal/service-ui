@@ -19,7 +19,7 @@ node {
                 IMAGE_NAME='reportportal-dev/service-ui'
                 COMMIT_SHA=\$(git rev-parse HEAD | git hash-object --stdin)
                 BUILD_DATE=\$(date +%FT%T%z)
-                docker build -t \$IMAGE_NAME --build-arg version=\$BUILD_VER --build-arg build_date=\$BUILD_DATE --build-arg branch=\$BRANCH-\$COMMIT_SHA .
+                docker build -t \$IMAGE_NAME --build-arg APP_VERSION=\$BUILD_VER --build-arg BUILD_DATE=\$BUILD_DATE --build-arg BUILD_BRANCH=\$BRANCH-\$COMMIT_SHA .
                 """
             }
         }
