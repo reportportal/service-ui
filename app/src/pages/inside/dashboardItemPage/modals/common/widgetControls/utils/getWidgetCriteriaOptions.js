@@ -54,6 +54,7 @@ import {
   MATCHED_PATTERN,
   ASSIGN_USER,
   UNASSIGN_USER,
+  CHANGE_ROLE,
 } from 'common/constants/actionTypes';
 import {
   LAUNCH_STATUSES_OPTIONS,
@@ -176,6 +177,7 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.unassign_user',
     defaultMessage: 'Unassign user',
   },
+  [CHANGE_ROLE]: { id: 'WidgetCriteriaOption.change_role', defaultMessage: 'Change role' },
 
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',
@@ -345,6 +347,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: CREATE_USER, label: formatMessage(messages[CREATE_USER]) },
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
+  { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
