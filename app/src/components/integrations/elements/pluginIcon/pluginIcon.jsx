@@ -26,14 +26,13 @@ import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations
 import { Image } from 'components/main/image';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
+  const projectId = useSelector(activeProjectSelector);
+  const globalIntegrations = useSelector(globalIntegrationsSelector);
   const { details, name } = pluginData;
   const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
 
   const calculateIconSrc = () => {
     if (isDynamicIconAvailable) {
-      const projectId = useSelector(activeProjectSelector);
-      const globalIntegrations = useSelector(globalIntegrationsSelector);
-
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
 
       if (isCommonCommandSupported) {
