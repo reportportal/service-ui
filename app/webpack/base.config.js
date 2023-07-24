@@ -19,6 +19,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
@@ -36,13 +38,13 @@ module.exports = {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
       components: path.resolve(__dirname, '../src/components'),
+      componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
       controllers: path.resolve(__dirname, '../src/controllers'),
       common: path.resolve(__dirname, '../src/common'),
       pages: path.resolve(__dirname, '../src/pages'),
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
-      'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
     },
   },
   module: {
@@ -88,7 +90,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',
-      process: 'process/browser',
+      process: 'process/browser.js',
       Buffer: ['buffer', 'Buffer'],
     }),
   ],
