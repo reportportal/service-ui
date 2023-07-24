@@ -17,6 +17,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import { Button } from 'componentLibrary/button';
+import { withTooltip } from 'componentLibrary/tooltip';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { useIntl } from 'react-intl';
@@ -35,6 +36,20 @@ const images = {
   plus,
 };
 
+const EmptyStateButton = ({ name, ...props }) => <Button {...props}>{name}</Button>;
+EmptyStateButton.propTypes = {
+  name: PropTypes.string.isRequired,
+};
+
+const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
+TooltipComponent.propTypes = {
+  tooltip: PropTypes.string.isRequired,
+};
+
+const ButtonWithTooltip = withTooltip({
+  ContentComponent: TooltipComponent,
+})(EmptyStateButton);
+
 export const EmptyStatePage = ({
   handleButton,
   buttonName,
@@ -47,6 +62,7 @@ export const EmptyStatePage = ({
   imageType,
   buttonDataAutomationId,
   documentationDataAutomationId,
+  buttonTooltip,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -54,16 +70,25 @@ export const EmptyStatePage = ({
       <span className={cx('img')}>{Parser(images[imageType])}</span>
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
-      {buttonName && (
-        <Button
-          disabled={disableButton}
-          wide
-          onClick={handleButton}
-          dataAutomationId={buttonDataAutomationId}
-        >
-          {buttonName}
-        </Button>
-      )}
+      {buttonName &&
+        (buttonTooltip ? (
+          <ButtonWithTooltip
+            disabled={disableButton}
+            name={buttonName}
+            onClick={handleButton}
+            dataAutomationId={buttonDataAutomationId}
+            tooltip={buttonTooltip}
+          />
+        ) : (
+          <Button
+            disabled={disableButton}
+            wide
+            onClick={handleButton}
+            dataAutomationId={buttonDataAutomationId}
+          >
+            {buttonName}
+          </Button>
+        ))}
       {documentationLink && (
         <a
           href={documentationLink}
@@ -92,6 +117,7 @@ EmptyStatePage.propTypes = {
   imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell']),
   buttonDataAutomationId: PropTypes.string,
   documentationDataAutomationId: PropTypes.string,
+  buttonTooltip: PropTypes.string,
 };
 
 EmptyStatePage.defaultProps = {
@@ -106,4 +132,5 @@ EmptyStatePage.defaultProps = {
   imageType: 'plus',
   buttonDataAutomationId: '',
   documentationDataAutomationId: 'emptyStatePageDocsLink',
+  buttonTooltip: null,
 };
