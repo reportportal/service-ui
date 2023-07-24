@@ -62,15 +62,16 @@
 .children-container {
   cursor: pointer;
 
-  & > a:focus-visible {
-    outline: none;
-    text-decoration: underline;
-    color: $COLOR--topaz-focused;
+  & a {
+    text-decoration: none;
+    color: $COLOR--topaz-2;
   }
 
-  & > a {
-    color: $COLOR--topaz-2;
-    text-decoration: none;
+  & a:focus,
+  & a:focus-visible {
+    outline: none;
+    color: $COLOR--topaz-focused;
+    text-decoration: underline;
   }
 }
 

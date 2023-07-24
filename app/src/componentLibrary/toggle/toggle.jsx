@@ -16,6 +16,8 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useRef } from 'react';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './toggle.scss';
 
 const cx = classNames.bind(styles);
@@ -30,27 +32,53 @@ export const Toggle = ({
   disabled,
   title,
   dataAutomationId,
-}) => (
-  // eslint-disable-next-line
-  <label
-    title={title}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    className={cx('toggle', className, { disabled })}
-    data-automation-id={dataAutomationId}
-  >
-    <input
-      onChange={onChange}
-      checked={value}
-      disabled={disabled}
-      className={cx('input')}
-      type="checkbox"
-    />
-    <div className={cx('slider', 'round')} />
-    {children && <span className={cx('children-container')}>{children}</span>}
-  </label>
-);
+}) => {
+  const inputRef = useRef(null);
 
+  const handleKeyDown = (event) => {
+    const { keyCode } = event;
+
+    if (keyCode === SPACE_KEY_CODE) {
+      event.preventDefault();
+      return;
+    }
+
+    if (keyCode === ENTER_KEY_CODE) {
+      event.preventDefault();
+      inputRef.current.click();
+    }
+  };
+
+  return (
+    // eslint-disable-next-line
+    <label
+      id="toggle-label"
+      title={title}
+      onFocus={disabled ? null : onFocus}
+      onBlur={disabled ? null : onBlur}
+      className={cx('toggle', className, { disabled })}
+      data-automation-id={dataAutomationId}
+    >
+      <input
+        ref={inputRef}
+        tabIndex={disabled ? -1 : 0}
+        onChange={disabled ? null : onChange}
+        checked={value}
+        disabled={disabled}
+        onKeyDown={disabled ? null : handleKeyDown}
+        className={cx('input')}
+        type="checkbox"
+      />
+      <div
+        aria-labelledby="chk1-label"
+        role="checkbox"
+        aria-checked={value}
+        className={cx('slider', 'round')}
+      />
+      {children && <span className={cx('children-container')}>{children}</span>}
+    </label>
+  );
+};
 Toggle.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
@@ -62,7 +90,6 @@ Toggle.propTypes = {
   title: PropTypes.string,
   dataAutomationId: PropTypes.string,
 };
-
 Toggle.defaultProps = {
   children: null,
   value: false,
