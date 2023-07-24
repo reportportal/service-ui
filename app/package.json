@@ -48,6 +48,7 @@
     "marked-lts": "npm:marked@5.1.1",
     "mime-types": "2.1.35",
     "moment": "2.29.4",
+    "path-browserify": "^1.0.1",
     "perf-cascade": "2.5.4",
     "prop-types": "15.8.1",
     "pure-react-carousel": "1.28.1",

@@ -19,8 +19,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
@@ -45,6 +43,9 @@ module.exports = {
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
     },
   },
   module: {
@@ -92,6 +93,7 @@ module.exports = {
       Utils: 'common/utils',
       process: 'process/browser.js',
       Buffer: ['buffer', 'Buffer'],
+      path: require.resolve('path-browserify'),
     }),
   ],
 };
