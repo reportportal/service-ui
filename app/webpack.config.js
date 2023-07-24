@@ -4,8 +4,7 @@ const prodConfig = require('./webpack/prod.config');
 const devConfig = require('./webpack/dev.config');
 const sealightsConfig = require('./webpack/sealights.config');
 
-module.exports = () => {
-  const mode = process.env.NODE_ENV;
+module.exports = ({ NODE_ENV: mode } = {}) => {
   if (mode === 'development') {
     return merge(baseConfig, devConfig());
   }
