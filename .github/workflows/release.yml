@@ -21,12 +21,12 @@ jobs:
       - name: Get Date
         run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '12'
+          node-version: '14'
 
       - name: JS Build
         env:
