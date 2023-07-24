@@ -19,7 +19,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
@@ -28,7 +27,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: '[name].app.[contenthash:6].js',
+    filename: '[name].app.[contenthash:8].js',
     publicPath: '',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
@@ -92,11 +91,5 @@ module.exports = {
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
     }),
-    // new CircularDependencyPlugin({
-    //   exclude: /a\.js|node_modules/,
-    //   failOnError: false,
-    //   allowAsyncCycles: false,
-    //   cwd: process.cwd(),
-    // }),
   ],
 };
