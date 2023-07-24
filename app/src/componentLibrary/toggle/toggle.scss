@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@mixin draw-after-pseudo-element {
+@mixin draw-toggler-border {
   &::after {
     top: 50%;
     left: 50%;
@@ -97,7 +97,7 @@
 
   &:focus:not(.disabled),
   &:focus-visible:not(.disabled) + .slider {
-    @include draw-after-pseudo-element;
+    @include draw-toggler-border;
   }
 
   &:checked + .slider {
