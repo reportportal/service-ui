@@ -16,6 +16,7 @@
 
 const path = require('path');
 const dotenv = require('dotenv');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 dotenv.config();
 
@@ -64,6 +65,14 @@ module.exports = () => {
         },
       ],
     },
+    plugins: [
+      new CircularDependencyPlugin({
+        exclude: /a\.js|node_modules/,
+        failOnError: false,
+        allowAsyncCycles: false,
+        cwd: process.cwd(),
+      }),
+    ],
     devServer: {
       static: {
         directory: path.resolve(__dirname, '../build'),
