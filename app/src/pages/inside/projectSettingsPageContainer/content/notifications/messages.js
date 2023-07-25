@@ -102,6 +102,10 @@ export const messages = defineMessages({
     id: 'AddNewCaseButton.addNewRuleButton',
     defaultMessage: 'Create Rule',
   },
+  notConfiguredNotificationTooltip: {
+    id: 'ButtonTooltip.notConfiguredNotificationTooltip',
+    defaultMessage: `Email Server is not configured. Please contact Instance Administrator.`,
+  },
   toggleLabel: {
     id: 'NotificationsEnableForm.toggleNotificationsLabel',
     defaultMessage: 'Auto Email Notifications',

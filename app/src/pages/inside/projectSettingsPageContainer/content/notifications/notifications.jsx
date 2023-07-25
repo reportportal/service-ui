@@ -34,6 +34,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { withTooltip } from 'componentLibrary/tooltip';
 import {
   fetchProjectNotificationsAction,
   updateNotificationStateAction,
@@ -54,6 +55,15 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
+
+const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
+TooltipComponent.propTypes = {
+  tooltip: PropTypes.string.isRequired,
+};
+
+const ButtonWithTooltip = withTooltip({
+  ContentComponent: TooltipComponent,
+})(Button);
 
 export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
@@ -167,10 +177,21 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   useEffect(() => {
     if (notifications.length > 0) {
       setHeaderTitleNode(
-        <span className={cx('button')} onClick={onAdd}>
-          <Button disabled={!isAbleToEdit()} dataAutomationId={'createNotificationRuleButton'}>
-            {formatMessage(messages.create)}
-          </Button>
+        <span className={cx('button')}>
+          {isAbleToEdit() ? (
+            <Button onClick={onAdd} dataAutomationId="createNotificationRuleButton">
+              {formatMessage(messages.create)}
+            </Button>
+          ) : (
+            <ButtonWithTooltip
+              disabled
+              mobileDisabled
+              tooltip={formatMessage(messages.notConfiguredNotificationTooltip)}
+              dataAutomationId="createNotificationRuleButton"
+            >
+              {formatMessage(messages.create)}
+            </ButtonWithTooltip>
+          )}
         </span>,
       );
     }
@@ -258,7 +279,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           title={formatMessage(messages.noItemsMessage)}
           description={formatMessage(messages.notificationsInfo)}
           buttonName={formatMessage(messages.create)}
-          buttonDataAutomationId={'createNotificationRuleButton'}
+          buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
+          buttonDataAutomationId="createNotificationRuleButton"
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }
