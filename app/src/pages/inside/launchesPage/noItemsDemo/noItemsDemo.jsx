@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import Parser from 'html-react-parser';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -33,7 +34,7 @@ const messages = defineMessages({
   generateDemoDataDescription: {
     id: 'NoItemsDemo.generateDemoDataDescription',
     defaultMessage:
-      "To get started, please <a href='http://reportportal.io/download/integration' target='_blank'>Set up Own Integration</a> or generate Demo Test Results",
+      'To get started, please <a>Set up Own Integration</a> or generate Demo Test Results',
   },
 });
 
@@ -62,7 +63,14 @@ export class NoItemsDemo extends Component {
         <img src={DemoNoData} alt="No data" />
         <h5 className={cx('no-data-title')}>{formatMessage(messages.noDataTitle)}</h5>
         <p className={cx('generate-demo-description')}>
-          {Parser(formatMessage(messages.generateDemoDataDescription))}
+          {Parser(
+            formatMessage(messages.generateDemoDataDescription, {
+              a: (data) =>
+                DOMPurify.sanitize(
+                  `<a href='https://reportportal.io/download/integration' target='_blank'>${data}</a>`,
+                ),
+            }),
+          )}
         </p>
         <GenerateDemoDataBlock onSuccess={onGenerate} className={cx('generate-demo-data-block')} />
       </div>

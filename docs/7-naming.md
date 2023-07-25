@@ -41,6 +41,4 @@ All files (except icons) should be named in `camelCase`.
 
 Files with tests should be named as `<fileName>.test.js`. For example if you have a file `mySuperFunction.js`, file with tests should be named `mySuperFunction.test.js`.
 
-Files with storybook stories should be named in the following way: `<componentFileName>.stories.jsx`.
-
 SVG icons should be named in dash notation. To use them in JSX, the `-inline` postfix should be added. For example: `arrow-down-inline.svg`.

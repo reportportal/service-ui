@@ -105,8 +105,8 @@ export class InputTimeDateRangeMenu extends Component {
       defaultDisplayEndDate,
       component,
     } = this.props;
-    const displayStartDate = moment((value && value.start) || defaultDisplayStartDate);
-    const displayEndDate = moment((value && value.end) || defaultDisplayEndDate);
+    const displayStartDate = moment((value && value.start) || defaultDisplayStartDate).toDate();
+    const displayEndDate = moment((value && value.end) || defaultDisplayEndDate).toDate();
 
     return (
       <div className={cx('menu', { visible: opened })}>

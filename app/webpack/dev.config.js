@@ -15,8 +15,9 @@
  */
 
 const path = require('path');
-const webpack = require('webpack');
 const dotenv = require('dotenv');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ module.exports = () => {
     process.exit(1);
   }
   return {
-    devtool: 'eval-sourcemap',
+    devtool: 'eval-source-map',
     mode: 'development',
     module: {
       rules: [
@@ -49,7 +50,7 @@ module.exports = () => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName: '[name]__[local]--[hash:base64:5]',
+                  localIdentName: '[name]__[local]--[contenthash:base64:5]',
                 },
                 importLoaders: 1,
               },
@@ -65,9 +66,22 @@ module.exports = () => {
         },
       ],
     },
-    plugins: [new webpack.HotModuleReplacementPlugin()],
+    optimization: {
+      runtimeChunk: 'single',
+    },
+    plugins: [
+      new CircularDependencyPlugin({
+        exclude: /a\.js|node_modules/,
+        failOnError: false,
+        allowAsyncCycles: false,
+        cwd: process.cwd(),
+      }),
+      new ReactRefreshWebpackPlugin(),
+    ],
     devServer: {
-      contentBase: path.resolve(__dirname, '../build'),
+      static: {
+        directory: path.resolve(__dirname, '../build'),
+      },
       hot: true,
       historyApiFallback: true,
       https: false,

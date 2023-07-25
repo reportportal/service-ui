@@ -30,8 +30,6 @@ To launch the development environment, follow these steps:
 
 `npm run build` - build the product version in the `dist` folder
 
-`npm run storybook` - launch the development environment for storybook
-
 `npm run test` - single run all tests
 
 `npm run test:watch` - run tests when changing files

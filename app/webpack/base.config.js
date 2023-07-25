@@ -19,7 +19,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
@@ -28,20 +27,25 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: '[name].app.[hash:6].js',
+    filename: '[name].app.[contenthash:8].js',
     publicPath: '',
+    assetModuleFilename: 'media/[name].[ext]',
+    clean: true,
   },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
       components: path.resolve(__dirname, '../src/components'),
+      componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
       controllers: path.resolve(__dirname, '../src/controllers'),
       common: path.resolve(__dirname, '../src/common'),
       pages: path.resolve(__dirname, '../src/pages'),
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
-      'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
     },
   },
   module: {
@@ -60,11 +64,12 @@ module.exports = {
       },
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-        loader: 'url-loader',
         exclude: /\/*-inline.svg/,
-        options: {
-          limit: 1000,
-          name: 'media/[name].[ext]',
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 1000,
+          },
         },
       },
       {
@@ -75,7 +80,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
+      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../localization/messages')],
     }),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new HtmlWebpackPlugin({
@@ -86,12 +91,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',
+      process: 'process/browser.js',
+      Buffer: ['buffer', 'Buffer'],
+      path: require.resolve('path-browserify'),
     }),
-    // new CircularDependencyPlugin({
-    //   exclude: /a\.js|node_modules/,
-    //   failOnError: false,
-    //   allowAsyncCycles: false,
-    //   cwd: process.cwd(),
-    // }),
   ],
 };
