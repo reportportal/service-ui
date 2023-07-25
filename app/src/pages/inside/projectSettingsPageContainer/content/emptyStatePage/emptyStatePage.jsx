@@ -36,11 +36,6 @@ const images = {
   plus,
 };
 
-const EmptyStateButton = ({ name, ...props }) => <Button {...props}>{name}</Button>;
-EmptyStateButton.propTypes = {
-  name: PropTypes.string.isRequired,
-};
-
 const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
 TooltipComponent.propTypes = {
   tooltip: PropTypes.string.isRequired,
@@ -48,7 +43,7 @@ TooltipComponent.propTypes = {
 
 const ButtonWithTooltip = withTooltip({
   ContentComponent: TooltipComponent,
-})(EmptyStateButton);
+})(Button);
 
 export const EmptyStatePage = ({
   handleButton,
@@ -74,11 +69,12 @@ export const EmptyStatePage = ({
         (buttonTooltip ? (
           <ButtonWithTooltip
             disabled={disableButton}
-            name={buttonName}
             onClick={disableButton ? null : handleButton}
             dataAutomationId={buttonDataAutomationId}
             tooltip={buttonTooltip}
-          />
+          >
+            {buttonName}
+          </ButtonWithTooltip>
         ) : (
           <Button
             disabled={disableButton}

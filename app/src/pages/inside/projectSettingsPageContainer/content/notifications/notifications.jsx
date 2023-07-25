@@ -56,15 +56,6 @@ import { messages } from './messages';
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
 
-const CreateButton = ({ name, ...props }) => (
-  <Button dataAutomationId="createNotificationRuleButton" {...props}>
-    {name}
-  </Button>
-);
-CreateButton.propTypes = {
-  name: PropTypes.string.isRequired,
-};
-
 const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
 TooltipComponent.propTypes = {
   tooltip: PropTypes.string.isRequired,
@@ -72,7 +63,7 @@ TooltipComponent.propTypes = {
 
 const ButtonWithTooltip = withTooltip({
   ContentComponent: TooltipComponent,
-})(CreateButton);
+})(Button);
 
 export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
@@ -195,9 +186,11 @@ export const Notifications = ({ setHeaderTitleNode }) => {
             <ButtonWithTooltip
               disabled
               mobileDisabled
-              name={formatMessage(messages.create)}
               tooltip={formatMessage(messages.notConfiguredNotificationTooltip)}
-            />
+              dataAutomationId="createNotificationRuleButton"
+            >
+              {formatMessage(messages.create)}
+            </ButtonWithTooltip>
           )}
         </span>,
       );
