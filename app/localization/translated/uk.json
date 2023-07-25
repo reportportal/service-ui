@@ -216,7 +216,7 @@
   "BtsCommonMessages.projectKeyLabel": "Ключ проекту в СОД",
   "BtsIntegrationSelector.btsTitle": "СОД",
   "BtsIntegrationSelector.integrationNameTitle": "Ім’я інтеграції",
-  "ButtonTooltip.notConfiguredTooltip": "Сервер електронної пошти не налаштовано. Будь ласка, зверніться до адміністратора екземпляра.",
+  "ButtonTooltip.notConfiguredNotificationTooltip": "Сервер електронної пошти не налаштовано. Будь ласка, зверніться до адміністратора екземпляра.",
   "CategoriesList.addOrganizationButtonTitle": "Додати організацію на GitHub",
   "CategoriesList.organizationNameLabel": "Назва організації",
   "ChangePasswordBlock.changePass": "Зміна пароля",

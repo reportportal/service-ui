@@ -57,7 +57,7 @@ const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
 
 const CreateButton = ({ name, ...props }) => (
-  <Button dataAutomationId={'createNotificationRuleButton'} {...props}>
+  <Button dataAutomationId="createNotificationRuleButton" {...props}>
     {name}
   </Button>
 );
@@ -188,13 +188,15 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       setHeaderTitleNode(
         <span className={cx('button')}>
           {isAbleToEdit() ? (
-            <CreateButton name={formatMessage(messages.create)} onClick={onAdd} />
+            <Button onClick={onAdd} dataAutomationId="createNotificationRuleButton">
+              {formatMessage(messages.create)}
+            </Button>
           ) : (
             <ButtonWithTooltip
               disabled
               mobileDisabled
               name={formatMessage(messages.create)}
-              tooltip={formatMessage(messages.notConfiguredTooltip)}
+              tooltip={formatMessage(messages.notConfiguredNotificationTooltip)}
             />
           )}
         </span>,
@@ -284,8 +286,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           title={formatMessage(messages.noItemsMessage)}
           description={formatMessage(messages.notificationsInfo)}
           buttonName={formatMessage(messages.create)}
-          buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredTooltip)}
-          buttonDataAutomationId={'createNotificationRuleButton'}
+          buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
+          buttonDataAutomationId="createNotificationRuleButton"
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }

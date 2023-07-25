@@ -216,7 +216,7 @@
   "BtsCommonMessages.projectKeyLabel": "BTS中项目的关键字",
   "BtsIntegrationSelector.btsTitle": "BTS",
   "BtsIntegrationSelector.integrationNameTitle": "集成名称",
-  "ButtonTooltip.notConfiguredTooltip": "Email Server is not configured. Please contact Instance Administrator.",
+  "ButtonTooltip.notConfiguredNotificationTooltip": "Email Server is not configured. Please contact Instance Administrator.",
   "CategoriesList.addOrganizationButtonTitle": "添加GitHub组织",
   "CategoriesList.organizationNameLabel": "组织名称",
   "ChangePasswordBlock.changePass": "修改密码",

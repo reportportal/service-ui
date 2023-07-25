@@ -216,7 +216,7 @@
   "BtsCommonMessages.projectKeyLabel": "Ключ проекта в СОД",
   "BtsIntegrationSelector.btsTitle": "СОД",
   "BtsIntegrationSelector.integrationNameTitle": "Имя интеграции",
-  "ButtonTooltip.notConfiguredTooltip": "Почтовый сервер не настроен. Обратитесь к администратору инстанса.",
+  "ButtonTooltip.notConfiguredNotificationTooltip": "Почтовый сервер не настроен. Обратитесь к администратору инстанса.",
   "CategoriesList.addOrganizationButtonTitle": "Добавить организацию GitHub",
   "CategoriesList.organizationNameLabel": "Название организации",
   "ChangePasswordBlock.changePass": "Изменение пароля",

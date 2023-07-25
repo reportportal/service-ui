@@ -216,7 +216,7 @@
   "BtsCommonMessages.projectKeyLabel": "Ключ праекта ў САХ",
   "BtsIntegrationSelector.btsTitle": "САХ",
   "BtsIntegrationSelector.integrationNameTitle": "Імя інтэграцыі",
-  "ButtonTooltip.notConfiguredTooltip": "Сервер электроннай пошты не наладжаны. Калі ласка, звярніцеся да адміністратара асобніка.",
+  "ButtonTooltip.notConfiguredNotificationTooltip": "Сервер электроннай пошты не наладжаны. Калі ласка, звярніцеся да адміністратара асобніка.",
   "CategoriesList.addOrganizationButtonTitle": "Дадаць арганізацыю GitHub",
   "CategoriesList.organizationNameLabel": "Назва арганізацыі",
   "ChangePasswordBlock.changePass": "Змяніць пароль",

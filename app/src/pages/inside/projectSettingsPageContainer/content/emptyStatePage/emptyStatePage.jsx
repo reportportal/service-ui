@@ -75,7 +75,7 @@ export const EmptyStatePage = ({
           <ButtonWithTooltip
             disabled={disableButton}
             name={buttonName}
-            onClick={handleButton}
+            onClick={disableButton ? null : handleButton}
             dataAutomationId={buttonDataAutomationId}
             tooltip={buttonTooltip}
           />
@@ -83,7 +83,7 @@ export const EmptyStatePage = ({
           <Button
             disabled={disableButton}
             wide
-            onClick={handleButton}
+            onClick={disableButton ? null : handleButton}
             dataAutomationId={buttonDataAutomationId}
           >
             {buttonName}
