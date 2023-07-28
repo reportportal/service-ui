@@ -61,7 +61,7 @@ export const IntegrationsList = (props) => {
         <EmptyStatePage
           title={formatMessage(messages.noIntegrationsMessage)}
           description={formatMessage(messages.noIntegrationsDescription)}
-          documentationLink={'https://reportportal.io/docs/Project-configuration%3Eintegrations'}
+          documentationLink="https://reportportal.io/docs/reportportal-configuration/IntegrationViaPlugin"
           handleDocumentationClick={handleDocumentationClick}
           descriptionClassName={cx('integration-empty')}
         />

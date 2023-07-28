@@ -26,11 +26,18 @@ import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
+import Parser from 'html-react-parser';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
-import { ANALYZER_ENABLED, ANALYZER_MODE, MIN_SHOULD_MATCH } from '../constants';
+import {
+  ANALYZER_ENABLED,
+  ANALYZER_MODE,
+  LINKS_TO_DOCUMENTATION,
+  MIN_SHOULD_MATCH,
+} from '../constants';
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -75,7 +82,13 @@ const AutoAnalysis = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <Layout description={formatMessage(messages.tabDescription)}>
+    <Layout
+      description={Parser(
+        formatMessage(messages.tabDescription, {
+          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.analysis),
+        }),
+      )}
+    >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={ANALYZER_ENABLED}

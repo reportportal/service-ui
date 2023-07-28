@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
+import Parser from 'html-react-parser';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
@@ -28,11 +29,16 @@ import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
 import { Layout } from '../../layout';
 import { Divider } from '../../elements/divider';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
-import { ALL_MESSAGES_SHOULD_MATCH, NUMBER_OF_LOG_LINES } from '../constants';
+import {
+  ALL_MESSAGES_SHOULD_MATCH,
+  LINKS_TO_DOCUMENTATION,
+  NUMBER_OF_LOG_LINES,
+} from '../constants';
 import styles from './indexSettings.scss';
 
 const cx = classNames.bind(styles);
@@ -103,7 +109,13 @@ const IndexSettings = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <Layout description={formatMessage(messages.tabDescription)}>
+    <Layout
+      description={Parser(
+        formatMessage(messages.tabDescription, {
+          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.indexSettings),
+        }),
+      )}
+    >
       <form className={cx('index-settings-form')} onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={NUMBER_OF_LOG_LINES}

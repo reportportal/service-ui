@@ -57,7 +57,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'PatternAnalysis.tabDescription',
     defaultMessage:
-      'The Pattern-Analysis feature helps to find common patterns in error logs by marking them with the "PA" label',
+      'The Pattern-Analysis feature helps to find common patterns in error logs by marking them with the "PA" label. More information about Pattern-Analysis you can read in <a>Documentation</a>',
   },
   autoPatternAnalysis: {
     id: 'PatternAnalysis.autoPatternAnalysis',

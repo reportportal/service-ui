@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,9 @@
  * limitations under the License.
  */
 
-.tab-description {
-  display: block;
-  max-width: 640px;
-  margin-bottom: 24px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--almost-black;
+import DOMPurify from 'dompurify';
 
-  & > a {
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    color: $COLOR--topaz-2;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-      color: $COLOR--topaz-hover-2;
-    }
-  }
-}
+export const createLink = (data, href) =>
+  DOMPurify.sanitize(`<a href=${href} target="_blank" rel="noreferrer noopener">${data}</a>`, {
+    ALLOWED_ATTR: ['target', 'href', 'rel'],
+  });

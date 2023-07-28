@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
@@ -25,10 +26,11 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
 import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
-import { SEARCH_LOGS_MIN_SHOULD_MATCH } from '../constants';
+import { LINKS_TO_DOCUMENTATION, SEARCH_LOGS_MIN_SHOULD_MATCH } from '../constants';
 
 const SimilarItems = ({
   analyzerConfig,
@@ -62,7 +64,13 @@ const SimilarItems = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <Layout description={formatMessage(messages.tabDescription)}>
+    <Layout
+      description={Parser(
+        formatMessage(messages.tabDescription, {
+          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.similarItems),
+        }),
+      )}
+    >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={SEARCH_LOGS_MIN_SHOULD_MATCH}

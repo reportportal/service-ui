@@ -81,7 +81,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           description={formatMessage(messages.noPatternAnalysisDescription)}
           buttonName={formatMessage(messages.create)}
           buttonDataAutomationId="createPatternButton"
-          documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
+          documentationLink="https://reportportal.io/docs/analysis/PatternAnalysis"
           disableButton={!isAbleToCreate}
           handleButton={onAddPattern}
         />

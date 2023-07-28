@@ -18,15 +18,21 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
-import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
+import {
+  LINKS_TO_DOCUMENTATION,
+  UNIQUE_ERROR_ENABLED,
+  UNIQUE_ERROR_REMOVE_NUMBERS,
+} from '../constants';
 import { formatFieldName } from '../utils';
 import { Layout } from '../../layout';
 
@@ -81,7 +87,13 @@ const UniqueErrors = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <Layout description={formatMessage(messages.tabDescription)}>
+    <Layout
+      description={Parser(
+        formatMessage(messages.tabDescription, {
+          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.uniqueErrors),
+        }),
+      )}
+    >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={formatFieldName(UNIQUE_ERROR_ENABLED)}

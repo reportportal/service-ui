@@ -20,7 +20,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'AutoAnalysis.tabDescription',
     defaultMessage:
-      'Auto-Analysis allows to reduce the time spent on test execution investigation by analyzing test failures in automatic mode. The process of Auto-Analysis is based on previous user-investigated results using Machine Learning',
+      'Auto-Analysis allow to reduce the time spent on test execution investigation by analyzing test failures in automatic mode. The process of Auto-Analysis is based on previous user-investigated results using Machine Learning. More information about Auto-Analysis you can read in <a>Documentation</a>',
   },
   autoAnalysis: {
     id: 'AutoAnalysis.autoAnalysis',
