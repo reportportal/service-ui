@@ -20,7 +20,6 @@ export const DELETE_LAUNCH = 'deleteLaunch';
 export const POST_ISSUE = 'postIssue';
 export const LINK_ISSUE = 'linkIssue';
 export const UNLINK_ISSUE = 'unlinkIssue';
-export const CREATE_USER = 'createUser';
 export const ASSIGN_USER = 'assignUser';
 export const UNASSIGN_USER = 'unassignUser';
 export const CHANGE_ROLE = 'changeRole';
