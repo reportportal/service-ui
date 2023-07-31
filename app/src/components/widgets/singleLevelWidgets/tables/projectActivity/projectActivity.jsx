@@ -36,7 +36,6 @@ import {
   FINISH_LAUNCH,
   DELETE_LAUNCH,
   UPDATE_ANALYZER,
-  CREATE_USER,
   UPDATE_PROJECT,
   UPDATE_NOTIFICATIONS,
   CREATE_PATTERN,
@@ -57,7 +56,6 @@ import { AnalysisConfigurations } from './activities/analysisConfigurations';
 import { Integration } from './activities/integration';
 import { Launch } from './activities/launch';
 import { TestItem } from './activities/testItem';
-import { CreateUser } from './activities/createUser';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
@@ -284,8 +282,6 @@ export class ProjectActivity extends Component {
         ) : (
           <DefaultProjectSettings activity={activity} lang={this.props.lang} />
         );
-      case CREATE_USER:
-        return <CreateUser activity={activity} />;
 
       case ASSIGN_USER:
         return <AssignUser activity={activity} />;
@@ -307,33 +303,20 @@ export class ProjectActivity extends Component {
       return (
         ActivityComponent && (
           <div className={cx('row-content')} key={activity.id}>
-            {activity.actionType === CREATE_USER ? (
-              <Fragment>
-                {ActivityComponent}
-                <AbsRelTime
-                  setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                  startTime={+activity.lastModified}
-                  customClass={cx('time')}
-                />
-              </Fragment>
-            ) : (
-              <Fragment>
-                <UserAvatar
-                  className={cx('avatar-wrapper')}
-                  userId={activity.user}
-                  projectId={this.props.projectId}
-                  alt="avatar"
-                />
-                <div className={cx('activity-wrapper')}>
-                  {ActivityComponent}
-                  <AbsRelTime
-                    setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                    startTime={+activity.lastModified}
-                    customClass={cx('time')}
-                  />
-                </div>
-              </Fragment>
-            )}
+            <UserAvatar
+              className={cx('avatar-wrapper')}
+              userId={activity.user}
+              projectId={this.props.projectId}
+              alt="avatar"
+            />
+            <div className={cx('activity-wrapper')}>
+              {ActivityComponent}
+              <AbsRelTime
+                setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
+                startTime={+activity.lastModified}
+                customClass={cx('time')}
+              />
+            </div>
           </div>
         )
       );

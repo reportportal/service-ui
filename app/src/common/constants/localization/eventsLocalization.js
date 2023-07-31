@@ -46,7 +46,6 @@ import {
   DELETE_LAUNCH,
   START_IMPORT,
   FINISH_IMPORT,
-  CREATE_USER,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -128,10 +127,6 @@ export const actionMessages = defineMessages({
   [FINISH_IMPORT]: {
     id: 'EventActions.finishImport',
     defaultMessage: 'Finish import',
-  },
-  [CREATE_USER]: {
-    id: 'EventActions.createUser',
-    defaultMessage: 'Create user',
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',

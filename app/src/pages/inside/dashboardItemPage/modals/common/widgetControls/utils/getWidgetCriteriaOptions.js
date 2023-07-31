@@ -38,7 +38,6 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  CREATE_USER,
   UPDATE_PROJECT,
   ACTIONS_WITH_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
@@ -164,10 +163,6 @@ const messages = defineMessages({
   [ACTIONS_WITH_ISSUES]: {
     id: 'WidgetCriteriaOption.issues_actions',
     defaultMessage: 'Actions with issues',
-  },
-  [CREATE_USER]: {
-    id: 'WidgetCriteriaOption.create_user',
-    defaultMessage: 'Add, register user',
   },
   [ASSIGN_USER]: {
     id: 'WidgetCriteriaOption.assign_user',
@@ -344,7 +339,6 @@ const getUserActionOptions = (formatMessage) => [
   { value: FINISH_LAUNCH, label: formatMessage(messages[FINISH_LAUNCH]) },
   { value: DELETE_LAUNCH, label: formatMessage(messages[DELETE_LAUNCH]) },
   { value: ACTIONS_WITH_ISSUES, label: formatMessage(messages[ACTIONS_WITH_ISSUES]) },
-  { value: CREATE_USER, label: formatMessage(messages[CREATE_USER]) },
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
   { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },

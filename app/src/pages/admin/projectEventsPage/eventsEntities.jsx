@@ -47,7 +47,6 @@ import {
   POST_ISSUE,
   LINK_ISSUE,
   UNLINK_ISSUE,
-  CREATE_USER,
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
   DELETE_DASHBOARD,
@@ -249,10 +248,6 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[UNLINK_ISSUE]),
               value: UNLINK_ISSUE,
-            },
-            {
-              label: intl.formatMessage(actionMessages[CREATE_USER]),
-              value: CREATE_USER,
             },
             {
               label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
