@@ -32,7 +32,13 @@ import { docsReferences, createExternalLink } from 'common/utils';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
-import { ANALYZER_ENABLED, ANALYZER_MODE, MIN_SHOULD_MATCH } from '../constants';
+import {
+  ALL_MESSAGES_SHOULD_MATCH,
+  ANALYZER_ENABLED,
+  ANALYZER_MODE,
+  MIN_SHOULD_MATCH,
+  NUMBER_OF_LOG_LINES,
+} from '../constants';
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -47,9 +53,27 @@ const AutoAnalysis = ({
   const [isPending, setPending] = useState(false);
   const { trackEvent } = useTracking();
 
-  const dropdownOptions = [
+  const analyzerModeDropdownOptions = [
     { value: 'ALL', label: formatMessage(messages.allLaunchesCaption) },
     { value: 'LAUNCH_NAME', label: formatMessage(messages.sameNameLaunchesCaption) },
+  ];
+
+  const numberOfLogDropdownOptions = [
+    { value: '1', label: '1' },
+    { value: '2', label: '2' },
+    { value: '3', label: '3' },
+    { value: '4', label: '4' },
+    { value: '5', label: '5' },
+    { value: '6', label: '6' },
+    { value: '7', label: '7' },
+    { value: '8', label: '8' },
+    { value: '9', label: '9' },
+    { value: '10', label: '10' },
+    { value: '15', label: '15' },
+    {
+      value: '-1',
+      label: formatMessage(messages.numberOfLogLinesAllOption),
+    },
   ];
 
   useEffect(() => {
@@ -57,6 +81,8 @@ const AutoAnalysis = ({
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfig[ANALYZER_ENABLED] || 'false'),
       [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH],
       [ANALYZER_MODE]: analyzerConfig[ANALYZER_MODE],
+      [NUMBER_OF_LOG_LINES]: analyzerConfig[NUMBER_OF_LOG_LINES],
+      [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(analyzerConfig[ALL_MESSAGES_SHOULD_MATCH] || 'false'),
     });
   }, []);
 
@@ -70,6 +96,15 @@ const AutoAnalysis = ({
         data[MIN_SHOULD_MATCH],
         data[ANALYZER_ENABLED],
         data[ANALYZER_MODE] === 'ALL' ? 'All' : messages.sameNameLaunchesCaption.defaultMessage,
+      ),
+    );
+
+    const numberOfLogLines = data[NUMBER_OF_LOG_LINES] === '-1' ? 'all' : data[NUMBER_OF_LOG_LINES];
+
+    trackEvent(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_INDEX_TAB(
+        numberOfLogLines,
+        data[ALL_MESSAGES_SHOULD_MATCH],
       ),
     );
   };
@@ -102,7 +137,7 @@ const AutoAnalysis = ({
           format={String}
           disabled={isFieldDisabled}
         >
-          <Dropdown options={dropdownOptions} mobileDisabled />
+          <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
         </FieldElement>
         <FieldElement
           name={MIN_SHOULD_MATCH}
@@ -114,6 +149,23 @@ const AutoAnalysis = ({
           <FieldErrorHint>
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name={NUMBER_OF_LOG_LINES}
+          label={formatMessage(messages.numberOfLogLines)}
+          description={formatMessage(messages.numberOfLogLinesDescription)}
+          format={String}
+          disabled={isFieldDisabled}
+        >
+          <Dropdown options={numberOfLogDropdownOptions} mobileDisabled />
+        </FieldElement>
+        <FieldElement
+          name={ALL_MESSAGES_SHOULD_MATCH}
+          description={formatMessage(messages.allMessagesShouldMatchDescription)}
+          format={Boolean}
+          disabled={isFieldDisabled}
+        >
+          <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
         </FieldElement>
         <Button type="submit" disabled={isFieldDisabled} mobileDisabled>
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
