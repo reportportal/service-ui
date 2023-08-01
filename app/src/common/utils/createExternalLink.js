@@ -16,7 +16,7 @@
 
 import DOMPurify from 'dompurify';
 
-export const createLink = (data, href) =>
+export const createExternalLink = (data, href) =>
   DOMPurify.sanitize(`<a href=${href} target="_blank" rel="noreferrer noopener">${data}</a>`, {
     ALLOWED_ATTR: ['target', 'href', 'rel'],
   });

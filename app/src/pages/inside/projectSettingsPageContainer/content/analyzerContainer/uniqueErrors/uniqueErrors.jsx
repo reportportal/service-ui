@@ -25,14 +25,11 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
+import { createExternalLink } from 'common/utils/createExternalLink';
+import { referenceDictionary } from 'common/utils';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
-import {
-  LINKS_TO_DOCUMENTATION,
-  UNIQUE_ERROR_ENABLED,
-  UNIQUE_ERROR_REMOVE_NUMBERS,
-} from '../constants';
+import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
 import { formatFieldName } from '../utils';
 import { Layout } from '../../layout';
 
@@ -90,7 +87,7 @@ const UniqueErrors = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.uniqueErrors),
+          a: (data) => createExternalLink(data, referenceDictionary.uniqueErrorsDocs),
         }),
       )}
     >

@@ -29,16 +29,13 @@ import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
+import { createExternalLink } from 'common/utils/createExternalLink';
+import { referenceDictionary } from 'common/utils';
 import { Layout } from '../../layout';
 import { Divider } from '../../elements/divider';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
-import {
-  ALL_MESSAGES_SHOULD_MATCH,
-  LINKS_TO_DOCUMENTATION,
-  NUMBER_OF_LOG_LINES,
-} from '../constants';
+import { ALL_MESSAGES_SHOULD_MATCH, NUMBER_OF_LOG_LINES } from '../constants';
 import styles from './indexSettings.scss';
 
 const cx = classNames.bind(styles);
@@ -112,7 +109,7 @@ const IndexSettings = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.indexSettings),
+          a: (data) => createExternalLink(data, referenceDictionary.indexSettingsDocs),
         }),
       )}
     >

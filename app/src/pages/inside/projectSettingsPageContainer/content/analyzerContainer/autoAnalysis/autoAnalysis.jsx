@@ -28,16 +28,12 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
+import { createExternalLink } from 'common/utils/createExternalLink';
+import { referenceDictionary } from 'common/utils';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
-import {
-  ANALYZER_ENABLED,
-  ANALYZER_MODE,
-  LINKS_TO_DOCUMENTATION,
-  MIN_SHOULD_MATCH,
-} from '../constants';
+import { ANALYZER_ENABLED, ANALYZER_MODE, MIN_SHOULD_MATCH } from '../constants';
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -85,7 +81,7 @@ const AutoAnalysis = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createLink(data, LINKS_TO_DOCUMENTATION.analysis),
+          a: (data) => createExternalLink(data, referenceDictionary.autoAnalysisDocs),
         }),
       )}
     >

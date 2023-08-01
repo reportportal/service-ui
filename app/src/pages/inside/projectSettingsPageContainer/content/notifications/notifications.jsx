@@ -46,7 +46,8 @@ import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { createLink } from 'pages/inside/projectSettingsPageContainer/utils';
+import { createExternalLink } from 'common/utils/createExternalLink';
+import { referenceDictionary } from 'common/utils';
 import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -252,11 +253,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           <Layout
             description={Parser(
               formatMessage(messages.tabDescription, {
-                a: (data) =>
-                  createLink(
-                    data,
-                    'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications',
-                  ),
+                a: (data) => createExternalLink(data, referenceDictionary.notificationsDocs),
               }),
             )}
           >
@@ -293,9 +290,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           buttonName={formatMessage(messages.create)}
           buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
           buttonDataAutomationId="createNotificationRuleButton"
-          documentationLink={
-            'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications'
-          }
+          documentationLink={referenceDictionary.emptyStateNotificationsDocs}
           disableButton={isReadOnly}
           handleButton={onAdd}
           handleDocumentationClick={handleDocumentationClick}
