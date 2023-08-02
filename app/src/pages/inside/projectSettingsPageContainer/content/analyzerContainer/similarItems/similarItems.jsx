@@ -27,7 +27,7 @@ import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { createExternalLink } from 'common/utils/createExternalLink';
-import { referenceDictionary } from 'common/utils';
+import { projectSettingsDocLinks } from 'common/utils';
 import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
@@ -68,7 +68,7 @@ const SimilarItems = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, referenceDictionary.similarItemsDocs),
+          a: (data) => createExternalLink(data, projectSettingsDocLinks.similarItemsDocs),
         }),
       )}
     >

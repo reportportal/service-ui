@@ -29,6 +29,9 @@ export const referenceDictionary = {
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
   rpEpamCommonPolicy:
     'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
+};
+
+export const projectSettingsDocLinks = {
   indexSettingsDocs:
     'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches#removegenerate-elasticsearch-index',
   autoAnalysisDocs: 'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches',

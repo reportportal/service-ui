@@ -30,7 +30,7 @@ import { useDispatch } from 'react-redux';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { createExternalLink } from 'common/utils/createExternalLink';
-import { referenceDictionary } from 'common/utils';
+import { projectSettingsDocLinks } from 'common/utils';
 import { Layout } from '../../layout';
 import { Divider } from '../../elements/divider';
 import { LabeledPreloader, FieldElement } from '../../elements';
@@ -109,7 +109,7 @@ const IndexSettings = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, referenceDictionary.indexSettingsDocs),
+          a: (data) => createExternalLink(data, projectSettingsDocLinks.indexSettingsDocs),
         }),
       )}
     >

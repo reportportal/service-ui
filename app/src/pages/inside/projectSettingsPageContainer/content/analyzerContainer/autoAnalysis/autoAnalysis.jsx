@@ -29,7 +29,7 @@ import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { createExternalLink } from 'common/utils/createExternalLink';
-import { referenceDictionary } from 'common/utils';
+import { projectSettingsDocLinks } from 'common/utils';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
@@ -81,7 +81,7 @@ const AutoAnalysis = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, referenceDictionary.autoAnalysisDocs),
+          a: (data) => createExternalLink(data, projectSettingsDocLinks.autoAnalysisDocs),
         }),
       )}
     >

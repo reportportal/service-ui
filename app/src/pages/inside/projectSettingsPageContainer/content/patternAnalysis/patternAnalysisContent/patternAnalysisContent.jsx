@@ -36,7 +36,7 @@ import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { createExternalLink } from 'common/utils/createExternalLink';
-import { referenceDictionary } from 'common/utils';
+import { projectSettingsDocLinks } from 'common/utils';
 import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
@@ -164,7 +164,7 @@ export const PatternAnalysisContent = ({
       <Layout
         description={Parser(
           formatMessage(messages.tabDescription, {
-            a: (data) => createExternalLink(data, referenceDictionary.patternAnalysisDocs),
+            a: (data) => createExternalLink(data, projectSettingsDocLinks.patternAnalysisDocs),
           }),
         )}
       >
