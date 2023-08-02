@@ -20,7 +20,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'SimilarItems.tabDescription',
     defaultMessage:
-      'Besides known issues with selected defect types, there could be issues with a similar reason marked as "To investigate" defect types. All these items are displayed in the "Similar To Investigate" section in Defect editor modal',
+      'Besides known issues with selected defect types, there could be issues with a similar reason marked as «To investigate» defect types. All these items are displayed in the «Similar To Investigate» section in Defect editor modal. More information about Similar Items you can read in <a>Documentation</a>',
   },
   searchLogsMinShouldMatch: {
     id: 'SimilarItems.searchLogsMinShouldMatch',

@@ -25,6 +25,7 @@ import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import PropTypes from 'prop-types';
+import { docsReferences } from 'common/utils';
 import { SettingsPageContent } from '../settingsPageContent';
 import { PatternAnalysisContent } from './patternAnalysisContent';
 import { EmptyStatePage } from '../emptyStatePage/';
@@ -81,7 +82,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           description={formatMessage(messages.noPatternAnalysisDescription)}
           buttonName={formatMessage(messages.create)}
           buttonDataAutomationId="createPatternButton"
-          documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
+          documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
           disableButton={!isAbleToCreate}
           handleButton={onAddPattern}
         />

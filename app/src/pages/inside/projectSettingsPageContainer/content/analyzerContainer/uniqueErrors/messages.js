@@ -20,7 +20,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'UniqueErrors.tabDescription',
     defaultMessage:
-      'Unique error analysis detects all unique error logs in the launch and forms them into clusters with relevant failed test items. Unique errors clusters could be found on "Unique Errors" tab on test item levels',
+      'Unique error analysis detects all unique error logs in the launch and forms them into clusters with relevant failed test items. Unique errors clusters could be found on "Unique Errors" tab on test item levels. More information about Unique Errors you can read in <a>Documentation</a>',
   },
   uniqueError: {
     id: 'UniqueErrors.uniqueError',

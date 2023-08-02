@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
+import Parser from 'html-react-parser';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
   projectNotificationsSelector,
@@ -45,6 +46,8 @@ import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { createExternalLink } from 'common/utils/createExternalLink';
+import { docsReferences } from 'common/utils';
 import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -247,7 +250,13 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     <>
       {notifications.length ? (
         <SettingsPageContent>
-          <Layout description={formatMessage(messages.tabDescription)}>
+          <Layout
+            description={Parser(
+              formatMessage(messages.tabDescription, {
+                a: (data) => createExternalLink(data, docsReferences.notificationsDocs),
+              }),
+            )}
+          >
             <FieldElement
               withoutProvider
               description={formatMessage(messages.toggleNote)}
@@ -281,9 +290,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           buttonName={formatMessage(messages.create)}
           buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
           buttonDataAutomationId="createNotificationRuleButton"
-          documentationLink={
-            'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
-          }
+          documentationLink={docsReferences.emptyStateNotificationsDocs}
           disableButton={isReadOnly}
           handleButton={onAdd}
           handleDocumentationClick={handleDocumentationClick}

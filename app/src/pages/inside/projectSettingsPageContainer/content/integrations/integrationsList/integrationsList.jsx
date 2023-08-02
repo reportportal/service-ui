@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { docsReferences } from 'common/utils';
 import { IntegrationsListItem } from './integrationsListItem';
 import styles from './integrationsList.scss';
 import { messages } from './messages';
@@ -61,7 +62,7 @@ export const IntegrationsList = (props) => {
         <EmptyStatePage
           title={formatMessage(messages.noIntegrationsMessage)}
           description={formatMessage(messages.noIntegrationsDescription)}
-          documentationLink={'https://reportportal.io/docs/Project-configuration%3Eintegrations'}
+          documentationLink={docsReferences.emptyStateIntegrationsDocs}
           handleDocumentationClick={handleDocumentationClick}
           descriptionClassName={cx('integration-empty')}
         />

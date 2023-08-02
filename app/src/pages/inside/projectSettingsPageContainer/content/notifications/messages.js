@@ -121,6 +121,6 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'NotificationsEnableForm.tabDescription',
     defaultMessage:
-      'Create Email Notification rules and enable Auto Email Notifications to receive emails on a launch finish event.',
+      'Create Email Notification rules and enable Auto Email Notifications to receive emails on a launch finish event. More information about E-mail Notifications you can read in <a>Documentation</a>',
   },
 });
