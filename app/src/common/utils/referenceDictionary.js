@@ -31,7 +31,7 @@ export const referenceDictionary = {
     'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
 };
 
-export const projectSettingsDocLinks = {
+export const docsReferences = {
   indexSettingsDocs:
     'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches#removegenerate-elasticsearch-index',
   autoAnalysisDocs: 'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches',

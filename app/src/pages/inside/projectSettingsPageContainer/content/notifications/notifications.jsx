@@ -47,7 +47,7 @@ import { projectNotificationsLoadingSelector } from 'controllers/project/selecto
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { createExternalLink } from 'common/utils/createExternalLink';
-import { projectSettingsDocLinks } from 'common/utils';
+import { docsReferences } from 'common/utils';
 import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -253,7 +253,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           <Layout
             description={Parser(
               formatMessage(messages.tabDescription, {
-                a: (data) => createExternalLink(data, projectSettingsDocLinks.notificationsDocs),
+                a: (data) => createExternalLink(data, docsReferences.notificationsDocs),
               }),
             )}
           >
@@ -290,7 +290,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           buttonName={formatMessage(messages.create)}
           buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
           buttonDataAutomationId="createNotificationRuleButton"
-          documentationLink={projectSettingsDocLinks.emptyStateNotificationsDocs}
+          documentationLink={docsReferences.emptyStateNotificationsDocs}
           disableButton={isReadOnly}
           handleButton={onAdd}
           handleDocumentationClick={handleDocumentationClick}
