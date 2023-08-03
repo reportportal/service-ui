@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 export { isEmptyObject } from './isEmptyObject';
-export { referenceDictionary } from './referenceDictionary';
+export { referenceDictionary, docsReferences } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export {
   getStorageItem,
@@ -56,3 +56,4 @@ export { formatAttribute } from './attributeUtils';
 export { createNamespacedActionPredicate } from './createNamespacedActionPredicate';
 export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
+export { createExternalLink } from './createExternalLink';
