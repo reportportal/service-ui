@@ -74,7 +74,7 @@ export const RuleItem = ({
       <div className={cx('panel-wrapper', { 'preview-wrapper': isPreview })}>
         <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name-wrapper')} title={name}>
-            {isRuleNameClickable ? (
+            {isRuleNameClickable && !disabled ? (
               <i className={cx('name')} onClick={handleRuleNameClick}>
                 {name}
               </i>
