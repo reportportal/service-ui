@@ -56,4 +56,25 @@ export const messages = defineMessages({
     id: 'AutoAnalysis.allLaunchesCaption',
     defaultMessage: 'All launches',
   },
+  numberOfLogLines: {
+    id: 'AutoAnalysis.numberOfLogLines',
+    defaultMessage: 'Number of log lines should be considered in Elasticsearch',
+  },
+  numberOfLogLinesDescription: {
+    id: 'AutoAnalysis.numberOfLogLinesDescription',
+    defaultMessage:
+      'The number of first lines of log message that should be considered in ElasticSearch',
+  },
+  numberOfLogLinesAllOption: {
+    id: 'AutoAnalysis.numberOfLogLinesAllOption',
+    defaultMessage: 'All',
+  },
+  allMessagesShouldMatchDescription: {
+    id: 'AutoAnalysis.allMessagesShouldMatchDescription',
+    defaultMessage: 'When an analyzed test item contains logs with 3 or more rows',
+  },
+  allMessagesShouldMatch: {
+    id: 'AutoAnalysis.allMessagesShouldMatch',
+    defaultMessage: 'All logs with 3 or more rows should match',
+  },
 });
