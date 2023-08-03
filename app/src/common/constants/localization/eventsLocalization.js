@@ -69,6 +69,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_PROJECT,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -216,6 +217,10 @@ export const actionMessages = defineMessages({
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
     defaultMessage: 'PA find pattern',
+  },
+  [CREATE_PROJECT]: {
+    id: 'EventActions.createProject',
+    defaultMessage: 'Create Project',
   },
 });
 

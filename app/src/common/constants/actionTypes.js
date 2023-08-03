@@ -52,6 +52,7 @@ export const CREATE_PATTERN = 'createPattern';
 export const UPDATE_PATTERN = 'updatePattern';
 export const DELETE_PATTERN = 'deletePattern';
 export const MATCHED_PATTERN = 'patternMatched';
+export const CREATE_PROJECT = 'createProject';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';

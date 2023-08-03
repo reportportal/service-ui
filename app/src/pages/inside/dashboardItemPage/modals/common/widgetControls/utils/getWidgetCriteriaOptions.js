@@ -54,6 +54,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_PROJECT,
 } from 'common/constants/actionTypes';
 import {
   LAUNCH_STATUSES_OPTIONS,
@@ -222,6 +223,10 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.matched_pattern',
     defaultMessage: 'Pattern matched',
   },
+  [CREATE_PROJECT]: {
+    id: 'WidgetCriteriaOption.create_project',
+    defaultMessage: 'Create project',
+  },
 
   attributes: {
     id: 'WidgetCriteriaOption.attributes',
@@ -354,6 +359,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: UPDATE_PATTERN, label: formatMessage(messages[UPDATE_PATTERN]) },
   { value: DELETE_PATTERN, label: formatMessage(messages[DELETE_PATTERN]) },
   { value: MATCHED_PATTERN, label: formatMessage(messages[MATCHED_PATTERN]) },
+  { value: CREATE_PROJECT, label: formatMessage(messages[CREATE_PROJECT]) },
 ];
 
 const getLaunchGridColumnsOptions = (formatMessage) => [
