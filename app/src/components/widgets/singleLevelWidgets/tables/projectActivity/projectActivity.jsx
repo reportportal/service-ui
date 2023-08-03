@@ -45,6 +45,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_PROJECT,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -63,6 +64,7 @@ import styles from './projectActivity.scss';
 import { AssignUser } from './activities/assignUser';
 import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
+import { CreateProject } from './activities/createProject';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -291,6 +293,9 @@ export class ProjectActivity extends Component {
 
       case CHANGE_ROLE:
         return <ChangeRole activity={activity} />;
+
+      case CREATE_PROJECT:
+        return <CreateProject activity={activity} />;
 
       default:
         return null;
