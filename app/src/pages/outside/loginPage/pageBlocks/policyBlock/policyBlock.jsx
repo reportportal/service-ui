@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 export const PolicyBlock = () => (
   <div className={cx('policy-block')}>
-    <a href={referenceDictionary.rpEpamCommonPolicy} target="_blank">
+    <a href={referenceDictionary.rpEpamPolicy} target="_blank">
       <FormattedMessage id={'PolicyBlock.privacyPolicy'} defaultMessage={'Privacy Policy'} />
     </a>
   </div>
