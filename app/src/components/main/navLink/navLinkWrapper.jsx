@@ -33,7 +33,6 @@ export class NavLinkWrapper extends Component {
     children: PropTypes.node,
     onClick: PropTypes.func,
     location: PropTypes.object,
-    tabIndex: PropTypes.number,
   };
 
   static defaultProps = {
@@ -43,7 +42,6 @@ export class NavLinkWrapper extends Component {
     children: null,
     onClick: () => {},
     location: null,
-    tabIndex: 0,
   };
 
   /*
@@ -95,10 +93,9 @@ export class NavLinkWrapper extends Component {
   };
 
   render() {
-    const { onClick, children, to, className, activeClassName, tabIndex } = this.props;
+    const { onClick, children, to, className, activeClassName } = this.props;
     return (
       <NavLink
-        tabIndex={tabIndex}
         to={to}
         className={className}
         activeClassName={activeClassName}
