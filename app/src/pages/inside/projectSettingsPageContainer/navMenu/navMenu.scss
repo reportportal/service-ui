@@ -21,6 +21,7 @@
 }
 
 .item {
+  position: relative;
   padding: 12px 16px;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
@@ -34,6 +35,20 @@
 
   &:hover {
     background-color: $COLOR--bg-100;
+  }
+
+  &:focus-visible {
+    outline: none;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 99%;
+      height: 90%;
+      border: 2px solid $COLOR--topaz-focused;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 

@@ -55,7 +55,6 @@ import {
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
-import { RawContentAppLayout } from 'layouts/appLayout/rawContentAppLayout';
 import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 
@@ -86,11 +85,13 @@ export const pageRendering = {
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
   PROJECT_SETTINGS_PAGE: {
     component: ProjectSettingsPageContainer,
-    layout: RawContentAppLayout,
+    layout: AppLayout,
+    rawContent: true,
   },
   PROJECT_SETTINGS_TAB_PAGE: {
     component: ProjectSettingsPageContainer,
-    layout: RawContentAppLayout,
+    layout: AppLayout,
+    rawContent: true,
   },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
