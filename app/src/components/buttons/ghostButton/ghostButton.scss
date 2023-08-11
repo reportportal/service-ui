@@ -135,7 +135,8 @@
     &:hover {
       &.filled-icon:not(.stroked-icon) {
         path,
-        polygon {
+        polygon,
+        rect {
           fill: $COLOR--white-two;
         }
       }

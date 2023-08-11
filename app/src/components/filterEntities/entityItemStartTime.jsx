@@ -31,7 +31,7 @@ const endOfToday = moment()
 export const getTimeDateRangePresets = (tracking, events) => [
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Today'))}>
+      <div onClick={() => tracking.trackEvent(events?.getChosenDate('Today'))}>
         <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />
       </div>
     ),
@@ -45,7 +45,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 2 days'))}>
+      <div onClick={() => tracking.trackEvent(events?.getChosenDate('Last 2 days'))}>
         <FormattedMessage id="EntityItemStartTime.last2days" defaultMessage="Last 2 days" />
       </div>
     ),
@@ -60,7 +60,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 7 days'))}>
+      <div onClick={() => tracking.trackEvent(events?.getChosenDate('Last 7 days'))}>
         <FormattedMessage id="EntityItemStartTime.last7days" defaultMessage="Last 7 days" />
       </div>
     ),
@@ -75,7 +75,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 30 days'))}>
+      <div onClick={() => tracking.trackEvent(events?.getChosenDate('Last 30 days'))}>
         <FormattedMessage id="EntityItemStartTime.last30days" defaultMessage="Last 30 days" />
       </div>
     ),
