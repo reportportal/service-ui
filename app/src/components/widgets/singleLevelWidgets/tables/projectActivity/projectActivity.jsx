@@ -46,6 +46,7 @@ import {
   UNASSIGN_USER,
   CHANGE_ROLE,
   CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -65,6 +66,7 @@ import { AssignUser } from './activities/assignUser';
 import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
 import { CreateProject } from './activities/createProject';
+import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -296,6 +298,9 @@ export class ProjectActivity extends Component {
 
       case CREATE_PROJECT:
         return <CreateProject activity={activity} />;
+
+      case UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS:
+        return <UpdateAutoPatternAnalysis activity={activity} />;
 
       default:
         return null;

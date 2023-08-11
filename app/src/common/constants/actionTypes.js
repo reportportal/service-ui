@@ -50,6 +50,7 @@ export const LINK_ISSUE_AA = 'linkIssueAa';
 export const ANALYZE_ITEM = 'analyzeItem';
 export const CREATE_PATTERN = 'createPattern';
 export const UPDATE_PATTERN = 'updatePattern';
+export const UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS = 'updatePatternAnalysisSettings';
 export const DELETE_PATTERN = 'deletePattern';
 export const MATCHED_PATTERN = 'patternMatched';
 export const CREATE_PROJECT = 'createProject';

@@ -69,6 +69,7 @@ import {
   UNASSIGN_USER,
   CHANGE_ROLE,
   CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -212,6 +213,10 @@ export const actionMessages = defineMessages({
   [DELETE_PATTERN]: {
     id: 'EventActions.deletePattern',
     defaultMessage: 'Delete pattern rule',
+  },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'EventActions.updateAutoPatternAnalysis',
+    defaultMessage: 'Update pattern analysis',
   },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
