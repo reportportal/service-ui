@@ -26,10 +26,9 @@ import {
   USER,
   EMAIL_CONFIG,
   ITEM_ISSUE,
-  TEST_ITEM,
   INTEGRATION,
-  TICKET,
   PATTERN_RULE,
+  INDEX,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -245,6 +244,10 @@ export const objectTypesMessages = defineMessages({
     id: 'EventObjectTypes.import',
     defaultMessage: 'Import',
   },
+  [INDEX]: {
+    id: 'EventObjectTypes.index',
+    defaultMessage: 'Index',
+  },
   [PROJECT]: {
     id: 'EventObjectTypes.project',
     defaultMessage: 'Project',
@@ -263,19 +266,11 @@ export const objectTypesMessages = defineMessages({
   },
   [ITEM_ISSUE]: {
     id: 'EventObjectTypes.itemIssue',
-    defaultMessage: 'Defect',
-  },
-  [TEST_ITEM]: {
-    id: 'EventObjectTypes.testItem',
     defaultMessage: 'Test item',
   },
   [INTEGRATION]: {
-    id: 'EventObjectTypes.itegration',
+    id: 'EventObjectTypes.integration',
     defaultMessage: 'Integration',
-  },
-  [TICKET]: {
-    id: 'EventObjectTypes.ticket',
-    defaultMessage: 'Link to BTS',
   },
   [PATTERN_RULE]: {
     id: 'EventObjectTypes.patternRule',
