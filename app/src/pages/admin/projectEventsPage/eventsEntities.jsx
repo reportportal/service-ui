@@ -85,12 +85,15 @@ import {
   PROJECT,
   DEFECT_TYPE,
   USER,
-  TICKET,
-  TEST_ITEM,
+  ITEM_ISSUE,
   INTEGRATION,
   EMAIL_CONFIG,
-  ITEM_ISSUE,
   PATTERN_RULE,
+  EMAIL_CONFIG_FILTERING_OPTION,
+  DEFECT_TYPE_FILTERING_OPTION,
+  ITEM_ISSUE_FILTERING_OPTION,
+  PATTERN_RULE_FILTERING_OPTION,
+  INDEX,
 } from 'common/constants/eventsObjectTypes';
 
 import {
@@ -329,11 +332,11 @@ export class EventsEntities extends Component {
             },
             {
               label: intl.formatMessage(objectTypesMessages[DEFECT_TYPE]),
-              value: DEFECT_TYPE,
+              value: DEFECT_TYPE_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[TEST_ITEM]),
-              value: TEST_ITEM,
+              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
+              value: ITEM_ISSUE_FILTERING_OPTION,
             },
             {
               label: intl.formatMessage(objectTypesMessages[LAUNCH]),
@@ -363,21 +366,14 @@ export class EventsEntities extends Component {
               label: intl.formatMessage(objectTypesMessages[IMPORT]),
               value: IMPORT,
             },
-            {
-              label: intl.formatMessage(objectTypesMessages[TICKET]),
-              value: TICKET,
-            },
-            {
-              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
-              value: ITEM_ISSUE,
-            },
+            { label: intl.formatMessage(objectTypesMessages[INDEX]), value: INDEX },
             {
               label: intl.formatMessage(objectTypesMessages[EMAIL_CONFIG]),
-              value: EMAIL_CONFIG,
+              value: EMAIL_CONFIG_FILTERING_OPTION,
             },
             {
               label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
-              value: PATTERN_RULE,
+              value: PATTERN_RULE_FILTERING_OPTION,
             },
           ],
         },
