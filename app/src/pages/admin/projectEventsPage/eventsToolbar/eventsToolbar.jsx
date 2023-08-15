@@ -18,6 +18,7 @@ import classNames from 'classnames/bind';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { ACTIVITIES } from 'components/filterEntities/constants';
+import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
 import { EventsEntities } from '../eventsEntities';
 import styles from './eventsToolbar.scss';
 
@@ -33,6 +34,7 @@ export const EventsToolbar = () => (
           entitiesProvider={EventsEntities}
           filterValues={entities}
           onChange={onChange}
+          eventsInfo={ADMIN_EVENT_MONITORING_PAGE_EVENTS}
         />
       )}
     />

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -26,7 +26,17 @@ import track from 'react-tracking';
 import { InputFilterToolbar } from './inputFilterToolbar';
 import styles from './inputFilter.scss';
 
+const getAppliedFilters = (appliedFilters) =>
+  appliedFilters.reduce(
+    (acc, { title, value: { value } }) => Object.assign(acc, { [title]: value }),
+    {},
+  );
+
 const cx = classNames.bind(styles);
+
+// TODO remove @track() wrapper
+// TODO move all GA logic into EventsToolbar,ProjectsToolbar,UsersToolbar etc.
+// TODO components and pass event tracking functions as props
 @track()
 export class InputFilter extends Component {
   static propTypes = {
@@ -87,6 +97,12 @@ export class InputFilter extends Component {
     onQuickClear: () => {},
   };
 
+  prevAppliedFilters = createRef();
+
+  componentDidMount() {
+    this.prevAppliedFilters.current = getAppliedFilters(this.props.filterEntities);
+  }
+
   state = {
     opened: false,
   };
@@ -99,7 +115,22 @@ export class InputFilter extends Component {
   handleClickClear = () => this.props.onQuickClear();
 
   handleApply = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.applyBtn);
+    if (this.props.eventsInfo.CLICK_APPLY_BUTTON) {
+      const currentAppliedFilters = getAppliedFilters(this.props.filterEntities);
+
+      const analyticsData = Object.keys(currentAppliedFilters)
+        .filter((key) => this.prevAppliedFilters.current[key] !== currentAppliedFilters[key])
+        .join('#');
+
+      if (analyticsData) {
+        this.props.tracking.trackEvent(this.props.eventsInfo.CLICK_APPLY_BUTTON(analyticsData));
+      }
+
+      this.prevAppliedFilters.current = currentAppliedFilters;
+    } else {
+      this.props.tracking.trackEvent(this.props.eventsInfo.applyBtn);
+    }
+
     this.setState({ opened: false });
     this.props.onFilterApply();
   };
@@ -109,10 +140,15 @@ export class InputFilter extends Component {
     this.props.onCancel();
   };
 
-  togglePopup = () =>
+  togglePopup = () => {
+    if (!this.state.opened) {
+      this.props.tracking.trackEvent(this.props.eventsInfo.TOGGLE_POPUP);
+    }
+
     this.setState({ opened: !this.state.opened }, () =>
       this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
     );
+  };
 
   render() {
     const {
