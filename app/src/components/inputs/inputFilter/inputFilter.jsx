@@ -33,6 +33,10 @@ const getAppliedFilters = (appliedFilters) =>
   );
 
 const cx = classNames.bind(styles);
+
+// TODO remove @track() wrapper
+// TODO move all GA logic into EventsToolbar,ProjectsToolbar,UsersToolbar etc.
+// TODO components and pass event tracking functions as props
 @track()
 export class InputFilter extends Component {
   static propTypes = {
