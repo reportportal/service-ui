@@ -20,7 +20,7 @@ export const downloadFile = (url, fileNameFallback) => {
   fetch(url, { responseType: 'blob' }, true).then((response) => {
     const data = response.data;
     const attachmentHeader = response.headers['content-disposition'];
-    const extractedFileName = /filename=(.*?)(?:\s|$)/.exec(attachmentHeader);
+    const extractedFileName = /filename="(.*?)"(?:$)/.exec(attachmentHeader);
     const fileName = extractedFileName ? extractedFileName[1] : fileNameFallback;
     const objectURL = URL.createObjectURL(data);
     if ('msSaveOrOpenBlob' in navigator) {
