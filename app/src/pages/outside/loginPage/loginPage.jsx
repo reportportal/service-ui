@@ -112,6 +112,7 @@ export class LoginPage extends PureComponent {
   render() {
     const { instanceType } = this.props;
     const currentBlock = this.getCurrentBlock();
+    const isPolicyBlockVisible = instanceType === EPAM || instanceType === SAAS;
 
     return (
       <div className={cx('login-page')}>
@@ -125,8 +126,10 @@ export class LoginPage extends PureComponent {
           </LoginPageSection>
           <LoginPageSection>
             {currentBlock}
-            <ServiceVersionsBlock />
-            {(instanceType === EPAM || instanceType === SAAS) && <PolicyBlock />}
+            <div className={cx('footer', { 'footer-with-policyBlock': isPolicyBlockVisible })}>
+              <ServiceVersionsBlock />
+              {isPolicyBlockVisible && <PolicyBlock />}
+            </div>
           </LoginPageSection>
         </div>
       </div>
