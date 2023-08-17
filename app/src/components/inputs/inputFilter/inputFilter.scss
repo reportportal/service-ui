@@ -113,6 +113,8 @@
   line-height: 13px;
   color: $COLOR--charcoal-grey;
   box-shadow: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &::-ms-clear {
     display: none;
