@@ -55,6 +55,7 @@ import {
   UNASSIGN_USER,
   CHANGE_ROLE,
   CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 import {
   LAUNCH_STATUSES_OPTIONS,
@@ -227,6 +228,10 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.create_project',
     defaultMessage: 'Create project',
   },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'WidgetCriteriaOption.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
+  },
 
   attributes: {
     id: 'WidgetCriteriaOption.attributes',
@@ -355,6 +360,10 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },
+  {
+    value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+    label: formatMessage(messages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
+  },
   { value: CREATE_PATTERN, label: formatMessage(messages[CREATE_PATTERN]) },
   { value: UPDATE_PATTERN, label: formatMessage(messages[UPDATE_PATTERN]) },
   { value: DELETE_PATTERN, label: formatMessage(messages[DELETE_PATTERN]) },
