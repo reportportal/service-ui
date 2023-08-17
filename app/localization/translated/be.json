@@ -2013,6 +2013,7 @@
   "administrateUsersPage.successMultiple": "Карыстальнікі выдаленыя",
   "administrateUsersPageToolbar.allUsers": "{count} карыстальнікаў выбрана",
   "administrateUsersPageToolbar.searchPlaceholder": "Шукаць па імені, лагіне, электронным адрасе",
+  "administrateEventsPageToolbar.searchPlaceholder": "Пошук па карыстальніку, дзеянні, тыпу аб'екта, назве аб'екта",
   "dashboardControl.dashboardName": "Мая першая панэль кіравання",
   "dashboardControl.title": "Захаваць віджэт на прыборнай панэлі",
   "entityInputConditional.defaultPlaceholder": "Увядзiце iмя",
