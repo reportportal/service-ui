@@ -2010,6 +2010,7 @@
   "administrateUsersPage.successMultiple": "Пользователи удалены",
   "administrateUsersPageToolbar.allUsers": "{count} пользователей выбрано",
   "administrateUsersPageToolbar.searchPlaceholder": "Поиск по имени, логину, электронному адресу",
+  "administrateEventsPageToolbar.searchPlaceholder": "Поиск по пользователю, действию, типу объекта, имени объекта",
   "dashboardControl.dashboardName": "Моя первая панель управления",
   "dashboardControl.title": "Сохранить виджет на панели управления",
   "entityInputConditional.defaultPlaceholder": "Введите имя",
