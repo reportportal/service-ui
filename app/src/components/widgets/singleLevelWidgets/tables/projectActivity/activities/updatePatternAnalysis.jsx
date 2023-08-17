@@ -33,7 +33,7 @@ export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, detai
   return (
     <>
       <span className={cx('user-name')}>{user}</span>
-      <span>{formatMessage(messages.updateAutoPatternAnalysisSettings_ACTION)}</span>
+      <span>{formatMessage(messages.updatePatternAnalysisSettings_ACTION)}</span>
       <Link
         className={cx('link')}
         target="_blank"
@@ -42,7 +42,7 @@ export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, detai
         {formatMessage(COMMON_LOCALE_KEYS.PATTERN_ANALYSIS)}
       </Link>
       <span>
-        {formatMessage(messages.updateAutoPatternAnalysisSettings_DESCRIPTION, {
+        {formatMessage(messages.updatePatternAnalysisSettings_DESCRIPTION, {
           oldValue: oldValue ? 'ON' : 'OFF',
           newValue: newValue ? 'ON' : 'OFF',
         })}
