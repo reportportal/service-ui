@@ -126,7 +126,7 @@ export class LoginPage extends PureComponent {
           </LoginPageSection>
           <LoginPageSection>
             {currentBlock}
-            <div className={cx('footer', { 'footer-with-policyBlock': isPolicyBlockVisible })}>
+            <div className={cx('footer', { 'with-policy': isPolicyBlockVisible })}>
               <ServiceVersionsBlock />
               {isPolicyBlockVisible && <PolicyBlock />}
             </div>
