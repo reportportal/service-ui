@@ -93,3 +93,11 @@
     height: 25px;
   }
 }
+
+.footer {
+  padding-bottom: 50px;
+
+  &.with-policy {
+    padding-bottom: 0;
+  }
+}
