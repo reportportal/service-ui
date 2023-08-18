@@ -3,7 +3,6 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { PATTERN_ANALYSIS } from 'common/constants/settingsTabs';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 import styles from './common.scss';
 import { getProjectSettingTabPageLink } from './utils';
@@ -17,7 +16,11 @@ const messages = defineMessages({
   },
   [`${UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS}_DESCRIPTION`]: {
     id: 'UpdateAutoPatternAnalysisSettings.description',
-    defaultMessage: 'properties switch from {oldValue} to {newValue}.',
+    defaultMessage: 'switch from {oldValue} to {newValue}.',
+  },
+  [`${UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS}_LINK`]: {
+    id: 'UpdateAutoPatternAnalysisSettings.linkText',
+    defaultMessage: 'Pattern-Analysis properties:',
   },
 });
 
@@ -39,7 +42,7 @@ export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, detai
         target="_blank"
         to={getProjectSettingTabPageLink(projectName, PATTERN_ANALYSIS)}
       >
-        {formatMessage(COMMON_LOCALE_KEYS.PATTERN_ANALYSIS)}
+        {formatMessage(messages.updatePatternAnalysisSettings_LINK)}
       </Link>
       <span>
         {formatMessage(messages.updatePatternAnalysisSettings_DESCRIPTION, {

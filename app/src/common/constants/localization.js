@@ -181,8 +181,4 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.value',
     defaultMessage: 'Value',
   },
-  PATTERN_ANALYSIS: {
-    id: 'Common.pattern_analysis',
-    defaultMessage: 'Pattern-Analysis',
-  },
 });
