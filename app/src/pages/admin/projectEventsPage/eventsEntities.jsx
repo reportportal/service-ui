@@ -100,6 +100,7 @@ import {
   actionMessages,
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
+import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -311,6 +312,7 @@ export class EventsEntities extends Component {
         removable: false,
         customProps: {
           withoutDynamic: true,
+          events: ADMIN_EVENT_MONITORING_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
         },
       },
       {
