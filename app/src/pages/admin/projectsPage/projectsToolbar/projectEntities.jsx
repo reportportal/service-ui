@@ -45,6 +45,7 @@ import {
   LAUNCHES_QUANTITY,
   PROJECTS,
 } from 'common/constants/projectsObjectTypes';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   contains: { id: 'projectsGrid.contains', defaultMessage: 'Contains' },
@@ -146,6 +147,7 @@ export class ProjectEntities extends Component {
         removable: false,
         customProps: {
           withoutDynamic: true,
+          events: ADMIN_PROJECTS_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
         },
       },
       {
