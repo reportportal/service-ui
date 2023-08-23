@@ -15,6 +15,7 @@
  */
 
 import { getBasicClickEventParameters } from './common/ga4Utils';
+import { getRefineFiltersPanelEvents } from './common/testItemPages/actionEventsCreators';
 
 export const ADMIN_PROJECTS_PAGE = 'Projects page';
 export const ADMINISTRATE = 'administrate';
@@ -45,6 +46,9 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
       ...basicAdminProjectsClickEventParams,
       element_name: sectionToElementNameMap[section],
     };
+  },
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(ADMINISTRATE),
   },
   // GA3 events
   ADD_PROJECT_BTN: {
