@@ -1,6 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM alpine:latest AS generate-build-info
+FROM alpine:3.16.2 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -15,7 +15,7 @@ COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm ci && npm run build
 
-FROM nginxinc/nginx-unprivileged:alpine
+FROM --platform=$BUILDPLATFORM nginxinc/nginx-unprivileged:alpine
 
 USER root
 
