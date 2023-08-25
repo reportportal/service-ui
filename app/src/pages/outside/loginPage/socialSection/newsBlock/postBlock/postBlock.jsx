@@ -19,83 +19,44 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import DOMPurify from 'dompurify';
+import { marked } from 'marked-lts';
+
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
 const HREF_TAG_NAME = 'A';
 
-const getPostContent = (text, entities) => {
-  const replaceObjects = [];
-  let result = '';
-  let currentReplaceObject;
-
-  const parseEntity = (curEntities, getHtml) => {
-    Object.keys(curEntities).map((objEntityKey) => {
-      const entity = curEntities[objEntityKey];
-      if (entity.indices[0] !== entity.indices[1]) {
-        replaceObjects.push({
-          start: entity.indices[0],
-          end: entity.indices[1],
-          html: getHtml(entity),
-        });
-      }
-      return true;
-    });
-  };
-
-  entities.urls &&
-    parseEntity(
-      entities.urls,
-      (entity) =>
-        `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
-          entity.display_url
-        }</a>`,
-    );
-  entities.user_mentions &&
-    parseEntity(
-      entities.user_mentions,
-      (entity) =>
-        `<a class=${cx(
-          'twit-link',
-        )} target="_blank" href="https://twitter.com/intent/user?user_id=${entity.id}">@${
-          entity.screen_name
-        }</a>`,
-    );
-  entities.hashtags &&
-    parseEntity(
-      entities.hashtags,
-      (entity) =>
-        `<a class=${cx('twit-link')} target="_blank" href="https://twitter.com/hashtag/${
-          entity.text
-        }">#${entity.text}</a>`,
-    );
-  entities.media &&
-    parseEntity(
-      entities.media,
-      (entity) =>
-        `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
-          entity.display_url
-        }</a>`,
-    );
-  replaceObjects.sort((a, b) => a.start - b.start);
-
-  const symbols = [...text];
-
-  symbols.forEach((symbol, index) => {
-    if (!currentReplaceObject && replaceObjects.length) {
-      currentReplaceObject = replaceObjects.shift();
+export const renderer = {
+  link(href, text, title) {
+    if (text && title) {
+      return `<a class=${cx(
+        'twit-link',
+      )} href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
+    } else if (title) {
+      return `<a class=${cx(
+        'twit-link',
+      )} href="${href}" target="_blank" rel="noopener noreferrer"">${title}</a>`;
     }
+    return `<a class=${cx(
+      'twit-link',
+    )} href="${href}" target="_blank" rel="noopener noreferrer"">${href}</a>`;
+  },
+};
 
-    if (!currentReplaceObject || index < currentReplaceObject.start) {
-      result += symbol;
-    } else if (currentReplaceObject.start === index) {
-      result += currentReplaceObject.html;
-    } else if (index === currentReplaceObject.end) {
-      currentReplaceObject = null;
-    }
-  });
+marked.use(
+  {
+    mangle: false,
+    headerIds: false,
+    breaks: true,
+  },
+  {
+    renderer,
+  },
+);
 
-  return result.replace(/\n/g, '<br>');
+const getPostContent = (text) => {
+  const result = marked.parse(text);
+  return result;
 };
 
 const handleClick = (e, tracking) => {
@@ -107,7 +68,7 @@ const handleClick = (e, tracking) => {
 
 export const PostBlock = ({ tweetData, tracking }) => (
   <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
-    {Parser(DOMPurify.sanitize(getPostContent(tweetData.text, tweetData.entities)))}
+    {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
   </div>
 );
 
@@ -118,6 +79,7 @@ PostBlock.propTypes = {
     getTrackingData: PropTypes.func,
   }).isRequired,
 };
+
 PostBlock.defaultProps = {
   tweetData: {},
 };
