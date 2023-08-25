@@ -394,15 +394,15 @@ export class EventsEntities extends Component {
         id: ENTITY_SUBJECT_NAME,
         component: EntitySearch,
         value: this.bindDefaultValue(ENTITY_SUBJECT_NAME, {
-          condition: CONDITION_IN,
+          condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.userCol),
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.projectUsernamesSearch(activeProject),
+          getURI: URLS.searchEventsBySubjectName(activeProject),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
-          minLength: 3,
+          minLength: 1,
         },
       },
     ];
