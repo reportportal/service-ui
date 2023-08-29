@@ -1,9 +1,9 @@
 name: Build Docker image
 
 on:
-  push:
+  create:
     branches:
-      - "rc/*"
+      - 'rc/*'
 
   workflow_dispatch:
     inputs:
