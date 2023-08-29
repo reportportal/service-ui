@@ -32,13 +32,13 @@ import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
   ENTITY_ACTION,
   ENTITY_OBJECT_TYPE,
-  ENTITY_USER,
   CONDITION_IN,
   CONDITION_BETWEEN,
   ACTIVITIES,
   ENTITY_CREATION_DATE,
   CONDITION_CNT,
   ENTITY_OBJECT_NAME,
+  ENTITY_SUBJECT_NAME,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -398,18 +398,18 @@ export class EventsEntities extends Component {
         removable: false,
       },
       {
-        id: ENTITY_USER,
+        id: ENTITY_SUBJECT_NAME,
         component: EntitySearch,
-        value: this.bindDefaultValue(ENTITY_USER, {
-          condition: CONDITION_IN,
+        value: this.bindDefaultValue(ENTITY_SUBJECT_NAME, {
+          condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.userCol),
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.projectUsernamesSearch(activeProject),
+          getURI: URLS.searchEventsBySubjectName(activeProject),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
-          minLength: 3,
+          minLength: 1,
         },
       },
     ];
