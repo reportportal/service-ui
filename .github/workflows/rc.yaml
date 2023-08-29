@@ -1,15 +1,9 @@
 name: Build Docker image
 
 on:
-  create:
+  push:
     branches:
-      - 'rc/*'
-
-  workflow_dispatch:
-    inputs:
-      manual_trigger:
-        description: 'Manually trigger the workflow'
-        required: false
+      - "rc/*"
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}         # set this to your preferred AWS region, e.g. us-west-1
@@ -21,7 +15,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     environment: development
-    if: github.base_ref == 'develop'
+    if:  github.event.created && github.base_ref == 'develop'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
