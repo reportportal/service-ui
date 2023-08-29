@@ -15,7 +15,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     environment: development
-    if:  github.event.created && github.base_ref == 'develop'
+    if: startsWith( github.ref_name, 'rc/')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,11 +30,16 @@ jobs:
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Get release version
+        id: release-version
+        run: echo "version=$(echo '${{ github.ref_name }}' | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')" >> $GITHUB_OUTPUT
+
       - name: Build and export
         uses: docker/build-push-action@v4
         env:
-          VERSION: ${{ github.head_ref }}-${{ steps.vars.outputs.sha_short }}
-          BRANCH: ${{ github.head_ref }}
+          VERSION: ${{ steps.vars.outputs.release-version }}
+          BRANCH: ${{ github.ref_name }}
           DATE: ${{ steps.date.outputs.date }}
         with:
           context: .
@@ -87,7 +92,7 @@ jobs:
       - name: Create image tag
         id: image-tag
         run: |
-          echo "tag=$(echo ${{ github.head_ref }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "tag=$(echo ${{ github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
       
       - name: Tag and push docker image to Amazon ECR
         id: push-image
