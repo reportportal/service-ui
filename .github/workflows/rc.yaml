@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "rc/*"
+      - "hotfix/*"
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}         # set this to your preferred AWS region, e.g. us-west-1
@@ -14,8 +15,8 @@ jobs:
   build-and-export:
     name: Build and export to AWS ECR
     runs-on: ubuntu-latest
-    environment: development
-    if: startsWith( github.ref_name, 'rc/')
+    environment: rc
+    if: startsWith( github.ref_name, 'rc/') || startsWith( github.ref_name, 'hotfix/')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
