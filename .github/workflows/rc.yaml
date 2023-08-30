@@ -16,7 +16,6 @@ jobs:
     name: Build and export to AWS ECR
     runs-on: ubuntu-latest
     environment: rc
-    if: startsWith( github.ref_name, 'rc/') || startsWith( github.ref_name, 'hotfix/')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
