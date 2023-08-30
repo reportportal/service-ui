@@ -401,7 +401,7 @@ export class EventsEntities extends Component {
         id: ENTITY_SUBJECT_NAME,
         component: EntitySearch,
         value: this.bindDefaultValue(ENTITY_SUBJECT_NAME, {
-          condition: CONDITION_CNT,
+          condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.userCol),
         active: true,
