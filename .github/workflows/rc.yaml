@@ -1,4 +1,4 @@
-name: Build Docker image RC
+name: Build RC Docker image
 
 on:
   push:
@@ -8,67 +8,17 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}         # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }} # set this to your Amazon ECR repository name
-  PLATFORMS: ${{ vars.BUILD_PLATFORMS }}
-
+  PLATFORMS: ${{ vars.BUILD_PLATFORMS }}      # set target build platforms. By default linux/amd64
+      
 jobs:
-  build:
-    name: Build
+  build-and-export:
+    name: Build and export to AWS ECR
     runs-on: ubuntu-latest
-    environment: release
+    environment: development
+    if: github.base_ref == 'develop'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Get release version
-        id: release-version
-        run: echo "version=$(echo '${{ github.ref_name }}' | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')" >> $GITHUB_OUTPUT
-
-      - name: Build and export
-        uses: docker/build-push-action@v4
-        env:
-          VERSION: ${{ steps.release-version.outputs.version }}
-          BRANCH: ${{ github.ref_name }}
-          DATE: ${{ steps.date.outputs.date }}
-        with:
-          context: .
-          build-args: APP_VERSION=${{ env.VERSION }},BUILD_BRANCH=${{ env.BRANCH }},BUILD_DATE=${{ env.DATE }}
-          platforms: ${{ env.PLATFORMS }}
-          tags: ${{ github.repository }}:latest
-          outputs: type=oci,dest=/tmp/docker-image.tar
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-image
-          path: /tmp/docker-image.tar
-  
-  push_to_ecr:
-    name: Push to Amazon ECR
-    needs: build
-    runs-on: ubuntu-latest
-    environment: release
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-image
-          path: /tmp
-
-      - name: Load image
-        run: |
-          docker load --input /tmp/docker-image.tar
-          docker image ls -a
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -84,19 +34,39 @@ jobs:
         with:
           mask-password: 'true'
 
-      - name: Create image tag
-        id: image-tag
+      - name: Create variables
+        id: vars
         run: |
-          echo "tag=$(echo ${{ github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "version=$(echo '${{ github.ref_name }}' | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')" >> $GITHUB_OUTPUT
+          echo "tag=$(echo ${{ github.ref_name }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       
-      - name: Tag and push docker image to Amazon ECR
-        id: push-image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build
+        uses: docker/build-push-action@v4
+        env:
+          VERSION: ${{ steps.vars.outputs.version }}
+          BRANCH: ${{ github.ref_name }}
+          DATE: ${{ steps.vars.outputs.date }}
+          IMAGE_TAG: ${{ steps.vars.outputs.tag }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        with:
+          context: .
+          push: true
+          build-args: APP_VERSION=${{ env.VERSION }},BUILD_BRANCH=${{ env.BRANCH }},BUILD_DATE=${{ env.DATE }}
+          platforms: ${{ env.PLATFORMS }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+      
+      - name: Summarize
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ steps.image-tag.outputs.tag }}
+          IMAGE_TAG: ${{ steps.vars.outputs.tag }}
         run: |
-          docker tag ${{ github.repository }} $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "## General information about the build:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- :gift: Docker image in Amazon ECR: $ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_STEP_SUMMARY
