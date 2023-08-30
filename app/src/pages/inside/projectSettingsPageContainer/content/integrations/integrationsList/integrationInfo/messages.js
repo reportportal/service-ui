@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   noGlobalIntegrationsMessage: {
     id: 'IntegrationsDescription.noGlobalIntegrationsMessage',
-    defaultMessage: 'No Global Integrations',
+    defaultMessage: 'No integrations',
   },
   noGlobalIntegrationsDescription: {
     id: 'IntegrationsDescription.noGlobalIntegrationsDescription',
@@ -80,5 +80,9 @@ export const messages = defineMessages({
   integrationList: {
     id: 'IntegrationsDescription.integrationList',
     defaultMessage: 'Integration List',
+  },
+  linkToDocumentation: {
+    id: 'IntegrationsDescription.integrationHeadDocumentationLink',
+    defaultMessage: 'Link to <a>Documentation</a>',
   },
 });
