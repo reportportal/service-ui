@@ -61,6 +61,19 @@ jobs:
           build-args: APP_VERSION=${{ env.VERSION }},BUILD_BRANCH=${{ env.BRANCH }},BUILD_DATE=${{ env.DATE }}
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        env:
+          IMAGE_TAG: ${{ steps.vars.outputs.tag }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        with:
+          image-ref: '${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
       
       - name: Summarize
         env:
