@@ -1038,7 +1038,7 @@
   "IntegrationsDescription.globalIntegrationText": "Глабальныя інтэграцыі ствараюцца на ўзроўні экзэмпляра і прымяняюцца да ўсіх праектаў.",
   "IntegrationsDescription.globalIntegrationTitle": "Глабальныя інтэграцыі",
   "IntegrationsDescription.integrationList": "Спіс інтэграцый",
-  "IntegrationsDescription.integrationHeadDocumentationLink": "Спасылка на <a>Дакументацыю</a>",
+  "IntegrationsDescription.linkToDocumentation": "Спасылка на <a>Дакументацыю</a>",
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Дадаць інтэграцыю праекта",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "Інтэграцыі не настроены. Вы можаце ўручную наладзіць інтэграцыю для гэтага праекту.",
   "IntegrationsDescription.noGlobalIntegrationsMessage": "Ніякіх інтэграцый",

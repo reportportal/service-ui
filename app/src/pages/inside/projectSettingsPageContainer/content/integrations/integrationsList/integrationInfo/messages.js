@@ -82,7 +82,7 @@ export const messages = defineMessages({
     defaultMessage: 'Integration List',
   },
   linkToDocumentation: {
-    id: 'IntegrationsDescription.integrationHeadDocumentationLink',
+    id: 'IntegrationsDescription.linkToDocumentation',
     defaultMessage: 'Link to <a>Documentation</a>',
   },
 });

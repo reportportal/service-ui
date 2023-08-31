@@ -1038,7 +1038,7 @@
   "IntegrationsDescription.globalIntegrationText": "全局集成已创建在实例级别，并已应用至所有项目",
   "IntegrationsDescription.globalIntegrationTitle": "全局集成",
   "IntegrationsDescription.integrationList": "Integration List",
-  "IntegrationsDescription.integrationHeadDocumentationLink": "Link to <a>Documentation</a>",
+  "IntegrationsDescription.linkToDocumentation": "Link to <a>Documentation</a>",
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "添加项目集成",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "未配置任何集成。您可以手动为此项目设置集成。",
   "IntegrationsDescription.noGlobalIntegrationsMessage": "无集成",
