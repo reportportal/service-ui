@@ -24,6 +24,7 @@ import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { createExternalLink } from 'common/utils';
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -42,6 +43,26 @@ export const IntegrationHeader = (props) => {
     breadcrumbs,
   } = props;
 
+  const { linkToDocumentation = '' } = details;
+
+  const integrationDescription = PLUGIN_DESCRIPTIONS_MAP[name] ? (
+    <>
+      {PLUGIN_DESCRIPTIONS_MAP[name]}{' '}
+      {Parser(
+        formatMessage(messages.linkToDocumentation, {
+          a: (link) => createExternalLink(link, linkToDocumentation),
+        }),
+      )}
+    </>
+  ) : (
+    <>
+      {details.description && Parser(details.description)} Link to{' '}
+      <a target="_blank" rel="noreferrer noopener" href={linkToDocumentation}>
+        Documentation
+      </a>
+    </>
+  );
+
   return (
     <div className={cx('container')}>
       <div className={cx('back-to')}>
@@ -57,11 +78,7 @@ export const IntegrationHeader = (props) => {
                 {details.version && `${formatMessage(messages.version)} ${details.version}`}
               </span>
             </div>
-
-            <p className={cx('integration-description')}>
-              {PLUGIN_DESCRIPTIONS_MAP[name] ||
-                (details.description && Parser(details.description))}
-            </p>
+            <p className={cx('integration-description')}>{integrationDescription}</p>
           </div>
         </div>
         {withButton && (

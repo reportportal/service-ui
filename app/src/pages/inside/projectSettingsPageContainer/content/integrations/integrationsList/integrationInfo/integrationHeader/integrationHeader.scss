@@ -94,4 +94,16 @@
   @include integrarion-measure(13px, 20px, $COLOR--almost-black, $FONT-ROBOTO-REGULAR);
   text-indent: 1px;
   max-width: 610px;
+
+  > a {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: $COLOR--topaz-2;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+      color: $COLOR--topaz-hover-2;
+    }
+  }
 }

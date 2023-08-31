@@ -21,7 +21,6 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import {
   isAdminSelector,
   activeProjectRoleSelector,
@@ -47,20 +46,9 @@ import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
 import { messages } from './messages';
-import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
 import styles from './integrationInfo.scss';
 
 const cx = classNames.bind(styles);
-
-const documentationList = {
-  [JIRA]: 'https://reportportal.io/docs/Jira-Server-Integration%3Eproject-jira-server-integration',
-  [RALLY]: 'https://reportportal.io/docs/Rally-Integration%3Eproject-rally-integration',
-  [EMAIL]: 'https://reportportal.io/docs/E-mail-server-integration',
-  [SAUCE_LABS]: 'https://reportportal.io/docs/Sauce-Labs-integration',
-  [JIRA_CLOUD]:
-    'https://reportportal.io/docs/Jira-Cloud-Integration%3Eproject-jira-cloud-integration',
-  [AZURE_DEVOPS]: 'https://reportportal.io/docs/Azure-DevOps-BTS',
-};
 
 export const IntegrationInfo = (props) => {
   const [integrationInfo, setIntegrationInfo] = useState({});
@@ -282,7 +270,6 @@ export const IntegrationInfo = (props) => {
           handleDocumentationClick={handleDocumentationClick}
           buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
           disableButton={!isAbleToClick}
-          documentationLink={documentationList[pluginName]}
         />
       )}
     </>
