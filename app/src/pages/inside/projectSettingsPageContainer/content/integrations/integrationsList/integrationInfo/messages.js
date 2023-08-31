@@ -19,12 +19,12 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   noGlobalIntegrationsMessage: {
     id: 'IntegrationsDescription.noGlobalIntegrationsMessage',
-    defaultMessage: 'No integrations',
+    defaultMessage: 'No Integrations',
   },
   noGlobalIntegrationsDescription: {
     id: 'IntegrationsDescription.noGlobalIntegrationsDescription',
     defaultMessage:
-      'No Integrations were configured. You can manually setup the integration for this project.',
+      'No integrations were configured. You can manually setup the integration for this project.',
   },
   noGlobalIntegrationsButtonAdd: {
     id: 'IntegrationsDescription.noGlobalIntegrationsButtonAdd',

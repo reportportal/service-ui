@@ -43,21 +43,21 @@ export const IntegrationHeader = (props) => {
     breadcrumbs,
   } = props;
 
-  const { linkToDocumentation = '' } = details;
+  const { documentationLink = '' } = details;
 
   const integrationDescription = PLUGIN_DESCRIPTIONS_MAP[name] ? (
     <>
       {PLUGIN_DESCRIPTIONS_MAP[name]}{' '}
       {Parser(
         formatMessage(messages.linkToDocumentation, {
-          a: (link) => createExternalLink(link, linkToDocumentation),
+          a: (link) => createExternalLink(link, documentationLink),
         }),
       )}
     </>
   ) : (
     <>
       {details.description && Parser(details.description)} Link to{' '}
-      <a target="_blank" rel="noreferrer noopener" href={linkToDocumentation}>
+      <a target="_blank" rel="noreferrer noopener" href={documentationLink}>
         Documentation
       </a>
     </>

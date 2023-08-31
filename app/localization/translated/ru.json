@@ -1041,7 +1041,7 @@
   "IntegrationsDescription.linkToDocumentation": "Ссылка на <a>Документацию</a>",
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Добавить интеграцию проекта",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "Интеграции не настроены. Вы можете вручную настроить интеграцию для этого проекта.",
-  "IntegrationsDescription.noGlobalIntegrationsMessage": "Нет интеграций",
+  "IntegrationsDescription.noGlobalIntegrationsMessage": "Нет Интеграций",
   "IntegrationsDescription.projectIntegrationCreate": "Создать интеграцию проекта",
   "IntegrationsDescription.projectIntegrationDelete": "Удалить",
   "IntegrationsDescription.projectIntegrationDeleteDescription": "Вы уверены, что хотите удалить Интеграцию проекта",
