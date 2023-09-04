@@ -58,7 +58,10 @@ jobs:
         with:
           context: .
           push: true
-          build-args: APP_VERSION=${{ env.VERSION }},BUILD_BRANCH=${{ env.BRANCH }},BUILD_DATE=${{ env.DATE }}
+          build-args: |
+            APP_VERSION=${{ env.VERSION }}
+            BUILD_BRANCH=${{ env.BRANCH }}
+            BUILD_DATE=${{ env.DATE }}
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
