@@ -58,10 +58,6 @@ export const AttributeList = ({
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
 
-  const addNewAttButtonRefCb = (node) => {
-    addNewAttrRef.current = node;
-  };
-
   const getAttributesRefsMap = () => {
     if (!attributesRefs.current) {
       attributesRefs.current = new Map();
@@ -318,7 +314,7 @@ export const AttributeList = ({
         )}
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
-            refCallback={addNewAttButtonRefCb}
+            refCallback={addNewAttrRef}
             customClassName={cx('button-focused')}
             startIcon={PlusIcon}
             onClick={onAddNew}

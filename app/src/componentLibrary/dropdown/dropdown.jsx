@@ -31,6 +31,7 @@ import { calculateDefaultIndex, calculateNextIndex, calculatePrevIndex } from '.
 
 const cx = classNames.bind(styles);
 
+// TODO: Fix data-automation-id usage
 export const Dropdown = ({
   value,
   options,

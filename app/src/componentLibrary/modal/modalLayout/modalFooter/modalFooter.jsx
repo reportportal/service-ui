@@ -22,6 +22,7 @@ import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
+// TODO: remove usage of dataAutomationId
 export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }) => {
   return (
     <div className={cx('modal-footer')}>

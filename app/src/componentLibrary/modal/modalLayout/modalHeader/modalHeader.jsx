@@ -23,6 +23,7 @@ import styles from './modalHeader.scss';
 
 const cx = classNames.bind(styles);
 
+// TODO: remove data-automation-id={'closeModalIcon'}
 export const ModalHeader = ({ title, onClose, headerNode }) => (
   <div className={cx('modal-header')}>
     <div className={cx('modal-header-content')}>

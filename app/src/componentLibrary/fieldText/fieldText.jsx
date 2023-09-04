@@ -24,6 +24,7 @@ import styles from './fieldText.scss';
 const cx = classNames.bind(styles);
 const VARIANT = 'light';
 
+// TODO: Fix usage of refFunction
 export const FieldText = ({
   value,
   className,

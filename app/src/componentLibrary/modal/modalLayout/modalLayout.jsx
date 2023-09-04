@@ -30,6 +30,9 @@ const MODAL_MAX_RATIO = 0.9;
 const MODAL_HEADER_AND_FOOTER_HEIGHT = 176;
 const cx = classNames.bind(styles);
 
+// TODO: change modalSize to size
+// TODO: fix data-automation-id usage
+// TODO: fix usage of okButton & cancelButton
 export const ModalLayout = ({
   title,
   headerNode,
