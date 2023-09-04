@@ -154,15 +154,11 @@ const dotNetConfig = (activeProject) => ({
   content: (
     <div className={cx('content-wrapper')}>
       <h1 className={cx('h1')}>
-        Copy and save the following properties in `ReportPortal.config.json` file which should be
-        placed next by you test DLL:
+        Copy and save the following properties in `ReportPortal.json` file which should be placed
+        next by you test DLL:
       </h1>
       <p>{`{`}</p>
       <div className={cx('options')}>
-        <p>
-          "$schema":
-          "https://raw.githubusercontent.com/reportportal/agent-net-nunit/master/src/ReportPortal.NUnitExtension/ReportPortal.config.schema",
-        </p>
         <p>"enabled": true,</p>
         <p>{`"server": {`}</p>
         <div className={cx('options')}>
