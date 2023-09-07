@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 
 class AbsRelTime extends Component {
   static propTypes = {
-    startTime: PropTypes.number,
+    startTime: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     startTimeFormat: PropTypes.oneOf([START_TIME_FORMAT_RELATIVE, START_TIME_FORMAT_ABSOLUTE]),
     setStartTimeFormatAction: PropTypes.func.isRequired,
     customClass: PropTypes.string,
@@ -49,17 +49,18 @@ class AbsRelTime extends Component {
   isRelative = () => this.props.startTimeFormat === START_TIME_FORMAT_RELATIVE;
 
   render() {
-    const { value: startTime, unit } = getRelativeUnits(this.props.startTime);
+    const { startTime, styles: style, customClass } = this.props;
+    const { value: relativeTime, unit } = getRelativeUnits(new Date(startTime));
     return (
       <div
-        className={cx('abs-rel-time', { relative: this.isRelative() }, this.props.customClass)}
+        className={cx('abs-rel-time', { relative: this.isRelative() }, customClass)}
         onClick={this.toggleFormat}
-        style={this.props.styles}
+        style={style}
       >
         <span className={cx('relative-time')}>
-          <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
+          <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />
         </span>
-        <span className={cx('absolute-time')}>{dateFormat(this.props.startTime)}</span>
+        <span className={cx('absolute-time')}>{dateFormat(startTime)}</span>
       </div>
     );
   }

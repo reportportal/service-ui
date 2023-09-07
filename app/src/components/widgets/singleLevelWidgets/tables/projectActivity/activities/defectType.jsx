@@ -69,7 +69,7 @@ export class DefectType extends Component {
           className={cx('link')}
           target="_blank"
         >
-          {activity.details.objectName || intl.formatMessage(messages.defectTypes)}
+          {activity.objectName || intl.formatMessage(messages.defectTypes)}
         </Link>
       </Fragment>
     );

@@ -14,8 +14,43 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from './common/ga4Utils';
+import { getRefineFiltersPanelEvents } from './common/testItemPages/actionEventsCreators';
+
 export const ADMIN_PROJECTS_PAGE = 'Projects page';
+export const ADMINISTRATE = 'administrate';
+
+const basicAdminProjectsClickEventParams = getBasicClickEventParameters(ADMINISTRATE);
+
 export const ADMIN_PROJECTS_PAGE_EVENTS = {
+  // GA4 events
+  PROJECT_MENU: {
+    ...basicAdminProjectsClickEventParams,
+    icon_name: 'dots_menu_button',
+    place: 'all_projects',
+  },
+  CLICK_EVENT_MONITORING: {
+    ...basicAdminProjectsClickEventParams,
+    element_name: 'monitoring',
+    place: 'drop_down',
+  },
+  HEADER_BUTTON_CLICK(section) {
+    const baseElementName = 'button_project_';
+    const sectionToElementNameMap = {
+      monitoring: `${baseElementName}${section}`,
+      members: `${baseElementName}${section}`,
+      settings: `${baseElementName}${section}`,
+    };
+
+    return {
+      ...basicAdminProjectsClickEventParams,
+      element_name: sectionToElementNameMap[section],
+    };
+  },
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(ADMINISTRATE),
+  },
+  // GA3 events
   ADD_PROJECT_BTN: {
     category: ADMIN_PROJECTS_PAGE,
     action: 'Click on Btn Add Project',
@@ -80,21 +115,6 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
     category: ADMIN_PROJECTS_PAGE,
     action: 'Click on Members in Project Menu',
     label: 'Transition to Members page',
-  },
-  CLICK_MEMBERS_BTN: {
-    category: ADMIN_PROJECTS_PAGE,
-    action: 'Click on button Members',
-    label: 'Transition to Members Page',
-  },
-  CLICK_SETTINGS_BTN: {
-    category: ADMIN_PROJECTS_PAGE,
-    action: 'Click on button Settings',
-    label: 'Transition to Settings Tabs',
-  },
-  PROJECT_MENU: {
-    category: ADMIN_PROJECTS_PAGE,
-    action: 'Click on Menu (3 points)',
-    label: 'Open Menu for projects',
   },
   ASSIGN_ACTION: {
     category: ADMIN_PROJECTS_PAGE,

@@ -76,13 +76,13 @@ import {
 import { tokenSelector } from './selectors';
 
 // TODO: clear cookie on logout
-function* handleLogout() {
+function* handleLogout({ payload }) {
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
   yield put(
     redirect({
-      type: LOGIN_PAGE,
+      type: payload || LOGIN_PAGE,
     }),
   );
   yield put(

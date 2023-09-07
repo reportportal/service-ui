@@ -75,8 +75,8 @@ export class Integration extends Component {
     const actualName =
       name.newValue ||
       name.oldValue ||
-      (messages[`${activity.details.objectName}DefaultName`]
-        ? formatMessage(messages[`${activity.details.objectName}DefaultName`])
+      (messages[`${activity.objectName}DefaultName`]
+        ? formatMessage(messages[`${activity.objectName}DefaultName`])
         : '');
 
     return actualName.charAt(0).toUpperCase() + actualName.slice(1);

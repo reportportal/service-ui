@@ -30,15 +30,15 @@ import {
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
-  ENTITY_ACTION,
-  ENTITY_OBJECT_TYPE,
   CONDITION_IN,
   CONDITION_BETWEEN,
   ACTIVITIES,
-  ENTITY_CREATION_DATE,
   CONDITION_CNT,
   ENTITY_OBJECT_NAME,
+  ENTITY_EVENT_NAME,
+  ENTITY_CREATED_AT,
   ENTITY_SUBJECT_NAME,
+  ENTITY_EVENTS_OBJECT_TYPE,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -47,7 +47,6 @@ import {
   POST_ISSUE,
   LINK_ISSUE,
   UNLINK_ISSUE,
-  CREATE_USER,
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
   DELETE_DASHBOARD,
@@ -86,18 +85,22 @@ import {
   PROJECT,
   DEFECT_TYPE,
   USER,
-  TICKET,
-  TEST_ITEM,
+  ITEM_ISSUE,
   INTEGRATION,
   EMAIL_CONFIG,
-  ITEM_ISSUE,
   PATTERN_RULE,
+  EMAIL_CONFIG_FILTERING_OPTION,
+  DEFECT_TYPE_FILTERING_OPTION,
+  ITEM_ISSUE_FILTERING_OPTION,
+  PATTERN_RULE_FILTERING_OPTION,
+  INDEX,
 } from 'common/constants/eventsObjectTypes';
 
 import {
   actionMessages,
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
+import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -146,9 +149,9 @@ export class EventsEntities extends Component {
         removable: false,
       },
       {
-        id: ENTITY_ACTION,
+        id: ENTITY_EVENT_NAME,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_ACTION, {
+        value: this.bindDefaultValue(ENTITY_EVENT_NAME, {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.actionCol),
@@ -251,10 +254,6 @@ export class EventsEntities extends Component {
               value: UNLINK_ISSUE,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_USER]),
-              value: CREATE_USER,
-            },
-            {
               label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
               value: GENERATE_INDEX,
             },
@@ -302,9 +301,9 @@ export class EventsEntities extends Component {
         },
       },
       {
-        id: ENTITY_CREATION_DATE,
+        id: ENTITY_CREATED_AT,
         component: EntityItemStartTime,
-        value: this.bindDefaultValue(ENTITY_CREATION_DATE, {
+        value: this.bindDefaultValue(ENTITY_CREATED_AT, {
           value: '',
           condition: CONDITION_BETWEEN,
         }),
@@ -313,12 +312,13 @@ export class EventsEntities extends Component {
         removable: false,
         customProps: {
           withoutDynamic: true,
+          events: ADMIN_EVENT_MONITORING_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
         },
       },
       {
-        id: ENTITY_OBJECT_TYPE,
+        id: ENTITY_EVENTS_OBJECT_TYPE,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_OBJECT_TYPE, {
+        value: this.bindDefaultValue(ENTITY_EVENTS_OBJECT_TYPE, {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.objectTypeCol),
@@ -334,11 +334,11 @@ export class EventsEntities extends Component {
             },
             {
               label: intl.formatMessage(objectTypesMessages[DEFECT_TYPE]),
-              value: DEFECT_TYPE,
+              value: DEFECT_TYPE_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[TEST_ITEM]),
-              value: TEST_ITEM,
+              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
+              value: ITEM_ISSUE_FILTERING_OPTION,
             },
             {
               label: intl.formatMessage(objectTypesMessages[LAUNCH]),
@@ -368,21 +368,14 @@ export class EventsEntities extends Component {
               label: intl.formatMessage(objectTypesMessages[IMPORT]),
               value: IMPORT,
             },
-            {
-              label: intl.formatMessage(objectTypesMessages[TICKET]),
-              value: TICKET,
-            },
-            {
-              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
-              value: ITEM_ISSUE,
-            },
+            { label: intl.formatMessage(objectTypesMessages[INDEX]), value: INDEX },
             {
               label: intl.formatMessage(objectTypesMessages[EMAIL_CONFIG]),
-              value: EMAIL_CONFIG,
+              value: EMAIL_CONFIG_FILTERING_OPTION,
             },
             {
               label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
-              value: PATTERN_RULE,
+              value: PATTERN_RULE_FILTERING_OPTION,
             },
           ],
         },

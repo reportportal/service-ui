@@ -16,16 +16,18 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
 import { ACCOUNT_REMOVED_PAGE } from 'controllers/pages';
+import { deleteUserAccountAction } from 'controllers/user';
 import styles from './deleteAccountModal.scss';
 
 const cx = classNames.bind(styles);
@@ -56,10 +58,10 @@ const messages = defineMessages({
 
 const DELETE = 'DELETE';
 
-// eslint-disable-next-line no-unused-vars
 const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
@@ -67,12 +69,19 @@ const DeleteAccount = ({ data }) => {
     setConfirmationValue(newValue);
   };
 
-  const onDelete = (closeModal) => {
-    closeModal();
-    // todo send 'data' to GA4
-    // todo dispatch delete account action with delete request
-    dispatch(logoutAction());
-    dispatch(redirect({ type: ACCOUNT_REMOVED_PAGE }));
+  const onDelete = () => {
+    const onSuccess = () => {
+      const dataKeys = Object.keys(data);
+      const checkboxes = dataKeys.filter((key) => key !== 'otherReason');
+      dataKeys.length === 0
+        ? trackEvent(PROFILE_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL_EPAM)
+        : trackEvent(
+            PROFILE_PAGE_EVENTS.getDeleteBtnDeleteModalEvent(checkboxes, data.otherReason),
+          );
+      dispatch(logoutAction(ACCOUNT_REMOVED_PAGE));
+    };
+
+    dispatch(deleteUserAccountAction(onSuccess));
   };
 
   const deleteButton = {

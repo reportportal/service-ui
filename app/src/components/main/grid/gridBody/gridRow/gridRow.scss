@@ -80,19 +80,6 @@ $LEVEL_OFFSET_STEP: 20px;
       }
     }
   }
-
-  &:hover:not(.highlight-error-row):not(.error-row) {
-    background-color: $COLOR--tealish-hover;
-
-    .accordion-block {
-      background-color: $COLOR--tealish-hover;
-      box-shadow: 0 -15px 20px 0px $COLOR--tealish-hover;
-
-      &.expanded {
-        box-shadow: none;
-      }
-    }
-  }
   &::after {
     content: '';
     position: absolute;

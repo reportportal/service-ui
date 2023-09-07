@@ -91,7 +91,6 @@ export class AnalysisProperties extends Component {
     intl: PropTypes.object.isRequired,
     ...activityItemPropTypes,
   };
-
   static defaultProps = activityItemDefaultProps;
 
   getActivityHistory = (activity) => {

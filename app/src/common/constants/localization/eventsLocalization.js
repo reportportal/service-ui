@@ -26,10 +26,9 @@ import {
   USER,
   EMAIL_CONFIG,
   ITEM_ISSUE,
-  TEST_ITEM,
   INTEGRATION,
-  TICKET,
   PATTERN_RULE,
+  INDEX,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -46,7 +45,6 @@ import {
   DELETE_LAUNCH,
   START_IMPORT,
   FINISH_IMPORT,
-  CREATE_USER,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -69,6 +67,9 @@ import {
   MATCHED_PATTERN,
   ASSIGN_USER,
   UNASSIGN_USER,
+  CHANGE_ROLE,
+  CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -128,10 +129,15 @@ export const actionMessages = defineMessages({
     id: 'EventActions.finishImport',
     defaultMessage: 'Finish import',
   },
-  [CREATE_USER]: {
-    id: 'EventActions.createUser',
-    defaultMessage: 'Create user',
+  [ASSIGN_USER]: {
+    id: 'EventActions.assignUser',
+    defaultMessage: 'Assign',
   },
+  [UNASSIGN_USER]: {
+    id: 'EventActions.unassignUser',
+    defaultMessage: 'Unassign',
+  },
+  [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
     defaultMessage: 'Assign',
@@ -216,9 +222,17 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deletePattern',
     defaultMessage: 'Delete pattern rule',
   },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'EventActions.updateAutoPatternAnalysis',
+    defaultMessage: 'Update pattern analysis',
+  },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
     defaultMessage: 'PA find pattern',
+  },
+  [CREATE_PROJECT]: {
+    id: 'EventActions.createProject',
+    defaultMessage: 'Create Project',
   },
 });
 
@@ -243,6 +257,10 @@ export const objectTypesMessages = defineMessages({
     id: 'EventObjectTypes.import',
     defaultMessage: 'Import',
   },
+  [INDEX]: {
+    id: 'EventObjectTypes.index',
+    defaultMessage: 'Index',
+  },
   [PROJECT]: {
     id: 'EventObjectTypes.project',
     defaultMessage: 'Project',
@@ -261,19 +279,11 @@ export const objectTypesMessages = defineMessages({
   },
   [ITEM_ISSUE]: {
     id: 'EventObjectTypes.itemIssue',
-    defaultMessage: 'Defect',
-  },
-  [TEST_ITEM]: {
-    id: 'EventObjectTypes.testItem',
     defaultMessage: 'Test item',
   },
   [INTEGRATION]: {
-    id: 'EventObjectTypes.itegration',
+    id: 'EventObjectTypes.integration',
     defaultMessage: 'Integration',
-  },
-  [TICKET]: {
-    id: 'EventObjectTypes.ticket',
-    defaultMessage: 'Link to BTS',
   },
   [PATTERN_RULE]: {
     id: 'EventObjectTypes.patternRule',

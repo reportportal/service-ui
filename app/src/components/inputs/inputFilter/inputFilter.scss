@@ -48,12 +48,13 @@
   margin: auto;
   width: 20px;
   height: 20px;
-  margin-left: 10px;
   bottom: 8px;
 
   &.search {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
+    padding: 9px 0px 9px 11px;
+    background-color: $COLOR--white-two;
     svg {
       fill: $COLOR--gray-60;
       width: 20px;
@@ -112,6 +113,8 @@
   line-height: 13px;
   color: $COLOR--charcoal-grey;
   box-shadow: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &::-ms-clear {
     display: none;

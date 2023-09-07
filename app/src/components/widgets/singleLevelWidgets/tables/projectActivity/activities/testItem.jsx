@@ -137,7 +137,7 @@ export class TestItem extends Component {
           className={cx('link')}
           target="_blank"
         >
-          {activity.details.objectName}
+          {activity.objectName}
         </Link>
       </Fragment>
     );

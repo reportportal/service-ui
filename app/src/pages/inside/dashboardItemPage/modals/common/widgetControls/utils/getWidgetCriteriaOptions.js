@@ -38,7 +38,6 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  CREATE_USER,
   UPDATE_PROJECT,
   ACTIONS_WITH_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
@@ -54,6 +53,9 @@ import {
   MATCHED_PATTERN,
   ASSIGN_USER,
   UNASSIGN_USER,
+  CHANGE_ROLE,
+  CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -103,10 +105,16 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.issues_actions',
     defaultMessage: 'Actions with issues',
   },
-  [CREATE_USER]: {
-    id: 'WidgetCriteriaOption.create_user',
-    defaultMessage: 'Add, register user',
+  [ASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.assign_user',
+    defaultMessage: 'Assign, invite user',
   },
+  [UNASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.unassign_user',
+    defaultMessage: 'Unassign user',
+  },
+  [CHANGE_ROLE]: { id: 'WidgetCriteriaOption.change_role', defaultMessage: 'Change role' },
+
   [ASSIGN_USER]: {
     id: 'WidgetCriteriaOption.assign_user',
     defaultMessage: 'Assign, invite user',
@@ -163,6 +171,14 @@ const messages = defineMessages({
   [MATCHED_PATTERN]: {
     id: 'WidgetCriteriaOption.matched_pattern',
     defaultMessage: 'Pattern matched',
+  },
+  [CREATE_PROJECT]: {
+    id: 'WidgetCriteriaOption.create_project',
+    defaultMessage: 'Create project',
+  },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'WidgetCriteriaOption.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
   },
 
   attributes: {
@@ -239,9 +255,9 @@ const getUserActionOptions = (formatMessage) => [
   { value: FINISH_LAUNCH, label: formatMessage(messages[FINISH_LAUNCH]) },
   { value: DELETE_LAUNCH, label: formatMessage(messages[DELETE_LAUNCH]) },
   { value: ACTIONS_WITH_ISSUES, label: formatMessage(messages[ACTIONS_WITH_ISSUES]) },
-  { value: CREATE_USER, label: formatMessage(messages[CREATE_USER]) },
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
+  { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
@@ -250,10 +266,15 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },
+  {
+    value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+    label: formatMessage(messages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
+  },
   { value: CREATE_PATTERN, label: formatMessage(messages[CREATE_PATTERN]) },
   { value: UPDATE_PATTERN, label: formatMessage(messages[UPDATE_PATTERN]) },
   { value: DELETE_PATTERN, label: formatMessage(messages[DELETE_PATTERN]) },
   { value: MATCHED_PATTERN, label: formatMessage(messages[MATCHED_PATTERN]) },
+  { value: CREATE_PROJECT, label: formatMessage(messages[CREATE_PROJECT]) },
 ];
 
 const getLaunchGridColumnsOptions = (formatMessage) => [

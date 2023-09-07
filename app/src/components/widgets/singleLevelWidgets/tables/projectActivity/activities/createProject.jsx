@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +14,18 @@
  * limitations under the License.
  */
 
-.container {
-  background-color: $COLOR--white-two;
-  padding: 0 120px;
+import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
+import styles from './common.scss';
 
-  .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    max-width: 1370px;
-    margin: 0 auto;
-    .section-wrapper {
-      padding: 0 30px;
-    }
-  }
+const cx = classNames.bind(styles);
 
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 35px;
-    border-top: 2px solid $COLOR--gray-91;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-}
+export const CreateProject = ({ activity }) => (
+  <>
+    <span className={cx('user-name')}>{activity.objectName}</span>
+    <FormattedMessage id="CreateProject" defaultMessage="is created" />
+  </>
+);
+CreateProject.propTypes = activityItemPropTypes;
+CreateProject.defaultProps = activityItemDefaultProps;

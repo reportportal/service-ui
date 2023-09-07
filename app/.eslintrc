@@ -6,7 +6,7 @@
     "plugin:prettier/recommended",
     "prettier/react"
   ],
-  "plugins": ["react",  "react-hooks", "jsx-a11y", "prettier", "babel"],
+  "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "babel"],
   "settings": {
     "import/resolver": {
       "webpack": {

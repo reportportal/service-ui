@@ -20,6 +20,9 @@
   float: left;
   position: relative;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 0;

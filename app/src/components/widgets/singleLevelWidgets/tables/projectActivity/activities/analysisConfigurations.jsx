@@ -47,6 +47,5 @@ export const AnalysisConfigurations = ({ activity }) => (
     )}
   </Fragment>
 );
-
 AnalysisConfigurations.propTypes = activityItemPropTypes;
 AnalysisConfigurations.defaultProps = activityItemDefaultProps;

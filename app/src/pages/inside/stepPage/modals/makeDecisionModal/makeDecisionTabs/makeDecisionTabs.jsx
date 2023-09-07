@@ -125,7 +125,7 @@ export const MakeDecisionTabs = ({
                   <div className={cx('link-wrapper')}>
                     {formatMessage(messages.pleaseCheck)}
                     <a
-                      href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
+                      href="https://reportportal.io/docs/issues-troubleshooting/ResolveAnalyzerKnownIssues/"
                       target="_blank"
                       className={cx('suggestion-link')}
                     >
