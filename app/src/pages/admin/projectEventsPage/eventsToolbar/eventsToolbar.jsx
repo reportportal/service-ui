@@ -18,23 +18,37 @@ import classNames from 'classnames/bind';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { ACTIVITIES } from 'components/filterEntities/constants';
+import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
+import { defineMessages, useIntl } from 'react-intl';
 import { EventsEntities } from '../eventsEntities';
 import styles from './eventsToolbar.scss';
 
+const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'administrateEventsPageToolbar.searchPlaceholder',
+    defaultMessage: 'Search by user, action, object type, object name',
+  },
+});
+
 const cx = classNames.bind(styles);
 
-export const EventsToolbar = () => (
-  <div className={cx('events-toolbar')}>
-    <FilterEntitiesURLContainer
-      debounced={false}
-      render={({ entities, onChange }) => (
-        <InputFilter
-          id={ACTIVITIES}
-          entitiesProvider={EventsEntities}
-          filterValues={entities}
-          onChange={onChange}
-        />
-      )}
-    />
-  </div>
-);
+export const EventsToolbar = () => {
+  const { formatMessage } = useIntl();
+  return (
+    <div className={cx('events-toolbar')}>
+      <FilterEntitiesURLContainer
+        debounced={false}
+        render={({ entities, onChange }) => (
+          <InputFilter
+            id={ACTIVITIES}
+            entitiesProvider={EventsEntities}
+            filterValues={entities}
+            onChange={onChange}
+            eventsInfo={ADMIN_EVENT_MONITORING_PAGE_EVENTS}
+            placeholder={formatMessage(messages.searchPlaceholder)}
+          />
+        )}
+      />
+    </div>
+  );
+};

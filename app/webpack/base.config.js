@@ -21,7 +21,6 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const pjson = require('../package.json');
-// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
@@ -47,6 +46,9 @@ module.exports = {
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
       analyticsEvents: path.resolve(__dirname, '../src/components/main/analytics/events/ga4Events'),
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
     },
   },
   module: {
@@ -170,11 +172,5 @@ module.exports = {
         },
       },
     }),
-    // new CircularDependencyPlugin({
-    //   exclude: /a\.js|node_modules/,
-    //   failOnError: false,
-    //   allowAsyncCycles: false,
-    //   cwd: process.cwd(),
-    // }),
   ],
 };

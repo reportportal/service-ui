@@ -16,6 +16,7 @@
 
 export const CONDITION_CNT = 'cnt';
 export const CONDITION_NOT_CNT = '!cnt';
+export const CONDITION_NOT_CNT_EVENTS = 'non_cnt';
 export const CONDITION_EQ = 'eq';
 // TODO export const CONDITION_NOT_EQ = '!eq';
 export const CONDITION_NOT_EQ = 'ne';
@@ -50,4 +51,13 @@ export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
 export const ENTITY_RETRY = 'hasRetries';
 export const ENTITY_NEW_FAILURE = 'newFailure';
+
+export const ENTITY_CREATED_AT = 'createdAt';
+export const ENTITY_EVENT_NAME = 'eventName';
+export const ENTITY_EVENTS_OBJECT_TYPE = 'objectType';
 export const ENTITY_SUBJECT_NAME = 'subjectName';
+export const ENTITY_SUBJECT_TYPE = 'subjectType';
+
+export const reMappedOperationValuesMap = {
+  [CONDITION_NOT_CNT]: CONDITION_NOT_CNT_EVENTS,
+};

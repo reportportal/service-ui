@@ -52,7 +52,11 @@ export { LOG_PAGE, LOG_PAGE_EVENTS } from './logPageEvents';
 export { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from './dashboardsPageEvents';
 export { HISTORY_PAGE, HISTORY_PAGE_EVENTS } from './historyPageEvents';
 export { ADMIN_ALL_USERS_PAGE_EVENTS } from './adminAllUsersPageEvents';
-export { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from './adminProjectsPageEvents';
+export {
+  ADMIN_PROJECTS_PAGE_EVENTS,
+  ADMIN_PROJECTS_PAGE,
+  ADMINISTRATE,
+} from './adminProjectsPageEvents';
 export {
   ADMIN_SERVER_SETTINGS_PAGE,
   ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
@@ -60,3 +64,4 @@ export {
 } from './adminServerSettingsPageEvents';
 export { TEST_PAGE, TESTS_PAGE_EVENTS } from './testsPageEvents';
 export { UNIQUE_ERRORS_PAGE_EVENTS } from './uniqueErrorsPageEvents';
+export { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from './adminEventsMonitoringPageEvents';

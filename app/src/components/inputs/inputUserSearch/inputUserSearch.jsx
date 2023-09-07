@@ -23,7 +23,10 @@ import { UserItem } from './userItem';
 
 const isValidNewOption = (inputValue) => validate.email(inputValue);
 const isOptionUnique = (inputValue, options) =>
-  !options.some((option) => option.userLogin === inputValue || option.email === inputValue);
+  !options.some(
+    (option) =>
+      option.userLogin === inputValue || option.email.toLowerCase() === inputValue.toLowerCase(),
+  );
 const newOptionCreator = (inputValue) => ({
   externalUser: true,
   userLogin: inputValue,

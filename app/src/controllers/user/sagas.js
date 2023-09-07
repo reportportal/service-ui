@@ -29,6 +29,7 @@ import {
   FETCH_API_KEYS,
   DELETE_API_KEY,
   FETCH_USER,
+  DELETE_USER_ACCOUNT,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -223,6 +224,25 @@ function* deleteApiKey({ payload = {} }) {
   }
 }
 
+function* deleteUserAccount({ payload = {} }) {
+  const { onSuccess } = payload;
+  const user = yield select(userInfoSelector);
+
+  try {
+    yield call(fetch, URLS.userInfo(user.id), {
+      method: 'delete',
+    });
+    onSuccess();
+  } catch ({ message }) {
+    yield put(
+      showNotification({
+        message,
+        type: NOTIFICATION_TYPES.ERROR,
+      }),
+    );
+  }
+}
+
 function* watchAddApiKey() {
   yield takeEvery(ADD_API_KEY, addApiKey);
 }
@@ -233,6 +253,10 @@ function* watchFetchApiKeys() {
 
 function* watchDeleteApiKey() {
   yield takeEvery(DELETE_API_KEY, deleteApiKey);
+}
+
+function* watchDeleteUserAccount() {
+  yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
 function* watchSetActiveProject() {
@@ -260,5 +284,6 @@ export function* userSagas() {
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),
+    watchDeleteUserAccount(),
   ]);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './common.scss';
@@ -22,11 +21,12 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const CreateUser = ({ activity }) => (
-  <div className={cx('create-user', 'clearfix')}>
-    <span className={cx('new-user-name')}>{activity.details.objectName}, </span>
-    <FormattedMessage id="CreateUser.welcome" defaultMessage="welcome to Report Portal!" />
-  </div>
+export const ChangeRole = ({ activity: { user, objectName } }) => (
+  <>
+    <span className={cx('user-name')}>{objectName}</span>
+    <FormattedMessage id="ChangeRole" defaultMessage="role was changed on the project by" />
+    <span className={cx('user-name')}> {user}.</span>
+  </>
 );
-CreateUser.propTypes = activityItemPropTypes;
-CreateUser.defaultProps = activityItemDefaultProps;
+ChangeRole.propTypes = activityItemPropTypes;
+ChangeRole.defaultProps = activityItemDefaultProps;

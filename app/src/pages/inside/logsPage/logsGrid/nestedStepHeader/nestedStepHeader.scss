@@ -49,9 +49,6 @@ $LEVEL_OFFSET_STEP: 20px;
     @include levels(false);
   }
   background-color: $COLOR--white-two;
-  &:hover {
-    background-color: $COLOR--tealish-hover;
-  }
   transition: background-color 0.2s ease 0s;
 }
 
@@ -154,6 +151,7 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .show-additional-block {
+  position: relative;
   &:hover {
     .additional-name-cell-block {
       margin-left: auto;

@@ -35,9 +35,11 @@ const messages = defineMessages({
   },
   description: {
     id: 'ApiKeyGeneratedModal.description',
-    defaultMessage:
-      'Copy the API Key and store it in a safe place. \n' +
-      'You won’t be able to see your Key once you click Close button.',
+    defaultMessage: 'Copy the API Key and store it in a safe place.',
+  },
+  descriptionNote: {
+    id: 'ApiKeyGeneratedModal.descriptionNote',
+    defaultMessage: 'You won’t be able to see your Key once you click "Close" button.',
   },
   loaderText: {
     id: 'ApiKeyGeneratedModal.loaderText',
@@ -70,7 +72,7 @@ const ApiKeyGenerated = ({ data }) => {
   );
 
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    text: formatMessage(COMMON_LOCALE_KEYS.CLOSE),
   };
 
   return (
@@ -81,6 +83,7 @@ const ApiKeyGenerated = ({ data }) => {
       closeConfirmation={{ confirmationWarning: '' }}
     >
       <div className={cx('description')}>{formatMessage(messages.description)}</div>
+      <div className={cx('description-note')}>{formatMessage(messages.descriptionNote)}</div>
       <div className={cx('input')}>
         <Input readonly value={apiKey} />
       </div>

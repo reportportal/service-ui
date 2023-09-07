@@ -20,9 +20,9 @@ export const DELETE_LAUNCH = 'deleteLaunch';
 export const POST_ISSUE = 'postIssue';
 export const LINK_ISSUE = 'linkIssue';
 export const UNLINK_ISSUE = 'unlinkIssue';
-export const CREATE_USER = 'createUser';
 export const ASSIGN_USER = 'assignUser';
 export const UNASSIGN_USER = 'unassignUser';
+export const CHANGE_ROLE = 'changeRole';
 export const CREATE_DASHBOARD = 'createDashboard';
 export const UPDATE_DASHBOARD = 'updateDashboard';
 export const DELETE_DASHBOARD = 'deleteDashboard';
@@ -50,8 +50,10 @@ export const LINK_ISSUE_AA = 'linkIssueAa';
 export const ANALYZE_ITEM = 'analyzeItem';
 export const CREATE_PATTERN = 'createPattern';
 export const UPDATE_PATTERN = 'updatePattern';
+export const UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS = 'updatePatternAnalysisSettings';
 export const DELETE_PATTERN = 'deletePattern';
 export const MATCHED_PATTERN = 'patternMatched';
+export const CREATE_PROJECT = 'createProject';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';

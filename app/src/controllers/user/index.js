@@ -33,6 +33,7 @@ export {
   addApiKeySuccessAction,
   fetchApiKeysAction,
   deleteApiKeyAction,
+  deleteUserAccountAction,
   deleteApiKeySuccessAction,
   setPhotoTimeStampAction,
   assignToProjectAction,

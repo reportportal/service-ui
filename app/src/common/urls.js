@@ -253,7 +253,7 @@ export const URLS = {
   authSettings: (authTypeOrId, id = '') => `${uatBase}settings/auth/${authTypeOrId}/${id}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
-  events: (projectId) => `${urlBase}${projectId}/activity`,
+  events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
   allUsers: () => `${urlBase}user/all`,

@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+import { getRefineFiltersPanelEvents } from './common/testItemPages/actionEventsCreators';
+
 const ADMIN_ALL_USERS_PAGE = 'Admin all users page';
 export const ADMIN_ALL_USERS_PAGE_EVENTS = {
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(ADMIN_ALL_USERS_PAGE),
+  },
   CLOSE_ICON_DELETE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
     action: 'Click on Close Icon on Modal "Delete users"',

@@ -79,7 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.createRelease.outputs.upload_url }}
-          asset_path: "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
+          asset_path: '${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}'
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
 
