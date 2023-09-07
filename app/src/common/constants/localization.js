@@ -33,6 +33,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.copyToClipboard',
     defaultMessage: 'Copy to Clipboard',
   },
+  COPY_TO_CLIPBOARD_LOCATOR: {
+    id: 'Common.copyToClipboardLocator',
+    defaultMessage: 'Defect type locator has been copied successfully',
+  },
   UPDATE: {
     id: 'Common.update',
     defaultMessage: 'Update',
