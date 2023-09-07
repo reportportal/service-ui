@@ -29,6 +29,7 @@ import {
   INTEGRATION,
   PATTERN_RULE,
   INDEX,
+  INVITATION_LINK,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -70,6 +71,7 @@ import {
   CHANGE_ROLE,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  CREATE_INVITATION_LINK,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -234,6 +236,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createProject',
     defaultMessage: 'Create Project',
   },
+  [CREATE_INVITATION_LINK]: {
+    id: 'EventActions.createInvitationLink',
+    defaultMessage: 'Create Invitation Link',
+  },
 });
 
 export const objectTypesMessages = defineMessages({
@@ -288,5 +294,9 @@ export const objectTypesMessages = defineMessages({
   [PATTERN_RULE]: {
     id: 'EventObjectTypes.patternRule',
     defaultMessage: 'Pattern rule',
+  },
+  [INVITATION_LINK]: {
+    id: 'EventObjectTypes.invitationLink',
+    defaultMessage: 'Invitation Link',
   },
 });

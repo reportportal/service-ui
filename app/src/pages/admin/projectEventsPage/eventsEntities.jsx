@@ -75,6 +75,7 @@ import {
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  CREATE_INVITATION_LINK,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -94,6 +95,8 @@ import {
   ITEM_ISSUE_FILTERING_OPTION,
   PATTERN_RULE_FILTERING_OPTION,
   INDEX,
+  INVITATION_LINK,
+  INVITATION_LINK_FILTERING_OPTION,
 } from 'common/constants/eventsObjectTypes';
 
 import {
@@ -297,6 +300,10 @@ export class EventsEntities extends Component {
               label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
               value: MATCHED_PATTERN,
             },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
+              value: CREATE_INVITATION_LINK,
+            },
           ],
         },
       },
@@ -376,6 +383,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
               value: PATTERN_RULE_FILTERING_OPTION,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[INVITATION_LINK]),
+              value: INVITATION_LINK_FILTERING_OPTION,
             },
           ],
         },

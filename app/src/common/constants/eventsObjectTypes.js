@@ -27,8 +27,10 @@ export const USER = 'user';
 export const EMAIL_CONFIG = 'emailConfig';
 export const PATTERN_RULE = 'pattern';
 export const INDEX = 'index';
+export const INVITATION_LINK = 'invitationLink';
 
 export const EMAIL_CONFIG_FILTERING_OPTION = 'EMAIL_CONFIG';
 export const DEFECT_TYPE_FILTERING_OPTION = 'DEFECT_TYPE';
 export const ITEM_ISSUE_FILTERING_OPTION = 'ITEM_ISSUE';
 export const PATTERN_RULE_FILTERING_OPTION = 'PATTERN';
+export const INVITATION_LINK_FILTERING_OPTION = 'INVITATION_LINK';
