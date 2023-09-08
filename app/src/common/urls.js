@@ -269,7 +269,6 @@ export const URLS = {
   plugin: () => `${urlBase}plugin`,
   pluginPublic: () => `${urlBase}plugin/public`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
-  pluginFile: (pluginName, fileKey) => `${urlBase}plugin/${pluginName}/file/${fileKey}`,
   pluginPublicFile: (pluginName, fileKey) =>
     `${urlBase}plugin/public/${pluginName}/file/${fileKey}`,
   pluginCommandCommon: (projectId, pluginName, command) =>

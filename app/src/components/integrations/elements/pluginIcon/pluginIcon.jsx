@@ -24,7 +24,6 @@ import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
-import { PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;
@@ -36,7 +35,6 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
     const commandParams = { method: 'PUT', data: { fileKey: 'icon' } };
 
     if (isDynamicIconAvailable && enabled) {
-      const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
 
       if (isCommonCommandSupported) {
@@ -55,9 +53,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       }
 
       return {
-        url: isPublic
-          ? URLS.pluginPublicFile(name, details.binaryData.icon)
-          : URLS.pluginFile(name, details.binaryData.icon),
+        url: URLS.pluginPublicFile(name, details.binaryData.icon),
       };
     }
 
