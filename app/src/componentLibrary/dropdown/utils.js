@@ -19,7 +19,7 @@ export const calculateDefaultIndex = (options, selectedValue) =>
     .map(({ value }) => value)
     .indexOf(selectedValue instanceof Object ? selectedValue.value : selectedValue);
 
-const calculateCurrentItemIndex = (index, itemsCount) =>
+export const calculateCurrentItemIndex = (index, itemsCount) =>
   ((index % itemsCount) + itemsCount) % itemsCount;
 
 const findNearestAvailableIndex = (index, options, step = 1) => {

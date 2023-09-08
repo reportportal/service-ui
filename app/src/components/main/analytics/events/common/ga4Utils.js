@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const getBasicEventParameters = (action, category) => ({
+export const getBasicEventParameters = (action, category) => ({
   action,
   category,
   place: '',

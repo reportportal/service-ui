@@ -257,6 +257,10 @@ export class EventsEntities extends Component {
               value: UNLINK_ISSUE,
             },
             {
+              label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
+              value: CREATE_INVITATION_LINK,
+            },
+            {
               label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
               value: GENERATE_INDEX,
             },
@@ -299,10 +303,6 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
               value: MATCHED_PATTERN,
-            },
-            {
-              label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
-              value: CREATE_INVITATION_LINK,
             },
           ],
         },
@@ -364,6 +364,10 @@ export class EventsEntities extends Component {
               value: USER,
             },
             {
+              label: intl.formatMessage(objectTypesMessages[INVITATION_LINK]),
+              value: INVITATION_LINK_FILTERING_OPTION,
+            },
+            {
               label: intl.formatMessage(objectTypesMessages[WIDGET]),
               value: WIDGET,
             },
@@ -383,10 +387,6 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
               value: PATTERN_RULE_FILTERING_OPTION,
-            },
-            {
-              label: intl.formatMessage(objectTypesMessages[INVITATION_LINK]),
-              value: INVITATION_LINK_FILTERING_OPTION,
             },
           ],
         },
