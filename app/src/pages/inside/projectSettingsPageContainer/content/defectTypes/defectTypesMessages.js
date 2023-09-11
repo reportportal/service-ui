@@ -58,7 +58,7 @@ export const messages = defineMessages({
     defaultMessage: 'Delete Defect Type',
   },
   copyToClipboardLocator: {
-    id: 'Common.copyToClipboardLocator',
+    id: 'DefectTypesTab.copyToClipboardLocator',
     defaultMessage: 'Defect type locator has been copied successfully',
   },
   createDefectHeader: {
