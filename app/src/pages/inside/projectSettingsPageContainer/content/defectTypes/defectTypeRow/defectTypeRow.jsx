@@ -33,6 +33,7 @@ import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/proj
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { defectTypeShape } from '../defectTypeShape';
+import { messages } from '../defectTypesMessages';
 import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
@@ -54,6 +55,9 @@ DefectLocatorPopoverContent.propTypes = {
   locator: PropTypes.string.isRequired,
   onCopy: PropTypes.func,
 };
+DefectLocatorPopoverContent.defaultProps = {
+  onCopy: () => {},
+};
 
 const DefectLocatorWithPopover = withPopover({
   ContentComponent: DefectLocatorPopoverContent,
@@ -70,6 +74,9 @@ const DefectLocatorWithPopover = withPopover({
 DefectLocatorWithPopover.propTypes = {
   locator: PropTypes.string.isRequired,
   onCopy: PropTypes.func,
+};
+DefectLocatorWithPopover.defaultProps = {
+  onCopy: () => {},
 };
 
 export const DefectTypeRow = ({
@@ -121,7 +128,7 @@ export const DefectTypeRow = ({
     dispatch(
       showNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
-        message: formatMessage(COMMON_LOCALE_KEYS.COPY_TO_CLIPBOARD_LOCATOR),
+        message: formatMessage(messages.copyToClipboardLocator),
       }),
     );
   };
