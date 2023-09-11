@@ -77,7 +77,7 @@ const SelectedItem = ({
         'mobile-disabled': mobileDisabled,
         'highlight-un-stored-item': highlightUnStoredItem && !storedOption,
       })}
-      onClick={!disabled && editable && !storedOption ? changeEditMode : null}
+      onClick={!disabled && editable ? changeEditMode : null}
     >
       {parseValueToString(item)}
       {!disabled && (
