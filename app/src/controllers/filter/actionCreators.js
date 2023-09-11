@@ -31,6 +31,7 @@ import {
   UPDATE_FILTER_ORDERS,
   FETCH_FILTERS_PAGE,
   SET_PAGE_LOADING,
+  PARSE_QUERY_TO_FILTER_ENTITY,
 } from './constants';
 
 export const fetchFiltersAction = (params) => ({
@@ -119,4 +120,8 @@ export const fetchFiltersPageAction = (refreshProjectSettings) => ({
 export const setPageLoadingAction = (isLoading) => ({
   type: SET_PAGE_LOADING,
   payload: isLoading,
+});
+
+export const parseQueryToFilterEntityAction = () => ({
+  type: PARSE_QUERY_TO_FILTER_ENTITY,
 });

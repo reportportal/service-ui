@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call, take } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call, take, takeLatest } from 'redux-saga/effects';
 import {
   fetchDataAction,
   createFetchPredicate,
@@ -31,7 +31,7 @@ import {
   fetchProjectPreferencesAction,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
 } from 'controllers/project';
-import { launchDistinctSelector } from 'controllers/launch';
+import { fetchLaunchesAction, launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
@@ -49,6 +49,7 @@ import {
   RESET_FILTER,
   FETCH_FILTERS_PAGE,
   COPY_PREFIX,
+  PARSE_QUERY_TO_FILTER_ENTITY,
 } from './constants';
 import { querySelector, launchFiltersSelector } from './selectors';
 import {
@@ -57,6 +58,7 @@ import {
   updateFilterSuccessAction,
   removeFilterAction,
   setPageLoadingAction,
+  createFilterAction,
 } from './actionCreators';
 
 function* fetchFilters() {
@@ -174,6 +176,20 @@ function* saveNewFilter({ payload: filter }) {
   yield put(changeActiveFilterAction(newId));
 }
 
+function* parseQueryToFilterEntity() {
+  const { launchesParams } = yield select(querySelector);
+
+  if (launchesParams) {
+    const [filterName, value] = launchesParams.split('=');
+    const [, condition, filteringField] = filterName.split('.');
+
+    const filter = { conditions: [{ filteringField, value, condition }] };
+    yield put(createFilterAction(filter));
+  } else {
+    yield put(fetchLaunchesAction());
+  }
+}
+
 function* watchFetchFilters() {
   yield takeEvery(FETCH_FILTERS, fetchFilters);
 }
@@ -229,6 +245,10 @@ function* watchFetchFiltersPage() {
   yield takeEvery(FETCH_FILTERS_PAGE, fetchFiltersPage);
 }
 
+function* watchParseQueryToFilterEntity() {
+  yield takeLatest(PARSE_QUERY_TO_FILTER_ENTITY, parseQueryToFilterEntity);
+}
+
 export function* filterSagas() {
   yield all([
     watchFetchFilters(),
@@ -240,5 +260,6 @@ export function* filterSagas() {
     watchSaveNewFilter(),
     watchRemoveFilter(),
     watchFetchFiltersPage(),
+    watchParseQueryToFilterEntity(),
   ]);
 }
