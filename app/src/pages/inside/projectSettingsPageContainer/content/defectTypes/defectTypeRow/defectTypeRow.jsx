@@ -31,33 +31,32 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { defectTypeShape } from '../defectTypeShape';
+import { messages } from '../defectTypesMessages';
 import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorPopoverContent = ({ locator }) => {
-  const { trackEvent } = useTracking();
-
-  return (
-    <div className={cx('defect-locator-popover')}>
-      Locator
-      <span className={cx('locator')}>
-        {locator}
-        <CopyToClipboard
-          text={locator}
-          onCopy={() => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON)}
-        >
-          <i className={cx('icon', 'copy-button')} data-automation-id="defectTypeCopyLocatorIcon">
-            {Parser(CopyIcon)}
-          </i>
-        </CopyToClipboard>
-      </span>
-    </div>
-  );
-};
+const DefectLocatorPopoverContent = ({ locator, onCopy }) => (
+  <div className={cx('defect-locator-popover')}>
+    Locator
+    <span className={cx('locator')}>
+      {locator}
+      <CopyToClipboard text={locator} onCopy={onCopy}>
+        <i className={cx('icon', 'copy-button')} data-automation-id="defectTypeCopyLocatorIcon">
+          {Parser(CopyIcon)}
+        </i>
+      </CopyToClipboard>
+    </span>
+  </div>
+);
 DefectLocatorPopoverContent.propTypes = {
   locator: PropTypes.string.isRequired,
+  onCopy: PropTypes.func,
+};
+DefectLocatorPopoverContent.defaultProps = {
+  onCopy: () => {},
 };
 
 const DefectLocatorWithPopover = withPopover({
@@ -74,6 +73,10 @@ const DefectLocatorWithPopover = withPopover({
 ));
 DefectLocatorWithPopover.propTypes = {
   locator: PropTypes.string.isRequired,
+  onCopy: PropTypes.func,
+};
+DefectLocatorWithPopover.defaultProps = {
+  onCopy: () => {},
 };
 
 export const DefectTypeRow = ({
@@ -82,6 +85,7 @@ export const DefectTypeRow = ({
   group,
   isPossibleUpdateSettings,
 }) => {
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -114,6 +118,17 @@ export const DefectTypeRow = ({
           defectType: { ...data },
           actionType: 'edit',
         },
+      }),
+    );
+  };
+
+  const onCopy = () => {
+    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON);
+
+    dispatch(
+      showNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: formatMessage(messages.copyToClipboardLocator),
       }),
     );
   };
@@ -156,7 +171,7 @@ export const DefectTypeRow = ({
             )}
           </div>
         </div>
-        <DefectLocatorWithPopover locator={locator} />
+        <DefectLocatorWithPopover locator={locator} onCopy={onCopy} />
       </div>
     </div>
   );

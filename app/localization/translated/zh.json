@@ -524,6 +524,7 @@
   "DefectTypesTab.allSubtypesAreAdded": "已添加所有的{count}个子类型",
   "DefectTypesTab.automationBugsGroup": "自动化错误组",
   "DefectTypesTab.colorCol": "颜色",
+  "DefectTypesTab.copyToClipboardLocator": "Defect type locator has been copied successfully",
   "DefectTypesTab.createDefectHeader": "创建缺陷类型",
   "DefectTypesTab.createDefectIcon": "创建一个新的缺陷类型",
   "DefectTypesTab.defectLongNameHint": "全名的长度应为3到55个字符",

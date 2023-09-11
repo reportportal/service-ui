@@ -529,6 +529,7 @@
   "DefectTypesTab.allSubtypesAreAdded": "Усе {count} падтыпаў ўжо дададзеныя",
   "DefectTypesTab.automationBugsGroup": "Група Automation Bugs",
   "DefectTypesTab.colorCol": "Колер",
+  "DefectTypesTab.copyToClipboardLocator": "Сродак вызначэння тыпу дэфекту было паспяхова скапіявана",
   "DefectTypesTab.createDefectHeader": "Стварыць Тып Дэфекту",
   "DefectTypesTab.createDefectIcon": "Стварыце новы Дэфект",
   "DefectTypesTab.defectLongNameHint": "Назва Тыпу Дэфекту павінна мець памер ад '3' да '55' сімвалаў",

@@ -526,6 +526,7 @@
   "DefectTypesTab.allSubtypesAreAdded": "Все {count} подтипов уже добавлены",
   "DefectTypesTab.automationBugsGroup": "Группа ошибок тестов",
   "DefectTypesTab.colorCol": "Цвет",
+  "DefectTypesTab.copyToClipboardLocator": "Средство определения типа дефекта было успешно скопировано",
   "DefectTypesTab.createDefectHeader": "Создать Тип Дефекта",
   "DefectTypesTab.createDefectIcon": "Создать новый Дефект",
   "DefectTypesTab.defectLongNameHint": "Имя Типа Дефекта должно иметь размер от '3' до '55' символов",
