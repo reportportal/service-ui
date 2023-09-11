@@ -32,9 +32,10 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
 } from 'controllers/project';
 import { fetchLaunchesAction, launchDistinctSelector } from 'controllers/launch';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { LAUNCHES_PAGE, PROJECT_LAUNCHES_PAGE, projectIdSelector } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
+import { redirect } from 'redux-first-router';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -51,7 +52,7 @@ import {
   COPY_PREFIX,
   PARSE_QUERY_TO_FILTER_ENTITY,
 } from './constants';
-import { querySelector, launchFiltersSelector } from './selectors';
+import { querySelector, launchFiltersSelector, filterFromQuerySelector } from './selectors';
 import {
   addFilterAction,
   changeActiveFilterAction,
@@ -177,14 +178,12 @@ function* saveNewFilter({ payload: filter }) {
 }
 
 function* parseQueryToFilterEntity() {
-  const { launchesParams } = yield select(querySelector);
+  const filterConditions = yield select(filterFromQuerySelector);
+  const projectId = yield select(projectIdSelector);
 
-  if (launchesParams) {
-    const [filterName, value] = launchesParams.split('=');
-    const [, condition, filteringField] = filterName.split('.');
-
-    const filter = { conditions: [{ filteringField, value, condition }] };
-    yield put(createFilterAction(filter));
+  if (filterConditions) {
+    yield put(createFilterAction(filterConditions));
+    yield put(redirect({ type: LAUNCHES_PAGE, payload: { projectId } }));
   } else {
     yield put(fetchLaunchesAction());
   }

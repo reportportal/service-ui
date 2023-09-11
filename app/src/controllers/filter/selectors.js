@@ -17,6 +17,10 @@
 import { createSelector } from 'reselect';
 import isEqual from 'fast-deep-equal';
 import { createQueryParametersSelector, filterIdSelector } from 'controllers/pages';
+import { queryParametersSelector } from 'controllers/launch';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_KEY } from 'controllers/sorting';
+import { isEmptyObject } from 'common/utils';
 import { userFiltersSelector } from '../project/selectors';
 
 const domainSelector = (state) => state.filters || {};
@@ -67,4 +71,18 @@ export const dirtyFilterIdsSelector = createSelector(
         return savedFilter && !isEqual(filter, savedFilter);
       })
       .map((item) => item.id),
+);
+
+export const filterFromQuerySelector = createSelector(
+  queryParametersSelector,
+  ({ [SIZE_KEY]: size, [SORTING_KEY]: sort, [PAGE_KEY]: page, ...filter }) => {
+    if (isEmptyObject(filter)) {
+      return null;
+    }
+
+    const [[filterName, filterValue]] = Object.entries(filter);
+    const [, condition, filteringField] = filterName.split('.');
+
+    return { conditions: [{ filteringField, value: filterValue, condition }] };
+  },
 );
