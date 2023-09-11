@@ -2,7 +2,7 @@ import { select, call, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { PUBLIC_PLUGINS, PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
+import { PUBLIC_PLUGINS } from 'controllers/plugins/constants';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
 import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -30,16 +30,10 @@ export function* fetchExtensionsMetadata(action) {
 
   // TODO: discuss with BE whether we can fetch plugins metadata via single API call
   const calls = uiExtensionPlugins.map((plugin) => {
-    const isPluginPublic = plugin.details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
     const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
-    return fetch(
-      isPluginPublic
-        ? URLS.pluginPublicFile(plugin.name, metadataFile)
-        : URLS.pluginFile(plugin.name, metadataFile),
-      {
-        contentType: 'application/json',
-      },
-    );
+    return fetch(URLS.pluginPublicFile(plugin.name, metadataFile), {
+      contentType: 'application/json',
+    });
   });
 
   if (calls.length === 0) {
@@ -55,7 +49,6 @@ export function* fetchExtensionsMetadata(action) {
       return acc.concat({
         ...result.value,
         pluginName: uiExtensionPlugins[index].name,
-        isPublic: uiExtensionPlugins[index].details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE,
       });
     }, []);
 

@@ -45,5 +45,3 @@ export const PROJECT_INTEGRATIONS = 'projectIntegrations';
 export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';
-
-export const PUBLIC_PLUGIN_ACCESS_TYPE = 'public';
