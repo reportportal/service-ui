@@ -238,7 +238,7 @@ export const actionMessages = defineMessages({
   },
   [CREATE_INVITATION_LINK]: {
     id: 'EventActions.createInvitationLink',
-    defaultMessage: 'Create Invitation Link',
+    defaultMessage: 'Create invitation link',
   },
 });
 
@@ -297,6 +297,6 @@ export const objectTypesMessages = defineMessages({
   },
   [INVITATION_LINK]: {
     id: 'EventObjectTypes.invitationLink',
-    defaultMessage: 'Invitation Link',
+    defaultMessage: 'Invitation link',
   },
 });
