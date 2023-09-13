@@ -24,6 +24,7 @@ import { BlockContainerBody, BlockContainerHeader } from 'pages/inside/profilePa
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { daysFromNow } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { docsReferences } from 'common/utils/referenceDictionary';
 import styles from './apiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -35,7 +36,11 @@ const messages = defineMessages({
   description: {
     id: 'ApiKeys.ApiKeysBlock.description',
     defaultMessage:
-      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to report with agent.',
+      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent. More information about API Keys you can read in',
+  },
+  descriptionLink: {
+    id: 'ApiKeys.ApiKeysBlock.descriptionLink',
+    defaultMessage: 'Documentation',
   },
   headerNameCol: {
     id: 'ApiKeys.ApiKeysBlock.headerNameCol',
@@ -60,7 +65,16 @@ export const ApiKeysBlock = ({ apiKeys }) => {
 
   return (
     <div className={cx('api-keys-block')}>
-      <div className={cx('description')}>{formatMessage(messages.description)}</div>
+      <div className={cx('description')}>
+        {formatMessage(messages.description)}{' '}
+        <a
+          className={cx('description-link')}
+          href={docsReferences.authorizationWithUsersApiKeyForAgents}
+          target="_blank"
+        >
+          {formatMessage(messages.descriptionLink)}
+        </a>
+      </div>
       <GhostButton onClick={onGenerateClick} title={formatMessage(messages.generateApiKey)}>
         {formatMessage(messages.generateApiKey)}
       </GhostButton>

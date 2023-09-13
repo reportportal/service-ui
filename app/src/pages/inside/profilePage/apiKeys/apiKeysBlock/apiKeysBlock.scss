@@ -24,6 +24,14 @@
   font-size: 12px;
   color: $COLOR--gray-60;
   margin-bottom: 24px;
+  max-width: 780px;
+}
+
+.description-link {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--topaz;
+  text-decoration: none;
 }
 
 .api-keys {
