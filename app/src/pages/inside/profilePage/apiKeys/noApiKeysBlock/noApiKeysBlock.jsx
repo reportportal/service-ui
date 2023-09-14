@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { docsReferences } from 'common/utils/referenceDictionary';
 import styles from './noApiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -36,6 +37,10 @@ const messages = defineMessages({
     id: 'ApiKeys.noApiKeys.description',
     defaultMessage:
       'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to report with agent.',
+  },
+  documentation: {
+    id: 'ApiKeys.noApiKeys.documentation',
+    defaultMessage: 'Documentation',
   },
 });
 
@@ -54,6 +59,15 @@ export const NoApiKeysBlock = () => {
         <GhostButton onClick={onGenerateClick} title={formatMessage(messages.generateApiKey)}>
           {formatMessage(messages.generateApiKey)}
         </GhostButton>
+      </div>
+      <div className={cx('documentation')} title={formatMessage(messages.documentation)}>
+        <a
+          className={cx('documentation-link')}
+          href={docsReferences.authorizationWithUsersApiKeyForAgents}
+          target="_blank"
+        >
+          {formatMessage(messages.documentation)}
+        </a>
       </div>
     </div>
   );
