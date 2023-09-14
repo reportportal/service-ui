@@ -32,7 +32,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
 } from 'controllers/project';
 import { fetchLaunchesAction, launchDistinctSelector } from 'controllers/launch';
-import { LAUNCHES_PAGE, PROJECT_LAUNCHES_PAGE, projectIdSelector } from 'controllers/pages';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
@@ -59,7 +59,7 @@ import {
   updateFilterSuccessAction,
   removeFilterAction,
   setPageLoadingAction,
-  createFilterAction,
+  createFilterFromParsedQueryAction,
 } from './actionCreators';
 
 function* fetchFilters() {
@@ -106,15 +106,17 @@ function* updateLaunchesFilter({ payload: filter }) {
   );
 }
 
-function* changeActiveFilter({ payload: filterId }) {
+function* changeActiveFilter({ payload: filterId, meta: { fromParsedQuery } }) {
   const activeProject = yield select(activeProjectSelector);
-  yield put({
+  const action = {
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
       projectId: activeProject,
       filterId,
     },
-  });
+  };
+
+  yield put(fromParsedQuery ? redirect(action) : action);
 }
 
 function* resetFilter({ payload: filterId }) {
@@ -123,7 +125,7 @@ function* resetFilter({ payload: filterId }) {
   yield put(updateFilterSuccessAction(savedFilter));
 }
 
-function* createFilter({ payload: filter = {} }) {
+function* createFilter({ payload: filter = {}, meta: { fromParsedQuery } = {} }) {
   const launchFilters = yield select(launchFiltersSelector);
   const userId = yield select(userIdSelector);
   const lastNewFilterId = launchFilters.reduce(
@@ -140,7 +142,7 @@ function* createFilter({ payload: filter = {} }) {
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
-  yield put(changeActiveFilterAction(newFilter.id));
+  yield put(changeActiveFilterAction(newFilter.id, fromParsedQuery));
 }
 
 function* saveNewFilter({ payload: filter }) {
@@ -179,11 +181,8 @@ function* saveNewFilter({ payload: filter }) {
 
 function* parseQueryToFilterEntity() {
   const filterConditions = yield select(filterFromQuerySelector);
-  const projectId = yield select(projectIdSelector);
-
   if (filterConditions) {
-    yield put(createFilterAction(filterConditions));
-    yield put(redirect({ type: LAUNCHES_PAGE, payload: { projectId } }));
+    yield put(createFilterFromParsedQueryAction(filterConditions));
   } else {
     yield put(fetchLaunchesAction());
   }

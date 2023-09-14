@@ -27,3 +27,15 @@ export const updateFilter = (filters, filter, oldId) => {
 
 export const addFilteringFieldToConditions = (conditions = {}) =>
   Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key }));
+
+export const collectFilterConditions = (filterName, filterValue, filtersCollection) => {
+  const [, condition, filteringField] = filterName.split('.');
+
+  return Object.assign(filtersCollection, {
+    conditions: filtersCollection.conditions.concat({
+      filteringField,
+      value: filterValue,
+      condition,
+    }),
+  });
+};
