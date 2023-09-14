@@ -106,7 +106,7 @@ function* updateLaunchesFilter({ payload: filter }) {
   );
 }
 
-function* changeActiveFilter({ payload: filterId, meta: { fromParsedQuery } }) {
+function* changeActiveFilter({ payload: filterId, meta }) {
   const activeProject = yield select(activeProjectSelector);
   const action = {
     type: PROJECT_LAUNCHES_PAGE,
@@ -116,7 +116,7 @@ function* changeActiveFilter({ payload: filterId, meta: { fromParsedQuery } }) {
     },
   };
 
-  yield put(fromParsedQuery ? redirect(action) : action);
+  yield put(meta.redirect ? redirect(action) : action);
 }
 
 function* resetFilter({ payload: filterId }) {
@@ -125,7 +125,7 @@ function* resetFilter({ payload: filterId }) {
   yield put(updateFilterSuccessAction(savedFilter));
 }
 
-function* createFilter({ payload: filter = {}, meta: { fromParsedQuery } = {} }) {
+function* createFilter({ payload: filter = {}, meta = {} }) {
   const launchFilters = yield select(launchFiltersSelector);
   const userId = yield select(userIdSelector);
   const lastNewFilterId = launchFilters.reduce(
@@ -142,7 +142,7 @@ function* createFilter({ payload: filter = {}, meta: { fromParsedQuery } = {} })
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
-  yield put(changeActiveFilterAction(newFilter.id, fromParsedQuery));
+  yield put(changeActiveFilterAction(newFilter.id, meta));
 }
 
 function* saveNewFilter({ payload: filter }) {

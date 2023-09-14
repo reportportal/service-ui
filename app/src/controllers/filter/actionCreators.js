@@ -49,10 +49,10 @@ export const fetchUserFiltersSuccessAction = (filters) => ({
   payload: filters,
 });
 
-export const changeActiveFilterAction = (filterId, fromParsedQuery = false) => ({
+export const changeActiveFilterAction = (filterId, meta = {}) => ({
   type: CHANGE_ACTIVE_FILTER,
   payload: filterId,
-  meta: { fromParsedQuery },
+  meta,
 });
 
 export const updateFilterConditionsAction = (filterId, conditions) => ({
@@ -88,7 +88,7 @@ export const createFilterAction = (filter) => ({
 export const createFilterFromParsedQueryAction = (filter) => ({
   ...createFilterAction(filter),
   meta: {
-    fromParsedQuery: true,
+    redirect: true,
   },
 });
 
