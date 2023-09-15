@@ -90,6 +90,7 @@ import {
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
+import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -207,7 +208,7 @@ const routesMap = {
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
-      dispatch(fetchLaunchesAction());
+      dispatch(parseQueryToFilterEntityAction());
     },
   },
   [HISTORY_PAGE]: {

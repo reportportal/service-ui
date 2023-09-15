@@ -31,6 +31,7 @@ import {
   UPDATE_FILTER_ORDERS,
   FETCH_FILTERS_PAGE,
   SET_PAGE_LOADING,
+  PARSE_QUERY_TO_FILTER_ENTITY,
 } from './constants';
 
 export const fetchFiltersAction = (params) => ({
@@ -48,9 +49,10 @@ export const fetchUserFiltersSuccessAction = (filters) => ({
   payload: filters,
 });
 
-export const changeActiveFilterAction = (filterId) => ({
+export const changeActiveFilterAction = (filterId, meta = {}) => ({
   type: CHANGE_ACTIVE_FILTER,
   payload: filterId,
+  meta,
 });
 
 export const updateFilterConditionsAction = (filterId, conditions) => ({
@@ -81,6 +83,13 @@ export const resetFilterAction = (filterId) => ({
 export const createFilterAction = (filter) => ({
   type: CREATE_FILTER,
   payload: filter,
+});
+
+export const createFilterFromParsedQueryAction = (filter) => ({
+  ...createFilterAction(filter),
+  meta: {
+    redirect: true,
+  },
 });
 
 export const removeFilterAction = (filterId) => ({
@@ -119,4 +128,8 @@ export const fetchFiltersPageAction = (refreshProjectSettings) => ({
 export const setPageLoadingAction = (isLoading) => ({
   type: SET_PAGE_LOADING,
   payload: isLoading,
+});
+
+export const parseQueryToFilterEntityAction = () => ({
+  type: PARSE_QUERY_TO_FILTER_ENTITY,
 });

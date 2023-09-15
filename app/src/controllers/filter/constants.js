@@ -29,6 +29,7 @@ export const ADD_FILTER = 'addFilter';
 export const SAVE_NEW_FILTER = 'saveNewFilter';
 export const REMOVE_FILTER = 'removeFilter';
 export const REMOVE_LAUNCHES_FILTER = 'removeLaunchesFilter';
+export const PARSE_QUERY_TO_FILTER_ENTITY = 'parseQueryToFilterEntity';
 
 export const UPDATE_FILTER_SUCCESS = 'updateFilterSuccess';
 export const FETCH_USER_FILTERS_SUCCESS = 'fetchUserFiltersSuccess';

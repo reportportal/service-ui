@@ -102,6 +102,7 @@
     "@babel/preset-env": "7.16.8",
     "@babel/preset-react": "7.16.7",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
+    "@types/jest": "24.9.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "axios-mock-adapter": "1.17.0",
     "babel-eslint": "10.0.3",
