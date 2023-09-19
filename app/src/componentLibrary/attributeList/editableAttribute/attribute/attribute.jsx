@@ -45,7 +45,7 @@ export const Attribute = ({
   return (
     <div
       ref={wrapperRefCallback}
-      tabIndex={disabled ? -1 : 0}
+      tabIndex={0}
       className={cx('attribute', variant, customClass, { disabled })}
       onClick={disabled ? null : onClick}
       onKeyDown={disabled ? null : handleWrapperKeyDown}
