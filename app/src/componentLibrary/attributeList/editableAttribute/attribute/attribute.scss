@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-@mixin draw-attribute-border($width, $height, $bgColor, $translateX: 0, $translateY: 0) {
-  background-color: $bgColor;
-
+@mixin draw-attribute-border($width, $height, $translateX: 0, $translateY: 0) {
   &:not(.disabled, :active) {
     &::after {
       position: absolute;
@@ -115,7 +113,7 @@
     @include disabled-state($COLOR--almost-black, $COLOR--bg-200);
 
     &:focus-visible {
-      @include draw-attribute-border(calc(100% - 2px), 85%, $COLOR--e-100);
+      @include draw-attribute-border(calc(100% - 2px), 85%);
     }
   }
   &.label {
@@ -125,7 +123,7 @@
     &:focus:not(.disabled),
     &:focus-visible:not(.disabled) {
       outline: none;
-      @include draw-attribute-border(calc(100% - 10px), 66%, $COLOR--e-100, 3px, 3px);
+      @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);
     }
   }
   &.remove-icon {
@@ -135,7 +133,7 @@
     &:focus,
     &:focus-visible {
       outline: none;
-      @include draw-attribute-border(120%, 140%, $COLOR--e-100, -3px, -4px);
+      @include draw-attribute-border(120%, 140%, -3px, -4px);
     }
   }
 }
