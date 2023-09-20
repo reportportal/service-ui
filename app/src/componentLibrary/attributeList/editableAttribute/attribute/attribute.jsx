@@ -56,13 +56,10 @@ export const Attribute = ({
     <div
       ref={wrapperRefCallback}
       tabIndex={0}
-      className={cx(
-        'attribute',
-        variant,
-        customClass,
-        { disabled },
-        isLabelFocused ? `hover-${variant}` : '',
-      )}
+      className={cx('attribute', variant, customClass, {
+        disabled,
+        [`hover-${variant}`]: isLabelFocused,
+      })}
       onClick={disabled ? null : onClick}
       onKeyDown={disabled ? null : handleWrapperKeyDown}
     >
@@ -95,6 +92,8 @@ export const Attribute = ({
           className={cx('remove-icon', variant)}
           onClick={onClickRemove}
           onKeyDown={handleCrossIconKeyDown}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           {Parser(CrossIcon)}
         </div>
