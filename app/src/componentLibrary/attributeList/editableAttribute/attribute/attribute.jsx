@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -37,16 +38,31 @@ export const Attribute = ({
   handleCrossIconKeyDown,
   wrapperRefCallback,
 }) => {
+  const [isLabelFocused, setIsLabelFocused] = useState(false);
   const onClickRemove = (e) => {
     e.stopPropagation();
     onRemove();
+  };
+
+  const onFocus = () => {
+    setIsLabelFocused(true);
+  };
+
+  const onBlur = () => {
+    setIsLabelFocused(false);
   };
 
   return (
     <div
       ref={wrapperRefCallback}
       tabIndex={0}
-      className={cx('attribute', variant, customClass, { disabled })}
+      className={cx(
+        'attribute',
+        variant,
+        customClass,
+        { disabled },
+        isLabelFocused ? `hover-${variant}` : '',
+      )}
       onClick={disabled ? null : onClick}
       onKeyDown={disabled ? null : handleWrapperKeyDown}
     >
@@ -55,6 +71,8 @@ export const Attribute = ({
         tabIndex={-1}
         className={cx('label', variant, { disabled })}
         onKeyDown={disabled ? null : handleAttributeKeyValueKeyDown}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         {attribute.key ? (
           <>
