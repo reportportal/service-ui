@@ -38,18 +38,18 @@ export const Attribute = ({
   handleCrossIconKeyDown,
   wrapperRefCallback,
 }) => {
-  const [isLabelFocused, setIsLabelFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const onClickRemove = (e) => {
     e.stopPropagation();
     onRemove();
   };
 
   const onFocus = () => {
-    setIsLabelFocused(true);
+    setIsFocused(true);
   };
 
   const onBlur = () => {
-    setIsLabelFocused(false);
+    setIsFocused(false);
   };
 
   return (
@@ -58,7 +58,7 @@ export const Attribute = ({
       tabIndex={0}
       className={cx('attribute', variant, customClass, {
         disabled,
-        [`hover-${variant}`]: isLabelFocused,
+        [`hover-${variant}`]: isFocused,
       })}
       onClick={disabled ? null : onClick}
       onKeyDown={disabled ? null : handleWrapperKeyDown}
