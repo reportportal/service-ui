@@ -30,7 +30,7 @@
   }
 }
 
-@mixin attribute($bgColor) {
+@mixin attribute($bgColor, $bgHover) {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -41,6 +41,10 @@
   box-sizing: border-box;
   max-width: 100%;
   column-gap: 8px;
+
+  &:hover:not(:focus-visible) {
+    background-color: $bgHover;
+  }
 
   &:focus-visible {
     outline: none;
@@ -103,40 +107,51 @@
   }
 }
 
+.hover-light {
+  background-color: $COLOR--e-100 !important;
+}
+
+.hover-dark {
+  background-color: $COLOR--darkmode-gray-300 !important;
+}
+
 .light {
   &.attribute {
-    @include attribute($COLOR--bg-200);
-    @include disabled-state($COLOR--e-300, $COLOR--e-100);
+    @include attribute($COLOR--bg-200, $COLOR--e-100);
+    @include disabled-state($COLOR--almost-black, $COLOR--bg-200);
 
-    &:focus-visible:not(:hover) {
+    &:focus-visible {
       @include draw-attribute-border(calc(100% - 2px), 85%);
+      background-color: $COLOR--e-100;
     }
   }
   &.label {
     position: relative;
-    @include label($COLOR--darkmode-gray-200);
+    @include label($COLOR--almost-black);
 
     &:focus:not(.disabled),
     &:focus-visible:not(.disabled) {
       outline: none;
       @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);
+      background-color: $COLOR--e-100;
     }
   }
   &.remove-icon {
     position: relative;
-    @include remove-icon($COLOR--darkmode-gray-200);
+    @include remove-icon($COLOR--almost-black);
 
     &:focus,
     &:focus-visible {
       outline: none;
       @include draw-attribute-border(120%, 140%, -3px, -4px);
+      background-color: $COLOR--e-100;
     }
   }
 }
 
 .dark {
   &.attribute {
-    @include attribute($COLOR--darkmode-gray-200);
+    @include attribute($COLOR--darkmode-gray-200, $COLOR--darkmode-gray-300);
     @include disabled-state($COLOR--darkmode-gray-50, $COLOR--darkmode-gray-300);
   }
   &.label {

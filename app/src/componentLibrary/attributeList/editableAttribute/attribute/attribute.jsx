@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -37,16 +38,28 @@ export const Attribute = ({
   handleCrossIconKeyDown,
   wrapperRefCallback,
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
   const onClickRemove = (e) => {
     e.stopPropagation();
     onRemove();
   };
 
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <div
       ref={wrapperRefCallback}
-      tabIndex={disabled ? -1 : 0}
-      className={cx('attribute', variant, customClass, { disabled })}
+      tabIndex={0}
+      className={cx('attribute', variant, customClass, {
+        disabled,
+        [`hover-${variant}`]: isFocused,
+      })}
       onClick={disabled ? null : onClick}
       onKeyDown={disabled ? null : handleWrapperKeyDown}
     >
@@ -55,6 +68,8 @@ export const Attribute = ({
         tabIndex={-1}
         className={cx('label', variant, { disabled })}
         onKeyDown={disabled ? null : handleAttributeKeyValueKeyDown}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         {attribute.key ? (
           <>
@@ -77,6 +92,8 @@ export const Attribute = ({
           className={cx('remove-icon', variant)}
           onClick={onClickRemove}
           onKeyDown={handleCrossIconKeyDown}
+          onFocus={onFocus}
+          onBlur={onBlur}
         >
           {Parser(CrossIcon)}
         </div>
