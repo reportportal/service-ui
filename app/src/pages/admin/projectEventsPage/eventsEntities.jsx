@@ -66,8 +66,7 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
-  START_IMPORT,
-  FINISH_IMPORT,
+  IMPORT as EVENT_ACTIONS_IMPORT,
   UPDATE_ITEM,
   LINK_ISSUE_AA,
   ANALYZE_ITEM,
@@ -76,6 +75,11 @@ import {
   DELETE_PATTERN,
   MATCHED_PATTERN,
   CREATE_INVITATION_LINK,
+  ASSIGN_USER,
+  UNASSIGN_USER,
+  CHANGE_ROLE,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  CREATE_PROJECT,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -257,6 +261,18 @@ export class EventsEntities extends Component {
               value: UNLINK_ISSUE,
             },
             {
+              label: intl.formatMessage(actionMessages[ASSIGN_USER]),
+              value: ASSIGN_USER,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UNASSIGN_USER]),
+              value: UNASSIGN_USER,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CHANGE_ROLE]),
+              value: CHANGE_ROLE,
+            },
+            {
               label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
               value: CREATE_INVITATION_LINK,
             },
@@ -269,12 +285,8 @@ export class EventsEntities extends Component {
               value: DELETE_INDEX,
             },
             {
-              label: intl.formatMessage(actionMessages[START_IMPORT]),
-              value: START_IMPORT,
-            },
-            {
-              label: intl.formatMessage(actionMessages[FINISH_IMPORT]),
-              value: FINISH_IMPORT,
+              label: intl.formatMessage(actionMessages[EVENT_ACTIONS_IMPORT]),
+              value: EVENT_ACTIONS_IMPORT,
             },
             {
               label: intl.formatMessage(actionMessages[UPDATE_ITEM]),
@@ -287,6 +299,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[ANALYZE_ITEM]),
               value: ANALYZE_ITEM,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
+              value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
             },
             {
               label: intl.formatMessage(actionMessages[CREATE_PATTERN]),
@@ -303,6 +319,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
               value: MATCHED_PATTERN,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_PROJECT]),
+              value: CREATE_PROJECT,
             },
           ],
         },

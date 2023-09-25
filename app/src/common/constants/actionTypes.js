@@ -43,6 +43,7 @@ export const DELETE_INDEX = 'deleteIndex';
 export const CREATE_DEFECT = 'createDefect';
 export const UPDATE_DEFECT = 'updateDefect';
 export const DELETE_DEFECT = 'deleteDefect';
+export const IMPORT = 'import';
 export const START_IMPORT = 'startImport';
 export const FINISH_IMPORT = 'finishImport';
 export const UPDATE_ITEM = 'updateItem';

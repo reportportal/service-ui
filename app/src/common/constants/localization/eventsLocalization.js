@@ -44,8 +44,7 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  START_IMPORT,
-  FINISH_IMPORT,
+  IMPORT as EVENT_ACTIONS_IMPORT,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -123,13 +122,9 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deleteLaunch',
     defaultMessage: 'Delete launch',
   },
-  [START_IMPORT]: {
+  [EVENT_ACTIONS_IMPORT]: {
     id: 'EventActions.startImport',
-    defaultMessage: 'Start import',
-  },
-  [FINISH_IMPORT]: {
-    id: 'EventActions.finishImport',
-    defaultMessage: 'Finish import',
+    defaultMessage: 'Import',
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
@@ -140,14 +135,6 @@ export const actionMessages = defineMessages({
     defaultMessage: 'Unassign',
   },
   [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
-  [ASSIGN_USER]: {
-    id: 'EventActions.assignUser',
-    defaultMessage: 'Assign',
-  },
-  [UNASSIGN_USER]: {
-    id: 'EventActions.unassignUser',
-    defaultMessage: 'Unassign',
-  },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
@@ -225,8 +212,8 @@ export const actionMessages = defineMessages({
     defaultMessage: 'Delete pattern rule',
   },
   [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
-    id: 'EventActions.updateAutoPatternAnalysis',
-    defaultMessage: 'Update pattern analysis',
+    id: 'EventActions.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
   },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
