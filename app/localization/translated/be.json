@@ -2203,6 +2203,8 @@
   "launchAnalysisModal.analyze": "Аналізаваць",
   "launchAnalysisModal.baseOptions.allLaunches": "Усе запускі",
   "launchAnalysisModal.baseOptions.current": "Толькі бягучы запуск",
+  "launchAnalysisModal.baseOptions.currentAndWithSameName": "Бягучы запуск і запускі з такой жа назвай",
+  "launchAnalysisModal.baseOptions.previousLaunch": "Папярэдні запуск з такой жа назвай",
   "launchAnalysisModal.baseOptions.withSameName": "Запускі з аднолькавымі імёнамі",
   "launchAnalysisModal.itemOptions.byAA": "Элементы прааналізаваныя аўтаматычна (АА)",
   "launchAnalysisModal.itemOptions.investigate": "To investigated элементы",

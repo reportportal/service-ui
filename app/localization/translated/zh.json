@@ -2181,6 +2181,8 @@
   "launchAnalysisModal.analyze": "分析",
   "launchAnalysisModal.baseOptions.allLaunches": "全部测试任务",
   "launchAnalysisModal.baseOptions.current": "仅限当前测试任务",
+  "launchAnalysisModal.baseOptions.currentAndWithSameName": "Current launch and Launches with the same name",
+  "launchAnalysisModal.baseOptions.previousLaunch": "Previous launch with the same name",
   "launchAnalysisModal.baseOptions.withSameName": "有相同名称的测试任务",
   "launchAnalysisModal.itemOptions.byAA": "（由AA）自动分析的测试项",
   "launchAnalysisModal.itemOptions.investigate": "待分析的测试项",
