@@ -128,11 +128,11 @@ export const actionMessages = defineMessages({
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
-    defaultMessage: 'Assign',
+    defaultMessage: 'Assign user',
   },
   [UNASSIGN_USER]: {
     id: 'EventActions.unassignUser',
-    defaultMessage: 'Unassign',
+    defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
   [UPDATE_PROJECT]: {
@@ -195,6 +195,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.analyzeItem',
     defaultMessage: 'AA changed defect type',
   },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'EventActions.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
+  },
   [LINK_ISSUE_AA]: {
     id: 'EventActions.linkIssueAA',
     defaultMessage: 'AA linked issue',
@@ -211,17 +215,13 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deletePattern',
     defaultMessage: 'Delete pattern rule',
   },
-  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
-    id: 'EventActions.updateAutoPatternAnalysisSettings',
-    defaultMessage: 'Update Pattern-Analysis settings',
-  },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
     defaultMessage: 'PA find pattern',
   },
   [CREATE_PROJECT]: {
     id: 'EventActions.createProject',
-    defaultMessage: 'Create Project',
+    defaultMessage: 'Create project',
   },
   [CREATE_INVITATION_LINK]: {
     id: 'EventActions.createInvitationLink',
