@@ -44,8 +44,7 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  START_IMPORT,
-  FINISH_IMPORT,
+  IMPORT as EVENT_ACTIONS_IMPORT,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -123,31 +122,19 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deleteLaunch',
     defaultMessage: 'Delete launch',
   },
-  [START_IMPORT]: {
+  [EVENT_ACTIONS_IMPORT]: {
     id: 'EventActions.startImport',
-    defaultMessage: 'Start import',
-  },
-  [FINISH_IMPORT]: {
-    id: 'EventActions.finishImport',
-    defaultMessage: 'Finish import',
+    defaultMessage: 'Import',
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
-    defaultMessage: 'Assign',
+    defaultMessage: 'Assign user',
   },
   [UNASSIGN_USER]: {
     id: 'EventActions.unassignUser',
-    defaultMessage: 'Unassign',
+    defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
-  [ASSIGN_USER]: {
-    id: 'EventActions.assignUser',
-    defaultMessage: 'Assign',
-  },
-  [UNASSIGN_USER]: {
-    id: 'EventActions.unassignUser',
-    defaultMessage: 'Unassign',
-  },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
@@ -208,6 +195,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.analyzeItem',
     defaultMessage: 'AA changed defect type',
   },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'EventActions.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
+  },
   [LINK_ISSUE_AA]: {
     id: 'EventActions.linkIssueAA',
     defaultMessage: 'AA linked issue',
@@ -224,17 +215,13 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deletePattern',
     defaultMessage: 'Delete pattern rule',
   },
-  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
-    id: 'EventActions.updateAutoPatternAnalysis',
-    defaultMessage: 'Update pattern analysis',
-  },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
     defaultMessage: 'PA find pattern',
   },
   [CREATE_PROJECT]: {
     id: 'EventActions.createProject',
-    defaultMessage: 'Create Project',
+    defaultMessage: 'Create project',
   },
   [CREATE_INVITATION_LINK]: {
     id: 'EventActions.createInvitationLink',
