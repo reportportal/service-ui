@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -53,9 +54,16 @@ const AutoAnalysis = ({
   const [isPending, setPending] = useState(false);
   const { trackEvent } = useTracking();
 
+  const {
+    ANALYZER_MODE: { ALL, LAUNCH_NAME, CURRENT_LAUNCH, PREVIOUS_LAUNCH, CURRENT_AND_THE_SAME_NAME },
+  } = LAUNCH_ANALYZE_TYPES;
+
   const analyzerModeDropdownOptions = [
-    { value: 'ALL', label: formatMessage(messages.allLaunchesCaption) },
-    { value: 'LAUNCH_NAME', label: formatMessage(messages.sameNameLaunchesCaption) },
+    { value: ALL, label: formatMessage(messages.allLaunchesCaption) },
+    { value: LAUNCH_NAME, label: formatMessage(messages.sameNameLaunchesCaption) },
+    { value: CURRENT_LAUNCH, label: formatMessage(messages.currentLaunch) },
+    { value: PREVIOUS_LAUNCH, label: formatMessage(messages.previousLaunch) },
+    { value: CURRENT_AND_THE_SAME_NAME, label: formatMessage(messages.currentAndTheSameName) },
   ];
 
   const numberOfLogDropdownOptions = [
