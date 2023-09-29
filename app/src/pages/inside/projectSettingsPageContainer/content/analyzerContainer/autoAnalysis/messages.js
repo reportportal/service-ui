@@ -56,6 +56,18 @@ export const messages = defineMessages({
     id: 'AutoAnalysis.allLaunchesCaption',
     defaultMessage: 'All launches',
   },
+  currentLaunch: {
+    id: 'AutoAnalysis.current',
+    defaultMessage: 'Only current launch',
+  },
+  previousLaunch: {
+    id: 'AutoAnalysis.previousLaunch',
+    defaultMessage: 'Previous launch with the same name',
+  },
+  currentAndTheSameName: {
+    id: 'AutoAnalysis.currentAndWithSameName',
+    defaultMessage: 'Current launch and Launches with the same name',
+  },
   numberOfLogLines: {
     id: 'AutoAnalysis.numberOfLogLines',
     defaultMessage: 'Number of log lines should be considered in Elasticsearch',
