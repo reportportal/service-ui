@@ -61,7 +61,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
   const onRevokeClick = (key) => dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
 
   return (
-    <div className={cx('api-keys-block')}>
+    <div>
       <div className={cx('description')}>
         {Parser(
           formatMessage(messages.description, {

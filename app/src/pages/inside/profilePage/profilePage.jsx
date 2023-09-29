@@ -117,9 +117,11 @@ export class ProfilePage extends Component {
               onChangeTab={this.props.dispatch}
             />
           </div>
-          <div className={cx('footer')}>
-            <LocalizationBlock />
-            <DeleteAccountBlock />
+          <div>
+            <div className={cx('footer')}>
+              <LocalizationBlock />
+              <DeleteAccountBlock />
+            </div>
           </div>
         </section>
       </div>

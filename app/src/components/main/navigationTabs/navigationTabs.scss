@@ -17,7 +17,7 @@
 .navigation-tabs {
   width: 100%;
   box-sizing: border-box;
-  padding: 5px 15px 15px 15px;
+  padding: 5px 45px 15px 45px;
   background-color: $COLOR--white-two;
   @media (max-width: $SCREEN_XS_MAX) {
     padding-top: 15px;
@@ -27,7 +27,7 @@
   box-sizing: border-box;
   width: 100%;
   padding-top: 15px;
-  border-bottom: 1px solid $COLOR--gray-91;
+  border-bottom: 2px solid $COLOR--gray-91;
   text-align: center;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
