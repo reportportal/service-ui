@@ -700,6 +700,8 @@
   "EventActions.deletePattern": "Видалення шаблону",
   "EventActions.deleteWidget": "Видалення міні-програми",
   "EventActions.import": "Імпорт",
+  "EventActions.startImport": "Розпочати імпорт",
+  "EventActions.finishImport": "Завершити імпорт",
   "EventActions.finishLaunch": "Закінчення запуску",
   "EventActions.generateIndex": "Генерація індексу",
   "EventActions.linkIssue": "Прив’язка помилки",

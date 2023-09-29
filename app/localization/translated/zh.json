@@ -696,6 +696,8 @@
   "EventActions.deletePattern": "删除模板规则",
   "EventActions.deleteWidget": "删除小部件",
   "EventActions.import": "导入",
+  "EventActions.startImport": "Start import",
+  "EventActions.finishImport": "Finish import",
   "EventActions.finishLaunch": "完成测试任务",
   "EventActions.generateIndex": "生成索引",
   "EventActions.linkIssue": "与问题关联",

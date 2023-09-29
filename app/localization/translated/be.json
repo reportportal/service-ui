@@ -702,6 +702,8 @@
   "EventActions.deletePattern": "Выдаленне шаблону",
   "EventActions.deleteWidget": "Выдаленне віджэта",
   "EventActions.import": "Імпарт",
+  "EventActions.startImport": "Пачаць імпарт",
+  "EventActions.finishImport": "Скончыць імпарт",
   "EventActions.finishLaunch": "Канчатак запуску",
   "EventActions.generateIndex": "Генерацыя індэкса",
   "EventActions.linkIssue": "Прывязка праблемы",

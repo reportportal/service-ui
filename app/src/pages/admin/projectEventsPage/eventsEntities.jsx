@@ -66,7 +66,7 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
-  IMPORT as EVENT_ACTIONS_IMPORT,
+  ACTIONS_WITH_IMPORT,
   UPDATE_ITEM,
   LINK_ISSUE_AA,
   ANALYZE_ITEM,
@@ -80,6 +80,9 @@ import {
   CHANGE_ROLE,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   CREATE_PROJECT,
+  IMPORT as EVENT_ACTIONS_IMPORT,
+  START_IMPORT,
+  FINISH_IMPORT,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -167,6 +170,10 @@ export class EventsEntities extends Component {
         customProps: {
           multiple: true,
           selectAll: true,
+          actionToGroup: {
+            [START_IMPORT]: ACTIONS_WITH_IMPORT,
+            [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
+          },
           options: [
             {
               label: intl.formatMessage(actionMessages[CREATE_DASHBOARD]),
@@ -286,7 +293,7 @@ export class EventsEntities extends Component {
             },
             {
               label: intl.formatMessage(actionMessages[EVENT_ACTIONS_IMPORT]),
-              value: EVENT_ACTIONS_IMPORT,
+              value: ACTIONS_WITH_IMPORT,
             },
             {
               label: intl.formatMessage(actionMessages[UPDATE_ITEM]),
