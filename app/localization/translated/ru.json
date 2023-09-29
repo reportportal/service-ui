@@ -696,6 +696,8 @@
   "EventActions.deletePattern": "Удаление шаблона",
   "EventActions.deleteWidget": "Удаление виджета",
   "EventActions.import": "Импорт",
+  "EventActions.startImport": "Начать импорт",
+  "EventActions.finishImport": "Закончить импорт",
   "EventActions.finishLaunch": "Окончание запуска",
   "EventActions.generateIndex": "Генерация индекса",
   "EventActions.linkIssue": "Привязка ошибки",

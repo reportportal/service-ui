@@ -43,7 +43,6 @@ export const DELETE_INDEX = 'deleteIndex';
 export const CREATE_DEFECT = 'createDefect';
 export const UPDATE_DEFECT = 'updateDefect';
 export const DELETE_DEFECT = 'deleteDefect';
-export const IMPORT = 'import';
 export const START_IMPORT = 'startImport';
 export const FINISH_IMPORT = 'finishImport';
 export const UPDATE_ITEM = 'updateItem';
@@ -56,6 +55,7 @@ export const DELETE_PATTERN = 'deletePattern';
 export const MATCHED_PATTERN = 'patternMatched';
 export const CREATE_PROJECT = 'createProject';
 export const CREATE_INVITATION_LINK = 'createInvitationLink';
+export const IMPORT = 'import';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';

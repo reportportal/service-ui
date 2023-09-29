@@ -44,7 +44,6 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  IMPORT as EVENT_ACTIONS_IMPORT,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -71,6 +70,9 @@ import {
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   CREATE_INVITATION_LINK,
+  IMPORT as EVENT_ACTIONS_IMPORT,
+  FINISH_IMPORT,
+  START_IMPORT,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -123,8 +125,16 @@ export const actionMessages = defineMessages({
     defaultMessage: 'Delete launch',
   },
   [EVENT_ACTIONS_IMPORT]: {
-    id: 'EventActions.startImport',
+    id: 'EventActions.import',
     defaultMessage: 'Import',
+  },
+  [START_IMPORT]: {
+    id: 'EventActions.startImport',
+    defaultMessage: 'Start import',
+  },
+  [FINISH_IMPORT]: {
+    id: 'EventActions.finishImport',
+    defaultMessage: 'Finish import',
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
