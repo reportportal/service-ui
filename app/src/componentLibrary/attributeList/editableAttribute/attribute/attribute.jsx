@@ -82,7 +82,9 @@ export const Attribute = ({
             </div>
           </>
         ) : (
-          <div className={cx('value-without-key')}>{attribute.value}</div>
+          <div className={cx('value-without-key')} style={{ maxWidth: maxCellWidth * 2 }}>
+            {attribute.value}
+          </div>
         )}
       </div>
       {!disabled && (
