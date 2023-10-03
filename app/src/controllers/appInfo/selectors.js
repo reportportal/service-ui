@@ -21,6 +21,7 @@ import {
   GA_MEASUREMENT_ID,
   INSTANCE_TYPE,
   NOT_PROVIDED,
+  ALLOW_DELETE_ACCOUNT,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -56,3 +57,5 @@ export const flushDataInSelector = (state) =>
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
+export const allowDeleteAccountSelector = (state) =>
+  environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';

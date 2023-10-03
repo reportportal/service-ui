@@ -23,12 +23,14 @@ import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
 import { userProfileRouteSelector, USER_PROFILE_SUB_PAGE } from 'controllers/pages';
+import { allowDeleteAccountSelector } from 'controllers/appInfo/selectors';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
+import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { ApiKeys } from './apiKeys';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
@@ -84,6 +86,7 @@ const getNavigationTabsConfig = (formatMessage) => ({
 
 @connect((state) => ({
   activeTab: userProfileRouteSelector(state),
+  allowDeleteAccount: allowDeleteAccountSelector(state),
 }))
 @injectIntl
 @track({ page: PROFILE_PAGE })
@@ -92,11 +95,13 @@ export class ProfilePage extends Component {
     intl: PropTypes.object.isRequired,
     activeTab: PropTypes.string,
     dispatch: PropTypes.func,
+    allowDeleteAccount: PropTypes.bool,
   };
 
   static defaultProps = {
     activeTab: PROJECT_ASSIGNMENT_ROUTE,
     dispatch: () => {},
+    allowDeleteAccount: false,
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
@@ -116,7 +121,10 @@ export class ProfilePage extends Component {
               onChangeTab={this.props.dispatch}
             />
           </div>
-          <LocalizationBlock />
+          <div className={cx('footer')}>
+            <LocalizationBlock />
+            {this.props.allowDeleteAccount && <DeleteAccountBlock />}
+          </div>
         </section>
       </div>
     </PageLayout>

@@ -34,6 +34,7 @@ import {
   MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -96,11 +97,10 @@ const messages = defineMessages({
 export class CommonEntity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
   };
-  static defaultProps = {
-    activity: {},
-  };
+  static defaultProps = activityItemDefaultProps;
+
   state = {
     testItem: null,
   };
@@ -111,7 +111,7 @@ export class CommonEntity extends Component {
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
-        <span className={cx('activity-name')}> {activity.details.objectName}.</span>
+        <span className={cx('activity-name')}> {activity.objectName}.</span>
       </Fragment>
     );
   }

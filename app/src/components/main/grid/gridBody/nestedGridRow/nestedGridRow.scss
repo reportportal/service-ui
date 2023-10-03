@@ -55,6 +55,7 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .load-button {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   margin-right: 13px;
@@ -71,6 +72,27 @@ $LEVEL_OFFSET_STEP: 20px;
   &.loading {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  &.overflowed-button {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    right: 0;
+    align-items: baseline;
+    padding-top: 13px;
+    justify-content: center;
+    transform: translateX(48%);
+    width: 190px;
+    background: linear-gradient(
+      270deg,
+      $COLOR--white-two 80%,
+      rgba($color: $COLOR--white-two, $alpha: 0) 100%
+    );
+
+    &-collapsed-view {
+      transform: translateX(16%);
+    }
   }
 }
 

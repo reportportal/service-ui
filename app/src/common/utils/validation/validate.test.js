@@ -588,3 +588,40 @@ describe('validate.notificationLaunchNames', () => {
     expect(validate.notificationLaunchNames([textLonger256])).toBe(false);
   });
 });
+
+describe('validate.apiKeyName', () => {
+  test('validation should be correct', () => {
+    expect(validate.apiKeyName('abc')).toBe(true);
+    expect(validate.apiKeyName('api key name')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.apiKeyName(undefined)).toBe(false);
+    expect(validate.apiKeyName()).toBe(false);
+    expect(validate.apiKeyName('')).toBe(false);
+    expect(validate.apiKeyName('  ')).toBe(false);
+    const textLonger40 = '11111111111111111111111111111111111111111';
+    expect(validate.apiKeyName(textLonger40)).toBe(false);
+  });
+});
+
+describe('validate.anyOptionSelected', () => {
+  test('validation should be correct', () => {
+    expect(validate.anyOptionSelected({ option1: true, option2: false })).toBe(true);
+    expect(validate.anyOptionSelected({ a: '1', b: false, c: false, d: null, x: undefined })).toBe(
+      true,
+    );
+    expect(validate.anyOptionSelected({ a: 2, b: false, c: false, d: null, x: undefined })).toBe(
+      true,
+    );
+    expect(validate.anyOptionSelected({ a: {}, b: false, c: false, d: null, x: undefined })).toBe(
+      true,
+    );
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.anyOptionSelected({ option1: false, option2: false })).toBe(false);
+    expect(validate.anyOptionSelected({ option1: '', option2: null })).toBe(false);
+    expect(
+      validate.anyOptionSelected({ a: '', b: false, c: false, d: null, e: 0, x: undefined }),
+    ).toBe(false);
+  });
+});

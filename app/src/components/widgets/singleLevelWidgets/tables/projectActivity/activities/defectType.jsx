@@ -23,6 +23,7 @@ import { DEFECT } from 'common/constants/settingsTabs';
 import { DELETE_DEFECT, UPDATE_DEFECT, CREATE_DEFECT } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -49,11 +50,10 @@ const messages = defineMessages({
 export class DefectType extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
   };
-  static defaultProps = {
-    activity: {},
-  };
+  static defaultProps = activityItemDefaultProps;
+
   state = {
     testItem: null,
   };
@@ -69,7 +69,7 @@ export class DefectType extends Component {
           className={cx('link')}
           target="_blank"
         >
-          {activity.details.objectName || intl.formatMessage(messages.defectTypes)}
+          {activity.objectName || intl.formatMessage(messages.defectTypes)}
         </Link>
       </Fragment>
     );

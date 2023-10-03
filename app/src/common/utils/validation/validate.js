@@ -117,3 +117,5 @@ export const notificationLaunchNames = (value) =>
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);
 export const uniqueApiKeyName = (names) => (value) =>
   names.every((name) => name.toLowerCase() !== value.trim().toLowerCase());
+export const deleteAccountFeedbackOtherValue = maxLength(128);
+export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);

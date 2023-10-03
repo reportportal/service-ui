@@ -54,11 +54,12 @@ import {
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_SUB_PAGE,
+  ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
-import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
+import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
@@ -105,6 +106,7 @@ const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
 
   [LOGIN_PAGE]: '/login',
+  [ACCOUNT_REMOVED_PAGE]: '/accountRemoved',
   [REGISTRATION_PAGE]: '/registration',
   [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
@@ -127,7 +129,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${MONITORING})?/:settingsTab?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },

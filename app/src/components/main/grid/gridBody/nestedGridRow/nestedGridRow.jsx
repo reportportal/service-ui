@@ -70,9 +70,9 @@ RowMore.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const LoadButton = ({ loading, clickHandler, label, icon, iconClassName }) => (
+const LoadButton = ({ loading, clickHandler, label, icon, iconClassName, customClassName }) => (
   <div
-    className={cx('load-button', { loading })}
+    className={cx('load-button', { loading }, customClassName)}
     onClick={(e) => {
       e.stopPropagation();
       clickHandler();
@@ -88,9 +88,11 @@ LoadButton.propTypes = {
   label: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   iconClassName: PropTypes.string,
+  customClassName: PropTypes.string,
 };
 LoadButton.defaultProps = {
   iconClassName: '',
+  customClassName: '',
 };
 
 export const NestedGridRow = track()(
@@ -159,6 +161,16 @@ export const NestedGridRow = track()(
       />
     );
 
+    const additionalNameCellBlockButton = (
+      <LoadButton
+        customClassName={cx('overflowed-button', { 'overflowed-button-collapsed-view': collapsed })}
+        loading={loading}
+        clickHandler={loadCurrentStep}
+        label={formatMessage(messages.loadCurrentStep)}
+        icon={LoadList}
+      />
+    );
+
     return (
       <>
         <NestedStepHeader
@@ -167,7 +179,7 @@ export const NestedGridRow = track()(
           loading={collapsed && loading}
           onToggle={requestStep}
           level={level}
-          additionalNameCellBlock={showLoadCurrentStepButton && loadCurrentStepButton}
+          additionalNameCellBlock={showLoadCurrentStepButton && additionalNameCellBlockButton}
         />
         {!collapsed && (
           <>

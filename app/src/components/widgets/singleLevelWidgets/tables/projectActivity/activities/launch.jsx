@@ -30,6 +30,7 @@ import {
 } from 'common/constants/actionTypes';
 import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
@@ -64,11 +65,9 @@ const messages = defineMessages({
 export class Launch extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activity: PropTypes.object,
+    ...activityItemPropTypes,
   };
-  static defaultProps = {
-    activity: {},
-  };
+  static defaultProps = activityItemDefaultProps;
 
   getLaunchesPageLink = (projectId) => ({
     type: PROJECT_LAUNCHES_PAGE,
@@ -90,7 +89,7 @@ export class Launch extends Component {
         {activity.actionType === DELETE_LAUNCH && (
           <Fragment>
             {` ${formatMessage(messages.launch)} `}
-            {activity.details.objectName}.
+            {activity.objectName}.
           </Fragment>
         )}
         {(activity.actionType === START_LAUNCH || activity.actionType === FINISH_LAUNCH) && (
@@ -101,7 +100,7 @@ export class Launch extends Component {
               className={cx('link')}
               target="_blank"
             >
-              {activity.details.objectName}.
+              {activity.objectName}.
             </Link>
           </Fragment>
         )}
@@ -111,7 +110,7 @@ export class Launch extends Component {
             className={cx('link')}
             target="_blank"
           >
-            {activity.details.objectName}.
+            {activity.objectName}.
           </Link>
         )}
       </Fragment>

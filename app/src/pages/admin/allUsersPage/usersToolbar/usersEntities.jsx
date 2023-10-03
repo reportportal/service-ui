@@ -45,6 +45,7 @@ import {
 } from 'common/constants/userObjectTypes';
 
 import { URLS } from 'common/urls';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   contains: { id: 'usersGrid.contains', defaultMessage: 'Contains' },
@@ -223,6 +224,7 @@ export class UsersEntities extends Component {
         removable: false,
         customProps: {
           withoutDynamic: true,
+          events: ADMIN_ALL_USERS_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
         },
       },
       {

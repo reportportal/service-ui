@@ -19,6 +19,7 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
@@ -76,7 +77,7 @@ const messages = defineMessages({
   modalText: {
     id: 'UnassignModal.modalText',
     defaultMessage:
-      "Are you sure you want to unassign user '<b>{user}</b>' from the project '<b>{project}</b>'?",
+      "Are you sure you want to unassign user ''<b>{user}</b>'' from the project ''<b>{project}</b>''?",
   },
 });
 
@@ -141,6 +142,7 @@ export class UnassignButton extends Component {
       id: 'confirmationModal',
       data: {
         message: intl.formatMessage(messages.modalText, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           user: userId,
           project: projectId,
         }),

@@ -36,13 +36,17 @@ import {
   FINISH_LAUNCH,
   DELETE_LAUNCH,
   UPDATE_ANALYZER,
-  CREATE_USER,
   UPDATE_PROJECT,
   UPDATE_NOTIFICATIONS,
   CREATE_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  ASSIGN_USER,
+  UNASSIGN_USER,
+  CHANGE_ROLE,
+  CREATE_PROJECT,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -54,11 +58,15 @@ import { AnalysisConfigurations } from './activities/analysisConfigurations';
 import { Integration } from './activities/integration';
 import { Launch } from './activities/launch';
 import { TestItem } from './activities/testItem';
-import { CreateUser } from './activities/createUser';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
+import { AssignUser } from './activities/assignUser';
+import { UnassignUser } from './activities/unassignUser';
+import { ChangeRole } from './activities/changeRole';
+import { CreateProject } from './activities/createProject';
+import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -245,6 +253,7 @@ export class ProjectActivity extends Component {
 
   selectActivitiesComponent = (activity) => {
     const actionGroup = ACTION_TO_GROUP_MAP[activity.actionType] || activity.actionType;
+
     switch (actionGroup) {
       case ACTIONS_WITH_ISSUES:
         return <TestItem activity={activity} />;
@@ -277,8 +286,22 @@ export class ProjectActivity extends Component {
         ) : (
           <DefaultProjectSettings activity={activity} lang={this.props.lang} />
         );
-      case CREATE_USER:
-        return <CreateUser activity={activity} />;
+
+      case ASSIGN_USER:
+        return <AssignUser activity={activity} />;
+
+      case UNASSIGN_USER:
+        return <UnassignUser activity={activity} />;
+
+      case CHANGE_ROLE:
+        return <ChangeRole activity={activity} />;
+
+      case CREATE_PROJECT:
+        return <CreateProject activity={activity} />;
+
+      case UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS:
+        return <UpdateAutoPatternAnalysis activity={activity} />;
+
       default:
         return null;
     }
@@ -290,33 +313,20 @@ export class ProjectActivity extends Component {
       return (
         ActivityComponent && (
           <div className={cx('row-content')} key={activity.id}>
-            {activity.actionType === CREATE_USER ? (
-              <Fragment>
-                {ActivityComponent}
-                <AbsRelTime
-                  setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                  startTime={+activity.lastModified}
-                  customClass={cx('time')}
-                />
-              </Fragment>
-            ) : (
-              <Fragment>
-                <UserAvatar
-                  className={cx('avatar-wrapper')}
-                  userId={activity.user}
-                  projectId={this.props.projectId}
-                  alt="avatar"
-                />
-                <div className={cx('activity-wrapper')}>
-                  {ActivityComponent}
-                  <AbsRelTime
-                    setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                    startTime={+activity.lastModified}
-                    customClass={cx('time')}
-                  />
-                </div>
-              </Fragment>
-            )}
+            <UserAvatar
+              className={cx('avatar-wrapper')}
+              userId={activity.user}
+              projectId={this.props.projectId}
+              alt="avatar"
+            />
+            <div className={cx('activity-wrapper')}>
+              {ActivityComponent}
+              <AbsRelTime
+                setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
+                startTime={+activity.lastModified}
+                customClass={cx('time')}
+              />
+            </div>
           </div>
         )
       );

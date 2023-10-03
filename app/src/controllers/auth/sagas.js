@@ -71,12 +71,12 @@ import {
 } from './constants';
 import { tokenSelector } from './selectors';
 
-function* handleLogout() {
+function* handleLogout({ payload }) {
   yield put(resetTokenAction());
   yield put(fetchAppInfoAction());
   yield put(
     redirect({
-      type: LOGIN_PAGE,
+      type: payload || LOGIN_PAGE,
     }),
   );
   yield put(

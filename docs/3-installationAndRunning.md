@@ -29,8 +29,6 @@ For development, you need a [node.js](https://nodejs.org). The recommended versi
 
 `npm run build` - build the product version in the `build` folder
 
-`npm run storybook` - launch the development environment for storybook (default url is `http://localhost:9001`)
-
 `npm run test` - single run all tests
 
 `npm run test:watch` - run tests when changing files

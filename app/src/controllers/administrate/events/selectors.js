@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
-import { createQueryParametersSelector } from 'controllers/pages';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { createSelector } from 'reselect';
+import { createQueryParametersSelector, projectIdSelector } from 'controllers/pages';
+import { SORTING_KEY } from 'controllers/sorting';
 import { administrateDomainSelector } from '../selectors';
+import { DEFAULT_SORTING } from './constants';
+import { getAppliedFilters, getAlternativePaginationAndSortParams } from './utils';
 
 const domainSelector = (state) => administrateDomainSelector(state).events || {};
 
@@ -25,7 +28,29 @@ export const eventsPaginationSelector = (state) => domainSelector(state).paginat
 export const eventsSelector = (state) => domainSelector(state).events;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
-export const querySelector = createQueryParametersSelector({
+export const createEventsPageQueryParametersSelector = ({
+  namespace: staticNamespace,
+  defaultPagination,
+  defaultSorting,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({ staticNamespace, defaultPagination, defaultSorting }),
+    projectIdSelector,
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...filters }, projectId) => {
+      const alternativePaginationAndSortParams = getAlternativePaginationAndSortParams(
+        sort,
+        limit,
+        pageNumber,
+      );
+
+      return {
+        appliedFilters: getAppliedFilters(filters, projectId),
+        alternativePaginationAndSortParams,
+      };
+    },
+  );
+
+export const querySelector = createEventsPageQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });
