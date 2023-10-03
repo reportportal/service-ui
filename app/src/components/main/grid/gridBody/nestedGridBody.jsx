@@ -15,9 +15,9 @@
  */
 
 import PropTypes from 'prop-types';
+import { NestedGridRow } from 'components/main/grid/gridBody/nestedGridRow/nestedGridRow';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
-import { NestedGridRow } from './nestedGridRow';
 
 export const NestedGridBody = ({ data, ...rest }) => {
   const Component = rest.nestedGridRow || NestedGridRow;

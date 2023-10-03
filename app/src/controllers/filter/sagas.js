@@ -25,13 +25,14 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
+import { userFiltersSelector } from 'controllers/project/selectors';
 import {
-  userFiltersSelector,
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
-  FETCH_PROJECT_PREFERENCES_SUCCESS,
-} from 'controllers/project';
-import { fetchLaunchesAction, launchDistinctSelector } from 'controllers/launch';
+} from 'controllers/project/actionCreators';
+import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants';
+import { launchDistinctSelector } from 'controllers/launch/selectors';
+import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';

@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import styles from './serviceVersionsBlock.scss';
 import { ServiceVersionItem } from '../serviceVersionItem';
-import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal';
+import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal/serviceVersionBlockModal';
 
 const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
 
