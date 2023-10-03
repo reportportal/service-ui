@@ -16,7 +16,7 @@
 
 .container {
   background-color: $COLOR--white-two;
-  padding: 0 115px 0 135px;
+  padding: 0 135px 0 115px;
 
   .content-wrapper {
     display: flex;
@@ -28,9 +28,6 @@
     margin: 0 auto;
     .section-wrapper {
       padding: 0 30px;
-    }
-    [class^="navigationTabs__navigation-tabs"] {
-      padding: 5px 45px 15px 45px;
     }
   }
 
