@@ -61,7 +61,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
   const onRevokeClick = (key) => dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
 
   return (
-    <div className={cx('api-keys-block')}>
+    <>
       <div className={cx('description')}>
         {Parser(
           formatMessage(messages.description, {
@@ -102,7 +102,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
           </BlockContainerBody>
         </ScrollWrapper>
       </div>
-    </div>
+    </>
   );
 };
 ApiKeysBlock.propTypes = {

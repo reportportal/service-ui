@@ -107,10 +107,8 @@ export class ProfilePage extends Component {
       <PageHeader breadcrumbs={this.getBreadcrumbs()} />
       <div className={cx('container')}>
         <section className={cx('content-wrapper')}>
-          <div>
-            <div className={cx('section-wrapper')}>
-              <PersonalInfoBlock />
-            </div>
+          <div className={cx('section-wrapper')}>
+            <PersonalInfoBlock />
             <NavigationTabs
               config={getNavigationTabsConfig(this.props.intl.formatMessage)}
               activeTab={this.props.activeTab}
