@@ -77,6 +77,10 @@
     display: inline-block;
     margin: auto 4px;
   }
+
+  .value-without-key {
+    width: 100%;
+  }
 }
 
 @mixin disabled-state($color, $bgColor) {
