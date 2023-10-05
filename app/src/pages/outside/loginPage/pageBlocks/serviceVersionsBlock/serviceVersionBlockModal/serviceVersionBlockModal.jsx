@@ -22,7 +22,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './serviceVersionsBlockModal.scss';
-import { ServiceVersionsBlockWithTooltip } from '../serviceVersionBlockTooltip/serviceVersionsBlock';
+import { ServiceVersionsBlockWithTooltip } from '../serviceVersionBlockTooltip/serviceVersionsBlockWithTooltip';
 
 const cx = classNames.bind(styles);
 

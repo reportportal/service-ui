@@ -19,6 +19,8 @@ import { NestedGridRow } from 'components/main/grid/gridBody/nestedGridRow/neste
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
 
+// The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridRow.
+
 export const NestedGridBody = ({ data, ...rest }) => {
   const Component = rest.nestedGridRow || NestedGridRow;
   return data.map((nodeData) =>

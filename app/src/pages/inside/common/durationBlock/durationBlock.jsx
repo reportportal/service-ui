@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
@@ -25,66 +25,12 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { getDuration, getApproximateTime } from 'common/utils';
 import ClockIcon from './img/clock-icon-inline.svg';
 import { DurationTooltip } from '../infoLine/parentInfo/duration/durationTooltip/durationTooltip';
+import { messages } from './messages';
+import { isInProgress, isStopped, isInterrupted } from './utils';
 
 import styles from './durationBlock.scss';
 
 const cx = classNames.bind(styles);
-export const messages = defineMessages({
-  inProgressWithEnd: {
-    id: 'DurationBlock.inProgressWithEnd',
-    defaultMessage: "Wrong status: 'In progress' with finish time",
-  },
-  notInProgressWithoutEnd: {
-    id: 'DurationBlock.notInProgressWithoutEnd',
-    defaultMessage: "Wrong state: item is not 'In progress', but has no finish time",
-  },
-  inProgress: {
-    id: 'DurationBlock.inProgress',
-    defaultMessage: 'In progress',
-  },
-  skipped: {
-    id: 'DurationBlock.skipped',
-    defaultMessage: 'SKIPPED. Duration: { durationTime }',
-  },
-  stoppedDuration: {
-    id: 'DurationBlock.stoppedDuration',
-    defaultMessage: 'Run STOPPED after: { durationTime }.',
-  },
-  stoppedTime: {
-    id: 'DurationBlock.stoppedTime',
-    defaultMessage: 'Stopped at: { endTime }',
-  },
-  interruptedDuration: {
-    id: 'DurationBlock.interruptedDuration',
-    defaultMessage: 'Run INTERRUPTED after: { durationTime }.',
-  },
-  finishedDuration: {
-    id: 'DurationBlock.finishedDuration',
-    defaultMessage: 'Duration: { durationTime }.',
-  },
-  finishedTime: {
-    id: 'DurationBlock.finishedTime',
-    defaultMessage: 'Finish time: { endTime }',
-  },
-  overApproximate: {
-    id: 'DurationBlock.overApproximate',
-    defaultMessage: 'Average executions time - { end }, current overlap - { over }',
-  },
-  left: {
-    id: 'DurationBlock.left',
-    defaultMessage: 'left',
-  },
-  tooltipDescribe: {
-    id: 'DurationTooltip.message',
-    defaultMessage:
-      'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.',
-  },
-});
-
-export const isInProgress = (status) => status === 'IN_PROGRESS';
-export const isStopped = (status) => status === 'STOPPED';
-export const isSkipped = (status) => status === 'SKIPPED';
-export const isInterrupted = (status) => status === 'INTERRUPTED';
 
 @injectIntl
 @withTooltip({

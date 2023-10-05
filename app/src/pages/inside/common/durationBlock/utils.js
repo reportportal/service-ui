@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export { DurationBlock } from './durationBlock';
-export { isInProgress, isStopped, isSkipped, isInterrupted } from './utils';
-export { messages } from './messages';
+export const isInProgress = (status) => status === 'IN_PROGRESS';
+export const isStopped = (status) => status === 'STOPPED';
+export const isSkipped = (status) => status === 'SKIPPED';
+export const isInterrupted = (status) => status === 'INTERRUPTED';

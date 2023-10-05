@@ -24,8 +24,8 @@ import {
   isStopped,
   isInterrupted,
   isSkipped,
-  messages,
-} from 'pages/inside/common/durationBlock/durationBlock';
+} from 'pages/inside/common/durationBlock/utils';
+import { messages } from 'pages/inside/common/durationBlock/messages';
 
 import styles from './durationTooltip.scss';
 
