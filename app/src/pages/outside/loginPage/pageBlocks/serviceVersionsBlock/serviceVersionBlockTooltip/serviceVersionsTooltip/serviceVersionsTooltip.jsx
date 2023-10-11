@@ -52,13 +52,9 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
 };
 ServiceVersionsTooltip.propTypes = {
   services: PropTypes.object,
-  serviceVersions: PropTypes.object,
-  latestServiceVersions: PropTypes.object,
   className: PropTypes.string,
 };
 ServiceVersionsTooltip.defaultProps = {
-  serviceVersions: {},
-  latestServiceVersions: {},
   services: {},
   className: '',
 };
