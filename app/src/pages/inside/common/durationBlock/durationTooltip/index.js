@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ServiceVersionsBlockWithTooltip } from './serviceVersionsBlockWithTooltip';
+export { DurationTooltip } from './durationTooltip';

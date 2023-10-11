@@ -17,12 +17,12 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import styles from './serviceVersionsBlockWithTooltip.scss';
+import styles from './serviceVersionsTooltip.scss';
 import { ServiceVersionItem } from '../../serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-export const ServiceVersionsBlockWithTooltip = ({ services, className }) => {
+export const ServiceVersionsTooltip = ({ services, className }) => {
   return (
     <div className={cx(className)}>
       <span className={cx('current-version')}>
@@ -50,13 +50,13 @@ export const ServiceVersionsBlockWithTooltip = ({ services, className }) => {
     </div>
   );
 };
-ServiceVersionsBlockWithTooltip.propTypes = {
+ServiceVersionsTooltip.propTypes = {
   services: PropTypes.object,
   serviceVersions: PropTypes.object,
   latestServiceVersions: PropTypes.object,
   className: PropTypes.string,
 };
-ServiceVersionsBlockWithTooltip.defaultProps = {
+ServiceVersionsTooltip.defaultProps = {
   serviceVersions: {},
   latestServiceVersions: {},
   services: {},

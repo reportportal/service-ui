@@ -15,7 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { NestedGridRow } from 'components/main/grid/gridBody/nestedGridRow/nestedGridRow';
+import { NestedGridRow } from './nestedGridRow';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
 

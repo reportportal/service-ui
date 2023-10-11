@@ -71,7 +71,7 @@ module.exports = () => {
     },
     plugins: [
       new CircularDependencyPlugin({
-        exclude: /a\.js|node_modules/,
+        exclude: /a\.js|node_modules|gridBody/,
         failOnError: false,
         allowAsyncCycles: false,
         cwd: process.cwd(),

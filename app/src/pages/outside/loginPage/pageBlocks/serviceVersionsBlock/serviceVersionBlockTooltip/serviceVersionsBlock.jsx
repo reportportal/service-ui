@@ -20,8 +20,8 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { useDispatch } from 'react-redux';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import styles from './serviceVersionsBlock.scss';
-import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal/serviceVersionBlockModal';
-import { ServiceVersionsBlockWithTooltip } from './serviceVersionsBlockWithTooltip';
+import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal';
+import { ServiceVersionsTooltip } from './serviceVersionsTooltip';
 
 const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
 
@@ -59,7 +59,7 @@ ServiceVersionsBlock.defaultProps = {
 };
 
 export const ServiceVersionItemTooltip = withTooltip({
-  TooltipComponent: ServiceVersionsBlockWithTooltip,
+  TooltipComponent: ServiceVersionsTooltip,
   data: {
     dynamicWidth: true,
     placement: 'top',

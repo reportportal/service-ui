@@ -35,7 +35,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NEXT, PREVIOUS } from 'controllers/log';
 import DoubleArrow from 'common/img/double-arrow-inline.svg';
 import LoadList from 'common/img/list-full-inline.svg';
-import { NestedGridBody } from 'components/main/grid/gridBody/nestedGridBody';
+import { NestedGridBody } from '../nestedGridBody';
 import styles from './nestedGridRow.scss';
 
 const cx = classNames.bind(styles);

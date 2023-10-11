@@ -24,7 +24,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { getDuration, getApproximateTime } from 'common/utils';
 import ClockIcon from './img/clock-icon-inline.svg';
-import { DurationTooltip } from '../infoLine/parentInfo/duration/durationTooltip/durationTooltip';
+import { DurationTooltip } from './durationTooltip';
 import { messages } from './messages';
 import { isInProgress, isStopped, isInterrupted } from './utils';
 
