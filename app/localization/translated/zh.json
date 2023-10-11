@@ -206,7 +206,7 @@
   "AutoAnalysis.minShouldMatchDescription": "已分析的日志与来自ElasticSearch的指定日志之间单词相等部分所占百分比。如果通过分析ElasticSearch的日志得到的值小于设置的值，那么该日志将被自动分析服务忽略",
   "AutoAnalysis.previousLaunch": "Previous launch with the same name",
   "AutoAnalysis.sameNameLaunchesCaption": "同名的测试任务",
-  "AutoAnalysis.tabDescription": "自動分析允許通過在自動模式下分析測試失敗來減少測試執行調查所花費的時間。自動分析的過程基於之前使用機器學習進行的用戶調查結果。有關自動分析的更多信息，您可以在<a>文檔</a>中閱讀",
+  "AutoAnalysis.tabDescription": "自動分析允許通過在自動模式下分析測試失敗來減少測試執行調查所花費的時間。自動分析的過程基於之前使用機器學習進行的用戶調查結果。当启动完成事件和测试项完成事件触发自动分析时，将应用这些设置。有關自動分析的更多信息，您可以在<a>文檔</a>中閱讀",
   "BetaBadge.beta": "测试版",
   "Breadcrumbs.lostLaunch": "原始测试任务丢失",
   "Breadcrumbs.restorePath": "恢复路径",
