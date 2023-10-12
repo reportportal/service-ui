@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-.duration-tooltip {
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--darkmode-gray-100;
-  line-height: 18px;
-  &-status {
-    color: $COLOR--white-two;
-    margin-bottom: 10px;
-    font-family: $FONT-SEMIBOLD;
-    &-stopped {
-      color: $COLOR--darkmode-error-text;
-    }
-  }
+.versions-list {
+  font-size: 11px;
+  color: $COLOR--charcoal-grey;
+}
+
+.current-version {
+  margin-right: 13px;
+  font-size: 12px;
+  color: $COLOR--gray-47;
 }

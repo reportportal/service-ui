@@ -17,57 +17,15 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import styles from './serviceVersionsBlock.scss';
-import { ServiceVersionItem } from '../serviceVersionItem';
 import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal';
+import { ServiceVersionsTooltip } from './serviceVersionsTooltip';
 
 const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
 
 const cx = classNames.bind(styles);
-
-export const ServiceVersionsBlockWithTooltip = ({ services, className }) => {
-  return (
-    <div className={cx(className)}>
-      <span className={cx('current-version')}>
-        <FormattedMessage
-          id={'ServiceVersionsBlock.currentVersion'}
-          defaultMessage={'Current version:'}
-        />
-      </span>
-      <span className={cx('versions-list')}>
-        {Object.keys(services).map((objKey) => {
-          const value = services[objKey];
-
-          return (
-            <ServiceVersionItem
-              // eslint-disable-next-line react/no-array-index-key
-              key={objKey}
-              serviceName={value.name}
-              serviceVersion={value.version}
-              serviceNewVersion={value.newVersion}
-              isDeprecated={!!value.isDeprecated}
-            />
-          );
-        })}
-      </span>
-    </div>
-  );
-};
-ServiceVersionsBlockWithTooltip.propTypes = {
-  services: PropTypes.object,
-  serviceVersions: PropTypes.object,
-  latestServiceVersions: PropTypes.object,
-  className: PropTypes.string,
-};
-ServiceVersionsBlockWithTooltip.defaultProps = {
-  serviceVersions: {},
-  latestServiceVersions: {},
-  services: {},
-  className: '',
-};
 
 export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
   const dispatch = useDispatch();
@@ -101,7 +59,7 @@ ServiceVersionsBlock.defaultProps = {
 };
 
 export const ServiceVersionItemTooltip = withTooltip({
-  TooltipComponent: ServiceVersionsBlockWithTooltip,
+  TooltipComponent: ServiceVersionsTooltip,
   data: {
     dynamicWidth: true,
     placement: 'top',

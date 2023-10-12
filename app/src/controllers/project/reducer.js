@@ -15,7 +15,8 @@
  */
 
 import { combineReducers } from 'redux';
-import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS, updateFilter } from 'controllers/filter';
+import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS } from 'controllers/filter/constants';
+import { updateFilter } from 'controllers/filter/utils';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,

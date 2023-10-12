@@ -95,6 +95,8 @@ LoadButton.defaultProps = {
   customClassName: '',
 };
 
+// The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridBody.
+
 export const NestedGridRow = track()(
   ({ tracking, data, level, data: { id }, nestedStepHeader: NestedStepHeader, ...rest }) => {
     const { eventsInfo = {} } = rest;

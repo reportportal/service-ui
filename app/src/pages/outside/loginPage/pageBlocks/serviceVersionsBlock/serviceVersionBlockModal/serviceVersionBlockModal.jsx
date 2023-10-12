@@ -22,7 +22,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './serviceVersionsBlockModal.scss';
-import { ServiceVersionsBlockWithTooltip } from '../serviceVersionBlockTooltip/serviceVersionsBlock';
+import { ServiceVersionsTooltip } from '../serviceVersionBlockTooltip/serviceVersionsTooltip';
 
 const cx = classNames.bind(styles);
 
@@ -48,7 +48,7 @@ export const ServiceVersionsBlockModal = ({ services, hideModal }) => {
       className={cx('modal-window-mobile')}
       footerNode={<FooterNode hideModal={hideModal} />}
     >
-      <ServiceVersionsBlockWithTooltip services={services} className={cx('tooltip-modal')} />
+      <ServiceVersionsTooltip services={services} className={cx('tooltip-modal')} />
     </ModalLayout>
   );
 };

@@ -1,5 +1,5 @@
-/*
- * Copyright 2019 EPAM Systems
+/*!
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
-export { DurationBlock } from './durationBlock';
-export { isInProgress, isStopped, isSkipped, isInterrupted } from './utils';
-export { messages } from './messages';
+.duration-tooltip {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--darkmode-gray-100;
+  line-height: 18px;
+  &-status {
+    color: $COLOR--white-two;
+    margin-bottom: 10px;
+    font-family: $FONT-SEMIBOLD;
+    &-stopped {
+      color: $COLOR--darkmode-error-text;
+    }
+  }
+}

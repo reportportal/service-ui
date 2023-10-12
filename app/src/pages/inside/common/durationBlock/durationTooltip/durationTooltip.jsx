@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import {
   isStopped,
   isInterrupted,
   isSkipped,
-  messages,
-} from 'pages/inside/common/durationBlock/durationBlock';
+} from 'pages/inside/common/durationBlock/utils';
+import { messages } from 'pages/inside/common/durationBlock/messages';
 
 import styles from './durationTooltip.scss';
 
