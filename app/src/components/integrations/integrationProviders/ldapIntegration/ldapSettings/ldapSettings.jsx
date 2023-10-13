@@ -25,6 +25,7 @@ export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => 
     goToPreviousPage={goToPreviousPage}
     isGlobal={isGlobal}
     formFieldsComponent={LdapFormFields}
+    preventTestConnection
   />
 );
 

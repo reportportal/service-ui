@@ -58,9 +58,18 @@ export const IntegrationSettings = (props) => {
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const availableGlobalIntegrations = globalIntegrations[query.subPage] || [];
-  const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
-  const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
+  const availableGlobalIntegrations = useMemo(() => globalIntegrations[query.subPage] || [], [
+    globalIntegrations,
+    query.subPage,
+  ]);
+  const availableProjectIntegrations = useMemo(() => projectIntegrations[query.subPage] || [], [
+    projectIntegrations,
+    query.subPage,
+  ]);
+  const groupedIntegrations = useMemo(
+    () => [...availableGlobalIntegrations, ...availableProjectIntegrations],
+    [availableGlobalIntegrations, availableProjectIntegrations],
+  );
 
   const namedSubPage = useMemo(
     () => ({
@@ -74,8 +83,8 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
-    setLoading(true);
-    if ('id' in props.data) {
+    if ('id' in props.data && !props.preventTestConnection) {
+      setLoading(true);
       fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
         .then(() => {
           setConnected(true);
@@ -86,7 +95,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, activeProject, projectId]);
+  }, [props.data, activeProject, projectId, props.preventTestConnection]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
