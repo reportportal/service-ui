@@ -74,6 +74,7 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
+    setLoading(true);
     if ('id' in props.data) {
       fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
         .then(() => {
