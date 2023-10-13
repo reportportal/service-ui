@@ -58,18 +58,13 @@ export const IntegrationSettings = (props) => {
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const availableGlobalIntegrations = useMemo(() => globalIntegrations[query.subPage] || [], [
-    globalIntegrations,
-    query.subPage,
-  ]);
-  const availableProjectIntegrations = useMemo(() => projectIntegrations[query.subPage] || [], [
-    projectIntegrations,
-    query.subPage,
-  ]);
-  const groupedIntegrations = useMemo(
-    () => [...availableGlobalIntegrations, ...availableProjectIntegrations],
-    [availableGlobalIntegrations, availableProjectIntegrations],
-  );
+
+  const groupedIntegrations = useMemo(() => {
+    const availableGlobalIntegrations = globalIntegrations[query.subPage] || [];
+    const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
+
+    return [...availableGlobalIntegrations, ...availableProjectIntegrations];
+  }, [globalIntegrations, projectIntegrations, query.subPage]);
 
   const namedSubPage = useMemo(
     () => ({
