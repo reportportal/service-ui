@@ -34,7 +34,6 @@ import {
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
-import { AD, LDAP, SAML } from 'common/constants/pluginNames';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -63,18 +62,6 @@ export const IntegrationSettings = (props) => {
   const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
   const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
 
-  const {
-    data,
-    onUpdate,
-    formFieldsComponent,
-    editAuthConfig,
-    isEmptyConfiguration,
-    formKey,
-    isGlobal,
-  } = props;
-
-  const pluginName = props.data.integrationType?.name;
-
   const namedSubPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
@@ -87,7 +74,7 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
-    if ('id' in props.data && pluginName !== AD && pluginName !== LDAP && pluginName !== SAML) {
+    if ('id' in props.data) {
       fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
         .then(() => {
           setConnected(true);
@@ -98,7 +85,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, activeProject, projectId, pluginName]);
+  }, [props.data, activeProject, projectId]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
@@ -116,12 +103,24 @@ export const IntegrationSettings = (props) => {
   const removeIntegration = () => {
     const {
       data: { id, integrationType },
+      isGlobal,
       goToPreviousPage,
     } = props;
 
     trackEvent(PLUGINS_PAGE_EVENTS.clickDeleteBtnRemoveIntegration(integrationType.name));
     dispatch(removeIntegrationAction(id, isGlobal, goToPreviousPage));
   };
+
+  const {
+    data,
+    onUpdate,
+    formFieldsComponent,
+    editAuthConfig,
+    isEmptyConfiguration,
+    formKey,
+    isGlobal,
+  } = props;
+  const pluginName = data.integrationType?.name;
 
   return (
     <div className={cx('integration-settings')}>

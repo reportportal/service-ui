@@ -25,7 +25,6 @@ export const SamlSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => 
     goToPreviousPage={goToPreviousPage}
     isGlobal={isGlobal}
     formFieldsComponent={SamlFormFields}
-    preventTestConnection
   />
 );
 
