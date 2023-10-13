@@ -50,6 +50,7 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -257,9 +258,10 @@ export class DashboardItemPage extends Component {
     this.props.toggleFullScreenModeAction();
   };
   showWidgetWizard = () => {
+    const modalId = 'widgetWizardModal';
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
     this.props.showModalAction({
-      id: 'widgetWizardModal',
+      id: modalId,
       data: {
         onConfirm: this.addWidget,
         eventsInfo: {
@@ -282,6 +284,9 @@ export class DashboardItemPage extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
+          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
+            modalId,
+          ),
         },
       },
     });

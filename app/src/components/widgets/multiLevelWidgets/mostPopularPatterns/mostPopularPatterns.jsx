@@ -24,7 +24,7 @@ import { getQueryNamespace, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { NoDataAvailable } from 'components/widgets';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

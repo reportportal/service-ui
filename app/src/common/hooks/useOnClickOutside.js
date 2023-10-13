@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,20 @@ import { useEffect } from 'react';
 
 export const useOnClickOutside = (ref, handler) => {
   useEffect(() => {
+    if (!handler) {
+      return undefined;
+    }
+
     const listener = (event) => {
       if (ref && ref.current && !ref.current.contains(event.target)) {
         handler(event);
       }
     };
 
-    document.addEventListener('mousedown', listener);
-    document.addEventListener('touchstart', listener);
+    document.addEventListener('pointerdown', listener);
 
     return () => {
-      document.removeEventListener('mousedown', listener);
-      document.removeEventListener('touchstart', listener);
+      document.removeEventListener('pointerdown', listener);
     };
   }, [ref, handler]);
 };

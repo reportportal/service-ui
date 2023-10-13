@@ -16,7 +16,7 @@
 
 .container {
   background-color: $COLOR--white-two;
-  padding: 0 120px;
+  padding: 0 135px 0 115px;
 
   .content-wrapper {
     display: flex;
@@ -34,7 +34,8 @@
   .footer {
     display: flex;
     justify-content: space-between;
-    padding: 15px 35px;
+    padding: 15px 0px;
+    margin: 0 45px;
     border-top: 2px solid $COLOR--gray-91;
 
     @media (max-width: $SCREEN_SM_MAX) {

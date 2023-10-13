@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
+import { loadingReducer } from 'controllers/loading';
 import { uiExtensionsReducer } from './uiExtensions';
 import {
   NAMESPACE,
@@ -34,11 +35,12 @@ import {
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  PUBLIC_PLUGINS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
   ...state,
-  [type]: [...state[type], payload],
+  [type]: [payload, ...state[type]],
 });
 
 const updateIntegration = (state, type, payload) => ({
@@ -119,6 +121,8 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
 
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
+  publicPlugins: fetchReducer(PUBLIC_PLUGINS),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
+  pluginsLoading: loadingReducer(NAMESPACE),
 });

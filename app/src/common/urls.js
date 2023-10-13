@@ -18,9 +18,9 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const DEFAULT_API_URL_PREFIX = '/api/v1';
-export const UAT_API_URL_PREFIX = '/uat';
-export const COMPOSITE_API_URL_PREFIX = '/composite/';
+export const DEFAULT_API_URL_PREFIX = '../api/v1';
+export const UAT_API_URL_PREFIX = '../uat';
+export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
@@ -97,6 +97,7 @@ export const URLS = {
   choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
+  launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (activeProject) => `${urlBase}${activeProject}/launch`,
@@ -127,8 +128,8 @@ export const URLS = {
   addProject: () => `${urlBase}project`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
-  projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
-  projectDeleteDefectSubType: (activeProject, id) =>
+  projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
+  projectDeleteDefectType: (activeProject, id) =>
     `${urlBase}${activeProject}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
@@ -165,9 +166,11 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  projectNotificationConfiguration: (activeProject) =>
-    `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
+
+  notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
+  notificationById: (activeProject, notificationId) =>
+    `${urlBase}${activeProject}/settings/notification/${notificationId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
   testItemsWithProviderType: (activeProject, ids) =>
@@ -251,6 +254,8 @@ export const URLS = {
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlBase}activities/searches`,
+  searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
+    `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
   allUsers: () => `${urlBase}user/all`,
 
   exportUsers: (filterEntities) =>
@@ -262,9 +267,13 @@ export const URLS = {
   appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
+  pluginPublic: () => `${urlBase}plugin/public`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
+  pluginPublicFile: (pluginName, fileKey) =>
+    `${urlBase}plugin/public/${pluginName}/file/${fileKey}`,
   pluginCommandCommon: (projectId, pluginName, command) =>
     `${urlBase}plugin/${projectId}/${pluginName}/common/${command}`,
+  pluginCommandPublic: (pluginName, command) => `${urlBase}plugin/public/${pluginName}/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>

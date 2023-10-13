@@ -193,6 +193,11 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Add new rule on tab Notifications',
     label: 'Add new rule on tab Notifications',
   },
+  CLONE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Clone Notification Rule',
+    label: 'Arrise Modal Clone Notification Rule',
+  },
   INTEGRATIONS_TAB: {
     category: SETTINGS_PAGE,
     action: 'Click on tab Integrations in Settings',

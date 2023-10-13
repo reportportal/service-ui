@@ -1,0 +1,102 @@
+/*
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin font-config($font, $size, $height, $color) {
+  font-family: $font;
+  font-size: $size;
+  line-height: $height;
+  color: $color;
+}
+
+@mixin message-headers($color) {
+  color: $color;
+  text-transform: capitalize;
+  margin-bottom: 8px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+}
+
+@mixin stripe-shape($color--line1, $color--line2) {
+  height: 8px;
+  border-radius: 8px 8px 0 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    $color--line1,
+    $color--line1 24px,
+    $color--line2 24px,
+    $color--line2 48px
+  );
+}
+
+.system-message {
+  min-height: 85px;
+  height: auto;
+  width: 100%;
+  background: $COLOR--bg-000;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--item;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+
+  .stripes-info {
+    @include stripe-shape($COLOR--system-message-information-line-100, $COLOR--e-200);
+  }
+
+  .stripes-warning {
+    @include stripe-shape(
+      $COLOR--system-message-warning-line-100,
+      $COLOR--system-message-warning-line-200
+    );
+  }
+  .stripes-error {
+    @include stripe-shape(
+      $COLOR--system-message-error-line-100,
+      $COLOR--system-message-error-line-200
+    );
+  }
+  .text-container {
+    padding: 12px 16px 16px;
+
+    .message-header-info {
+      @include message-headers($COLOR--e-400);
+    }
+
+    .message-header-warning {
+      @include message-headers($COLOR--system-message-warning);
+    }
+
+    .message-header-error {
+      @include message-headers($COLOR--system-message-error);
+    }
+
+    .children {
+      text-indent: 1px;
+      @include font-config($FONT-ROBOTO-BOLD, 13px, 20px, $COLOR--almost-black);
+    }
+
+    p {
+      margin-top: 4px;
+      max-width: 780px;
+      @include font-config($FONT-ROBOTO-REGULAR, 11px, 16px, $COLOR--e-400);
+    }
+  }
+}
+
+.content-width {
+  max-width: max-content;
+}

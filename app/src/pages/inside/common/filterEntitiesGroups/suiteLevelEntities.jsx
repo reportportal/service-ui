@@ -27,7 +27,6 @@ import {
   STATS_PASSED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
-import { DEFECT_TYPES_SEQUENCE, NO_DEFECT } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -50,6 +49,8 @@ import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import { pageEventsMap } from 'components/main/analytics';
 import { levelSelector } from 'controllers/testItem';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
+import { NO_DEFECT } from 'common/constants/defectTypes';
 
 const messages = defineMessages({
   NameTitle: {
@@ -141,8 +142,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter name',
   },
 });
-
-const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 
 @injectIntl
 @connect((state) => ({
@@ -303,69 +302,33 @@ export class SuiteLevelEntities extends Component {
   };
 
   getDynamicEntities = () => {
-    const { intl, visibleFilters } = this.props;
-    let defectTypeEntities = [];
-    DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
-      if (defectTypeRef.toLowerCase() === NO_DEFECT) {
-        return;
-      }
-      const defectTypeGroup = this.props.defectTypes[defectTypeRef];
-      const hasSubtypes = defectTypeGroup.length > 1;
-      const defectTitle = `${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`;
-
-      defectTypeEntities.push({
-        id: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
-        component: EntityInputConditional,
-        value: this.bindDefaultValue(
-          `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
-          {
+    const { defectTypes, intl, visibleFilters } = this.props;
+    return getGroupedDefectTypesOptions(defectTypes, intl.formatMessage)
+      .filter(
+        (option) =>
+          option.groupId !== NO_DEFECT.toUpperCase() && option.groupRef !== NO_DEFECT.toUpperCase(),
+      )
+      .map((option) => {
+        const meta = option.meta;
+        return {
+          ...option,
+          id: option.value,
+          component: EntityInputConditional,
+          value: this.bindDefaultValue(option.value, {
             condition: CONDITION_GREATER_EQ,
+          }),
+          validationFunc: commonValidators.launchNumericEntity,
+          title: meta && meta.subItemLabel ? meta.subItemLabel : option.label,
+          customProps: {
+            conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
+            placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
           },
-        ),
-        validationFunc: commonValidators.launchNumericEntity,
-        title: messages[defectTitle] ? intl.formatMessage(messages[defectTitle]) : '',
-        active: visibleFilters.includes(
-          `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
-        ),
-        removable: true,
-        customProps: {
-          conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
-          placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
-        },
+          removable: true,
+          active: visibleFilters.includes(option.value),
+        };
       });
-      if (hasSubtypes) {
-        defectTypeEntities = defectTypeEntities.concat(
-          defectTypeGroup.map((defectType) => ({
-            id: `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-            component: EntityInputConditional,
-            value: this.bindDefaultValue(
-              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-              {
-                condition: CONDITION_GREATER_EQ,
-              },
-            ),
-            validationFunc: commonValidators.launchNumericEntity,
-            title: `${intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
-              defectType.shortName
-            }`,
-            active: visibleFilters.includes(
-              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-            ),
-            removable: true,
-            meta: {
-              longName: defectType.longName,
-              subItem: true,
-            },
-            customProps: {
-              conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
-              placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
-            },
-          })),
-        );
-      }
-    });
-    return defectTypeEntities;
   };
+
   bindDefaultValue = bindDefaultValue;
   render() {
     const { render, ...rest } = this.props;

@@ -59,8 +59,8 @@ describe('Attachments Selectors', () => {
         alt: 'image/png',
         contentType: 'image/png',
         id: '5678',
-        src: '/api/v1/data/test_project/5678',
-        thumbnailSrc: '/api/v1/data/test_project/5678?loadThumbnail=true',
+        src: '../api/v1/data/test_project/5678',
+        thumbnailSrc: '../api/v1/data/test_project/5678?loadThumbnail=true',
         isImage: true,
       },
     ];

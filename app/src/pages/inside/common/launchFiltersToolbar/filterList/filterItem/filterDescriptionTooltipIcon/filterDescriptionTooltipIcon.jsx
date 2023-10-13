@@ -18,14 +18,14 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { ALIGN_LEFT } from 'components/main/tooltips/constants';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import TooltipIcon from 'common/img/tooltip-icon-inline.svg';
+import { MarkdownTooltip } from 'components/main/tooltips/markdownTooltip';
 import styles from './filterDescriptionTooltipIcon.scss';
 
 const cx = classNames.bind(styles);
 
 export const FilterDescriptionTooltipIcon = withTooltip({
-  TooltipComponent: TextTooltip,
+  TooltipComponent: MarkdownTooltip,
   data: {
     align: ALIGN_LEFT,
     leftOffset: -50,

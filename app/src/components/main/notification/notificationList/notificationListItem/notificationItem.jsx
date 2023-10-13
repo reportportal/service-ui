@@ -52,13 +52,17 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
   },
-  updateDefectSubTypeSuccess: {
-    id: 'Project.updateDefectSubTypeSuccess',
-    defaultMessage: 'Completed successfully!',
+  addDefectTypeSuccess: {
+    id: 'Project.addDefectTypeSuccess',
+    defaultMessage: 'Defect Type has been successfully created',
   },
-  deleteDefectSubTypeSuccess: {
-    id: 'Project.deleteDefectSubTypeSuccess',
-    defaultMessage: 'Defect type was successfully deleted',
+  updateDefectTypeSuccess: {
+    id: 'Project.updateDefectTypeSuccess',
+    defaultMessage: 'Defect Type has been successfully updated',
+  },
+  deleteDefectTypeSuccess: {
+    id: 'Project.deleteDefectTypeSuccess',
+    defaultMessage: 'Defect Type has been deleted successfully',
   },
   updateProjectNotificationsConfigurationSuccess: {
     id: 'NotificationsTab.updateProjectNotificationsConfigurationSuccess',
@@ -178,7 +182,7 @@ export class NotificationItem extends PureComponent {
     }
     return (
       <div key={message} onClick={this.messageClick}>
-        <div className={cx('message-container', type)}>
+        <div className={cx('message-container', type)} data-automation-id="listItem">
           <p>
             {Parser(
               DOMPurify.sanitize(messageId ? formatMessage(messages[messageId], values) : message),

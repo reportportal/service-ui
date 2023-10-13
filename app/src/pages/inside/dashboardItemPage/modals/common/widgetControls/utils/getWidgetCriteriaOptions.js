@@ -57,6 +57,8 @@ import {
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
 } from 'common/constants/actionTypes';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
+import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
 import {
   LAUNCH_STATUSES_OPTIONS,
   DEFECT_TYPES_OPTIONS,
@@ -87,69 +89,6 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.CriteriaSkipped',
     defaultMessage: 'Skipped',
   },
-
-  [PRODUCT_BUG]: {
-    id: 'WidgetCriteriaOption.PRODUCT_BUG',
-    defaultMessage: 'Product bug',
-  },
-  [AUTOMATION_BUG]: {
-    id: 'WidgetCriteriaOption.AUTOMATION_BUG',
-    defaultMessage: 'Automation bug',
-  },
-  [SYSTEM_ISSUE]: {
-    id: 'WidgetCriteriaOption.SYSTEM_ISSUE',
-    defaultMessage: 'System issue',
-  },
-  [TO_INVESTIGATE]: {
-    id: 'WidgetCriteriaOption.TO_INVESTIGATE',
-    defaultMessage: 'To investigate',
-  },
-  [NO_DEFECT]: {
-    id: 'WidgetCriteriaOption.NO_DEFECT',
-    defaultMessage: 'No defect',
-  },
-
-  PRODUCT_BUG_TOTAL: {
-    id: 'WidgetCriteriaOption.PRODUCT_BUG_TOTAL',
-    defaultMessage: 'Total product bugs',
-  },
-  AUTOMATION_BUG_TOTAL: {
-    id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Total automation bugs',
-  },
-  SYSTEM_ISSUE_TOTAL: {
-    id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
-    defaultMessage: 'Total system issues',
-  },
-  TO_INVESTIGATE_TOTAL: {
-    id: 'WidgetCriteriaOption.TO_INVESTIGATE_TOTAL',
-    defaultMessage: 'Total to investigate',
-  },
-  NO_DEFECT_TOTAL: {
-    id: 'WidgetCriteriaOption.NO_DEFECT_TOTAL',
-    defaultMessage: 'Total no defects',
-  },
-  Defect_Type_AB001: {
-    id: 'WidgetCriteriaOption.Defect_Type_AB001',
-    defaultMessage: 'Automation bug',
-  },
-  Defect_Type_PB001: {
-    id: 'WidgetCriteriaOption.Defect_Type_PB001',
-    defaultMessage: 'Product bug',
-  },
-  Defect_Type_SI001: {
-    id: 'WidgetCriteriaOption.Defect_Type_SI001',
-    defaultMessage: 'System issue',
-  },
-  Defect_Type_TI001: {
-    id: 'WidgetCriteriaOption.Defect_Type_TI001',
-    defaultMessage: 'To investigate',
-  },
-  Defect_Type_ND001: {
-    id: 'WidgetCriteriaOption.Defect_Type_ND001',
-    defaultMessage: 'No defect',
-  },
-
   [START_LAUNCH]: {
     id: 'WidgetCriteriaOption.start_launch',
     defaultMessage: 'Start launch',
@@ -175,6 +114,15 @@ const messages = defineMessages({
     defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'WidgetCriteriaOption.change_role', defaultMessage: 'Change role' },
+
+  [ASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.assign_user',
+    defaultMessage: 'Assign, invite user',
+  },
+  [UNASSIGN_USER]: {
+    id: 'WidgetCriteriaOption.unassign_user',
+    defaultMessage: 'Unassign user',
+  },
 
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',
@@ -275,57 +223,15 @@ const getPassedFailedLaunchesOptions = (formatMessage) => [
 ];
 
 const getDefectStatisticsOptions = (formatMessage) => [
-  { value: STATS_PB_TOTAL, label: formatMessage(messages[PRODUCT_BUG]) },
-  { value: STATS_AB_TOTAL, label: formatMessage(messages[AUTOMATION_BUG]) },
-  { value: STATS_SI_TOTAL, label: formatMessage(messages[SYSTEM_ISSUE]) },
-  { value: STATS_ND_TOTAL, label: formatMessage(messages[NO_DEFECT]) },
+  { value: STATS_PB_TOTAL, label: formatMessage(defectTypesLocalization[PRODUCT_BUG]) },
+  { value: STATS_AB_TOTAL, label: formatMessage(defectTypesLocalization[AUTOMATION_BUG]) },
+  { value: STATS_SI_TOTAL, label: formatMessage(defectTypesLocalization[SYSTEM_ISSUE]) },
+  { value: STATS_ND_TOTAL, label: formatMessage(defectTypesLocalization[NO_DEFECT]) },
 ];
 
 const getToInvestigateStatisticsOption = (formatMessage) => [
-  { value: STATS_TI_TOTAL, label: formatMessage(messages[TO_INVESTIGATE]) },
+  { value: STATS_TI_TOTAL, label: formatMessage(defectTypesLocalization[TO_INVESTIGATE]) },
 ];
-
-export const getGroupedDefectTypesOptions = (
-  defectTypes,
-  formatMessage,
-  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
-) => {
-  let defectTypesOptions = [];
-  defectTypesSequence.forEach((defectTypeId) => {
-    const defectTypeGroup = defectTypes[defectTypeId];
-    const hasSubTypes = defectTypeGroup.length > 1;
-    if (hasSubTypes) {
-      defectTypesOptions.push({
-        label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
-        value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
-        groupId: defectTypeGroup[0].typeRef,
-      });
-      defectTypesOptions = defectTypesOptions.concat(
-        defectTypeGroup.map((defectType) => ({
-          groupRef: defectType.typeRef,
-          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
-            defectType.locator
-          }`,
-          label: messages[defectType.locator]
-            ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
-            : defectType.longName,
-        })),
-      );
-    } else {
-      defectTypesOptions = defectTypesOptions.concat(
-        defectTypeGroup.map((defectType) => ({
-          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
-            defectType.locator
-          }`,
-          label: messages[defectType.locator]
-            ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
-            : defectType.longName,
-        })),
-      );
-    }
-  });
-  return defectTypesOptions;
-};
 
 const getDefectTypesOptions = (defectTypes, formatMessage) => {
   let defectTypesOptions = [];
@@ -380,11 +286,11 @@ const getLaunchGridColumnsOptions = (formatMessage) => [
 ];
 
 const getDefectTypesGroupsOptions = (formatMessage) => [
-  { value: PRODUCT_BUG, label: formatMessage(messages[PRODUCT_BUG]) },
-  { value: AUTOMATION_BUG, label: formatMessage(messages[AUTOMATION_BUG]) },
-  { value: SYSTEM_ISSUE, label: formatMessage(messages[SYSTEM_ISSUE]) },
-  { value: TO_INVESTIGATE, label: formatMessage(messages[TO_INVESTIGATE]) },
-  { value: NO_DEFECT, label: formatMessage(messages[NO_DEFECT]) },
+  { value: PRODUCT_BUG, label: formatMessage(defectTypesLocalization[PRODUCT_BUG]) },
+  { value: AUTOMATION_BUG, label: formatMessage(defectTypesLocalization[AUTOMATION_BUG]) },
+  { value: SYSTEM_ISSUE, label: formatMessage(defectTypesLocalization[SYSTEM_ISSUE]) },
+  { value: TO_INVESTIGATE, label: formatMessage(defectTypesLocalization[TO_INVESTIGATE]) },
+  { value: NO_DEFECT, label: formatMessage(defectTypesLocalization[NO_DEFECT]) },
 ];
 
 export const getWidgetCriteriaOptions = (optionGroups, formatMessage, meta) => {

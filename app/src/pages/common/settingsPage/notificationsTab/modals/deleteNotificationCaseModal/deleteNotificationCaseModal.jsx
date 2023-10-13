@@ -52,7 +52,7 @@ export class DeleteNotificationCaseModal extends Component {
   render() {
     const {
       intl,
-      data: { id, onConfirm, eventsInfo },
+      data: { name, onConfirm, eventsInfo },
     } = this.props;
     return (
       <ModalLayout
@@ -75,7 +75,7 @@ export class DeleteNotificationCaseModal extends Component {
           {Parser(
             intl.formatMessage(messages.message, {
               b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-              name: id + 1,
+              name,
             }),
           )}
         </div>

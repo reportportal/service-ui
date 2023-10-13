@@ -1,0 +1,233 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin input-container($borderColor, $backgroundColor) {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  width: 100%;
+  padding: 7px 12px;
+  box-sizing: border-box;
+  border: 1px solid $borderColor;
+  border-radius: 3px;
+  background-color: $backgroundColor;
+}
+
+@mixin input-base {
+  width: 100%;
+  margin: 2px 0 0 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@mixin input-text($color) {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: $color;
+}
+
+@mixin hover-state($borderColor) {
+  &:hover:not(.disabled) {
+    border-color: $borderColor;
+  }
+}
+
+@mixin focus-state($borderColor) {
+  &:focus-within:not(.error.touched) {
+    padding: 6px 11px;
+    border: 2px solid $borderColor;
+  }
+}
+
+@mixin error-state($borderColor) {
+  border-color: $borderColor;
+}
+
+@mixin disabled-state {
+  opacity: 0.3;
+}
+
+@mixin additional-text($color) {
+  display: block;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $color;
+}
+
+@mixin fill-svg($color) {
+  svg {
+    fill: $color;
+
+    & > path {
+      fill: $color;
+    }
+  }
+}
+
+@mixin default-width {
+  width: 240px;
+}
+
+@mixin label($color) {
+  display: block;
+  margin-bottom: 4px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  color: $color;
+}
+
+@mixin icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+@mixin clearIcon($hoverColor, $focusColor) {
+  cursor: pointer;
+
+  &.disabled {
+    pointer-events: none;
+  }
+
+  &:hover {
+    @include fill-svg($hoverColor);
+  }
+
+  &:active {
+    @include fill-svg($focusColor);
+  }
+}
+
+@mixin asterisk() {
+  position: absolute;
+  top: -3px;
+  color: $COLOR--e-300;
+}
+
+.additional-content {
+  margin-top: 4px;
+
+  &.disabled {
+    pointer-events: none;
+  }
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.icon-container-start {
+  @extend .icon-container;
+  margin-right: 4px;
+}
+
+.icon-container-end {
+  @extend .icon-container;
+  margin-left: 4px;
+}
+
+.light {
+  &.label {
+    @include label($COLOR--almost-black);
+
+    .asterisk {
+      @include asterisk();
+      padding-left: 4px;
+    }
+
+    &.disabled {
+      @include disabled-state;
+    }
+  }
+
+  &.input-container {
+    @include input-container($COLOR--e-200, $COLOR--bg-000);
+    @include hover-state($COLOR--e-300);
+    @include focus-state($COLOR--topaz-focused);
+
+    &.error.touched {
+      @include error-state($COLOR--red-failed-2);
+    }
+
+    &.disabled {
+      @include disabled-state;
+    }
+
+    &.default-width {
+      @include default-width;
+    }
+  }
+
+  &.custom-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  input {
+    border: none;
+  }
+
+  &.input {
+    @include input-base;
+    @include input-text($COLOR--almost-black);
+  }
+
+  &.placeholder {
+    @include input-text($COLOR--e-200);
+    position: absolute;
+    top: 2px;
+    left: 0;
+    pointer-events: none;
+
+    .asterisk:after {
+      @include asterisk();
+      right: -7px;
+      content: '*';
+      color: $COLOR--red-focused;
+    }
+  }
+
+  &.error-text {
+    @include additional-text($COLOR--red-failed-2);
+  }
+
+  &.help-text {
+    @include additional-text($COLOR--e-300);
+  }
+
+  &.icon {
+    @include icon;
+  }
+
+  &.clear-icon {
+    @extend .icon;
+    @include clearIcon($COLOR--e-400, $COLOR--topaz-pressed);
+  }
+}

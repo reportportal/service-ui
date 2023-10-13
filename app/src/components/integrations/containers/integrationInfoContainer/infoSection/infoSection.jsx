@@ -48,6 +48,7 @@ export class InfoSection extends Component {
     onToggleActive: PropTypes.func,
     showToggleConfirmationModal: PropTypes.func,
     isGlobal: PropTypes.bool,
+    pluginDetails: PropTypes.object,
   };
 
   static defaultProps = {
@@ -56,6 +57,7 @@ export class InfoSection extends Component {
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
     isGlobal: false,
+    pluginDetails: {},
   };
 
   state = {
@@ -106,10 +108,11 @@ export class InfoSection extends Component {
       data: { name },
       title,
       showToggleConfirmationModal,
+      pluginDetails: { pluginLocation },
     } = this.props;
     const { isEnabled } = this.state;
 
-    showToggleConfirmationModal(isEnabled, title || name, this.toggleActiveHandler);
+    showToggleConfirmationModal(isEnabled, title || name, this.toggleActiveHandler, pluginLocation);
   };
 
   render() {
@@ -120,6 +123,7 @@ export class InfoSection extends Component {
       version,
       description,
       isGlobal,
+      pluginDetails: { disabledPluginTooltip },
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
@@ -147,7 +151,8 @@ export class InfoSection extends Component {
                 title={
                   isEnabled
                     ? ''
-                    : formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
+                    : disabledPluginTooltip ||
+                      formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
                         name: title,
                       })
                 }

@@ -14,44 +14,83 @@
  * limitations under the License.
  */
 
-.general-tab {
-  position: relative;
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    padding: 0 15px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-  }
+.field-container {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
 
 .field-input {
-  min-width: 300px;
-  width: 300px;
-  position: relative;
-  @media (max-width: $SCREEN_SM_MAX) {
-    min-width: 250px;
-    width: 250px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
+  margin-top: 4px;
+  padding: 0;
+  order: 1;
 }
 
-.button-container {
-  min-width: 300px;
-  width: 300px;
-  display: flex;
-  justify-content: flex-end;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
+.label {
+  padding: 0;
+  margin-bottom: 4px;
+  text-align: start;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-MEDIUM;
 }
-.submit-button {
-  button {
-    font-size: 13px;
-  }
+
+.hint {
+  padding: 0;
+  color: $COLOR--e-300;
+  font-size: 11px;
+  line-height: 16px;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.fake-input-label {
+  margin-bottom: 4px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--almost-black;
+}
+
+.fake-input {
+  box-sizing: border-box;
+  width: 240px;
+  padding: 7px 12px;
+  margin-bottom: 24px;
+  background: transparent;
+  color: $COLOR--almost-black;
+  border: 1px solid $COLOR--e-100;
+  border-radius: 3px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown {
+  width: 240px;
+}
+
+.submit-block {
+  display: flex;
+}
+
+.preloader-block {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+}
+
+.preloader {
+  width: 48px;
+  padding-bottom: 6px;
+}
+
+.preloader-text {
+  margin-left: 16px;
+  color: $COLOR--e-300;
+  font-size: 11px;
+  line-height: 16px;
+  font-family: $FONT-ROBOTO-REGULAR;
 }

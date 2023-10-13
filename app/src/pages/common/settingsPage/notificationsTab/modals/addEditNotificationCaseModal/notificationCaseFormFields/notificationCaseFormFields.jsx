@@ -31,6 +31,7 @@ import { FormField } from 'components/fields/formField';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
+import { Input } from 'components/inputs/input';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import {
   LAUNCH_CASES,
@@ -40,6 +41,7 @@ import {
   LAUNCH_NAMES_FIELD_KEY,
   RECIPIENTS_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  RULE_NAME_FIELD_KEY,
   ATTRIBUTES_OPERATOR_FIELD_KEY,
   NOTIFICATION_CASE_FORM,
   ATTRIBUTES_OPERATORS,
@@ -71,6 +73,7 @@ export class NotificationCaseFormFields extends Component {
     activeProject: '',
     attributesValue: [],
     resetSection: () => {},
+    change: () => {},
   };
 
   getDropdownInputConfig = () => {
@@ -142,6 +145,16 @@ export class NotificationCaseFormFields extends Component {
 
     return (
       <Fragment>
+        <FormField
+          label={formatMessage(messages.nameLabel)}
+          name={RULE_NAME_FIELD_KEY}
+          fieldWrapperClassName={cx('form-input')}
+          labelClassName={cx('form-label')}
+        >
+          <FieldErrorHint hintType="top">
+            <Input maxLength={55} />
+          </FieldErrorHint>
+        </FormField>
         <FormField
           label={formatMessage(messages.recipientsLabel)}
           name={RECIPIENTS_FIELD_KEY}

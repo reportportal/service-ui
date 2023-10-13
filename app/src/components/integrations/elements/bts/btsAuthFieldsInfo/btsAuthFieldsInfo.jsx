@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import styles from './btsAuthFieldsInfo.scss';
 const cx = classNames.bind(styles);
 
 export const BtsAuthFieldsInfo = ({ fieldsConfig = [] }) => (
-  <div className={cx('bts-auth-fields-info')}>
+  <>
     {fieldsConfig.map((item) => (
       <div key={item.value} className={cx('field-item')}>
         <span className={cx('field-item-title')}>{item.message}</span>
         <span className={cx('field-item-value')}>{item.value}</span>
       </div>
     ))}
-  </div>
+  </>
 );
 
 BtsAuthFieldsInfo.propTypes = {

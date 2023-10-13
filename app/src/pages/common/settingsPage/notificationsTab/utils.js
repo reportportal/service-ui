@@ -18,6 +18,8 @@ import { OWNER } from 'common/constants/permissions';
 
 export const convertNotificationCaseForSubmission = (obj) => {
   const {
+    id,
+    ruleName,
     informOwner,
     recipients,
     sendCase,
@@ -27,6 +29,8 @@ export const convertNotificationCaseForSubmission = (obj) => {
     attributesOperator,
   } = obj;
   return {
+    id,
+    ruleName,
     recipients: informOwner ? [...recipients, OWNER] : recipients,
     sendCase,
     launchNames,

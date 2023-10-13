@@ -26,16 +26,17 @@ const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
     defaultMessage:
-      'Login should have size from 1 to 128 symbols, latin, numeric characters, hyphen, underscore, dot.',
+      'User name may contain only Latin, numeric characters, hyphen, underscore, dot (from 1 to 128 symbols)',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
+      'Full name may contain only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot. Space is permitted (from 3 to 256 symbols)',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: 'Password should have size from 4 to 256 symbols.',
+    defaultMessage:
+      'Password should contain at least 4 characters; a special symbol; upper-case (A - Z); lower-case',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -43,7 +44,7 @@ const messages = defineMessages({
   },
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
-    defaultMessage: 'Passwords do not match.',
+    defaultMessage: 'Passwords do not match',
   },
   loginDuplicateHint: {
     id: 'RegistrationForm.loginDuplicateHint',
@@ -128,7 +129,11 @@ const messages = defineMessages({
   },
   recipientsHint: {
     id: 'AddEditNotificationCaseModal.recipientsHint',
-    defaultMessage: 'Select at least one recipient',
+    defaultMessage: 'Please enter existent user name on your project or valid email',
+  },
+  ruleNameHint: {
+    id: 'AddEditNotificationModal.ruleNameHint',
+    defaultMessage: "Field is required. Rule name should have size from '1' to '55' characters",
   },
   launchesHint: {
     id: 'AddEditNotificationCaseModal.launchesHint',
@@ -146,6 +151,10 @@ const messages = defineMessages({
     id: 'Common.requiredFieldHint',
     defaultMessage: 'This field is required',
   },
+  shortRequiredFieldHint: {
+    id: 'Common.shortRequiredFieldHint',
+    defaultMessage: 'Field is required',
+  },
   attributeKeyLengthHint: {
     id: 'AttributeEditor.attributeKeyLengthHint',
     defaultMessage: 'Key should have size from 1 to 512 symbols',
@@ -160,16 +169,16 @@ const messages = defineMessages({
   },
   defectLongNameHint: {
     id: 'DefectTypesTab.defectLongNameHint',
-    defaultMessage: "Full name should have size from '3' to '55'",
+    defaultMessage: "Defect Type name should have size from '3' to '55' characters",
   },
   defectShortNameHint: {
     id: 'DefectTypesTab.defectShortNameHint',
-    defaultMessage: "Short name should have size from '1' to '4'",
+    defaultMessage: "Defect Type abbreviation should have size from '1' to '4' characters",
   },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
     defaultMessage:
-      "Project name should have size from '3' to '256', latin, numeric characters, hyphen, underscore.",
+      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)',
   },
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
@@ -202,6 +211,10 @@ const messages = defineMessages({
   patternNameDuplicateHint: {
     id: 'PatternAnalysis.patternNameDuplicateHint',
     defaultMessage: 'Pattern with the same name already exists in the project',
+  },
+  ruleNameDuplicateHint: {
+    id: 'Notifications.ruleNameDuplicateHint',
+    defaultMessage: 'Rule with the same name already exist on the project',
   },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',
@@ -248,6 +261,9 @@ export class FieldErrorHint extends Component {
     staticHint: PropTypes.bool,
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
+    provideHint: PropTypes.bool,
+    touched: PropTypes.bool,
+    dataAutomationId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -259,6 +275,9 @@ export class FieldErrorHint extends Component {
     staticHint: false,
     widthContent: false,
     darkView: false,
+    provideHint: true,
+    touched: false,
+    dataAutomationId: '',
   };
 
   isHintVisible = () => {
@@ -280,34 +299,38 @@ export class FieldErrorHint extends Component {
       staticHint,
       widthContent,
       darkView,
+      provideHint,
+      dataAutomationId,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
-      <div className={classes}>
+      <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
             error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
             active,
             ...rest,
           })}
-        <div
-          className={cx('hint', `type-${hintType}`, {
-            'static-hint': staticHint,
-            visible: this.isHintVisible(),
-          })}
-        >
+        {provideHint && (
           <div
-            className={cx('hint-content', `type-${hintType}`, {
+            className={cx('hint', `type-${hintType}`, {
               'static-hint': staticHint,
-              'width-content': widthContent,
-              'dark-view': darkView,
+              visible: this.isHintVisible(),
             })}
           >
-            {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+            <div
+              className={cx('hint-content', `type-${hintType}`, {
+                'static-hint': staticHint,
+                'width-content': widthContent,
+                'dark-view': darkView,
+              })}
+            >
+              {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

@@ -111,11 +111,13 @@ export class ForgotPasswordForm extends PureComponent {
       <form className={cx('forgot-password-form')} onSubmit={handleSubmit(this.submitForm)}>
         <div className={cx('email-field')}>
           <FieldProvider name="email">
-            <FieldErrorHint>
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 icon={EmailIcon}
                 autoComplete="off"
                 placeholder={formatMessage(placeholders.email)}
+                hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>

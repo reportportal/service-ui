@@ -29,6 +29,7 @@ import {
   INTEGRATION,
   PATTERN_RULE,
   INDEX,
+  INVITATION_LINK,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -43,8 +44,6 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  START_IMPORT,
-  FINISH_IMPORT,
   UPDATE_PROJECT,
   CREATE_DEFECT,
   UPDATE_DEFECT,
@@ -70,6 +69,10 @@ import {
   CHANGE_ROLE,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  CREATE_INVITATION_LINK,
+  IMPORT as EVENT_ACTIONS_IMPORT,
+  FINISH_IMPORT,
+  START_IMPORT,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -121,6 +124,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deleteLaunch',
     defaultMessage: 'Delete launch',
   },
+  [EVENT_ACTIONS_IMPORT]: {
+    id: 'EventActions.import',
+    defaultMessage: 'Import',
+  },
   [START_IMPORT]: {
     id: 'EventActions.startImport',
     defaultMessage: 'Start import',
@@ -131,11 +138,11 @@ export const actionMessages = defineMessages({
   },
   [ASSIGN_USER]: {
     id: 'EventActions.assignUser',
-    defaultMessage: 'Assign',
+    defaultMessage: 'Assign user',
   },
   [UNASSIGN_USER]: {
     id: 'EventActions.unassignUser',
-    defaultMessage: 'Unassign',
+    defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'EventActions.changeRole', defaultMessage: 'Change role' },
   [UPDATE_PROJECT]: {
@@ -198,6 +205,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.analyzeItem',
     defaultMessage: 'AA changed defect type',
   },
+  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
+    id: 'EventActions.updateAutoPatternAnalysisSettings',
+    defaultMessage: 'Update Pattern-Analysis settings',
+  },
   [LINK_ISSUE_AA]: {
     id: 'EventActions.linkIssueAA',
     defaultMessage: 'AA linked issue',
@@ -214,17 +225,17 @@ export const actionMessages = defineMessages({
     id: 'EventActions.deletePattern',
     defaultMessage: 'Delete pattern rule',
   },
-  [UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]: {
-    id: 'EventActions.updateAutoPatternAnalysis',
-    defaultMessage: 'Update pattern analysis',
-  },
   [MATCHED_PATTERN]: {
     id: 'EventActions.matchedPattern',
     defaultMessage: 'PA find pattern',
   },
   [CREATE_PROJECT]: {
     id: 'EventActions.createProject',
-    defaultMessage: 'Create Project',
+    defaultMessage: 'Create project',
+  },
+  [CREATE_INVITATION_LINK]: {
+    id: 'EventActions.createInvitationLink',
+    defaultMessage: 'Create invitation link',
   },
 });
 
@@ -280,5 +291,9 @@ export const objectTypesMessages = defineMessages({
   [PATTERN_RULE]: {
     id: 'EventObjectTypes.patternRule',
     defaultMessage: 'Pattern rule',
+  },
+  [INVITATION_LINK]: {
+    id: 'EventObjectTypes.invitationLink',
+    defaultMessage: 'Invitation link',
   },
 });

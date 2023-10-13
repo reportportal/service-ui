@@ -27,7 +27,12 @@ import {
 
 export const domainSelector = (state) => state.plugins || {};
 
-export const pluginsSelector = (state) => domainSelector(state).plugins;
+export const pluginsSelector = (state) => {
+  return domainSelector(state).plugins;
+};
+export const publicPluginsSelector = (state) => {
+  return domainSelector(state).publicPlugins;
+};
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
@@ -38,6 +43,9 @@ const projectIntegrationsSelector = (state) =>
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
 export const enabledPluginNamesSelector = createSelector(pluginsSelector, (plugins) =>
+  filterEnabledPlugins(plugins).map((plugin) => plugin.name),
+);
+export const enabledPublicPluginNamesSelector = createSelector(publicPluginsSelector, (plugins) =>
   filterEnabledPlugins(plugins).map((plugin) => plugin.name),
 );
 
@@ -67,6 +75,8 @@ export const createNamedIntegrationsSelector = (integrationName, integrationsSel
 
 export const createGlobalNamedIntegrationsSelector = (name) =>
   createNamedIntegrationsSelector(name, globalIntegrationsSelector);
+
+export const pluginsLoadingSelector = (state) => domainSelector(state).pluginsLoading;
 
 export const createIntegrationsMapSelector = (integrationsSelector) => {
   return createSelector(integrationsSelector, (integrations) => {

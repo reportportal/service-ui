@@ -54,11 +54,9 @@ export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
-export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
-  !patterns.some(
-    ({ id, name: patternName }) =>
-      patternName.toLowerCase() === newPatternName.toLowerCase() && id !== patternId,
-  );
+export const ruleNameLength = composeValidators([isNotEmpty, maxLength(55)]);
+export const createNameUniqueValidator = (itemId, items) => (newName) =>
+  !items.some(({ id, name }) => name.toLowerCase() === newName.toLowerCase() && id !== itemId);
 export const analyzerMinShouldMatch = composeValidators([
   isNotEmpty,
   regex(/^([5-9][0-9])$|^100$/i),
@@ -110,8 +108,20 @@ export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
-export const createNotificationRecipientsValidator = (informOwner) => (value) =>
-  isNotEmptyArray(value) || informOwner;
+export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
+  if (!informOwner && !value.length) {
+    return false;
+  }
+  if (informOwner && !value.length) {
+    return true;
+  }
+  const checkIsStringWithEmailParts = regex(/[.@]/);
+  if (value.some(checkIsStringWithEmailParts)) {
+    return value.filter(checkIsStringWithEmailParts).every(email);
+  }
+
+  return true;
+};
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);

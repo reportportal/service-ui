@@ -1,0 +1,139 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$DEFECT_NAME_PADDING: 16px;
+
+@mixin fill-svg($color) {
+  svg {
+    & > path {
+      fill: $color;
+    }
+  }
+}
+
+.defect-types-list {
+  display: flex;
+  flex-direction: column;
+  margin: 24px auto 0;
+  font-size: 12px;
+  padding-left: 24px;
+}
+
+.defect-type-group {
+  margin-bottom: 30px;
+}
+
+.group-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-type {
+  display: flex;
+  align-items: center;
+}
+
+.group-diagram {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  margin-left: -24px;
+
+  &.type-product_bug {
+    path {
+      stroke: $COLOR--product-bug-group;
+    }
+  }
+
+  &.type-system_issue {
+    path {
+      stroke: $COLOR--system-issue-group;
+    }
+  }
+
+  &.type-automation_bug {
+    path {
+      stroke: $COLOR--automation-bug-group;
+    }
+  }
+
+  &.type-to_investigate {
+    path {
+      stroke: $COLOR--topaz-2;
+    }
+  }
+
+  &.type-no_defect {
+    path {
+      stroke: $COLOR--no-defect-bug-group;
+    }
+  }
+}
+
+.group-name {
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--almost-black;
+  background-color: $COLOR--white-four;
+  padding: 7px 20px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.group-create {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.3;
+    cursor: initial;
+  }
+
+  &:hover:not(.disabled) {
+    @include fill-svg($COLOR--e-400);
+  }
+}
+
+.group-field-list {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 124px 8px 44px;
+  font-size: 11px;
+  color: $COLOR--e-300;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.group-content {
+  padding-bottom: 10px;
+}
+
+.button {
+  margin-left: auto;
+}
+
+.system-message {
+  padding-top: 24px;
+}
+
+.system-message-description {
+  font-family: $FONT-ROBOTO-BOLD;
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  line-height: 16px;
+}

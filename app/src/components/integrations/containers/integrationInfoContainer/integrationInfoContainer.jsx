@@ -91,6 +91,7 @@ export class IntegrationInfoContainer extends Component {
           onToggleActive={onToggleActive}
           showToggleConfirmationModal={showToggleConfirmationModal}
           isGlobal={isGlobal}
+          pluginDetails={details}
         />
         <InstancesSection
           pluginDetails={details}

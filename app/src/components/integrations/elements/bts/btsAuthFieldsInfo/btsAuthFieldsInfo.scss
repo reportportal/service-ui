@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-.bts-auth-fields-info {
-  display: flex;
-  flex-direction: column;
-  padding-left: 25px;
-}
-
 .field-item {
   display: flex;
   flex-direction: column;
-  &:not(:last-child) {
-    margin-bottom: 25px;
-  }
+  margin-top: 24px;
 }
 
 .field-item-title {
-  margin-bottom: 10px;
-  color: $COLOR--gray-60;
-  font-size: 12px;
-  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  color: $COLOR--e-300;
+  font-family: $FONT-ROBOTO-REGULAR;
+  margin-bottom: 4px;
 }
 
 .field-item-value {
-  color: $COLOR--black-2;
   font-size: 13px;
-  font-family: $FONT-SEMIBOLD;
-  word-break: break-all;
+  line-height: 20px;
+  text-indent: 1px;
+  color: $COLOR--almost-black;
+  font-family: $FONT-ROBOTO-REGULAR;
 }

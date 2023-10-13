@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { RegistrationPageSection } from './registrationPageSection';
+import { RegistrationPageSection } from './registrationPageSection';
+
+export { RegistrationPageSection };
+
+export default RegistrationPageSection;

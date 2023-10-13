@@ -27,13 +27,12 @@ export {
   hideFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
-  updateProjectNotificationsConfigAction,
-  updateDefectSubTypeAction,
-  updateDefectSubTypeSuccessAction,
-  addDefectSubTypeAction,
-  addDefectSubTypeSuccessAction,
-  deleteDefectSubTypeAction,
-  deleteDefectSubTypeSuccessAction,
+  updateDefectTypeAction,
+  updateDefectTypeSuccessAction,
+  addDefectTypeAction,
+  addDefectTypeSuccessAction,
+  deleteDefectTypeAction,
+  deleteDefectTypeSuccessAction,
   addPatternAction,
   updatePatternAction,
   updatePatternSuccessAction,
@@ -41,6 +40,9 @@ export {
   deletePatternSuccessAction,
   updatePAStateAction,
   fetchProjectPreferencesAction,
+  addProjectNotificationAction,
+  updateProjectNotificationAction,
+  deleteProjectNotificationAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -53,7 +55,9 @@ export {
   orderedContentFieldsSelector,
   orderedDefectFieldsSelector,
   projectNotificationsConfigurationSelector,
+  projectNotificationSelector,
   projectNotificationsCasesSelector,
+  projectNotificationsSelector,
   projectNotificationsEnabledSelector,
   externalSystemSelector,
   analyzerAttributesSelector,
@@ -65,6 +69,7 @@ export {
   projectInfoSelector,
   projectInfoLoadingSelector,
   projectAttributesSelector,
+  projectNotificationsStateSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

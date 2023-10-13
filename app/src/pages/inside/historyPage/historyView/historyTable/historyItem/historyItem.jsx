@@ -130,7 +130,7 @@ export class HistoryItem extends Component {
           </div>
         )}
         {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
-        {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
+        {issue.comment && <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
           <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
         )}

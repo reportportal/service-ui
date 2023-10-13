@@ -1,0 +1,103 @@
+/*
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import { useRef } from 'react';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
+import styles from './toggle.scss';
+
+const cx = classNames.bind(styles);
+
+export const Toggle = ({
+  children,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  className,
+  disabled,
+  title,
+  dataAutomationId,
+}) => {
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (event) => {
+    const { keyCode } = event;
+
+    if (keyCode === SPACE_KEY_CODE) {
+      event.preventDefault();
+      return;
+    }
+
+    if (keyCode === ENTER_KEY_CODE) {
+      event.preventDefault();
+      inputRef.current.click();
+    }
+  };
+
+  return (
+    // eslint-disable-next-line
+    <label
+      id="toggle-label"
+      title={title}
+      onFocus={disabled ? null : onFocus}
+      onBlur={disabled ? null : onBlur}
+      className={cx('toggle', className, { disabled })}
+      data-automation-id={dataAutomationId}
+    >
+      <input
+        ref={inputRef}
+        tabIndex={disabled ? -1 : 0}
+        onChange={disabled ? null : onChange}
+        checked={value}
+        disabled={disabled}
+        onKeyDown={disabled ? null : handleKeyDown}
+        className={cx('input')}
+        type="checkbox"
+      />
+      <div
+        aria-labelledby="chk1-label"
+        role="checkbox"
+        aria-checked={value}
+        className={cx('slider', 'round')}
+      />
+      {children && <span className={cx('children-container')}>{children}</span>}
+    </label>
+  );
+};
+Toggle.propTypes = {
+  children: PropTypes.node,
+  value: PropTypes.bool,
+  onChange: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  title: PropTypes.string,
+  dataAutomationId: PropTypes.string,
+};
+Toggle.defaultProps = {
+  children: null,
+  value: false,
+  onChange: () => {},
+  onFocus: () => {},
+  onBlur: () => {},
+  className: '',
+  disabled: false,
+  title: '',
+  dataAutomationId: '',
+};

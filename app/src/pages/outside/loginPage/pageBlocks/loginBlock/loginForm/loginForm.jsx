@@ -22,20 +22,17 @@ import { connect } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { authExtensionsSelector, isDemoInstanceSelector } from 'controllers/appInfo';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import WarningIcon from 'common/img/error-inline.svg';
 import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import PasswordIcon from 'common/img/password-field-icon-inline.svg';
-import { ExternalLoginBlock } from './externalLoginBlock';
 import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
@@ -52,10 +49,14 @@ const messages = defineMessages({
     id: 'LoginForm.passwordPlaceholder',
     defaultMessage: 'Password',
   },
-  loginAttemptsExceeded: {
-    id: 'LoginForm.loginAttemptsExceeded',
+  loginAttemptsExceededMessage: {
+    id: 'LoginForm.loginAttemptsExceededMessage',
     defaultMessage:
-      'You entered incorrectly login or password many times. Login form is blocked for <b>{time}</b> sec.',
+      'You entered incorrectly login or password many times. <br />Login form is blocked for',
+  },
+  loginAttemptsExceededTime: {
+    id: 'LoginForm.loginAttemptsExceededTime',
+    defaultMessage: '{time} sec.',
   },
   errorMessage: {
     id: 'LoginForm.errorMessage',
@@ -69,7 +70,6 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    externalAuth: authExtensionsSelector(state),
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
     badCredentials: badCredentialsSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
@@ -91,7 +91,6 @@ export class LoginForm extends React.Component {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     authorize: PropTypes.func.isRequired,
-    externalAuth: PropTypes.object,
     lastFailedLoginTime: PropTypes.number,
     badCredentials: PropTypes.bool.isRequired,
     form: PropTypes.string.isRequired,
@@ -101,7 +100,6 @@ export class LoginForm extends React.Component {
   };
 
   static defaultProps = {
-    externalAuth: {},
     lastFailedLoginTime: null,
     isDemoInstance: false,
   };
@@ -194,76 +192,71 @@ export class LoginForm extends React.Component {
     const {
       intl: { formatMessage },
       handleSubmit,
-      externalAuth,
       authorize,
     } = this.props;
     const { blockTime, isLoginLimitExceeded } = this.state;
 
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
-        {!isEmptyObject(externalAuth) ? (
-          <div>
-            <ExternalLoginBlock externalAuth={externalAuth} />
-            <div className={cx('separator')}>
-              <div className={cx('line')} />
-              <div className={cx('or')}>
-                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-              </div>
+        {!isLoginLimitExceeded ? (
+          <>
+            <div className={cx('login-field')}>
+              <FieldProvider name="login">
+                <FieldErrorHint provideHint={false}>
+                  <InputOutside
+                    icon={LoginIcon}
+                    placeholder={formatMessage(messages.login)}
+                    maxLength="128"
+                    hasDynamicValidation
+                    provideErrorHint
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
             </div>
-          </div>
-        ) : null}
-        <div className={cx('login-field')}>
-          <FieldProvider name="login">
-            <FieldErrorHint>
-              <InputOutside
-                disabled={isLoginLimitExceeded}
-                icon={LoginIcon}
-                placeholder={formatMessage(messages.login)}
-                maxLength="128"
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
-        <div className={cx('password-field')}>
-          <FieldProvider name="password">
-            <FieldErrorHint>
-              <InputOutside
-                disabled={isLoginLimitExceeded}
-                icon={PasswordIcon}
-                placeholder={formatMessage(messages.password)}
-                type="password"
-                autoComplete="off"
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
-        <Link
-          to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-          className={cx('forgot-pass')}
-        >
-          <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-        </Link>
-        {isLoginLimitExceeded && (
+            <div className={cx('password-field')}>
+              <FieldProvider name="password">
+                <FieldErrorHint provideHint={false}>
+                  <InputOutside
+                    icon={PasswordIcon}
+                    placeholder={formatMessage(messages.password)}
+                    type="password"
+                    hasDynamicValidation
+                    provideErrorHint
+                    autoComplete="off"
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
+            </div>
+            <Link
+              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+              className={cx('forgot-pass')}
+            >
+              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
+            </Link>
+            <div className={cx('login-button-container')}>
+              <BigButton roundedCorners type="submit" color={'organish'}>
+                {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+              </BigButton>
+            </div>
+          </>
+        ) : (
           <div className={cx('attempts-exceeded-block')}>
-            <span className={cx('warning')}>
-              <i className={cx('warning-icon')}>{Parser(WarningIcon)}</i>
-              {formatMessage(messages.errorMessage)}
-            </span>
-            <span>
-              {Parser(formatMessage(messages.loginAttemptsExceeded, { time: blockTime }))}
-            </span>
+            <div className={cx('attempts-exceeded-block-content')}>
+              <span>{Parser(formatMessage(messages.loginAttemptsExceededMessage))}</span>
+              <span className={cx('time')}>
+                <b>
+                  {Parser(formatMessage(messages.loginAttemptsExceededTime, { time: blockTime }))}
+                </b>
+              </span>
+            </div>
+            <Link
+              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+              className={cx('forgot-pass', 'attempts-exceed')}
+            >
+              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
+            </Link>
           </div>
         )}
-        <div className={cx('login-button-container')}>
-          <BigButton
-            disabled={isLoginLimitExceeded}
-            roundedCorners
-            type="submit"
-            color={'organish'}
-          >
-            {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
-          </BigButton>
-        </div>
       </form>
     );
   }

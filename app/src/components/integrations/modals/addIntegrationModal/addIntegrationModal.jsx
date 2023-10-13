@@ -18,13 +18,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { connect } from 'react-redux';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins/uiExtensions/selectors';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
 
 const messages = defineMessages({
@@ -58,14 +59,7 @@ export class AddIntegrationModal extends Component {
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
-    fieldsExtensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        pluginName: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        component: PropTypes.func.isRequired,
-      }),
-    ),
+    fieldsExtensions: PropTypes.arrayOf(extensionType),
     data: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -125,7 +119,7 @@ export class AddIntegrationModal extends Component {
     );
     const FieldsComponent =
       INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType] ||
-      (integrationFieldsExtension && integrationFieldsExtension.component);
+      (integrationFieldsExtension && ExtensionLoader);
 
     return (
       <ModalLayout
@@ -148,6 +142,8 @@ export class AddIntegrationModal extends Component {
           updateMetaData={this.updateMetaData}
           lineAlign
           {...customProps}
+          extension={integrationFieldsExtension}
+          withPreloader
         />
       </ModalLayout>
     );

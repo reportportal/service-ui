@@ -65,6 +65,9 @@ import {
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
+  projectIdSelector,
+  querySelector,
+  payloadSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -94,8 +97,13 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import {
+  showSuccessNotification,
+  showErrorNotification,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
@@ -111,7 +119,7 @@ import {
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { AttributeListField } from 'components/main/attributeList';
+import { AttributeListContainer as AttributeListField } from 'components/containers/attributeListContainer';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -140,7 +148,7 @@ import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList, ItemContent } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
-import { getGroupedDefectTypesOptions } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetCriteriaOptions';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
 import {
   getDefaultTestItemLinkParams,
@@ -159,7 +167,32 @@ import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
-import { createGlobalNamedIntegrationsSelector } from '../selectors';
+import {
+  publicPluginsSelector,
+  createGlobalNamedIntegrationsSelector,
+} from 'controllers/plugins/selectors';
+import { loginAction } from 'controllers/auth';
+import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
+import { FieldText } from 'componentLibrary/fieldText';
+import {
+  FieldElement,
+  RuleList as RuleListComponent,
+  DraggableRuleList,
+} from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { Checkbox } from 'componentLibrary/checkbox';
+import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
+import { Button } from 'componentLibrary/button';
+import { Toggle } from 'componentLibrary/toggle';
+import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldNumber } from 'componentLibrary/fieldNumber';
+import { SystemMessage } from 'componentLibrary/systemMessage';
+import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+import { Tabs } from 'components/main/tabs';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { PlainTable } from 'componentLibrary/plainTable';
 
 const BUTTONS = {
   GhostButton,
@@ -169,6 +202,7 @@ const BUTTONS = {
   GhostMenuButton,
   MultiActionButton,
   SidebarButton,
+  Button,
 };
 
 const INPUTS = {
@@ -190,6 +224,7 @@ const INPUTS = {
   WithAsyncLoading,
 };
 
+// TODO: in the future these components and other stuff will be shared via WMF
 export const createImportProps = (pluginName) => ({
   lib: {
     React,
@@ -210,9 +245,11 @@ export const createImportProps = (pluginName) => ({
     ...BUTTONS,
     ...INPUTS,
     NavigationTabs,
+    Tabs,
     NoCasesBlock,
     ItemList,
     SpinningPreloader,
+    DottedPreloader,
     ModalLayout,
     ModalField,
     FieldProvider,
@@ -239,6 +276,25 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
+    ModalLayoutComponent,
+    FieldText,
+    FieldTextFlex,
+    FieldElement,
+    Checkbox,
+    Toggle,
+    EmptyStatePage,
+    Dropdown,
+    FieldNumber,
+    SystemMessage,
+    AsyncAutocompleteField,
+    RuleListComponent,
+    AttributeListFormField,
+    Breadcrumbs,
+    PlainTable,
+  },
+  componentLibrary: { DraggableRuleList },
+  HOCs: {
+    withTooltip,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
@@ -270,10 +326,15 @@ export const createImportProps = (pluginName) => ({
     updateConfigurationAttributesAction,
     updateLaunchLocallyAction,
     updatePagePropertiesAction,
+    showDefaultErrorNotification,
+    loginAction,
   },
   selectors: {
     pluginRouteSelector,
+    payloadSelector,
     activeProjectSelector,
+    projectIdSelector,
+    // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
@@ -287,6 +348,8 @@ export const createImportProps = (pluginName) => ({
     defectLinkSelector,
     pagePropertiesSelector,
     launchSelector,
+    publicPluginsSelector,
+    querySelector,
   },
   icons: {
     PlusIcon,

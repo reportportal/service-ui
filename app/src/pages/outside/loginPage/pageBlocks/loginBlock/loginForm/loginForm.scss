@@ -23,47 +23,8 @@
     width: 100%;
   }
 }
-.separator {
-  position: relative;
-  height: 20px;
-  margin-bottom: 30px;
-  margin-top: 20px;
-  text-align: center;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    left: -115px;
-    width: 610px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    left: 0;
-    width: 100%;
-    margin-bottom: 25px;
-    margin-top: 37px;
-  }
-}
-.line {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  border-top: 1px solid $COLOR--steel-grey;
-  opacity: 0.2;
-  width: 100%;
-}
-.or {
-  position: relative;
-  padding: 0 14px;
-  background: $COLOR--white-two;
-  display: inline-block;
-  border: none;
-  font-size: 15px;
-  text-align: center;
-  color: $COLOR--steel-grey;
-  box-sizing: border-box;
-}
 .login-field {
   width: 380px;
-  height: 40px;
   margin-bottom: 30px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -72,7 +33,6 @@
 }
 .password-field {
   width: 380px;
-  height: 40px;
   margin-bottom: 10px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -90,6 +50,13 @@
   &:hover {
     text-decoration: underline;
   }
+
+  &.attempts-exceed {
+    @media (max-width: $SCREEN_XS_MAX) {
+      position: initial;
+      margin-bottom: 0;
+    }
+  }
 }
 .login-button-container {
   width: 160px;
@@ -104,33 +71,35 @@
     margin-bottom: 30px;
   }
 }
-
 .attempts-exceeded-block {
   display: flex;
-  margin-bottom: 20px;
-  color: $COLOR--charcoal-grey;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.attempts-exceeded-block-content {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  color: $COLOR--steel-grey;
   font-size: 12px;
   font-family: $FONT-REGULAR;
   line-height: 16px;
 
+  .time {
+    padding-top: 16px;
+    line-height: 30px;
+  }
+
   b {
-    font-family: $FONT-SEMIBOLD;
+    font-size: 36px;
   }
 
-  .warning {
-    display: inline-flex;
-    margin-right: 5px;
-    color: $COLOR--failed;
-  }
-
-  .warning-icon {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    margin-right: 5px;
-    vertical-align: middle;
-    svg {
-      fill: $COLOR--failed;
-    }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 280px;
   }
 }

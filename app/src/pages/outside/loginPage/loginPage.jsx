@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -22,6 +22,8 @@ import { connect } from 'react-redux';
 import { referenceDictionary, connectRouter } from 'common/utils';
 import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import styles from './loginPage.scss';
@@ -36,19 +38,16 @@ import { PolicyBlock } from './pageBlocks/policyBlock';
 
 const cx = classNames.bind(styles);
 
-@connectRouter(
-  ({ forgotPass, reset, errorAuth, multipleAuth }) => ({
-    forgotPass,
-    reset,
-    errorAuth,
-    multipleAuth,
-  }),
-  {
-    clearErrorAuth: () => ({ errorAuth: '' }),
-  },
-)
+@connectRouter(({ forgotPass, reset, errorAuth, multipleAuth, registration }) => ({
+  forgotPass,
+  reset,
+  errorAuth,
+  multipleAuth,
+  registration,
+}))
 @connect(
   (state) => ({
+    extensions: uiExtensionLoginPageSelector(state),
     instanceType: instanceTypeSelector(state),
   }),
   {
@@ -62,40 +61,41 @@ export class LoginPage extends PureComponent {
     reset: PropTypes.string,
     errorAuth: PropTypes.string,
     multipleAuth: PropTypes.string,
+    registration: PropTypes.string,
+    extensions: PropTypes.array,
     showDefaultErrorNotification: PropTypes.func,
     instanceType: PropTypes.string.isRequired,
-    clearErrorAuth: PropTypes.func,
   };
   static defaultProps = {
     forgotPass: '',
     reset: '',
     errorAuth: '',
     multipleAuth: '',
+    registration: '',
+    extensions: [],
     showDefaultErrorNotification: () => {},
-    clearErrorAuth: () => {},
   };
 
-  showError = () => {
+  componentDidMount() {
     if (this.props.errorAuth) {
       this.props.showDefaultErrorNotification({
         message: this.props.errorAuth,
       });
-      this.props.clearErrorAuth();
     }
-  };
-
-  componentDidMount() {
-    this.showError();
   }
 
-  componentDidUpdate() {
-    this.showError();
+  componentDidUpdate(prevProps) {
+    if (this.props.errorAuth !== prevProps.errorAuth) {
+      this.props.showDefaultErrorNotification({
+        message: this.props.errorAuth,
+      });
+    }
   }
 
   getCurrentBlock = () => {
-    const { forgotPass, reset, multipleAuth } = this.props;
-    let currentBlock = <LoginBlock />;
+    const { forgotPass, reset, multipleAuth, registration, extensions } = this.props;
 
+    let currentBlock = <LoginBlock />;
     if (forgotPass) {
       currentBlock = <ForgotPasswordBlock />;
     }
@@ -105,14 +105,18 @@ export class LoginPage extends PureComponent {
     if (multipleAuth) {
       currentBlock = <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
     }
+    if (registration && extensions) {
+      currentBlock = extensions.map((extension) => (
+        <ExtensionLoader key={extension.name} extension={extension} withPreloader />
+      ));
+    }
 
     return currentBlock;
   };
 
   render() {
-    const { instanceType } = this.props;
+    const { registration, instanceType } = this.props;
     const currentBlock = this.getCurrentBlock();
-    const isPolicyBlockVisible = instanceType === EPAM || instanceType === SAAS;
 
     return (
       <div className={cx('login-page')}>
@@ -126,10 +130,8 @@ export class LoginPage extends PureComponent {
           </LoginPageSection>
           <LoginPageSection>
             {currentBlock}
-            <div className={cx('footer', { 'with-policy': isPolicyBlockVisible })}>
-              <ServiceVersionsBlock />
-              {isPolicyBlockVisible && <PolicyBlock />}
-            </div>
+            {!registration && <ServiceVersionsBlock />}
+            {(instanceType === EPAM || instanceType === SAAS) && <PolicyBlock />}
           </LoginPageSection>
         </div>
       </div>

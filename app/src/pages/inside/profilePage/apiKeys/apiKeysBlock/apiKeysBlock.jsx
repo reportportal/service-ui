@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -22,8 +23,9 @@ import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { BlockContainerBody, BlockContainerHeader } from 'pages/inside/profilePage/blockContainer';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { daysFromNow } from 'common/utils';
+import { daysFromNow, createExternalLink } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { docsReferences } from 'common/utils/referenceDictionary';
 import styles from './apiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -35,7 +37,7 @@ const messages = defineMessages({
   description: {
     id: 'ApiKeys.ApiKeysBlock.description',
     defaultMessage:
-      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to report with agent.',
+      'In order to provide security for your own domain password, you can use a user key — to verify your account to be able to log with agent. More information about API Keys you can read in <a>Documentation</a>',
   },
   headerNameCol: {
     id: 'ApiKeys.ApiKeysBlock.headerNameCol',
@@ -59,8 +61,15 @@ export const ApiKeysBlock = ({ apiKeys }) => {
   const onRevokeClick = (key) => dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
 
   return (
-    <div className={cx('api-keys-block')}>
-      <div className={cx('description')}>{formatMessage(messages.description)}</div>
+    <>
+      <div className={cx('description')}>
+        {Parser(
+          formatMessage(messages.description, {
+            a: (data) =>
+              createExternalLink(data, docsReferences.authorizationWithUsersApiKeyForAgents),
+          }),
+        )}
+      </div>
       <GhostButton onClick={onGenerateClick} title={formatMessage(messages.generateApiKey)}>
         {formatMessage(messages.generateApiKey)}
       </GhostButton>
@@ -93,7 +102,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
           </BlockContainerBody>
         </ScrollWrapper>
       </div>
-    </div>
+    </>
   );
 };
 ApiKeysBlock.propTypes = {

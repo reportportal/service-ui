@@ -23,3 +23,4 @@ export { TogglerControl } from './togglerControl';
 export { CustomColumnsControl } from './customColumnsControl';
 export { AttributesFieldArrayControl } from './attributesFieldArrayControl';
 export { SortingControl } from './sortingControl';
+export { RadioGroupControl } from './radioGroupControl';

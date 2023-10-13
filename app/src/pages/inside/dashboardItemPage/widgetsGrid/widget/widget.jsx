@@ -35,6 +35,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -295,9 +296,10 @@ export class SimpleWidget extends Component {
   };
 
   showEditWidgetModal = () => {
+    const modalId = 'editWidgetModal';
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
     this.props.showModalAction({
-      id: 'editWidgetModal',
+      id: modalId,
       data: {
         widget: this.state.widget,
         onConfirm: (isForceUpdateNeeded) =>
@@ -322,6 +324,9 @@ export class SimpleWidget extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
+          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
+            modalId,
+          ),
         },
       },
     });

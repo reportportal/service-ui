@@ -23,7 +23,6 @@ import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
 import { userProfileRouteSelector, USER_PROFILE_SUB_PAGE } from 'controllers/pages';
-import { allowDeleteAccountSelector } from 'controllers/appInfo/selectors';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
@@ -86,7 +85,6 @@ const getNavigationTabsConfig = (formatMessage) => ({
 
 @connect((state) => ({
   activeTab: userProfileRouteSelector(state),
-  allowDeleteAccount: allowDeleteAccountSelector(state),
 }))
 @injectIntl
 @track({ page: PROFILE_PAGE })
@@ -95,13 +93,11 @@ export class ProfilePage extends Component {
     intl: PropTypes.object.isRequired,
     activeTab: PropTypes.string,
     dispatch: PropTypes.func,
-    allowDeleteAccount: PropTypes.bool,
   };
 
   static defaultProps = {
     activeTab: PROJECT_ASSIGNMENT_ROUTE,
     dispatch: () => {},
-    allowDeleteAccount: false,
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
@@ -111,10 +107,8 @@ export class ProfilePage extends Component {
       <PageHeader breadcrumbs={this.getBreadcrumbs()} />
       <div className={cx('container')}>
         <section className={cx('content-wrapper')}>
-          <div>
-            <div className={cx('section-wrapper')}>
-              <PersonalInfoBlock />
-            </div>
+          <div className={cx('section-wrapper')}>
+            <PersonalInfoBlock />
             <NavigationTabs
               config={getNavigationTabsConfig(this.props.intl.formatMessage)}
               activeTab={this.props.activeTab}
@@ -123,7 +117,7 @@ export class ProfilePage extends Component {
           </div>
           <div className={cx('footer')}>
             <LocalizationBlock />
-            {this.props.allowDeleteAccount && <DeleteAccountBlock />}
+            <DeleteAccountBlock />
           </div>
         </section>
       </div>

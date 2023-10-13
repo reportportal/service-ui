@@ -18,6 +18,10 @@ import { defineMessages } from 'react-intl';
 import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from './constants';
 
 export const messages = defineMessages({
+  nameLabel: {
+    id: 'NotificationCase.nameLabel',
+    defaultMessage: 'Rule Name',
+  },
   recipientsLabel: {
     id: 'NotificationCase.recipientsLabel',
     defaultMessage: 'Recipients',

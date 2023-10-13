@@ -18,6 +18,7 @@ export { pluginsReducer } from './reducer';
 export { SECRET_FIELDS_KEY } from './constants';
 export {
   fetchPluginsAction,
+  fetchPublicPluginsAction,
   removePluginAction,
   removePluginSuccessAction,
   updatePluginSuccessAction,
@@ -53,6 +54,7 @@ export {
   isBtsPluginsExistSelector,
   enabledBtsPluginsSelector,
   globalIntegrationsSelector,
+  pluginsLoadingSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

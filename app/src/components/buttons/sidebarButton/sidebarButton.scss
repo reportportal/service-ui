@@ -73,6 +73,11 @@
       fill: $COLOR--booger;
     }
   }
+
+  &:focus-visible {
+    outline: none;
+    border: 2px solid $COLOR--topaz-focused;
+  }
 }
 
 .sidebar-nav-btn {

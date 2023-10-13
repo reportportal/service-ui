@@ -15,7 +15,6 @@
  */
 
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
 
 export const getWeekRange = (date = '') => {
@@ -25,8 +24,4 @@ export const getWeekRange = (date = '') => {
     .format(DATE_FORMAT_TOOLTIP);
 
   return `${startDate} - ${endDate}`;
-};
-
-getWeekRange.propTypes = {
-  date: PropTypes.string.isRequired,
 };

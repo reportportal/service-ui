@@ -26,9 +26,6 @@ import moment from 'moment';
 import { URLS } from 'common/urls';
 import { fetch, secondsToDays } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { Input } from 'components/inputs/input';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { BigButton } from 'components/buttons/bigButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   updateConfigurationAttributesAction,
@@ -39,12 +36,14 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
-
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { Button } from 'componentLibrary/button';
+import { Dropdown } from 'componentLibrary/dropdown';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -60,7 +59,7 @@ const selector = formValueSelector('generalForm');
 @connect(
   (state) => ({
     projectId: projectIdSelector(state),
-    isLoaging: projectInfoLoadingSelector(state),
+    isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
@@ -97,7 +96,7 @@ export class GeneralTab extends Component {
     lang: PropTypes.string,
     retention: PropTypes.number,
     formValues: PropTypes.object,
-    isLoaging: PropTypes.bool,
+    isLoading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -105,7 +104,10 @@ export class GeneralTab extends Component {
     fetchProjectAction: () => {},
     lang: 'en',
     retention: null,
-    isLoaging: false,
+    isLoading: false,
+  };
+  state = {
+    processingData: false,
   };
 
   componentDidMount() {
@@ -131,6 +133,7 @@ export class GeneralTab extends Component {
   }
 
   onFormSubmit = (formData) => {
+    this.setState({ processingData: true });
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERAL_SUBMIT);
     const preparedData = normalizeAttributesWithPrefix(formData, JOB_ATTRIBUTE_PREFIX);
     const data = {
@@ -147,12 +150,14 @@ export class GeneralTab extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.updateConfigurationAttributesAction(data);
+        this.setState({ processingData: false });
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateErrorNotification),
           type: NOTIFICATION_TYPES.ERROR,
         });
+        this.setState({ processingData: false });
       });
   };
 
@@ -258,6 +263,9 @@ export class GeneralTab extends Component {
         title: this.props.intl.formatMessage(Messages.keepLogsTooltip),
       };
     });
+    if (newOptions.every((v) => v.hidden)) {
+      newOptions.push(this.formatRetention(inputValues.keepLogs));
+    }
     return newOptions;
   };
 
@@ -270,6 +278,9 @@ export class GeneralTab extends Component {
       const hidden = inputValues.keepLogs === Infinity ? false : isHidden;
       return { ...elem, hidden };
     });
+    if (newOptions.every((v) => v.hidden)) {
+      newOptions.push(this.formatRetention(inputValues.keepScreenshots));
+    }
     return newOptions;
   };
 
@@ -281,85 +292,120 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoaging } = this.props;
-    return isLoaging ? (
+    const { intl, accountRole, userRole, isLoading, projectId } = this.props;
+    const { processingData } = this.state;
+    const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
+    return isLoading ? (
       <SpinningPreloader />
     ) : (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-          <FormField
-            fieldWrapperClassName={cx('field-input')}
-            label={intl.formatMessage(Messages.projectNameLabel)}
-            withoutProvider
-          >
-            <Input disabled value={this.props.projectId} />
-          </FormField>
+          <div>
+            <div className={cx('fake-input-label')}>Name</div>
+            <div className={cx('fake-input')} title={projectId}>
+              {projectId}
+            </div>
+          </div>
           <FormField
             name="interruptJobTime"
             fieldWrapperClassName={cx('field-input')}
+            containerClassName={cx('field-container')}
+            labelClassName={cx('label')}
             label={intl.formatMessage(Messages.interruptedJob)}
             onChange={this.createTrackingFunction(
               SETTINGS_PAGE_EVENTS.inactivityTimeoutGeneral,
               this.formatInterruptJobTimes,
             )}
             customBlock={{
+              wrapperClassName: cx('hint'),
               node: <p>{intl.formatMessage(Messages.interruptedJobDescription)}</p>,
             }}
-            disabled={!canUpdateSettings(accountRole, userRole)}
+            disabled={isDisabled}
             format={this.formatInterruptJobTimes}
           >
-            <InputDropdown options={this.interruptJobTime} mobileDisabled />
+            <Dropdown
+              customClasses={{ dropdown: cx('dropdown') }}
+              options={this.interruptJobTime}
+              mobileDisabled
+            />
           </FormField>
           <FormField
             name="keepLaunches"
             fieldWrapperClassName={cx('field-input')}
+            containerClassName={cx('field-container')}
+            labelClassName={cx('label')}
             label={intl.formatMessage(Messages.keepLaunches)}
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLaunchesGeneral)}
             customBlock={{
+              wrapperClassName: cx('hint'),
               node: <p>{intl.formatMessage(Messages.keepLaunchesDescription)}</p>,
             }}
-            disabled={!canUpdateSettings(accountRole, userRole)}
+            disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getLaunchesOptions()} mobileDisabled />
+            <Dropdown
+              customClasses={{ dropdown: cx('dropdown') }}
+              options={this.getLaunchesOptions()}
+              mobileDisabled
+            />
           </FormField>
           <FormField
             name="keepLogs"
             fieldWrapperClassName={cx('field-input')}
+            containerClassName={cx('field-container')}
+            labelClassName={cx('label')}
             label={intl.formatMessage(Messages.keepLogs)}
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLogsGeneral)}
             customBlock={{
+              wrapperClassName: cx('hint'),
               node: <p>{intl.formatMessage(Messages.keepLogsDescription)}</p>,
             }}
-            disabled={!canUpdateSettings(accountRole, userRole)}
+            disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getLogOptions()} mobileDisabled />
+            <Dropdown
+              customClasses={{ dropdown: cx('dropdown') }}
+              options={this.getLogOptions()}
+              mobileDisabled
+            />
           </FormField>
           <FormField
             name="keepScreenshots"
             fieldWrapperClassName={cx('field-input')}
+            containerClassName={cx('field-container')}
+            labelClassName={cx('label')}
             label={intl.formatMessage(Messages.keepScreenshots)}
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral)}
             customBlock={{
+              wrapperClassName: cx('hint'),
               node: <p>{intl.formatMessage(Messages.keepScreenshotsDescription)}</p>,
             }}
-            disabled={!canUpdateSettings(accountRole, userRole)}
+            disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getScreenshotsOptions()} mobileDisabled />
+            <Dropdown
+              customClasses={{ dropdown: cx('dropdown') }}
+              options={this.getScreenshotsOptions()}
+              mobileDisabled
+            />
           </FormField>
-          <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
-            <div className={cx('submit-button')}>
-              <BigButton
-                color="booger"
-                type="submit"
-                disabled={!canUpdateSettings(accountRole, userRole)}
-              >
-                {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-              </BigButton>
-            </div>
-          </FormField>
+          <div className={cx('submit-block')}>
+            <Button variant={'topaz'} type="submit" disabled={isDisabled}>
+              {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+            </Button>
+            {processingData && (
+              <div className={cx('preloader-block')}>
+                <BubblesPreloader
+                  color={'topaz'}
+                  bubblesCount={7}
+                  customClassName={cx('preloader')}
+                />
+                <span className={cx('preloader-text')}>
+                  {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
+                </span>
+              </div>
+            )}
+          </div>
         </form>
       </div>
     );

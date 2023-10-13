@@ -39,6 +39,7 @@ import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { uniqueErrorGridCellComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { modifyColumnsFunc } from './utils';
 import styles from './clusterItemsGridRow.scss';
 
@@ -132,9 +133,9 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
           <div className={cx('table-cell')}>
             <ClusterColumn cluster={data} />
           </div>
-          {extensions.map((extensionComponent) => (
-            <div className={cx('table-cell')} key={extensionComponent.name}>
-              <extensionComponent.component data={data} />
+          {extensions.map((extension) => (
+            <div className={cx('table-cell')} key={extension.name}>
+              <ExtensionLoader extension={extension} data={data} />
             </div>
           ))}
         </div>

@@ -19,16 +19,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const pjson = require('../package.json');
 
 module.exports = {
   entry: {
     polyfills: path.resolve(__dirname, '../src/common/polyfills.js'),
-    main: path.resolve(__dirname, '../src/index.jsx'),
+    main: path.resolve(__dirname, '../src/init.js'),
   },
   output: {
     path: path.resolve(__dirname, '../build'),
     filename: '[name].app.[contenthash:8].js',
-    publicPath: '',
+    publicPath: 'auto',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
   },
@@ -43,6 +45,7 @@ module.exports = {
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
+      analyticsEvents: path.resolve(__dirname, '../src/components/main/analytics/events/ga4Events'),
     },
     fallback: {
       path: require.resolve('path-browserify'),
@@ -93,7 +96,81 @@ module.exports = {
       Utils: 'common/utils',
       process: 'process/browser.js',
       Buffer: ['buffer', 'Buffer'],
-      path: require.resolve('path-browserify'),
+    }),
+    new ModuleFederationPlugin({
+      name: 'main_app',
+      exposes: {
+        './FieldProvider': './src/components/fields',
+        './FieldErrorHint': './src/components/fields/fieldErrorHint',
+        './BigButton': './src/components/buttons/bigButton',
+        './InputOutside': './src/components/inputs/inputOutside',
+        './NavLink': './src/components/main/navLink',
+        './FieldBottomConstraints': './src/components/fields/fieldBottomConstraints',
+        './RegistrationPageSection': './src/pages/outside/registrationPage/registrationPageSection',
+        './BlockHeader': './src/pages/outside/common/pageBlockContainer/blockHeader',
+        './InputCheckbox': './src/components/inputs/inputCheckbox',
+      },
+      shared: {
+        react: {
+          import: 'react',
+          shareKey: 'react',
+          shareScope: 'default',
+          singleton: true,
+          requiredVersion: pjson.dependencies.react,
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-dom'],
+        },
+        'react-redux': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-redux'],
+        },
+        'react-intl': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-intl'],
+        },
+        'redux-form': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['redux-form'],
+        },
+        'redux-first-router': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['redux-first-router'],
+        },
+        history: {
+          singleton: true,
+          requiredVersion: pjson.dependencies.history,
+        },
+        classnames: {
+          singleton: true,
+          requiredVersion: pjson.dependencies.classnames,
+        },
+        'prop-types': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['prop-types'],
+        },
+        'react-tracking': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-tracking'],
+        },
+        moment: {
+          singleton: true,
+          requiredVersion: pjson.dependencies.moment,
+        },
+        'html-react-parser': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['html-react-parser'],
+        },
+        'fast-deep-equal': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['fast-deep-equal'],
+        },
+        'react-copy-to-clipboard': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-copy-to-clipboard'],
+        },
+      },
     }),
   ],
 };

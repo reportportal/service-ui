@@ -15,7 +15,12 @@
  */
 
 import { combineReducers } from 'redux';
-import { EXTENSION_LOAD_FINISH, EXTENSION_LOAD_START } from './constants';
+import {
+  EXTENSION_LOAD_FINISH,
+  EXTENSION_LOAD_START,
+  FETCH_EXTENSIONS_METADATA_SUCCESS,
+  UPDATE_EXTENSION_METADATA,
+} from './constants';
 
 const extensionsLoadedReducer = (state = false, { type }) => {
   switch (type) {
@@ -28,6 +33,23 @@ const extensionsLoadedReducer = (state = false, { type }) => {
   }
 };
 
+const extensionsMetadataReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case FETCH_EXTENSIONS_METADATA_SUCCESS:
+      return payload;
+    case UPDATE_EXTENSION_METADATA:
+      return state.map((item) => {
+        if (item.pluginName === payload.pluginName) {
+          return payload;
+        }
+        return item;
+      });
+    default:
+      return state;
+  }
+};
+
 export const uiExtensionsReducer = combineReducers({
   uiExtensionsLoaded: extensionsLoadedReducer,
+  extensionsMetadata: extensionsMetadataReducer,
 });

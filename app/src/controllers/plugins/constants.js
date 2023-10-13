@@ -20,6 +20,7 @@ export const FETCH_GLOBAL_INTEGRATIONS = 'fetchGlobalIntegrations';
 export const FETCH_GLOBAL_INTEGRATIONS_SUCCESS = 'fetchGlobalIntegrationsSuccess';
 
 export const FETCH_PLUGINS = 'fetchPlugins';
+export const FETCH_PUBLIC_PLUGINS = 'fetchPublicPlugins';
 export const REMOVE_PLUGIN = 'removePlugin';
 export const UPDATE_PLUGIN_SUCCESS = 'updatePluginSuccess';
 export const REMOVE_PLUGIN_SUCCESS = 'removePluginSuccess';
@@ -41,5 +42,6 @@ export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSucce
 
 export const GLOBAL_INTEGRATIONS = 'globalIntegrations';
 export const PROJECT_INTEGRATIONS = 'projectIntegrations';
+export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';

@@ -29,6 +29,20 @@
   color: $COLOR--white-two;
   cursor: pointer;
 
+  &:focus-visible {
+    outline: none;
+    &::after {
+      position: absolute;
+      content: '';
+      width: 93%;
+      height: 90%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid $COLOR--topaz-focused;
+    }
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     padding-left: 10px;

@@ -53,7 +53,6 @@ export const isOldHistorySelector = (state) =>
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
 export const flushDataInSelector = (state) =>
   (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;
-
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;

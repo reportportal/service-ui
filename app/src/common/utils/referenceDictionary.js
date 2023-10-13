@@ -30,3 +30,21 @@ export const referenceDictionary = {
   rpEpamCommonPolicy:
     'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
 };
+
+export const docsReferences = {
+  indexSettingsDocs:
+    'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches#removegenerate-elasticsearch-index',
+  autoAnalysisDocs: 'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches',
+  similarItemsDocs: 'https://reportportal.io/docs/analysis/SearchForTheSimilarToInvestigateItems',
+  uniqueErrorsDocs: 'https://reportportal.io/docs/analysis/UniqueErrorAnalysis',
+  patternAnalysisDocs: 'https://reportportal.io/docs/analysis/PatternAnalysis',
+  emptyStatePatternAnalysisDocs: 'https://reportportal.io/docs/analysis/PatternAnalysis',
+  notificationsDocs:
+    'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications',
+  emptyStateNotificationsDocs:
+    'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications',
+  emptyStateIntegrationsDocs:
+    'https://reportportal.io/docs/reportportal-configuration/IntegrationViaPlugin',
+  authorizationWithUsersApiKeyForAgents:
+    'https://reportportal.io/docs/reportportal-configuration/HowToGetAnAccessTokenInReportPortal/#2-authorization-with-users-api-key-for-agents',
+};

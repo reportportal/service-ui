@@ -43,6 +43,7 @@ export {
   dirtyFilterIdsSelector,
   launchFiltersReadySelector,
   pageLoadingSelector,
+  filterFromQuerySelector,
 } from './selectors';
 export { filterSagas } from './sagas';
 export {

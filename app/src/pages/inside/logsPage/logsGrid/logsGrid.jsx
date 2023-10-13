@@ -98,6 +98,11 @@ AttachmentColumn.defaultProps = {
   value: {},
 };
 
+const StatusColumn = ({ className }) => <div className={className} />;
+StatusColumn.propTypes = {
+  className: PropTypes.string.isRequired,
+};
+
 const TimeColumn = ({ className, value, customProps: { mobile } }) => (
   <div className={cx('time-column', className, { mobile })}>{dateFormat(value.time)}</div>
 );
@@ -234,7 +239,7 @@ export class LogsGrid extends Component {
         },
       },
       sortable: true,
-      component: () => <div />,
+      component: StatusColumn,
     };
     const columns = [
       {

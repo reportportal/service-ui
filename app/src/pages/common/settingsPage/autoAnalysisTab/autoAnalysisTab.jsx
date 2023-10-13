@@ -215,6 +215,7 @@ export class AutoAnalysisTab extends Component {
           initialValues={this.getAnalysisFormValues()}
           analysisBaseSettings={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
         />
         <IndexActionsBlock
           disabled={disabled}

@@ -27,6 +27,7 @@ import {
   SETTINGS_PAGE_EVENTS,
   getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from 'components/main/analytics/events';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { AccuracyFormBlock } from './accuracyFormBlock';
 import {
   NUMBER_OF_LOG_LINES,
@@ -116,6 +117,7 @@ export class AnalysisForm extends Component {
     change: PropTypes.func,
     handleSubmit: PropTypes.func,
     onFormSubmit: PropTypes.func,
+    isAnalyzerServiceAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -126,6 +128,7 @@ export class AnalysisForm extends Component {
     change: () => {},
     handleSubmit: () => {},
     onFormSubmit: () => {},
+    isAnalyzerServiceAvailable: true,
   };
 
   state = {
@@ -216,7 +219,7 @@ export class AnalysisForm extends Component {
   };
 
   render() {
-    const { intl, handleSubmit, disabled } = this.props;
+    const { intl, handleSubmit, disabled, isAnalyzerServiceAvailable } = this.props;
 
     return (
       <form className={cx('analysis-form')} onSubmit={handleSubmit(this.submitHandler)}>
@@ -226,15 +229,24 @@ export class AnalysisForm extends Component {
           </span>
           <div className={cx('toggle-button-wrapper')}>
             <ToggleButton
-              disabled={disabled}
+              disabled={disabled || !isAnalyzerServiceAvailable}
               items={this.tabItems}
               value={this.state.autoAnalysisMode}
               mobileDisabled
               onChange={this.tabChangeHandle}
+              title={
+                isAnalyzerServiceAvailable
+                  ? ''
+                  : intl.formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
+              }
             />
           </div>
         </div>
-        <AccuracyFormBlock disabled={disabled} onInputChange={this.onInputChange} />
+        <AccuracyFormBlock
+          disabled={disabled}
+          onInputChange={this.onInputChange}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
+        />
       </form>
     );
   }

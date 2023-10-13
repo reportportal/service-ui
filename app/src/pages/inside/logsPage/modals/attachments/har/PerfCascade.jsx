@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { fromHar } from 'perf-cascade/dist/perf-cascade'; // exports ES6 from main
 import 'perf-cascade/dist/perf-cascade.css';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import DOMPurify from 'dompurify';
 
 export class PerfCascade extends Component {
   static propTypes = {
@@ -37,7 +38,7 @@ export class PerfCascade extends Component {
   componentDidMount() {
     let perfCascadeSvg;
     try {
-      perfCascadeSvg = fromHar(this.props.harData);
+      perfCascadeSvg = fromHar(DOMPurify.sanitize(this.props.harData));
       this.myRef.current.appendChild(perfCascadeSvg);
     } catch (e) {
       this.showErrorMessage();

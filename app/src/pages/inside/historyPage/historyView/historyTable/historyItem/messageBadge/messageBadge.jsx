@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import Parser from 'html-react-parser';
+import { MarkdownViewer } from 'components/main/markdown';
 import styles from './messageBadge.scss';
 
 const cx = classNames.bind(styles);
@@ -26,8 +27,8 @@ const cx = classNames.bind(styles);
 const MessageBadgeToolTip = ({ data }) => (
   <div className={cx('tooltip-content')}>
     {data.map((item) => (
-      <div className={cx('content-container')} key={item.ticketId}>
-        <span>{item.ticketId}</span>
+      <div className={cx('content-container')} key={item.comment}>
+        <MarkdownViewer value={item.comment} />
       </div>
     ))}
   </div>

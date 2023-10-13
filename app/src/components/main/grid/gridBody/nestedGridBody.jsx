@@ -15,9 +15,11 @@
  */
 
 import PropTypes from 'prop-types';
+import { NestedGridRow } from './nestedGridRow';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
-import { NestedGridRow } from './nestedGridRow';
+
+// The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridRow.
 
 export const NestedGridBody = ({ data, ...rest }) => {
   const Component = rest.nestedGridRow || NestedGridRow;

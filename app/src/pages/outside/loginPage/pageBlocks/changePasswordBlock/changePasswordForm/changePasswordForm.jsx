@@ -29,7 +29,6 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import PasswordIcon from './img/password-icon-inline.svg';
@@ -55,6 +54,12 @@ const notifications = defineMessages({
   failedChange: {
     id: 'ChangePasswordForm.failedChange',
     defaultMessage: 'Failed to update password',
+  },
+});
+const hints = defineMessages({
+  passwordHint: {
+    id: 'ChangePasswordForm.passwordConstraints',
+    defaultMessage: '4-256 symbols',
   },
 });
 
@@ -124,33 +129,29 @@ export class ChangePasswordForm extends PureComponent {
       <form className={cx('change-password-form')} onSubmit={handleSubmit(this.changePassword)}>
         <div className={cx('new-password-field')}>
           <FieldProvider name="password">
-            <FieldBottomConstraints
-              text={
-                <FormattedMessage
-                  id={'ChangePasswordForm.passwordConstraints'}
-                  defaultMessage={'4-256 symbols'}
-                />
-              }
-            >
-              <FieldErrorHint>
-                <InputOutside
-                  type={'password'}
-                  icon={PasswordIcon}
-                  maxLength={'256'}
-                  placeholder={formatMessage(placeholders.newPassword)}
-                />
-              </FieldErrorHint>
-            </FieldBottomConstraints>
+            <FieldErrorHint provideHint={false}>
+              <InputOutside
+                type={'password'}
+                icon={PasswordIcon}
+                maxLength={'256'}
+                placeholder={formatMessage(placeholders.newPassword)}
+                hint={formatMessage(hints.passwordHint)}
+                hasDynamicValidation
+                provideErrorHint
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
-            <FieldErrorHint>
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 type={'password'}
                 icon={PasswordIcon}
                 maxLength={'256'}
                 placeholder={formatMessage(placeholders.confirmNewPassword)}
+                hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>

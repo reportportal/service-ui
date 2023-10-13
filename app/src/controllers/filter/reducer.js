@@ -42,8 +42,11 @@ const updateFilterOrders = (filters, filterId, orders) => {
 
 export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldId } = {} }) => {
   switch (type) {
-    case FETCH_USER_FILTERS_SUCCESS:
-      return payload;
+    case FETCH_USER_FILTERS_SUCCESS: {
+      const unsavedFilters = state.filter(({ id }) => id < 0);
+
+      return [...payload, ...unsavedFilters];
+    }
     case UPDATE_FILTER_CONDITIONS:
       return updateFilterConditions(state, payload.filterId, payload.conditions);
     case UPDATE_FILTER_ORDERS:

@@ -16,6 +16,7 @@
 
 import {
   FETCH_PLUGINS,
+  FETCH_PUBLIC_PLUGINS,
   REMOVE_PLUGIN,
   UPDATE_PLUGIN_SUCCESS,
   REMOVE_PLUGIN_SUCCESS,
@@ -38,6 +39,10 @@ import {
 
 export const fetchPluginsAction = () => ({
   type: FETCH_PLUGINS,
+});
+
+export const fetchPublicPluginsAction = () => ({
+  type: FETCH_PUBLIC_PLUGINS,
 });
 
 export const removePluginAction = (id, callback, pluginName) => ({

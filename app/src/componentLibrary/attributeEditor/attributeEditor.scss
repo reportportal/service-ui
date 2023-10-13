@@ -1,0 +1,94 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin btn($iconColor, $bgColor, $borderColor) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid $borderColor;
+  border-radius: 3px;
+  background: $bgColor;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  svg {
+    height: 16px;
+    width: 16px;
+    fill: $iconColor;
+  }
+
+  &:focus:not(.disabled) {
+    outline: none;
+  }
+}
+
+.attribute-editor {
+  display: flex;
+  align-items: flex-start;
+}
+
+.separator {
+  margin: 8px 7px 0;
+  color: $COLOR--almost-black;
+  font-size: 16px;
+}
+
+.buttons {
+  display: flex;
+  margin-left: 16px;
+}
+
+.check-btn {
+  @include btn($COLOR--white-two, $COLOR--topaz-2, transparent);
+
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--topaz-hover-2;
+    background-color: $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+    background-color: $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--topaz-focused;
+  }
+}
+
+.cross-btn {
+  margin-left: 8px;
+  @include btn($COLOR--almost-black, $COLOR--bg-100, $COLOR--topaz-2);
+
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--topaz-focused;
+  }
+}
+
+.menu {
+  width: 264px;
+}

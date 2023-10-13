@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useIntl } from 'react-intl';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
   BtsAuthFieldsInfo,
@@ -29,100 +29,95 @@ import {
 import { IntegrationSettings } from 'components/integrations/elements';
 import { messages } from '../messages';
 
-@connect(null, {
-  showModalAction,
-  hideModalAction,
-})
-@injectIntl
-export class RallySettings extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-    goToPreviousPage: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    showModalAction: PropTypes.func.isRequired,
-    hideModalAction: PropTypes.func.isRequired,
-    isGlobal: PropTypes.bool,
-  };
+export const RallySettings = (props) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
 
-  static defaultProps = {
-    isGlobal: false,
-  };
-
-  onSubmit = (data, callback, metaData) => {
+  const onSubmit = (data, callback, metaData) => {
     const { fields, checkedFieldsIds = {}, ...meta } = metaData;
     const defectFormFields = getDefectFormFields(fields, checkedFieldsIds, data);
 
-    this.props.onUpdate({ defectFormFields }, callback, meta);
+    props.onUpdate({ defectFormFields }, callback, meta);
   };
 
-  getEditAuthConfig = () => ({
-    content: <BtsAuthFieldsInfo fieldsConfig={this.authFieldsConfig} />,
-    onClick: this.editAuthorizationClickHandler,
-  });
-
-  authFieldsConfig = [
+  const authFieldsConfig = [
     {
-      value: this.props.data.integrationParameters.url,
-      message: this.props.intl.formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel),
+      value: props.data.integrationParameters.url,
+      message: formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel),
     },
     {
-      value: this.props.data.integrationParameters.project,
-      message: this.props.intl.formatMessage(messages.projectIdLabel),
+      value: props.data.integrationParameters.project,
+      message: formatMessage(messages.projectIdLabel),
     },
   ];
 
-  getConfirmationFunc = (testConnection) => (data, metaData) => {
-    const { onUpdate } = this.props;
+  const getConfirmationFunc = (testConnection) => (data, metaData) => {
+    const { onUpdate } = props;
 
     onUpdate(
       data,
       () => {
-        this.props.hideModalAction();
+        dispatch(hideModalAction());
         testConnection();
       },
       metaData,
     );
   };
 
-  editAuthorizationClickHandler = (testConnection) => {
+  const editAuthorizationClickHandler = (testConnection) => {
     const {
       data: { name, integrationParameters, integrationType },
-    } = this.props;
+    } = props;
 
-    this.props.showModalAction({
-      id: 'addIntegrationModal',
-      data: {
-        onConfirm: this.getConfirmationFunc(testConnection),
-        instanceType: integrationType.name,
-        customProps: {
-          initialData: {
-            ...integrationParameters,
-            integrationName: name,
+    dispatch(
+      showModalAction({
+        id: 'createProjectIntegrationModal',
+        data: {
+          modalTitle: formatMessage(messages.editAuthTitle),
+          onConfirm: getConfirmationFunc(testConnection),
+          instanceType: integrationType.name,
+          customProps: {
+            initialData: {
+              ...integrationParameters,
+              integrationName: name,
+            },
+            editAuthMode: true,
           },
-          editAuthMode: true,
         },
-      },
-    });
+      }),
+    );
   };
 
-  render() {
-    const { data, goToPreviousPage, isGlobal } = this.props;
+  const getEditAuthConfig = () => ({
+    content: <BtsAuthFieldsInfo fieldsConfig={authFieldsConfig} />,
+    onClick: editAuthorizationClickHandler,
+  });
 
-    return (
-      <IntegrationSettings
-        data={data}
-        onUpdate={this.onSubmit}
-        goToPreviousPage={goToPreviousPage}
-        formFieldsComponent={BtsPropertiesForIssueForm}
-        formKey={BTS_FIELDS_FORM}
-        editAuthConfig={this.getEditAuthConfig()}
-        isGlobal={isGlobal}
-        isEmptyConfiguration={
-          !data.integrationParameters.defectFormFields ||
-          !data.integrationParameters.defectFormFields.length
-        }
-      />
-    );
-  }
-}
+  const { data, goToPreviousPage, isGlobal } = props;
+  return (
+    <IntegrationSettings
+      data={data}
+      onUpdate={onSubmit}
+      goToPreviousPage={goToPreviousPage}
+      formFieldsComponent={BtsPropertiesForIssueForm}
+      formKey={BTS_FIELDS_FORM}
+      editAuthConfig={getEditAuthConfig()}
+      isGlobal={isGlobal}
+      isEmptyConfiguration={
+        !data.integrationParameters.defectFormFields ||
+        !data.integrationParameters.defectFormFields.length
+      }
+    />
+  );
+};
+
+RallySettings.propTypes = {
+  data: PropTypes.object.isRequired,
+  goToPreviousPage: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  isGlobal: PropTypes.bool,
+};
+
+RallySettings.defaultProps = {
+  isGlobal: false,
+};

@@ -21,11 +21,20 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
+import {
+  EXCLUDING_SKIPPED,
+  TOTAL_TEST_CASES,
+  FORM_GROUP_CONTROL,
+  passingRateOptionMessages,
+} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
+import track from 'react-tracking';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
-import { TogglerControl, FiltersControl, InputControl } from './controls';
+import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
+import { widgetTypesMessages } from '../messages';
 
 const DEFAULT_ITEMS_COUNT = '50';
+
 const messages = defineMessages({
   ItemsFieldLabel: {
     id: 'PassingRateSummaryControls.ItemsFieldLabel',
@@ -37,6 +46,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 export class PassingRateSummaryControls extends Component {
   static propTypes = {
@@ -45,7 +55,12 @@ export class PassingRateSummaryControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    widgetType: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -61,6 +76,7 @@ export class PassingRateSummaryControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
+          includeSkipped: true,
         },
       },
     });
@@ -71,6 +87,20 @@ export class PassingRateSummaryControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
+  handleIncludeSkippedChange = (includeSkipped) => {
+    const {
+      eventsInfo: { ratioBasedOnChange },
+      tracking: { trackEvent },
+      widgetType,
+    } = this.props;
+
+    const eventType = includeSkipped
+      ? 'total_test_cases'
+      : passingRateOptionMessages[EXCLUDING_SKIPPED].defaultMessage;
+
+    trackEvent(ratioBasedOnChange(widgetTypesMessages[widgetType].defaultMessage, eventType));
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -78,6 +108,11 @@ export class PassingRateSummaryControls extends Component {
       onFormAppearanceChange,
       eventsInfo,
     } = this.props;
+
+    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+      label: formatMessage(passingRateOptionMessages[option]),
+      value: `${option === TOTAL_TEST_CASES}`,
+    }));
 
     return (
       <Fragment>
@@ -112,6 +147,15 @@ export class PassingRateSummaryControls extends Component {
                   [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
                   formatMessage,
                 )}
+              />
+            </FieldProvider>
+            <FieldProvider
+              onChange={this.handleIncludeSkippedChange}
+              name="contentParameters.widgetOptions.includeSkipped"
+            >
+              <RadioGroupControl
+                options={options}
+                fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
               />
             </FieldProvider>
           </Fragment>

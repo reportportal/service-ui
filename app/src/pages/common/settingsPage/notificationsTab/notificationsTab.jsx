@@ -26,10 +26,16 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import {
-  updateProjectNotificationsConfigAction,
-  projectNotificationsCasesSelector,
-  projectNotificationsEnabledSelector,
+  addProjectNotificationAction,
+  updateProjectNotificationAction,
+  deleteProjectNotificationAction,
+  projectNotificationsSelector,
+  projectNotificationsStateSelector,
 } from 'controllers/project';
+import {
+  fetchProjectNotificationsAction,
+  updateNotificationStateAction,
+} from 'controllers/project/actionCreators';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
@@ -92,13 +98,17 @@ const ruleFieldsConfig = {
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
     userRole: userAccountRoleSelector(state),
-    enabled: projectNotificationsEnabledSelector(state),
-    cases: projectNotificationsCasesSelector(state),
+    enabled: projectNotificationsStateSelector(state),
+    cases: projectNotificationsSelector(state),
     isEmailIntegrationAvailable: isEmailIntegrationAvailableSelector(state),
   }),
   {
-    updateNotificationsConfig: updateProjectNotificationsConfigAction,
+    updateNotificationsConfig: updateNotificationStateAction,
+    addNotificationCase: addProjectNotificationAction,
+    updateNotificationCase: updateProjectNotificationAction,
+    deleteNotificationCase: deleteProjectNotificationAction,
     showModal: showModalAction,
+    fetchProjectNotifications: fetchProjectNotificationsAction,
   },
 )
 @track()
@@ -108,6 +118,10 @@ export class NotificationsTab extends Component {
     enabled: PropTypes.bool,
     cases: PropTypes.array,
     updateNotificationsConfig: PropTypes.func,
+    addNotificationCase: PropTypes.func,
+    updateNotificationCase: PropTypes.func,
+    deleteNotificationCase: PropTypes.func,
+    fetchProjectNotifications: PropTypes.func,
     showModal: PropTypes.func,
     projectRole: PropTypes.string,
     userRole: PropTypes.string,
@@ -122,10 +136,19 @@ export class NotificationsTab extends Component {
     cases: [],
     showModal: () => {},
     updateNotificationsConfig: () => {},
+    addNotificationCase: () => {},
+    updateNotificationCase: () => {},
+    deleteNotificationCase: () => {},
+    fetchProjectNotifications: () => {},
     projectRole: '',
     userRole: '',
     isEmailIntegrationAvailable: true,
   };
+
+  componentDidMount() {
+    const { fetchProjectNotifications } = this.props;
+    fetchProjectNotifications();
+  }
 
   isAbleToEditNotificationCaseList = () =>
     canUpdateSettings(this.props.userRole, this.props.projectRole);
@@ -136,33 +159,32 @@ export class NotificationsTab extends Component {
 
   toggleNotificationsEnabled = (enabled) => {
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
-    this.props.updateNotificationsConfig({ enabled });
+    this.props.updateNotificationsConfig(enabled);
   };
 
   confirmAddCase = (notificationCase) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const cases = [...oldCases, notificationCase].map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
+    const { addNotificationCase } = this.props;
+    const notification = convertNotificationCaseForSubmission(notificationCase);
+    addNotificationCase(notification);
   };
 
-  confirmEditCase = (id, notificationCase) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const updatedCases = [...oldCases];
-    updatedCases.splice(id, 1, notificationCase);
-    const cases = updatedCases.map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
+  confirmEditCase = (notificationCase) => {
+    const { updateNotificationCase } = this.props;
+    updateNotificationCase(
+      convertNotificationCaseForSubmission({
+        ...notificationCase,
+        name: notificationCase.ruleName,
+      }),
+    );
   };
 
   confirmDeleteCase = (id) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const cases = oldCases
-      .filter((item, index) => index !== id)
-      .map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
+    const { deleteNotificationCase } = this.props;
+    deleteNotificationCase(id);
   };
 
   addNotificationCase = () => {
-    const { showModal, tracking } = this.props;
+    const { showModal, cases, tracking } = this.props;
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     showModal({
       id: 'addEditNotificationCaseModal',
@@ -180,18 +202,19 @@ export class NotificationsTab extends Component {
               ),
             ),
         },
+        cases,
       },
     });
   };
 
-  onEdit = (notificationCase, id) => {
-    const { showModal, tracking } = this.props;
+  onEdit = (notificationCase) => {
+    const { showModal, tracking, cases } = this.props;
 
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
     showModal({
       id: 'addEditNotificationCaseModal',
       data: {
-        onConfirm: (data) => this.confirmEditCase(id, data),
+        onConfirm: this.confirmEditCase,
         notificationCase,
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,
@@ -203,19 +226,20 @@ export class NotificationsTab extends Component {
               ),
             ),
         },
+        cases,
       },
     });
   };
 
-  onDelete = (notificationCase, id) => {
+  onDelete = (notificationCase) => {
     const { showModal, tracking } = this.props;
 
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
     showModal({
       id: 'deleteNotificationCaseModal',
       data: {
-        id,
-        onConfirm: () => this.confirmDeleteCase(id),
+        name: notificationCase.ruleName,
+        onConfirm: () => this.confirmDeleteCase(notificationCase.id),
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
@@ -225,21 +249,16 @@ export class NotificationsTab extends Component {
     });
   };
 
-  onToggleHandler = (enabled, notificationCase, id) => {
-    const { cases: oldCases, updateNotificationsConfig, tracking } = this.props;
-    const updatedCases = [...oldCases];
-    updatedCases.splice(id, 1, { ...notificationCase, enabled });
-    const cases = updatedCases.map(convertNotificationCaseForSubmission);
+  onToggleHandler = (enabled, notificationCase) => {
+    const { updateNotificationCase, tracking } = this.props;
 
     tracking.trackEvent(
       enabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    updateNotificationsConfig({ cases });
+    updateNotificationCase(convertNotificationCaseForSubmission({ ...notificationCase, enabled }));
   };
-
-  getPanelTitle = () => this.props.intl.formatMessage(messages.controlPanelName);
 
   getListItemContentData = (notificationCase) => {
     const {
@@ -294,11 +313,10 @@ export class NotificationsTab extends Component {
             />
             <RuleList
               readOnly={readOnlyNotificationCaseList}
-              data={cases}
+              data={cases.map((item) => ({ ...item, name: item.ruleName }))}
               onToggle={this.onToggleHandler}
               onDelete={this.onDelete}
               onEdit={this.onEdit}
-              getPanelTitle={this.getPanelTitle}
               getListItemContentData={this.getListItemContentData}
             />
           </Fragment>

@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { BigButton } from './bigButton';
+import { BigButton } from './bigButton';
+
+export { BigButton };
+
+export default BigButton;
