@@ -287,10 +287,11 @@ export class BtsPropertiesForIssueForm extends Component {
     const updatedFields = [...fields];
 
     updatedFields.forEach((field, index) => {
+      const checked = checkedFieldsIds[field.id] || field.required;
       updatedFields[index] = {
         ...updatedFields[index],
-        checked: checkedFieldsIds[field.id] || field.required,
-        disabled: field.id === ISSUE_TYPE_FIELD_KEY ? true : disabled,
+        checked,
+        disabled: field.id === ISSUE_TYPE_FIELD_KEY ? true : disabled || !checked,
       };
     });
 
