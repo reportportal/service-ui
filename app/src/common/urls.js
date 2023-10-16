@@ -19,10 +19,12 @@ import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
+export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
 export const UAT_API_URL_PREFIX = '../uat';
 export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
+const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
@@ -121,8 +123,8 @@ export const URLS = {
   login: () => `${uatBase}sso/oauth/token`,
   sessionToken: () => `${uatBase}sso/me`,
 
-  apiKeys: (userId) => `${urlBase}user/${userId}/api-keys`,
-  apiKeyById: (userId, apiKeyId) => `${urlBase}user/${userId}/api-keys/${apiKeyId}`,
+  apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
+  apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,
@@ -143,7 +145,7 @@ export const URLS = {
       term: searchTerm,
     })}`,
   searchUsers: (term) =>
-    `${urlBase}user/search${getQueryParams({
+    `${urlCommonBase}users/search${getQueryParams({
       term,
     })}`,
   projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
@@ -234,16 +236,16 @@ export const URLS = {
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
   user: () => `${urlBase}user`,
-  userRegistration: () => `${urlBase}user/registration`,
-  userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
-  userPasswordReset: () => `${urlBase}user/password/reset`,
-  userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
-  userPasswordRestore: () => `${urlBase}user/password/restore`,
-  userChangePassword: () => `${urlBase}user/password/change`,
+  userRegistration: () => `${urlCommonBase}users/registration`,
+  userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
+  userPasswordReset: () => `${urlCommonBase}users/password/reset`,
+  userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
+  userPasswordRestore: () => `${urlCommonBase}users/password/restore`,
+  userChangePassword: () => `${urlCommonBase}users/password/change`,
   userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
-  userInfo: (userId) => `${urlBase}user/${userId}`,
+  userInfo: (userId) => `${urlCommonBase}users/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
-  userInviteExternal: () => `${urlBase}user/bid`,
+  userInviteExternal: () => `${urlCommonBase}users/bid`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
@@ -256,10 +258,10 @@ export const URLS = {
   events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlBase}user/all`,
+  allUsers: () => `${urlCommonBase}users/all`,
 
   exportUsers: (filterEntities) =>
-    `${urlBase}user/export${getQueryParams({
+    `${urlCommonBase}users/export${getQueryParams({
       view: 'csv',
       ...createFilterQuery(filterEntities),
     })}`,
