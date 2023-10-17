@@ -18,13 +18,14 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 // const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
+const { SubresourceIntegrityPlugin } = require('@sowtame/webpack-subresource-integrity');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   mode: 'production',
   output: {
-    // crossOriginLoading: 'anonymous',
+    crossOriginLoading: 'anonymous',
   },
   module: {
     rules: [
@@ -69,10 +70,11 @@ module.exports = {
       minRatio: 0.8,
     }),
     // TODO: wait until https://github.com/waysact/webpack-subresource-integrity/issues/176 will be resolved
-    // new SubresourceIntegrityPlugin({
-    //   hashFuncNames: ['sha256', 'sha384'],
-    //   hashLoading: 'lazy',
-    // }),
+    // TODO we are forced to use it because of webpack-subresource-integrity has not introduced the fix yet
+    new SubresourceIntegrityPlugin({
+      hashFuncNames: ['sha256', 'sha384'],
+      hashLoading: 'lazy',
+    }),
   ],
   optimization: {
     minimize: true,
