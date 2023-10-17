@@ -21,7 +21,11 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from 'controllers/plugins/uiExtensions/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
-import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'controllers/plugins/utils';
+import {
+  filterIntegrationsByName,
+  isPluginSupportsAllowedCommand,
+  isPluginSupportsCommonCommand,
+} from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
@@ -36,6 +40,10 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
 
     if (isDynamicIconAvailable && enabled) {
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
+      const isAllowedCommandSupported = isPluginSupportsAllowedCommand(
+        pluginData,
+        COMMAND_GET_FILE,
+      );
 
       if (isCommonCommandSupported) {
         return {
@@ -45,7 +53,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       }
 
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
-      if (integration) {
+      if (integration && isAllowedCommandSupported) {
         return {
           url: URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE),
           requestParams: commandParams,
