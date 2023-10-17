@@ -235,7 +235,7 @@ export const URLS = {
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
-  user: () => `${urlBase}user`,
+  users: () => `${urlCommonBase}users`,
   userRegistration: () => `${urlCommonBase}users/registration`,
   userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,
