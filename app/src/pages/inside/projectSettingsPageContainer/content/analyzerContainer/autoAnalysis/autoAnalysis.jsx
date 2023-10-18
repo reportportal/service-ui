@@ -103,7 +103,7 @@ const AutoAnalysis = ({
       PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB(
         data[MIN_SHOULD_MATCH],
         data[ANALYZER_ENABLED],
-        data[ANALYZER_MODE] === 'ALL' ? 'All' : messages.sameNameLaunchesCaption.defaultMessage,
+        data[ANALYZER_MODE],
       ),
     );
 

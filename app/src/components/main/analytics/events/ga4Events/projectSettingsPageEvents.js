@@ -15,6 +15,7 @@
  */
 
 import { normalizeEventString } from '../../utils';
+import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
@@ -53,12 +54,12 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     status: getStatus(status),
   }),
 
-  CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB: (number, status, type) => ({
+  CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB: (number, status, condition) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_auto_analyzer`,
     number,
     status: getStatus(status),
-    type: normalizeEventString(type),
+    condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[condition],
   }),
 
   CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({

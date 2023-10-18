@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
   getEditItemsModalEvents,
@@ -45,20 +44,11 @@ import {
   getSelectToggleButtonsAddWidgetModal,
 } from './common/widgetPages/actionEventCreators';
 import { getBasicClickEventParameters } from './common/ga4Utils';
+import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from './common/constants';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
 
-const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = LAUNCH_ANALYZE_TYPES;
-
-const LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP = {
-  [ANALYZE_ITEMS_MODE.TO_INVESTIGATE]: 'investigate_items',
-  [ANALYZE_ITEMS_MODE.AUTO_ANALYZED]: 'by_aa',
-  [ANALYZE_ITEMS_MODE.MANUALLY_ANALYZED]: 'manually',
-  [ANALYZER_MODE.ALL]: 'all_launches',
-  [ANALYZER_MODE.LAUNCH_NAME]: 'launches_with_the_same_name',
-  [ANALYZER_MODE.CURRENT_LAUNCH]: 'only_current_launch',
-};
 const formatAnalyzeItemsMode = (modes) =>
   modes.map((mode) => LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[mode]).join('#');
 
