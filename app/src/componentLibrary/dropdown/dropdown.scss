@@ -77,8 +77,8 @@
 }
 
 @mixin disabled-state {
-  opacity: 0.3;
   pointer-events: none;
+  background-color: $COLOR--bg-100;
 }
 
 @mixin value($color: $COLOR--almost-black) {
@@ -159,6 +159,10 @@
 
     &.disabled {
       @include disabled-state;
+
+      .value {
+        color: $COLOR--e-300;
+      }
     }
 
     &.error.touched {
@@ -227,6 +231,10 @@
 
     &.disabled {
       @include disabled-state;
+
+      .value {
+        color: $COLOR--e-300;
+      }
     }
 
     &.error.touched {
