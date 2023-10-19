@@ -44,6 +44,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
+import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -52,6 +53,35 @@ const cx = classNames.bind(styles);
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
 const selector = formValueSelector('generalForm');
+const secondsToHours = (seconds) => moment.duration(seconds, 'seconds').asHours();
+const hoursToDays = (hours) => moment.duration(hours, 'hours').asDays();
+
+const getInactivityTimeoutAnalytics = (inactivityTimeoutSeconds) => {
+  const inactivityTimeoutHours = secondsToHours(inactivityTimeoutSeconds);
+  const inactivityTimeoutDays = hoursToDays(inactivityTimeoutHours);
+
+  const severalHours = inactivityTimeoutHours > 1;
+  const hoursValue = `${inactivityTimeoutHours}_${severalHours ? 'hours' : 'hour'}`;
+
+  const severalDays = inactivityTimeoutDays > 1;
+  const daysValue = `${inactivityTimeoutDays}_${severalDays ? 'days' : 'day'}`;
+
+  return inactivityTimeoutHours >= 24 ? daysValue : hoursValue;
+};
+
+const getAnalyticsData = (...periods) =>
+  periods
+    .map((periodInSeconds) => {
+      const isForever = periodInSeconds === 0;
+
+      if (isForever) {
+        return 'forever';
+      }
+      const days = hoursToDays(secondsToHours(periodInSeconds));
+
+      return days;
+    })
+    .join('#');
 
 @reduxForm({
   form: 'generalForm',
@@ -134,7 +164,13 @@ export class GeneralTab extends Component {
 
   onFormSubmit = (formData) => {
     this.setState({ processingData: true });
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERAL_SUBMIT);
+
+    this.props.tracking.trackEvent(
+      PROJECT_SETTINGS_GENERAL_TAB_EVENTS.CLICK_SUBMIT(
+        getInactivityTimeoutAnalytics(formData.interruptJobTime),
+        getAnalyticsData(formData.keepLaunches, formData.keepLogs, formData.keepScreenshots),
+      ),
+    );
     const preparedData = normalizeAttributesWithPrefix(formData, JOB_ATTRIBUTE_PREFIX);
     const data = {
       configuration: {
