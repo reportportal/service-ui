@@ -17,7 +17,7 @@
 import { messages } from '../translations';
 
 export const getActionMessage = (intl, activityItem) => {
-  switch (activityItem.actionType) {
+  switch (activityItem.event_name) {
     case 'updateItem':
       return intl.formatMessage(
         activityItem.details.history.length > 1 ? messages.updateItemIssue : messages.updateItem,
@@ -33,6 +33,6 @@ export const getActionMessage = (intl, activityItem) => {
     case 'linkIssueAa':
       return intl.formatMessage(messages.issueLoadByAnalyzer);
     default:
-      return activityItem.actionType;
+      return activityItem.event_name;
   }
 };
