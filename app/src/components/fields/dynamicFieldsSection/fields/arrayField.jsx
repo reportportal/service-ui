@@ -24,10 +24,12 @@ export class ArrayField extends Component {
     field: PropTypes.object.isRequired,
     defaultOptionValueKey: PropTypes.string.isRequired,
     darkView: PropTypes.bool,
+    modalView: PropTypes.bool,
   };
 
   static defaultProps = {
     darkView: false,
+    modalView: false,
   };
 
   formatOptions = (values = []) =>
@@ -56,7 +58,7 @@ export class ArrayField extends Component {
   parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
 
   render() {
-    const { field, darkView, ...rest } = this.props;
+    const { field, darkView, modalView, ...rest } = this.props;
 
     return (
       <DynamicField
@@ -64,6 +66,7 @@ export class ArrayField extends Component {
         format={this.creatable ? this.formatOptions : this.formatTags}
         parse={this.parseTags}
         darkView={darkView}
+        modalView={modalView}
         {...rest}
       >
         <MultipleAutocomplete
