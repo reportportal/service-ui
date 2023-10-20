@@ -20,18 +20,13 @@
   align-items: center;
   justify-content: center;
   column-gap: 6px;
-  margin-top: 17px;
   font-family: $FONT-REGULAR;
   line-height: 1em;
   box-sizing: border-box;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding-bottom: 24px;
-  }
+  padding: 8px 0;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    padding-bottom: 40px;
-    padding-top: 24px;
+    padding: 12px 0;
   }
 }
 

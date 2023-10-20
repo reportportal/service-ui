@@ -15,9 +15,9 @@
  */
 
 .policy-block {
-  padding: 30px 50px;
   box-sizing: border-box;
   text-align: center;
+  padding: 8px 0;
 
   a {
     text-decoration: none;
@@ -26,7 +26,7 @@
     font-family: $FONT-REGULAR;
   }
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding-top: 20px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 12px 0;
   }
 }

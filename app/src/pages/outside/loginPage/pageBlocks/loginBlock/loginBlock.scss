@@ -22,7 +22,6 @@
   text-align: center;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    left: -115px;
     width: 610px;
   }
 
@@ -53,6 +52,10 @@
   box-sizing: border-box;
 }
 .bottom-content {
-  height: 12px;
-  margin-top: 48px;
+  line-height: 16px;
+  padding: 8px 0;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 12px 0;
+  }
 }
