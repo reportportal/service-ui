@@ -31,7 +31,6 @@
     width: 100%;
 
     &:not(.left) {
-      height: auto;
       overflow-y: hidden;
       background-color: $COLOR--white-two;
       box-shadow: 0 1px 3px 0 $COLOR--skipped;
