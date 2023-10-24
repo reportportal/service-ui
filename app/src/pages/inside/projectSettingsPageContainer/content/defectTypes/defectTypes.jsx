@@ -41,6 +41,7 @@ import {
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { docsReferences, createExternalLink } from 'common/utils';
 import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
@@ -147,7 +148,13 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
 
   return (
     <SettingsPageContent>
-      <TabDescription>{formatMessage(messages.description)}</TabDescription>
+      <TabDescription>
+        {Parser(
+          formatMessage(messages.description, {
+            a: (data) => createExternalLink(data, docsReferences.workWithReports),
+          }),
+        )}
+      </TabDescription>
       <Divider />
       {(isInformationMessage || !canAddNewDefectType) && (
         <div className={cx('system-message')}>
