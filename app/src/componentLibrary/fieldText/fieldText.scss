@@ -64,7 +64,8 @@
 }
 
 @mixin disabled-state {
-  opacity: 0.3;
+  pointer-events: none;
+  background-color: $COLOR--bg-100;
 }
 
 @mixin additional-text($color) {
@@ -200,7 +201,7 @@
   }
 
   &.placeholder {
-    @include input-text($COLOR--e-200);
+    @include input-text($COLOR--e-300);
     position: absolute;
     top: 2px;
     left: 0;
