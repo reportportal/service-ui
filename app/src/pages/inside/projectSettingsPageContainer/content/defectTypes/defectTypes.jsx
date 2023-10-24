@@ -102,6 +102,10 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
   };
 
+  const onDocumentation = () => {
+    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
+  };
+
   const defectTypesLength = useMemo(
     () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0),
     [defectTypes],
@@ -149,11 +153,14 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   return (
     <SettingsPageContent>
       <TabDescription>
-        {Parser(
-          formatMessage(messages.description, {
-            a: (data) => createExternalLink(data, docsReferences.workWithReports),
-          }),
-        )}
+        {formatMessage(messages.description)}{' '}
+        <span onClick={onDocumentation}>
+          {Parser(
+            formatMessage(messages.documentation, {
+              a: (data) => createExternalLink(data, docsReferences.workWithReports),
+            }),
+          )}
+        </span>
       </TabDescription>
       <Divider />
       {(isInformationMessage || !canAddNewDefectType) && (
