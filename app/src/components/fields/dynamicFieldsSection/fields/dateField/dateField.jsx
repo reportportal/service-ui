@@ -30,10 +30,12 @@ export class DateField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     darkView: PropTypes.bool,
+    modalView: PropTypes.bool,
   };
 
   static defaultProps = {
     darkView: false,
+    modalView: false,
   };
 
   parseDateValue = (value) => [(value && moment(value).format(DATE_FORMAT)) || ''];
@@ -41,7 +43,7 @@ export class DateField extends Component {
   formatDateValue = (value) => value && value[0];
 
   render() {
-    const { field, darkView, ...rest } = this.props;
+    const { field, darkView, modalView, ...rest } = this.props;
     return (
       <div className={cx('date-field')}>
         <DynamicField
@@ -49,6 +51,7 @@ export class DateField extends Component {
           parse={this.parseDateValue}
           format={this.formatDateValue}
           darkView={darkView}
+          modalView={modalView}
           {...rest}
         >
           <DatePicker

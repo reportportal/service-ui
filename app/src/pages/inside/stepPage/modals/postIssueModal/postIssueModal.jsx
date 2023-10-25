@@ -446,6 +446,7 @@ export class PostIssueModal extends Component {
               fields={fields}
               defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
               darkView
+              modalView
             />
           ) : (
             <div className={cx('no-default-properties-message')}>
