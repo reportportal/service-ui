@@ -72,11 +72,7 @@ export const messages = defineMessages({
   description: {
     id: 'DefectTypesTab.description',
     defaultMessage:
-      'Defect Types are a set of defects that are most likely to appear during tests execution. You can use default Defect Types to mark your test items or create your own Defect Types to make it easier to analyze tests execution. More information about Defect Types you can read in',
-  },
-  documentation: {
-    id: 'DefectTypesTab.documentation',
-    defaultMessage: '<a>Documentation</a>.',
+      'Defect Types are a set of defects that are most likely to appear during tests execution. You can use default Defect Types to mark your test items or create your own Defect Types to make it easier to analyze tests execution. More information about Defect Types you can read in <a>Documentation</a>.',
   },
   informationTitle: {
     id: 'DefectTypesTab.informationTitle',

@@ -102,8 +102,12 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const onDocumentation = () => {
-    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
+  const handleDocumentationClick = (event) => {
+    const { tagName } = event.target;
+
+    if (tagName === 'A') {
+      trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
+    }
   };
 
   const defectTypesLength = useMemo(
@@ -153,10 +157,9 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   return (
     <SettingsPageContent>
       <TabDescription>
-        {formatMessage(messages.description)}{' '}
-        <span onClick={onDocumentation}>
+        <span onClick={handleDocumentationClick}>
           {Parser(
-            formatMessage(messages.documentation, {
+            formatMessage(messages.description, {
               a: (data) => createExternalLink(data, docsReferences.workWithReports),
             }),
           )}
