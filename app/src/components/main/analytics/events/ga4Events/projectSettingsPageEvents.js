@@ -16,11 +16,13 @@
 
 import { normalizeEventString } from '../../utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
 const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
+const GENERAL = 'general';
 const BASIC_EVENT_PARAMETERS = {
   action: 'click',
   category: PROJECT_SETTINGS,
@@ -41,6 +43,18 @@ const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
   action: 'click',
   category: PROJECT_SETTINGS,
   place: 'integrations',
+};
+
+const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
+
+export const PROJECT_SETTINGS_GENERAL_TAB_EVENTS = {
+  CLICK_SUBMIT: (inactivityTimeout, type) => ({
+    ...BASIC_EVENT_PARAMETERS_GENERAL,
+    place: GENERAL,
+    element_name: 'button_submit',
+    number: inactivityTimeout,
+    type,
+  }),
 };
 
 const getStatus = (status) => (status ? 'active' : 'disabled');
