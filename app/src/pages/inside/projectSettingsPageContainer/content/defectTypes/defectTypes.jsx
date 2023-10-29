@@ -42,6 +42,7 @@ import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
@@ -64,6 +65,7 @@ const CreateDefect = withTooltip({
   <i
     className={cx('group-create', { disabled })}
     onClick={onClick}
+    onKeyDown={onClick}
     data-automation-id={'createDefectTypeIcon'}
   >
     {Parser(CreateDefectIcon)}
@@ -102,10 +104,14 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const handleDocumentationClick = (event) => {
-    const { tagName } = event.target;
-
+  const handleDocumentationClick = ({ tagName }) => {
     if (tagName === 'A') {
+      trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
+    }
+  };
+
+  const handleDocumentationKeyDown = ({ keyCode }) => {
+    if (keyCode === ENTER_KEY_CODE) {
       trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
     }
   };
@@ -157,7 +163,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   return (
     <SettingsPageContent>
       <TabDescription>
-        <span onClick={handleDocumentationClick}>
+        <span onClick={handleDocumentationClick} onKeyDown={handleDocumentationKeyDown}>
           {Parser(
             formatMessage(messages.description, {
               a: (data) => createExternalLink(data, docsReferences.workWithReports),
