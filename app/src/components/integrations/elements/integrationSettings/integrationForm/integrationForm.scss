@@ -38,6 +38,17 @@
   justify-content: center;
   width: 100%;
   margin-top: 5px;
+
+  svg path {
+    fill: $COLOR--e-300;
+  }
+
+  [class*="with-popover"] {
+    path:first-child {
+      stroke: $COLOR--e-300;
+      fill: none !important;
+    }
+  }
 }
 
 .block-header {

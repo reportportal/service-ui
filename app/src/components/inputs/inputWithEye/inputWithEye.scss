@@ -44,11 +44,11 @@
   }
 
   &.disabled {
-    opacity: 0.3;
+    opacity: 0.4;
     cursor: default;
 
     svg path {
-      fill: $COLOR--e-200;
+      fill: $COLOR--e-300;
     }
   }
 }
