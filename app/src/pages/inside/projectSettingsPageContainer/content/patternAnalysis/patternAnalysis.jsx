@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addPatternAction, patternsSelector } from 'controllers/project';
 import { useTracking } from 'react-tracking';
 import { getSaveNewPatternEvent, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';

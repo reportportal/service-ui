@@ -16,37 +16,34 @@
 
 import { normalizeEventString } from '../../utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
 const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
+const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
 const BASIC_EVENT_PARAMETERS = {
-  action: 'click',
-  category: PROJECT_SETTINGS,
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
   element_name: 'button_submit',
 };
 const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
-  action: 'click',
-  category: PROJECT_SETTINGS,
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: NOTIFICATIONS,
 };
 const BASIC_EVENT_PARAMETERS_DEFECT_TYPES = {
-  action: 'click',
-  category: PROJECT_SETTINGS,
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: DEFECT_TYPES,
 };
 
 const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
-  action: 'click',
-  category: PROJECT_SETTINGS,
-  place: 'integrations',
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: INTEGRATIONS,
 };
 
 const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
-  action: 'click',
-  category: PROJECT_SETTINGS,
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: PATTERN_ANALYSIS,
 };
 

@@ -36,7 +36,7 @@ import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
-import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';

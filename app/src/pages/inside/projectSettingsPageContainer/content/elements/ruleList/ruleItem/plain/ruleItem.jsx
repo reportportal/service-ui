@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from 'componentLibrary/toggle';
 import PropTypes from 'prop-types';
-import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
