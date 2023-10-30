@@ -104,7 +104,9 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const handleDocumentationClick = ({ tagName }) => {
+  const handleDocumentationClick = (event) => {
+    const { tagName } = event.target;
+
     if (tagName === 'A') {
       trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK);
     }
