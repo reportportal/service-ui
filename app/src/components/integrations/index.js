@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,3 +17,4 @@
 export { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES, PLUGIN_DEFAULT_IMAGE } from './constants';
 export { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from './settingsComponentsMap';
 export { AddIntegrationModal } from './modals/addIntegrationModal';
+export { DeleteIntegrationModal } from './modals/deleteIntegrationModal';

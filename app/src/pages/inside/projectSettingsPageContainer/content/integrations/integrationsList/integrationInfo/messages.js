@@ -60,10 +60,6 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.projectIntegrationText',
     defaultMessage: 'Project Integrations are created per project',
   },
-  projectIntegrationCreate: {
-    id: 'IntegrationsDescription.projectIntegrationCreate',
-    defaultMessage: 'Create Project Integration',
-  },
   projectIntegrationReset: {
     id: 'IntegrationsDescription.projectIntegrationReset',
     defaultMessage: 'Reset to Global Integration',

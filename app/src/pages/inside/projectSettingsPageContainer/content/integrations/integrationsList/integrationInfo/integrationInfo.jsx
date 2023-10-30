@@ -121,9 +121,8 @@ export const IntegrationInfo = (props) => {
     const pluginDetails = { ...details };
     dispatch(
       showModalAction({
-        id: 'createProjectIntegrationModal',
+        id: 'addIntegrationModal',
         data: {
-          modalTitle: formatMessage(messages.projectIntegrationCreate),
           hasWarningMessage: Boolean(
             availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
           ),
