@@ -165,6 +165,10 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
     ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
     icon_name: 'icon_create_defect',
   },
+  CLICK_DOCUMENTATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
+    link_name: 'documentation',
+  },
 };
 
 export const PROJECT_SETTINGS_INTEGRATION = {

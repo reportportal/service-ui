@@ -536,7 +536,7 @@
   "DefectTypesTab.defectShortNameHint": "简称的长度应为1到4个字符",
   "DefectTypesTab.deleteModalContent": "您确定要删除此缺陷类型吗？所有被标记为“<b>{name}</b>”的缺陷都将被替换为“<b>{parentName}</b>”。",
   "DefectTypesTab.deleteModalHeader": "删除缺陷类型",
-  "DefectTypesTab.description": "缺陷类型是在测试执行期间最有可能出现的一组缺陷。您可以使用默认缺陷类型来标记您的测试项,或创建自己的缺陷类型以便更轻松地分析测试执行。",
+  "DefectTypesTab.description": "缺陷类型是在测试执行期间最有可能出现的一组缺陷。您可以使用默认缺陷类型来标记您的测试项,或创建自己的缺陷类型以便更轻松地分析测试执行。有关缺陷类型的更多信息，您可以<a>在文档中</a>阅读",
   "DefectTypesTab.diagramCol": "图表",
   "DefectTypesTab.informationMessage": "您只剩下{length}个{slot}可用于创建缺陷类型",
   "DefectTypesTab.informationMessageMultiply": "可用缺陷类型",
