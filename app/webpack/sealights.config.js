@@ -66,7 +66,7 @@ module.exports = {
         exclude: /\/*-inline.svg/,
         options: {
           limit: 1000,
-          name: 'media/[name][ext]',
+          name: 'media/[name].[contenthash:8][ext]',
         },
       },
       {

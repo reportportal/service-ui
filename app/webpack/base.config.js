@@ -31,7 +31,7 @@ module.exports = {
     path: path.resolve(__dirname, '../build'),
     filename: '[name].app.[contenthash:8].js',
     publicPath: 'auto',
-    assetModuleFilename: 'media/[name][ext]',
+    assetModuleFilename: 'media/[name].[contenthash:8][ext]',
     clean: true,
   },
   resolve: {
