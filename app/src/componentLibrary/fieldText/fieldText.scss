@@ -193,6 +193,11 @@
 
   input {
     border: none;
+
+    &:disabled::placeholder,
+    &:disabled {
+      color: $COLOR--e-300;
+    }
   }
 
   &.input {

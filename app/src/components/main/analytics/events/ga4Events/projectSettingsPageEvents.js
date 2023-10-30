@@ -24,6 +24,7 @@ const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
 const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
+const GENERAL = 'general';
 const BASIC_EVENT_PARAMETERS = {
   ...getBasicClickEventParameters(PROJECT_SETTINGS),
   element_name: 'button_submit',
@@ -45,6 +46,18 @@ const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
 const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
   ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: PATTERN_ANALYSIS,
+};
+
+const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
+
+export const PROJECT_SETTINGS_GENERAL_TAB_EVENTS = {
+  CLICK_SUBMIT: (inactivityTimeout, type) => ({
+    ...BASIC_EVENT_PARAMETERS_GENERAL,
+    place: GENERAL,
+    element_name: 'button_submit',
+    number: inactivityTimeout,
+    type,
+  }),
 };
 
 const getStatus = (status) => (status ? 'active' : 'disabled');
@@ -154,6 +167,10 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
   CLICK_CREATE_ICON: {
     ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
     icon_name: 'icon_create_defect',
+  },
+  CLICK_DOCUMENTATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
+    link_name: 'documentation',
   },
 };
 
