@@ -15,10 +15,12 @@
  */
 
 import React, { useState } from 'react';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from 'componentLibrary/toggle';
 import PropTypes from 'prop-types';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
@@ -34,6 +36,7 @@ export const RuleItem = ({
   onRuleNameClick,
   isPreview,
 }) => {
+  const { trackEvent } = useTracking();
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
   const isRuleNameClickable = Boolean(onRuleNameClick);
@@ -47,6 +50,9 @@ export const RuleItem = ({
   }
 
   const onClickHandler = () => {
+    if (!shown) {
+      trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.OPEN_NAME_PATTERN_ANALYSIS);
+    }
     onClick(!shown);
     setShown(!shown);
   };

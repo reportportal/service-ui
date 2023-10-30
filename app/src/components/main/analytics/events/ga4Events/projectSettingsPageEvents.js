@@ -21,6 +21,7 @@ const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
 const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
+const PATTERN_ANALYSIS = 'pattern_analysis';
 const BASIC_EVENT_PARAMETERS = {
   action: 'click',
   category: PROJECT_SETTINGS,
@@ -41,6 +42,12 @@ const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
   action: 'click',
   category: PROJECT_SETTINGS,
   place: 'integrations',
+};
+
+const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
+  action: 'click',
+  category: PROJECT_SETTINGS,
+  place: PATTERN_ANALYSIS,
 };
 
 const getStatus = (status) => (status ? 'active' : 'disabled');
@@ -176,5 +183,42 @@ export const PROJECT_SETTINGS_INTEGRATION = {
   CLICK_RESET_TO_GLOBAL_INTEGRATION: {
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     element_name: 'button_reset',
+  },
+};
+
+export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
+  CLICK_CREATE_PATTERN_ANALYSIS: {
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    element_name: 'button_create_pattern',
+  },
+
+  CLICK_SAVE_PATTERN_ANALYSIS_CREATE_MODAL: (type, switcher, isDuplicateModal) => ({
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    element_name: 'button_save',
+    modal: isDuplicateModal ? 'duplicate_pattern' : 'create_pattern',
+    type: normalizeEventString(type),
+    switcher: getSwitcher(switcher),
+  }),
+
+  SWITCH_NAME_PATTERN_ANALYSIS: (switcher) => ({
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    switcher: getSwitcher(switcher),
+  }),
+
+  SWITCH_AUTO_PATTERN_ANALYSIS: (status) => ({
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    element_name: 'checkbox_auto_pattern_analysis',
+    status: getStatus(status),
+  }),
+
+  CLICK_ACTION_ICON_PATTERN_ANALYSIS: (iconName) => ({
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    icon_name: iconName,
+  }),
+
+  OPEN_NAME_PATTERN_ANALYSIS: {
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    element_name: 'pattern_name',
+    status: 'open',
   },
 };
