@@ -36,6 +36,7 @@ import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
@@ -68,6 +69,9 @@ export const PatternAnalysisContent = ({
   });
 
   const onRenamePattern = (pattern) => {
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_ACTION_ICON_PATTERN_ANALYSIS('icon_edit'),
+    );
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_PATTERN_ICON);
     dispatch(
       showModalAction({
@@ -81,11 +85,22 @@ export const PatternAnalysisContent = ({
     );
   };
   const handleSaveClonedPattern = (pattern) => {
+    const IS_DUPLICATE_MODAL = true;
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_SAVE_PATTERN_ANALYSIS_CREATE_MODAL(
+        pattern.type,
+        pattern.enabled,
+        IS_DUPLICATE_MODAL,
+      ),
+    );
     trackEvent(SETTINGS_PAGE_EVENTS.SAVE_BTN_CLONE_PATTERN_MODAL);
     dispatch(addPatternAction(pattern));
     dispatch(hideModalAction());
   };
   const onClonePattern = (pattern) => {
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_ACTION_ICON_PATTERN_ANALYSIS('icon_duplicate'),
+    );
     trackEvent(SETTINGS_PAGE_EVENTS.CLONE_PATTERN_ICON);
     const newPattern = {
       ...pattern,
@@ -110,6 +125,9 @@ export const PatternAnalysisContent = ({
     dispatch(hideModalAction());
   };
   const showDeleteConfirmationDialog = (pattern) => {
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_ACTION_ICON_PATTERN_ANALYSIS('icon_delete'),
+    );
     dispatch(
       showModalAction({
         id: 'deletePatternRuleModal',
@@ -120,6 +138,7 @@ export const PatternAnalysisContent = ({
     );
   };
   const onChangePatternAnalysis = (enabled) => {
+    trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.SWITCH_AUTO_PATTERN_ANALYSIS(enabled));
     trackEvent(
       enabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_SWITCHER
@@ -128,6 +147,7 @@ export const PatternAnalysisContent = ({
     dispatch(updatePAStateAction(enabled));
   };
   const onToggleHandler = (enabled, pattern) => {
+    trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.SWITCH_NAME_PATTERN_ANALYSIS(enabled));
     trackEvent(
       enabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_RULE_SWITCHER

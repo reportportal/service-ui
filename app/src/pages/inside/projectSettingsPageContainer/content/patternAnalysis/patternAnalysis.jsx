@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addPatternAction, patternsSelector } from 'controllers/project';
 import { useTracking } from 'react-tracking';
 import { getSaveNewPatternEvent, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';
@@ -41,11 +42,18 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const dispatch = useDispatch();
 
   const savePattern = (pattern) => {
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_SAVE_PATTERN_ANALYSIS_CREATE_MODAL(
+        pattern.type,
+        pattern.enabled,
+      ),
+    );
     trackEvent(getSaveNewPatternEvent(pattern.type));
     dispatch(addPatternAction(pattern));
     dispatch(hideModalAction());
   };
   const onAddPattern = () => {
+    trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_CREATE_PATTERN_ANALYSIS);
     trackEvent(SETTINGS_PAGE_EVENTS.CREATE_PATTERN_BTN);
     dispatch(
       showModalAction({
