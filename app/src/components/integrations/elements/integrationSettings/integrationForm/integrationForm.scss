@@ -43,12 +43,14 @@
     fill: $COLOR--e-300;
   }
 
+  /* stylelint-disable */
   [class*="with-popover"] {
     path:first-child {
       stroke: $COLOR--e-300;
       fill: none !important;
     }
   }
+  /* stylelint-enable */
 }
 
 .block-header {
