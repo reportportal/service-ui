@@ -51,15 +51,18 @@
 .ghost {
   border: 1px solid $COLOR--topaz-2;
   background-color: transparent;
-  color: $COLOR--almost-black;
+  color: $COLOR--topaz-2;
   &:hover:not(.disabled) {
     border: 1px solid $COLOR--topaz-hover-2;
+    color: $COLOR--topaz-hover-2;
   }
   &:active:not(.disabled) {
     border: 1px solid $COLOR--topaz-pressed;
+    color: $COLOR--topaz-pressed;
   }
   &:focus:not(.disabled, :active) {
     border: 2px solid $COLOR--topaz-focused;
+    color: $COLOR--topaz-focused;
   }
 }
 

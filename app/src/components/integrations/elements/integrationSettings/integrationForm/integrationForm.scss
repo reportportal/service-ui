@@ -92,20 +92,4 @@
   button {
     font-size: 13px;
   }
-
-  &:last-child {
-    button {
-      color: $COLOR--topaz-2;
-
-      &:hover {
-        color: $COLOR--topaz-hover-2;
-      }
-      &:focus {
-        color: $COLOR--topaz-focused;
-      }
-      &:active {
-        color: $COLOR--topaz-pressed;
-      }
-    }
-  }
 }

@@ -33,20 +33,4 @@
   &:last-child {
     margin-right: 0;
   }
-
-  &:first-child {
-    button {
-      color: $COLOR--topaz-2;
-
-      &:hover {
-        color: $COLOR--topaz-hover-2;
-      }
-      &:focus {
-        color: $COLOR--topaz-focused;
-      }
-      &:active {
-        color: $COLOR--topaz-pressed;
-      }
-    }
-  }
 }
