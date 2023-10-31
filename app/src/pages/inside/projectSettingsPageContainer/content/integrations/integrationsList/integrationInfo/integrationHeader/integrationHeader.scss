@@ -51,22 +51,10 @@
 
   button {
     margin-right: 8px;
-    color: $COLOR--topaz-2;
-
-    &:hover {
-      color: $COLOR--topaz-hover-2;
-    }
-    &:focus {
-      color: $COLOR--topaz-focused;
-    }
-    &:active {
-      color: $COLOR--topaz-pressed;
-    }
   }
 
   button:first-of-type {
     margin-right: 0px;
-    color: $COLOR--white-two;
   }
 }
 
