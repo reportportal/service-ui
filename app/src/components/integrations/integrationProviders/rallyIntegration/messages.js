@@ -25,8 +25,4 @@ export const messages = defineMessages({
     id: 'RallyConnectionFormFields.accessKeyLabel',
     defaultMessage: 'AccessKey',
   },
-  editAuthTitle: {
-    id: 'AddIntegrationModal.editAuthTitle',
-    defaultMessage: 'Edit authorization',
-  },
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
 
-const DeleteProjectIntegrationModal = ({ data }) => {
+const DeleteIntegrationModal = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -54,7 +54,7 @@ const DeleteProjectIntegrationModal = ({ data }) => {
     </ModalLayout>
   );
 };
-DeleteProjectIntegrationModal.propTypes = {
+DeleteIntegrationModal.propTypes = {
   data: PropTypes.shape({
     onConfirm: PropTypes.func,
     modalTitle: PropTypes.string,
@@ -62,7 +62,7 @@ DeleteProjectIntegrationModal.propTypes = {
     isReset: PropTypes.bool,
   }),
 };
-DeleteProjectIntegrationModal.defaultProps = {
+DeleteIntegrationModal.defaultProps = {
   data: {
     onConfirm: () => {},
     modalTitle: '',
@@ -71,4 +71,4 @@ DeleteProjectIntegrationModal.defaultProps = {
   },
 };
 
-export default withModal('deleteProjectIntegrationModal')(DeleteProjectIntegrationModal);
+export default withModal('deleteIntegrationModal')(DeleteIntegrationModal);

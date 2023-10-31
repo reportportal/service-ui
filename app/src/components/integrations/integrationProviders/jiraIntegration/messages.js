@@ -29,8 +29,4 @@ export const messages = defineMessages({
     id: 'JiraConnectionFormFields.authorizedByTitle',
     defaultMessage: 'Authorized by username',
   },
-  editAuthTitle: {
-    id: 'AddIntegrationModal.editAuthTitle',
-    defaultMessage: 'Edit authorization',
-  },
 });

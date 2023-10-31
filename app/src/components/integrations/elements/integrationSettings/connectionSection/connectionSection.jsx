@@ -134,7 +134,7 @@ export class ConnectionSection extends Component {
     );
 
     this.props.showModalAction({
-      id: 'deleteProjectIntegrationModal',
+      id: 'deleteIntegrationModal',
       data: {
         onConfirm: this.props.onRemoveIntegration,
         modalTitle: `${formatMessage(COMMON_LOCALE_KEYS.DELETE)} ${data.name}`,

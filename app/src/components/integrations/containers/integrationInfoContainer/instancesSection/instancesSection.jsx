@@ -190,7 +190,7 @@ export class InstancesSection extends Component {
       data.name,
     );
 
-  addProjectIntegration = (formData, metaData) => {
+  createIntegration = (formData, metaData) => {
     const { isGlobal, instanceType } = this.props;
     const data = {
       enabled: true,
@@ -253,16 +253,15 @@ export class InstancesSection extends Component {
     });
   };
 
-  showAddProjectIntegrationModal = () => {
-    const { instanceType, pluginDetails, isGlobal, events } = this.props;
+  showAddIntegrationModal = () => {
+    const { instanceType, pluginDetails, isGlobal } = this.props;
 
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
-        onConfirm: this.addProjectIntegration,
+        onConfirm: this.createIntegration,
         instanceType,
         isGlobal,
-        eventsInfo: events.saveIntegrationModalEvents(instanceType, isGlobal),
         customProps: {
           pluginDetails,
         },
@@ -270,18 +269,18 @@ export class InstancesSection extends Component {
     });
   };
 
-  addProjectIntegrationClickHandler = () => {
+  addIntegrationClickHandler = () => {
     const { instanceType, tracking, events } = this.props;
 
     tracking.trackEvent(events.integrationAddClickEvent(instanceType));
-    this.showAddProjectIntegrationModal();
+    this.showAddIntegrationModal();
   };
 
   unlinkAndSetupManuallyClickHandler = () => {
     const { instanceType, tracking } = this.props;
 
     tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
-    this.showAddProjectIntegrationModal();
+    this.showAddIntegrationModal();
   };
 
   render() {
@@ -322,7 +321,7 @@ export class InstancesSection extends Component {
                 />
                 {this.multiple && !disabled && (
                   <div className={cx('add-integration-button')}>
-                    <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                    <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                       {formatMessage(messages.addIntegrationButtonTitle)}
                     </GhostButton>
                   </div>
@@ -356,7 +355,7 @@ export class InstancesSection extends Component {
             )}
             {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
               <div className={cx('add-integration-button')}>
-                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                   {formatMessage(messages.addIntegrationButtonTitle)}
                 </GhostButton>
               </div>

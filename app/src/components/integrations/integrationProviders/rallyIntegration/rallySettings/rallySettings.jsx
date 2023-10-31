@@ -67,13 +67,14 @@ export const RallySettings = (props) => {
   const editAuthorizationClickHandler = (testConnection) => {
     const {
       data: { name, integrationParameters, integrationType },
+      isGlobal,
     } = props;
 
     dispatch(
       showModalAction({
-        id: 'createProjectIntegrationModal',
+        id: 'addIntegrationModal',
         data: {
-          modalTitle: formatMessage(messages.editAuthTitle),
+          isGlobal,
           onConfirm: getConfirmationFunc(testConnection),
           instanceType: integrationType.name,
           customProps: {
