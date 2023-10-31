@@ -82,7 +82,7 @@ Popover.propTypes = {
 };
 
 const IconShow = () => {
-  return <>{Parser(InfoIcon)}</>;
+  return <i>{Parser(InfoIcon)}</i>;
 };
 
 const ShowWithPopover = withPopover({

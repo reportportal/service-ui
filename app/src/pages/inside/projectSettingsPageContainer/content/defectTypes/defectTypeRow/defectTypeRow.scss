@@ -101,6 +101,15 @@ $DEFECT_NAME_PADDING: 16px;
     width: 40px;
     height: 14px;
     margin: 0;
+
+    svg {
+      path {
+        fill: $COLOR--e-300;
+      }
+      rect {
+        stroke: $COLOR--e-300;
+      }
+    }
   }
 }
 
@@ -117,7 +126,7 @@ $DEFECT_NAME_PADDING: 16px;
 .delete-button,
 .copy-button {
   path {
-    fill: $COLOR--e-200;
+    fill: $COLOR--e-300;
   }
   &:hover path {
     fill: $COLOR--e-400;

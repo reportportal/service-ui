@@ -42,18 +42,16 @@
   svg {
     width: 6px;
     height: 16px;
-    fill: $COLOR--gray-60;
+    fill: $COLOR--e-300;
     &:hover {
-      fill: $COLOR--black-2;
+      fill: $COLOR--e-400;
     }
   }
 
   &.disabled {
     cursor: default;
     pointer-events: none;
-    svg {
-      fill: $COLOR--gray-80;
-    }
+    opacity: 0.4;
   }
 }
 
@@ -93,37 +91,23 @@
   vertical-align: middle;
 
   svg {
-    stroke: $COLOR--gray-60;
+    stroke: $COLOR--e-300;
     &:hover {
-      stroke: $COLOR--black-2;
+      stroke: $COLOR--e-400;
     }
   }
 
   &.filled {
     svg {
-      fill: $COLOR--gray-60;
+      fill: $COLOR--e-300;
       &:hover {
-        fill: $COLOR--black-2;
+        fill: $COLOR--e-400;
       }
     }
   }
 
   &.disabled {
     cursor: default;
-    svg:not(.filled) {
-      stroke: $COLOR--gray-80;
-      &:hover {
-        stroke: $COLOR--gray-80;
-      }
-    }
-
-    &.filled {
-      svg {
-        fill: $COLOR--gray-80;
-        &:hover {
-          fill: $COLOR--gray-80;
-        }
-      }
-    }
+    opacity: 0.4;
   }
 }

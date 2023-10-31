@@ -38,6 +38,19 @@
   justify-content: center;
   width: 100%;
   margin-top: 5px;
+
+  svg path {
+    fill: $COLOR--e-300;
+  }
+
+  i {
+    svg {
+      path:first-child {
+        stroke: $COLOR--e-300;
+        fill: none !important;
+      }
+    }
+  }
 }
 
 .block-header {

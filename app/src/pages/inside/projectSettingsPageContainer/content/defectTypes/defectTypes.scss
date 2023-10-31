@@ -94,6 +94,7 @@ $DEFECT_NAME_PADDING: 16px;
 }
 
 .group-create {
+  @include fill-svg($COLOR--e-300);
   position: relative;
   display: inline-block;
   width: 16px;
@@ -101,7 +102,7 @@ $DEFECT_NAME_PADDING: 16px;
   cursor: pointer;
 
   &.disabled {
-    opacity: 0.3;
+    opacity: 0.4;
     cursor: initial;
   }
 

@@ -48,6 +48,12 @@
   &.is-dragging {
     column-gap: 0;
   }
+
+  div:last-child {
+    svg circle {
+      fill: $COLOR--e-300;
+    }
+  }
 }
 
 .tooltip-wrapper {
