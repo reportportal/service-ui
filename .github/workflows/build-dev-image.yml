@@ -18,7 +18,7 @@ jobs:
   build-and-export:
     name: Build and export to AWS ECR
     runs-on: ubuntu-latest
-    environment: develop
+    environment: development
     steps:
       - name: Checkout
         uses: actions/checkout@v3
