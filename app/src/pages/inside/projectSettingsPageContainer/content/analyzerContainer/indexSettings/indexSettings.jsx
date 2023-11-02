@@ -26,6 +26,11 @@ import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { docsReferences, createExternalLink } from 'common/utils';
+import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { Layout } from '../../layout';
 import { LabeledPreloader } from '../../elements';
 import { messages } from './messages';
@@ -52,6 +57,14 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
 
   return (
     <Layout
+      handleDescriptionClick={handleExternalLinkClick(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('index_settings'),
+      )}
+      handleDescriptionKeyDown={handleExternalLinkKeyDown(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('index_settings'),
+      )}
       description={Parser(
         formatMessage(messages.tabDescription, {
           a: (data) =>

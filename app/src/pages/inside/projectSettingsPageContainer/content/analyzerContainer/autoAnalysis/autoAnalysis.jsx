@@ -31,6 +31,10 @@ import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
@@ -122,6 +126,14 @@ const AutoAnalysis = ({
 
   return (
     <Layout
+      handleDescriptionClick={handleExternalLinkClick(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('auto_analyzer'),
+      )}
+      handleDescriptionKeyDown={handleExternalLinkKeyDown(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('auto_analyzer'),
+      )}
       description={Parser(
         formatMessage(messages.tabDescription, {
           a: (data) =>

@@ -37,6 +37,10 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
 import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
@@ -181,6 +185,14 @@ export const PatternAnalysisContent = ({
   return (
     <>
       <Layout
+        handleDescriptionClick={handleExternalLinkClick(
+          trackEvent,
+          PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION(),
+        )}
+        handleDescriptionKeyDown={handleExternalLinkKeyDown(
+          trackEvent,
+          PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION(),
+        )}
         description={Parser(
           formatMessage(messages.tabDescription, {
             a: (data) => createExternalLink(data, docsReferences.patternAnalysisDocs),

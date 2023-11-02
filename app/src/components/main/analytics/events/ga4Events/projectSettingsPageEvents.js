@@ -91,6 +91,12 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     status: getStatus(status),
     type: type ? 'exclude' : 'include',
   }),
+
+  CLICK_LINK_DOCUMENTATION: (place) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: `${ANALYZER}_${place}`,
+    link_name: 'documentation',
+  }),
 };
 
 export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
@@ -123,10 +129,11 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     switcher: getSwitcher(switcher),
   }),
 
-  CLICK_LINK_DOCUMENTATION: {
+  CLICK_LINK_DOCUMENTATION: (place) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    ...(place && { place }),
     link_name: 'documentation',
-  },
+  }),
 
   CLICK_CREATE_RULE_BUTTON: {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
@@ -235,4 +242,9 @@ export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
     element_name: 'pattern_name',
     status: 'open',
   },
+  CLICK_LINK_DOCUMENTATION: (place) => ({
+    ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
+    ...(place && { place }),
+    link_name: 'documentation',
+  }),
 };

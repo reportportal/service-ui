@@ -27,6 +27,10 @@ import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
 import { FIELD } from 'common/constants/dataAutomation';
 import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
@@ -66,6 +70,14 @@ const SimilarItems = ({
 
   return (
     <Layout
+      handleDescriptionClick={handleExternalLinkClick(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('similar_items'),
+      )}
+      handleDescriptionKeyDown={handleExternalLinkKeyDown(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('similar_items'),
+      )}
       description={Parser(
         formatMessage(messages.tabDescription, {
           a: (data) =>

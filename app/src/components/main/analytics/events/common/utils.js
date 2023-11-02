@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
+
 // conditions should look like 'statistics$defects$product_bug$pb001'
 export const getDefectTypeLabel = (condition) => {
   try {
@@ -41,4 +43,16 @@ export const getIncludedData = ({ includeData, includeComments, includeLogs }) =
   return Object.keys(analyticsDataMap)
     .filter((key) => analyticsDataMap[key])
     .join('#');
+};
+
+export const handleExternalLinkClick = (trackEvent, event) => ({ target: { tagName } }) => {
+  if (tagName === 'A') {
+    trackEvent(event);
+  }
+};
+
+export const handleExternalLinkKeyDown = (trackEvent, event) => ({ keyCode }) => {
+  if (keyCode === ENTER_KEY_CODE) {
+    trackEvent(event);
+  }
 };

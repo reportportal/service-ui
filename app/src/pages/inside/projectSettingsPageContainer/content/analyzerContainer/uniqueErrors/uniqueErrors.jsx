@@ -26,6 +26,10 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
@@ -84,6 +88,14 @@ const UniqueErrors = ({
 
   return (
     <Layout
+      handleDescriptionClick={handleExternalLinkClick(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('unique_errors'),
+      )}
+      handleDescriptionKeyDown={handleExternalLinkKeyDown(
+        trackEvent,
+        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('unique_errors'),
+      )}
       description={Parser(
         formatMessage(messages.tabDescription, {
           a: (data) =>

@@ -48,6 +48,10 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
 import {
+  handleExternalLinkClick,
+  handleExternalLinkKeyDown,
+} from 'components/main/analytics/events/common/utils';
+import {
   RuleList,
   FieldElement,
   NotificationRuleContent,
@@ -245,7 +249,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION('no_notifications'));
   };
 
   if (loading) {
@@ -257,6 +261,14 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       {notifications.length ? (
         <SettingsPageContent>
           <Layout
+            handleDescriptionClick={handleExternalLinkClick(
+              trackEvent,
+              PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION(),
+            )}
+            handleDescriptionKeyDown={handleExternalLinkKeyDown(
+              trackEvent,
+              PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION(),
+            )}
             description={Parser(
               formatMessage(messages.tabDescription, {
                 a: (data) => createExternalLink(data, docsReferences.notificationsDocs),

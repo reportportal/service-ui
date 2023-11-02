@@ -22,10 +22,17 @@ import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
 
-export const Layout = ({ description, children }) => {
+export const Layout = ({
+  description,
+  children,
+  handleDescriptionClick,
+  handleDescriptionKeyDown,
+}) => {
   return (
     <>
-      <TabDescription>{description}</TabDescription>
+      <TabDescription handleClick={handleDescriptionClick} handleKeyDown={handleDescriptionKeyDown}>
+        {description}
+      </TabDescription>
       <Divider />
       <div className={cx('children')}>{children}</div>
     </>
@@ -34,4 +41,10 @@ export const Layout = ({ description, children }) => {
 Layout.propTypes = {
   description: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  handleDescriptionClick: PropTypes.func,
+  handleDescriptionKeyDown: PropTypes.func,
+};
+Layout.defaultProps = {
+  handleDescriptionClick: () => {},
+  handleDescriptionKeyDown: () => {},
 };
