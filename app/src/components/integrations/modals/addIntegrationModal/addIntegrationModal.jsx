@@ -29,6 +29,7 @@ import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
+import { useTracking } from 'react-tracking';
 import styles from './addIntegrationModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,13 +63,25 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const { onConfirm, customProps, isGlobal } = data;
+  const { trackEvent } = useTracking();
+  const {
+    onConfirm,
+    customProps,
+    isGlobal,
+    eventsInfo: { createGlobalIntegration },
+  } = data;
+
+  const integrationFieldsExtension = fieldsExtensions.find(
+    (ext) => ext.pluginName === data.instanceType,
+  );
 
   const updateMetaData = (newMetaData) => {
     setMetaData({ ...metaData, ...newMetaData });
   };
 
   const onSubmit = (newData) => {
+    trackEvent(createGlobalIntegration(integrationFieldsExtension.pluginName));
+
     onConfirm(newData, metaData);
   };
 
@@ -84,9 +97,6 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
 
-  const integrationFieldsExtension = fieldsExtensions.find(
-    (ext) => ext.pluginName === data.instanceType,
-  );
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
     (integrationFieldsExtension && ExtensionLoader);
@@ -127,7 +137,7 @@ AddIntegrationModal.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 AddIntegrationModal.defaultProps = {
-  data: {},
+  data: { eventsInfo: { createGlobalIntegration: () => {} } },
 };
 
 export default withModal('addIntegrationModal')(

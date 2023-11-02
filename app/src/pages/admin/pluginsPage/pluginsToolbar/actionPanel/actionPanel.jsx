@@ -110,7 +110,7 @@ export class ActionPanel extends Component {
         url: URLS.plugin(),
         singleImport: true,
         eventsInfo: {
-          okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,
+          uploadButton: PLUGINS_PAGE_EVENTS.UPLOAD_BTN_UPLOAD_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
           closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UPLOAD_MODAL,
         },

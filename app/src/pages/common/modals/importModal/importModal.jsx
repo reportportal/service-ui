@@ -66,7 +66,7 @@ export class ImportModal extends Component {
   };
 
   static defaultProps = {
-    data: {},
+    data: { eventsInfo: { uploadButton: () => {}, cancelBtn: {}, closeIcon: {} } },
   };
 
   state = {
@@ -168,6 +168,8 @@ export class ImportModal extends Component {
     };
   };
 
+  getFilesNames = (files) => files.map(({ file: { name } }) => name).join('#');
+
   formValidationMessage = (validationProperties) => {
     const {
       intl,
@@ -222,6 +224,14 @@ export class ImportModal extends Component {
   successUploadHandler = (id) => {
     this.props.data.onImport();
     const { files } = this.state;
+    const {
+      tracking: { trackEvent },
+      data: {
+        eventsInfo: { uploadButton },
+      },
+    } = this.props;
+
+    trackEvent(uploadButton(this.getFilesNames(files)));
 
     this.setState({
       files: files.map((item) => {

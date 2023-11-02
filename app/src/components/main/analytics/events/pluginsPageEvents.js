@@ -17,7 +17,6 @@
 import {
   getClickDeleteBtnRemoveIntegrationEvent,
   getClickSaveBtnEditAuthorizationEvent,
-  getIntegrationAddClickEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
   getPluginConfigureClickSubmitEvent,
@@ -26,6 +25,7 @@ import {
   getPluginRemoveIntegrationClickEvent,
   getSaveIntegrationModalEvents,
 } from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
+import { getBasicClickEventParameters, normalizeEventParameter } from './common/ga4Utils';
 
 export const PLUGINS_PAGE = 'plugins';
 
@@ -51,18 +51,33 @@ export const getUninstallPluginBtnClickEvent = (pluginName) => ({
 });
 
 const PLUGINS_MODAL = 'Modal plugins';
+const BASIC_PLUGINS_EVENT_PARAMS = getBasicClickEventParameters(PLUGINS_PAGE);
 
 export const PLUGINS_PAGE_EVENTS = {
+  // GA 4
   CLICK_UPLOAD_BTN: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Upload',
-    label: 'Arise Modal Upload Plugin',
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'upload',
+    place: 'navigation_panel',
   },
-  OK_BTN_UPLOAD_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Ok on Modal "Upload plugins"',
-    label: 'Upload Plugins',
-  },
+  UPLOAD_BTN_UPLOAD_MODAL: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'upload',
+    modal: 'upload_plugin',
+    type,
+  }),
+  CLICK_CREATE_GLOBAL_INTEGRATION: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'button_create',
+    modal: 'create_project_integration',
+    type: normalizeEventParameter(type),
+  }),
+  integrationAddClickEvent: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'add_integration',
+    type: normalizeEventParameter(type),
+  }),
+  // GA 3
   CANCEL_BTN_UPLOAD_MODAL: {
     category: PLUGINS_MODAL,
     action: 'Click on Btn Cancel on Modal "Upload plugins"',
@@ -107,6 +122,5 @@ export const PLUGINS_PAGE_EVENTS = {
   pluginConfigureClick: getPluginConfigureClickEvent(PLUGINS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(PLUGINS_PAGE),
   pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(PLUGINS_PAGE),
-  integrationAddClickEvent: getIntegrationAddClickEvent(PLUGINS_PAGE),
   saveIntegrationModalEvents: getSaveIntegrationModalEvents(PLUGINS_PAGE),
 };
