@@ -24,5 +24,5 @@ export const normalizePathWithPrefix = (path) => {
 };
 
 export const setWindowLocationToNewPath = (path) => {
-  window.location = `${window.location.protocol}//${window.location.host}${path}`;
+  window.location = path;
 };
