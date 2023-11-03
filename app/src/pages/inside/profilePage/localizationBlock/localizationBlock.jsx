@@ -33,7 +33,7 @@ import {
 } from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { PROFILE_EVENT } from 'analyticsEvents/profilePageEvent';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import UkrainianFlagIcon from './img/ua-flag-inline.svg';
@@ -154,7 +154,7 @@ export class LocalizationBlock extends Component {
 
   onChangeLanguage = (lang) => {
     const { trackEvent } = this.props.tracking;
-    trackEvent(PROFILE_EVENT.CHANGE_LANGUAGE(langNameByCode(lang)));
+    trackEvent(PROFILE_EVENTS.CHANGE_LANGUAGE(langNameByCode(lang)));
     updateStorageItem(APPLICATION_SETTINGS, { appLanguage: lang });
     this.props.setLangAction(lang);
   };

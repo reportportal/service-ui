@@ -17,6 +17,7 @@
 import React from 'react';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
@@ -26,6 +27,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { daysFromNow, createExternalLink } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { docsReferences } from 'common/utils/referenceDictionary';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './apiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -56,13 +58,29 @@ const messages = defineMessages({
 export const ApiKeysBlock = ({ apiKeys }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
-  const onGenerateClick = () => dispatch(showModalAction({ id: 'generateApiKeyModal' }));
-  const onRevokeClick = (key) => dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
+  const onGenerateClick = () => {
+    dispatch(showModalAction({ id: 'generateApiKeyModal' }));
+    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_API_KEY_BUTTON(true));
+  };
+
+  const onRevokeClick = (key) => {
+    dispatch(showModalAction({ id: 'revokeApiKeyModal', data: key }));
+    trackEvent(PROFILE_EVENTS.CLICK_REVOKE_BUTTON);
+  };
+
+  const onDocumentationClick = (event) => {
+    const { tagName } = event.target;
+
+    if (tagName === 'A') {
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK(true));
+    }
+  };
 
   return (
     <>
-      <div className={cx('description')}>
+      <div className={cx('description')} onClick={onDocumentationClick}>
         {Parser(
           formatMessage(messages.description, {
             a: (data) =>
