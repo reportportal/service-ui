@@ -112,10 +112,6 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.attributesLabel',
     defaultMessage: 'Attributes',
   },
-  attributesNote: {
-    id: 'AddEditNotificationCaseModal.attributesNote',
-    defaultMessage: 'Send notifications about launches containing specified attributes',
-  },
   attributesNotActive: {
     id: 'AddEditNotificationCaseModal.attributesNotActive',
     defaultMessage: 'Attributes are non active. To activate please select checkbox ‘Attributes’',

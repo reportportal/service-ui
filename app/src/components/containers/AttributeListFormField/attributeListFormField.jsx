@@ -27,7 +27,7 @@ const cx = className.bind(styles);
 const messages = defineMessages({
   attributesNote: {
     id: 'AttributesContainer.attributesNote',
-    defaultMessage: 'Send notifications about launches containing specified attributes',
+    defaultMessage: 'Notify if the launch has all/at least one of specified attributes',
   },
   attributesNotActive: {
     id: 'AttributesContainer.attributesNotActive',
@@ -54,10 +54,15 @@ export const AttributeListFormField = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  const attributesCaption =
-    shown || (!shown && !value?.length)
-      ? attributesNote || formatMessage(messages.attributesNote)
-      : formatMessage(messages.attributesNotActive);
+  const getAttributesCaption = () => {
+    if (!shown) {
+      return value?.length
+        ? formatMessage(messages.attributesNotActive)
+        : attributesNote || formatMessage(messages.attributesNote);
+    } else {
+      return attributesNote || formatMessage(messages.attributesNote);
+    }
+  };
 
   const attributeControlHandler = (e) => {
     setShowEditor(e.target.checked);
@@ -82,7 +87,7 @@ export const AttributeListFormField = ({
       >
         {formatMessage(messages.attributes)}
       </Checkbox>
-      <div className={cx('description')}>{attributesCaption}</div>
+      <div className={cx('description')}>{getAttributesCaption()}</div>
       <AttributeListContainer value={value} {...rest} />
     </>
   );

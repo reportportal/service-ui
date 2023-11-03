@@ -58,10 +58,6 @@ export const messages = defineMessages({
     id: 'NotificationCase.attributesLabel',
     defaultMessage: 'Attributes (and)',
   },
-  attributesNote: {
-    id: 'NotificationCase.attributesNote',
-    defaultMessage: 'Send notifications about launches containing specified attributes',
-  },
   [LAUNCH_CASES.ALWAYS]: {
     id: 'NotificationCase.dropdownValueAlways',
     defaultMessage: 'Always',

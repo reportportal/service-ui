@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
+import { ATTRIBUTES_OPERATORS } from 'pages/common/settingsPage/notificationsTab/constants';
 import { LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
@@ -45,6 +46,14 @@ const messages = defineMessages({
   attributesLabel: {
     id: 'AddEditNotificationCaseModal.attributesLabel',
     defaultMessage: 'Attributes',
+  },
+  attributesLabelAll: {
+    id: 'AddEditNotificationCaseModal.attributesLabelAll',
+    defaultMessage: '(All attributes should match)',
+  },
+  attributesLabelAny: {
+    id: 'AddEditNotificationCaseModal.attributesLabelAny',
+    defaultMessage: '(Any attribute should match)',
   },
   [LAUNCH_CASES.ALWAYS]: {
     id: 'AddEditNotificationCaseModal.dropdownValueAlways',
@@ -102,7 +111,15 @@ export const NotificationRuleContent = ({ item }) => {
       <span className={cx('value')}>{recipients.join(SEPARATOR)}</span>
       {item.attributes.length > 0 && (
         <>
-          <span className={cx('field')}>{formatMessage(messages.attributesLabel)}</span>
+          <span className={cx('field', 'attributes-text')}>
+            {item.attributes.length > 1
+              ? `${formatMessage(messages.attributesLabel)} ${
+                  item.attributesOperator === ATTRIBUTES_OPERATORS.AND
+                    ? formatMessage(messages.attributesLabelAll)
+                    : formatMessage(messages.attributesLabelAny)
+                }`
+              : formatMessage(messages.attributesLabel)}
+          </span>
           <div className={cx('value')}>
             <AttributeListContainer disabled attributes={item.attributes} />
           </div>
@@ -118,5 +135,6 @@ NotificationRuleContent.propTypes = {
     recipients: PropTypes.array,
     attributes: PropTypes.array,
     informOwner: PropTypes.bool,
+    attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
 };
