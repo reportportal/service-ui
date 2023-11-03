@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -32,6 +33,7 @@ import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events';
+import { HELP_AND_SUPPORT_GA4_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
 import { messages } from '../messages';
 import styles from './requestSupportModal.scss';
 
@@ -42,6 +44,7 @@ const REQUEST_FORM_ID = 'requestFormId';
 const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const email = useSelector(userEmailSelector);
   const [iframe, setIframe] = useState(null);
 
@@ -70,6 +73,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         }),
       );
       nextAction();
+      trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CLICK_SEND_REQUEST_SUPPORT_BUTTON);
     };
     iframe.onerror = () => {
       nextAction();
