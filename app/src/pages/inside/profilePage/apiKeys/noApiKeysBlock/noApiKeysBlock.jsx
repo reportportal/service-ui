@@ -23,6 +23,7 @@ import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { docsReferences } from 'common/utils/referenceDictionary';
 import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './noApiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -60,6 +61,12 @@ export const NoApiKeysBlock = () => {
     trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK());
   };
 
+  const onDocumentationKeyDown = ({ keyCode }) => {
+    if (keyCode === ENTER_KEY_CODE) {
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK());
+    }
+  };
+
   return (
     <div className={cx('no-api-keys-block')}>
       <div className={cx('image-holder')} />
@@ -73,6 +80,7 @@ export const NoApiKeysBlock = () => {
       <div
         className={cx('documentation')}
         onClick={onDocumentationClick}
+        onKeyDown={onDocumentationKeyDown}
         title={formatMessage(messages.documentation)}
       >
         <a
