@@ -98,14 +98,17 @@ export const NotificationRuleContent = ({
     [LAUNCH_CASES.TO_INVESTIGATE]: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
   };
 
-  const attributesFieldText =
-    attributes.length > 1
-      ? `${formatMessage(messages.attributesLabel)} ${formatMessage(
-          attributesOperator === ATTRIBUTES_OPERATORS.AND
-            ? messages.attributesLabelAll
-            : messages.attributesLabelAny,
-        )}`
-      : formatMessage(messages.attributesLabel);
+  const getAttributesFieldText = () => {
+    if (attributes.length > 1) {
+      return `${formatMessage(messages.attributesLabel)} ${formatMessage(
+        attributesOperator === ATTRIBUTES_OPERATORS.AND
+          ? messages.attributesLabelAll
+          : messages.attributesLabelAny,
+      )}`;
+    } else {
+      return formatMessage(messages.attributesLabel);
+    }
+  };
 
   return (
     <div className={cx('info')}>
@@ -121,7 +124,7 @@ export const NotificationRuleContent = ({
       <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
       {attributes.length > 0 && (
         <>
-          <span className={cx('field', 'attributes-text')}>{attributesFieldText}</span>
+          <span className={cx('field', 'attributes-text')}>{getAttributesFieldText()}</span>
           <div className={cx('value')}>
             <AttributeListContainer disabled attributes={attributes} />
           </div>
