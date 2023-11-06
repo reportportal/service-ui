@@ -226,12 +226,12 @@ export class ImportModal extends Component {
     const { files } = this.state;
     const {
       tracking: { trackEvent },
-      data: {
-        eventsInfo: { uploadButton },
-      },
+      data: { eventsInfo: { uploadButton } = {} },
     } = this.props;
 
-    trackEvent(uploadButton(this.getFilesNames(files)));
+    if (uploadButton) {
+      trackEvent(uploadButton(this.getFilesNames(files)));
+    }
 
     this.setState({
       files: files.map((item) => {

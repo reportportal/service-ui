@@ -60,16 +60,16 @@ export const PLUGINS_PAGE_EVENTS = {
     element_name: 'upload',
     place: 'navigation_panel',
   },
-  UPLOAD_BTN_UPLOAD_MODAL: (type) => ({
+  clickUploadBtn: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'upload',
     modal: 'upload_plugin',
     type,
   }),
-  CLICK_CREATE_GLOBAL_INTEGRATION: (type) => ({
+  clickCreateGlobalIntegration: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'button_create',
-    modal: 'create_project_integration',
+    modal: 'create_global_integration',
     type: normalizeEventParameter(type),
   }),
   integrationAddClickEvent: (type) => ({

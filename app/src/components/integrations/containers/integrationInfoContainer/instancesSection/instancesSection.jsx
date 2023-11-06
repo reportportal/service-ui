@@ -265,9 +265,6 @@ export class InstancesSection extends Component {
         customProps: {
           pluginDetails,
         },
-        eventsInfo: {
-          createGlobalIntegration: PLUGINS_PAGE_EVENTS.CLICK_CREATE_GLOBAL_INTEGRATION,
-        },
       },
     });
   };
