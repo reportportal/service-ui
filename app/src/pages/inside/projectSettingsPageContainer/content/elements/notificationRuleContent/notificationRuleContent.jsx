@@ -19,8 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
-import { ATTRIBUTES_OPERATORS } from 'pages/common/settingsPage/notificationsTab/constants';
-import { LAUNCH_CASES } from '../../notifications/constants';
+import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
@@ -82,11 +81,12 @@ const messages = defineMessages({
 });
 
 export const NotificationRuleContent = ({ item }) => {
+  const { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase } = item;
   const { formatMessage } = useIntl();
 
-  const recipients = item.informOwner
-    ? [formatMessage(messages.launchOwner), ...item.recipients]
-    : item.recipients;
+  const recipientsValue = informOwner
+    ? [formatMessage(messages.launchOwner), ...recipients]
+    : recipients;
 
   const inCaseOptions = {
     [LAUNCH_CASES.ALWAYS]: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
@@ -97,31 +97,32 @@ export const NotificationRuleContent = ({ item }) => {
     [LAUNCH_CASES.TO_INVESTIGATE]: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
   };
 
+  const attributesFieldText =
+    attributes.length > 1
+      ? `${formatMessage(messages.attributesLabel)} ${
+          attributesOperator === ATTRIBUTES_OPERATORS.AND
+            ? formatMessage(messages.attributesLabelAll)
+            : formatMessage(messages.attributesLabelAny)
+        }`
+      : formatMessage(messages.attributesLabel);
+
   return (
     <div className={cx('info')}>
-      {item.launchNames.length > 0 && (
+      {launchNames.length > 0 && (
         <>
           <span className={cx('field')}>{formatMessage(messages.launchNameLabel)}</span>
-          <span className={cx('value')}>{item.launchNames.join(SEPARATOR)}</span>
+          <span className={cx('value')}>{launchNames.join(SEPARATOR)}</span>
         </>
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
-      <span className={cx('value')}>{inCaseOptions[item.sendCase]}</span>
+      <span className={cx('value')}>{inCaseOptions[sendCase]}</span>
       <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-      <span className={cx('value')}>{recipients.join(SEPARATOR)}</span>
-      {item.attributes.length > 0 && (
+      <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+      {attributes.length > 0 && (
         <>
-          <span className={cx('field', 'attributes-text')}>
-            {item.attributes.length > 1
-              ? `${formatMessage(messages.attributesLabel)} ${
-                  item.attributesOperator === ATTRIBUTES_OPERATORS.AND
-                    ? formatMessage(messages.attributesLabelAll)
-                    : formatMessage(messages.attributesLabelAny)
-                }`
-              : formatMessage(messages.attributesLabel)}
-          </span>
+          <span className={cx('field', 'attributes-text')}>{attributesFieldText}</span>
           <div className={cx('value')}>
-            <AttributeListContainer disabled attributes={item.attributes} />
+            <AttributeListContainer disabled attributes={attributes} />
           </div>
         </>
       )}

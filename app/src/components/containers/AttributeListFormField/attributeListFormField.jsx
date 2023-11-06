@@ -25,10 +25,6 @@ import styles from './attributeListFormField.scss';
 const cx = className.bind(styles);
 
 const messages = defineMessages({
-  attributesNote: {
-    id: 'AttributesContainer.attributesNote',
-    defaultMessage: 'Notify if the launch has all/at least one of specified attributes',
-  },
   attributesNotActive: {
     id: 'AttributesContainer.attributesNotActive',
     defaultMessage: 'Attributes are non active. To activate please select checkbox ‘Attributes’',
@@ -54,16 +50,6 @@ export const AttributeListFormField = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  const getAttributesCaption = () => {
-    if (!shown) {
-      return value?.length
-        ? formatMessage(messages.attributesNotActive)
-        : attributesNote || formatMessage(messages.attributesNote);
-    } else {
-      return attributesNote || formatMessage(messages.attributesNote);
-    }
-  };
-
   const attributeControlHandler = (e) => {
     setShowEditor(e.target.checked);
     const filteredAttributes = value.reduce((acc, curr) => {
@@ -87,7 +73,9 @@ export const AttributeListFormField = ({
       >
         {formatMessage(messages.attributes)}
       </Checkbox>
-      <div className={cx('description')}>{getAttributesCaption()}</div>
+      <div className={cx('description')}>
+        {!shown && value?.length ? formatMessage(messages.attributesNotActive) : attributesNote}
+      </div>
       <AttributeListContainer value={value} {...rest} />
     </>
   );

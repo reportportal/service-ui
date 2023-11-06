@@ -180,6 +180,10 @@ const messages = defineMessages({
     id: 'NotificationsEnableForm.attributes',
     defaultMessage: 'Attributes',
   },
+  attributesNote: {
+    id: 'AddEditNotificationCaseModal.attributesNote',
+    defaultMessage: 'Notify if the launch has all/at least one of specified attributes',
+  },
 });
 
 const FIELD = 'Field';
@@ -373,6 +377,7 @@ const AddEditNotificationModal = ({
             setShowEditor={setShowEditor}
             shown={isEditorShown}
             changeValue={change}
+            attributesNote={formatMessage(messages.attributesNote)}
           />
         </FieldElement>
         {attributesValue.length > 0 && (
