@@ -28,10 +28,10 @@ export const useOnClickOutside = (ref, handler) => {
       }
     };
 
-    document.addEventListener('pointerdown', listener);
+    document.addEventListener('pointerup', listener);
 
     return () => {
-      document.removeEventListener('pointerdown', listener);
+      document.removeEventListener('pointerup', listener);
     };
   }, [ref, handler]);
 };
