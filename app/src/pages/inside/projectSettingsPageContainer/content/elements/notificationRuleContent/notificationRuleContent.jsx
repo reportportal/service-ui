@@ -80,8 +80,9 @@ const messages = defineMessages({
   },
 });
 
-export const NotificationRuleContent = ({ item }) => {
-  const { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase } = item;
+export const NotificationRuleContent = ({
+  item: { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase },
+}) => {
   const { formatMessage } = useIntl();
 
   const recipientsValue = informOwner
