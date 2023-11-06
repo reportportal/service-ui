@@ -100,11 +100,11 @@ export const NotificationRuleContent = ({
 
   const attributesFieldText =
     attributes.length > 1
-      ? `${formatMessage(messages.attributesLabel)} ${
+      ? `${formatMessage(messages.attributesLabel)} ${formatMessage(
           attributesOperator === ATTRIBUTES_OPERATORS.AND
-            ? formatMessage(messages.attributesLabelAll)
-            : formatMessage(messages.attributesLabelAny)
-        }`
+            ? messages.attributesLabelAll
+            : messages.attributesLabelAny,
+        )}`
       : formatMessage(messages.attributesLabel);
 
   return (
