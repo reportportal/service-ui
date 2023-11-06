@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
-import { LAUNCH_CASES } from '../../notifications/constants';
+import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
@@ -45,6 +45,14 @@ const messages = defineMessages({
   attributesLabel: {
     id: 'AddEditNotificationCaseModal.attributesLabel',
     defaultMessage: 'Attributes',
+  },
+  attributesLabelAll: {
+    id: 'AddEditNotificationCaseModal.attributesLabelAll',
+    defaultMessage: '(All attributes should match)',
+  },
+  attributesLabelAny: {
+    id: 'AddEditNotificationCaseModal.attributesLabelAny',
+    defaultMessage: '(Any attribute should match)',
   },
   [LAUNCH_CASES.ALWAYS]: {
     id: 'AddEditNotificationCaseModal.dropdownValueAlways',
@@ -72,12 +80,14 @@ const messages = defineMessages({
   },
 });
 
-export const NotificationRuleContent = ({ item }) => {
+export const NotificationRuleContent = ({
+  item: { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase },
+}) => {
   const { formatMessage } = useIntl();
 
-  const recipients = item.informOwner
-    ? [formatMessage(messages.launchOwner), ...item.recipients]
-    : item.recipients;
+  const recipientsValue = informOwner
+    ? [formatMessage(messages.launchOwner), ...recipients]
+    : recipients;
 
   const inCaseOptions = {
     [LAUNCH_CASES.ALWAYS]: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
@@ -88,23 +98,35 @@ export const NotificationRuleContent = ({ item }) => {
     [LAUNCH_CASES.TO_INVESTIGATE]: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
   };
 
+  const getAttributesFieldText = () => {
+    if (attributes.length > 1) {
+      return `${formatMessage(messages.attributesLabel)} ${formatMessage(
+        attributesOperator === ATTRIBUTES_OPERATORS.AND
+          ? messages.attributesLabelAll
+          : messages.attributesLabelAny,
+      )}`;
+    } else {
+      return formatMessage(messages.attributesLabel);
+    }
+  };
+
   return (
     <div className={cx('info')}>
-      {item.launchNames.length > 0 && (
+      {launchNames.length > 0 && (
         <>
           <span className={cx('field')}>{formatMessage(messages.launchNameLabel)}</span>
-          <span className={cx('value')}>{item.launchNames.join(SEPARATOR)}</span>
+          <span className={cx('value')}>{launchNames.join(SEPARATOR)}</span>
         </>
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
-      <span className={cx('value')}>{inCaseOptions[item.sendCase]}</span>
+      <span className={cx('value')}>{inCaseOptions[sendCase]}</span>
       <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-      <span className={cx('value')}>{recipients.join(SEPARATOR)}</span>
-      {item.attributes.length > 0 && (
+      <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+      {attributes.length > 0 && (
         <>
-          <span className={cx('field')}>{formatMessage(messages.attributesLabel)}</span>
+          <span className={cx('field', 'attributes-text')}>{getAttributesFieldText()}</span>
           <div className={cx('value')}>
-            <AttributeListContainer disabled attributes={item.attributes} />
+            <AttributeListContainer disabled attributes={attributes} />
           </div>
         </>
       )}
@@ -118,5 +140,6 @@ NotificationRuleContent.propTypes = {
     recipients: PropTypes.array,
     attributes: PropTypes.array,
     informOwner: PropTypes.bool,
+    attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
 };
