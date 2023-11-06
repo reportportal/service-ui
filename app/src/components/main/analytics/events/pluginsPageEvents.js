@@ -60,7 +60,7 @@ export const PLUGINS_PAGE_EVENTS = {
     element_name: 'upload',
     place: 'navigation_panel',
   },
-  clickUploadBtn: (type) => ({
+  clickUploadModalBtn: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'upload',
     modal: 'upload_plugin',

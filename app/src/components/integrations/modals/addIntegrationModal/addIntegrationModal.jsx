@@ -77,9 +77,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
 
   const onSubmit = (newData) => {
     if (isGlobal && !customProps.editAuthMode) {
-      trackEvent(
-        PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(integrationFieldsExtension.pluginName),
-      );
+      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
     }
 
     onConfirm(newData, metaData);
