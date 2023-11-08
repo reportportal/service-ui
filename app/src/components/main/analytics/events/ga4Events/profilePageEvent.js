@@ -33,11 +33,17 @@ export const PROFILE_EVENTS = {
     element_name: 'tab_api_keys',
   },
 
-  CLICK_GENERATE_API_KEY_BUTTON: (isApiKey) => ({
+  CLICK_GENERATE_BUTTON_WITH_API_KEY: {
     ...BASIC_EVENT_PARAMETERS_PROFILE,
     element_name: 'generate_api_key',
-    type: isApiKey ? 'with_api_key' : 'no_api_key',
-  }),
+    type: 'with_api_key',
+  },
+
+  CLICK_GENERATE_BUTTON_NO_API_KEY: {
+    ...BASIC_EVENT_PARAMETERS_PROFILE,
+    element_name: 'generate_api_key',
+    type: 'no_api_key',
+  },
 
   CLICK_GENERATE_API_KEY_BUTTON_IN_MODAL: {
     ...BASIC_EVENT_PARAMETERS_PROFILE,
@@ -51,11 +57,17 @@ export const PROFILE_EVENTS = {
     modal: 'api_key_generated',
   },
 
-  CLICK_DOCUMENTATION_LINK: (isApiKey) => ({
+  CLICK_DOCUMENTATION_LINK_WITH_API_KEY: {
     ...BASIC_EVENT_PARAMETERS_PROFILE,
     link_name: 'documentation',
-    place: isApiKey ? 'with_api_key' : 'no_api_key',
-  }),
+    place: 'with_api_key',
+  },
+
+  CLICK_DOCUMENTATION_LINK_NO_API_KEY: {
+    ...BASIC_EVENT_PARAMETERS_PROFILE,
+    link_name: 'documentation',
+    place: 'no_api_key',
+  },
 
   CLICK_REVOKE_BUTTON: {
     ...BASIC_EVENT_PARAMETERS_PROFILE,

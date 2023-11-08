@@ -63,7 +63,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
 
   const onGenerateClick = () => {
     dispatch(showModalAction({ id: 'generateApiKeyModal' }));
-    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_API_KEY_BUTTON(true));
+    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_BUTTON_WITH_API_KEY);
   };
 
   const onRevokeClick = (key) => {
@@ -75,7 +75,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
     const { tagName } = event.target;
 
     if (tagName === 'A') {
-      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK(true));
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_WITH_API_KEY);
     }
   };
 
@@ -84,7 +84,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
     const { tagName } = event.target;
 
     if (tagName === 'A' && keyCode === ENTER_KEY_CODE) {
-      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK(true));
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_WITH_API_KEY);
     }
   };
 

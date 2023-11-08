@@ -54,16 +54,16 @@ export const NoApiKeysBlock = () => {
 
   const onGenerateClick = () => {
     dispatch(showModalAction({ id: 'generateApiKeyModal' }));
-    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_API_KEY_BUTTON());
+    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_BUTTON_NO_API_KEY);
   };
 
   const onDocumentationClick = () => {
-    trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK());
+    trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_NO_API_KEY);
   };
 
   const onDocumentationKeyDown = ({ keyCode }) => {
     if (keyCode === ENTER_KEY_CODE) {
-      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK());
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_NO_API_KEY);
     }
   };
 
