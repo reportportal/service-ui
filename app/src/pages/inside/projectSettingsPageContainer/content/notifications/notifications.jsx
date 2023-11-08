@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,14 @@ import { projectNotificationsLoadingSelector } from 'controllers/project/selecto
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
-import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
+import {
+  RuleList,
+  FieldElement,
+  NotificationRuleContent,
+  MODAL_ACTION_TYPE_ADD,
+  MODAL_ACTION_TYPE_EDIT,
+  MODAL_ACTION_TYPE_COPY,
+} from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
 import styles from './notifications.scss';
@@ -118,7 +125,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          actionType: 'add',
+          actionType: MODAL_ACTION_TYPE_ADD,
           onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
           notifications,
@@ -134,7 +141,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          actionType: 'edit',
+          actionType: MODAL_ACTION_TYPE_EDIT,
           onSave: confirmEdit,
           notification,
           notifications,
@@ -164,7 +171,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          actionType: 'copy',
+          actionType: MODAL_ACTION_TYPE_COPY,
           onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: {
             ...newNotification,
