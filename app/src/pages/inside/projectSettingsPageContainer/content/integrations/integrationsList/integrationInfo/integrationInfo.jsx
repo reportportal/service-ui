@@ -225,7 +225,7 @@ export const IntegrationInfo = (props) => {
   const onResetProjectIntegration = () => {
     dispatch(
       showModalAction({
-        id: 'deleteProjectIntegrationModal',
+        id: 'deleteIntegrationModal',
         data: {
           onConfirm: resetProjectIntegrations,
           modalTitle: formatMessage(messages.projectIntegrationReset),
