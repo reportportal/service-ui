@@ -16,11 +16,14 @@
 
 import React from 'react';
 import { useIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { docsReferences } from 'common/utils/referenceDictionary';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './noApiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -46,9 +49,23 @@ const messages = defineMessages({
 
 export const NoApiKeysBlock = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const onGenerateClick = () => dispatch(showModalAction({ id: 'generateApiKeyModal' }));
+  const onGenerateClick = () => {
+    dispatch(showModalAction({ id: 'generateApiKeyModal' }));
+    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_BUTTON_NO_API_KEY);
+  };
+
+  const onDocumentationClick = () => {
+    trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_NO_API_KEY);
+  };
+
+  const onDocumentationKeyDown = ({ keyCode }) => {
+    if (keyCode === ENTER_KEY_CODE) {
+      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_NO_API_KEY);
+    }
+  };
 
   return (
     <div className={cx('no-api-keys-block')}>
@@ -60,7 +77,12 @@ export const NoApiKeysBlock = () => {
           {formatMessage(messages.generateApiKey)}
         </GhostButton>
       </div>
-      <div className={cx('documentation')} title={formatMessage(messages.documentation)}>
+      <div
+        className={cx('documentation')}
+        onClick={onDocumentationClick}
+        onKeyDown={onDocumentationKeyDown}
+        title={formatMessage(messages.documentation)}
+      >
         <a
           className={cx('documentation-link')}
           href={docsReferences.authorizationWithUsersApiKeyForAgents}
