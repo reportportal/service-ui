@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ASSIGN_TO_RROJECT_SUCCESS, UNASSIGN_FROM_PROJECT_SUCCESS } from 'controllers/user';
+import { ASSIGN_TO_PROJECT_SUCCESS, UNASSIGN_FROM_PROJECT_SUCCESS } from 'controllers/user';
 import { FETCH_SUCCESS } from 'controllers/fetch';
 import { SET_PROJECTS_VIEW_MODE, TABLE_VIEW, GRID_VIEW, NAMESPACE } from './constants';
 import { setViewModeReducer, assignProjectReducer, projectFetchReducer } from './reducer';
@@ -133,12 +133,12 @@ describe('projects reducer', () => {
       expect(assignProjectReducer(oldState, [{ id: 2 }])).toBe(oldState);
     });
 
-    test('should handle ASSIGN_TO_RROJECT_SUCCESS', () => {
+    test('should handle ASSIGN_TO_PROJECT_SUCCESS', () => {
       const payload = {
         projectName: PROJECTS[0].projectName,
       };
       const newState = assignProjectReducer(PROJECTS, {
-        type: ASSIGN_TO_RROJECT_SUCCESS,
+        type: ASSIGN_TO_PROJECT_SUCCESS,
         payload,
       });
       expect(newState).toEqual(PROJECTS_AFTER_ASSIGN);

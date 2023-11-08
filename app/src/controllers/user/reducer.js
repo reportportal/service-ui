@@ -20,7 +20,7 @@ import {
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
-  ASSIGN_TO_RROJECT_SUCCESS,
+  ASSIGN_TO_PROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
   SET_API_KEYS,
@@ -41,7 +41,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
 
 export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
   switch (type) {
-    case ASSIGN_TO_RROJECT_SUCCESS: {
+    case ASSIGN_TO_PROJECT_SUCCESS: {
       const { projectName, projectRole, entryType } = payload;
       return {
         ...state,
@@ -73,7 +73,7 @@ export const userInfoReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case FETCH_USER_SUCCESS:
       return payload;
-    case ASSIGN_TO_RROJECT_SUCCESS:
+    case ASSIGN_TO_PROJECT_SUCCESS:
     case UNASSIGN_FROM_PROJECT_SUCCESS:
       return {
         ...state,
