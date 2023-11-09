@@ -68,7 +68,8 @@ const SimilarItems = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.similarItemsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.similarItemsDocs, 'documentationLink'),
         }),
       )}
     >

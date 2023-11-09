@@ -86,7 +86,8 @@ const UniqueErrors = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.uniqueErrorsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.uniqueErrorsDocs, 'documentationLink'),
         }),
       )}
     >

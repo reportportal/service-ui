@@ -54,7 +54,8 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.indexSettingsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.indexSettingsDocs, 'documentationLink'),
         }),
       )}
     >

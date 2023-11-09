@@ -124,7 +124,8 @@ const AutoAnalysis = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.autoAnalysisDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.autoAnalysisDocs, 'documentationLink'),
         }),
       )}
     >
