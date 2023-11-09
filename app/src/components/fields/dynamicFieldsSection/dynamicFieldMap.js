@@ -14,12 +14,28 @@
  *  limitations under the License.
  */
 
-import { ArrayField, DateField, DropdownField, TextField } from './fields';
-import { ARRAY_TYPE, DATE_TYPE, DROPDOWN_TYPE, TEXT_TYPE } from './constants';
+import {
+  ArrayField,
+  AutocompleteField,
+  DateField,
+  DropdownField,
+  MultipleAutocompleteField,
+  TextField,
+} from './fields';
+import {
+  ARRAY_TYPE,
+  AUTOCOMPLETE_TYPE,
+  DATE_TYPE,
+  DROPDOWN_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+  TEXT_TYPE,
+} from './constants';
 
 export const FIELDS_MAP = {
   [TEXT_TYPE]: TextField,
   [DROPDOWN_TYPE]: DropdownField,
   [DATE_TYPE]: DateField,
   [ARRAY_TYPE]: ArrayField,
+  [AUTOCOMPLETE_TYPE]: AutocompleteField,
+  [MULTIPLE_AUTOCOMPLETE_TYPE]: MultipleAutocompleteField,
 };

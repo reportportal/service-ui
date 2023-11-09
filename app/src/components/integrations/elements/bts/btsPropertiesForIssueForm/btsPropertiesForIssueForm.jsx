@@ -302,6 +302,26 @@ export class BtsPropertiesForIssueForm extends Component {
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
       const { defectFormFields } = this.props.initialData;
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
+      // todo remove me
+      console.log('normalizeFieldsWithOptions');
+      console.log(fields);
+      fields.push({
+        fieldName: 'Assignee2',
+        id: 'assignee2',
+        fieldType: 'autocomplete',
+        required: false,
+        url: '../api/v1/project_1698394355/launch/names?filter.cnt.name=',
+      });
+      fields.push({
+        fieldName: 'Epic2',
+        id: 'epic2',
+        fieldType: 'multipleAutocomplete',
+        required: false,
+        url: '../api/v1/project_1698394355/launch/names?filter.cnt.name=',
+      });
+      console.log('fields after additional fields push');
+      console.log(fields);
+
       let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {

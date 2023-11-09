@@ -51,6 +51,7 @@ export class SingleAutocomplete extends Component {
     icon: PropTypes.string,
     isOptionUnique: PropTypes.func,
     refFunction: PropTypes.func,
+    prohibitCreateOnBlur: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -78,6 +79,7 @@ export class SingleAutocomplete extends Component {
     icon: null,
     isOptionUnique: null,
     refFunction: () => {},
+    prohibitCreateOnBlur: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -119,6 +121,7 @@ export class SingleAutocomplete extends Component {
       options,
       isOptionUnique,
       refFunction,
+      prohibitCreateOnBlur,
       ...props
     } = this.props;
     return (
@@ -167,10 +170,17 @@ export class SingleAutocomplete extends Component {
                             selectItem(newValue);
                           }
 
-                          if (createWithoutConfirmation) {
+                          // check me
+                          if (
+                            createWithoutConfirmation &&
+                            (!prohibitCreateOnBlur || newValue === '')
+                          ) {
                             selectItem(newValue);
                           }
-                          onBlur(e);
+
+                          // check me
+                          (!prohibitCreateOnBlur || newValue === '') && onBlur(e);
+
                           isOptionUnique &&
                             isOptionUnique(newValue ? !options.find((v) => v === newValue) : null);
                           setTouch(true);

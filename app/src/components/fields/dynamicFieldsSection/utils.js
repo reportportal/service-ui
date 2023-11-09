@@ -21,6 +21,8 @@ import {
   TEXT_TYPE,
   VALUE_ID_KEY,
   VALUE_NAME_KEY,
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -65,6 +67,10 @@ export const getFieldComponent = (field) => {
     fieldType = DATE_TYPE;
   } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
+  } else if (field.fieldType === AUTOCOMPLETE_TYPE && field.url) {
+    fieldType = AUTOCOMPLETE_TYPE;
+  } else if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE && field.url) {
+    fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
   } else {
     fieldType = TEXT_TYPE;
   }
