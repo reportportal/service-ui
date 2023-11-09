@@ -28,6 +28,7 @@ const useDynamicScript = (scope, url) => {
     element.onerror = () => {
       setReady(false);
       setFailed(true);
+      element.remove();
     };
 
     document.head.appendChild(element);
