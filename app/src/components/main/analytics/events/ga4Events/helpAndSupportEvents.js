@@ -18,7 +18,7 @@ import { getBasicClickEventParameters, getBasicChooseEventParameters } from '../
 
 const HELP_AND_SUPPORT = 'help_and_support';
 
-export const HELP_AND_SUPPORT_GA4_EVENTS = {
+export const HELP_AND_SUPPORT_EVENTS = {
   CLICK_HELP_AND_SUPPORT_BUTTON: {
     ...getBasicClickEventParameters(HELP_AND_SUPPORT),
     place: 'sidebar',

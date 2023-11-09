@@ -25,8 +25,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events';
-import { HELP_AND_SUPPORT_GA4_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
+import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
 import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
 import { messages } from './messages';
@@ -71,8 +70,7 @@ export const SupportBlock = ({ options }) => {
 
   const toggleModal = () => {
     setModalShown(!isModalShown);
-    !isModalShown && trackEvent(HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn());
-    !isModalShown && trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CLICK_HELP_AND_SUPPORT_BUTTON);
+    !isModalShown && trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_HELP_AND_SUPPORT_BUTTON);
   };
 
   const openModal = () => {
@@ -82,24 +80,19 @@ export const SupportBlock = ({ options }) => {
         id: 'requestSupportModal',
       }),
     );
-    trackEvent(
-      HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn(messages.requestSupport.defaultMessage),
-    );
-    trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CLICK_REQUEST_SUPPORT_BUTTON);
+    trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_REQUEST_SUPPORT_BUTTON);
   };
 
-  const onClickLink = (nameLink, nameLinkGA4) => {
+  const onClickLink = (nameLink) => {
     toggleModal();
-    trackEvent(HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn(nameLink));
-    trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CLICK_ON_SUPPORT_LINK(nameLinkGA4));
+    trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_ON_SUPPORT_LINK(nameLink));
   };
 
   const onClickUserChoiceBtn = () => {
     toggleModal();
     const label = options.find(({ value }) => value === userChoice).label;
-    trackEvent(HELP_AND_SUPPORT_EVENTS.clickInstructionLink(label));
-    !userChoice && trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CLICK_ASK_A_QUESTION_BUTTON);
-    userChoice && trackEvent(HELP_AND_SUPPORT_GA4_EVENTS.CHOOSE_INSTRUCTION_BUTTON(label));
+    !userChoice && trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_ASK_A_QUESTION_BUTTON);
+    userChoice && trackEvent(HELP_AND_SUPPORT_EVENTS.CHOOSE_INSTRUCTION_BUTTON(label));
   };
 
   return (
@@ -147,7 +140,7 @@ export const SupportBlock = ({ options }) => {
                     target="_blank"
                     rel="noreferrer noopener"
                     className={cx('support-link')}
-                    onClick={() => onClickLink('email', 'support_team')}
+                    onClick={() => onClickLink('support_team')}
                     key={EMAIL_SUPPORT}
                   >
                     {formatMessage(messages.ourSupportTeam)}
@@ -159,7 +152,7 @@ export const SupportBlock = ({ options }) => {
                     target="_blank"
                     rel="noreferrer noopener"
                     className={cx('support-link')}
-                    onClick={() => onClickLink(messages.slackChannel.defaultMessage, 'slack')}
+                    onClick={() => onClickLink('slack')}
                     key={referenceDictionary.rpSlack}
                   >
                     {formatMessage(messages.slackChannel)}
