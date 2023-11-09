@@ -85,6 +85,7 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             title={analyzerUnavailableTitle}
             mobileDisabled
             variant="ghost"
+            dataAutomationId="generateIndexButton"
           >
             {formatMessage(messages.generateIndexButtonCaption)}
           </Button>
@@ -94,6 +95,7 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             title={analyzerUnavailableTitle}
             mobileDisabled
             variant="ghost"
+            dataAutomationId="removeIndexButton"
           >
             {formatMessage(messages.removeIndexButtonCaption)}
           </Button>
