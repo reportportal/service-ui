@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
 import { DEFECT_TYPES_MAP } from 'common/constants/defectTypes';
-import { FieldElement } from '../../../elements';
+import { FieldElement, MODAL_ACTION_TYPE_ADD } from '../../../elements';
 import {
   NAME_FIELD_KEY,
   COLOR_FIELD_KEY,
@@ -102,7 +102,6 @@ const messages = defineMessages({
   },
 });
 
-const ACTION_TYPE_ADD = 'add';
 const FIELD = 'Field';
 
 const AddEditDefectTypeModal = ({
@@ -149,7 +148,7 @@ const AddEditDefectTypeModal = ({
 
   const submitActions = (formFieldValues) => {
     onSave(
-      actionType === ACTION_TYPE_ADD
+      actionType === MODAL_ACTION_TYPE_ADD
         ? formFieldValues
         : [{ ...formFieldValues, typeRef: defectType.typeRef }],
     );
@@ -157,7 +156,7 @@ const AddEditDefectTypeModal = ({
 
   const okButton = {
     text:
-      actionType === ACTION_TYPE_ADD
+      actionType === MODAL_ACTION_TYPE_ADD
         ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
         : formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => {
@@ -183,9 +182,9 @@ const AddEditDefectTypeModal = ({
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
     >
-      {actionType === ACTION_TYPE_ADD && formatMessage(messages.description)}
+      {actionType === MODAL_ACTION_TYPE_ADD && formatMessage(messages.description)}
       <div className={cx('content')}>
-        {actionType === ACTION_TYPE_ADD && (
+        {actionType === MODAL_ACTION_TYPE_ADD && (
           <FieldElement
             label={formatMessage(messages.group)}
             name={GROUP_FIELD_KEY}
