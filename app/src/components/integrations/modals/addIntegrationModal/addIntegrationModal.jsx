@@ -29,6 +29,8 @@ import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
+import { useTracking } from 'react-tracking';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addIntegrationModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,13 +64,22 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { onConfirm, customProps, isGlobal } = data;
+
+  const integrationFieldsExtension = fieldsExtensions.find(
+    (ext) => ext.pluginName === data.instanceType,
+  );
 
   const updateMetaData = (newMetaData) => {
     setMetaData({ ...metaData, ...newMetaData });
   };
 
   const onSubmit = (newData) => {
+    if (isGlobal && !customProps.editAuthMode) {
+      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
+    }
+
     onConfirm(newData, metaData);
   };
 
@@ -84,9 +95,6 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
 
-  const integrationFieldsExtension = fieldsExtensions.find(
-    (ext) => ext.pluginName === data.instanceType,
-  );
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
     (integrationFieldsExtension && ExtensionLoader);
@@ -125,9 +133,6 @@ AddIntegrationModal.propTypes = {
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-};
-AddIntegrationModal.defaultProps = {
-  data: {},
 };
 
 export default withModal('addIntegrationModal')(

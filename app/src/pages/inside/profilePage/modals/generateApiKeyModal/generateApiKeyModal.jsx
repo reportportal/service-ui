@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { connect, useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { formValueSelector, reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { LoaderBlock } from 'pages/inside/profilePage/modals/loaderBlock';
@@ -34,6 +35,7 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { addApiKeyAction, apiKeysSelector } from 'controllers/user';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './generateApiKeyModal.scss';
 
 const LABEL_WIDTH = 85;
@@ -87,6 +89,7 @@ const lengthAndUniqueNameValidator = (existNames) =>
 const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const [loading, setLoading] = useState(false);
 
   const onSuccessfulGeneration = (apiKey) => {
@@ -103,6 +106,7 @@ const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
         onSuccessfulGeneration,
       ),
     );
+    trackEvent(PROFILE_EVENTS.CLICK_GENERATE_API_KEY_BUTTON_IN_MODAL);
   };
 
   const okButton = {

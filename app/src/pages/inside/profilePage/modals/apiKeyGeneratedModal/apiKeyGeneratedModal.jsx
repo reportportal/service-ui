@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -25,6 +26,7 @@ import { Input } from 'components/inputs/input';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { BigButton } from 'components/buttons/bigButton';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './apiKeyGeneratedModal.scss';
 
 const cx = classNames.bind(styles);
@@ -54,6 +56,7 @@ const messages = defineMessages({
 const ApiKeyGenerated = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { apiKey } = data;
 
   const onCopy = () => {
@@ -63,6 +66,7 @@ const ApiKeyGenerated = ({ data }) => {
         message: formatMessage(messages.successNotification),
       }),
     );
+    trackEvent(PROFILE_EVENTS.CLICK_COPY_TO_CLIPBOARD_BUTTON);
   };
 
   const copyButton = (

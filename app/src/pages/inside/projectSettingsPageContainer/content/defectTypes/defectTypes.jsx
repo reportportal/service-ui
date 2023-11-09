@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,21 +28,15 @@ import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { Button } from 'componentLibrary/button';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
-import {
-  Divider,
-  TabDescription,
-} from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { withTooltip } from 'componentLibrary/tooltip';
 import { showModalAction } from 'controllers/modal';
-import {
-  MAX_DEFECT_TYPES_COUNT,
-  WARNING_DEFECT_TYPES_COUNT,
-} from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
+import { Divider, TabDescription, MODAL_ACTION_TYPE_EDIT } from '../elements';
+import { MAX_DEFECT_TYPES_COUNT, WARNING_DEFECT_TYPES_COUNT } from './constants';
 import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
@@ -96,7 +90,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         id: 'addEditDefectTypeModal',
         data: {
           onSave: addDefect,
-          actionType: 'add',
+          actionType: MODAL_ACTION_TYPE_EDIT,
           defectType: { color: defectGroup.color, typeRef: defectGroup.typeRef },
           defectTypes,
         },

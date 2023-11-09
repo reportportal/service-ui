@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,12 @@ import { AttributeListFormField } from 'components/containers/AttributeListFormF
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
-import { FieldElement } from '../../../elements';
+import {
+  FieldElement,
+  MODAL_ACTION_TYPE_ADD,
+  MODAL_ACTION_TYPE_EDIT,
+  MODAL_ACTION_TYPE_COPY,
+} from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
   ATTRIBUTES_OPERATORS,
@@ -65,15 +70,15 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.description',
     defaultMessage: 'Select conditions to create a notification rule',
   },
-  add: {
+  [MODAL_ACTION_TYPE_ADD]: {
     id: 'AddEditNotificationCaseModal.newRuleMessage',
     defaultMessage: 'Create',
   },
-  edit: {
+  [MODAL_ACTION_TYPE_EDIT]: {
     id: 'AddEditNotificationCaseModal.editRuleMessage',
     defaultMessage: 'Edit',
   },
-  copy: {
+  [MODAL_ACTION_TYPE_COPY]: {
     id: 'AddEditNotificationCaseModal.copyRuleMessage',
     defaultMessage: 'Duplicate',
   },
@@ -112,10 +117,6 @@ const messages = defineMessages({
   attributesLabel: {
     id: 'AddEditNotificationCaseModal.attributesLabel',
     defaultMessage: 'Attributes',
-  },
-  attributesNote: {
-    id: 'AddEditNotificationCaseModal.attributesNote',
-    defaultMessage: 'Send notifications about launches containing specified attributes',
   },
   attributesNotActive: {
     id: 'AddEditNotificationCaseModal.attributesNotActive',
@@ -184,6 +185,10 @@ const messages = defineMessages({
   attributes: {
     id: 'NotificationsEnableForm.attributes',
     defaultMessage: 'Attributes',
+  },
+  attributesNote: {
+    id: 'AddEditNotificationCaseModal.attributesNote',
+    defaultMessage: 'Notify if the launch has all/at least one of specified attributes',
   },
 });
 
@@ -270,7 +275,10 @@ const AddEditNotificationModal = ({
   };
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    text:
+      actionType === MODAL_ACTION_TYPE_ADD
+        ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
+        : formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => {
       handleSubmit(submitActions)();
     },
@@ -377,6 +385,7 @@ const AddEditNotificationModal = ({
             setShowEditor={setShowEditor}
             shown={isEditorShown}
             changeValue={change}
+            attributesNote={formatMessage(messages.attributesNote)}
           />
         </FieldElement>
         {attributesValue.length > 0 && (
@@ -398,7 +407,11 @@ AddEditNotificationModal.propTypes = {
     notifications: PropTypes.array,
     onSave: PropTypes.func,
     eventsInfo: PropTypes.object,
-    actionType: PropTypes.string,
+    actionType: PropTypes.oneOf([
+      MODAL_ACTION_TYPE_ADD,
+      MODAL_ACTION_TYPE_EDIT,
+      MODAL_ACTION_TYPE_COPY,
+    ]),
   }),
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

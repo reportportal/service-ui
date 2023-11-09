@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { MODAL_ACTION_TYPE_EDIT } from '../../elements';
 import { defectTypeShape } from '../defectTypeShape';
 import { messages } from '../defectTypesMessages';
 import styles from './defectTypeRow.scss';
@@ -116,7 +117,7 @@ export const DefectTypeRow = ({
         data: {
           onSave: editDefect,
           defectType: { ...data },
-          actionType: 'edit',
+          actionType: MODAL_ACTION_TYPE_EDIT,
         },
       }),
     );
