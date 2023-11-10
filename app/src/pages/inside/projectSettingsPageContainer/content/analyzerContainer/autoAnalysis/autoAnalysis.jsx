@@ -28,15 +28,10 @@ import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
-import Parser from 'html-react-parser';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
-import {
-  handleExternalLinkClick,
-  handleExternalLinkKeyDown,
-} from 'components/main/analytics/events/common/utils';
 import { Layout } from '../../layout';
-import { FieldElement, LabeledPreloader } from '../../elements';
+import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
 import {
   ALL_MESSAGES_SHOULD_MATCH,
@@ -105,7 +100,7 @@ const AutoAnalysis = ({
     setPending(false);
 
     trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInAutoAnalyzerTab(
         data[MIN_SHOULD_MATCH],
         data[ANALYZER_ENABLED],
         data[ANALYZER_MODE],
@@ -115,7 +110,7 @@ const AutoAnalysis = ({
     const numberOfLogLines = data[NUMBER_OF_LOG_LINES] === '-1' ? 'all' : data[NUMBER_OF_LOG_LINES];
 
     trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_INDEX_TAB(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInIndexTab(
         numberOfLogLines,
         data[ALL_MESSAGES_SHOULD_MATCH],
       ),
@@ -126,20 +121,15 @@ const AutoAnalysis = ({
 
   return (
     <Layout
-      handleDescriptionClick={handleExternalLinkClick(
-        trackEvent,
-        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('auto_analyzer'),
-      )}
-      handleDescriptionKeyDown={handleExternalLinkKeyDown(
-        trackEvent,
-        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('auto_analyzer'),
-      )}
-      description={Parser(
-        formatMessage(messages.tabDescription, {
-          a: (data) =>
-            createExternalLink(data, docsReferences.autoAnalysisDocs, 'documentationLink'),
-        }),
-      )}
+      description={
+        <FormattedDescription
+          content={formatMessage(messages.tabDescription, {
+            a: (data) =>
+              createExternalLink(data, docsReferences.autoAnalysisDocs, 'documentationLink'),
+          })}
+          event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('auto_analyzer')}
+        />
+      }
     >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement

@@ -17,7 +17,6 @@
 import React, { useEffect } from 'react';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
-import Parser from 'html-react-parser';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   addPatternAction,
@@ -37,11 +36,7 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import {
-  handleExternalLinkClick,
-  handleExternalLinkKeyDown,
-} from 'components/main/analytics/events/common/utils';
-import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
+import { PatternRuleContent, FieldElement, RuleList, FormattedDescription } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
 import styles from './patternAnalysisContent.scss';
@@ -185,19 +180,14 @@ export const PatternAnalysisContent = ({
   return (
     <>
       <Layout
-        handleDescriptionClick={handleExternalLinkClick(
-          trackEvent,
-          PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION(),
-        )}
-        handleDescriptionKeyDown={handleExternalLinkKeyDown(
-          trackEvent,
-          PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION(),
-        )}
-        description={Parser(
-          formatMessage(messages.tabDescription, {
-            a: (data) => createExternalLink(data, docsReferences.patternAnalysisDocs),
-          }),
-        )}
+        description={
+          <FormattedDescription
+            content={formatMessage(messages.tabDescription, {
+              a: (data) => createExternalLink(data, docsReferences.patternAnalysisDocs),
+            })}
+            event={PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.clickDocumentationLink()}
+          />
+        }
       >
         <FieldElement
           withoutProvider

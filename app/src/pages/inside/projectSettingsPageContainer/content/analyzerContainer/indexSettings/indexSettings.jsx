@@ -19,20 +19,15 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
-import Parser from 'html-react-parser';
 import { Button } from 'componentLibrary/button';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { docsReferences, createExternalLink } from 'common/utils';
-import {
-  handleExternalLinkClick,
-  handleExternalLinkKeyDown,
-} from 'components/main/analytics/events/common/utils';
-import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { Layout } from '../../layout';
-import { LabeledPreloader } from '../../elements';
+import { LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
 import styles from './indexSettings.scss';
 
@@ -57,20 +52,15 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
 
   return (
     <Layout
-      handleDescriptionClick={handleExternalLinkClick(
-        trackEvent,
-        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('index_settings'),
-      )}
-      handleDescriptionKeyDown={handleExternalLinkKeyDown(
-        trackEvent,
-        PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_LINK_DOCUMENTATION('index_settings'),
-      )}
-      description={Parser(
-        formatMessage(messages.tabDescription, {
-          a: (data) =>
-            createExternalLink(data, docsReferences.indexSettingsDocs, 'documentationLink'),
-        }),
-      )}
+      description={
+        <FormattedDescription
+          content={formatMessage(messages.tabDescription, {
+            a: (data) =>
+              createExternalLink(data, docsReferences.indexSettingsDocs, 'documentationLink'),
+          })}
+          event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('index_settings')}
+        />
+      }
     >
       <div className={cx('index-block')}>
         <span className={cx('index-block-title')}>

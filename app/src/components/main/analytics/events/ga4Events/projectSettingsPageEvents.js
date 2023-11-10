@@ -25,10 +25,7 @@ const DEFECT_TYPES = 'defect_types';
 const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
 const GENERAL = 'general';
-const BASIC_EVENT_PARAMETERS = {
-  ...getBasicClickEventParameters(PROJECT_SETTINGS),
-  element_name: 'button_submit',
-};
+const BASIC_EVENT_PARAMETERS_ANALYZER_TAB = getBasicClickEventParameters(PROJECT_SETTINGS);
 const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
   ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: NOTIFICATIONS,
@@ -64,36 +61,40 @@ const getStatus = (status) => (status ? 'active' : 'disabled');
 const getSwitcher = (switcher) => (switcher ? 'on' : 'off');
 
 export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
-  CLICK_SUBMIT_IN_INDEX_TAB: (number, status) => ({
-    ...BASIC_EVENT_PARAMETERS,
+  clickSubmitInIndexTab: (number, status) => ({
+    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
+    element_name: 'button_submit',
     place: `${ANALYZER}_index_settings`,
     number,
     status: getStatus(status),
   }),
 
-  CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB: (number, status, condition) => ({
-    ...BASIC_EVENT_PARAMETERS,
+  clickSubmitInAutoAnalyzerTab: (number, status, condition) => ({
+    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_auto_analyzer`,
+    element_name: 'button_submit',
     number,
     status: getStatus(status),
     condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[condition],
   }),
 
-  CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
-    ...BASIC_EVENT_PARAMETERS,
+  clickSubmitInSimilarItemsTab: (number) => ({
+    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_similar_items`,
+    element_name: 'button_submit',
     number,
   }),
 
-  CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB: (status, type) => ({
-    ...BASIC_EVENT_PARAMETERS,
+  clickSubmitInUniqueErrorsTab: (status, type) => ({
+    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_unique_errors`,
     status: getStatus(status),
+    element_name: 'button_submit',
     type: type ? 'exclude' : 'include',
   }),
 
-  CLICK_LINK_DOCUMENTATION: (place) => ({
-    ...BASIC_EVENT_PARAMETERS,
+  clickDocumentationLink: (place) => ({
+    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_${place}`,
     link_name: 'documentation',
   }),
@@ -101,7 +102,7 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
 
 export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
   CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB: {
-    ...BASIC_EVENT_PARAMETERS,
+    ...getBasicClickEventParameters(PROJECT_SETTINGS),
     element_name: 'button_generate_demo_data',
     place: 'demo_data',
   },
@@ -129,7 +130,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     switcher: getSwitcher(switcher),
   }),
 
-  CLICK_LINK_DOCUMENTATION: (place) => ({
+  clickDocumentationLink: (place) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     ...(place && { place }),
     link_name: 'documentation',
@@ -242,7 +243,7 @@ export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
     element_name: 'pattern_name',
     status: 'open',
   },
-  CLICK_LINK_DOCUMENTATION: (place) => ({
+  clickDocumentationLink: (place) => ({
     ...BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS,
     ...(place && { place }),
     link_name: 'documentation',

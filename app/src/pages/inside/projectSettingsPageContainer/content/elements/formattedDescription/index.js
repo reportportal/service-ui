@@ -1,0 +1,1 @@
+export { FormattedDescription } from './formattedDescription';
