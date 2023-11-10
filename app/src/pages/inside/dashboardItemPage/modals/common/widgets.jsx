@@ -313,9 +313,7 @@ export const getWidgets = (formatMessage) => [
     description: (
       <FormattedMessage
         id={'Widgets.Description.flakyTestCases'}
-        defaultMessage={
-          'Shows the TOP-50 the most flaky test cases within the specified previous launches.'
-        }
+        defaultMessage={'Shows the TOP-50 the most flaky test cases within the specified launches.'}
       />
     ),
     preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
