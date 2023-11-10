@@ -86,7 +86,8 @@ const UniqueErrors = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.uniqueErrorsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.uniqueErrorsDocs, 'documentationLink'),
         }),
       )}
     >
@@ -96,6 +97,7 @@ const UniqueErrors = ({
           description={formatMessage(messages.uniqueErrorDescription)}
           format={Boolean}
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
+          dataAutomationId="switchUniqueErrorField"
         >
           <Checkbox title={analyzerUnavailableTitle}>
             {formatMessage(messages.uniqueError)}
@@ -107,10 +109,16 @@ const UniqueErrors = ({
           description={formatMessage(messages.analyzedErrorLogsDescription)}
           format={String}
           disabled={isFieldDisabled}
+          dataAutomationId="removeNumbersInErrorLogField"
         >
           <Dropdown options={dropdownOptions} mobileDisabled />
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} mobileDisabled>
+        <Button
+          type="submit"
+          disabled={isFieldDisabled}
+          mobileDisabled
+          dataAutomationId="submitButton"
+        >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}

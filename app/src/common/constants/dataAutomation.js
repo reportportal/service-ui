@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-import DOMPurify from 'dompurify';
-
-export const createExternalLink = (data, href, dataAutomationId) =>
-  DOMPurify.sanitize(
-    `<a href=${href} target="_blank" rel="noreferrer noopener" data-automation-id=${dataAutomationId}>${data}</a>`,
-    {
-      ALLOWED_ATTR: ['target', 'href', 'rel', 'data-automation-id'],
-    },
-  );
+export const FIELD = 'Field';

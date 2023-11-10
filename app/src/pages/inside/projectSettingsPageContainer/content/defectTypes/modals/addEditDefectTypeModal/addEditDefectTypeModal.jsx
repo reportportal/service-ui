@@ -31,6 +31,7 @@ import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
 import { DEFECT_TYPES_MAP } from 'common/constants/defectTypes';
+import { FIELD } from 'common/constants/dataAutomation';
 import { FieldElement, MODAL_ACTION_TYPE_ADD } from '../../../elements';
 import {
   NAME_FIELD_KEY,
@@ -101,8 +102,6 @@ const messages = defineMessages({
     defaultMessage: 'System Issue Group',
   },
 });
-
-const FIELD = 'Field';
 
 const AddEditDefectTypeModal = ({
   data,

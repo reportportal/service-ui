@@ -25,6 +25,7 @@ import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Toggle } from 'componentLibrary/toggle';
@@ -191,7 +192,6 @@ const messages = defineMessages({
   },
 });
 
-const FIELD = 'Field';
 const NOTIFICATION_FORM = 'notificationForm';
 
 const attributesValueSelector = formValueSelector(NOTIFICATION_FORM);

@@ -20,6 +20,7 @@ import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
+import { FIELD } from 'common/constants/dataAutomation';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -123,7 +124,8 @@ const AutoAnalysis = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.autoAnalysisDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.autoAnalysisDocs, 'documentationLink'),
         }),
       )}
     >
@@ -133,6 +135,7 @@ const AutoAnalysis = ({
           description={formatMessage(messages.autoAnalysisDescription)}
           format={Boolean}
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
+          dataAutomationId={ANALYZER_ENABLED + FIELD}
         >
           <Checkbox title={analyzerUnavailableTitle}>
             {formatMessage(messages.autoAnalysis)}
@@ -144,6 +147,7 @@ const AutoAnalysis = ({
           description={formatMessage(messages.analyzerModeDescription)}
           format={String}
           disabled={isFieldDisabled}
+          dataAutomationId={ANALYZER_MODE + FIELD}
         >
           <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
         </FieldElement>
@@ -153,6 +157,7 @@ const AutoAnalysis = ({
           description={formatMessage(messages.minShouldMatchDescription)}
           format={String}
           disabled={isFieldDisabled}
+          dataAutomationId={MIN_SHOULD_MATCH + FIELD}
         >
           <FieldErrorHint>
             <FieldNumber postfix="%" max={100} />
@@ -164,6 +169,7 @@ const AutoAnalysis = ({
           description={formatMessage(messages.numberOfLogLinesDescription)}
           format={String}
           disabled={isFieldDisabled}
+          dataAutomationId={NUMBER_OF_LOG_LINES + FIELD}
         >
           <Dropdown options={numberOfLogDropdownOptions} mobileDisabled />
         </FieldElement>
@@ -172,10 +178,16 @@ const AutoAnalysis = ({
           description={formatMessage(messages.allMessagesShouldMatchDescription)}
           format={Boolean}
           disabled={isFieldDisabled}
+          dataAutomationId={ALL_MESSAGES_SHOULD_MATCH + FIELD}
         >
           <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} mobileDisabled>
+        <Button
+          type="submit"
+          disabled={isFieldDisabled}
+          mobileDisabled
+          dataAutomationId="submitButton"
+        >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}

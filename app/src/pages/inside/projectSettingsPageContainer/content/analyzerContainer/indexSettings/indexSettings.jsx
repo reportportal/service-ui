@@ -54,7 +54,8 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.indexSettingsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.indexSettingsDocs, 'documentationLink'),
         }),
       )}
     >
@@ -85,6 +86,7 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             title={analyzerUnavailableTitle}
             mobileDisabled
             variant="ghost"
+            dataAutomationId="generateIndexButton"
           >
             {formatMessage(messages.generateIndexButtonCaption)}
           </Button>
@@ -94,6 +96,7 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             title={analyzerUnavailableTitle}
             mobileDisabled
             variant="ghost"
+            dataAutomationId="removeIndexButton"
           >
             {formatMessage(messages.removeIndexButtonCaption)}
           </Button>

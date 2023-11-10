@@ -27,6 +27,7 @@ import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import { FIELD } from 'common/constants/dataAutomation';
 import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
@@ -67,7 +68,8 @@ const SimilarItems = ({
     <Layout
       description={Parser(
         formatMessage(messages.tabDescription, {
-          a: (data) => createExternalLink(data, docsReferences.similarItemsDocs),
+          a: (data) =>
+            createExternalLink(data, docsReferences.similarItemsDocs, 'documentationLink'),
         }),
       )}
     >
@@ -78,12 +80,18 @@ const SimilarItems = ({
           description={formatMessage(messages.searchLogsMinShouldMatchDescription)}
           format={String}
           disabled={isFieldDisabled}
+          dataAutomationId={SEARCH_LOGS_MIN_SHOULD_MATCH + FIELD}
         >
           <FieldErrorHint>
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} mobileDisabled>
+        <Button
+          type="submit"
+          disabled={isFieldDisabled}
+          mobileDisabled
+          dataAutomationId="submitButton"
+        >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
