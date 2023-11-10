@@ -34,7 +34,7 @@ import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
-import { Divider, TabDescription, MODAL_ACTION_TYPE_EDIT, FormattedDescription } from '../elements';
+import { Divider, TabDescription, MODAL_ACTION_TYPE_ADD, FormattedDescription } from '../elements';
 import { MAX_DEFECT_TYPES_COUNT, WARNING_DEFECT_TYPES_COUNT } from './constants';
 import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
@@ -89,7 +89,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         id: 'addEditDefectTypeModal',
         data: {
           onSave: addDefect,
-          actionType: MODAL_ACTION_TYPE_EDIT,
+          actionType: MODAL_ACTION_TYPE_ADD,
           defectType: { color: defectGroup.color, typeRef: defectGroup.typeRef },
           defectTypes,
         },
