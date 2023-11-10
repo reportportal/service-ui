@@ -28,7 +28,6 @@ import { daysFromNow, createExternalLink } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { docsReferences } from 'common/utils/referenceDictionary';
 import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
-import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import styles from './apiKeysBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -79,22 +78,9 @@ export const ApiKeysBlock = ({ apiKeys }) => {
     }
   };
 
-  const onDocumentationKeyDown = (event) => {
-    const { keyCode } = event;
-    const { tagName } = event.target;
-
-    if (tagName === 'A' && keyCode === ENTER_KEY_CODE) {
-      trackEvent(PROFILE_EVENTS.CLICK_DOCUMENTATION_LINK_WITH_API_KEY);
-    }
-  };
-
   return (
     <>
-      <div
-        className={cx('description')}
-        onClick={onDocumentationClick}
-        onKeyDown={onDocumentationKeyDown}
-      >
+      <div className={cx('description')} onClick={onDocumentationClick}>
         {Parser(
           formatMessage(messages.description, {
             a: (data) =>

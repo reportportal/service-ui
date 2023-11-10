@@ -18,7 +18,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
@@ -29,7 +28,7 @@ import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSetting
 import { docsReferences, createExternalLink } from 'common/utils';
 import { FIELD } from 'common/constants/dataAutomation';
 import { Layout } from '../../layout';
-import { LabeledPreloader, FieldElement } from '../../elements';
+import { LabeledPreloader, FieldElement, FormattedDescription } from '../../elements';
 import { messages } from './messages';
 import { SEARCH_LOGS_MIN_SHOULD_MATCH } from '../constants';
 
@@ -56,7 +55,7 @@ const SimilarItems = ({
     setPending(false);
 
     trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInSimilarItemsTab(
         data[SEARCH_LOGS_MIN_SHOULD_MATCH],
       ),
     );
@@ -66,12 +65,15 @@ const SimilarItems = ({
 
   return (
     <Layout
-      description={Parser(
-        formatMessage(messages.tabDescription, {
-          a: (data) =>
-            createExternalLink(data, docsReferences.similarItemsDocs, 'documentationLink'),
-        }),
-      )}
+      description={
+        <FormattedDescription
+          content={formatMessage(messages.tabDescription, {
+            a: (data) =>
+              createExternalLink(data, docsReferences.similarItemsDocs, 'documentationLink'),
+          })}
+          event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('similar_items')}
+        />
+      }
     >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement

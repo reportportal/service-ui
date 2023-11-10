@@ -18,7 +18,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
@@ -26,7 +25,7 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
-import { FieldElement, LabeledPreloader } from '../../elements';
+import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
 import { formatFieldName } from '../utils';
@@ -73,7 +72,7 @@ const UniqueErrors = ({
     const type = JSON.parse(preparedData[UNIQUE_ERROR_REMOVE_NUMBERS]);
 
     trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInUniqueErrorsTab(
         preparedData[UNIQUE_ERROR_ENABLED],
         type,
       ),
@@ -84,12 +83,15 @@ const UniqueErrors = ({
 
   return (
     <Layout
-      description={Parser(
-        formatMessage(messages.tabDescription, {
-          a: (data) =>
-            createExternalLink(data, docsReferences.uniqueErrorsDocs, 'documentationLink'),
-        }),
-      )}
+      description={
+        <FormattedDescription
+          content={formatMessage(messages.tabDescription, {
+            a: (data) =>
+              createExternalLink(data, docsReferences.uniqueErrorsDocs, 'documentationLink'),
+          })}
+          event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('unique_errors')}
+        />
+      }
     >
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement

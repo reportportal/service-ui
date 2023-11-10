@@ -73,6 +73,12 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
 
   const isAbleToCreate = canUpdateSettings(userRole, projectRole);
 
+  const handleDocumentationClick = () => {
+    trackEvent(
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION('no_pattern_analysis'),
+    );
+  };
+
   return (
     <>
       {patterns.length > 0 ? (
@@ -93,6 +99,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
           disableButton={!isAbleToCreate}
           handleButton={onAddPattern}
+          handleDocumentationClick={handleDocumentationClick}
         />
       )}
     </>

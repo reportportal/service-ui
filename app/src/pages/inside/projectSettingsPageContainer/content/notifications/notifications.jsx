@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
-import Parser from 'html-react-parser';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
   projectNotificationsSelector,
@@ -51,6 +50,7 @@ import {
   RuleList,
   FieldElement,
   NotificationRuleContent,
+  FormattedDescription,
   MODAL_ACTION_TYPE_ADD,
   MODAL_ACTION_TYPE_EDIT,
   MODAL_ACTION_TYPE_COPY,
@@ -245,7 +245,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.clickDocumentationLink('no_notifications'));
   };
 
   if (loading) {
@@ -257,11 +257,14 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       {notifications.length ? (
         <SettingsPageContent>
           <Layout
-            description={Parser(
-              formatMessage(messages.tabDescription, {
-                a: (data) => createExternalLink(data, docsReferences.notificationsDocs),
-              }),
-            )}
+            description={
+              <FormattedDescription
+                content={formatMessage(messages.tabDescription, {
+                  a: (data) => createExternalLink(data, docsReferences.notificationsDocs),
+                })}
+                event={PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.clickDocumentationLink()}
+              />
+            }
           >
             <FieldElement
               withoutProvider
