@@ -269,8 +269,8 @@ export const URLS = {
   appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
+  pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
   pluginPublic: () => `${urlBase}plugin/public`,
-  pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
   pluginPublicFile: (pluginName, fileKey) =>
     `${urlBase}plugin/public/${pluginName}/file/${fileKey}`,
   pluginCommandCommon: (projectId, pluginName, command) =>

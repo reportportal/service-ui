@@ -114,6 +114,7 @@ export class IntegrationSettingsContainer extends Component {
           isGlobal={isGlobal}
           extension={integrationSettingsExtension}
           withPreloader
+          silentOnError={false}
         />
       </div>
     );

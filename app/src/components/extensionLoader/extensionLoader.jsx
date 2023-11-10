@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ErrorBoundary } from 'components/containers/errorBoundary';
+import { ErrorMessage } from 'components/main/errorMessage';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { createImportProps } from 'controllers/plugins/uiExtensions/createImportProps';
 import { extensionType } from './extensionTypes';
 import { useFederatedComponent } from './hooks';
 import { getExtensionUrl } from './utils';
 
-// TODO: Create a special error boundary for extension components
 function ExtensionLoader({ extension, withPreloader, ...componentProps }) {
   const { moduleName, scope, pluginName } = extension;
   const url = getExtensionUrl(extension);
@@ -35,18 +36,31 @@ ExtensionLoader.defaultProps = {
   withPreloader: false,
 };
 
-export function ExtensionLoaderWrapper({ extension, withPreloader, ...componentProps }) {
-  return extension.component ? (
-    <extension.component {...componentProps} />
-  ) : (
-    <ExtensionLoader extension={extension} withPreloader={withPreloader} {...componentProps} />
+export function ExtensionLoaderWrapper({
+  extension,
+  withPreloader,
+  silentOnError,
+  ...componentProps
+}) {
+  return (
+    <ErrorBoundary
+      getFallback={silentOnError ? undefined : (error) => <ErrorMessage error={error} />}
+    >
+      {extension.component ? (
+        <extension.component {...componentProps} />
+      ) : (
+        <ExtensionLoader extension={extension} withPreloader={withPreloader} {...componentProps} />
+      )}
+    </ErrorBoundary>
   );
 }
 ExtensionLoaderWrapper.propTypes = {
   extension: extensionType,
   withPreloader: PropTypes.bool,
+  silentOnError: PropTypes.bool,
 };
 ExtensionLoaderWrapper.defaultProps = {
   extension: {},
   withPreloader: false,
+  silentOnError: true,
 };

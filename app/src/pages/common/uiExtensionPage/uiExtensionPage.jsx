@@ -44,7 +44,12 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
             </Header>
           </div>
           <PageSection>
-            <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
+            <ExtensionLoader
+              extension={extension}
+              setHeaderNodes={setHeaderNodes}
+              withPreloader
+              silentOnError={false}
+            />
           </PageSection>
         </>
       );
@@ -53,7 +58,7 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
         <PageLayout>
           <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />
           <PageSection>
-            <ExtensionLoader extension={extension} withPreloader />
+            <ExtensionLoader extension={extension} silentOnError={false} withPreloader />
           </PageSection>
         </PageLayout>
       );

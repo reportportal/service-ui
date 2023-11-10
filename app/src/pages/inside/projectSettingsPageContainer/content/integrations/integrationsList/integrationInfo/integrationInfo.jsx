@@ -298,6 +298,7 @@ export const IntegrationInfo = (props) => {
               goToPreviousPage={goToPluginIntegrationList}
               extension={integrationSettingsExtension}
               withPreloader
+              silentOnError={false}
             />
           </div>
         </>

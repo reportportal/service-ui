@@ -115,7 +115,7 @@ export class InstalledTab extends Component {
     } = this.props;
     const toggleActive = !itemData.enabled;
 
-    return fetch(URLS.pluginUpdate(itemData.type), {
+    return fetch(URLS.pluginById(itemData.type), {
       method: 'PUT',
       data: {
         enabled: toggleActive,

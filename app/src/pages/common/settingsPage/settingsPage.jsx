@@ -115,7 +115,7 @@ export class SettingsPage extends Component {
         [extension.name]: {
           name: extension.title || extension.name,
           link: this.props.createTabLink(extension.name),
-          component: <ExtensionLoader extension={extension} withPreloader />,
+          component: <ExtensionLoader extension={extension} withPreloader silentOnError={false} />,
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),
         },

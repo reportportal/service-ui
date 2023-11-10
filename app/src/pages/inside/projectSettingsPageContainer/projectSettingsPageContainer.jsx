@@ -81,7 +81,12 @@ export const ProjectSettingsPageContainer = () => {
           name: extension.title || extension.name,
           link: createTabLink(extension.name),
           component: (
-            <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
+            <ExtensionLoader
+              extension={extension}
+              withPreloader
+              silentOnError={false}
+              setHeaderNodes={setHeaderNodes}
+            />
           ),
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),

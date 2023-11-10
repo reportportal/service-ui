@@ -14,15 +14,4 @@
  *  limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import { ErrorBoundary } from '../errorBoundary';
-import { PageError } from './pageError';
-
-export function PageErrorBoundary({ children }) {
-  return (
-    <ErrorBoundary getFallback={(error) => <PageError error={error} />}>{children}</ErrorBoundary>
-  );
-}
-PageErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+export { ErrorBoundary } from './errorBoundary';
