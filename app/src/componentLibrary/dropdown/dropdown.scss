@@ -28,6 +28,8 @@
   box-sizing: border-box;
   transition: border-color 200ms linear;
   cursor: pointer;
+
+  @include arrow-color($COLOR--e-300);
 }
 
 @mixin arrow-color($arrowColor) {
@@ -79,6 +81,12 @@
 @mixin disabled-state {
   pointer-events: none;
   background-color: $COLOR--bg-100;
+
+  .arrow {
+    svg path {
+      opacity: 0.4;
+    }
+  }
 }
 
 @mixin value($color: $COLOR--almost-black) {

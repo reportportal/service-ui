@@ -55,6 +55,15 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
+
+    path {
+      fill: $COLOR--e-300;
+    }
+
+    path:first-child {
+      stroke: $COLOR--e-300;
+      fill: none;
+    }
   }
   .show-hint-text {
     color: $COLOR--almost-black;
