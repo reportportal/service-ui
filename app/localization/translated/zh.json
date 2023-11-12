@@ -2125,7 +2125,7 @@
   "Widgets.Description.componentHealthCheck": "显示由指定属性所指示的应用程序组件的通过率。",
   "Widgets.Description.componentHealthCheckTable": "显示由指定属性所指示的应用程序组件的详细统计信息。由于小部件包含复杂的查询，小部件可能需要渲染一段时间（大约10分钟）",
   "Widgets.Description.cumulative": "显示具有相同属性关键字的测试任务的汇总统计的增长趋势。",
-  "Widgets.Description.flakyTestCases": "显示在指定的先前测试任务中前50名最不稳定的测试用例。",
+  "Widgets.Description.flakyTestCases": "Shows the TOP-50 the most flaky test cases within the specified launches.",
   "Widgets.Description.investigatedTrend": " - 选择“测试任务模式”将显示每次运行测试任务是否被分析（“已分析”/“待分析”的百分比），<br> - 选择“时间轴模式”将按日期分布的形式显示在每天所有运行的测试中“已分析”/“待分析”的百分比。",
   "Widgets.Description.launchStatistics": "显示上次测试任务的统计信息，分为2个部分：</br> - 跳过、通过、失败</br> - 产品错误、系统问题、待分析、自动化错误。",
   "Widgets.Description.launchesComparisonChart": "允许并排比较最近2次测试任务的统计数据。",
