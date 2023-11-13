@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,15 @@
  *  limitations under the License.
  */
 
-import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { ErrorBoundary } from '../errorBoundary';
 import { PageError } from './pageError';
 
-export class PageErrorBoundary extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
-  static getDerivedStateFromError(error) {
-    return {
-      hasError: true,
-      error,
-    };
-  }
-
-  state = {
-    hasError: false,
-    error: null,
-  };
-
-  render() {
-    const { hasError, error } = this.state;
-    if (!hasError) {
-      return this.props.children;
-    }
-    // eslint-disable-next-line no-console
-    console.error(error);
-    return <PageError error={error} />;
-  }
+export function PageErrorBoundary({ children }) {
+  return (
+    <ErrorBoundary getFallback={(error) => <PageError error={error} />}>{children}</ErrorBoundary>
+  );
 }
+PageErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired,
+};

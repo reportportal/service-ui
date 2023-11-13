@@ -764,6 +764,7 @@
   "ExternalUserInvitationModal.email": "Запрашэнне было адпраўлена на",
   "ExternalUserInvitationModal.header": "Запрасіць карыстальніка",
   "ExternalUserInvitationModal.link": "Спасылка на запрашэнне",
+  "ExtensionError.message": "У плагіне адбыўся збой. <br />Дачакайцеся ўзнаўлення злучэння <br />або звярніцеся за дапамогай да адміністратара.",
   "FailedCasesTrendChart.failedCases": "няўдалыя сцэнарыі",
   "FailedCasesTrendControls.ItemsFieldLabel": "Элементы",
   "FailedCasesTrendControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",

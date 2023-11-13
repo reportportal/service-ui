@@ -231,7 +231,7 @@ function* watchFetchPublicPlugins() {
 function* removePlugin({ payload: { id, callback, pluginName } }) {
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.pluginUpdate(id), {
+    yield call(fetch, URLS.pluginById(id), {
       method: 'delete',
     });
     yield put(removePluginSuccessAction(id));

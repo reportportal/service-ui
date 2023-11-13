@@ -21,9 +21,12 @@
   font-family: $font-family;
 }
 
-.integrations-section {
-  max-width: 844px;
-  padding: 0px 32px;
+.available-integrations {
+  flex-grow: 1;
+  max-width: 908px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 32px;
   margin: 24px auto 48px;
 }
 

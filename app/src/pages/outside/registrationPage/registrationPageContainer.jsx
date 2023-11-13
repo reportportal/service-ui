@@ -122,6 +122,7 @@ export class RegistrationPageContainer extends Component {
               uuid={uuid}
               extension={extension}
               withPreloader
+              silentOnError={false}
             />
           ))
         ) : (

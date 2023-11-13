@@ -764,6 +764,7 @@
   "ExternalUserInvitationModal.email": "Запрошення було надіслано на",
   "ExternalUserInvitationModal.header": "Запросити користувача",
   "ExternalUserInvitationModal.link": "Посилання на запрошення",
+  "ExtensionError.message": "У плагіні стався збій. <br />Дочекайте відновлення з'єднання <br />або зверніться за допомогою до адміністратора.",
   "FailedCasesTrendChart.failedCases": "сценарії невдалі",
   "FailedCasesTrendControls.ItemsFieldLabel": "Елементи",
   "FailedCasesTrendControls.ItemsValidationError": "Кількість елементів приймає значення від '1' до '600'",

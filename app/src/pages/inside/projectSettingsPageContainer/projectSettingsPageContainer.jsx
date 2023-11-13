@@ -81,7 +81,12 @@ export const ProjectSettingsPageContainer = () => {
           name: extension.title || extension.name,
           link: createTabLink(extension.name),
           component: (
-            <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
+            <ExtensionLoader
+              extension={extension}
+              withPreloader
+              silentOnError={false}
+              setHeaderNodes={setHeaderNodes}
+            />
           ),
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),
@@ -184,17 +189,19 @@ export const ProjectSettingsPageContainer = () => {
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper resetRequired>
-        {!subPage && (
-          <div className={cx('header')}>
-            <Header
-              title={config[activeTab] && config[activeTab].name}
-              titleNode={headerNodes.titleNode}
-            >
-              {headerNodes.children}
-            </Header>
-          </div>
-        )}
-        <div className={cx({ content: !subPage })}>{content}</div>
+        <div className={cx('settings-page-content-wrapper')}>
+          {!subPage && (
+            <div className={cx('header')}>
+              <Header
+                title={config[activeTab] && config[activeTab].name}
+                titleNode={headerNodes.titleNode}
+              >
+                {headerNodes.children}
+              </Header>
+            </div>
+          )}
+          <div className={cx('content', { 'main-page': !subPage })}>{content}</div>
+        </div>
       </ScrollWrapper>
     </SettingsLayout>
   );
