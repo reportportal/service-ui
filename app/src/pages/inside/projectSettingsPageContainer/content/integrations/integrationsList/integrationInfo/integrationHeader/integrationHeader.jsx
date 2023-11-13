@@ -25,6 +25,9 @@ import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { createExternalLink } from 'common/utils';
+import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
+import { FormattedDescription } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { useTracking } from 'react-tracking';
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -32,6 +35,7 @@ const cx = classNames.bind(styles);
 
 export const IntegrationHeader = (props) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const {
     data: { name, details = {} },
     data,
@@ -45,19 +49,29 @@ export const IntegrationHeader = (props) => {
 
   const { documentationLink = '' } = details;
 
+  const handleDocumentationClick = () => {
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
+  };
+
   const integrationDescription = PLUGIN_DESCRIPTIONS_MAP[name] ? (
     <>
       {PLUGIN_DESCRIPTIONS_MAP[name]}{' '}
-      {Parser(
-        formatMessage(messages.linkToDocumentation, {
+      <FormattedDescription
+        content={formatMessage(messages.linkToDocumentation, {
           a: (link) => createExternalLink(link, documentationLink),
-        }),
-      )}
+        })}
+        event={PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations')}
+      />
     </>
   ) : (
     <>
       {details.description && Parser(details.description)} Link to{' '}
-      <a target="_blank" rel="noreferrer noopener" href={documentationLink}>
+      <a
+        onClick={handleDocumentationClick}
+        target="_blank"
+        rel="noreferrer noopener"
+        href={documentationLink}
+      >
         Documentation
       </a>
     </>

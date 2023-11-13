@@ -34,7 +34,7 @@ export const IntegrationsList = (props) => {
   const { trackEvent } = useTracking();
 
   const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_BUTTON('no_integrations'));
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations'));
   };
 
   return (
