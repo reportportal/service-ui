@@ -67,7 +67,7 @@ export class NoItemsDemo extends Component {
             formatMessage(messages.generateDemoDataDescription, {
               a: (data) =>
                 DOMPurify.sanitize(
-                  `<a href='https://reportportal.io/download/integration' target='_blank'>${data}</a>`,
+                  `<a href='https://reportportal.io/docs/log-data-in-reportportal/ImplementOwnIntegration/' target='_blank'>${data}</a>`,
                 ),
             }),
           )}
