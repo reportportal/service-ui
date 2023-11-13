@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ErrorBoundary } from 'components/containers/errorBoundary';
-import { ErrorMessage } from 'components/main/errorMessage';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { createImportProps } from 'controllers/plugins/uiExtensions/createImportProps';
+import { ExtensionError } from './extensionError';
 import { extensionType } from './extensionTypes';
 import { useFederatedComponent } from './hooks';
 import { getExtensionUrl } from './utils';
@@ -43,9 +43,7 @@ export function ExtensionLoaderWrapper({
   ...componentProps
 }) {
   return (
-    <ErrorBoundary
-      getFallback={silentOnError ? undefined : (error) => <ErrorMessage error={error} />}
-    >
+    <ErrorBoundary getFallback={silentOnError ? undefined : () => <ExtensionError />}>
       {extension.component ? (
         <extension.component {...componentProps} />
       ) : (

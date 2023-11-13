@@ -764,6 +764,7 @@
   "ExternalUserInvitationModal.email": "Приглашение было отправлено на",
   "ExternalUserInvitationModal.header": "Пригласить пользователя",
   "ExternalUserInvitationModal.link": "Ссылка на приглашение",
+  "ExtensionError.message": "В плагине произошел сбой. <br />Дождитесь восстановления соединения <br />или обратитесь за помощью к администратору.",
   "FailedCasesTrendChart.failedCases": "неудавшиеся сценарии",
   "FailedCasesTrendControls.ItemsFieldLabel": "Элементы",
   "FailedCasesTrendControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",

@@ -45,7 +45,7 @@ export const AvailableIntegrations = ({
   return (
     <>
       {integrations.length > 0 && (
-        <div className={cx('integrations-section')}>
+        <div className={cx('available-integrations')}>
           <h1 className={cx('integrations-header')}>{header}</h1>
           <p className={cx('integrations-text')}>{text}</p>
           {hasProjectIntegration && (

@@ -764,6 +764,7 @@
   "ExternalUserInvitationModal.email": "邀请已发送至",
   "ExternalUserInvitationModal.header": "邀请用户",
   "ExternalUserInvitationModal.link": "邀请链接",
+  "ExtensionError.message": "The plugin has encountered a crash. <br />Await the reestablishment of the connection <br />or contact the administrator for assistance.",
   "FailedCasesTrendChart.failedCases": "失败的用例",
   "FailedCasesTrendControls.ItemsFieldLabel": "测试项",
   "FailedCasesTrendControls.ItemsValidationError": "测试项的数量应该在1到600之间",
