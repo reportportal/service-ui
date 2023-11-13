@@ -67,9 +67,9 @@ export const getFieldComponent = (field) => {
     fieldType = DATE_TYPE;
   } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
-  } else if (field.fieldType === AUTOCOMPLETE_TYPE && field.url) {
+  } else if (field.fieldType === AUTOCOMPLETE_TYPE && field.commandName) {
     fieldType = AUTOCOMPLETE_TYPE;
-  } else if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE && field.url) {
+  } else if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE && field.commandName) {
     fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
   } else {
     fieldType = TEXT_TYPE;

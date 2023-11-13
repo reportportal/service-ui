@@ -19,6 +19,7 @@
   top: 100%;
   display: none;
   width: 100%;
+  max-width: 405px;
   border-radius: 3px;
   margin-top: 4px;
   font-family: $FONT-ROBOTO-MEDIUM;
@@ -31,5 +32,9 @@
   z-index: $Z-INDEX-POPUP;
   &.opened {
     display: block;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
   }
 }

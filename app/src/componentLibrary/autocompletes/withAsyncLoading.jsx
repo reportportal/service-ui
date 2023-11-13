@@ -22,6 +22,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
   class WrappedAutocomplete extends Component {
     static propTypes = {
       getURI: PropTypes.func,
+      getRequestParams: PropTypes.func,
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
       minLength: PropTypes.number,
@@ -29,6 +30,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
 
     static defaultProps = {
       getURI: () => '',
+      getRequestParams: () => {},
       makeOptions: (values) => values,
       filterOption: () => true,
       minLength: 1,
@@ -47,16 +49,21 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
     }
 
     debouncedFetch = debounce((inputValue) => {
-      const { getURI, makeOptions, filterOption } = this.props;
+      const { getURI, getRequestParams, makeOptions, filterOption } = this.props;
+
       if (this.cancelToken) {
         this.cancelToken();
       }
+
       const value = (inputValue || '').trim();
       const uri = getURI(value);
+      const requestParams = getRequestParams(value);
+
       fetch(uri, {
         abort: (cancelToken) => {
           this.cancelToken = cancelToken;
         },
+        ...requestParams,
       })
         .then((response) => {
           this.cancelToken = null;

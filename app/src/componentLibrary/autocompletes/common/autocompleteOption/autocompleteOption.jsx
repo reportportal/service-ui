@@ -30,34 +30,43 @@ export const AutocompleteOption = ({
   isNew,
   disabled,
   variant,
+  hideSelected,
   ...props
 }) => {
-  return isNew ? (
-    <>
-      <div className={cx('divider')} />
-      <li
-        className={cx('new-item', variant, { active: isActive, selected: isSelected, disabled })}
-        {...props}
-      >
-        <span className={cx('value')}>{children}</span>
-        <Button
-          {...(!disabled ? props : {})}
-          customClassName={cx({ 'button-active': isActive })}
-          startIcon={PlusIcon}
-          variant={'text'}
+  let option;
+  if (isNew) {
+    option = (
+      <>
+        <div className={cx('divider')} />
+        <li
+          className={cx('new-item', variant, { active: isActive, selected: isSelected, disabled })}
+          {...props}
         >
-          {variant === 'key-variant' ? 'New key' : 'New value'}
-        </Button>
+          <span className={cx('value')}>{children}</span>
+          <Button
+            {...(!disabled ? props : {})}
+            customClassName={cx({ 'button-active': isActive })}
+            startIcon={PlusIcon}
+            variant={'text'}
+          >
+            {variant === 'key-variant' ? 'New key' : 'New value'}
+          </Button>
+        </li>
+      </>
+    );
+  } else if (isSelected && hideSelected) {
+    option = null;
+  } else {
+    option = (
+      <li
+        className={cx('item', variant, { active: isActive, selected: isSelected, disabled })}
+        {...(!disabled ? props : {})}
+      >
+        <span className={cx('label', 'tag')}>{children}</span>
       </li>
-    </>
-  ) : (
-    <li
-      className={cx('item', variant, { active: isActive, selected: isSelected, disabled })}
-      {...(!disabled ? props : {})}
-    >
-      <span className={cx('label', 'tag')}>{children}</span>
-    </li>
-  );
+    );
+  }
+  return option;
 };
 
 AutocompleteOption.propTypes = {
@@ -67,6 +76,7 @@ AutocompleteOption.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
   variant: PropTypes.string,
+  hideSelected: PropTypes.bool,
 };
 
 AutocompleteOption.defaultProps = {
@@ -76,4 +86,5 @@ AutocompleteOption.defaultProps = {
   children: null,
   disabled: false,
   variant: '',
+  hideSelected: false,
 };

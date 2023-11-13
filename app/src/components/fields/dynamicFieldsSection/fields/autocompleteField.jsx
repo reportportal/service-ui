@@ -1,31 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { connect } from 'react-redux';
+import { projectInfoSelector } from 'controllers/project';
+import { URLS } from 'common/urls';
 import { DynamicField } from '../dynamicField';
 
-export const AutocompleteField = ({ field, darkView, modalView, ...rest }) => {
-  // todo change to command
-  const getUri = (val) => `${field.url}${val}`;
+const AutocompleteFieldComponent = ({
+  field,
+  darkView,
+  modalView,
+  integrationId,
+  projectName,
+  ...rest
+}) => {
+  const getUri = () =>
+    URLS.projectIntegrationByIdCommand(projectName, integrationId, field.commandName);
+
+  const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
+
+  const parseValueToString = (user) => (user ? user.name : '');
 
   return (
     <DynamicField field={field} darkView={darkView} modalView={modalView} {...rest}>
       <AsyncAutocomplete
         getURI={getUri}
-        minLength={3}
+        getRequestParams={getRequestParams}
+        parseValueToString={parseValueToString}
         createWithoutConfirmation
-        prohibitCreateOnBlur
         onBlur={() => {}}
       />
     </DynamicField>
   );
 };
-AutocompleteField.propTypes = {
+AutocompleteFieldComponent.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
+  projectName: PropTypes.number,
+  integrationId: PropTypes.number,
 };
-AutocompleteField.defaultProps = {
+AutocompleteFieldComponent.defaultProps = {
   darkView: false,
   modalView: false,
+  integrationId: undefined,
 };
+export const AutocompleteField = connect((state) => ({
+  projectName: projectInfoSelector(state).projectName,
+}))(AutocompleteFieldComponent);

@@ -52,6 +52,7 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
+  hideSelected,
   ...props
 }) => {
   let updatePosition;
@@ -72,6 +73,7 @@ export const MultipleAutocomplete = ({
       index,
       isActive: highlightedIndex === index,
       isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+      hideSelected,
       ...rest,
     });
   const removeItemByBackspace = ({ event, removeItem, inputValue }) => {
@@ -266,6 +268,7 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
+  hideSelected: PropTypes.bool,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -297,4 +300,5 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
+  hideSelected: false,
 };
