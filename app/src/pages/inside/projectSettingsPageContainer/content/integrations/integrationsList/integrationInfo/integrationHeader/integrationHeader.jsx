@@ -48,9 +48,10 @@ export const IntegrationHeader = (props) => {
   } = props;
 
   const { documentationLink = '' } = details;
+  const analyticsData = withButton ? 'integrations' : 'no_integrations';
 
   const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(analyticsData, name));
   };
 
   const integrationDescription = PLUGIN_DESCRIPTIONS_MAP[name] ? (
@@ -60,7 +61,7 @@ export const IntegrationHeader = (props) => {
         content={formatMessage(messages.linkToDocumentation, {
           a: (link) => createExternalLink(link, documentationLink),
         })}
-        event={PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations')}
+        event={PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(analyticsData, name)}
       />
     </>
   ) : (
