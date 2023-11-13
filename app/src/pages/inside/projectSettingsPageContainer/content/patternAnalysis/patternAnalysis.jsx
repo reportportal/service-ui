@@ -75,7 +75,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
 
   const handleDocumentationClick = () => {
     trackEvent(
-      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_LINK_DOCUMENTATION('no_pattern_analysis'),
+      PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.clickDocumentationLink('no_pattern_analysis'),
     );
   };
 

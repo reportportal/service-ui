@@ -238,7 +238,7 @@ export const IntegrationInfo = (props) => {
   };
 
   const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_BUTTON('integrations'));
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
   };
 
   const renderIntegrationList = () => (

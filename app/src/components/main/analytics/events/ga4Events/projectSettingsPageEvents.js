@@ -183,7 +183,7 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_INTEGRATION = {
-  CLICK_DOCUMENTATION_BUTTON: (place) => ({
+  clickDocumentationLink: (place) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     place: normalizeEventString(place),
     link_name: 'documentation',
