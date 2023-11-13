@@ -16,7 +16,7 @@
 
 import { normalizeEventString } from '../../utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import { getBasicClickEventParameters, normalizeEventParameter } from '../common/ga4Utils';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
@@ -183,10 +183,11 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_INTEGRATION = {
-  clickDocumentationLink: (place) => ({
+  clickDocumentationLink: (place, type) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     place: normalizeEventString(place),
     link_name: 'documentation',
+    ...(type && { type: normalizeEventParameter(type) }),
   }),
 
   CLICK_ADD_PROJECT_INTEGRATION: (type) => ({
