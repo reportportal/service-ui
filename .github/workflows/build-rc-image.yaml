@@ -29,7 +29,7 @@ jobs:
       date: ${{ steps.vars.outputs.date }}
       
   call-docker-build:
-    name: Call develop Docker build
+    name: Call release candidate Docker build
     needs: variables-setup
     uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
     with:
