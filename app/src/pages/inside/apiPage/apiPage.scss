@@ -98,17 +98,22 @@
       }
 
       .opblock {
-        .opblock-summary-path {
-          flex: none;
-          font-weight: normal;
-          font-size: 14px;
-          font-family: $FONT-SEMIBOLD;
-        }
-        .opblock-summary-description {
-          width: 100%;
-          padding-right: 10px;
-          color: $COLOR--system-issue;
-          text-align: right;
+        .opblock-summary-path-description-wrapper {
+          flex-wrap: nowrap;
+
+          .opblock-summary-path {
+            flex: none;
+            font-weight: normal;
+            font-size: 14px;
+            font-family: $FONT-SEMIBOLD;
+          }
+
+          .opblock-summary-description {
+            width: 100%;
+            padding-right: 10px;
+            color: $COLOR--system-issue;
+            text-align: right;
+          }
         }
       }
 
