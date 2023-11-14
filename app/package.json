@@ -90,7 +90,7 @@
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
     "swagger-ui-react": "5.9.4",
-    "video.js": "7.21.5"
+    "video.js": "7.17.0"
   },
   "devDependencies": {
     "@babel/core": "7.16.7",
@@ -135,7 +135,7 @@
     "jest-junit": "9.0.0",
     "lint-staged": "9.4.2",
     "mini-css-extract-plugin": "2.5.2",
-    "node-sass": "8.0.0",
+    "node-sass": "7.0.3",
     "postcss": "^8.4.5",
     "postcss-loader": "6.2.1",
     "prettier": "1.19.1",
