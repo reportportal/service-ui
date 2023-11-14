@@ -87,7 +87,7 @@
     "redux-saga": "0.16.0",
     "reselect": "3.0.1",
     "reset-css": "2.2.1",
-    "semver-diff": "2.1.0",
+    "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
     "swagger-ui-react": "4.19.1",
     "video.js": "7.17.0"
