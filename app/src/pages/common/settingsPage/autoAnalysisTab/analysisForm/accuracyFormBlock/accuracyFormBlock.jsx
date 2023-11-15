@@ -41,12 +41,12 @@ const messages = defineMessages({
   minimumShouldMatchDescription: {
     id: 'AccuracyFormBlock.minimumShouldMatchDescription',
     defaultMessage:
-      'Percent of words equality between analyzed log and particular log from the ElasticSearch. If a log from ElasticSearch has the value less then set, this log will be ignored for AA.',
+      'Percent of words equality between analyzed log and particular log from the search engine. If a log from search engine has the value less then set, this log will be ignored for AA.',
   },
   numberOfLogLinesDescription: {
     id: 'AccuracyFormBlock.numberOfLogLinesDescription',
     defaultMessage:
-      'The number of first lines of log message that should be considered in ElasticSearch.',
+      'The number of first lines of log message that should be considered in search engine.',
   },
   numberOfLogLinesAllOption: {
     id: 'AccuracyFormBlock.numberOfLogLinesAllOption',
@@ -71,7 +71,7 @@ const messages = defineMessages({
   searchLogsMinShouldMatchDescription: {
     id: 'AccuracyFormBlock.searchLogsMinShouldMatchDescription',
     defaultMessage: `Percent of words equality between a log from considered test item 
-    and a log from To Investigate item in the ElasticSearch. If a log from ElasticSearch 
+    and a log from To Investigate item in the search engine. If a log from search engine 
     has the value less than set, this log won’t be shown in the similar To Investigate items section.`,
   },
 });

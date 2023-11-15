@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   contentHeaderMessage: {
     id: 'GenerateIndexModal.contentHeaderMessage',
-    defaultMessage: 'Are you sure to generate index in the ElasticSearch?',
+    defaultMessage: 'Are you sure to generate index in the search engine?',
   },
   noteBlockTitle: {
     id: 'GenerateIndexModal.noteBlockTitle',

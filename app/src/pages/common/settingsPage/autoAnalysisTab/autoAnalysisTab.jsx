@@ -68,7 +68,7 @@ const messages = defineMessages({
   regenerateIndexDescription: {
     id: 'AnalysisForm.regenerateIndexDescription',
     defaultMessage:
-      'You have changed a parameter "Number of log lines". This action can influence on results of an analysis. For an appropriate work of the analyzer, please regenerate Index in Elastic Search. Do you want to regenerate it now?',
+      'You have changed a parameter "Number of log lines". This action can influence on results of an analysis. For an appropriate work of the analyzer, please regenerate Index in search engine. Do you want to regenerate it now?',
   },
 });
 

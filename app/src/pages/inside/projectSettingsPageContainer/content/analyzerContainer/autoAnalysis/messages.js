@@ -46,7 +46,7 @@ export const messages = defineMessages({
   minShouldMatchDescription: {
     id: 'AutoAnalysis.minShouldMatchDescription',
     defaultMessage:
-      'Percent of words equality between analyzed log and particular log from the ElasticSearch. If a log from ElasticSearch has the value less then set, this log will be ignored for AA',
+      'Percent of words equality between analyzed log and particular log from the search engine. If a log from search engine has the value less then set, this log will be ignored for AA',
   },
   sameNameLaunchesCaption: {
     id: 'AutoAnalysis.sameNameLaunchesCaption',
@@ -70,12 +70,12 @@ export const messages = defineMessages({
   },
   numberOfLogLines: {
     id: 'AutoAnalysis.numberOfLogLines',
-    defaultMessage: 'Number of log lines should be considered in Elasticsearch',
+    defaultMessage: 'Number of log lines should be considered in search engine',
   },
   numberOfLogLinesDescription: {
     id: 'AutoAnalysis.numberOfLogLinesDescription',
     defaultMessage:
-      'The number of first lines of log message that should be considered in ElasticSearch',
+      'The number of first lines of log message that should be considered in search engine',
   },
   numberOfLogLinesAllOption: {
     id: 'AutoAnalysis.numberOfLogLinesAllOption',

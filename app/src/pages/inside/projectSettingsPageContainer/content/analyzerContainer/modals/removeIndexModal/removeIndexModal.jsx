@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   contentHeaderMessage: {
     id: 'RemoveIndexModal.contentHeaderMessage',
-    defaultMessage: 'Are you sure to remove all data from the ElasticSearch?',
+    defaultMessage: 'Are you sure to remove all data from the search engine?',
   },
   removeButtonText: {
     id: 'RemoveIndexModal.removeButtonText',
