@@ -29,6 +29,6 @@ export const messages = defineMessages({
   searchLogsMinShouldMatchDescription: {
     id: 'SimilarItems.searchLogsMinShouldMatchDescription',
     defaultMessage:
-      'Percent of words equality between a log from considered test item and a log from To Investigate item in the ElasticSearch. If a log from ElasticSearch has the value less than set, this log won’t be shown in the similar To Investigate items section',
+      'Percent of words equality between a log from considered test item and a log from To Investigate item in the search engine. If a log from search engine has the value less than set, this log won’t be shown in the similar To Investigate items section',
   },
 });
