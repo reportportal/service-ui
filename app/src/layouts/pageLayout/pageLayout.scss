@@ -19,10 +19,11 @@
   border-radius: 0;
   box-shadow: none;
   background-color: transparent;
-  margin: 0;
+  margin: 0 auto;
   padding: 20px 0 0;
   position: relative;
   height: 100%;
+  max-width: 1370px;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0;
   }
