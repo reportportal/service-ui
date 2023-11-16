@@ -41,7 +41,7 @@ const messages = defineMessages({
   generateIndexDescription: {
     id: 'IndexActionsBlock.generateIndexDescription',
     defaultMessage:
-      'All data is removed from search engine and new one is generated based on all previous investigations on the project in accordance with current analysis settings. You can start auto-analyze test results after receiving an e-mail about the end of the generation process',
+      'All data is removed from the search engine and new one is generated based on all previous investigations on the project in accordance with current analysis settings. You can start auto-analyze test results after receiving an e-mail about the end of the generation process',
   },
   removeIndexButtonCaption: {
     id: 'IndexActionsBlock.removeIndexButtonCaption',
