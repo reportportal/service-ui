@@ -60,10 +60,10 @@ const AutoAnalysis = ({
 
   const analyzerModeDropdownOptions = [
     { value: ALL, label: formatMessage(messages.allLaunchesCaption) },
-    { value: LAUNCH_NAME, label: formatMessage(messages.sameNameLaunchesCaption) },
-    { value: CURRENT_LAUNCH, label: formatMessage(messages.currentLaunch) },
-    { value: PREVIOUS_LAUNCH, label: formatMessage(messages.previousLaunch) },
     { value: CURRENT_AND_THE_SAME_NAME, label: formatMessage(messages.currentAndTheSameName) },
+    { value: LAUNCH_NAME, label: formatMessage(messages.sameNameLaunchesCaption) },
+    { value: PREVIOUS_LAUNCH, label: formatMessage(messages.previousLaunch) },
+    { value: CURRENT_LAUNCH, label: formatMessage(messages.currentLaunch) },
   ];
 
   const numberOfLogDropdownOptions = [

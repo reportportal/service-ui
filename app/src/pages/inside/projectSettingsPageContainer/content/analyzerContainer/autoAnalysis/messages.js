@@ -50,7 +50,7 @@ export const messages = defineMessages({
   },
   sameNameLaunchesCaption: {
     id: 'AutoAnalysis.sameNameLaunchesCaption',
-    defaultMessage: 'Launches with the same name',
+    defaultMessage: 'Previous launches with the same name',
   },
   allLaunchesCaption: {
     id: 'AutoAnalysis.allLaunchesCaption',
@@ -58,15 +58,15 @@ export const messages = defineMessages({
   },
   currentLaunch: {
     id: 'AutoAnalysis.current',
-    defaultMessage: 'Only current launch',
+    defaultMessage: 'Current launch',
   },
   previousLaunch: {
     id: 'AutoAnalysis.previousLaunch',
-    defaultMessage: 'Previous launch with the same name',
+    defaultMessage: 'Only Last Launch with the Same Name',
   },
   currentAndTheSameName: {
     id: 'AutoAnalysis.currentAndWithSameName',
-    defaultMessage: 'Current launch and Launches with the same name',
+    defaultMessage: 'All launches with the same name',
   },
   numberOfLogLines: {
     id: 'AutoAnalysis.numberOfLogLines',

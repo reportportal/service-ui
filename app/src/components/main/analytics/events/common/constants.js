@@ -25,8 +25,8 @@ export const LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP = {
   [ANALYZE_ITEMS_MODE.AUTO_ANALYZED]: 'by_aa',
   [ANALYZE_ITEMS_MODE.MANUALLY_ANALYZED]: 'manually',
   [ANALYZER_MODE.ALL]: 'all_launches',
-  [ANALYZER_MODE.LAUNCH_NAME]: 'launches_with_the_same_name',
-  [ANALYZER_MODE.CURRENT_LAUNCH]: 'only_current_launch',
-  [ANALYZER_MODE.PREVIOUS_LAUNCH]: 'previous_launch_with_the_same_name',
-  [ANALYZER_MODE.CURRENT_AND_THE_SAME_NAME]: 'current_launch_and_launches_with_the_same_name',
+  [ANALYZER_MODE.LAUNCH_NAME]: 'previous_launches_with_the_same_name',
+  [ANALYZER_MODE.CURRENT_LAUNCH]: 'current_launch',
+  [ANALYZER_MODE.PREVIOUS_LAUNCH]: 'only_last_launch_with_the_same_name',
+  [ANALYZER_MODE.CURRENT_AND_THE_SAME_NAME]: 'all_launches_with_the_same_name',
 };
