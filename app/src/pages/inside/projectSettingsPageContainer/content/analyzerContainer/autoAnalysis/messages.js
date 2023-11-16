@@ -62,7 +62,7 @@ export const messages = defineMessages({
   },
   previousLaunch: {
     id: 'AutoAnalysis.previousLaunch',
-    defaultMessage: 'Only Last Launch with Same Name',
+    defaultMessage: 'Only Last Launch with the Same Name',
   },
   currentAndTheSameName: {
     id: 'AutoAnalysis.currentAndWithSameName',
