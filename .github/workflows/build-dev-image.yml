@@ -8,67 +8,30 @@ on:
       - '.github/**'
       - README.md
 
-env:
-  AWS_REGION: ${{ vars.AWS_REGION }}          # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}  # set this to your Amazon ECR repository name
-  PLATFORMS: ${{ vars.BUILD_PLATFORMS }}      # set target build platforms. By default linux/amd64
-  IMAGE_TAG: develop-${{ github.run_number }} # set the image tag
-
 jobs:
-  build-and-export:
-    name: Build and export to AWS ECR
+  variables-setup:
+    name: Setting variables for docker build
     runs-on: ubuntu-latest
-    environment: development
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          mask-password: 'true'
-
       - name: Create variables
         id: vars
         run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    outputs:
+      date: ${{ steps.vars.outputs.date }}
+      sha_short: ${{ steps.vars.outputs.sha_short }}
 
-      - name: Build
-        uses: docker/build-push-action@v4
-        env:
-          VERSION: ${{ github.ref_name }}-${{ steps.vars.outputs.sha_short }}
-          BRANCH: ${{ github.ref_name }}
-          DATE: ${{ steps.vars.outputs.date }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        with:
-          context: .
-          push: true
-          build-args: |
-            APP_VERSION=${{ env.VERSION }}
-            BUILD_BRANCH=${{ env.BRANCH }}
-            BUILD_DATE=${{ env.DATE }}
-          platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-      - name: Summarize
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          echo "## General information about the build:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- :gift: Docker image in Amazon ECR: ecr/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_STEP_SUMMARY
-          echo "- :octocat: The commit SHA from which the build was performed: [$GITHUB_SHA](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA)" >> $GITHUB_STEP_SUMMARY
+  call-docker-build:
+    name: Call develop Docker build
+    needs: variables-setup
+    uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
+    with:
+      aws-region: ${{ vars.AWS_REGION }}
+      image-tag: 'develop-${{ github.run_number }}'
+      version: '${{ github.ref_name }}-${{ needs.variables-setup.outputs.sha_short }}'
+      date: ${{ needs.variables-setup.outputs.date }}
+    secrets: inherit
