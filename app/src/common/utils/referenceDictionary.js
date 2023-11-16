@@ -33,7 +33,7 @@ export const referenceDictionary = {
 
 export const docsReferences = {
   indexSettingsDocs:
-    'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches#removegenerate-elasticsearch-index',
+    'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches/#removegenerate-index',
   autoAnalysisDocs: 'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches',
   similarItemsDocs: 'https://reportportal.io/docs/analysis/SearchForTheSimilarToInvestigateItems',
   uniqueErrorsDocs: 'https://reportportal.io/docs/analysis/UniqueErrorAnalysis',
