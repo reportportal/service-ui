@@ -67,7 +67,7 @@ const messages = defineMessages({
   },
   PREVIOUS_LAUNCH: {
     id: 'launchAnalysisModal.baseOptions.previousLaunch',
-    defaultMessage: 'Only Last Launch with the Same Name',
+    defaultMessage: 'Only last launch with the same name',
   },
   CURRENT_AND_THE_SAME_NAME: {
     id: 'launchAnalysisModal.baseOptions.currentAndWithSameName',
