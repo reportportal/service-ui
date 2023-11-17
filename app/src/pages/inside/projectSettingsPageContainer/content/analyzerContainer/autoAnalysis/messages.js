@@ -20,7 +20,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'AutoAnalysis.tabDescription',
     defaultMessage:
-      'Auto-Analysis allow to reduce the time spent on test execution investigation by analyzing test failures in automatic mode. The process of Auto-Analysis is based on previous user-investigated results using Machine Learning. The settings are applied when Auto-Analysis triggered on launch finish event as well as on test item finish event. More information about Auto-Analysis you can read in <a>Documentation</a>',
+      'Auto-Analysis allows to reduce the time spent on test execution investigation by analyzing test failures in automatic mode. The process of Auto-Analysis is based on previous user-investigated results using Machine Learning. The settings are applied when Auto-Analysis triggered on launch finish event as well as on test item finish event. More information about Auto-Analysis you can read in <a>Documentation</a>',
   },
   autoAnalysis: {
     id: 'AutoAnalysis.autoAnalysis',
@@ -62,7 +62,7 @@ export const messages = defineMessages({
   },
   previousLaunch: {
     id: 'AutoAnalysis.previousLaunch',
-    defaultMessage: 'Only Last Launch with the Same Name',
+    defaultMessage: 'Only last launch with the same name',
   },
   currentAndTheSameName: {
     id: 'AutoAnalysis.currentAndWithSameName',
