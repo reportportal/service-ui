@@ -51,7 +51,9 @@ export const mergeFields = (savedFields, fetchedFields) =>
 export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldKey) => {
   const valuesMap = {};
   fields.forEach((field) => {
-    valuesMap[field.id] = field.value;
+    const isAutocomplete =
+      field.fieldType === AUTOCOMPLETE_TYPE || field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
+    valuesMap[field.id] = isAutocomplete ? field.namedValue : field.value;
     if (field.fieldType === predefinedFieldKey && predefinedFieldValue) {
       valuesMap[field.id] = [predefinedFieldValue];
     }

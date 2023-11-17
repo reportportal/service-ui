@@ -409,9 +409,14 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled, integrationId } = this.props;
+    const { intl, disabled, integrationId, pluginName, projectName, projectInfo } = this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
+    const integrationInfo = {
+      integrationId,
+      projectName: projectName || projectInfo.projectName,
+      pluginName,
+    };
 
     return (
       <div className={cx('bts-properties-for-issue-form')}>
@@ -458,7 +463,7 @@ export class BtsPropertiesForIssueForm extends Component {
                   customBlockCreator={this.getCustomBLockConfig}
                   customFieldWrapper={IntegrationFormField}
                   defaultOptionValueKey={this.defaultOptionValueKey}
-                  integrationId={integrationId}
+                  integrationInfo={integrationInfo}
                 >
                   {disabled && (
                     <div className={cx('show-hint-wrapper')}>

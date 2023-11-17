@@ -52,7 +52,6 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
-  hideSelected,
   ...props
 }) => {
   let updatePosition;
@@ -73,7 +72,6 @@ export const MultipleAutocomplete = ({
       index,
       isActive: highlightedIndex === index,
       isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      hideSelected,
       ...rest,
     });
   const removeItemByBackspace = ({ event, removeItem, inputValue }) => {
@@ -213,7 +211,9 @@ export const MultipleAutocomplete = ({
             >
               {({ placement, ref, style, scheduleUpdate }) => {
                 updatePosition = scheduleUpdate;
-                const filteredOptions = options.filter((option) => value.indexOf(option) < 0);
+                const filteredOptions = options.filter((option) =>
+                  value.every((val) => !isEqual(val, option)),
+                );
 
                 return (
                   <AutocompleteMenu
@@ -268,7 +268,6 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
-  hideSelected: PropTypes.bool,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -300,5 +299,4 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
-  hideSelected: false,
 };

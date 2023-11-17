@@ -10,12 +10,15 @@ const MultipleAutocompleteFieldComponent = ({
   field,
   darkView,
   modalView,
-  integrationId,
-  projectName,
+  integrationInfo,
   ...rest
 }) => {
   const getUri = () =>
-    URLS.projectIntegrationByIdCommand(projectName, integrationId, field.commandName);
+    URLS.projectIntegrationByIdCommand(
+      integrationInfo.projectName,
+      integrationInfo.integrationId,
+      field.commandName,
+    );
 
   const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
 
@@ -28,7 +31,6 @@ const MultipleAutocompleteFieldComponent = ({
         getRequestParams={getRequestParams}
         parseValueToString={parseValueToString}
         createWithoutConfirmation
-        hideSelected
       />
     </DynamicField>
   );
@@ -38,13 +40,12 @@ MultipleAutocompleteFieldComponent.propTypes = {
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
-  projectName: PropTypes.number,
-  integrationId: PropTypes.number,
+  integrationInfo: PropTypes.object,
 };
 MultipleAutocompleteFieldComponent.defaultProps = {
   darkView: false,
   modalView: false,
-  integrationId: undefined,
+  integrationInfo: {},
 };
 
 export const MultipleAutocompleteField = connect((state) => ({

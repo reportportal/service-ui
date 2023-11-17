@@ -50,6 +50,10 @@ import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import {
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+} from 'components/fields/dynamicFieldsSection/constants';
+import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
   INCLUDE_COMMENTS_KEY,
@@ -274,7 +278,11 @@ export class PostIssueModal extends Component {
       data: { items },
     } = this.props;
 
-    const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
+    const fields = this.state.fields.map((field) => {
+      const isAutocomplete =
+        field.fieldType === AUTOCOMPLETE_TYPE || field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
+      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: formData[field.id] };
+    });
     const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
@@ -411,9 +419,15 @@ export class PostIssueModal extends Component {
       namedBtsIntegrations,
       intl: { formatMessage },
       data: { items },
+      projectInfo,
     } = this.props;
     const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
+    const integrationInfo = {
+      integrationId,
+      projectName: projectInfo.projectName,
+      pluginName,
+    };
 
     return (
       <DarkModalLayout
@@ -447,7 +461,7 @@ export class PostIssueModal extends Component {
               defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
               darkView
               modalView
-              integrationId={integrationId}
+              integrationInfo={integrationInfo}
             />
           ) : (
             <div className={cx('no-default-properties-message')}>

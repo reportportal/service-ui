@@ -6,16 +6,13 @@ import { projectInfoSelector } from 'controllers/project';
 import { URLS } from 'common/urls';
 import { DynamicField } from '../dynamicField';
 
-const AutocompleteFieldComponent = ({
-  field,
-  darkView,
-  modalView,
-  integrationId,
-  projectName,
-  ...rest
-}) => {
+const AutocompleteFieldComponent = ({ field, darkView, modalView, integrationInfo, ...rest }) => {
   const getUri = () =>
-    URLS.projectIntegrationByIdCommand(projectName, integrationId, field.commandName);
+    URLS.projectIntegrationByIdCommand(
+      integrationInfo.projectName,
+      integrationInfo.integrationId,
+      field.commandName,
+    );
 
   const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
 
@@ -28,7 +25,6 @@ const AutocompleteFieldComponent = ({
         getRequestParams={getRequestParams}
         parseValueToString={parseValueToString}
         createWithoutConfirmation
-        onBlur={() => {}}
       />
     </DynamicField>
   );
@@ -38,13 +34,12 @@ AutocompleteFieldComponent.propTypes = {
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
-  projectName: PropTypes.number,
-  integrationId: PropTypes.number,
+  integrationInfo: PropTypes.object,
 };
 AutocompleteFieldComponent.defaultProps = {
   darkView: false,
   modalView: false,
-  integrationId: undefined,
+  integrationInfo: {},
 };
 export const AutocompleteField = connect((state) => ({
   projectName: projectInfoSelector(state).projectName,
