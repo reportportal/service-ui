@@ -62,19 +62,21 @@ export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldK
 };
 
 export const getFieldComponent = (field) => {
-  let fieldType = null;
+  let fieldType = TEXT_TYPE;
+
   if (field.fieldType === ARRAY_TYPE && field.definedValues && field.definedValues.length) {
     fieldType = ARRAY_TYPE;
   } else if (field.fieldType === DATE_TYPE || field.fieldType.toLowerCase() === 'datetime') {
     fieldType = DATE_TYPE;
   } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
-  } else if (field.fieldType === AUTOCOMPLETE_TYPE && field.commandName) {
-    fieldType = AUTOCOMPLETE_TYPE;
-  } else if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE && field.commandName) {
-    fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
-  } else {
-    fieldType = TEXT_TYPE;
+  } else if (field.commandName) {
+    if (field.fieldType === AUTOCOMPLETE_TYPE) {
+      fieldType = AUTOCOMPLETE_TYPE;
+    }
+    if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE) {
+      fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
+    }
   }
 
   return FIELDS_MAP[fieldType];
