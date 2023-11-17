@@ -215,7 +215,8 @@ export class BtsPropertiesForIssueForm extends Component {
         let selectedIssueTypeValue = [];
         if (defectFormFields && defectFormFields.length) {
           selectedIssueTypeValue =
-            (defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY) || {}).value || [];
+            (defectFormFields.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {})
+              .value || [];
         }
         selectedIssueTypeValue = selectedIssueTypeValue[0] || issueTypes[0];
         this.changeIssueTypeConfig(issueTypes, selectedIssueTypeValue);
@@ -291,7 +292,7 @@ export class BtsPropertiesForIssueForm extends Component {
       updatedFields[index] = {
         ...updatedFields[index],
         checked,
-        disabled: field.id === ISSUE_TYPE_FIELD_KEY ? true : disabled || !checked,
+        disabled: field.fieldType === ISSUE_TYPE_FIELD_KEY ? true : disabled || !checked,
       };
     });
 
@@ -305,7 +306,9 @@ export class BtsPropertiesForIssueForm extends Component {
       let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {
-        const savedIssueType = defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY);
+        const savedIssueType = defectFormFields.find(
+          (item) => item.fieldType === ISSUE_TYPE_FIELD_KEY,
+        );
         if (
           !savedIssueType ||
           (savedIssueType.value && savedIssueType.value[0] === issueTypeValue)
