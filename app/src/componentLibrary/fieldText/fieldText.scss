@@ -237,3 +237,86 @@
     @include clearIcon($COLOR--e-400, $COLOR--topaz-pressed);
   }
 }
+
+.dark {
+  &.label {
+    @include label($COLOR--darkmode-gray-200);
+
+    .asterisk {
+      @include asterisk();
+      padding-left: 4px;
+    }
+
+    &.disabled {
+      @include disabled-state;
+    }
+  }
+
+  &.input-container {
+    @include input-container($COLOR--darkmode-gray-200, transparent);
+    @include hover-state($COLOR--darkmode-gray-100);
+    @include focus-state($COLOR--topaz-focused);
+
+    border-radius: 4px;
+    height: 30px;
+    padding: 6px 10px;
+    font-size: 13px;
+    line-height: 13px;
+
+    &.disabled {
+      @include disabled-state;
+    }
+
+    &.default-width {
+      @include default-width;
+    }
+  }
+
+  &.custom-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  input {
+    border: none;
+
+    &:disabled::placeholder,
+    &:disabled {
+      color: $COLOR--darkmode-gray-200;
+    }
+  }
+
+  &.input {
+    @include input-base;
+    @include input-text($COLOR--bg-000);
+    font-family: $FONT-REGULAR;
+  }
+
+  &.placeholder {
+    @include input-text($COLOR--e-300);
+    position: absolute;
+    top: 2px;
+    left: 0;
+    pointer-events: none;
+
+    .asterisk:after {
+      @include asterisk();
+      right: -7px;
+      content: '*';
+      color: $COLOR--red-focused;
+    }
+  }
+
+  &.help-text {
+    @include additional-text($COLOR--e-300);
+  }
+
+  &.icon {
+    @include icon;
+  }
+
+  &.clear-icon {
+    @extend .icon;
+    @include clearIcon($COLOR--darkmode-gray-500, $COLOR--darkmode-gray-50);
+  }
+}

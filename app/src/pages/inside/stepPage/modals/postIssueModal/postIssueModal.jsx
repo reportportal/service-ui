@@ -281,7 +281,9 @@ export class PostIssueModal extends Component {
     const fields = this.state.fields.map((field) => {
       const isAutocomplete =
         field.fieldType === AUTOCOMPLETE_TYPE || field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
-      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: formData[field.id] };
+      const formFieldData = formData[field.id];
+      const preparedFormFieldData = Array.isArray(formFieldData) ? formFieldData : [formFieldData];
+      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
     });
     const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),

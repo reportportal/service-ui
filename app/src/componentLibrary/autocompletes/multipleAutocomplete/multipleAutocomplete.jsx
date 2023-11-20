@@ -52,6 +52,7 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
+  darkView,
   ...props
 }) => {
   let updatePosition;
@@ -134,6 +135,7 @@ export const MultipleAutocomplete = ({
                       error,
                       touched,
                       disabled,
+                      'dark-view': darkView,
                     })}
                   >
                     <div
@@ -153,6 +155,7 @@ export const MultipleAutocomplete = ({
                         getAdditionalCreationCondition={getAdditionalCreationCondition}
                         storedItemsMap={storedItemsMap}
                         highlightUnStoredItem={highlightUnStoredItem}
+                        darkView={darkView}
                       />
                       <input
                         {...getInputProps({
@@ -226,6 +229,7 @@ export const MultipleAutocomplete = ({
                     parseValueToString={parseValueToString}
                     createWithoutConfirmation={createWithoutConfirmation}
                     options={filteredOptions}
+                    darkView={darkView}
                     {...props}
                   />
                 );
@@ -268,6 +272,7 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
+  darkView: PropTypes.bool,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -299,4 +304,5 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
+  darkView: false,
 };

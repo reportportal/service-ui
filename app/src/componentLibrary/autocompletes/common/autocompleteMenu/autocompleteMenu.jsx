@@ -26,19 +26,20 @@ const isReadyForSearch = (minLength, inputValue) =>
   !minLength || minLength <= inputValue.trim().length;
 
 export const AutocompleteMenu = React.forwardRef(
-  ({ isOpen, placement, style, minLength, inputValue, className, ...props }, ref) => {
+  ({ isOpen, placement, style, minLength, inputValue, className, darkView, ...props }, ref) => {
     return (
       <ul
         ref={ref}
         className={cx(
           'menu',
+          { 'dark-view': darkView },
           { opened: isOpen && isReadyForSearch(minLength, inputValue) },
           className,
         )}
         placement={placement}
         style={style}
       >
-        <AutocompleteOptions inputValue={inputValue} {...props} />
+        <AutocompleteOptions inputValue={inputValue} darkView={darkView} {...props} />
       </ul>
     );
   },
@@ -51,6 +52,7 @@ AutocompleteMenu.propTypes = {
   minLength: PropTypes.number,
   inputValue: PropTypes.string,
   className: PropTypes.string,
+  darkView: PropTypes.bool,
 };
 
 AutocompleteMenu.defaultProps = {
@@ -60,4 +62,5 @@ AutocompleteMenu.defaultProps = {
   minLength: 1,
   inputValue: '',
   className: '',
+  darkView: false,
 };

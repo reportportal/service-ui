@@ -37,6 +37,7 @@ export class AutocompleteOptions extends Component {
     async: PropTypes.bool,
     autocompleteVariant: PropTypes.string,
     createWithoutConfirmation: PropTypes.bool,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ export class AutocompleteOptions extends Component {
     async: false,
     autocompleteVariant: '',
     createWithoutConfirmation: false,
+    darkView: false,
   };
 
   filterStaticOptions = () => {
@@ -63,11 +65,11 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading, createWithoutConfirmation } = this.props;
+    const { loading, createWithoutConfirmation, darkView } = this.props;
     if (loading) {
       return (
         <>
-          <AutocompletePrompt>
+          <AutocompletePrompt darkView={darkView}>
             <BubblesPreloader />
           </AutocompletePrompt>
           {!createWithoutConfirmation && this.renderNewItem(options)}
@@ -78,7 +80,7 @@ export class AutocompleteOptions extends Component {
   };
 
   renderItem = (item, index, isNew = false) => {
-    const { getItemProps, renderOption, autocompleteVariant } = this.props;
+    const { getItemProps, renderOption, autocompleteVariant, darkView } = this.props;
     return renderOption ? (
       renderOption(item, index, isNew, getItemProps)
     ) : (
@@ -87,6 +89,7 @@ export class AutocompleteOptions extends Component {
         variant={autocompleteVariant}
         {...getItemProps({ item, index })}
         isNew={isNew}
+        darkView={darkView}
       >
         {this.props.parseValueToString(item)}
       </AutocompleteOption>
@@ -98,7 +101,7 @@ export class AutocompleteOptions extends Component {
   };
 
   renderNewItem = (options) => {
-    const { inputValue, getItemProps, autocompleteVariant } = this.props;
+    const { inputValue, getItemProps, autocompleteVariant, darkView } = this.props;
     const index = options.length;
     const isNew = true;
     return (
@@ -108,6 +111,7 @@ export class AutocompleteOptions extends Component {
           variant={autocompleteVariant}
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
+          darkView={darkView}
         >
           {this.props.parseValueToString(inputValue)}
         </AutocompleteOption>

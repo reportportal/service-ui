@@ -100,3 +100,13 @@
   box-sizing: border-box;
   outline: none;
 }
+
+.dark-view {
+  background-color: $COLOR--darkmode-gray-400;
+  color: $COLOR--darkmode-gray-100;
+  font-family: $FONT-REGULAR;
+
+  .cross-icon {
+    @include fill-svg($COLOR--darkmode-gray-50);
+  }
+}

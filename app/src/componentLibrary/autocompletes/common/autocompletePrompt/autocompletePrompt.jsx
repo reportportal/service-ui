@@ -21,12 +21,16 @@ import styles from './autocompletePrompt.scss';
 
 const cx = classNames.bind(styles);
 
-export const AutocompletePrompt = ({ children }) => <div className={cx('prompt')}>{children}</div>;
+export const AutocompletePrompt = ({ children, darkView }) => (
+  <div className={cx('prompt', { 'dark-view': darkView })}>{children}</div>
+);
 
 AutocompletePrompt.propTypes = {
   children: PropTypes.node,
+  darkView: PropTypes.bool,
 };
 
 AutocompletePrompt.defaultProps = {
   children: null,
+  darkView: false,
 };

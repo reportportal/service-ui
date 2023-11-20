@@ -51,7 +51,8 @@ export class SingleAutocomplete extends Component {
     icon: PropTypes.string,
     isOptionUnique: PropTypes.func,
     refFunction: PropTypes.func,
-    // creatable: PropTypes.bool,
+    stateReducer: PropTypes.func,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,7 +80,8 @@ export class SingleAutocomplete extends Component {
     icon: null,
     isOptionUnique: null,
     refFunction: () => {},
-    // creatable: false,
+    stateReducer: (state, changes) => changes,
+    darkView: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -121,7 +123,8 @@ export class SingleAutocomplete extends Component {
       options,
       isOptionUnique,
       refFunction,
-      // creatable,
+      stateReducer,
+      darkView,
       ...props
     } = this.props;
     return (
@@ -132,6 +135,7 @@ export class SingleAutocomplete extends Component {
           selectedItem={value}
           onStateChange={onStateChange}
           defaultHighlightedIndex={DEFAULT_OPTIONS_INDEX}
+          stateReducer={stateReducer}
         >
           {({
             getInputProps,
@@ -170,13 +174,10 @@ export class SingleAutocomplete extends Component {
                             selectItem(newValue);
                           }
 
-                          // for the possibility of deletion
-                          // if (createWithoutConfirmation && (creatable || newValue === '')) {
                           if (createWithoutConfirmation) {
                             selectItem(newValue);
                           }
 
-                          // (creatable || newValue === '') && onBlur(e);
                           onBlur(e);
                           isOptionUnique &&
                             isOptionUnique(newValue ? !options.find((v) => v === newValue) : null);
@@ -188,6 +189,7 @@ export class SingleAutocomplete extends Component {
                         touched,
                         error,
                         endIcon: icon,
+                        darkView,
                         ...inputProps,
                       })}
                     />
@@ -216,6 +218,7 @@ export class SingleAutocomplete extends Component {
                     createWithoutConfirmation={createWithoutConfirmation}
                     className={menuClassName}
                     options={options}
+                    darkView={darkView}
                     {...props}
                   />
                 )}
