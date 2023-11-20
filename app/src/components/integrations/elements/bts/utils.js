@@ -25,9 +25,9 @@ export const getDefectFormFields = (fields, checkedFieldsIds, values) =>
     .map((item) => {
       const isAutocomplete =
         item.fieldType === AUTOCOMPLETE_TYPE || item.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
+      const valueKey = isAutocomplete ? 'namedValue' : 'value';
       return {
         ...item,
-        value: isAutocomplete ? undefined : values[item.id],
-        namedValue: isAutocomplete ? values[item.id] : undefined,
+        [valueKey]: values[item.id],
       };
     });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ export const FieldElement = (props) => {
   const {
     label,
     description,
+    descriptionSecondary,
     children,
     className,
     childrenClassName,
     withoutProvider,
     dataAutomationId,
     isRequired,
+    additionalInfo,
     ...rest
   } = props;
   const getChildren = () =>
@@ -46,6 +48,9 @@ export const FieldElement = (props) => {
           </span>
           {description && <span className={cx('description')}>{description}</span>}
           <div className={cx(childrenClassName)}>{getChildren()}</div>
+          {descriptionSecondary && (
+            <span className={cx('description-alt')}>{descriptionSecondary}</span>
+          )}
         </>
       ) : (
         <>
@@ -53,6 +58,7 @@ export const FieldElement = (props) => {
           {description && <span className={cx('description-alt')}>{description}</span>}
         </>
       )}
+      {additionalInfo}
     </div>
   );
 };
@@ -60,6 +66,8 @@ FieldElement.propTypes = {
   children: PropTypes.node.isRequired,
   label: PropTypes.string,
   description: PropTypes.string,
+  descriptionSecondary: PropTypes.string,
+  additionalInfo: PropTypes.node,
   className: PropTypes.string,
   childrenClassName: PropTypes.string,
   withoutProvider: PropTypes.bool,
@@ -69,6 +77,8 @@ FieldElement.propTypes = {
 FieldElement.defaultProps = {
   label: '',
   description: '',
+  descriptionSecondary: '',
+  additionalInfo: null,
   className: '',
   childrenClassName: '',
   withoutProvider: false,

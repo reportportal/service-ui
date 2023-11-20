@@ -28,7 +28,13 @@ export const dynamicFieldShape = PropTypes.shape({
     }),
   ),
   required: PropTypes.bool,
-  value: PropTypes.array,
+  value: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      PropTypes.string,
+      PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }),
+    ]),
+  ),
   disabled: PropTypes.bool,
+  description: PropTypes.string,
   defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
 });

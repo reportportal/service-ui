@@ -18,11 +18,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
 import { URLS } from 'common/urls';
-import { connect } from 'react-redux';
-import { projectInfoSelector } from 'controllers/project/selectors';
 import { DynamicField } from '../dynamicField';
 
-const MultipleAutocompleteFieldComponent = ({
+export const MultipleAutocompleteField = ({
   field,
   darkView,
   modalView,
@@ -52,19 +50,15 @@ const MultipleAutocompleteFieldComponent = ({
     </DynamicField>
   );
 };
-MultipleAutocompleteFieldComponent.propTypes = {
+MultipleAutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
   integrationInfo: PropTypes.object,
 };
-MultipleAutocompleteFieldComponent.defaultProps = {
+MultipleAutocompleteField.defaultProps = {
   darkView: false,
   modalView: false,
   integrationInfo: {},
 };
-
-export const MultipleAutocompleteField = connect((state) => ({
-  projectName: projectInfoSelector(state).projectName,
-}))(MultipleAutocompleteFieldComponent);

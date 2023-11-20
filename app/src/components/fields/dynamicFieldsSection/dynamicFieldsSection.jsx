@@ -32,7 +32,6 @@ export class DynamicFieldsSection extends Component {
     fields: PropTypes.arrayOf(dynamicFieldShape),
     withValidation: PropTypes.bool,
     customBlockCreator: PropTypes.func,
-    customFieldWrapper: PropTypes.func,
     // default field property to use as value (depends on different sets of fields)
     defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
     darkView: PropTypes.bool,
@@ -45,7 +44,6 @@ export class DynamicFieldsSection extends Component {
     fields: [],
     withValidation: false,
     customBlockCreator: null,
-    customFieldWrapper: null,
     defaultOptionValueKey: VALUE_NAME_KEY,
     darkView: false,
     children: null,
@@ -53,7 +51,7 @@ export class DynamicFieldsSection extends Component {
     integrationInfo: {},
   };
 
-  getCustomBlockConfig = (field) => {
+  getCustomBlock = (field) => {
     if (this.props.customBlockCreator) {
       return this.props.customBlockCreator(field);
     }
@@ -64,7 +62,6 @@ export class DynamicFieldsSection extends Component {
   createFields = () => {
     const {
       fields = [],
-      customFieldWrapper,
       withValidation,
       defaultOptionValueKey,
       darkView,
@@ -79,9 +76,8 @@ export class DynamicFieldsSection extends Component {
         <FieldComponent
           key={field.id}
           field={field}
-          customBlock={this.getCustomBlockConfig(field)}
+          customBlock={this.getCustomBlock(field)}
           withValidation={withValidation}
-          customFieldWrapper={customFieldWrapper}
           defaultOptionValueKey={defaultOptionValueKey}
           modalView={modalView}
           darkView={darkView}
