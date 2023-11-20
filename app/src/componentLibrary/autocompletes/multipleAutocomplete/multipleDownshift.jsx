@@ -18,7 +18,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import isEqual from 'fast-deep-equal';
-import { isArray } from 'c3/src/util';
 
 export const MultipleDownshift = ({
   selectedItems,
@@ -54,7 +53,7 @@ export const MultipleDownshift = ({
     }
   };
   const addSelectedItem = (newItemData, downshift) => {
-    const newItem = isArray(newItemData) ? newItemData : [newItemData];
+    const newItem = Array.isArray(newItemData) ? newItemData : [newItemData];
     const filteredSelectedItems = selectedItems.filter((item) => newItem.indexOf(item) < 0);
     const newSelectedItems = [...filteredSelectedItems, ...newItem];
     onChange(newSelectedItems, downshift);
