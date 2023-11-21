@@ -30,9 +30,10 @@ import {
   deleteProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
-import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
+import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { navigateToProjectSettingsAction } from 'controllers/administrate/projects/actionCreators';
 import { messages } from '../messages';
 
 @connect(
@@ -46,6 +47,7 @@ import { messages } from '../messages';
     unassignFromProject: unassignFromProjectAction,
     deleteProject: deleteProjectAction,
     navigateToProjectSection: navigateToProjectSectionAction,
+    navigateToProjectSettings: navigateToProjectSettingsAction,
   },
 )
 @injectIntl
@@ -57,6 +59,7 @@ export class ProjectMenu extends Component {
     isAssigned: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     navigateToProjectSection: PropTypes.func.isRequired,
+    navigateToProjectSettings: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
@@ -116,17 +119,17 @@ export class ProjectMenu extends Component {
         value: 'action-members',
       },
       {
-        onClick: this.navigateToSettings,
-        label: intl.formatMessage(messages.settings),
-        value: 'action-settings',
-      },
-      {
         onClick: this.navigateToEventsMonitoring,
         label: intl.formatMessage(messages.monitoring),
         value: 'action-monitoring',
       },
       {
         type: SEPARATOR_ITEM,
+      },
+      {
+        onClick: this.navigateToSettings,
+        label: intl.formatMessage(messages.settings),
+        value: 'action-settings',
       },
       {
         onClick: this.onUnassign,
@@ -168,7 +171,7 @@ export class ProjectMenu extends Component {
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
-    this.props.navigateToProjectSection(projectName, SETTINGS);
+    this.props.navigateToProjectSettings(projectName);
   };
 
   navigateToEventsMonitoring = () => {

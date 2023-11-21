@@ -18,7 +18,7 @@ export const INDEX_SETTINGS = 'indexSettings';
 export const AUTO_ANALYSIS = 'analysis';
 export const SIMILAR_ITEMS = 'similarItems';
 export const UNIQUE_ERRORS = 'uniqueErrors';
-
+export const INDEXING_RUNNING = 'indexingRunning';
 export const NUMBER_OF_LOG_LINES = 'numberOfLogLines';
 export const ALL_MESSAGES_SHOULD_MATCH = 'allMessagesShouldMatch';
 export const ANALYZER_ENABLED = 'isAutoAnalyzerEnabled';

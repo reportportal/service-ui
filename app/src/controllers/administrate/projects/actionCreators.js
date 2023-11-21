@@ -21,9 +21,7 @@ import {
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
-import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
-import { SETTINGS } from 'common/constants/projectSections';
-import { GENERAL } from 'common/constants/settingsTabs';
+import { PROJECT_DETAILS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import {
   FETCH_PROJECTS,
   START_SET_VIEW_MODE,
@@ -84,6 +82,12 @@ export const navigateToProjectSectionAction = (projectName, section) => ({
   payload: {
     projectId: projectName,
     projectSection: section,
-    settingsTab: section === SETTINGS ? GENERAL : undefined,
+  },
+});
+
+export const navigateToProjectSettingsAction = (projectId) => ({
+  type: PROJECT_SETTINGS_PAGE,
+  payload: {
+    projectId,
   },
 });

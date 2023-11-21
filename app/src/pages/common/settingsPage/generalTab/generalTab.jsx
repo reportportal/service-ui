@@ -337,7 +337,9 @@ export class GeneralTab extends Component {
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
-            <div className={cx('fake-input-label')}>Name</div>
+            <div className={cx('fake-input-label')}>
+              {intl.formatMessage(Messages.projectNameLabel)}
+            </div>
             <div className={cx('fake-input')} title={projectId}>
               {projectId}
             </div>

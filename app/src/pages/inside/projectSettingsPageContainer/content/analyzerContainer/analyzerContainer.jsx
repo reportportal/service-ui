@@ -31,7 +31,6 @@ import {
 } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { INDEXING_RUNNING } from 'pages/common/settingsPage/autoAnalysisTab/constants';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
@@ -41,6 +40,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';
 import {
+  INDEXING_RUNNING,
   AUTO_ANALYSIS,
   INDEX_SETTINGS,
   SIMILAR_ITEMS,
