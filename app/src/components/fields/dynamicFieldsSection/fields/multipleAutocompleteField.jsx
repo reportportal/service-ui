@@ -25,6 +25,7 @@ export const MultipleAutocompleteField = ({
   darkView,
   modalView,
   integrationInfo,
+  createWithoutConfirmation,
   ...rest
 }) => {
   const getUri = () =>
@@ -36,7 +37,16 @@ export const MultipleAutocompleteField = ({
 
   const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
 
-  const parseValueToString = (user) => (user ? user.name : '');
+  const parseValueToString = (option) => {
+    if (option) {
+      return option.name ? option.name : option;
+    } else {
+      return '';
+    }
+  };
+
+  const customiseNewSelectedValue = (value) =>
+    typeof value === 'string' ? { name: value } : value;
 
   return (
     <DynamicField field={field} darkView={darkView} modalView={modalView} {...rest}>
@@ -44,8 +54,9 @@ export const MultipleAutocompleteField = ({
         getURI={getUri}
         getRequestParams={getRequestParams}
         parseValueToString={parseValueToString}
-        createWithoutConfirmation
+        createWithoutConfirmation={createWithoutConfirmation}
         darkView={darkView}
+        customiseNewSelectedValue={customiseNewSelectedValue}
       />
     </DynamicField>
   );
@@ -56,9 +67,11 @@ MultipleAutocompleteField.propTypes = {
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
   integrationInfo: PropTypes.object,
+  createWithoutConfirmation: PropTypes.bool,
 };
 MultipleAutocompleteField.defaultProps = {
   darkView: false,
   modalView: false,
   integrationInfo: {},
+  createWithoutConfirmation: true,
 };

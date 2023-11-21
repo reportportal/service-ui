@@ -20,6 +20,7 @@ import {
   DateField,
   DropdownField,
   MultipleAutocompleteField,
+  CreatableMultipleAutocompleteField,
   TextField,
 } from './fields';
 import {
@@ -28,6 +29,7 @@ import {
   DATE_TYPE,
   DROPDOWN_TYPE,
   MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
   TEXT_TYPE,
 } from './constants';
 
@@ -38,4 +40,5 @@ export const FIELDS_MAP = {
   [ARRAY_TYPE]: ArrayField,
   [AUTOCOMPLETE_TYPE]: AutocompleteField,
   [MULTIPLE_AUTOCOMPLETE_TYPE]: MultipleAutocompleteField,
+  [CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE]: CreatableMultipleAutocompleteField,
 };

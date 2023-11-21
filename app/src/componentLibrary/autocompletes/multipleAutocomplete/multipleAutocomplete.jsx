@@ -53,6 +53,7 @@ export const MultipleAutocomplete = ({
   dataAutomationId,
   existingItemsMap,
   darkView,
+  customiseNewSelectedValue,
   ...props
 }) => {
   let updatePosition;
@@ -110,6 +111,7 @@ export const MultipleAutocomplete = ({
         options={options}
         existingItemsMap={existingItemsMap}
         handleUnStoredItemCb={handleUnStoredItemCb}
+        customiseNewSelectedValue={customiseNewSelectedValue}
       >
         {({
           getInputProps,
@@ -273,6 +275,7 @@ MultipleAutocomplete.propTypes = {
     value: PropTypes.bool,
   }),
   darkView: PropTypes.bool,
+  customiseNewSelectedValue: PropTypes.func,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -305,4 +308,5 @@ MultipleAutocomplete.defaultProps = {
   dataAutomationId: '',
   existingItemsMap: {},
   darkView: false,
+  customiseNewSelectedValue: (value) => value,
 };

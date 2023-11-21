@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-export { TextField } from './textField';
-export { DateField } from './dateField';
-export { DropdownField } from './dropdownField';
-export { ArrayField } from './arrayField';
-export { AutocompleteField } from './autocompleteField';
-export { MultipleAutocompleteField } from './multipleAutocompleteField';
-export { CreatableMultipleAutocompleteField } from './creatableMultipleAutocompleteField';
+import React from 'react';
+import { MultipleAutocompleteField } from 'components/fields/dynamicFieldsSection/fields/multipleAutocompleteField';
+
+export const CreatableMultipleAutocompleteField = (props) => (
+  <MultipleAutocompleteField createWithoutConfirmation={false} {...props} />
+);

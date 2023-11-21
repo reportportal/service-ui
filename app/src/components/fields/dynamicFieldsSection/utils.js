@@ -23,6 +23,7 @@ import {
   VALUE_NAME_KEY,
   AUTOCOMPLETE_TYPE,
   MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -52,7 +53,9 @@ export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldK
   const valuesMap = {};
   fields.forEach((field) => {
     const isAutocomplete =
-      field.fieldType === AUTOCOMPLETE_TYPE || field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
+      field.fieldType === AUTOCOMPLETE_TYPE ||
+      field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
+      field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
     valuesMap[field.id] = isAutocomplete ? field.namedValue : field.value;
     if (field.fieldType === predefinedFieldKey && predefinedFieldValue) {
       valuesMap[field.id] = [predefinedFieldValue];
@@ -76,6 +79,9 @@ export const getFieldComponent = (field) => {
     }
     if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE) {
       fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
+    }
+    if (field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE) {
+      fieldType = CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
     }
   }
 
