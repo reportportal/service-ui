@@ -32,4 +32,10 @@
   &.opened {
     display: block;
   }
+
+  &.dark-view {
+    margin-top: 5px;
+    border-radius: 0;
+    background-color: $COLOR--darkmode-gray-400;
+  }
 }

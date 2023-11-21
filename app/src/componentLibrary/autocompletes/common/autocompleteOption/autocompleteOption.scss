@@ -81,10 +81,27 @@
     background-color: $COLOR--bg-100;
   }
 
-  &.active:not(:hover) {
+  &.active:not(:hover):not(.dark-view) {
     background-color: $COLOR--bg-100;
     border: 1px solid $COLOR--topaz-focused;
     padding: 3px 11px;
+  }
+}
+
+.dark-view {
+  &.item {
+    background-color: transparent;
+    color: $COLOR--darkmode-gray-100;
+    min-height: 30px;
+    font-family: $FONT-REGULAR;
+
+    &:hover {
+      background-color: $COLOR--darkmode-bg-solid-98;
+    }
+
+    &.active {
+      color: $COLOR--darkmode-topaz-text;
+    }
   }
 }
 

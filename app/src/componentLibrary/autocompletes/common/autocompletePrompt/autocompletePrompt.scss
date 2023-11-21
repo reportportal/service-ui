@@ -23,4 +23,8 @@
   border-radius: 3px;
   padding-right: 42px;
   box-sizing: border-box;
+
+  &.dark-view {
+    background-color: transparent;
+  }
 }

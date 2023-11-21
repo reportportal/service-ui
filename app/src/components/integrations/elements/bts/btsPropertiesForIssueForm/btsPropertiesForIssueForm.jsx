@@ -303,6 +303,7 @@ export class BtsPropertiesForIssueForm extends Component {
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
       const { defectFormFields } = this.props.initialData;
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
+
       let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {
@@ -411,9 +412,14 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled } = this.props;
+    const { intl, disabled, integrationId, pluginName, projectName, projectInfo } = this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
+    const integrationInfo = {
+      integrationId,
+      projectName: projectName || projectInfo.projectName,
+      pluginName,
+    };
 
     return (
       <div className={cx('bts-properties-for-issue-form')}>
@@ -460,6 +466,7 @@ export class BtsPropertiesForIssueForm extends Component {
                   customBlockCreator={this.getCustomBLockConfig}
                   customFieldWrapper={IntegrationFormField}
                   defaultOptionValueKey={this.defaultOptionValueKey}
+                  integrationInfo={integrationInfo}
                 >
                   {disabled && (
                     <div className={cx('show-hint-wrapper')}>

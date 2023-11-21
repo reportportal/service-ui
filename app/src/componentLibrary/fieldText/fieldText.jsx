@@ -22,7 +22,8 @@ import CrossIcon from './img/cross-inline.svg';
 import styles from './fieldText.scss';
 
 const cx = classNames.bind(styles);
-const VARIANT = 'light';
+const LIGHT_VARIANT = 'light';
+const DARK_VARIANT = 'dark';
 
 export const FieldText = ({
   value,
@@ -48,21 +49,24 @@ export const FieldText = ({
   isRequired,
   hasDoubleMessage,
   type,
+  darkView,
 }) => {
   const clearInput = () => onChange('');
 
-  const helpTextElement = <span className={cx(VARIANT, 'help-text')}>{helpText}</span>;
+  const variant = darkView ? DARK_VARIANT : LIGHT_VARIANT;
+
+  const helpTextElement = <span className={cx(variant, 'help-text')}>{helpText}</span>;
 
   return (
     <>
       {label && (
-        <span className={cx(VARIANT, 'label', { disabled })}>
+        <span className={cx(variant, 'label', { disabled })}>
           {label}
           {isRequired && <span className={cx('asterisk')}>*</span>}
         </span>
       )}
       <div
-        className={cx(VARIANT, 'input-container', className, {
+        className={cx(variant, 'input-container', className, {
           error,
           touched,
           disabled,
@@ -72,14 +76,14 @@ export const FieldText = ({
       >
         {startIcon && (
           <span className={cx('icon-container-start')}>
-            <i className={cx(VARIANT, 'icon')}>{Parser(startIcon)}</i>
+            <i className={cx(variant, 'icon')}>{Parser(startIcon)}</i>
           </span>
         )}
-        <span className={cx(VARIANT, 'custom-input-wrapper')}>
+        <span className={cx(variant, 'custom-input-wrapper')}>
           <input
             ref={refFunction}
             type={type}
-            className={cx(VARIANT, 'input')}
+            className={cx(variant, 'input')}
             value={value}
             maxLength={maxLength}
             disabled={disabled}
@@ -90,21 +94,21 @@ export const FieldText = ({
             onKeyDown={disabled ? null : onKeyDown}
           />
           {placeholder && !value && (
-            <span className={cx(VARIANT, 'placeholder')}>
+            <span className={cx(variant, 'placeholder')}>
               {placeholder}
-              {isRequired && !label && <span className={cx(VARIANT, 'asterisk')} />}
+              {isRequired && !label && <span className={cx(variant, 'asterisk')} />}
             </span>
           )}
         </span>
         {endIcon && (
           <span className={cx('icon-container-end')}>
-            <i className={cx(VARIANT, 'icon')}>{Parser(endIcon)}</i>
+            <i className={cx(variant, 'icon')}>{Parser(endIcon)}</i>
           </span>
         )}
         {clearable && (
           <span className={cx('icon-container-end')}>
             <i
-              className={cx(VARIANT, 'clear-icon', { disabled })}
+              className={cx(variant, 'clear-icon', { disabled })}
               onClick={disabled ? null : clearInput}
             >
               {Parser(CrossIcon)}
@@ -113,10 +117,10 @@ export const FieldText = ({
         )}
       </div>
       {((error && touched) || helpText) && (
-        <div className={cx(VARIANT, 'additional-content', { disabled })}>
+        <div className={cx(variant, 'additional-content', { disabled })}>
           {error && touched ? (
             <>
-              <span className={cx(VARIANT, 'error-text')}>{error}</span>
+              <span className={cx(variant, 'error-text')}>{error}</span>
               {hasDoubleMessage && helpTextElement}
             </>
           ) : (
@@ -151,6 +155,7 @@ FieldText.propTypes = {
   isRequired: PropTypes.bool,
   hasDoubleMessage: PropTypes.bool,
   type: PropTypes.string,
+  darkView: PropTypes.bool,
 };
 FieldText.defaultProps = {
   value: '',
@@ -176,4 +181,5 @@ FieldText.defaultProps = {
   isRequired: false,
   hasDoubleMessage: false,
   type: 'text',
+  darkView: false,
 };

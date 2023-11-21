@@ -56,6 +56,10 @@
   @include hover-state($COLOR--e-300);
   @include focus-state($COLOR--topaz-focused);
 
+  &.disabled {
+    background-color: $COLOR--bg-100;
+  }
+
   &.error.touched {
     @include error-state($COLOR--red-failed-2);
   }
@@ -88,6 +92,7 @@
   color: $COLOR--almost-black;
   box-sizing: border-box;
   outline: none;
+  background-color: transparent;
 
   &::placeholder {
     font-family: inherit;
@@ -122,4 +127,12 @@
   font-size: 11px;
   line-height: 16px;
   color: $COLOR--red-failed-2;
+}
+
+.dark-view {
+  &.autocomplete {
+    border-radius: 4px;
+    background-color: $COLOR--darkmode-bg-solid-98;
+    border-color: $COLOR--darkmode-gray-200;
+  }
 }

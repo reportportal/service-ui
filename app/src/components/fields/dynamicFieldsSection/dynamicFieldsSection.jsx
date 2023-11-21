@@ -38,6 +38,7 @@ export class DynamicFieldsSection extends Component {
     darkView: PropTypes.bool,
     children: PropTypes.node,
     modalView: PropTypes.bool,
+    integrationInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -49,6 +50,7 @@ export class DynamicFieldsSection extends Component {
     darkView: false,
     children: null,
     modalView: false,
+    integrationInfo: {},
   };
 
   getCustomBlockConfig = (field) => {
@@ -67,6 +69,7 @@ export class DynamicFieldsSection extends Component {
       defaultOptionValueKey,
       darkView,
       modalView,
+      integrationInfo,
     } = this.props;
 
     return fields.map((field) => {
@@ -82,6 +85,7 @@ export class DynamicFieldsSection extends Component {
           defaultOptionValueKey={defaultOptionValueKey}
           modalView={modalView}
           darkView={darkView}
+          integrationInfo={integrationInfo}
         />
       );
     });

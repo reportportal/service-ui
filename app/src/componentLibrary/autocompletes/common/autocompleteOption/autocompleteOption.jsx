@@ -30,13 +30,19 @@ export const AutocompleteOption = ({
   isNew,
   disabled,
   variant,
+  darkView,
   ...props
 }) => {
   return isNew ? (
     <>
       <div className={cx('divider')} />
       <li
-        className={cx('new-item', variant, { active: isActive, selected: isSelected, disabled })}
+        className={cx(
+          'new-item',
+          variant,
+          { 'dark-view': darkView },
+          { active: isActive, selected: isSelected, disabled },
+        )}
         {...props}
       >
         <span className={cx('value')}>{children}</span>
@@ -52,7 +58,12 @@ export const AutocompleteOption = ({
     </>
   ) : (
     <li
-      className={cx('item', variant, { active: isActive, selected: isSelected, disabled })}
+      className={cx(
+        'item',
+        variant,
+        { 'dark-view': darkView },
+        { active: isActive, selected: isSelected, disabled },
+      )}
       {...(!disabled ? props : {})}
     >
       <span className={cx('label', 'tag')}>{children}</span>
@@ -67,6 +78,7 @@ AutocompleteOption.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
   variant: PropTypes.string,
+  darkView: PropTypes.bool,
 };
 
 AutocompleteOption.defaultProps = {
@@ -76,4 +88,5 @@ AutocompleteOption.defaultProps = {
   children: null,
   disabled: false,
   variant: '',
+  darkView: false,
 };
