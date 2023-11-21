@@ -45,7 +45,6 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
-import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
 
@@ -225,18 +224,16 @@ export class BtsPropertiesForIssueForm extends Component {
       .catch(this.catchError);
   };
 
-  getCustomBLockConfig = (field) => {
-    const customBlock = (
-      <InputWithEye
-        onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
-        value={field.checked}
-        disabled={field.required || this.props.disabled}
-      />
+  getAvailabilityControl = (field) => {
+    return (
+      <div className={cx('checkbox-wrapper')}>
+        <InputWithEye
+          onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
+          value={field.checked}
+          disabled={field.required || this.props.disabled}
+        />
+      </div>
     );
-    return {
-      node: customBlock,
-      wrapperClassName: cx('checkbox-wrapper'),
-    };
   };
 
   setupInitialFieldsConfig = () => {
@@ -463,8 +460,7 @@ export class BtsPropertiesForIssueForm extends Component {
               <Fragment>
                 <DynamicFieldsSection
                   fields={preparedFields}
-                  customBlockCreator={this.getCustomBLockConfig}
-                  customFieldWrapper={IntegrationFormField}
+                  customBlockCreator={this.getAvailabilityControl}
                   defaultOptionValueKey={this.defaultOptionValueKey}
                   integrationInfo={integrationInfo}
                 >

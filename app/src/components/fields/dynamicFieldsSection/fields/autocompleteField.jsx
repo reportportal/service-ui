@@ -17,12 +17,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
-import { connect } from 'react-redux';
-import { projectInfoSelector } from 'controllers/project';
 import { URLS } from 'common/urls';
 import { DynamicField } from '../dynamicField';
 
-const AutocompleteFieldComponent = ({ field, darkView, modalView, integrationInfo, ...rest }) => {
+export const AutocompleteField = ({ field, darkView, modalView, integrationInfo, ...rest }) => {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
       integrationInfo.projectName,
@@ -56,18 +54,15 @@ const AutocompleteFieldComponent = ({ field, darkView, modalView, integrationInf
     </DynamicField>
   );
 };
-AutocompleteFieldComponent.propTypes = {
+AutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   modalView: PropTypes.bool,
   integrationInfo: PropTypes.object,
 };
-AutocompleteFieldComponent.defaultProps = {
+AutocompleteField.defaultProps = {
   darkView: false,
   modalView: false,
   integrationInfo: {},
 };
-export const AutocompleteField = connect((state) => ({
-  projectName: projectInfoSelector(state).projectName,
-}))(AutocompleteFieldComponent);

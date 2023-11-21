@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormField } from 'components/fields/formField';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { dynamicFieldShape } from '../dynamicFieldShape';
 import styles from './dynamicField.scss';
@@ -26,7 +26,6 @@ const cx = classNames.bind(styles);
 export const DynamicField = ({
   field,
   customBlock,
-  customFieldWrapper: FieldWrapper,
   withValidation,
   children,
   darkView,
@@ -40,30 +39,30 @@ export const DynamicField = ({
   );
   const fieldCommonProps = {
     name: field.id,
-    label: field.fieldName,
     required: field.required,
     disabled: field.disabled,
-    customBlock,
     ...rest,
   };
 
-  return FieldWrapper ? (
-    <FieldWrapper {...fieldCommonProps}>{fieldChildren}</FieldWrapper>
-  ) : (
-    <FormField
+  return (
+    <FieldElement
+      label={field.fieldName}
+      isRequired={field.required}
+      descriptionSecondary={field.description}
+      className={cx('dynamic-field')}
+      additionalInfo={customBlock}
+      normalize={(value) => value}
+      format={(value) => value}
+      parse={(value) => value}
       {...fieldCommonProps}
-      fieldWrapperClassName={cx('field-wrapper')}
-      containerClassName={cx('form-field-item')}
-      labelClassName={cx('form-group-label', { 'dark-view': darkView, 'modal-view': modalView })}
     >
       {fieldChildren}
-    </FormField>
+    </FieldElement>
   );
 };
 DynamicField.propTypes = {
   field: dynamicFieldShape,
-  customBlock: PropTypes.object,
-  customFieldWrapper: PropTypes.func,
+  customBlock: PropTypes.node,
   withValidation: PropTypes.bool,
   children: PropTypes.any,
   darkView: PropTypes.bool,
@@ -72,7 +71,6 @@ DynamicField.propTypes = {
 DynamicField.defaultProps = {
   field: {},
   customBlock: null,
-  customFieldWrapper: null,
   withValidation: false,
   children: null,
   darkView: false,
