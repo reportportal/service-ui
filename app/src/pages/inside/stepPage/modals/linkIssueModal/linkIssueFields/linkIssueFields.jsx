@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import CloseIcon from 'common/img/cross-icon-inline.svg';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { FormField } from 'components/fields/formField';
-import { Input } from 'components/inputs/input';
+import { FieldText } from 'componentLibrary/fieldText';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import styles from './linkIssueFields.scss';
@@ -62,7 +62,6 @@ export class LinkIssueFields extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     withAutocomplete: PropTypes.bool,
-    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -80,7 +79,7 @@ export class LinkIssueFields extends Component {
   };
 
   render() {
-    const { fields, addEventInfo, tracking, withAutocomplete, darkView } = this.props;
+    const { fields, addEventInfo, tracking, withAutocomplete, intl } = this.props;
     return (
       <ul className={cx('link-issue-fields')}>
         {fields.map((issue, index) => (
@@ -93,50 +92,44 @@ export class LinkIssueFields extends Component {
                 {Parser(CloseIcon)}
               </div>
             )}
-            <FormField
+            <FieldElement
               name={`${issue}.issueLink`}
-              fieldWrapperClassName={cx('field-wrapper')}
-              label={this.props.intl.formatMessage(messages.issueLinkLabel)}
+              label={intl.formatMessage(messages.issueLinkLabel)}
               onChange={withAutocomplete ? this.updateIssueId : null}
-              labelClassName={cx('label', { 'dark-view': darkView })}
+              className={cx('field')}
+              labelClassName={cx('label')}
             >
-              <FieldErrorHint darkView={darkView}>
-                <Input
-                  className={darkView && 'dark-view'}
-                  placeholder={this.props.intl.formatMessage(messages.issueLinkPlaceholder)}
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  variant="dark"
+                  placeholder={intl.formatMessage(messages.issueLinkPlaceholder)}
                 />
               </FieldErrorHint>
-            </FormField>
-            <FormField
+            </FieldElement>
+            <FieldElement
               name={`${issue}.issueId`}
-              fieldWrapperClassName={cx('field-wrapper')}
-              label={this.props.intl.formatMessage(messages.issueIdLabel)}
-              labelClassName={cx('label', { 'dark-view': darkView })}
+              label={intl.formatMessage(messages.issueIdLabel)}
+              className={cx('field')}
+              labelClassName={cx('label')}
             >
-              <FieldErrorHint darkView={darkView}>
-                <Input
-                  maxLength="128"
-                  placeholder={this.props.intl.formatMessage(messages.issueIdLabel)}
-                  className={darkView && 'dark-view'}
-                />
+              <FieldErrorHint provideHint={false}>
+                <FieldText placeholder={intl.formatMessage(messages.issueIdLabel)} variant="dark" />
               </FieldErrorHint>
-            </FormField>
+            </FieldElement>
           </li>
         ))}
-        <li className={cx('add-issue-button', { 'dark-view': darkView })}>
-          <GhostButton
-            type="button"
-            notMinified
-            onClick={() => {
-              tracking.trackEvent(addEventInfo);
-              fields.push({});
-            }}
-            icon={PlusIcon}
-            appearance={darkView && 'gray'}
-          >
-            {this.props.intl.formatMessage(messages.addIssueButtonTitle)}
-          </GhostButton>
-        </li>
+        <GhostButton
+          type="button"
+          notMinified
+          onClick={() => {
+            tracking.trackEvent(addEventInfo);
+            fields.push({});
+          }}
+          icon={PlusIcon}
+          appearance={'gray'}
+        >
+          {intl.formatMessage(messages.addIssueButtonTitle)}
+        </GhostButton>
       </ul>
     );
   }

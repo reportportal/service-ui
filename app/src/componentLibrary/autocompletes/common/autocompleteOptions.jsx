@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { autocompleteVariantType, singleAutocompleteOptionVariantType } from './propTypes';
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
 import styles from './autocompleteOptions.scss';
@@ -35,9 +36,9 @@ export class AutocompleteOptions extends Component {
     getItemProps: PropTypes.func,
     renderOption: PropTypes.func,
     async: PropTypes.bool,
-    autocompleteVariant: PropTypes.string,
+    optionVariant: singleAutocompleteOptionVariantType,
     createWithoutConfirmation: PropTypes.bool,
-    darkView: PropTypes.bool,
+    variant: autocompleteVariantType,
   };
 
   static defaultProps = {
@@ -49,9 +50,9 @@ export class AutocompleteOptions extends Component {
     getItemProps: () => {},
     renderOption: null,
     async: false,
-    autocompleteVariant: '',
+    optionVariant: '',
     createWithoutConfirmation: false,
-    darkView: false,
+    variant: 'light',
   };
 
   filterStaticOptions = () => {
@@ -65,11 +66,11 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading, createWithoutConfirmation, darkView } = this.props;
+    const { loading, createWithoutConfirmation, variant } = this.props;
     if (loading) {
       return (
         <>
-          <AutocompletePrompt darkView={darkView}>
+          <AutocompletePrompt variant={variant}>
             <BubblesPreloader />
           </AutocompletePrompt>
           {!createWithoutConfirmation && this.renderNewItem(options)}
@@ -80,16 +81,16 @@ export class AutocompleteOptions extends Component {
   };
 
   renderItem = (item, index, isNew = false) => {
-    const { getItemProps, renderOption, autocompleteVariant, darkView } = this.props;
+    const { getItemProps, renderOption, optionVariant, variant } = this.props;
     return renderOption ? (
       renderOption(item, index, isNew, getItemProps)
     ) : (
       <AutocompleteOption
         key={this.props.parseValueToString(item)}
-        variant={autocompleteVariant}
+        optionVariant={optionVariant}
         {...getItemProps({ item, index })}
         isNew={isNew}
-        darkView={darkView}
+        variant={variant}
       >
         {this.props.parseValueToString(item)}
       </AutocompleteOption>
@@ -101,17 +102,17 @@ export class AutocompleteOptions extends Component {
   };
 
   renderNewItem = (options) => {
-    const { inputValue, getItemProps, autocompleteVariant, darkView } = this.props;
+    const { inputValue, getItemProps, optionVariant, variant } = this.props;
     const index = options.length;
     const isNew = true;
     return (
       <div className={cx({ container: !options.length })}>
         <AutocompleteOption
           key={this.props.parseValueToString(inputValue)}
-          variant={autocompleteVariant}
+          optionVariant={optionVariant}
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
-          darkView={darkView}
+          variant={variant}
         >
           {this.props.parseValueToString(inputValue)}
         </AutocompleteOption>

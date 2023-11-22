@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,18 @@
  * limitations under the License.
  */
 
-.post-issue-title {
-  position: relative;
-  display: inline-block;
-  padding-right: 15px;
-}
-
 .post-issue-form {
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  &.dark-view {
-    margin-top: 10px;
-    max-width: 600px;
-  }
+  max-width: 240px;
+  margin-top: 10px;
 }
 
 .no-default-properties-message {
-  box-sizing: border-box;
   display: flex;
-  width: 280px;
-  margin-left: 176px;
+  margin-bottom: 15px;
   color: $COLOR--error;
-  background-color: transparent;
-  font-family: $FONT-REGULAR;
+  font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 10px;
   line-height: 18px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-left: 0;
-  }
 }
 
 .icon {
@@ -54,118 +38,20 @@
   }
 }
 
-.include-block-wrapper {
-  display: flex;
-  margin: 24px 0;
-}
-
-.include-data-block {
-  display: flex;
-  flex-wrap: wrap;
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-left: 50px;
-  }
-}
-
-.switch-field-label {
-  margin-right: 20px;
-  color: $COLOR--charcoal-grey;
+.include-data-header {
+  margin-bottom: 4px;
   font-size: 13px;
-  font-family: $FONT-REGULAR;
-  &.dark-view {
-    color: $COLOR--dirty-gray;
-  }
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  color: $COLOR--darkmode-gray-100;
 }
 
-.form-block-header {
-  position: relative;
-  display: block;
-  width: 176px;
-  padding: 10px 36px 10px 0;
-  box-sizing: border-box;
-  background-color: $COLOR--white-four;
-  &.dark-view {
-    background-color: transparent;
-  }
+.include-data-fields {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.header-text {
-  opacity: 0.9;
-  font-size: 12px;
-  color: $COLOR--gray-47;
-  font-family: $FONT-REGULAR;
-  &.dark-view {
-    color: $COLOR--dirty-gray;
-  }
-}
-
-.credentials-block {
-  height: 0;
-  overflow: hidden;
-  margin-top: 20px;
-}
-
-.credentials-block-wrapper {
-  .header-text {
-    &:after {
-      content: '+';
-      position: absolute;
-      right: -13px;
-      top: 7px;
-      font-size: 24px;
-    }
-    cursor: pointer;
-  }
-
-  &.expanded {
-    .header-text {
-      &:after {
-        content: '-';
-        top: 5px;
-        right: -8px;
-      }
-    }
-
-    .credentials-block {
-      height: auto;
-      overflow: visible;
-
-      &.expand {
-        animation: expand 0.4s ease;
-      }
-    }
-  }
-
-  &:not(.expanded) {
-    .credentials-block {
-      &.expand {
-        animation: hide 0.4s ease;
-      }
-    }
-  }
-}
-
-@keyframes expand {
-  from {
-    height: 0;
-    overflow: hidden;
-  }
-  100% {
-    overflow: visible;
-    height: 100px;
-  }
-}
-
-@keyframes hide {
-  from {
-    overflow: hidden;
-    height: 100px;
-  }
-  100% {
-    height: 0;
-  }
-}
-
-.items-list {
-  margin-top: 42px;
+.field-label {
+  color: $COLOR--bg-000;
 }

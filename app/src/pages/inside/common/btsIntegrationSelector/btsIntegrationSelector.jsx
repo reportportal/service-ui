@@ -18,8 +18,8 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { FormField } from 'components/fields/formField';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import styles from './btsIntegrationSelector.scss';
 
@@ -45,7 +45,6 @@ export class BtsIntegrationSelector extends Component {
     integrationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     onChangePluginName: PropTypes.func.isRequired,
     onChangeIntegration: PropTypes.func.isRequired,
-    darkView: PropTypes.bool,
   };
 
   constructor(props) {
@@ -68,61 +67,38 @@ export class BtsIntegrationSelector extends Component {
     this.props.namedBtsIntegrations[this.props.pluginName].length > 1;
 
   render() {
-    const {
-      intl,
-      pluginName,
-      onChangePluginName,
-      integrationId,
-      onChangeIntegration,
-      darkView,
-    } = this.props;
+    const { intl, pluginName, onChangePluginName, integrationId, onChangeIntegration } = this.props;
 
     return (
       <Fragment>
-        <FormField
-          fieldWrapperClassName={cx('field-wrapper')}
+        <FieldElement
+          className={cx('field-wrapper')}
           label={intl.formatMessage(messages.btsTitle)}
-          labelClassName={cx('label', { 'dark-view': darkView })}
+          labelClassName={cx('label')}
           withoutProvider
         >
-          <InputDropdown
+          <Dropdown
             value={pluginName}
             options={this.pluginNamesOptions}
             onChange={onChangePluginName}
             disabled={!this.isMultipleBtsPlugins()}
-            customClasses={
-              darkView && {
-                selectBlock: 'dark-view',
-                value: 'dark-view',
-                arrow: 'dark-view',
-                selectList: 'dark-view',
-                dropdownOption: 'dark-view',
-              }
-            }
+            variant="dark"
           />
-        </FormField>
-        <FormField
-          fieldWrapperClassName={cx('field-wrapper')}
+        </FieldElement>
+        <FieldElement
+          className={cx('field-wrapper')}
           label={intl.formatMessage(messages.integrationNameTitle)}
-          labelClassName={cx('label', { 'dark-view': darkView })}
+          labelClassName={cx('label')}
           withoutProvider
         >
-          <InputDropdown
+          <Dropdown
             value={integrationId}
             options={this.getIntegrationNamesOptions()}
             onChange={onChangeIntegration}
             disabled={!this.isMultipleBtsIntegrations()}
-            customClasses={
-              darkView && {
-                selectBlock: 'dark-view',
-                value: 'dark-view',
-                arrow: 'dark-view',
-                selectList: 'dark-view',
-                dropdownOption: 'dark-view',
-              }
-            }
+            variant="dark"
           />
-        </FormField>
+        </FieldElement>
       </Fragment>
     );
   }

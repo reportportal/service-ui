@@ -19,7 +19,8 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
-import { AutocompleteMenu } from './../common/autocompleteMenu';
+import { autocompleteVariantType } from '../common/propTypes';
+import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { SelectedItems } from './selectedItems';
 import { MultipleDownshift } from './multipleDownshift';
 import styles from './multipleAutocomplete.scss';
@@ -52,7 +53,7 @@ export const MultipleAutocomplete = ({
   handleUnStoredItemCb,
   dataAutomationId,
   existingItemsMap,
-  darkView,
+  variant,
   customizeNewSelectedValue,
   ...props
 }) => {
@@ -132,12 +133,11 @@ export const MultipleAutocomplete = ({
                 <>
                   <div
                     ref={ref}
-                    className={cx('autocomplete', customClass, {
+                    className={cx('autocomplete', customClass, variant, {
                       'mobile-disabled': mobileDisabled,
                       error,
                       touched,
                       disabled,
-                      'dark-view': darkView,
                     })}
                   >
                     <div
@@ -157,7 +157,7 @@ export const MultipleAutocomplete = ({
                         getAdditionalCreationCondition={getAdditionalCreationCondition}
                         storedItemsMap={storedItemsMap}
                         highlightUnStoredItem={highlightUnStoredItem}
-                        darkView={darkView}
+                        variant={variant}
                       />
                       <input
                         {...getInputProps({
@@ -231,7 +231,7 @@ export const MultipleAutocomplete = ({
                     parseValueToString={parseValueToString}
                     createWithoutConfirmation={createWithoutConfirmation}
                     options={filteredOptions}
-                    darkView={darkView}
+                    variant={variant}
                     {...props}
                   />
                 );
@@ -274,7 +274,7 @@ MultipleAutocomplete.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
-  darkView: PropTypes.bool,
+  variant: autocompleteVariantType,
   customizeNewSelectedValue: PropTypes.func,
 };
 
@@ -307,6 +307,6 @@ MultipleAutocomplete.defaultProps = {
   handleUnStoredItemCb: null,
   dataAutomationId: '',
   existingItemsMap: {},
-  darkView: false,
+  variant: 'light',
   customizeNewSelectedValue: (value) => value,
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@mixin dropdown($borderColor, $background) {
+@mixin dropdown($borderColor, $background, $arrowColor) {
   display: flex;
   align-items: center;
   padding: 9px 12px 7px;
@@ -29,7 +29,7 @@
   transition: border-color 200ms linear;
   cursor: pointer;
 
-  @include arrow-color($COLOR--e-300);
+  @include arrow-color($arrowColor);
 }
 
 @mixin arrow-color($arrowColor) {
@@ -51,7 +51,7 @@
 @mixin active-state($borderColor, $arrowColor) {
   &:active,
   &:focus-visible {
-    padding: 7px 11px;
+    padding: 8px 11px 6px;
     border-width: 2px;
     border-color: $borderColor;
     outline: none;
@@ -80,7 +80,6 @@
 
 @mixin disabled-state {
   pointer-events: none;
-  background-color: $COLOR--bg-100;
 
   .arrow {
     svg path {
@@ -157,7 +156,7 @@
 
 .light {
   &.dropdown {
-    @include dropdown($COLOR--e-200, $COLOR--bg-000);
+    @include dropdown($COLOR--e-200, $COLOR--bg-000, $COLOR--e-300);
     @include hover-state($COLOR--e-300, $COLOR--e-400);
     @include active-state($COLOR--topaz-focused, $COLOR--e-400);
 
@@ -167,6 +166,7 @@
 
     &.disabled {
       @include disabled-state;
+      background-color: $COLOR--bg-100;
 
       .value {
         color: $COLOR--e-300;
@@ -193,8 +193,8 @@
 
 .dark {
   &.dropdown {
-    @include dropdown(transparent, $COLOR--darkmode-gray-400);
-    @include hover-state($COLOR--e-200, $COLOR--bg-000);
+    @include dropdown(transparent, $COLOR--darkmode-gray-400, $COLOR--darkmode-gray-150);
+    @include hover-state($COLOR--darkmode-gray-150, $COLOR--darkmode-gray-150);
     @include active-state($COLOR--darkmode-topaz-focused, $COLOR--bg-000);
 
     &.opened {
@@ -203,6 +203,13 @@
 
     &.disabled {
       @include disabled-state;
+      border-color: $COLOR--darkmode-gray-150;
+      background-color: $COLOR--darkmode-gray-400;
+      opacity: 0.3;
+
+      .value {
+        color: $COLOR--darkmode-gray-200;
+      }
     }
 
     &.error.touched {
@@ -225,7 +232,7 @@
 
 .ghost {
   &.dropdown {
-    @include dropdown(transparent, transparent);
+    @include dropdown(transparent, transparent, $COLOR--e-300);
     @include hover-state(transparent, $COLOR--e-400);
     @include active-state($COLOR--topaz-focused, $COLOR--e-400);
 
@@ -239,6 +246,7 @@
 
     &.disabled {
       @include disabled-state;
+      background-color: $COLOR--bg-100;
 
       .value {
         color: $COLOR--e-300;

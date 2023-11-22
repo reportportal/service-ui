@@ -35,7 +35,7 @@ const SelectedItem = ({
   getAdditionalCreationCondition,
   storedOption,
   highlightUnStoredItem,
-  darkView,
+  variant,
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState('');
@@ -72,12 +72,11 @@ const SelectedItem = ({
     />
   ) : (
     <div
-      className={cx('selected-item', {
+      className={cx('selected-item', variant, {
         [`validation-${error}`]: error,
         disabled,
         'mobile-disabled': mobileDisabled,
         'highlight-un-stored-item': highlightUnStoredItem && !storedOption,
-        'dark-view': darkView,
       })}
       onClick={!disabled && editable && !storedOption ? changeEditMode : null}
     >
@@ -112,7 +111,7 @@ SelectedItem.propTypes = {
   getAdditionalCreationCondition: PropTypes.func,
   storedOption: PropTypes.bool,
   highlightUnStoredItem: PropTypes.bool,
-  darkView: PropTypes.bool,
+  variant: PropTypes.oneOf(['light', 'dark']),
 };
 
 SelectedItem.defaultProps = {
@@ -124,7 +123,7 @@ SelectedItem.defaultProps = {
   getAdditionalCreationCondition: () => true,
   storedOption: true,
   highlightUnStoredItem: false,
-  darkView: false,
+  variant: 'light',
 };
 
 export const SelectedItems = ({

@@ -81,27 +81,10 @@
     background-color: $COLOR--bg-100;
   }
 
-  &.active:not(:hover):not(.dark-view) {
+  &.active:not(:hover) {
     background-color: $COLOR--bg-100;
     border: 1px solid $COLOR--topaz-focused;
     padding: 3px 11px;
-  }
-}
-
-.dark-view {
-  &.item {
-    background-color: transparent;
-    color: $COLOR--darkmode-gray-100;
-    min-height: 30px;
-    font-family: $FONT-REGULAR;
-
-    &:hover {
-      background-color: $COLOR--darkmode-bg-solid-98;
-    }
-
-    &.active {
-      color: $COLOR--darkmode-topaz-text;
-    }
   }
 }
 
@@ -143,5 +126,34 @@
 
   &:not(:hover) {
     @include button-active-state(88px);
+  }
+}
+
+.dark {
+  &.item, &.new-item {
+    background-color: transparent;
+    color: $COLOR--darkmode-gray-100;
+
+    &:hover {
+      background-color: $COLOR--darkmode-bg-solid-98;
+    }
+
+    &.active {
+      color: $COLOR--darkmode-topaz-text;
+    }
+
+    &.active:not(:hover) {
+      background-color: $COLOR--darkmode-bg-solid-98;
+    }
+  }
+
+  &.new-item {
+    &:not(:hover) {
+      @include button-active-state(88px);
+    }
+  }
+
+  &.divider {
+    background-color: $COLOR--darkmode-gray-200;
   }
 }

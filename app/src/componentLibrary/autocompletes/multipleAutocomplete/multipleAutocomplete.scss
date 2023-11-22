@@ -129,10 +129,13 @@
   color: $COLOR--red-failed-2;
 }
 
-.dark-view {
+.dark {
   &.autocomplete {
-    border-radius: 4px;
     background-color: $COLOR--darkmode-bg-solid-98;
     border-color: $COLOR--darkmode-gray-200;
+  }
+
+  .input {
+    color: $COLOR--bg-000;
   }
 }

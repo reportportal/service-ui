@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-.menu {
-  position: absolute;
-  top: 100%;
-  display: none;
-  width: 100%;
-  border-radius: 3px;
-  margin-top: 4px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--charcoal-grey;
-  background-color: $COLOR--white-two;
-  box-sizing: border-box;
-  box-shadow: $BOX_SHADOW--modal-window;
-  z-index: $Z-INDEX-POPUP;
-  &.opened {
-    display: block;
-  }
+import PropTypes from 'prop-types';
 
-  &.dark {
-    background-color: $COLOR--darkmode-gray-400;
-  }
-}
+export const autocompleteVariantType = PropTypes.oneOf(['light', 'dark']);
+
+export const singleAutocompleteOptionVariantType = PropTypes.oneOf([
+  'key-variant',
+  'value-variant',
+]);

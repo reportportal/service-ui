@@ -23,7 +23,6 @@ import { DynamicField } from '../dynamicField';
 export const MultipleAutocompleteField = ({
   field,
   darkView,
-  modalView,
   integrationInfo,
   createWithoutConfirmation,
   ...rest
@@ -49,13 +48,13 @@ export const MultipleAutocompleteField = ({
     typeof value === 'string' ? { name: value } : value;
 
   return (
-    <DynamicField field={field} darkView={darkView} modalView={modalView} {...rest}>
+    <DynamicField field={field} darkView={darkView} {...rest}>
       <AsyncMultipleAutocomplete
         getURI={getUri}
         getRequestParams={getRequestParams}
         parseValueToString={parseValueToString}
         createWithoutConfirmation={createWithoutConfirmation}
-        darkView={darkView}
+        variant={darkView ? 'dark' : 'light'}
         customizeNewSelectedValue={customizeNewSelectedValue}
       />
     </DynamicField>
@@ -65,13 +64,11 @@ MultipleAutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
-  modalView: PropTypes.bool,
   integrationInfo: PropTypes.object,
   createWithoutConfirmation: PropTypes.bool,
 };
 MultipleAutocompleteField.defaultProps = {
   darkView: false,
-  modalView: false,
   integrationInfo: {},
   createWithoutConfirmation: true,
 };

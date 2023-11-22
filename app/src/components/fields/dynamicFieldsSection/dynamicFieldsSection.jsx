@@ -36,7 +36,6 @@ export class DynamicFieldsSection extends Component {
     defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
     darkView: PropTypes.bool,
     children: PropTypes.node,
-    modalView: PropTypes.bool,
     integrationInfo: PropTypes.object,
   };
 
@@ -47,7 +46,6 @@ export class DynamicFieldsSection extends Component {
     defaultOptionValueKey: VALUE_NAME_KEY,
     darkView: false,
     children: null,
-    modalView: false,
     integrationInfo: {},
   };
 
@@ -65,7 +63,6 @@ export class DynamicFieldsSection extends Component {
       withValidation,
       defaultOptionValueKey,
       darkView,
-      modalView,
       integrationInfo,
     } = this.props;
 
@@ -79,7 +76,6 @@ export class DynamicFieldsSection extends Component {
           customBlock={this.getCustomBlock(field)}
           withValidation={withValidation}
           defaultOptionValueKey={defaultOptionValueKey}
-          modalView={modalView}
           darkView={darkView}
           integrationInfo={integrationInfo}
         />

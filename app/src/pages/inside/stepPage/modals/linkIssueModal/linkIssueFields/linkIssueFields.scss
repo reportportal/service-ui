@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,37 +20,12 @@
     margin-bottom: 18px;
   }
 }
-.field-wrapper {
-  width: 280px;
-  padding: 0;
-  margin: 0;
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 100%;
-    margin-bottom: 8px;
-  }
+.field {
+  margin-bottom: 15px;
 }
 
 .label {
-  width: 140px;
-  min-width: 182px;
-  padding-right: 30px;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  text-align: right;
-  &.dark-view {
-    color: $COLOR--dirty-gray;
-    min-width: 160px;
-    text-align: left;
-    margin-right: 16px;
-    padding-right: 0;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-bottom: 8px;
-    padding: 0;
-    text-align: left;
-  }
+  color: $COLOR--darkmode-gray-100;
 }
 
 .remove-issue-fields-button {
@@ -77,15 +52,5 @@
   @media (max-width: $SCREEN_XS_MAX) {
     right: -27px;
     top: 56px;
-  }
-}
-
-.add-issue-button {
-  margin-left: 180px;
-  &.dark-view {
-    margin-left: 176px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-left: 0;
   }
 }

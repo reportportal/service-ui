@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,9 @@
  */
 
 .field-wrapper {
-  width: 280px;
-  padding: 0;
-  margin: 0;
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 100%;
-    margin-bottom: 8px;
-  }
+  margin-bottom: 15px;
 }
 
 .label {
-  min-width: 182px;
-  padding-right: 30px;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  text-align: right;
-  &.dark-view {
-    width: 160px;
-    min-width: 160px;
-    margin-right: 16px;
-    padding-right: 0;
-    text-align: left;
-    color: $COLOR--dirty-gray;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-bottom: 8px;
-    padding: 0;
-    text-align: left;
-  }
+  color: $COLOR--darkmode-gray-100;
 }

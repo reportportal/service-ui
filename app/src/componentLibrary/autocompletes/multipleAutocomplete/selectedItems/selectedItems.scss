@@ -25,7 +25,7 @@
 }
 
 @mixin disabled {
-  background-color: $COLOR--gray-60;
+  color: $COLOR--e-300;
   padding-right: 10px;
 }
 
@@ -35,7 +35,7 @@
   align-items: center;
   min-width: 0;
   padding: 3px 8px;
-  background: $COLOR--bg-200;
+  background-color: $COLOR--bg-200;
   border-radius: 6px;
   border: 1px solid transparent;
   font-family: $FONT-ROBOTO-MEDIUM;
@@ -101,12 +101,11 @@
   outline: none;
 }
 
-.dark-view {
-  background-color: $COLOR--darkmode-gray-400;
-  color: $COLOR--darkmode-gray-100;
-  font-family: $FONT-REGULAR;
+.dark {
+  background-color: $COLOR--darkmode-gray-350;
+  color: $COLOR--bg-000;
 
   .cross-icon {
-    @include fill-svg($COLOR--darkmode-gray-50);
+    @include fill-svg($COLOR--darkmode-gray-100);
   }
 }

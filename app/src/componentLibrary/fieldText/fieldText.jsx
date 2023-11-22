@@ -49,11 +49,9 @@ export const FieldText = ({
   isRequired,
   hasDoubleMessage,
   type,
-  darkView,
+  variant,
 }) => {
   const clearInput = () => onChange('');
-
-  const variant = darkView ? DARK_VARIANT : LIGHT_VARIANT;
 
   const helpTextElement = <span className={cx(variant, 'help-text')}>{helpText}</span>;
 
@@ -155,7 +153,7 @@ FieldText.propTypes = {
   isRequired: PropTypes.bool,
   hasDoubleMessage: PropTypes.bool,
   type: PropTypes.string,
-  darkView: PropTypes.bool,
+  variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
 };
 FieldText.defaultProps = {
   value: '',
@@ -181,5 +179,5 @@ FieldText.defaultProps = {
   isRequired: false,
   hasDoubleMessage: false,
   type: 'text',
-  darkView: false,
+  variant: LIGHT_VARIANT,
 };

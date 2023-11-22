@@ -30,6 +30,8 @@ export const FieldElement = (props) => {
     children,
     className,
     childrenClassName,
+    labelClassName,
+    descriptionClassName,
     withoutProvider,
     dataAutomationId,
     isRequired,
@@ -42,20 +44,26 @@ export const FieldElement = (props) => {
     <div className={cx('wrapper', className)} data-automation-id={dataAutomationId}>
       {label ? (
         <>
-          <span className={cx('label')}>
+          <span className={cx('label', labelClassName)}>
             {label}
             {isRequired && <span className={cx('asterisk')}>*</span>}
           </span>
-          {description && <span className={cx('description')}>{description}</span>}
+          {description && (
+            <span className={cx('description', descriptionClassName)}>{description}</span>
+          )}
           <div className={cx(childrenClassName)}>{getChildren()}</div>
           {descriptionSecondary && (
-            <span className={cx('description-alt')}>{descriptionSecondary}</span>
+            <span className={cx('description-alt', descriptionClassName)}>
+              {descriptionSecondary}
+            </span>
           )}
         </>
       ) : (
         <>
           {getChildren()}
-          {description && <span className={cx('description-alt')}>{description}</span>}
+          {description && (
+            <span className={cx('description-alt', descriptionClassName)}>{description}</span>
+          )}
         </>
       )}
       {additionalInfo}
@@ -70,6 +78,8 @@ FieldElement.propTypes = {
   additionalInfo: PropTypes.node,
   className: PropTypes.string,
   childrenClassName: PropTypes.string,
+  labelClassName: PropTypes.string,
+  descriptionClassName: PropTypes.string,
   withoutProvider: PropTypes.bool,
   dataAutomationId: PropTypes.string,
   isRequired: PropTypes.bool,
@@ -81,6 +91,8 @@ FieldElement.defaultProps = {
   additionalInfo: null,
   className: '',
   childrenClassName: '',
+  labelClassName: '',
+  descriptionClassName: '',
   withoutProvider: false,
   dataAutomationId: '',
   isRequired: false,

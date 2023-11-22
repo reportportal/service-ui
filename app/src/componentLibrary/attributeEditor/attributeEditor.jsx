@@ -181,7 +181,7 @@ export const AttributeEditor = ({
           attributeKey={state.key}
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
-          autocompleteVariant={'key-variant'}
+          optionVariant={'key-variant'}
           menuClassName={cx('menu')}
         />
       </FieldErrorHint>
@@ -205,7 +205,7 @@ export const AttributeEditor = ({
           attributeKey={state.key}
           attributeValue={state.value}
           isRequired
-          autocompleteVariant={'value-variant'}
+          optionVariant={'value-variant'}
           menuClassName={cx('menu')}
         />
       </FieldErrorHint>

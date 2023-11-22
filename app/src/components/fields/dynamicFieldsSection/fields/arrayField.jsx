@@ -16,7 +16,8 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
+import { MultipleAutocomplete } from 'componentLibrary/autocompletes/multipleAutocomplete';
+// import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -24,12 +25,10 @@ export class ArrayField extends Component {
     field: PropTypes.object.isRequired,
     defaultOptionValueKey: PropTypes.string.isRequired,
     darkView: PropTypes.bool,
-    modalView: PropTypes.bool,
   };
 
   static defaultProps = {
     darkView: false,
-    modalView: false,
   };
 
   formatOptions = (values = []) =>
@@ -58,7 +57,7 @@ export class ArrayField extends Component {
   parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
 
   render() {
-    const { field, darkView, modalView, ...rest } = this.props;
+    const { field, darkView, ...rest } = this.props;
 
     return (
       <DynamicField
@@ -66,14 +65,13 @@ export class ArrayField extends Component {
         format={this.creatable ? this.formatOptions : this.formatTags}
         parse={this.parseTags}
         darkView={darkView}
-        modalView={modalView}
         {...rest}
       >
         <MultipleAutocomplete
           options={this.formatOptions(field.definedValues)}
           parseValueToString={this.parseValueToString}
           creatable={this.creatable}
-          darkView={darkView}
+          variant={darkView ? 'dark' : 'light'}
           mobileDisabled
         />
       </DynamicField>

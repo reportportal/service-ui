@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button } from 'componentLibrary/button';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../propTypes';
 import styles from './autocompleteOption.scss';
 
 const cx = classNames.bind(styles);
@@ -29,20 +30,19 @@ export const AutocompleteOption = ({
   children,
   isNew,
   disabled,
+  optionVariant,
   variant,
-  darkView,
   ...props
 }) => {
   return isNew ? (
     <>
-      <div className={cx('divider')} />
+      <div className={cx('divider', variant)} />
       <li
-        className={cx(
-          'new-item',
-          variant,
-          { 'dark-view': darkView },
-          { active: isActive, selected: isSelected, disabled },
-        )}
+        className={cx('new-item', optionVariant, variant, {
+          active: isActive,
+          selected: isSelected,
+          disabled,
+        })}
         {...props}
       >
         <span className={cx('value')}>{children}</span>
@@ -52,41 +52,38 @@ export const AutocompleteOption = ({
           startIcon={PlusIcon}
           variant={'text'}
         >
-          {variant === 'key-variant' ? 'New key' : 'New value'}
+          {optionVariant === 'key-variant' ? 'New key' : 'New value'}
         </Button>
       </li>
     </>
   ) : (
     <li
-      className={cx(
-        'item',
-        variant,
-        { 'dark-view': darkView },
-        { active: isActive, selected: isSelected, disabled },
-      )}
+      className={cx('item', optionVariant, variant, {
+        active: isActive,
+        selected: isSelected,
+        disabled,
+      })}
       {...(!disabled ? props : {})}
     >
       <span className={cx('label', 'tag')}>{children}</span>
     </li>
   );
 };
-
 AutocompleteOption.propTypes = {
   isActive: PropTypes.bool,
   isSelected: PropTypes.bool,
   isNew: PropTypes.bool,
   children: PropTypes.node,
   disabled: PropTypes.bool,
-  variant: PropTypes.string,
-  darkView: PropTypes.bool,
+  optionVariant: singleAutocompleteOptionVariantType,
+  variant: autocompleteVariantType,
 };
-
 AutocompleteOption.defaultProps = {
   isActive: false,
   isSelected: false,
   isNew: false,
   children: null,
   disabled: false,
-  variant: '',
-  darkView: false,
+  optionVariant: '',
+  variant: 'light',
 };
