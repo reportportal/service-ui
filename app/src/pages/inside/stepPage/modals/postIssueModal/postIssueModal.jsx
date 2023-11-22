@@ -52,6 +52,7 @@ import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import {
   AUTOCOMPLETE_TYPE,
   MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
 } from 'components/fields/dynamicFieldsSection/constants';
 import {
   INCLUDE_ATTACHMENTS_KEY,
@@ -280,7 +281,9 @@ export class PostIssueModal extends Component {
 
     const fields = this.state.fields.map((field) => {
       const isAutocomplete =
-        field.fieldType === AUTOCOMPLETE_TYPE || field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE;
+        field.fieldType === AUTOCOMPLETE_TYPE ||
+        field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
+        field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
       const formFieldData = formData[field.id];
       const preparedFormFieldData = Array.isArray(formFieldData) ? formFieldData : [formFieldData];
       return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
