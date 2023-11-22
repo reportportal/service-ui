@@ -22,6 +22,7 @@ import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
+import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -129,6 +130,12 @@ const AutoAnalysis = ({
     }
   };
 
+  const handleDocumentationKeyDown = ({ keyCode }) => {
+    if (keyCode === ENTER_KEY_CODE) {
+      trackEvent(PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('auto_analyzer_based_on'));
+    }
+  };
+
   return (
     <Layout
       description={
@@ -153,7 +160,7 @@ const AutoAnalysis = ({
             {formatMessage(messages.autoAnalysis)}
           </Checkbox>
         </FieldElement>
-        <div onClick={handleDocumentationClick}>
+        <div onClick={handleDocumentationClick} onKeyDown={handleDocumentationKeyDown}>
           <FieldElement
             name={ANALYZER_MODE}
             label={formatMessage(messages.analyzerMode)}
