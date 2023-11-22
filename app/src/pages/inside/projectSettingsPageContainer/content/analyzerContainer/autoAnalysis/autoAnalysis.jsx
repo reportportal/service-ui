@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
@@ -30,6 +31,7 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
@@ -119,6 +121,14 @@ const AutoAnalysis = ({
 
   const isFieldDisabled = !hasPermission || isPending;
 
+  const handleDocumentationClick = (event) => {
+    const { tagName } = event.target;
+
+    if (tagName === 'A') {
+      trackEvent(PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('auto_analyzer_based_on'));
+    }
+  };
+
   return (
     <Layout
       description={
@@ -143,16 +153,28 @@ const AutoAnalysis = ({
             {formatMessage(messages.autoAnalysis)}
           </Checkbox>
         </FieldElement>
-        <FieldElement
-          name={ANALYZER_MODE}
-          label={formatMessage(messages.analyzerMode)}
-          description={formatMessage(messages.analyzerModeDescription)}
-          format={String}
-          disabled={isFieldDisabled}
-          dataAutomationId={ANALYZER_MODE + FIELD}
-        >
-          <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
-        </FieldElement>
+        <div onClick={handleDocumentationClick}>
+          <FieldElement
+            name={ANALYZER_MODE}
+            label={formatMessage(messages.analyzerMode)}
+            description={Parser(
+              formatMessage(messages.analyzerModeDescription, {
+                a: (data) =>
+                  createExternalLink(
+                    data,
+                    docsReferences.baseAutoAnalysisDocs,
+                    'documentationLink',
+                    OpenInNewTabIcon,
+                  ),
+              }),
+            )}
+            format={String}
+            disabled={isFieldDisabled}
+            dataAutomationId={ANALYZER_MODE + FIELD}
+          >
+            <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
+          </FieldElement>
+        </div>
         <FieldElement
           name={MIN_SHOULD_MATCH}
           label={formatMessage(messages.minShouldMatch)}

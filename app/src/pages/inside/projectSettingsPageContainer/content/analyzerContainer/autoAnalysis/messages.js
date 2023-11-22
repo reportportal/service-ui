@@ -37,7 +37,7 @@ export const messages = defineMessages({
   analyzerModeDescription: {
     id: 'AutoAnalysis.AutoAnalysisModeDescription',
     defaultMessage:
-      'You can choose the type of test item analysis based on previously investigated data in launches with the same name or in all launches',
+      'You can specify the launches that will be used as the base for Auto-Analysis. <a>Documentation</a>',
   },
   minShouldMatch: {
     id: 'AutoAnalysis.minShouldMatch',
@@ -50,23 +50,23 @@ export const messages = defineMessages({
   },
   sameNameLaunchesCaption: {
     id: 'AutoAnalysis.sameNameLaunchesCaption',
-    defaultMessage: 'Previous launches with the same name',
+    defaultMessage: 'All previous launches with the same name',
   },
   allLaunchesCaption: {
     id: 'AutoAnalysis.allLaunchesCaption',
-    defaultMessage: 'All launches',
+    defaultMessage: 'All previous launches',
   },
   currentLaunch: {
     id: 'AutoAnalysis.current',
-    defaultMessage: 'Current launch',
+    defaultMessage: 'Only current launch',
   },
   previousLaunch: {
     id: 'AutoAnalysis.previousLaunch',
-    defaultMessage: 'Only last launch with the same name',
+    defaultMessage: 'Only previous launch with the same name',
   },
   currentAndTheSameName: {
     id: 'AutoAnalysis.currentAndWithSameName',
-    defaultMessage: 'All launches with the same name',
+    defaultMessage: 'Current and all previous launches with the same name',
   },
   numberOfLogLines: {
     id: 'AutoAnalysis.numberOfLogLines',
