@@ -26,7 +26,7 @@ export const MultipleDownshift = ({
   handleUnStoredItemCb,
   options,
   existingItemsMap,
-  customiseNewSelectedValue,
+  customizeNewSelectedValue,
   ...props
 }) => {
   const [storedItemsMap, setStoredItems] = useState(existingItemsMap);
@@ -54,7 +54,7 @@ export const MultipleDownshift = ({
     }
   };
   const addSelectedItem = (newItemData, downshift) => {
-    const customisedNewItemData = customiseNewSelectedValue(newItemData);
+    const customisedNewItemData = customizeNewSelectedValue(newItemData);
     const newItem = Array.isArray(customisedNewItemData)
       ? customisedNewItemData
       : [customisedNewItemData];
@@ -123,7 +123,7 @@ MultipleDownshift.propTypes = {
   existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
-  customiseNewSelectedValue: PropTypes.func,
+  customizeNewSelectedValue: PropTypes.func,
 };
 
 MultipleDownshift.defaultProps = {
@@ -132,5 +132,5 @@ MultipleDownshift.defaultProps = {
   selectedItems: [],
   handleUnStoredItemCb: null,
   existingItemsMap: {},
-  customiseNewSelectedValue: (value) => value,
+  customizeNewSelectedValue: (value) => value,
 };

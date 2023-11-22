@@ -45,7 +45,7 @@ export const MultipleAutocompleteField = ({
     }
   };
 
-  const customiseNewSelectedValue = (value) =>
+  const customizeNewSelectedValue = (value) =>
     typeof value === 'string' ? { name: value } : value;
 
   return (
@@ -56,7 +56,7 @@ export const MultipleAutocompleteField = ({
         parseValueToString={parseValueToString}
         createWithoutConfirmation={createWithoutConfirmation}
         darkView={darkView}
-        customiseNewSelectedValue={customiseNewSelectedValue}
+        customizeNewSelectedValue={customizeNewSelectedValue}
       />
     </DynamicField>
   );
