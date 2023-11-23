@@ -29,11 +29,12 @@ export const DynamicField = ({
   withValidation,
   children,
   darkView,
-  modalView,
   ...rest
 }) => {
   const fieldChildren = withValidation ? (
-    <FieldErrorHint darkView={darkView}>{children}</FieldErrorHint>
+    <FieldErrorHint darkView={darkView} provideHint={false}>
+      {children}
+    </FieldErrorHint>
   ) : (
     children
   );
@@ -49,7 +50,9 @@ export const DynamicField = ({
       label={field.fieldName}
       isRequired={field.required}
       descriptionSecondary={field.description}
-      className={cx('dynamic-field')}
+      className={cx('dynamic-field', { dark: darkView })}
+      labelClassName={cx({ 'label-dark': darkView })}
+      descriptionClassName={cx({ 'description-dark': darkView })}
       additionalInfo={customBlock}
       normalize={(value) => value}
       format={(value) => value}
@@ -66,7 +69,6 @@ DynamicField.propTypes = {
   withValidation: PropTypes.bool,
   children: PropTypes.any,
   darkView: PropTypes.bool,
-  modalView: PropTypes.bool,
 };
 DynamicField.defaultProps = {
   field: {},
@@ -74,5 +76,4 @@ DynamicField.defaultProps = {
   withValidation: false,
   children: null,
   darkView: false,
-  modalView: false,
 };

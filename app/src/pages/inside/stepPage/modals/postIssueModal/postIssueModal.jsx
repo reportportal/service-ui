@@ -40,7 +40,7 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { Checkbox } from 'componentLibrary/checkbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
@@ -450,14 +450,13 @@ export class PostIssueModal extends Component {
           />
         }
       >
-        <form className={cx('post-issue-form', 'dark-view')}>
+        <form className={cx('post-issue-form')}>
           <BtsIntegrationSelector
             namedBtsIntegrations={namedBtsIntegrations}
             pluginName={pluginName}
             integrationId={integrationId}
             onChangeIntegration={this.onChangeIntegration}
             onChangePluginName={this.onChangePlugin}
-            darkView
           />
           {fields.length ? (
             <DynamicFieldsSection
@@ -465,7 +464,6 @@ export class PostIssueModal extends Component {
               fields={fields}
               defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
               darkView
-              modalView
               integrationInfo={integrationInfo}
             />
           ) : (
@@ -475,22 +473,20 @@ export class PostIssueModal extends Component {
             </div>
           )}
           {!this.isBulkOperation && (
-            <div className={cx('include-block-wrapper')}>
-              <h4 className={cx('form-block-header', 'dark-view')}>
-                <span className={cx('header-text', 'dark-view')}>
-                  {formatMessage(messages.includeDataHeader)}
-                </span>
+            <>
+              <h4 className={cx('include-data-header')}>
+                {formatMessage(messages.includeDataHeader)}
               </h4>
-              <div className={cx('include-data-block')}>
+              <div className={cx('include-data-fields')}>
                 {this.dataFieldsConfig.map((item) => (
                   <FieldProvider key={item.name} name={item.name} format={Boolean}>
-                    <InputCheckbox iconTransparentBackground>
-                      <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
-                    </InputCheckbox>
+                    <Checkbox>
+                      <span className={cx('field-label')}>{item.title}</span>
+                    </Checkbox>
                   </FieldProvider>
                 ))}
               </div>
-            </div>
+            </>
           )}
           {currentExtension && <currentExtension.component />}
         </form>

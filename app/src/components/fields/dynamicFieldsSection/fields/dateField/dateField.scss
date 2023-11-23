@@ -24,24 +24,24 @@
 }
 
 .date-input {
-  height: 30px;
+  height: 36px;
   width: 100%;
   line-height: 25px;
   box-sizing: border-box;
   border: 1px solid $COLOR--gray-80;
-  padding: 0 5px;
+  border-radius: 3px;
+  padding: 7px 12px;
   outline: none;
   box-shadow: none;
-  font-family: $FONT-REGULAR;
+  font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   cursor: pointer;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
   &.dark-view {
-    background-color: transparent;
+    background-color: $COLOR--darkmode-bg-solid-98;
     border: 1px solid $COLOR--dark-gray;
-    border-radius: 4px;
     color: $COLOR--white-two;
   }
 

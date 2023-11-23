@@ -17,7 +17,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { AutocompleteOptions } from './../autocompleteOptions';
+import { autocompleteVariantType } from '../propTypes';
+import { AutocompleteOptions } from '../autocompleteOptions';
 import styles from './autocompleteMenu.scss';
 
 const cx = classNames.bind(styles);
@@ -26,25 +27,24 @@ const isReadyForSearch = (minLength, inputValue) =>
   !minLength || minLength <= inputValue.trim().length;
 
 export const AutocompleteMenu = React.forwardRef(
-  ({ isOpen, placement, style, minLength, inputValue, className, darkView, ...props }, ref) => {
+  ({ isOpen, placement, style, minLength, inputValue, className, variant, ...props }, ref) => {
     return (
       <ul
         ref={ref}
         className={cx(
           'menu',
-          { 'dark-view': darkView },
+          variant,
           { opened: isOpen && isReadyForSearch(minLength, inputValue) },
           className,
         )}
         placement={placement}
         style={style}
       >
-        <AutocompleteOptions inputValue={inputValue} darkView={darkView} {...props} />
+        <AutocompleteOptions inputValue={inputValue} variant={variant} {...props} />
       </ul>
     );
   },
 );
-
 AutocompleteMenu.propTypes = {
   isOpen: PropTypes.bool,
   placement: PropTypes.string,
@@ -52,9 +52,8 @@ AutocompleteMenu.propTypes = {
   minLength: PropTypes.number,
   inputValue: PropTypes.string,
   className: PropTypes.string,
-  darkView: PropTypes.bool,
+  variant: autocompleteVariantType,
 };
-
 AutocompleteMenu.defaultProps = {
   isOpen: false,
   placement: 'bottom-start',
@@ -62,5 +61,5 @@ AutocompleteMenu.defaultProps = {
   minLength: 1,
   inputValue: '',
   className: '',
-  darkView: false,
+  variant: 'light',
 };

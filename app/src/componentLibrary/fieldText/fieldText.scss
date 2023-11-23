@@ -63,9 +63,9 @@
   border-color: $borderColor;
 }
 
-@mixin disabled-state {
+@mixin disabled-state($backbroundColor) {
   pointer-events: none;
-  background-color: $COLOR--bg-100;
+  background-color: $backbroundColor;
 }
 
 @mixin additional-text($color) {
@@ -164,7 +164,7 @@
     }
 
     &.disabled {
-      @include disabled-state;
+      @include disabled-state($COLOR--bg-100);
     }
   }
 
@@ -178,7 +178,7 @@
     }
 
     &.disabled {
-      @include disabled-state;
+      @include disabled-state($COLOR--bg-100);
     }
 
     &.default-width {
@@ -240,31 +240,26 @@
 
 .dark {
   &.label {
-    @include label($COLOR--darkmode-gray-200);
+    @include label($COLOR--darkmode-gray-100);
 
     .asterisk {
       @include asterisk();
       padding-left: 4px;
     }
-
-    &.disabled {
-      @include disabled-state;
-    }
   }
 
   &.input-container {
-    @include input-container($COLOR--darkmode-gray-200, transparent);
+    @include input-container($COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-98);
     @include hover-state($COLOR--darkmode-gray-100);
     @include focus-state($COLOR--topaz-focused);
 
-    border-radius: 4px;
-    height: 30px;
-    padding: 6px 10px;
-    font-size: 13px;
-    line-height: 13px;
+    &.error.touched {
+      @include error-state($COLOR--red-failed-2);
+    }
 
     &.disabled {
-      @include disabled-state;
+      @include disabled-state($COLOR--darkmode-bg-solid-98);
+      opacity: 0.4;
     }
 
     &.default-width {
@@ -293,7 +288,7 @@
   }
 
   &.placeholder {
-    @include input-text($COLOR--e-300);
+    @include input-text($COLOR--darkmode-gray-200);
     position: absolute;
     top: 2px;
     left: 0;
@@ -305,6 +300,10 @@
       content: '*';
       color: $COLOR--red-focused;
     }
+  }
+
+  &.error-text {
+    @include additional-text($COLOR--red-failed-2);
   }
 
   &.help-text {

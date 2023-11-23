@@ -26,15 +26,25 @@
   cursor: pointer;
 }
 
-@mixin hover-state($backgroundColor) {
+@mixin hover-state($backgroundColor, $color) {
   &:hover:not(:active) {
     background: $backgroundColor;
   }
+
+  &.hover:not(.disabled) {
+    padding: 8px 11px 6px;
+    background-color: $backgroundColor;
+    border: 1px solid $color;
+  }
+
+  &.hover:not(.disabled):hover {
+    border: none;
+    padding: 9px 12px 7px;
+  }
 }
 
-@mixin active-state($backgroundColor, $color: inherit) {
-  &:active {
-    background: $backgroundColor;
+@mixin active-state($color) {
+  &:active:not(.disabled) {
     color: $color;
   }
 }
@@ -47,19 +57,8 @@
 .ghost {
   &.dropdown-option {
     @include dropdown-option($COLOR--almost-black);
-    @include hover-state($COLOR--bg-200);
-
-    &.hover:not(.disabled) {
-      padding: 8px 11px 6px;
-      background-color: $COLOR--bg-200;
-      border: 1px solid $COLOR--topaz-focused;
-    }
-
-    &.hover:not(.disabled):hover {
-      @include hover-state($COLOR--bg-200);
-      border: none;
-      padding: 9px 12px 7px;
-    }
+    @include hover-state($COLOR--bg-200, $COLOR--topaz-focused);
+    @include active-state($COLOR--topaz-pressed);
 
     &.selected {
       @include selected-state($COLOR--topaz-2);
@@ -74,8 +73,8 @@
 .dark {
   &.dropdown-option {
     @include dropdown-option($COLOR--bg-000);
-    @include hover-state($COLOR--darkmode-bg-solid-98);
-    @include active-state($COLOR--darkmode-bg-solid-98, $COLOR--darkmode-topaz-text);
+    @include hover-state($COLOR--darkmode-bg-solid-98, $COLOR--darkmode-topaz-focused);
+    @include active-state($COLOR--darkmode-topaz-pressed);
 
     &.selected {
       @include selected-state($COLOR--darkmode-topaz-text);

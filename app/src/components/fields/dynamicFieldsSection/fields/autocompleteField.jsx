@@ -20,7 +20,7 @@ import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocompl
 import { URLS } from 'common/urls';
 import { DynamicField } from '../dynamicField';
 
-export const AutocompleteField = ({ field, darkView, modalView, integrationInfo, ...rest }) => {
+export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest }) => {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
       integrationInfo.projectName,
@@ -42,14 +42,14 @@ export const AutocompleteField = ({ field, darkView, modalView, integrationInfo,
   };
 
   return (
-    <DynamicField field={field} darkView={darkView} modalView={modalView} {...rest}>
+    <DynamicField field={field} darkView={darkView} {...rest}>
       <AsyncAutocomplete
         getURI={getUri}
         getRequestParams={getRequestParams}
         parseValueToString={parseValueToString}
         createWithoutConfirmation
         stateReducer={stateReducer}
-        darkView={darkView}
+        variant={darkView ? 'dark' : 'light'}
       />
     </DynamicField>
   );
@@ -58,11 +58,9 @@ AutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
-  modalView: PropTypes.bool,
   integrationInfo: PropTypes.object,
 };
 AutocompleteField.defaultProps = {
   darkView: false,
-  modalView: false,
   integrationInfo: {},
 };

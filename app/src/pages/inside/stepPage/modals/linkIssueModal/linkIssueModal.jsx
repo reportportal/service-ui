@@ -268,7 +268,6 @@ export class LinkIssueModal extends Component {
             integrationId={integrationId}
             onChangeIntegration={this.onChangeIntegration}
             onChangePluginName={this.onChangePlugin}
-            darkView
           />
           <FieldArray
             name="issues"
@@ -276,7 +275,6 @@ export class LinkIssueModal extends Component {
             component={LinkIssueFields}
             addEventInfo={eventsInfo.addNewIssue}
             withAutocomplete={pluginName !== RALLY}
-            darkView
           />
         </form>
       </DarkModalLayout>

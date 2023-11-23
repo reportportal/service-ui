@@ -20,7 +20,8 @@ import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
-import { AutocompleteMenu } from './../common/autocompleteMenu';
+import { AutocompleteMenu } from '../common/autocompleteMenu';
+import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../common/propTypes';
 
 const DEFAULT_OPTIONS_INDEX = 0;
 
@@ -41,7 +42,7 @@ export class SingleAutocomplete extends Component {
     minLength: PropTypes.number,
     maxLength: PropTypes.number,
     async: PropTypes.bool,
-    autocompleteVariant: PropTypes.string,
+    optionVariant: singleAutocompleteOptionVariantType,
     isRequired: PropTypes.bool,
     error: PropTypes.string,
     touched: PropTypes.bool,
@@ -52,7 +53,7 @@ export class SingleAutocomplete extends Component {
     isOptionUnique: PropTypes.func,
     refFunction: PropTypes.func,
     stateReducer: PropTypes.func,
-    darkView: PropTypes.bool,
+    variant: autocompleteVariantType,
   };
 
   static defaultProps = {
@@ -70,7 +71,7 @@ export class SingleAutocomplete extends Component {
     minLength: 1,
     maxLength: null,
     async: false,
-    autocompleteVariant: '',
+    optionVariant: '',
     isRequired: false,
     error: '',
     touched: false,
@@ -81,7 +82,7 @@ export class SingleAutocomplete extends Component {
     isOptionUnique: null,
     refFunction: () => {},
     stateReducer: (state, changes) => changes,
-    darkView: false,
+    variant: 'light',
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -112,7 +113,7 @@ export class SingleAutocomplete extends Component {
       value,
       inputProps,
       maxLength,
-      autocompleteVariant,
+      optionVariant,
       isRequired,
       error,
       touched,
@@ -124,7 +125,7 @@ export class SingleAutocomplete extends Component {
       isOptionUnique,
       refFunction,
       stateReducer,
-      darkView,
+      variant,
       ...props
     } = this.props;
     return (
@@ -168,7 +169,7 @@ export class SingleAutocomplete extends Component {
                           }
                         },
                         onBlur: (e) => {
-                          const newValue = inputValue.trim();
+                          const newValue = (inputValue || '').trim();
 
                           if (!createWithoutConfirmation && !newValue) {
                             selectItem(newValue);
@@ -189,7 +190,7 @@ export class SingleAutocomplete extends Component {
                         touched,
                         error,
                         endIcon: icon,
-                        darkView,
+                        variant,
                         ...inputProps,
                       })}
                     />
@@ -214,11 +215,11 @@ export class SingleAutocomplete extends Component {
                     inputValue={(inputValue || '').trim()}
                     getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
                     parseValueToString={parseValueToString}
-                    autocompleteVariant={autocompleteVariant}
+                    optionVariant={optionVariant}
                     createWithoutConfirmation={createWithoutConfirmation}
                     className={menuClassName}
                     options={options}
-                    darkView={darkView}
+                    variant={variant}
                     {...props}
                   />
                 )}

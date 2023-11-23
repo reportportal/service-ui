@@ -169,7 +169,7 @@ export const Dropdown = ({
         {...getItemProps({
           item: option,
           index,
-          selected: option.value === selectedItem.value,
+          selected: option.value === (selectedItem?.value ?? selectedItem),
           variant,
           option,
           highlightHovered: highlightedIndex === index,

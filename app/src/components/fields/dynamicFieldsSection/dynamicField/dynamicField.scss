@@ -15,8 +15,19 @@
  */
 
 .dynamic-field {
-  box-sizing: border-box;
-  margin-bottom: 24px;
+  margin-bottom: 15px;
   padding-right: 45px;
   position: relative;
+}
+
+.dark {
+  padding-right: 0;
+}
+
+.label-dark {
+  color: $COLOR--darkmode-gray-100;
+}
+
+.description-dark {
+  color: $COLOR--darkmode-gray-150;
 }

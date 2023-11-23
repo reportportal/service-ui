@@ -17,19 +17,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Input } from 'components/inputs/input';
 import { DynamicField } from '../dynamicField';
 
 export class TextField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     darkView: PropTypes.bool,
-    modalView: PropTypes.bool,
   };
 
   static defaultProps = {
     darkView: false,
-    modalView: false,
   };
 
   formatInputValue = (value) => value && value[0];
@@ -37,19 +34,16 @@ export class TextField extends Component {
   parseInputValue = (value) => (value ? [value] : []);
 
   render() {
-    const { field, darkView, modalView, ...rest } = this.props;
-    const FieldComponent = modalView ? Input : FieldText;
-
+    const { field, darkView, ...rest } = this.props;
     return (
       <DynamicField
         field={field}
         format={this.formatInputValue}
         parse={this.parseInputValue}
         darkView={darkView}
-        modalView={modalView}
         {...rest}
       >
-        <FieldComponent defaultWidth={false} className={darkView && 'dark-view'} mobileDisabled />
+        <FieldText defaultWidth={false} variant={darkView ? 'dark' : 'light'} mobileDisabled />
       </DynamicField>
     );
   }

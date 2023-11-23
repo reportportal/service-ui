@@ -30,7 +30,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
 
     static defaultProps = {
       getURI: () => '',
-      getRequestParams: () => {},
+      getRequestParams: () => ({}),
       makeOptions: (values) => values,
       filterOption: () => true,
       minLength: 1,
