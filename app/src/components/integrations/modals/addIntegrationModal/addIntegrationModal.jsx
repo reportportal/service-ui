@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
 });
 
-const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
+const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
@@ -105,6 +105,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit }) => {
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
+      allowCloseOutside={!dirty}
     >
       {data.hasWarningMessage && (
         <SystemMessage
@@ -133,6 +134,7 @@ AddIntegrationModal.propTypes = {
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  dirty: PropTypes.bool.isRequired,
 };
 
 export default withModal('addIntegrationModal')(
