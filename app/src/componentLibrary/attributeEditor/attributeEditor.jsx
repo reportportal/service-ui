@@ -166,7 +166,7 @@ export const AttributeEditor = ({
         error={state.errors.key}
         touched={keyTouched}
         setTouch={setTouchKey}
-        dataAutomationId={'keyField'}
+        dataAutomationId="keyField"
       >
         <AttributeInput
           refFunction={refFunction}
@@ -181,7 +181,7 @@ export const AttributeEditor = ({
           attributeKey={state.key}
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
-          optionVariant={'key-variant'}
+          optionVariant="key-variant"
           menuClassName={cx('menu')}
         />
       </FieldErrorHint>
@@ -191,7 +191,7 @@ export const AttributeEditor = ({
         error={state.errors.value}
         touched={valueTouched}
         setTouch={setTouchValue}
-        dataAutomationId={'valueField'}
+        dataAutomationId="valueField"
       >
         <AttributeInput
           minLength={1}
@@ -205,7 +205,7 @@ export const AttributeEditor = ({
           attributeKey={state.key}
           attributeValue={state.value}
           isRequired
-          optionVariant={'value-variant'}
+          optionVariant="value-variant"
           menuClassName={cx('menu')}
         />
       </FieldErrorHint>
@@ -215,7 +215,7 @@ export const AttributeEditor = ({
           className={cx('check-btn', { disabled: !isValidForm })}
           onClick={isValidForm ? handleSubmit : null}
           onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
-          data-automation-id={'saveAttributeButton'}
+          data-automation-id="saveAttributeButton"
         >
           {Parser(CheckIcon)}
         </div>
@@ -224,7 +224,7 @@ export const AttributeEditor = ({
           className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
           onClick={handleCancel}
           onKeyDown={handleKeyDown(handleCancel)}
-          data-automation-id={'cancelAttributeButton'}
+          data-automation-id="cancelAttributeButton"
         >
           {Parser(CrossIcon)}
         </div>

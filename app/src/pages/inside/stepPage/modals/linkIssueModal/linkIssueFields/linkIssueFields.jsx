@@ -126,7 +126,7 @@ export class LinkIssueFields extends Component {
             fields.push({});
           }}
           icon={PlusIcon}
-          appearance={'gray'}
+          appearance="gray"
         >
           {intl.formatMessage(messages.addIssueButtonTitle)}
         </GhostButton>
