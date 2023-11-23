@@ -18,11 +18,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -122,20 +120,6 @@ const AutoAnalysis = ({
 
   const isFieldDisabled = !hasPermission || isPending;
 
-  const handleDocumentationClick = (event) => {
-    const { tagName } = event.target;
-
-    if (tagName === 'A') {
-      trackEvent(PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('auto_analyzer_based_on'));
-    }
-  };
-
-  const handleDocumentationKeyDown = ({ keyCode }) => {
-    if (keyCode === ENTER_KEY_CODE) {
-      trackEvent(PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink('auto_analyzer_based_on'));
-    }
-  };
-
   return (
     <Layout
       description={
@@ -160,12 +144,12 @@ const AutoAnalysis = ({
             {formatMessage(messages.autoAnalysis)}
           </Checkbox>
         </FieldElement>
-        <div onClick={handleDocumentationClick} onKeyDown={handleDocumentationKeyDown}>
-          <FieldElement
-            name={ANALYZER_MODE}
-            label={formatMessage(messages.analyzerMode)}
-            description={Parser(
-              formatMessage(messages.analyzerModeDescription, {
+        <FieldElement
+          name={ANALYZER_MODE}
+          label={formatMessage(messages.analyzerMode)}
+          description={
+            <FormattedDescription
+              content={formatMessage(messages.analyzerModeDescription, {
                 a: (data) =>
                   createExternalLink(
                     data,
@@ -173,15 +157,18 @@ const AutoAnalysis = ({
                     'documentationLink',
                     OpenInNewTabIcon,
                   ),
-              }),
-            )}
-            format={String}
-            disabled={isFieldDisabled}
-            dataAutomationId={ANALYZER_MODE + FIELD}
-          >
-            <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
-          </FieldElement>
-        </div>
+              })}
+              event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink(
+                'auto_analyzer_based_on',
+              )}
+            />
+          }
+          format={String}
+          disabled={isFieldDisabled}
+          dataAutomationId={ANALYZER_MODE + FIELD}
+        >
+          <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
+        </FieldElement>
         <FieldElement
           name={MIN_SHOULD_MATCH}
           label={formatMessage(messages.minShouldMatch)}

@@ -22,13 +22,13 @@ import styles from './formattedDescription.scss';
 
 const cx = classNames.bind(styles);
 
-const isAnchorElement = (tagName) => tagName === 'A';
+const isAnchorElement = (target) => target.tagName === 'A' || !!target.closest('SVG');
 
 export const FormattedDescription = ({ content, event }) => {
   const { trackEvent } = useTracking();
 
-  const handleExternalLinkClick = ({ target: { tagName } }) => {
-    if (isAnchorElement(tagName)) {
+  const handleExternalLinkClick = ({ target }) => {
+    if (isAnchorElement(target)) {
       trackEvent(event);
     }
   };
