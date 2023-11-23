@@ -22,9 +22,9 @@ import styles from './formattedDescription.scss';
 
 const cx = classNames.bind(styles);
 
-const isAnchorElement = (target) => target.tagName === 'A' || !!target.closest('SVG');
+const isAnchorElement = (target) => !!target.closest('A');
 
-export const FormattedDescription = ({ content, event }) => {
+export const FormattedDescription = ({ content, event, hasStyle }) => {
   const { trackEvent } = useTracking();
 
   const handleExternalLinkClick = ({ target }) => {
@@ -34,7 +34,7 @@ export const FormattedDescription = ({ content, event }) => {
   };
 
   return (
-    <span className={cx('formatted-description')} onClick={handleExternalLinkClick}>
+    <span className={cx({ 'formatted-description': !hasStyle })} onClick={handleExternalLinkClick}>
       {Parser(content)}
     </span>
   );
@@ -42,8 +42,10 @@ export const FormattedDescription = ({ content, event }) => {
 FormattedDescription.propTypes = {
   content: PropTypes.string,
   event: PropTypes.object,
+  hasStyle: PropTypes.bool,
 };
 FormattedDescription.defaultProps = {
   content: '',
   event: {},
+  hasStyle: false,
 };

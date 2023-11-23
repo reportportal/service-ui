@@ -42,16 +42,9 @@
   line-height: 16px;
   font-family: $FONT-ROBOTO-REGULAR;
 
-  span a {
+  a {
     display: inline-flex;
     color: $COLOR--e-300;
-    text-decoration: underline;
-    font-size: 11px;
-    line-height: 16px;
-
-    &:hover {
-      color: $COLOR--e-300;
-    }
 
     svg {
       width: 16px;
