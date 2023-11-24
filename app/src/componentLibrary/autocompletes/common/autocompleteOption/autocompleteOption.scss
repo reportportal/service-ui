@@ -18,23 +18,12 @@
   color: $color;
   .tag {
     padding: 4px 8px;
-    background-color: $bgcolor;
     border-radius: 6px;
+    background-color: $bgcolor;
   }
 
   .value {
-    display: inline-block;
-    height: 28px;
-    max-width: 115px;
-    padding: 4px 8px 4px 8px;
-    font-size: 13px;
-    text-align: center;
     border: 1px solid $bgcolor;
-    border-radius: 6px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    box-sizing: border-box;
   }
 }
 
@@ -70,22 +59,8 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
-  min-height: 36px;
-  padding: 4px 12px;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
-  box-sizing: border-box;
-  cursor: pointer;
-
-  &.active:hover {
-    background-color: $COLOR--bg-100;
-  }
-
-  &.active:not(:hover) {
-    background-color: $COLOR--bg-100;
-    border: 1px solid $COLOR--topaz-focused;
-    padding: 3px 11px;
-  }
 }
 
 .divider {
@@ -99,10 +74,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.item, .new-item {
   min-height: 36px;
   padding: 4px 12px;
-  box-sizing: border-box;
   cursor: pointer;
+  box-sizing: border-box;
+
+  &.active:hover {
+    background-color: $COLOR--bg-100;
+  }
+
+  &.active:not(:hover) {
+    background-color: $COLOR--bg-100;
+    border: 1px solid $COLOR--topaz-focused;
+    padding: 3px 11px;
+  }
+}
+
+.value {
+  display: inline-block;
+  height: 28px;
+  max-width: 50%;
+  padding: 4px 8px 4px 8px;
+  font-size: 13px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 .key-variant {
@@ -144,12 +147,6 @@
 
     &.active:not(:hover) {
       background-color: $COLOR--darkmode-bg-solid-98;
-    }
-  }
-
-  &.new-item {
-    &:not(:hover) {
-      @include button-active-state(88px);
     }
   }
 

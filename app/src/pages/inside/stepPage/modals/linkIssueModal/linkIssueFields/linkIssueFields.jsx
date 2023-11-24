@@ -103,6 +103,7 @@ export class LinkIssueFields extends Component {
                 <FieldText
                   variant="dark"
                   placeholder={intl.formatMessage(messages.issueLinkPlaceholder)}
+                  defaultWidth={false}
                 />
               </FieldErrorHint>
             </FieldElement>
@@ -113,7 +114,11 @@ export class LinkIssueFields extends Component {
               labelClassName={cx('label')}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldText placeholder={intl.formatMessage(messages.issueIdLabel)} variant="dark" />
+                <FieldText
+                  placeholder={intl.formatMessage(messages.issueIdLabel)}
+                  variant="dark"
+                  defaultWidth={false}
+                />
               </FieldErrorHint>
             </FieldElement>
           </li>
