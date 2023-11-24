@@ -42,7 +42,6 @@ export class RuleListHeader extends Component {
   };
 
   static defaultProps = {
-    id: 0,
     onAddItem: () => {},
     onChangeSwitcher: () => {},
     switcherValue: false,

@@ -130,8 +130,6 @@ export class GeneralTab extends Component {
   };
 
   static defaultProps = {
-    projectId: '',
-    fetchProjectAction: () => {},
     lang: 'en',
     retention: null,
     isLoading: false,
