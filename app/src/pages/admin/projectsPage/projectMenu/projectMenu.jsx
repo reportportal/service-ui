@@ -124,12 +124,12 @@ export class ProjectMenu extends Component {
         value: 'action-monitoring',
       },
       {
-        type: SEPARATOR_ITEM,
-      },
-      {
         onClick: this.navigateToSettings,
         label: intl.formatMessage(messages.settings),
         value: 'action-settings',
+      },
+      {
+        type: SEPARATOR_ITEM,
       },
       {
         onClick: this.onUnassign,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import IconOrderArrowDown from 'common/img/order-arrow-down-inline.svg';
 import IconDots from 'common/img/dots-inline.svg';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
-import { ARROW_DOWN, ARROW_UP } from 'pages/common/settingsPage/ruleList/constants';
+import { ARROW_DOWN, ARROW_UP } from 'components/main/ruleList/constants';
 import styles from './controlPanel.scss';
 
 const cx = classNames.bind(styles);
