@@ -21,4 +21,5 @@ export const autocompleteVariantType = PropTypes.oneOf(['light', 'dark']);
 export const singleAutocompleteOptionVariantType = PropTypes.oneOf([
   'key-variant',
   'value-variant',
+  '',
 ]);

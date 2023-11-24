@@ -83,6 +83,7 @@ export class BtsIntegrationSelector extends Component {
             onChange={onChangePluginName}
             disabled={!this.isMultipleBtsPlugins()}
             variant="dark"
+            defaultWidth={false}
           />
         </FieldElement>
         <FieldElement
@@ -97,6 +98,7 @@ export class BtsIntegrationSelector extends Component {
             onChange={onChangeIntegration}
             disabled={!this.isMultipleBtsIntegrations()}
             variant="dark"
+            defaultWidth={false}
           />
         </FieldElement>
       </Fragment>
