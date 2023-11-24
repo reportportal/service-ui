@@ -34,9 +34,9 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.resetToGlobalIntegrationsButton',
     defaultMessage: 'Reset to Global Integrations',
   },
-  backToIntegration: {
-    id: 'IntegrationsDescription.backToIntegration',
-    defaultMessage: 'Back to Integrations List',
+  backToIntegrations: {
+    id: 'IntegrationsDescription.backToIntegrations',
+    defaultMessage: 'Back to Integrations',
   },
   version: {
     id: 'InfoSection.version',
@@ -75,7 +75,7 @@ export const messages = defineMessages({
   },
   integrationList: {
     id: 'IntegrationsDescription.integrationList',
-    defaultMessage: 'Integration List',
+    defaultMessage: 'Integrations',
   },
   linkToDocumentation: {
     id: 'IntegrationsDescription.linkToDocumentation',
