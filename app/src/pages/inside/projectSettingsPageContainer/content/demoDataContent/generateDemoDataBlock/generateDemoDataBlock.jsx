@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-export const GenerateDemoDataBlock = ({ className }) => {
+export const GenerateDemoDataBlock = ({ className, onSuccess, onGenerate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
   const projectId = useSelector(projectIdSelector);
@@ -64,11 +64,13 @@ export const GenerateDemoDataBlock = ({ className }) => {
 
   const generateDemoData = () => {
     setIsLoading(true);
+    onGenerate();
 
     trackEvent(PROJECT_SETTINGS_DEMO_DATA_EVENTS.CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB);
 
     fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
       .then(() => {
+        onSuccess();
         dispatch(
           showNotification({
             message: formatMessage(messages.generateDemoDataSuccess),
@@ -85,20 +87,22 @@ export const GenerateDemoDataBlock = ({ className }) => {
       });
   };
   return (
-    <>
-      <div className={cx('generate-data-block', className)}>
-        <Button onClick={generateDemoData} disabled={isLoading}>
-          {formatMessage(messages.generateButtonTitle)}
-        </Button>
-        {isLoading && <LabeledPreloader text={formatMessage(messages.preloaderInfo)} />}
-      </div>
-    </>
+    <div className={cx('generate-data-block', className)}>
+      <Button onClick={generateDemoData} disabled={isLoading}>
+        {formatMessage(messages.generateButtonTitle)}
+      </Button>
+      {isLoading && <LabeledPreloader text={formatMessage(messages.preloaderInfo)} />}
+    </div>
   );
 };
 GenerateDemoDataBlock.propTypes = {
   className: PropTypes.string,
+  onSuccess: PropTypes.func,
+  onGenerate: PropTypes.func,
 };
 
 GenerateDemoDataBlock.defaultProps = {
   className: '',
+  onSuccess: () => {},
+  onGenerate: () => {},
 };

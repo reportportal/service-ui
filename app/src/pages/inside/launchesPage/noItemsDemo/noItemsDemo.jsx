@@ -21,7 +21,7 @@ import Parser from 'html-react-parser';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import DemoNoData from 'common/img/demo_no_data.svg';
-import { GenerateDemoDataBlock } from 'pages/common/settingsPage/demoDataTab/generateDemoDataBlock';
+import { GenerateDemoDataBlock } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent/generateDemoDataBlock';
 import styles from './noItemsDemo.scss';
 
 const cx = classNames.bind(styles);

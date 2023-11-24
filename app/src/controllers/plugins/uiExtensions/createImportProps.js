@@ -146,9 +146,9 @@ import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { SidebarButton } from 'components/buttons/sidebarButton';
-import { GeneralTab } from 'pages/common/settingsPage/generalTab';
-import { RuleList, ItemContent } from 'pages/common/settingsPage/ruleList';
-import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
+import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
+import { RuleList, ItemContent } from 'components/main/ruleList';
+import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
 import {
@@ -265,8 +265,10 @@ export const createImportProps = (pluginName) => ({
     MarkdownEditor,
     MarkdownViewer,
     GeneralTab,
+    //! We keep these 2 components only for backward-compatibility with old plugins
     RuleList,
     RuleListHeader,
+
     ItemContent,
     StripedMessage,
     AttributeListField,
