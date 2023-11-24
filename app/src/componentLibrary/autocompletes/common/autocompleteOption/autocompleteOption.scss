@@ -82,12 +82,11 @@
   cursor: pointer;
   box-sizing: border-box;
 
-  &.active:hover {
+  &.active, &:hover {
     background-color: $COLOR--bg-100;
   }
 
   &.active:not(:hover) {
-    background-color: $COLOR--bg-100;
     border: 1px solid $COLOR--topaz-focused;
     padding: 3px 11px;
   }
@@ -97,7 +96,7 @@
   display: inline-block;
   height: 28px;
   max-width: 50%;
-  padding: 4px 8px 4px 8px;
+  padding: 4px 8px;
   font-size: 13px;
   text-align: center;
   border: 1px solid transparent;
@@ -137,16 +136,12 @@
     background-color: transparent;
     color: $COLOR--darkmode-gray-100;
 
-    &:hover {
+    &.active, &:hover {
       background-color: $COLOR--darkmode-bg-solid-98;
     }
 
     &.active {
       color: $COLOR--darkmode-topaz-text;
-    }
-
-    &.active:not(:hover) {
-      background-color: $COLOR--darkmode-bg-solid-98;
     }
   }
 
