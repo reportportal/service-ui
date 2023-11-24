@@ -185,7 +185,7 @@ export const IntegrationInfo = (props) => {
   const integrationListBreadcrumbs = [
     {
       id: 'backToIntegrations',
-      title: formatMessage(messages.backToIntegration),
+      title: formatMessage(messages.backToIntegrations),
       link: allIntegrationListLink,
     },
   ];
