@@ -29,7 +29,7 @@ export const dynamicFieldShape = PropTypes.shape({
   ),
   required: PropTypes.bool,
   value: PropTypes.arrayOf(
-    PropTypes.oneOf([
+    PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({ id: PropTypes.string, name: PropTypes.string }),
     ]),
