@@ -35,6 +35,8 @@ export const docsReferences = {
   indexSettingsDocs:
     'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches/#removegenerate-index',
   autoAnalysisDocs: 'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches',
+  baseAutoAnalysisDocs:
+    'https://reportportal.io/docs/analysis/AutoAnalysisOfLaunches/#base-for-analysis',
   similarItemsDocs: 'https://reportportal.io/docs/analysis/SearchForTheSimilarToInvestigateItems',
   uniqueErrorsDocs: 'https://reportportal.io/docs/analysis/UniqueErrorAnalysis',
   patternAnalysisDocs: 'https://reportportal.io/docs/analysis/PatternAnalysis',

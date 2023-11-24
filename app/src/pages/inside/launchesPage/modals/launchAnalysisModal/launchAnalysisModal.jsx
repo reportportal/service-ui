@@ -55,23 +55,23 @@ const messages = defineMessages({
   },
   ALL: {
     id: 'launchAnalysisModal.baseOptions.allLaunches',
-    defaultMessage: 'All launches',
+    defaultMessage: 'All previous launches',
   },
   LAUNCH_NAME: {
     id: 'launchAnalysisModal.baseOptions.withSameName',
-    defaultMessage: 'Previous launches with the same name',
+    defaultMessage: 'All previous launches with the same name',
   },
   CURRENT_LAUNCH: {
     id: 'launchAnalysisModal.baseOptions.current',
-    defaultMessage: 'Current launch',
+    defaultMessage: 'Only current launch',
   },
   PREVIOUS_LAUNCH: {
     id: 'launchAnalysisModal.baseOptions.previousLaunch',
-    defaultMessage: 'Only last launch with the same name',
+    defaultMessage: 'Only previous launch with the same name',
   },
   CURRENT_AND_THE_SAME_NAME: {
     id: 'launchAnalysisModal.baseOptions.currentAndWithSameName',
-    defaultMessage: 'All launches with the same name',
+    defaultMessage: 'Current and all previous launches with the same name',
   },
   TO_INVESTIGATE: {
     id: 'launchAnalysisModal.itemOptions.investigate',

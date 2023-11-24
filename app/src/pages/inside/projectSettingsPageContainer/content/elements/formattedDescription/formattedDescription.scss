@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.formatted-description {
+.topaz {
   & > a {
     font-family: $FONT-ROBOTO-REGULAR;
     font-size: 13px;
@@ -24,6 +24,19 @@
     &:hover {
       text-decoration: underline;
       color: $COLOR--topaz-hover-2;
+    }
+  }
+}
+
+.gray {
+  & > a {
+    display: inline-flex;
+    color: $COLOR--e-300;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 2px;
     }
   }
 }

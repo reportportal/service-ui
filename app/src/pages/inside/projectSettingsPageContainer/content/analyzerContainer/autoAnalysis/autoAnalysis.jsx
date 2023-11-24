@@ -30,6 +30,7 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
@@ -146,7 +147,23 @@ const AutoAnalysis = ({
         <FieldElement
           name={ANALYZER_MODE}
           label={formatMessage(messages.analyzerMode)}
-          description={formatMessage(messages.analyzerModeDescription)}
+          description={
+            <FormattedDescription
+              content={formatMessage(messages.analyzerModeDescription, {
+                a: (data) =>
+                  createExternalLink(
+                    data,
+                    docsReferences.baseAutoAnalysisDocs,
+                    'documentationLink',
+                    OpenInNewTabIcon,
+                  ),
+              })}
+              event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink(
+                'auto_analyzer_based_on',
+              )}
+              variant="gray"
+            />
+          }
           format={String}
           disabled={isFieldDisabled}
           dataAutomationId={ANALYZER_MODE + FIELD}
