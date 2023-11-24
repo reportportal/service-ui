@@ -161,7 +161,7 @@ const AutoAnalysis = ({
               event={PROJECT_SETTINGS_ANALYZER_EVENTS.clickDocumentationLink(
                 'auto_analyzer_based_on',
               )}
-              hasStyle
+              variant="gray"
             />
           }
           format={String}

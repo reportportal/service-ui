@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 const isAnchorElement = (target) => !!target.closest('A');
 
-export const FormattedDescription = ({ content, event, hasStyle }) => {
+export const FormattedDescription = ({ content, event, variant }) => {
   const { trackEvent } = useTracking();
 
   const handleExternalLinkClick = ({ target }) => {
@@ -34,7 +34,7 @@ export const FormattedDescription = ({ content, event, hasStyle }) => {
   };
 
   return (
-    <span className={cx({ 'formatted-description': !hasStyle })} onClick={handleExternalLinkClick}>
+    <span className={cx(variant)} onClick={handleExternalLinkClick}>
       {Parser(content)}
     </span>
   );
@@ -42,10 +42,10 @@ export const FormattedDescription = ({ content, event, hasStyle }) => {
 FormattedDescription.propTypes = {
   content: PropTypes.string,
   event: PropTypes.object,
-  hasStyle: PropTypes.bool,
+  variant: PropTypes.string,
 };
 FormattedDescription.defaultProps = {
   content: '',
   event: {},
-  hasStyle: false,
+  variant: 'topaz',
 };
