@@ -131,11 +131,17 @@
 
 .dark {
   &.autocomplete {
+    @include hover-state($COLOR--darkmode-gray-150);
+    @include focus-state($COLOR--darkmode-topaz-focused);
     background-color: $COLOR--darkmode-bg-solid-98;
     border-color: $COLOR--darkmode-gray-200;
   }
 
   .input {
     color: $COLOR--bg-000;
+  }
+
+  &.error.touched {
+    @include error-state($COLOR--darkmode-error-default);
   }
 }

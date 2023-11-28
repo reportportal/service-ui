@@ -143,6 +143,10 @@
     &.active {
       color: $COLOR--darkmode-topaz-text;
     }
+
+    &:hover {
+      color: $COLOR--bg-000;
+    }
   }
 
   &.divider {
