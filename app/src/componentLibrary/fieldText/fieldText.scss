@@ -250,11 +250,11 @@
 
   &.input-container {
     @include input-container($COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-98);
-    @include hover-state($COLOR--darkmode-gray-100);
-    @include focus-state($COLOR--topaz-focused);
+    @include hover-state($COLOR--darkmode-gray-150);
+    @include focus-state($COLOR--darkmode-topaz-focused);
 
     &.error.touched {
-      @include error-state($COLOR--red-failed-2);
+      @include error-state($COLOR--darkmode-error-default);
     }
 
     &.disabled {
@@ -284,7 +284,6 @@
   &.input {
     @include input-base;
     @include input-text($COLOR--bg-000);
-    font-family: $FONT-REGULAR;
   }
 
   &.placeholder {
