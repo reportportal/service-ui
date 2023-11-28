@@ -34,7 +34,7 @@
   &.hover:not(.disabled) {
     padding: 8px 11px 6px;
     background-color: $backgroundColor;
-    border: 1px solid $color;
+    border: 1px solid $borderColor;
   }
 
   &.hover:not(.disabled):hover {
