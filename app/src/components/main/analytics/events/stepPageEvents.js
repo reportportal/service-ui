@@ -15,7 +15,6 @@
  */
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
-  getEditDefectActionEvent,
   getDeleteActionEvent,
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
@@ -105,7 +104,6 @@ export const STEP_PAGE_EVENTS = {
     switcher: isActive ? 'on' : 'off',
   }),
   DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
-  EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(STEP_PAGE),
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(STEP_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(STEP_PAGE),

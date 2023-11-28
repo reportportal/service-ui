@@ -217,8 +217,6 @@ export class UniqueErrorsPage extends Component {
     const { selectedItems, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
 
-    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-
     tracking.trackEvent(
       UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1

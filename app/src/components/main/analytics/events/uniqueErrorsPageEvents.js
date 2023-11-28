@@ -35,7 +35,6 @@ import {
   getChangeItemStatusEventCreator,
   getIgnoreInAutoAnalysisActionEventCreator,
   getIncludeInAutoAnalysisActionEventCreator,
-  getEditDefectActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
@@ -82,7 +81,6 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   DELETE_ACTION: getDeleteActionEvent(UNIQUE_ERRORS_PAGE),
   IGNORE_IN_AA_ACTION: getIgnoreInAutoAnalysisActionEventCreator(UNIQUE_ERRORS_PAGE),
   INCLUDE_IN_AA_ACTION: getIncludeInAutoAnalysisActionEventCreator(UNIQUE_ERRORS_PAGE),
-  EDIT_DEFECT_ACTION: getEditDefectActionEvent(UNIQUE_ERRORS_PAGE),
   IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(UNIQUE_ERRORS_PAGE),
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(UNIQUE_ERRORS_PAGE),
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(UNIQUE_ERRORS_PAGE),

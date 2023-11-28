@@ -149,11 +149,6 @@ export const getDeleteActionEvent = (category) => ({
   element_name: 'delete',
 });
 
-export const getEditDefectActionEvent = (category) => ({
-  ...getClickListOfActionsEventCreator(category),
-  element_name: 'edit_defects',
-});
-
 export const getPostIssueActionEvent = (category) => ({
   ...getClickListOfActionsEventCreator(category),
   element_name: 'post_issue',
