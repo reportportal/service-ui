@@ -33,12 +33,14 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
   const parseValueToString = (user) => (user ? user.name : '');
 
   const stateReducer = (state, changes) => {
-    return typeof changes.selectedItem === 'string' && changes.selectedItem !== ''
-      ? {
-          ...changes,
-          selectedItem: { ...state.selectedItem },
-        }
-      : changes;
+    if (typeof changes.selectedItem === 'string') {
+      return {
+        ...changes,
+        selectedItem: changes.selectedItem === '' ? [] : { ...state.selectedItem },
+      };
+    } else {
+      return changes;
+    }
   };
 
   return (
