@@ -193,7 +193,7 @@
 
 .dark {
   &.dropdown {
-    @include dropdown(transparent, $COLOR--darkmode-gray-400, $COLOR--darkmode-gray-150);
+    @include dropdown( $COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-96, $COLOR--darkmode-gray-150);
     @include hover-state($COLOR--darkmode-gray-150, $COLOR--darkmode-gray-150);
     @include active-state($COLOR--darkmode-topaz-focused, $COLOR--bg-000);
 
@@ -203,9 +203,8 @@
 
     &.disabled {
       @include disabled-state;
-      border-color: $COLOR--darkmode-gray-150;
+      border-color: $COLOR--darkmode-gray-300;
       background-color: $COLOR--darkmode-gray-400;
-      opacity: 0.3;
 
       .value {
         color: $COLOR--darkmode-gray-200;
