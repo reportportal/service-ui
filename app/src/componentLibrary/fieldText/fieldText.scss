@@ -24,6 +24,7 @@
   border: 1px solid $borderColor;
   border-radius: 3px;
   background-color: $backgroundColor;
+  transition: border-color 200ms linear;
 }
 
 @mixin input-base {
@@ -249,7 +250,7 @@
   }
 
   &.input-container {
-    @include input-container($COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-98);
+    @include input-container($COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-96);
     @include hover-state($COLOR--darkmode-gray-150);
     @include focus-state($COLOR--darkmode-topaz-focused);
 
@@ -258,8 +259,8 @@
     }
 
     &.disabled {
-      @include disabled-state($COLOR--darkmode-bg-solid-98);
-      opacity: 0.4;
+      @include disabled-state($COLOR--darkmode-gray-400);
+      border-color: $COLOR--darkmode-gray-300;
     }
 
     &.default-width {

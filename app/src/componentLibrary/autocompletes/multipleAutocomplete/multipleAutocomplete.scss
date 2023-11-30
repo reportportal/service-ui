@@ -24,6 +24,7 @@
   border: 1px solid $borderColor;
   border-radius: 3px;
   background-color: $backgroundColor;
+  transition: border-color 200ms linear;
 }
 
 @mixin hover-state($borderColor) {
@@ -133,7 +134,7 @@
   &.autocomplete {
     @include hover-state($COLOR--darkmode-gray-150);
     @include focus-state($COLOR--darkmode-topaz-focused);
-    background-color: $COLOR--darkmode-bg-solid-98;
+    background-color: $COLOR--darkmode-bg-solid-96;
     border-color: $COLOR--darkmode-gray-200;
   }
 
