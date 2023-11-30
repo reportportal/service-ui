@@ -47,4 +47,10 @@ export const ACTIVE_TAB_MAP = {
   [MACHINE_LEARNING_SUGGESTIONS]: 'suggestChoice',
 };
 
+export const ACTIVE_TAB_TO_ANALYTICS_DATA_MAP = {
+  [SELECT_DEFECT_MANUALLY]: 'defect_type_manually',
+  [COPY_FROM_HISTORY_LINE]: 'history_line',
+  [MACHINE_LEARNING_SUGGESTIONS]: 'ml_suggestions',
+};
+
 export const SHOW_LOGS_BY_DEFAULT = false;
