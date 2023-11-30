@@ -273,14 +273,12 @@ export class InviteUserModal extends Component {
           </ModalField>
           {data.isProjectSelector && (
             <ModalField label="Project" name="project" labelWidth={LABEL_WIDTH}>
-              <FieldProvider name="project">
-                <FieldErrorHint hintType="top">
-                  <AsyncAutocomplete
-                    minLength={1}
-                    getURI={URLS.projectNameSearch}
-                    filterOption={this.filterProject}
-                  />
-                </FieldErrorHint>
+              <FieldProvider name="project" dumbOnBlur>
+                <AsyncAutocomplete
+                  minLength={1}
+                  getURI={URLS.projectNameSearch}
+                  filterOption={this.filterProject}
+                />
               </FieldProvider>
             </ModalField>
           )}
