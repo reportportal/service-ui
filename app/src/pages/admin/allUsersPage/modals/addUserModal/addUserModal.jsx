@@ -259,14 +259,12 @@ export class AddUserModal extends Component {
             label={intl.formatMessage(messages.userSelectAProjectLabel)}
             labelWidth={LABEL_WIDTH}
           >
-            <FieldProvider name="defaultProject" type="text">
-              <FieldErrorHint hintType="top">
-                <AsyncAutocomplete
-                  placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                  getURI={URLS.projectNameSearch}
-                  minLength={1}
-                />
-              </FieldErrorHint>
+            <FieldProvider name="defaultProject" type="text" dumbOnBlur>
+              <AsyncAutocomplete
+                placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
+                getURI={URLS.projectNameSearch}
+                minLength={1}
+              />
             </FieldProvider>
           </ModalField>
           <ModalField
