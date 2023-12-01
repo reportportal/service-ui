@@ -27,15 +27,26 @@ import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import { analyticsEnabledSelector } from 'controllers/appInfo';
+import {
+  analyticsEnabledSelector,
+  instanceIdSelector,
+  apiBuildVersionSelector,
+} from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
-import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
+import { provideEcUniversalAnalytics } from 'components/main/analytics/utils';
+import { idSelector, isAdminSelector } from 'controllers/user/selectors';
+import {
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+} from 'controllers/project/selectors';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -63,6 +74,13 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
     activeProject: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
+    instanceId: instanceIdSelector(state),
+    buildVersion: apiBuildVersionSelector(state),
+    userId: idSelector(state),
+    isAutoAnalyzerEnabled: autoAnalysisEnabledSelector(state),
+    isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
+    projectInfoId: projectInfoIdSelector(state),
+    isAdmin: isAdminSelector(state),
   }),
   {
     showModalAction,
@@ -88,6 +106,13 @@ export class SimpleWidget extends Component {
     }).isRequired,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
+    instanceId: PropTypes.string.isRequired,
+    buildVersion: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
+    isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+    isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+    projectInfoId: PropTypes.number.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -338,25 +363,45 @@ export class SimpleWidget extends Component {
   };
 
   showDeleteWidgetModal = () => {
-    const { tracking, isAnalyticsEnabled, onDelete } = this.props;
+    const {
+      tracking,
+      isAnalyticsEnabled,
+      onDelete,
+      instanceId,
+      buildVersion,
+      userId,
+      isAutoAnalyzerEnabled,
+      isPatternAnalyzerEnabled,
+      projectInfoId,
+      isAdmin,
+    } = this.props;
 
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     const onConfirm = () => {
       const { widgetId, activeDashboardId } = this.props;
       const {
-        widget: { id, widgetType, contentParameters },
+        widget: { id, widgetType },
       } = this.state;
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
-        provideEcGA({
-          name: 'addProduct',
-          data: {
-            id,
-            name: widgetType,
-            category: `diagram/${contentParameters.widgetOptions.viewMode || 'unclassified'}`,
+        provideEcUniversalAnalytics({
+          eventName: 'remove_from_cart',
+          instanceId,
+          buildVersion,
+          userId,
+          isAutoAnalyzerEnabled,
+          isPatternAnalyzerEnabled,
+          projectInfoId,
+          isAdmin,
+          additionalParameters: {
+            items: [
+              getEcWidget({
+                itemId: id,
+                itemName: widgetType,
+                itemListName: activeDashboardId,
+              }),
+            ],
           },
-          action: 'remove',
-          additionalData: { list: activeDashboardId },
         });
       }
     };

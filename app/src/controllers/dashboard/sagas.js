@@ -31,9 +31,19 @@ import {
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
-import { provideEcGA } from 'components/main/analytics/utils';
+import { provideEcUniversalAnalytics } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
-import { analyticsEnabledSelector } from 'controllers/appInfo';
+import {
+  analyticsEnabledSelector,
+  instanceIdSelector,
+  apiBuildVersionSelector,
+} from 'controllers/appInfo';
+import { idSelector, isAdminSelector } from 'controllers/user/selectors';
+import {
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+} from 'controllers/project/selectors';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -95,10 +105,27 @@ function* fetchDashboard() {
   }
 
   if (isAnalyticsEnabled && dashboard && dashboard.widgets.length) {
-    provideEcGA({
-      name: 'addImpression',
-      data: formatEcDashboardData(dashboard),
-      action: 'impression',
+    const instanceId = yield select(instanceIdSelector);
+    const buildVersion = yield select(apiBuildVersionSelector);
+    const userId = yield select(idSelector);
+    const isAutoAnalyzerEnabled = yield select(autoAnalysisEnabledSelector);
+    const isPatternAnalyzerEnabled = yield select(patternAnalysisEnabledSelector);
+    const projectInfoId = yield select(projectInfoIdSelector);
+    const isAdmin = yield select(isAdminSelector);
+
+    provideEcUniversalAnalytics({
+      eventName: 'view_item_list',
+      instanceId,
+      buildVersion,
+      userId,
+      isAutoAnalyzerEnabled,
+      isPatternAnalyzerEnabled,
+      projectInfoId,
+      isAdmin,
+      additionalParameters: {
+        item_list_name: dashboard.id,
+        items: formatEcDashboardData(dashboard),
+      },
     });
   }
 }

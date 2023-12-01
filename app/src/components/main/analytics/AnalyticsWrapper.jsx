@@ -29,14 +29,7 @@ import {
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { normalizeDimensionValue } from './utils';
-
-const getAppVersion = (buildVersion) =>
-  buildVersion &&
-  buildVersion
-    .split('.')
-    .splice(0, 2)
-    .join('.');
+import { normalizeDimensionValue, getAppVersion } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
