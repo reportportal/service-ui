@@ -27,11 +27,7 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
-import {
-  analyticsEnabledSelector,
-  instanceIdSelector,
-  apiBuildVersionSelector,
-} from 'controllers/appInfo';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
@@ -39,14 +35,7 @@ import {
   getWidgetModeValuesString,
   getEcWidget,
 } from 'components/main/analytics/events/common/widgetPages/utils';
-import { provideEcUniversalAnalytics } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
-import { idSelector, isAdminSelector } from 'controllers/user/selectors';
-import {
-  autoAnalysisEnabledSelector,
-  patternAnalysisEnabledSelector,
-  projectInfoIdSelector,
-} from 'controllers/project/selectors';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -62,13 +51,7 @@ const cx = classNames.bind(styles);
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
-    instanceId: instanceIdSelector(state),
-    buildVersion: apiBuildVersionSelector(state),
-    userId: idSelector(state),
-    isAutoAnalyzerEnabled: autoAnalysisEnabledSelector(state),
-    isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
-    projectInfoId: projectInfoIdSelector(state),
-    isAdmin: isAdminSelector(state),
+    baseEventParameters: baseEventParametersSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -100,13 +83,15 @@ export class WidgetWizardContent extends Component {
     fetchDashboards: PropTypes.func,
     activeDashboardId: PropTypes.number,
     currentPage: PropTypes.string,
-    instanceId: PropTypes.string.isRequired,
-    buildVersion: PropTypes.string.isRequired,
-    userId: PropTypes.number.isRequired,
-    isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    projectInfoId: PropTypes.number.isRequired,
-    isAdmin: PropTypes.bool.isRequired,
+    baseEventParameters: PropTypes.shape({
+      instanceId: PropTypes.string.isRequired,
+      buildVersion: PropTypes.string.isRequired,
+      userId: PropTypes.number.isRequired,
+      isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+      isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+      projectInfoId: PropTypes.number.isRequired,
+      isAdmin: PropTypes.bool.isRequired,
+    }).isRequired,
   };
   static defaultProps = {
     formValues: {
@@ -140,30 +125,18 @@ export class WidgetWizardContent extends Component {
       submitWidgetWizardForm,
       isAnalyticsEnabled,
       activeDashboardId,
-      instanceId,
-      buildVersion,
-      userId,
-      isAutoAnalyzerEnabled,
-      isPatternAnalyzerEnabled,
-      projectInfoId,
-      isAdmin,
+      baseEventParameters,
     } = this.props;
 
     if (isAnalyticsEnabled) {
-      provideEcUniversalAnalytics({
+      provideEcGA({
         eventName: 'view_item',
-        instanceId,
-        buildVersion,
-        userId,
-        isAutoAnalyzerEnabled,
-        isPatternAnalyzerEnabled,
-        projectInfoId,
-        isAdmin,
+        baseEventParameters,
         additionalParameters: {
           item_list_name: activeDashboardId || 'noID',
           items: [
             getEcWidget({
-              itemName: formValues.widgetType,
+              itemName: widgetTypesMessages[formValues.widgetType].defaultMessage,
               itemVariant: this.props.currentPage,
             }),
           ],
@@ -184,18 +157,6 @@ export class WidgetWizardContent extends Component {
     }
 
     submitWidgetWizardForm();
-    if (isAnalyticsEnabled && this.state.step === 0) {
-      provideEcGA({
-        name: 'addProduct',
-        data: {
-          name: formValues.widgetType,
-          variant: this.props.currentPage,
-          category: 'diagram/unassigned',
-        },
-        action: 'detail',
-        additionalData: { list: this.props.activeDashboardId || 'noID' },
-      });
-    }
   };
 
   onClickPrevStep = () => {
@@ -210,13 +171,7 @@ export class WidgetWizardContent extends Component {
       projectId,
       onConfirm,
       isAnalyticsEnabled,
-      instanceId,
-      buildVersion,
-      userId,
-      isAutoAnalyzerEnabled,
-      isPatternAnalyzerEnabled,
-      projectInfoId,
-      isAdmin,
+      baseEventParameters,
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
@@ -236,15 +191,9 @@ export class WidgetWizardContent extends Component {
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
         if (isAnalyticsEnabled) {
-          provideEcUniversalAnalytics({
+          provideEcGA({
             eventName: 'add_to_cart',
-            instanceId,
-            buildVersion,
-            userId,
-            isAutoAnalyzerEnabled,
-            isPatternAnalyzerEnabled,
-            projectInfoId,
-            isAdmin,
+            baseEventParameters,
             additionalParameters: {
               item_list_name: selectedDashboard.id,
               items: [

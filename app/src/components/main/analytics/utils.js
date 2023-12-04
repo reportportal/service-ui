@@ -16,10 +16,6 @@
 
 import GA4 from 'react-ga4';
 
-//! Temporary solution. It allows us to avoid errors in the console.
-//! Remove this code after adding all the e-commerce events to GA4
-export const provideEcGA = () => {};
-
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
 };
@@ -31,23 +27,22 @@ export const normalizeEventString = (string = '') =>
     .toLowerCase();
 
 export const getAppVersion = (buildVersion) =>
-  buildVersion &&
   buildVersion
-    .split('.')
+    ?.split('.')
     .splice(0, 2)
     .join('.');
 
-export const provideEcUniversalAnalytics = ({
-  eventName,
-  instanceId,
-  buildVersion,
-  userId,
-  isAutoAnalyzerEnabled,
-  isPatternAnalyzerEnabled,
-  projectInfoId,
-  isAdmin,
-  additionalParameters,
-}) => {
+export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+  const {
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  } = baseEventParameters;
+
   const eventParameters = {
     instanceId,
     version: getAppVersion(buildVersion),
