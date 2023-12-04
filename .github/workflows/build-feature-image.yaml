@@ -20,11 +20,9 @@ jobs:
         run: |
           echo "tag=$(echo ${{ github.head_ref }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     outputs:
       tag: ${{ steps.vars.outputs.tag }}
       date: ${{ steps.vars.outputs.date }}
-      sha_short: ${{ steps.vars.outputs.sha_short }}
 
   call-docker-build:
     name: Call feature Docker build
@@ -33,7 +31,7 @@ jobs:
     with:
       aws-region: ${{ vars.AWS_REGION }}
       image-tag: ${{ needs.variables-setup.outputs.tag }}
-      version: '${{ github.head_ref }}-${{ needs.variables-setup.outputs.sha_short }}'
+      version: ${{ needs.variables-setup.outputs.tag }}
       branch: ${{ github.head_ref }}
       date: ${{ needs.variables-setup.outputs.date }}
     secrets: inherit
