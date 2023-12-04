@@ -23,29 +23,29 @@ import GA4 from 'react-ga4';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { normalizeDimensionValue, getAppVersion, baseEventParametersShape } from './utils';
+import { normalizeDimensionValue, getAppVersion } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
 @connect((state) => ({
-  ...baseEventParametersSelector(state),
+  baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
     queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
   },
-  dispatch: ({
-    instanceId,
-    buildVersion,
-    userId,
-    isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
-    projectInfoId,
-    isAdmin,
-    gaMeasurementId,
-    ...data
-  }) => {
+  dispatch: ({ baseEventParameters, gaMeasurementId, ...data }) => {
+    const {
+      instanceId,
+      buildVersion,
+      userId,
+      isAutoAnalyzerEnabled,
+      isPatternAnalyzerEnabled,
+      projectInfoId,
+      isAdmin,
+    } = baseEventParameters;
+
     if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
@@ -64,7 +64,6 @@ export const analyticsEventObserver = ReactObserver();
 })
 export class AnalyticsWrapper extends Component {
   static propTypes = {
-    baseEventParameters: baseEventParametersShape,
     gaMeasurementId: PropTypes.string,
     children: PropTypes.node,
   };
