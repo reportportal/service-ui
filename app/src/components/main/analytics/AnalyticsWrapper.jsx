@@ -17,54 +17,35 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo';
+import { baseEventParametersSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import GA4 from 'react-ga4';
-import { idSelector, isAdminSelector } from 'controllers/user/selectors';
-import {
-  autoAnalysisEnabledSelector,
-  patternAnalysisEnabledSelector,
-  projectInfoIdSelector,
-} from 'controllers/project/selectors';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { normalizeDimensionValue } from './utils';
-
-const getAppVersion = (buildVersion) =>
-  buildVersion &&
-  buildVersion
-    .split('.')
-    .splice(0, 2)
-    .join('.');
+import { normalizeDimensionValue, getAppVersion } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
 @connect((state) => ({
-  instanceId: instanceIdSelector(state),
-  buildVersion: apiBuildVersionSelector(state),
-  userId: idSelector(state),
-  isAutoAnalyzerEnabled: autoAnalysisEnabledSelector(state),
-  isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
-  projectId: projectInfoIdSelector(state),
-  isAdmin: isAdminSelector(state),
+  baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
     queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
   },
-  dispatch: ({
-    instanceId,
-    buildVersion,
-    userId,
-    isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
-    projectId,
-    isAdmin,
-    gaMeasurementId,
-    ...data
-  }) => {
+  dispatch: ({ baseEventParameters, gaMeasurementId, ...data }) => {
+    const {
+      instanceId,
+      buildVersion,
+      userId,
+      isAutoAnalyzerEnabled,
+      isPatternAnalyzerEnabled,
+      projectInfoId,
+      isAdmin,
+    } = baseEventParameters;
+
     if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
@@ -73,7 +54,7 @@ export const analyticsEventObserver = ReactObserver();
         auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
         timestamp: Date.now(),
-        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
+        ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
       GA4.event(data.action, eventParameters);
@@ -83,15 +64,8 @@ export const analyticsEventObserver = ReactObserver();
 })
 export class AnalyticsWrapper extends Component {
   static propTypes = {
-    instanceId: PropTypes.string.isRequired,
-    buildVersion: PropTypes.string.isRequired,
-    children: PropTypes.node,
-    userId: PropTypes.number.isRequired,
-    isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    projectId: PropTypes.number.isRequired,
-    isAdmin: PropTypes.bool.isRequired,
     gaMeasurementId: PropTypes.string,
+    children: PropTypes.node,
   };
 
   static defaultProps = {

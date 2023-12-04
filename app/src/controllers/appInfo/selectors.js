@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+import { createSelector } from 'reselect';
+import { idSelector, isAdminSelector } from 'controllers/user/selectors';
+import {
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+} from 'controllers/project/selectors';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -58,3 +65,29 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
+export const baseEventParametersSelector = createSelector(
+  instanceIdSelector,
+  apiBuildVersionSelector,
+  idSelector,
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+  isAdminSelector,
+  (
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  ) => ({
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  }),
+);

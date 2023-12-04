@@ -15,34 +15,7 @@
  */
 
 import GA4 from 'react-ga4';
-
-// TODO: rewrite it after adding the GA4 e-commerce events
-export const provideEcUniversalAnalytics = ({
-  name,
-  data,
-  action,
-  command = 'send',
-  hitType = 'event',
-  eventName = 'ecommerce',
-  additionalData,
-}) => {
-  const ga = GA4.ga();
-
-  if (Array.isArray(data)) {
-    data.forEach((el) => {
-      ga(`ec:${name}`, el);
-    });
-  } else {
-    ga(`ec:${name}`, data);
-  }
-  if (additionalData) {
-    ga('ec:setAction', action, additionalData);
-  }
-  ga(command, hitType, eventName, action);
-};
-//! Temporary solution. It allows us to avoid errors in the console.
-//! Remove this code after adding all the e-commerce events to GA4
-export const provideEcGA = () => {};
+import PropTypes from 'prop-types';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -53,3 +26,44 @@ export const normalizeEventString = (string = '') =>
     .trim()
     .replace(/\s+|-/g, '_')
     .toLowerCase();
+
+export const getAppVersion = (buildVersion) =>
+  buildVersion
+    ?.split('.')
+    .splice(0, 2)
+    .join('.');
+
+export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+  const {
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  } = baseEventParameters;
+
+  const eventParameters = {
+    instanceId,
+    version: getAppVersion(buildVersion),
+    uid: `${userId}|${instanceId}`,
+    auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
+    pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
+    timestamp: Date.now(),
+    ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
+    ...additionalParameters,
+  };
+
+  GA4.event(eventName, eventParameters);
+};
+
+export const baseEventParametersShape = PropTypes.shape({
+  instanceId: PropTypes.string.isRequired,
+  buildVersion: PropTypes.string.isRequired,
+  userId: PropTypes.number.isRequired,
+  isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  projectInfoId: PropTypes.number.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+}).isRequired;

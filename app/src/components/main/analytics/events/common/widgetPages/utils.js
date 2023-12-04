@@ -73,7 +73,7 @@ export const getWidgetModeValuesString = (options) => {
     .join('#');
 };
 
-const sortDashboadWidgets = (widgets) => {
+const sortDashboardWidgets = (widgets) => {
   return widgets.sort((a, b) => {
     if (a.widgetPosition.positionY < b.widgetPosition.positionY) return -1;
     if (a.widgetPosition.positionY > b.widgetPosition.positionY) return 1;
@@ -83,17 +83,22 @@ const sortDashboadWidgets = (widgets) => {
   });
 };
 
+export const getEcWidget = ({ itemId, itemName, index, itemVariant, itemListName }) => ({
+  item_id: itemId,
+  item_name: itemName,
+  item_variant: itemVariant,
+  item_list_name: itemListName,
+  index,
+});
+
 export const formatEcDashboardData = (dashboard) => {
-  const sortedWidgets = sortDashboadWidgets([...dashboard.widgets]);
-  return sortedWidgets.map((widget, index) => {
-    return {
-      id: widget.widgetId,
-      name: widgetTypesMessages[widget.widgetType].defaultMessage,
-      category: `${WIDGET_MODE_VALUES_MAP[widget.widgetOptions.viewMode] ||
-        'none'}/${WIDGET_MODE_VALUES_MAP[widget.widgetOptions.timeline] ||
-        'none'}/${WIDGET_MODE_VALUES_MAP[`latest-${widget.widgetOptions.latest}`] || 'none'}`,
-      list: dashboard.id,
-      position: index + 1,
-    };
-  });
+  const sortedWidgets = sortDashboardWidgets([...dashboard.widgets]);
+  return sortedWidgets.map((widget, index) =>
+    getEcWidget({
+      itemListName: dashboard.id,
+      itemId: widget.widgetId,
+      index: index + 1,
+      itemName: widgetTypesMessages[widget.widgetType].defaultMessage,
+    }),
+  );
 };
