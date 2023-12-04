@@ -20,10 +20,8 @@ jobs:
         id: vars
         run: |
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     outputs:
       date: ${{ steps.vars.outputs.date }}
-      sha_short: ${{ steps.vars.outputs.sha_short }}
 
   call-docker-build:
     name: Call develop Docker build
@@ -32,6 +30,6 @@ jobs:
     with:
       aws-region: ${{ vars.AWS_REGION }}
       image-tag: 'develop-${{ github.run_number }}'
-      version: '${{ github.ref_name }}-${{ needs.variables-setup.outputs.sha_short }}'
+      version: 'develop-${{ github.run_number }}'
       date: ${{ needs.variables-setup.outputs.date }}
     secrets: inherit
