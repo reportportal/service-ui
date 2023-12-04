@@ -29,7 +29,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { provideEcGA } from 'components/main/analytics';
+import { provideEcGA, baseEventParametersShape } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
 import {
   getWidgetModeValuesString,
@@ -83,15 +83,7 @@ export class WidgetWizardContent extends Component {
     fetchDashboards: PropTypes.func,
     activeDashboardId: PropTypes.number,
     currentPage: PropTypes.string,
-    baseEventParameters: PropTypes.shape({
-      instanceId: PropTypes.string.isRequired,
-      buildVersion: PropTypes.string.isRequired,
-      userId: PropTypes.number.isRequired,
-      isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-      isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-      projectInfoId: PropTypes.number.isRequired,
-      isAdmin: PropTypes.bool.isRequired,
-    }).isRequired,
+    baseEventParameters: baseEventParametersShape,
   };
   static defaultProps = {
     formValues: {
@@ -138,6 +130,7 @@ export class WidgetWizardContent extends Component {
             getEcWidget({
               itemName: widgetTypesMessages[formValues.widgetType].defaultMessage,
               itemVariant: this.props.currentPage,
+              itemListName: activeDashboardId || 'noID',
             }),
           ],
         },
@@ -201,6 +194,7 @@ export class WidgetWizardContent extends Component {
                   itemId: id,
                   itemName: widgetTypesMessages[data.widgetType].defaultMessage,
                   itemVariant: this.props.currentPage,
+                  itemListName: selectedDashboard.id,
                 }),
               ],
             },

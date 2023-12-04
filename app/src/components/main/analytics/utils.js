@@ -15,6 +15,7 @@
  */
 
 import GA4 from 'react-ga4';
+import PropTypes from 'prop-types';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -56,3 +57,13 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
 
   GA4.event(eventName, eventParameters);
 };
+
+export const baseEventParametersShape = PropTypes.shape({
+  instanceId: PropTypes.string.isRequired,
+  buildVersion: PropTypes.string.isRequired,
+  userId: PropTypes.number.isRequired,
+  isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  projectInfoId: PropTypes.number.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+}).isRequired;

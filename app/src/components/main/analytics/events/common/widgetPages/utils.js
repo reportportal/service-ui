@@ -95,6 +95,7 @@ export const formatEcDashboardData = (dashboard) => {
   const sortedWidgets = sortDashboardWidgets([...dashboard.widgets]);
   return sortedWidgets.map((widget, index) =>
     getEcWidget({
+      itemListName: dashboard.id,
       itemId: widget.widgetId,
       index: index + 1,
       itemName: widgetTypesMessages[widget.widgetType].defaultMessage,

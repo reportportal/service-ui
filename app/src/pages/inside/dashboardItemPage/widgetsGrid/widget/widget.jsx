@@ -36,7 +36,7 @@ import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/wid
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
-import { provideEcGA } from 'components/main/analytics/utils';
+import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -91,15 +91,7 @@ export class SimpleWidget extends Component {
     }).isRequired,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
-    baseEventParameters: PropTypes.shape({
-      instanceId: PropTypes.string.isRequired,
-      buildVersion: PropTypes.string.isRequired,
-      userId: PropTypes.number.isRequired,
-      isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-      isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-      projectInfoId: PropTypes.number.isRequired,
-      isAdmin: PropTypes.bool.isRequired,
-    }).isRequired,
+    baseEventParameters: baseEventParametersShape,
   };
 
   static defaultProps = {
@@ -364,6 +356,7 @@ export class SimpleWidget extends Component {
           eventName: 'remove_from_cart',
           baseEventParameters,
           additionalParameters: {
+            item_list_name: activeDashboardId,
             items: [
               getEcWidget({
                 itemId: id,
