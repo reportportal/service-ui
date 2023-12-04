@@ -46,7 +46,13 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   place: `${place}${actionPlace && `#${actionPlace}`}`,
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
-const getClickOnApplyBtnEventCreator = (place) => (defectFromTIGroup, hasSuggestions) => {
+const getClickOnApplyBtnEventCreator = (place) => (
+  defectFromTIGroup,
+  hasSuggestions,
+  status,
+  switcher,
+  iconName,
+) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
@@ -57,6 +63,9 @@ const getClickOnApplyBtnEventCreator = (place) => (defectFromTIGroup, hasSuggest
   }
   return {
     ...basicEventParameters,
+    status,
+    switcher,
+    icon_name: iconName,
     element_name: 'apply',
   };
 };

@@ -31,9 +31,13 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import {
+  DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES,
+  TO_INVESTIGATE_LOCATOR_PREFIX,
+} from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
+import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
 import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
@@ -301,6 +305,71 @@ const MakeDecision = ({ data }) => {
         return false;
     }
   };
+
+  const getDefectTypesAnalyticsData = (issueType) => {
+    const defaultDefectTypeNumber = '001';
+
+    return (
+      DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
+      `custom_${
+        DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType.slice(0, 2) + defaultDefectTypeNumber]
+      }`
+    );
+  };
+
+  const getApplyButtonAnalyticsParams = () => {
+    const {
+      eventsInfo: { editDefectsEvents = {} },
+    } = data;
+    const {
+      suggestedItems,
+      selectManualChoice: {
+        issue: { issueType },
+      },
+    } = modalState;
+    const hasSuggestions = !!suggestedItems;
+
+    let switchedFrom = '';
+    if (isBulkOperation) {
+      const { items } = data;
+
+      const switchedTo = `|#${getDefectTypesAnalyticsData(issueType)}`;
+      const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
+
+      for (let i = 0; i < items.length; i += 1) {
+        if (switchedFrom.trim().length >= maxSwitchedFromLength) {
+          switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength)}${switchedTo}`;
+
+          break;
+        }
+
+        switchedFrom = switchedFrom
+          ? `${switchedFrom} ${getDefectTypesAnalyticsData(items[i].issue.issueType)}`
+          : `${getDefectTypesAnalyticsData(items[i].issue.issueType)}`;
+
+        if (i === items.length - 1) {
+          switchedFrom = `${switchedFrom}${switchedTo}`;
+        }
+      }
+    } else {
+      switchedFrom = `${getDefectTypesAnalyticsData(
+        itemData.issue.issueType,
+      )}#${getDefectTypesAnalyticsData(issueType)}`;
+    }
+
+    return editDefectsEvents.getClickOnApplyEvent(
+      defectFromTIGroup,
+      hasSuggestions,
+      activeTab,
+      switchedFrom,
+      suggestedItems
+        .map(({ testItemResource }) =>
+          getDefectTypesAnalyticsData(testItemResource.issue.issueType),
+        )
+        .join('#'),
+    );
+  };
+
   const getOnApplyEvent = () => {
     const {
       eventsInfo: { editDefectsEvents = {} },
@@ -315,7 +384,7 @@ const MakeDecision = ({ data }) => {
         issueActionType.toLowerCase(),
       );
     } else {
-      eventInfo = editDefectsEvents.getClickOnApplyEvent(defectFromTIGroup, hasSuggestions);
+      eventInfo = getApplyButtonAnalyticsParams();
     }
     return eventInfo;
   };
