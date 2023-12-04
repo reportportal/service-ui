@@ -28,4 +28,22 @@ export const DEFECT_TYPES_SEQUENCE = [
   TO_INVESTIGATE.toUpperCase(),
 ];
 
+export const DEFECT_TYPES_MAP = {
+  PRODUCT_BUG: PRODUCT_BUG.toUpperCase(),
+  AUTOMATION_BUG: AUTOMATION_BUG.toUpperCase(),
+  SYSTEM_ISSUE: SYSTEM_ISSUE.toUpperCase(),
+  NO_DEFECT: NO_DEFECT.toUpperCase(),
+  TO_INVESTIGATE: TO_INVESTIGATE.toUpperCase(),
+};
+
+export const DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES = {
+  ab001: AUTOMATION_BUG,
+  pb001: PRODUCT_BUG,
+  si001: SYSTEM_ISSUE,
+  ti001: TO_INVESTIGATE,
+  nd001: NO_DEFECT,
+};
+
 export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';
+
+export const DEFAULT_DEFECT_TYPES_LOCATORS = ['ab001', 'pb001', 'si001', 'ti001', 'nd001'];

@@ -15,9 +15,9 @@
  */
 
 export const MAKE_DECISION_MODAL = 'makeDecisionModal';
-export const SELECT_DEFECT_MANUALLY = 'selectDefectTypeManually';
-export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
-export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
+export const SELECT_DEFECT_MANUALLY = 'defect_type_manually';
+export const COPY_FROM_HISTORY_LINE = 'history_line';
+export const MACHINE_LEARNING_SUGGESTIONS = 'ml_suggestions';
 export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';
 export const CURRENT_LAUNCH = 'currentLaunch';
 export const LAST_TEN_LAUNCHES = 'launchName';
