@@ -44,7 +44,6 @@ import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine }
 import { messages } from './messages';
 import {
   ACTIVE_TAB_MAP,
-  ACTIVE_TAB_TO_ANALYTICS_DATA_MAP,
   ADD_FOR_ALL,
   CLEAR_FOR_ALL,
   COPY_FROM_HISTORY_LINE,
@@ -361,7 +360,7 @@ const MakeDecision = ({ data }) => {
     return editDefectsEvents.getClickOnApplyEvent(
       defectFromTIGroup,
       hasSuggestions,
-      ACTIVE_TAB_TO_ANALYTICS_DATA_MAP[activeTab],
+      activeTab,
       switchedFrom,
       suggestedItems
         .map(({ testItemResource }) =>
