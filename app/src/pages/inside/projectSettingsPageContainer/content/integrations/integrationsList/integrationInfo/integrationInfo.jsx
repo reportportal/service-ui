@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
@@ -69,26 +69,30 @@ export const IntegrationInfo = (props) => {
     integrationId,
   } = props;
 
-  const availableGlobalIntegrations = globalIntegrations[pluginName] || [];
-  const availableProjectIntegrations = projectIntegrations[pluginName] || [];
+  const availableGlobalIntegrations = useMemo(() => globalIntegrations[pluginName] || [], [
+    globalIntegrations,
+    pluginName,
+  ]);
+  const availableProjectIntegrations = useMemo(() => projectIntegrations[pluginName] || [], [
+    projectIntegrations,
+    pluginName,
+  ]);
   const isAtLeastOneIntegrationAvailable =
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
   useEffect(() => {
-    const integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+    let isGlobal = false;
+    let integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+    if (!integration) {
+      integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
+      isGlobal = !!integration;
+    }
 
     if (integration) {
-      setIntegrationInfo(integration);
+      setUpdatedParameters({});
+      setIntegrationInfo({ ...integration, blocked: isGlobal });
     }
-  }, [integrationId, availableProjectIntegrations]);
-
-  useEffect(() => {
-    const integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
-
-    if (integration) {
-      setIntegrationInfo({ ...integration, blocked: true });
-    }
-  }, [integrationId, availableGlobalIntegrations]);
+  }, [availableGlobalIntegrations, availableProjectIntegrations, integrationId]);
 
   const integrationSettingsExtension = settingsExtensions.find(
     (ext) => ext.pluginName === pluginName,
