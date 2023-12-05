@@ -18,6 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { URLS } from 'common/urls';
+import { isEmptyObject } from 'common/utils';
 import { DynamicField } from '../dynamicField';
 
 export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest }) => {
@@ -36,7 +37,10 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
     if (typeof changes.selectedItem === 'string') {
       return {
         ...changes,
-        selectedItem: changes.selectedItem === '' ? [] : { ...state.selectedItem },
+        selectedItem:
+          changes.selectedItem === '' || isEmptyObject(state.selectedItem)
+            ? []
+            : { ...state.selectedItem },
       };
     } else {
       return changes;
