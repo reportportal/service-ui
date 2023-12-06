@@ -308,13 +308,14 @@ const MakeDecision = ({ data }) => {
 
   const getDefectTypesAnalyticsData = (issueType) => {
     const defaultDefectTypeNumber = '001';
+    const unselectedIssueType = 'unselected';
 
-    return (
-      DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
-      `custom_${
-        DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType.slice(0, 2) + defaultDefectTypeNumber]
-      }`
-    );
+    return issueType
+      ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
+          `custom_${
+            DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
+          }`
+      : unselectedIssueType;
   };
 
   const getApplyButtonAnalyticsParams = () => {
@@ -333,12 +334,12 @@ const MakeDecision = ({ data }) => {
     if (isBulkOperation) {
       const { items } = data;
 
-      const switchedTo = `|#${getDefectTypesAnalyticsData(issueType)}`;
+      const switchedTo = `#${getDefectTypesAnalyticsData(issueType)}`;
       const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
 
       for (let i = 0; i < items.length; i += 1) {
         if (switchedFrom.trim().length >= maxSwitchedFromLength) {
-          switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength)}${switchedTo}`;
+          switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength - 1)}|${switchedTo}`;
 
           break;
         }
