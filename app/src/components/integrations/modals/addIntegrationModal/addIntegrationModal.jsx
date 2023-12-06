@@ -53,9 +53,13 @@ const messages = defineMessages({
     id: 'AddIntegrationModal.createGlobalTitle',
     defaultMessage: 'Create Global Integration',
   },
-  editAuthTitle: {
-    id: 'AddIntegrationModal.editAuthTitle',
-    defaultMessage: 'Edit authorization',
+  editProjectIntegrationTitle: {
+    id: 'AddIntegrationModal.editProjectIntegrationTitle',
+    defaultMessage: 'Edit Project Integration',
+  },
+  editGlobalIntegrationTitle: {
+    id: 'AddIntegrationModal.editGlobalIntegrationTitle',
+    defaultMessage: 'Edit Global Integration',
   },
 });
 
@@ -66,7 +70,6 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { onConfirm, customProps, isGlobal } = data;
-
   const integrationFieldsExtension = fieldsExtensions.find(
     (ext) => ext.pluginName === data.instanceType,
   );
@@ -94,6 +97,9 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   };
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
+  const editTitle = isGlobal
+    ? messages.editGlobalIntegrationTitle
+    : messages.editProjectIntegrationTitle;
 
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
@@ -101,7 +107,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
 
   return (
     <ModalLayout
-      title={formatMessage(customProps.editAuthMode ? messages.editAuthTitle : createTitle)}
+      title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
