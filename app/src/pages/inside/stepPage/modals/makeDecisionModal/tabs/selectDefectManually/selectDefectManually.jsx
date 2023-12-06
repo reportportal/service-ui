@@ -36,6 +36,7 @@ import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { makeDecisionDefectCommentAddonSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import {
   ADD_FOR_ALL,
@@ -59,6 +60,7 @@ export const SelectDefectManually = ({
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const extensions = useSelector(makeDecisionDefectCommentAddonSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
@@ -80,7 +82,9 @@ export const SelectDefectManually = ({
       decisionType: SELECT_DEFECT_MANUALLY,
       selectManualChoice: { issue },
     });
-    !issue.comment && commentEditor.focus();
+    if (!issue.comment) {
+      commentEditor.focus();
+    }
   };
 
   const selectDefectTypeManually = (value) => {
@@ -227,7 +231,17 @@ export const SelectDefectManually = ({
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"
+          controlled={extensions.length !== 0}
         />
+        {!isBulkOperation &&
+          extensions.map((extensionComponent) => (
+            <extensionComponent.component
+              key={extensionComponent.name}
+              onChangeComment={handleDefectCommentChange}
+              comment={source.issue.comment}
+              item={itemData}
+            />
+          ))}
       </div>
       {!debugMode && (
         <ActionButtonsBar

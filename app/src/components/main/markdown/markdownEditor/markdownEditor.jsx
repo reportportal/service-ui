@@ -109,6 +109,7 @@ export class MarkdownEditor extends React.Component {
       hintCondition: PropTypes.func,
     }),
     provideErrorHint: PropTypes.bool,
+    controlled: PropTypes.bool,
   };
   static defaultProps = {
     value: '',
@@ -122,11 +123,20 @@ export class MarkdownEditor extends React.Component {
     error: '',
     hint: { hintText: () => '', hintCondition: () => true },
     provideErrorHint: false,
+    controlled: false,
   };
 
   state = {
     isPreview: false,
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.controlled) {
+      if (this.simpleMDE.value() !== this.props.value && prevProps.value !== this.props.value) {
+        this.simpleMDE.value(this.props.value);
+      }
+    }
+  }
 
   componentDidMount() {
     const {

@@ -111,7 +111,7 @@ export const MakeDecisionTabs = ({
             {loadingMLSuggest && (
               <div className={cx('central-block-default')}>
                 <div className={cx('preloader')}>
-                  <BubblesPreloader color={'topaz'} />
+                  <BubblesPreloader />
                 </div>
                 <p className={cx('suggest-text')}>{formatMessage(messages.analyzingSuggestions)}</p>
               </div>

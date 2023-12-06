@@ -11,6 +11,8 @@ export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridCellComponent';
 export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridHeaderCellComponent';
+export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON =
+  'uiExtension:makeDecisionDefectCommentAddon';
 
 export const COMMAND_GET_FILE = 'getFile';
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
