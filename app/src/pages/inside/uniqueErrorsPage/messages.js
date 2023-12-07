@@ -54,7 +54,7 @@ export const messages = defineMessages({
   },
   uniqueErrAnalyzeModalText: {
     id: 'EmptyUniqueErrsAnalyzeModal.text',
-    defaultMessage: 'Choose the base on witch the Unique Error Analysis will be performed:',
+    defaultMessage: 'Choose the base on which the Unique Error Analysis will be performed:',
   },
   uniqueErrAnalyzeModalFieldName: {
     id: 'EmptyUniqueErrsAnalyzeModal.fieldName',
