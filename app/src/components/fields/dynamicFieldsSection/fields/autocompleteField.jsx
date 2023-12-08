@@ -31,7 +31,7 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
 
   const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
 
-  const parseValueToString = (user) => (user ? user.name : '');
+  const parseValueToString = (value) => (value ? value.name : '');
 
   const stateReducer = (state, changes) => {
     if (typeof changes.selectedItem === 'string') {
@@ -62,7 +62,6 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
 };
 AutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
-  defaultOptionValueKey: PropTypes.string.isRequired,
   darkView: PropTypes.bool,
   integrationInfo: PropTypes.object,
 };

@@ -285,7 +285,10 @@ export class PostIssueModal extends Component {
         field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
         field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
       const formFieldData = formData[field.id];
-      const preparedFormFieldData = Array.isArray(formFieldData) ? formFieldData : [formFieldData];
+      let preparedFormFieldData = formFieldData;
+      if (!Array.isArray(formFieldData)) {
+        preparedFormFieldData = formFieldData ? [formFieldData] : [];
+      }
       return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
     });
     const backLinks = items.reduce(
