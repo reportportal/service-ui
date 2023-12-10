@@ -15,6 +15,8 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
+import { DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES } from 'common/constants/defectTypes';
+import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
 import { DEFECT_FROM_TI_GROUP_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
@@ -46,50 +48,101 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   place: `${place}${actionPlace && `#${actionPlace}`}`,
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
-const getClickOnApplyBtnEventCreator = (place) => (
+
+const getTypePrefix = (prefix, issue) => `${prefix}${issue ? `#${issue}` : ''}`;
+
+const getElementName = (issueActionType) => (issueActionType ? 'apply_and_continue' : 'apply');
+
+const getDefectTypesAnalyticsData = (issueType) => {
+  const defaultDefectTypeNumber = '001';
+  const unselectedIssueType = 'unselected';
+
+  return issueType
+    ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
+        `custom_${
+          DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
+        }`
+    : unselectedIssueType;
+};
+
+const getClickOnApplyEventCreator = (place) => (
   defectFromTIGroup,
   hasSuggestions,
   status,
-  switcher,
-  iconName,
+  issueType,
+  itemDataIssueType,
+  issueActionType,
+  suggestedItems,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
   );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  if (!isBulkOperation) {
-    basicEventParameters.type = hasSuggestions ? 'with_ml' : 'without_ml';
-  }
+
+  basicEventParameters.type = hasSuggestions
+    ? getTypePrefix('with_ml', issueActionType)
+    : getTypePrefix('without_ml', issueActionType);
+
+  const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
+    issueType,
+  )}`;
+
+  const iconName = suggestedItems
+    .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
+    .join('#');
+
   return {
     ...basicEventParameters,
     status,
     switcher,
     icon_name: iconName,
-    element_name: 'apply',
+    element_name: getElementName(issueActionType),
   };
 };
-const getClickOnApplyAndContinueBtnEventCreator = (place) => (
+
+const getSwitcher = (items, issueType) => {
+  let switchedFrom = '';
+  const switchedTo = `#${getDefectTypesAnalyticsData(issueType)}`;
+  const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
+
+  for (let i = 0; i < items.length; i += 1) {
+    if (switchedFrom.trim().length >= maxSwitchedFromLength) {
+      switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength - 1)}|${switchedTo}`;
+
+      break;
+    }
+
+    switchedFrom = switchedFrom
+      ? `${switchedFrom} ${getDefectTypesAnalyticsData(items[i].issue.issueType)}`
+      : `${getDefectTypesAnalyticsData(items[i].issue.issueType)}`;
+
+    if (i === items.length - 1) {
+      switchedFrom = `${switchedFrom}${switchedTo}`;
+    }
+  }
+
+  return switchedFrom;
+};
+
+const getClickOnApplyBulkEventCreator = (place) => (
   defectFromTIGroup,
-  hasSuggestions,
-  issueBtn,
+  issueActionType,
+  items,
+  issueType,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
   );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  const types = [];
-  if (!isBulkOperation) {
-    types.push(hasSuggestions ? 'with_ml' : 'without_ml');
-  }
-  types.push(issueBtn);
+
   return {
     ...basicEventParameters,
-    element_name: 'apply_and_continue',
-    type: types.join('#'),
+    element_name: getElementName(issueActionType),
+    switcher: getSwitcher(items, issueType),
+    type: issueActionType || undefined,
   };
 };
+
 const getShowErrLogsSwitcherEventCreator = (place) => (defectFromTIGroup, switcherState) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
   element_name: 'show_error_logs',
@@ -136,8 +189,8 @@ const getOnChangeCommentOptionEventCreator = (place) => (label) => ({
 });
 export const getMakeDecisionModalEvents = (page) => ({
   getOpenModalEvent: getOpenModalEventCreator(page),
-  getClickOnApplyEvent: getClickOnApplyBtnEventCreator(page),
-  getClickOnApplyAndContinueEvent: getClickOnApplyAndContinueBtnEventCreator(page),
+  getClickOnApplyEvent: getClickOnApplyEventCreator(page),
+  getClickOnApplyBulkEvent: getClickOnApplyBulkEventCreator(page),
   getToggleShowErrLogsSwitcherEvent: getShowErrLogsSwitcherEventCreator(page),
   getClickIgnoreAACheckboxEvent: getClickIgnoreAACheckboxEventCreator(page),
   getClickCommentEditorIcon: getClickOnCommentEditorIconEventCreator(page),

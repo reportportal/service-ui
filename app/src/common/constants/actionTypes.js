@@ -17,9 +17,9 @@
 export const START_LAUNCH = 'startLaunch';
 export const FINISH_LAUNCH = 'finishLaunch';
 export const DELETE_LAUNCH = 'deleteLaunch';
-export const POST_ISSUE = 'postIssue';
-export const LINK_ISSUE = 'linkIssue';
-export const UNLINK_ISSUE = 'unlinkIssue';
+export const POST_ISSUE = 'post_issue';
+export const LINK_ISSUE = 'link_issue';
+export const UNLINK_ISSUE = 'unlink_issue';
 export const ASSIGN_USER = 'assignUser';
 export const UNASSIGN_USER = 'unassignUser';
 export const CHANGE_ROLE = 'changeRole';
