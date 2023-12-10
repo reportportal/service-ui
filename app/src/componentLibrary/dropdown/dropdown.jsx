@@ -26,7 +26,7 @@ import { ENTER_KEY_CODE } from 'common/constants/keyCodes';
 import { DropdownOption } from './dropdownOption';
 import ArrowIcon from './img/arrow-inline.svg';
 import styles from './dropdown.scss';
-import { CLOSE_DROPDOWN_KEY_CODES_MAP, OPEN_DROPDOWN_KEY_CODES_MAP } from './constants';
+import { CLOSE_DROPDOWN_KEY_CODES_MAP, OPEN_DROPDOWN_KEY_CODES_MAP, EVENT_NAME } from './constants';
 import { calculateDefaultIndex, calculateNextIndex, calculatePrevIndex } from './utils';
 
 const cx = classNames.bind(styles);
@@ -55,6 +55,7 @@ export const Dropdown = ({
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
   const updatePosition = useRef(null);
+  const [eventName, setEventName] = useState(null);
 
   const handleClickOutside = () => {
     if (isOpened) {
@@ -92,6 +93,7 @@ export const Dropdown = ({
     onHighlightedIndexChange: (changes) => {
       switch (changes.type) {
         case useSelect.stateChangeTypes.MenuKeyDownArrowUp:
+          setEventName(EVENT_NAME.ON_KEY_DOWN);
           return {
             ...changes,
             highlightedIndex: setHighlightedIndex(
@@ -100,6 +102,7 @@ export const Dropdown = ({
           };
 
         case useSelect.stateChangeTypes.MenuKeyDownArrowDown:
+          setEventName(EVENT_NAME.ON_KEY_DOWN);
           return {
             ...changes,
             highlightedIndex: setHighlightedIndex(
@@ -120,6 +123,7 @@ export const Dropdown = ({
       updatePosition.current();
       setOpened((prevState) => !prevState);
       isOpened ? onBlur() : onFocus();
+      setEventName(EVENT_NAME.ON_CLICK);
     }
   };
 
@@ -142,6 +146,7 @@ export const Dropdown = ({
       updatePosition.current();
       setOpened(true);
       onFocus();
+      setEventName(EVENT_NAME.ON_KEY_DOWN);
     }
   };
 
@@ -172,7 +177,7 @@ export const Dropdown = ({
           selected: option.value === (selectedItem?.value ?? selectedItem),
           variant,
           option,
-          highlightHovered: highlightedIndex === index,
+          highlightHovered: highlightedIndex === index && eventName !== EVENT_NAME.ON_CLICK,
           render: renderOption,
           onChange: option.disabled ? null : () => handleChange(option),
           onMouseEnter: () => setHighlightedIndex(index),

@@ -28,7 +28,11 @@ const findNearestAvailableIndex = (index, options, step = 1) => {
   }
   const itemsCount = options.length;
 
-  return findNearestAvailableIndex(calculateCurrentItemIndex(index + step, itemsCount), options);
+  return findNearestAvailableIndex(
+    calculateCurrentItemIndex(index + step, itemsCount),
+    options,
+    step,
+  );
 };
 
 export const calculateNextIndex = (index, options) => findNearestAvailableIndex(index, options);

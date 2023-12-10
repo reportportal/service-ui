@@ -32,3 +32,8 @@ export const CLOSE_DROPDOWN_KEY_CODES_MAP = {
   [ESCAPE_KEY_CODE]: 'ESCAPE',
   [TAB_KEY_CODE]: 'TAB',
 };
+
+export const EVENT_NAME = {
+  ON_KEY_DOWN: 'onKeyDown',
+  ON_CLICK: 'onClick',
+};
