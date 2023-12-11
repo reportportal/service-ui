@@ -15,11 +15,14 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES } from 'common/constants/defectTypes';
-import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
-import { DEFECT_FROM_TI_GROUP_MAP } from './constants';
+import { DEFECT_FROM_TI_GROUP_MAP, ISSUE_TYPE_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
+import {
+  getMakeDecisionElementName,
+  getSwitchedDefectTypes,
+  getDefectTypesAnalyticsData,
+} from './utils';
 
 // GA4 events
 export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
@@ -49,22 +52,6 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
 
-const getTypePrefix = (prefix, issue) => `${prefix}${issue ? `#${issue}` : ''}`;
-
-const getElementName = (issueActionType) => (issueActionType ? 'apply_and_continue' : 'apply');
-
-const getDefectTypesAnalyticsData = (issueType) => {
-  const defaultDefectTypeNumber = '001';
-  const unselectedIssueType = 'unselected';
-
-  return issueType
-    ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
-        `custom_${
-          DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
-        }`
-    : unselectedIssueType;
-};
-
 const getClickOnApplyEventCreator = (place) => (
   defectFromTIGroup,
   hasSuggestions,
@@ -79,9 +66,9 @@ const getClickOnApplyEventCreator = (place) => (
     defectFromTIGroup,
   );
 
-  basicEventParameters.type = hasSuggestions
-    ? getTypePrefix('with_ml', issueActionType)
-    : getTypePrefix('without_ml', issueActionType);
+  basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
+    issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
+  }`;
 
   const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
     issueType,
@@ -96,32 +83,8 @@ const getClickOnApplyEventCreator = (place) => (
     status,
     switcher,
     icon_name: iconName,
-    element_name: getElementName(issueActionType),
+    element_name: getMakeDecisionElementName(issueActionType),
   };
-};
-
-const getSwitcher = (items, issueType) => {
-  let switchedFrom = '';
-  const switchedTo = `#${getDefectTypesAnalyticsData(issueType)}`;
-  const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
-
-  for (let i = 0; i < items.length; i += 1) {
-    if (switchedFrom.trim().length >= maxSwitchedFromLength) {
-      switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength - 1)}|${switchedTo}`;
-
-      break;
-    }
-
-    switchedFrom = switchedFrom
-      ? `${switchedFrom} ${getDefectTypesAnalyticsData(items[i].issue.issueType)}`
-      : `${getDefectTypesAnalyticsData(items[i].issue.issueType)}`;
-
-    if (i === items.length - 1) {
-      switchedFrom = `${switchedFrom}${switchedTo}`;
-    }
-  }
-
-  return switchedFrom;
 };
 
 const getClickOnApplyBulkEventCreator = (place) => (
@@ -137,9 +100,9 @@ const getClickOnApplyBulkEventCreator = (place) => (
 
   return {
     ...basicEventParameters,
-    element_name: getElementName(issueActionType),
-    switcher: getSwitcher(items, issueType),
-    type: issueActionType || undefined,
+    element_name: getMakeDecisionElementName(issueActionType),
+    switcher: getSwitchedDefectTypes(items, issueType),
+    type: ISSUE_TYPE_MAP[issueActionType] || undefined,
   };
 };
 
