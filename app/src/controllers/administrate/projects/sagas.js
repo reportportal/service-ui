@@ -75,7 +75,7 @@ function* addProject({ payload: projectName }) {
       },
     });
     const projectInfo = {
-      projectName,
+      projectName: projectName.toLowerCase(),
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
