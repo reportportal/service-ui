@@ -32,6 +32,7 @@ import {
   ENTITY_AUTOANALYZE,
   ENTITY_BTS_ISSUES,
 } from 'components/filterEntities/constants';
+import { POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 
 export const STATISTICS_ENTITY_DELIMITER = '$';
 export const STATISTICS_TOTAL_KEY = 'total';
@@ -59,4 +60,10 @@ export const FILTER_ENTITY_ID_TO_TYPE_MAP = {
 export const DEFECT_FROM_TI_GROUP_MAP = {
   true: 'to_investigate',
   false: 'no_investigate',
+};
+
+export const ISSUE_TYPE_MAP = {
+  [POST_ISSUE]: 'post_issue',
+  [LINK_ISSUE]: 'link_issue',
+  [UNLINK_ISSUE]: 'unlink_issue',
 };

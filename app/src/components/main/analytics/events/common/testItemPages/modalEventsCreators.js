@@ -15,9 +15,14 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { DEFECT_FROM_TI_GROUP_MAP } from './constants';
+import { DEFECT_FROM_TI_GROUP_MAP, ISSUE_TYPE_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
+import {
+  getMakeDecisionElementName,
+  getSwitchedDefectTypes,
+  getDefectTypesAnalyticsData,
+} from './utils';
 
 // GA4 events
 export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
@@ -46,50 +51,61 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   place: `${place}${actionPlace && `#${actionPlace}`}`,
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
-const getClickOnApplyBtnEventCreator = (place) => (
+
+const getClickOnApplyEventCreator = (place) => (
   defectFromTIGroup,
   hasSuggestions,
   status,
-  switcher,
-  iconName,
+  issueType,
+  itemDataIssueType,
+  issueActionType,
+  suggestedItems,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
   );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  if (!isBulkOperation) {
-    basicEventParameters.type = hasSuggestions ? 'with_ml' : 'without_ml';
-  }
+
+  basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
+    issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
+  }`;
+
+  const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
+    issueType,
+  )}`;
+
+  const iconName = suggestedItems
+    .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
+    .join('#');
+
   return {
     ...basicEventParameters,
     status,
     switcher,
     icon_name: iconName,
-    element_name: 'apply',
+    element_name: getMakeDecisionElementName(issueActionType),
   };
 };
-const getClickOnApplyAndContinueBtnEventCreator = (place) => (
+
+const getClickOnApplyBulkEventCreator = (place) => (
   defectFromTIGroup,
-  hasSuggestions,
-  issueBtn,
+  issueActionType,
+  items,
+  issueType,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
   );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  const types = [];
-  if (!isBulkOperation) {
-    types.push(hasSuggestions ? 'with_ml' : 'without_ml');
-  }
-  types.push(issueBtn);
+
   return {
     ...basicEventParameters,
-    element_name: 'apply_and_continue',
-    type: types.join('#'),
+    element_name: getMakeDecisionElementName(issueActionType),
+    switcher: getSwitchedDefectTypes(items, issueType),
+    type: ISSUE_TYPE_MAP[issueActionType] || undefined,
   };
 };
+
 const getShowErrLogsSwitcherEventCreator = (place) => (defectFromTIGroup, switcherState) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
   element_name: 'show_error_logs',
@@ -136,8 +152,8 @@ const getOnChangeCommentOptionEventCreator = (place) => (label) => ({
 });
 export const getMakeDecisionModalEvents = (page) => ({
   getOpenModalEvent: getOpenModalEventCreator(page),
-  getClickOnApplyEvent: getClickOnApplyBtnEventCreator(page),
-  getClickOnApplyAndContinueEvent: getClickOnApplyAndContinueBtnEventCreator(page),
+  getClickOnApplyEvent: getClickOnApplyEventCreator(page),
+  getClickOnApplyBulkEvent: getClickOnApplyBulkEventCreator(page),
   getToggleShowErrLogsSwitcherEvent: getShowErrLogsSwitcherEventCreator(page),
   getClickIgnoreAACheckboxEvent: getClickIgnoreAACheckboxEventCreator(page),
   getClickCommentEditorIcon: getClickOnCommentEditorIconEventCreator(page),

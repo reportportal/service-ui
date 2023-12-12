@@ -31,13 +31,9 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import {
-  DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES,
-  TO_INVESTIGATE_LOCATOR_PREFIX,
-} from 'common/constants/defectTypes';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
-import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
 import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
@@ -306,89 +302,42 @@ const MakeDecision = ({ data }) => {
     }
   };
 
-  const getDefectTypesAnalyticsData = (issueType) => {
-    const defaultDefectTypeNumber = '001';
-    const unselectedIssueType = 'unselected';
-
-    return issueType
-      ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
-          `custom_${
-            DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
-          }`
-      : unselectedIssueType;
-  };
-
-  const getApplyButtonAnalyticsParams = () => {
+  const getOnApplyEvent = () => {
     const {
       eventsInfo: { editDefectsEvents = {} },
+      items,
     } = data;
     const {
+      issueActionType,
       suggestedItems,
       selectManualChoice: {
         issue: { issueType },
       },
     } = modalState;
-    const hasSuggestions = !!suggestedItems;
 
-    let switchedFrom = '';
-    if (isBulkOperation) {
-      const { items } = data;
-
-      const switchedTo = `#${getDefectTypesAnalyticsData(issueType)}`;
-      const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
-
-      for (let i = 0; i < items.length; i += 1) {
-        if (switchedFrom.trim().length >= maxSwitchedFromLength) {
-          switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength - 1)}|${switchedTo}`;
-
-          break;
-        }
-
-        switchedFrom = switchedFrom
-          ? `${switchedFrom} ${getDefectTypesAnalyticsData(items[i].issue.issueType)}`
-          : `${getDefectTypesAnalyticsData(items[i].issue.issueType)}`;
-
-        if (i === items.length - 1) {
-          switchedFrom = `${switchedFrom}${switchedTo}`;
-        }
-      }
-    } else {
-      switchedFrom = `${getDefectTypesAnalyticsData(
-        itemData.issue.issueType,
-      )}#${getDefectTypesAnalyticsData(issueType)}`;
-    }
-
-    return editDefectsEvents.getClickOnApplyEvent(
-      defectFromTIGroup,
-      hasSuggestions,
-      activeTab,
-      switchedFrom,
-      suggestedItems
-        .map(({ testItemResource }) =>
-          getDefectTypesAnalyticsData(testItemResource.issue.issueType),
-        )
-        .join('#'),
-    );
-  };
-
-  const getOnApplyEvent = () => {
-    const {
-      eventsInfo: { editDefectsEvents = {} },
-    } = data;
-    const { issueActionType, suggestedItems } = modalState;
-    let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
-    if (isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType) {
-      eventInfo = editDefectsEvents.getClickOnApplyAndContinueEvent(
-        defectFromTIGroup,
-        hasSuggestions,
-        issueActionType.toLowerCase(),
-      );
-    } else {
-      eventInfo = getApplyButtonAnalyticsParams();
-    }
-    return eventInfo;
+
+    const issueBtn =
+      isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType;
+
+    return isBulkOperation
+      ? editDefectsEvents.getClickOnApplyBulkEvent(
+          defectFromTIGroup,
+          issueActionType,
+          items,
+          issueType,
+        )
+      : editDefectsEvents.getClickOnApplyEvent(
+          defectFromTIGroup,
+          hasSuggestions,
+          activeTab,
+          issueType,
+          itemData.issue.issueType,
+          issueBtn,
+          suggestedItems,
+        );
   };
+
   const applyChanges = () => {
     if (isBulkOperation) {
       modalHasChanges &&

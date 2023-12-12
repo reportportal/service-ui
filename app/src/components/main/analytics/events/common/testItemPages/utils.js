@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES } from 'common/constants/defectTypes';
+import { GA_4_FIELD_LIMIT } from 'components/main/analytics/events/common/constants';
 import {
   STATISTICS_ENTITY_DELIMITER,
   FILTER_ENTITY_ID_TO_TYPE_MAP,
@@ -42,4 +44,43 @@ export const getFilterEntityType = ({ id: entityId, meta }) => {
   }
 
   return normalizeEventParameter(type);
+};
+
+export const getMakeDecisionElementName = (issueActionType) =>
+  issueActionType ? 'apply_and_continue' : 'apply';
+
+export const getDefectTypesAnalyticsData = (issueType) => {
+  const defaultDefectTypeNumber = '001';
+  const unselectedIssueType = 'unselected';
+
+  return issueType
+    ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
+        `custom_${
+          DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
+        }`
+    : unselectedIssueType;
+};
+
+export const getSwitchedDefectTypes = (items, issueType) => {
+  let switchedFrom = '';
+  const switchedTo = `#${getDefectTypesAnalyticsData(issueType)}`;
+  const maxSwitchedFromLength = GA_4_FIELD_LIMIT - switchedTo.length;
+
+  for (let i = 0; i < items.length; i += 1) {
+    if (switchedFrom.trim().length >= maxSwitchedFromLength) {
+      switchedFrom = `${switchedFrom.slice(0, maxSwitchedFromLength - 1)}|${switchedTo}`;
+
+      break;
+    }
+
+    switchedFrom = switchedFrom
+      ? `${switchedFrom} ${getDefectTypesAnalyticsData(items[i].issue.issueType)}`
+      : `${getDefectTypesAnalyticsData(items[i].issue.issueType)}`;
+
+    if (i === items.length - 1) {
+      switchedFrom = `${switchedFrom}${switchedTo}`;
+    }
+  }
+
+  return switchedFrom;
 };
