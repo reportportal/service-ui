@@ -45,7 +45,7 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
   } = baseEventParameters;
 
   const eventParameters = {
-    instanceId,
+    instanceID: instanceId,
     version: getAppVersion(buildVersion),
     uid: `${userId}|${instanceId}`,
     auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
