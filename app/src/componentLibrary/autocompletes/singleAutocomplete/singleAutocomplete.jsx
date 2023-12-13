@@ -199,6 +199,7 @@ export class SingleAutocomplete extends Component {
               </Reference>
               <Popper
                 placement="bottom-start"
+                positionFixed
                 modifiers={{
                   preventOverflow: { escapeWithReference: true },
                   flip: {
