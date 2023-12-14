@@ -49,7 +49,7 @@ export const AttributeEditor = ({
   keyPlaceholder,
   valuePlaceholder,
   editorDefaultOpen,
-  fixedPosition,
+  autocompleteProps,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
@@ -184,7 +184,7 @@ export const AttributeEditor = ({
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
           menuClassName={cx('menu')}
-          fixedPosition={fixedPosition}
+          autocompleteProps={autocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -209,7 +209,7 @@ export const AttributeEditor = ({
           isRequired
           optionVariant="value-variant"
           menuClassName={cx('menu')}
-          fixedPosition={fixedPosition}
+          autocompleteProps={autocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>
@@ -247,7 +247,7 @@ AttributeEditor.propTypes = {
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
-  fixedPosition: PropTypes.bool,
+  autocompleteProps: PropTypes.object,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -262,5 +262,5 @@ AttributeEditor.defaultProps = {
   keyPlaceholder: 'Key',
   valuePlaceholder: 'Value',
   editorDefaultOpen: false,
-  fixedPosition: false,
+  autocompleteProps: {},
 };

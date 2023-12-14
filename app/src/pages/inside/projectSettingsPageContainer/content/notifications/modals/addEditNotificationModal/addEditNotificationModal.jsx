@@ -386,7 +386,7 @@ const AddEditNotificationModal = ({
             shown={isEditorShown}
             changeValue={change}
             attributesNote={formatMessage(messages.attributesNote)}
-            fixedPosition
+            autocompleteProps={{ fixedPosition: true }}
           />
         </FieldElement>
         {attributesValue.length > 0 && (
