@@ -184,7 +184,7 @@ export const AttributeEditor = ({
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
           menuClassName={cx('menu')}
-          autocompleteProps={autocompleteProps}
+          {...autocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -209,7 +209,7 @@ export const AttributeEditor = ({
           isRequired
           optionVariant="value-variant"
           menuClassName={cx('menu')}
-          autocompleteProps={autocompleteProps}
+          {...autocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>
