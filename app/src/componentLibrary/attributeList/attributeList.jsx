@@ -54,6 +54,7 @@ export const AttributeList = ({
   editable,
   attributesListClassname,
   editorDefaultOpen,
+  fixedPosition,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
@@ -258,6 +259,7 @@ export const AttributeList = ({
           getURIKey={getURIKey}
           getURIValue={getURIValue}
           editorDefaultOpen={editorDefaultOpen}
+          fixedPosition={fixedPosition}
         />
       )}
       <div className={cx('attributes-wrapper')}>
@@ -351,6 +353,7 @@ AttributeList.propTypes = {
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
+  fixedPosition: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -371,4 +374,5 @@ AttributeList.defaultProps = {
   editable: true,
   attributesListClassname: '',
   editorDefaultOpen: false,
+  fixedPosition: false,
 };

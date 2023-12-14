@@ -54,6 +54,7 @@ export class SingleAutocomplete extends Component {
     refFunction: PropTypes.func,
     stateReducer: PropTypes.func,
     variant: autocompleteVariantType,
+    fixedPosition: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -83,6 +84,7 @@ export class SingleAutocomplete extends Component {
     refFunction: () => {},
     stateReducer: (state, changes) => changes,
     variant: 'light',
+    fixedPosition: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -126,6 +128,7 @@ export class SingleAutocomplete extends Component {
       refFunction,
       stateReducer,
       variant,
+      fixedPosition,
       ...props
     } = this.props;
     return (
@@ -199,7 +202,7 @@ export class SingleAutocomplete extends Component {
               </Reference>
               <Popper
                 placement="bottom-start"
-                positionFixed
+                positionFixed={fixedPosition}
                 modifiers={{
                   preventOverflow: { escapeWithReference: true },
                   flip: {
