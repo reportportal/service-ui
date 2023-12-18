@@ -36,7 +36,10 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+<<<<<<< HEAD
 import { RadioGroup } from 'componentLibrary/radioGroup';
+=======
+>>>>>>> 465d0e092 (Fix linter errors (#3320))
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {

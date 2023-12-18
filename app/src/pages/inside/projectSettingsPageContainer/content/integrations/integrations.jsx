@@ -31,7 +31,6 @@ import {
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { redirect } from 'redux-first-router';
 import { projectOrganizationSlugSelector } from 'controllers/project';
-import { isEmptyObject } from 'common/utils';
 import { activeProjectKeySelector } from 'controllers/user';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';

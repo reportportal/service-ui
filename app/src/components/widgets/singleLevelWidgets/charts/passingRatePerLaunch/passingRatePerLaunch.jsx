@@ -69,7 +69,12 @@ export class PassingRatePerLaunch extends Component {
     const link = getStatisticsLink({
       statuses,
     });
-    const navigationParams = getDefaultTestItemLinkParams(projectKey, ALL, launchId, organizationSlug);
+    const navigationParams = getDefaultTestItemLinkParams(
+      projectKey,
+      ALL,
+      launchId,
+      organizationSlug,
+    );
 
     this.props.navigate(Object.assign(link, navigationParams));
   };

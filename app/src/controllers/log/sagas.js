@@ -138,15 +138,12 @@ function* fetchAllErrorLogs({
   let cancelRequest = () => {};
   try {
     yield put(
-      fetchDataAction(namespace)(
-        URLS.errorLogs(projectKey, retryId || id, level || filterLevel),
-        {
-          params: { ...query, excludeLogContent },
-          abort: (cancelFunc) => {
-            cancelRequest = cancelFunc;
-          },
+      fetchDataAction(namespace)(URLS.errorLogs(projectKey, retryId || id, level || filterLevel), {
+        params: { ...query, excludeLogContent },
+        abort: (cancelFunc) => {
+          cancelRequest = cancelFunc;
         },
-      ),
+      }),
     );
     yield take(createFetchPredicate(namespace));
   } catch (err) {
