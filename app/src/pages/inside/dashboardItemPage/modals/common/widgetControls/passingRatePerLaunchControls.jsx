@@ -28,7 +28,7 @@ import {
   passingRateOptionMessages,
 } from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import track from 'react-tracking';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 import { widgetTypesMessages } from '../messages';
@@ -58,7 +58,7 @@ const validators = {
 @track()
 @injectIntl
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class PassingRatePerLaunchControls extends Component {
   static propTypes = {

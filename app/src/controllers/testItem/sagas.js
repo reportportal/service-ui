@@ -21,7 +21,7 @@ import {
   bulkFetchDataAction,
   createFetchPredicate,
 } from 'controllers/fetch';
-import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
+import { showFilterOnLaunchesAction } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
@@ -131,7 +131,7 @@ export function* fetchParentItems() {
 
 export function* fetchParentLaunch({ payload = {} } = {}) {
   const {
-    projectKey = yield select(projectKeySelector),
+    projectKey = yield select(activeProjectKeySelector),
     launchId = yield select(launchIdSelector),
   } = payload;
 
@@ -178,7 +178,7 @@ function* fetchTestItems({ payload = {} }) {
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const namespace = yield select(namespaceSelector, offset);
   const query = yield select(queryParametersSelector, namespace);
   const pageQuery = yield select(pagePropertiesSelector);
@@ -292,7 +292,7 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const stepParams = yield call(calculateStepPagination, { next, offset });
   yield call(fetchTestItems, { payload: { offset, params: stepParams } });
   const testItems = yield select(itemsSelector);
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
   const { launchId, path } = testItem;
   const testItemIds = [launchId, ...path.split('.')].join('/');
@@ -322,7 +322,7 @@ function* watchTestItemsFromLogPage() {
 
 function* deleteTestItems({ payload: { items, callback } }) {
   const ids = items.map((item) => item.id).join(',');
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   yield put(showScreenLockAction());
   try {
     yield call(fetch, URLS.testItems(projectKey, ids), {

@@ -24,7 +24,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { fetch, updateSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import {
   namedAvailableBtsIntegrationsSelector,
   uiExtensionPostIssueFormSelector,
@@ -38,7 +38,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { projectInfoSelector, projectKeySelector } from 'controllers/project';
+import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
@@ -125,7 +125,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     projectInfo: projectInfoSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),

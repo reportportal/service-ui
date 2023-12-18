@@ -18,11 +18,15 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  activeProjectKeySelector,
+} from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NameColumn,
   DescriptionColumn,
@@ -61,7 +65,7 @@ const messages = defineMessages({
   projectId: activeProjectSelector(state),
   projectRole: activeProjectRoleSelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {

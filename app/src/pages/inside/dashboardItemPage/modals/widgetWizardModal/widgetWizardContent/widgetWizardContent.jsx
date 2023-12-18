@@ -35,7 +35,7 @@ import {
   getEcWidget,
 } from 'components/main/analytics/events/common/widgetPages/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -51,7 +51,7 @@ const cx = classNames.bind(styles);
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),

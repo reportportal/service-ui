@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
 import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';
@@ -66,7 +66,7 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class MostTimeConsumingTestCasesControls extends Component {
   static propTypes = {

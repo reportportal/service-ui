@@ -22,12 +22,13 @@ import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatu
 import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { PassingRateChart } from '../common/passingRateChart';
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),

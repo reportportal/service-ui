@@ -51,11 +51,8 @@ import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
-import {
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-  defectTypesSelector,
-} from 'controllers/project';
+import { projectOrganizationSlugSelector, defectTypesSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,
@@ -161,7 +158,7 @@ const itemTitleFormatter = (item) => {
 };
 
 export const breadcrumbsSelector = createSelector(
-  projectKeySelector,
+  activeProjectKeySelector,
   activeFilterSelector,
   parentItemsSelector,
   testItemIdsArraySelector,
@@ -425,7 +422,7 @@ export const defectLinkSelector = createSelector(
 );
 
 export const testCaseNameLinkSelector = (state) => (ownProps) => {
-  const projectKey = projectKeySelector(state);
+  const projectKey = activeProjectKeySelector(state);
   const organizationSlug = projectOrganizationSlugSelector(state);
   const payload = {
     projectKey,
@@ -539,7 +536,7 @@ export const uniqueErrorsLinkSelector = createSelector(
 );
 
 export const getLogItemLinkSelector = createSelector(
-  projectKeySelector,
+  activeProjectKeySelector,
   projectOrganizationSlugSelector,
   (projectKey, organizationSlug) => (testItem) => {
     const payload = {

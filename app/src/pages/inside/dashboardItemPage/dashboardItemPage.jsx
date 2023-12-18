@@ -34,7 +34,15 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
+<<<<<<< HEAD
 import { userInfoSelector } from 'controllers/user';
+=======
+import {
+  userInfoSelector,
+  activeProjectRoleSelector,
+  activeProjectKeySelector,
+} from 'controllers/user';
+>>>>>>> 01f1459e2 (EPMRPP 79767 || reduce selectors for new routing (#3284))
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
@@ -51,7 +59,7 @@ import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -114,7 +122,7 @@ const messages = defineMessages({
     fullScreenMode: dashboardFullScreenModeSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModalAction,

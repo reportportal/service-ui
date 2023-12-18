@@ -28,7 +28,8 @@ import { changeActiveFilterAction } from 'controllers/filter';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { Grid } from 'components/main/grid';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { STATS_SI, STATS_PB, STATS_TI, STATS_ND, STATS_AB } from '../components/constants';
 import {
   NAME,
@@ -71,7 +72,7 @@ const columnComponentsMap = {
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {

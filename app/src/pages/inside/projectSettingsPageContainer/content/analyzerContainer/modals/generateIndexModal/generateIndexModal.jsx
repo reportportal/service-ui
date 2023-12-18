@@ -22,7 +22,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchProjectAction, projectKeySelector } from 'controllers/project';
+import { fetchProjectAction } from 'controllers/project';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -31,6 +31,7 @@ import {
 import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generateIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -64,7 +65,7 @@ const messages = defineMessages({
 const GenerateIndexModal = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(urlProjectKeySelector);
 
   const onClickGenerate = () => {
     fetch(URLS.projectIndex(projectKey), { method: 'put' })

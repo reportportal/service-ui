@@ -17,17 +17,14 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import {
-  orderedDefectFieldsSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { orderedDefectFieldsSelector, projectOrganizationSlugSelector } from 'controllers/project';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
+import { activeProjectKeySelector } from 'controllers/user';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
 import styles from './overallStatisticsPanel.scss';
@@ -37,7 +34,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     orderedContentFields: orderedDefectFieldsSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),

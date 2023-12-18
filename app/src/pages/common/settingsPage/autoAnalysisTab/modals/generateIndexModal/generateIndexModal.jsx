@@ -22,13 +22,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchProjectAction, projectKeySelector } from 'controllers/project';
+import { fetchProjectAction } from 'controllers/project';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generateIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +63,7 @@ const messages = defineMessages({
 @withModal('generateIndexModal')
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     fetchProjectAction,

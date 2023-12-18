@@ -21,11 +21,11 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectKeySelector, activeProjectRoleSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
@@ -34,7 +34,7 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   projectRole: activeProjectRoleSelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {

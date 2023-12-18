@@ -22,11 +22,11 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { ERROR } from 'common/constants/logLevels';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { Retries } from './retries';
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @track()
 export class RetriesContainer extends Component {

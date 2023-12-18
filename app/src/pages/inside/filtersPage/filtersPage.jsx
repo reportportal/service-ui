@@ -31,7 +31,7 @@ import {
   updateFilterSuccessAction,
   pageLoadingSelector,
 } from 'controllers/filter';
-import { userIdSelector } from 'controllers/user';
+import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -41,7 +41,6 @@ import {
   userFiltersSelector,
   showFilterOnLaunchesAction,
   hideFilterOnLaunchesAction,
-  projectKeySelector,
   projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -72,12 +71,12 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: URLS.filters(projectKeySelector(state)),
+    url: URLS.filters(activeProjectKeySelector(state)),
     userFilters: userFiltersSelector(state),
     filters: filtersSelector(state),
     loading: pageLoadingSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModalAction,

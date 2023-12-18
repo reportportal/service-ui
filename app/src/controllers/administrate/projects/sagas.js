@@ -24,12 +24,9 @@ import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-<<<<<<< HEAD
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
-import { assignedProjectsSelector, ASSIGN_TO_PROJECT_SUCCESS, ASSIGN_TO_PROJECT, ASSIGN_TO_PROJECT_ERROR } from 'controllers/user';
-=======
 import { projectOrganizationSlugSelector } from 'controllers/project';
->>>>>>> 2388d71a1 (EPMRPP-79759 || Get projectKey on addProject (#3280))
+import { assignedProjectsSelector, ASSIGN_TO_PROJECT_SUCCESS, ASSIGN_TO_PROJECT, ASSIGN_TO_PROJECT_ERROR } from 'controllers/user';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -80,11 +77,7 @@ function* addProject({ payload: projectName }) {
       },
     });
     const projectInfo = {
-<<<<<<< HEAD
-      projectName: projectName.toLowerCase(),
-=======
-      projectKey,
->>>>>>> 2388d71a1 (EPMRPP-79759 || Get projectKey on addProject (#3280))
+      projectKey: projectKey.toLowerCase(),
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };

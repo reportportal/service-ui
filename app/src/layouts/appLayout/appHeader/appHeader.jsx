@@ -43,7 +43,6 @@ export class AppHeader extends Component {
   };
 
   static defaultProps = {
-    assignedProjects: {},
     sideMenuOpened: false,
     toggleSideMenu: () => {},
   };

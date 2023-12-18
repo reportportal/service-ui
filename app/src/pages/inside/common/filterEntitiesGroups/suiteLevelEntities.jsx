@@ -44,12 +44,13 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector, projectKeySelector } from 'controllers/project';
+import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import { pageEventsMap } from 'components/main/analytics';
 import { levelSelector } from 'controllers/testItem';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
+import { activeProjectKeySelector } from 'controllers/user';
 
 const messages = defineMessages({
   NameTitle: {
@@ -147,7 +148,7 @@ const messages = defineMessages({
   defectTypes: defectTypesSelector(state),
   launchId: launchIdSelector(state),
   level: levelSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class SuiteLevelEntities extends Component {
   static propTypes = {

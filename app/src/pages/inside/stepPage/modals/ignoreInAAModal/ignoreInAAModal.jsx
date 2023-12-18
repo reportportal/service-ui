@@ -26,7 +26,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import styles from './ignoreInAAModal.scss';
 
 const cx = classNames.bind(styles);
@@ -66,7 +66,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showNotification,

@@ -26,7 +26,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
 import { userIdSelector } from 'controllers/user';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -60,7 +60,7 @@ import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const integrationUrl = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectKey, pluginName);
@@ -105,7 +105,7 @@ function* watchAddIntegration() {
 function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const integrationUrl = isGlobal
       ? URLS.globalIntegration(id)
       : URLS.projectIntegration(projectKey, id);
@@ -145,7 +145,7 @@ function* watchUpdateIntegration() {
 function* removeIntegration({ payload: { id, isGlobal, callback } }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectKey, id);
 
     yield call(fetch, url, {
@@ -177,7 +177,7 @@ function* watchRemoveIntegration() {
 function* removeIntegrationsByType({ payload: instanceType }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     yield call(fetch, URLS.removeProjectIntegrationByType(projectKey, instanceType), {
       method: 'delete',
     });

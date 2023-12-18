@@ -30,7 +30,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import {
   levelSelector,
@@ -147,7 +147,6 @@ const testItemPages = {
     breadcrumbs: breadcrumbsSelector(state),
     parentLaunch: launchSelector(state),
     userId: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
     namespace: namespaceSelector(state),
   }),
   (dispatch) => ({
@@ -173,7 +172,6 @@ const testItemPages = {
 export class TestItemPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     namespace: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     deleteTestItemsAction: PropTypes.func.isRequired,

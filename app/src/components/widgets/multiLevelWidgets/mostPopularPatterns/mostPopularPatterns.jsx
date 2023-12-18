@@ -27,7 +27,8 @@ import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
@@ -37,7 +38,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,

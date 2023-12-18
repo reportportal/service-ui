@@ -28,7 +28,7 @@ import {
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLayout } from 'componentLibrary/modal';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 
 const messages = defineMessages({
   removeIndexHeader: {
@@ -52,7 +52,7 @@ const messages = defineMessages({
 const RemoveIndexModal = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(urlProjectKeySelector);
 
   const onClickRemove = () => {
     fetch(URLS.projectIndex(projectKey), { method: 'delete' })

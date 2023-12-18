@@ -37,7 +37,7 @@ import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
 import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -65,7 +65,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModalAction,

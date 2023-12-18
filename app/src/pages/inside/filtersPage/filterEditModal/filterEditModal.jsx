@@ -28,7 +28,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { commonValidators, validateAsync } from 'common/utils/validation';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 
 const messages = defineMessages({
   name: {
@@ -59,7 +59,7 @@ const validateFilterNameUniqueness = (projectKey, id, name) =>
 @withModal('filterEditModal')
 @injectIntl
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @reduxForm({
   form: 'filterEditForm',

@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -35,7 +35,6 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import { projectKeySelector } from 'controllers/project';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import { LinkIssueFields } from './linkIssueFields';
 import { messages as makeDecisionMessages } from '../makeDecisionModal/messages';
@@ -74,7 +73,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showNotification,

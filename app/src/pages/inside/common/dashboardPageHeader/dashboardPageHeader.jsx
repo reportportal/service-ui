@@ -32,7 +32,8 @@ import {
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
@@ -53,7 +54,7 @@ const DASHBOARDS_LIMIT = 300;
   totalDashboards: totalDashboardsSelector(state),
   isLoading: loadingSelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {

@@ -29,11 +29,7 @@ import {
   TEST_ITEMS_TYPE_LIST,
   PROVIDER_TYPE_WIDGET,
 } from 'controllers/testItem';
-import {
-  defectTypesSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { defectTypesSelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
@@ -41,6 +37,7 @@ import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { ActionsPopup } from './actionsPopup';
@@ -60,7 +57,7 @@ const PRINTED_LEGEND_HEIGHT = 80;
 @connect(
   (state) => ({
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
