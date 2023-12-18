@@ -36,19 +36,11 @@ export const ROLE_NAMES = defineMessages({
   },
   manager: {
     id: 'PermissionMap.manager',
-    defaultMessage: 'PM',
+    defaultMessage: 'Project Manager',
   },
   member: {
     id: 'PermissionMap.member',
     defaultMessage: 'Member',
-  },
-  operator: {
-    id: 'PermissionMap.operator',
-    defaultMessage: 'Operator',
-  },
-  customer: {
-    id: 'PermissionMap.customer',
-    defaultMessage: 'Customer',
   },
   attention: {
     id: 'PermissionMap.attention',

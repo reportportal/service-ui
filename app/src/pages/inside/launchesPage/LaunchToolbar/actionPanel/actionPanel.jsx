@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';

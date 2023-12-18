@@ -1528,7 +1528,6 @@
   "PermissionMap.moveLaunchToDebugDefault": "Перамясціць запускі у(з) адладку(і)",
   "PermissionMap.notOwnLegend": "Няўласны элемент ствараецца іншай асобай",
   "PermissionMap.notOwnTitle": "Няўласны элемент",
-  "PermissionMap.operator": "Аператар",
   "PermissionMap.ownLegend": "Уласны элемент ствараецца самім карыстальнікам",
   "PermissionMap.ownTitle": "Уласны элемент",
   "PermissionMap.projectManagement": "Кіраванне праектам",
@@ -2042,10 +2041,7 @@
   "WidgetCriteriaOption.widgets_actions": "Абнавiць вiджэт",
   "WidgetHeader.forceUpdate": "Абнавіць",
   "WidgetHeader.lastRefresh": "Абноўлены:",
-<<<<<<< HEAD
-=======
   "WidgetListItem.alreadyAddedWidgetTitle": "Віджэт ўжо дададзены на выбраную Панэль кіравання",
->>>>>>> 8649aa77c (EPMRPP-72320 || Remove ACL framework (#3187))
   "WidgetModes.allLaunches": "Усе запускi",
   "WidgetModes.areaViewMode": "Дыяграма",
   "WidgetModes.barViewMode": "Гістаграма",

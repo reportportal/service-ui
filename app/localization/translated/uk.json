@@ -1528,7 +1528,6 @@
   "PermissionMap.moveLaunchToDebugDefault": "У Перемістити запуски(з) налагодження(і)",
   "PermissionMap.notOwnLegend": "Невласний елемент створюється іншою особою",
   "PermissionMap.notOwnTitle": "Невласний елемент",
-  "PermissionMap.operator": "Оператор",
   "PermissionMap.ownLegend": "Власний елемент створюється самим користувачем",
   "PermissionMap.ownTitle": "Власний елемент",
   "PermissionMap.projectManagement": "Управління проектом",
@@ -2042,10 +2041,7 @@
   "WidgetCriteriaOption.widgets_actions": "Оновити віджет",
   "WidgetHeader.forceUpdate": "Оновити",
   "WidgetHeader.lastRefresh": "Оновлений:",
-<<<<<<< HEAD
-=======
   "WidgetListItem.alreadyAddedWidgetTitle": "Віджет вже доданий на обрану Панель управління",
->>>>>>> 8649aa77c (EPMRPP-72320 || Remove ACL framework (#3187))
   "WidgetModes.allLaunches": "Всі Запуски",
   "WidgetModes.areaViewMode": "Діаграма",
   "WidgetModes.barViewMode": "Гістограма",

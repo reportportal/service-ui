@@ -26,7 +26,7 @@ import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -42,7 +42,6 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputUserSearch } from 'components/inputs/inputUserSearch';
-import { projectKeySelector } from 'controllers/project';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -85,15 +84,14 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 @injectIntl
 @connect(
   (state, ownProps) => ({
-    selectedProject: ownProps.data.isProjectSelector
-      ? inviteFormSelector(state, 'project')
-      : projectIdSelector(state),
+    projectKey: ownProps.data.isProjectSelector
+      ? inviteFormSelector(state, 'projectKey')
+      : urlProjectKeySelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
-    projectKey: projectKeySelector(state),
     initialValues: {
       role: DEFAULT_PROJECT_ROLE,
-      project: projectIdSelector(state),
+      projectKey: urlProjectKeySelector(state),
     },
   }),
   {
@@ -126,7 +124,6 @@ export class InviteUserModal extends Component {
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     projectKey: PropTypes.string.isRequired,
-    selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
@@ -135,7 +132,6 @@ export class InviteUserModal extends Component {
   static defaultProps = {
     intl: {},
     showModalAction: () => {},
-    selectedProject: '',
     selectedUser: {},
     isAdmin: false,
     dirty: false,
@@ -154,13 +150,12 @@ export class InviteUserModal extends Component {
     const {
       intl: { formatMessage },
       data: { onInvite },
-      selectedProject,
       projectKey,
     } = this.props;
     const data = {};
 
     if (userData.user.externalUser) {
-      data.defaultProject = selectedProject;
+      data.defaultProject = projectKey;
       data.email = userData.user.userLogin;
       data.role = userData.role;
 
@@ -241,7 +236,7 @@ export class InviteUserModal extends Component {
     );
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, data, projectKey } = this.props;
+    const { intl, handleSubmit, projectKey, isAdmin, data } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
@@ -268,7 +263,6 @@ export class InviteUserModal extends Component {
             <FieldProvider name="user" format={this.formatUser}>
               <FieldErrorHint>
                 <InputUserSearch
-                  projectId={selectedProject}
                   isAdmin={isAdmin}
                   placeholder={intl.formatMessage(messages.inputPlaceholder)}
                   projectKey={projectKey}
