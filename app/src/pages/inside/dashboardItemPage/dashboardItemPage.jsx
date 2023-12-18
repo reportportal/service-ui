@@ -50,7 +50,7 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
-import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';

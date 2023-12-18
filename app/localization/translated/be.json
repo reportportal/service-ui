@@ -2042,6 +2042,10 @@
   "WidgetCriteriaOption.widgets_actions": "Абнавiць вiджэт",
   "WidgetHeader.forceUpdate": "Абнавіць",
   "WidgetHeader.lastRefresh": "Абноўлены:",
+<<<<<<< HEAD
+=======
+  "WidgetListItem.alreadyAddedWidgetTitle": "Віджэт ўжо дададзены на выбраную Панэль кіравання",
+>>>>>>> 8649aa77c (EPMRPP-72320 || Remove ACL framework (#3187))
   "WidgetModes.allLaunches": "Усе запускi",
   "WidgetModes.areaViewMode": "Дыяграма",
   "WidgetModes.barViewMode": "Гістаграма",
