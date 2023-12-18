@@ -144,7 +144,8 @@ export class ProjectsPage extends Component {
     this.props.showModal({
       id: 'addProjectModal',
       data: {
-        onSubmit: (values) => this.props.addProject(values.projectName),
+        onSubmit: (values) =>
+          this.props.addProject(values.projectName, this.props.organizationSlug),
         eventsInfo: {
           addBtn: ADMIN_PROJECTS_PAGE_EVENTS.ADD_BTN_ADD_PROJECT_MODAL,
           closeIcon: ADMIN_PROJECTS_PAGE_EVENTS.CLOSE_ICON_ADD_PROJECT_MODAL,
