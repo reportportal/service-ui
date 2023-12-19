@@ -21,6 +21,10 @@ export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
 };
 
+export const getAutoAnalysisEventValue = (value) => {
+  return normalizeDimensionValue(value) ?? 'no_analyzer';
+};
+
 export const normalizeEventString = (string = '') =>
   string
     .trim()
@@ -48,7 +52,7 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     instanceID: instanceId,
     version: getAppVersion(buildVersion),
     uid: `${userId}|${instanceId}`,
-    auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
+    auto_analysis: getAutoAnalysisEventValue(isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
     ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
