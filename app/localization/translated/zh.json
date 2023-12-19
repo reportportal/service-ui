@@ -1981,7 +1981,7 @@
   "UniqueErrors.uniqueError": "自动独特错误分析",
   "UniqueErrors.uniqueErrorDescription": "如果自动独特错误分析已启用，则在任何测试任务完成后都将立即开始独特错误分析",
   "UnlinkIssueModal.unlinkIssue": "取消关联问题",
-  "UnlinkIssueModal.unlinkModalConfirmationText": "您确定要将该问题与测试项的关联取消吗？",
+  "UnlinkIssueModal.unlinkModalConfirmationText": "Are you sure you want to unlink the issue(s) for test item(s)?",
   "UnlinkIssueModal.unlinkSuccessMessage": "顺利完成！",
   "UpdateAnalysisSettings.allMessagesShouldMatch": "开关“所有3行或有更多行的日志都应该匹配”",
   "UpdateAnalysisSettings.analysisProps": "自动分析服务的属性：",

@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   unlinkModalConfirmationText: {
     id: 'UnlinkIssueModal.unlinkModalConfirmationText',
-    defaultMessage: 'Are you sure to unlink issue/s for test items?',
+    defaultMessage: 'Are you sure you want to unlink the issue(s) for test item(s)?',
   },
   unlinkSuccessMessage: {
     id: 'UnlinkIssueModal.unlinkSuccessMessage',
