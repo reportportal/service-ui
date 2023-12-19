@@ -24,15 +24,11 @@ import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
   FETCH_USER,
   DELETE_USER_ACCOUNT,
-  GENERATE_API_TOKEN,
-  FETCH_API_TOKEN,
-  FETCH_USER,
   SET_ACTIVE_PROJECT_KEY,
 } from './constants';
 import {
@@ -146,7 +142,6 @@ function* fetchUserWorker() {
   const activeProjectName =
     user.assignedProjects[savedActiveProjectKey]?.projectName ?? defaultProjectName;
 
-  yield put(fetchApiTokenAction());
   yield put(setActiveProjectAction(activeProjectName));
   yield put(setActiveProjectKeyAction(activeProjectKey));
 }

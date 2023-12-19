@@ -34,15 +34,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-<<<<<<< HEAD
-import { userInfoSelector } from 'controllers/user';
-=======
-import {
-  userInfoSelector,
-  activeProjectRoleSelector,
-  activeProjectKeySelector,
-} from 'controllers/user';
->>>>>>> 01f1459e2 (EPMRPP 79767 || reduce selectors for new routing (#3284))
+import { userInfoSelector, activeProjectKeySelector } from 'controllers/user';
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,

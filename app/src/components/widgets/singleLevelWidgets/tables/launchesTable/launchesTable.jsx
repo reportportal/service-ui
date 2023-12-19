@@ -52,7 +52,6 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getItemNameConfig } from 'components/widgets/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { projectOrganizationSlugSelector } from 'controllers/project';
-import { projectOrganizationSlugSelector } from 'controllers/project';
 import { activeProjectKeySelector } from 'controllers/user';
 import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
 import { getStatisticsStatuses, groupFieldsWithDefectTypes } from '../components/utils';

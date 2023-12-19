@@ -24,7 +24,6 @@ import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectKeySelector, activeProjectRoleSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
-import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import { projectOrganizationSlugSelector } from 'controllers/project';
 import styles from './dashboardGridItem.scss';
 
@@ -81,15 +80,8 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const {
-      item,
-      currentUser: { userId, userRole },
-      projectKey,
-      projectRole,
-      organizationSlug,
-    } = this.props;
+    const { item, projectKey, organizationSlug } = this.props;
     const { name, description, owner, id } = item;
-    const isOwner = userId === owner;
 
     return (
       <div className={cx('grid-view')}>
@@ -115,16 +107,12 @@ export class DashboardGridItem extends Component {
             <p>{description}</p>
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
-          {canEditDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
-              <Icon type="icon-pencil" />
-            </div>
-          )}
-          {canDeleteDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
-              <Icon type="icon-close" />
-            </div>
-          )}
+          <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
+            <Icon type="icon-pencil" />
+          </div>
+          <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
+            <Icon type="icon-close" />
+          </div>
         </NavLink>
       </div>
     );

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PROJECT_MANAGER, MEMBER } from 'common/constants/projectRoles';
+import { PROJECT_MANAGER, MEMBER, OPERATOR, CUSTOMER } from 'common/constants/projectRoles';
 import { ALL, OWNER } from 'common/constants/permissions';
 
 export const ACTIONS = {
@@ -32,7 +32,6 @@ export const ACTIONS = {
   EDIT_DELETE_ITEM: 'EDIT_DELETE_ITEM',
   RERUN_LAUNCHES: 'RERUN_LAUNCHES',
   CHANGE_STATUS: 'CHANGE_STATUS',
-  EDIT_DELETE_ITEM: 'EDIT_DELETE_ITEM',
 };
 
 export const PERMISSIONS_MAP = {

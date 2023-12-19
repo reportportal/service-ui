@@ -34,7 +34,6 @@ import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants
 import { launchDistinctSelector } from 'controllers/launch/selectors';
 import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { projectOrganizationSlugSelector } from 'controllers/project';
-import { launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
@@ -106,7 +105,7 @@ function* updateLaunchesFilter({ payload: filter }) {
   );
 }
 
-function* changeActiveFilter({ payload: filterId }) {
+function* changeActiveFilter({ payload: filterId, meta }) {
   const organizationSlug = yield select(projectOrganizationSlugSelector);
   const projectKey = yield select(activeProjectKeySelector);
 
