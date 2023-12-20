@@ -75,6 +75,7 @@ export class FilterAdd extends Component {
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     valid: PropTypes.bool.isRequired,
+    projectKey: PropTypes.string.isRequired,
     name: PropTypes.string,
     eventsInfo: PropTypes.object,
   };

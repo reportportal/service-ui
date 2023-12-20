@@ -38,7 +38,6 @@ export class RetriesContainer extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    activeProject: PropTypes.string,
     retries: PropTypes.arrayOf(PropTypes.object),
   };
 

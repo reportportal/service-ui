@@ -53,7 +53,6 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { COMMON_LOCALE_KEYS, months, days } from 'common/constants/localization';
-import { urlProjectKeySelector } from 'controllers/pages';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -76,14 +75,12 @@ const cx = classNames.bind(styles);
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
-  projectKey: urlProjectKeySelector(state),
   lang: langSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectKey: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,

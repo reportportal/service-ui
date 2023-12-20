@@ -288,8 +288,16 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   navigateToTestListView = () => {
-    const { selectedItem, activeAttributes, organizationSlug, projectKey } = this.state;
-    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes } = this.props;
+    const { selectedItem, activeAttributes } = this.state;
+    const {
+      widget,
+      userSettings,
+      getStatisticsLink,
+      getDefectLink,
+      defectTypes,
+      organizationSlug,
+      projectKey,
+    } = this.props;
     const navigationParams = getDefaultTestItemLinkParams(
       projectKey,
       widget.appliedFilters[0].id,

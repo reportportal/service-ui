@@ -33,7 +33,6 @@ import {
 import { MEMBERS, MONITORING, SETTINGS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { navigateToProjectSettingsAction } from 'controllers/administrate/projects/actionCreators';
 import { messages } from '../messages';
 
 @connect(
@@ -47,7 +46,6 @@ import { messages } from '../messages';
     unassignFromProject: unassignFromProjectAction,
     deleteProject: deleteProjectAction,
     navigateToProjectSection: navigateToProjectSectionAction,
-    navigateToProjectSettings: navigateToProjectSettingsAction,
   },
 )
 @injectIntl
@@ -59,7 +57,6 @@ export class ProjectMenu extends Component {
     isAssigned: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     navigateToProjectSection: PropTypes.func.isRequired,
-    navigateToProjectSettings: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,

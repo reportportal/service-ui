@@ -42,7 +42,7 @@ import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { projectOrganizationSlugSelector } from 'controllers/project';
-import { activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -201,7 +201,6 @@ function AdminSidebarComponent({ onClickNavBtn, tracking, extensions, adminPageE
 }
 AdminSidebarComponent.propTypes = {
   onClickNavBtn: PropTypes.func,
-  activeProject: PropTypes.string.isRequired,
   tracking: PropTypes.shape({
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
@@ -217,7 +216,6 @@ AdminSidebarComponent.defaultProps = {
 
 export const AdminSidebar = track()(
   connect((state) => ({
-    activeProject: activeProjectSelector(state),
     extensions: uiExtensionAdminSidebarComponentsSelector(state),
     adminPageExtensions: uiExtensionAdminPagesSelector(state),
   }))(AdminSidebarComponent),

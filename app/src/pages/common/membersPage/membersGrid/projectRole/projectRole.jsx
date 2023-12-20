@@ -71,7 +71,6 @@ export class ProjectRole extends Component {
     assignedProjects: PropTypes.object,
     showNotification: PropTypes.func,
     accountRole: PropTypes.string,
-    projectId: PropTypes.string,
     userId: PropTypes.string,
     currentUser: PropTypes.string,
     canChangeRole: PropTypes.bool,
@@ -85,7 +84,6 @@ export class ProjectRole extends Component {
   static defaultProps = {
     assignedProjects: {},
     accountRole: '',
-    projectId: '',
     userId: '',
     currentUser: '',
     showNotification: () => {},
