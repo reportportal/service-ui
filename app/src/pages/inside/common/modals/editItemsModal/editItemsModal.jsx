@@ -314,8 +314,8 @@ export class EditItemsModal extends Component {
 
     const fetchUrl =
       type === LAUNCH_ITEM_TYPES.launch
-        ? URLS.launchesInfo(currentProject)
-        : URLS.testItemsInfo(currentProject);
+        ? URLS.launchesInfo(projectKey)
+        : URLS.testItemsInfo(projectKey);
     const data = {
       ids,
       attributes: attributes.filter((attribute) =>

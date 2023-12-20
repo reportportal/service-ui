@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-export { SHOW_MODAL, HIDE_MODAL } from './constants';
-export { showModalAction, hideModalAction, confirmModalAction } from './actionCreators';
-export { modalReducer } from './reducer';
-export { activeModalSelector } from './selectors';
-export { getModal, addModal } from './modalsMap';
-export { confirmSaga } from './sagas';
-export { withModal } from './withModal';
+import { take, put, race } from 'redux-saga/effects';
+import { showModalAction, hideModalAction } from './actionCreators';
+import { HIDE_MODAL, CONFIRM_MODAL } from './constants';
+
+export function* confirmSaga(confirmationModalOptions) {
+  yield put(showModalAction(confirmationModalOptions));
+  const { confirmed } = yield race({
+    confirmed: take(CONFIRM_MODAL),
+    cancelled: take(HIDE_MODAL),
+  });
+  if (confirmed) {
+    yield put(hideModalAction());
+  }
+  return !!confirmed;
+}

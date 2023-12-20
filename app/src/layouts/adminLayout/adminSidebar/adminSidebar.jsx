@@ -42,7 +42,7 @@ import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { projectOrganizationSlugSelector } from 'controllers/project';
-import { activeProjectKeySelector } from 'controllers/user';
+import { activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -87,12 +87,7 @@ const BackToProjectWithTooltip = withTooltip({
   },
 })(BackToProject);
 
-function AdminSidebarComponent({
-  onClickNavBtn,
-  tracking,
-  extensions,
-  adminPageExtensions,
-}) {
+function AdminSidebarComponent({ onClickNavBtn, tracking, extensions, adminPageExtensions }) {
   const organizationSlug = useSelector(projectOrganizationSlugSelector);
   const projectKey = useSelector(activeProjectKeySelector);
 

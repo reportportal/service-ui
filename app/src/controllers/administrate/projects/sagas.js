@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-import { takeEvery, takeLatest, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, takeLatest, race, take, all, put, select, call } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { assignToProjectSuccessAction } from 'controllers/user';
-import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
-import { fetch, getStorageItem, setStorageItem } from 'common/utils';
-import { PROJECT_PAGE } from 'controllers/pages';
-import { hideModalAction } from 'controllers/modal';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
+  assignToProjectSuccessAction,
   assignedProjectsSelector,
   ASSIGN_TO_PROJECT_SUCCESS,
   ASSIGN_TO_PROJECT,
   ASSIGN_TO_PROJECT_ERROR,
 } from 'controllers/user';
+import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
+import { SETTINGS } from 'common/constants/projectSections';
+import { fetch, getStorageItem, setStorageItem } from 'common/utils';
+import { PROJECT_PAGE } from 'controllers/pages';
+import { confirmSaga, hideModalAction } from 'controllers/modal';
+import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
   NAMESPACE,
   FETCH_PROJECTS,

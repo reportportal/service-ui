@@ -33,7 +33,6 @@ export class RetriesContainer extends Component {
   static propTypes = {
     testItemId: PropTypes.number.isRequired,
     projectKey: PropTypes.string.isRequired,
-    retries: PropTypes.arrayOf(PropTypes.object).isRequired,
     collapsed: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

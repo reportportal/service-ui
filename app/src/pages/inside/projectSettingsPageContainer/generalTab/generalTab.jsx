@@ -338,9 +338,7 @@ export class GeneralTab extends Component {
             <div className={cx('fake-input-label')}>
               {intl.formatMessage(Messages.projectNameLabel)}
             </div>
-            <div className={cx('fake-input')}>
-              {this.props.projectKey}
-            </div>
+            <div className={cx('fake-input')}>{this.props.projectKey}</div>
           </div>
           <FormField
             name="interruptJobTime"

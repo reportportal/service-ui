@@ -22,6 +22,8 @@ import {
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_DETAILS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages';
+import { SETTINGS } from 'common/constants/projectSections';
+import { GENERAL } from 'common/constants/settingsTabs';
 import {
   FETCH_PROJECTS,
   START_SET_VIEW_MODE,

@@ -234,9 +234,7 @@ export class WidgetWizardContent extends Component {
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
           projectKey={projectKey}
-          widgetSettings={prepareWidgetDataForSubmit(
-            this.preprocessOutputData(formValues),
-          )}
+          widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(formValues))}
           step={this.state.step}
           showConfirmation={showConfirmation}
         />

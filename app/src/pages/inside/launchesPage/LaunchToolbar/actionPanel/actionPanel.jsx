@@ -170,7 +170,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode || projectRole === CUSTOMER,
+        hidden: debugMode,
         onClick: () => {
           onMove();
           this.props.tracking.trackEvent(

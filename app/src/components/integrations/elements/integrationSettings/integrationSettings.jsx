@@ -26,9 +26,9 @@ import { omit } from 'common/utils/omit';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { activeProjectKeySelector } from 'controllers/user';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,

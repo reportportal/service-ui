@@ -190,20 +190,13 @@ export class ProjectsPage extends Component {
   };
 
   renderSection = () => {
-    const { projectKey, section, organizationSlug } = this.props;
+    const { projectKey, section } = this.props;
 
     if (!projectKey) {
       return <Projects />;
     }
 
     switch (section) {
-      case SETTINGS:
-        return (
-          <AdminProjectSettingsPageContainer
-            projectKey={projectKey}
-            organizationSlug={organizationSlug}
-          />
-        );
       case MEMBERS:
         return <MembersPage />;
       case MONITORING:

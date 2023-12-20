@@ -44,8 +44,6 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
-import { projectKeySelector } from 'controllers/project';
-import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
 
@@ -108,6 +106,8 @@ export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     integrationId: PropTypes.number.isRequired,
+    projectName: PropTypes.string,
+    projectInfo: PropTypes.object,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,

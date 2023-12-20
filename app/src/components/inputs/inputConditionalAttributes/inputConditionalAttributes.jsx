@@ -142,7 +142,13 @@ export class InputConditionalAttributes extends Component {
   };
 
   render() {
-    const { value, keyURLCreator, valueURLCreator, projectKey } = this.props;
+    const {
+      value,
+      keyURLCreator,
+      valueURLCreator,
+      projectKey,
+      isAttributeValueRequired,
+    } = this.props;
     const inputConditions = this.getConditions();
 
     return (

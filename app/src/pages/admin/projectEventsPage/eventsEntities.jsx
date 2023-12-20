@@ -31,6 +31,7 @@ import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
   CONDITION_IN,
   CONDITION_BETWEEN,
+  ENTITY_USER,
   ACTIVITIES,
   CONDITION_CNT,
   ENTITY_OBJECT_NAME,
@@ -453,7 +454,7 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.searchEventsBySubjectName(activeProject),
+          getURI: URLS.searchEventsBySubjectName(projectKey),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
           minLength: 1,
         },
