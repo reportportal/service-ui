@@ -89,6 +89,7 @@ const MakeDecision = ({ data }) => {
         !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
+    extraAnalyticsParams: {},
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
   const windowSize = useWindowResize();
@@ -313,6 +314,7 @@ const MakeDecision = ({ data }) => {
       selectManualChoice: {
         issue: { issueType },
       },
+      extraAnalyticsParams,
     } = modalState;
 
     const hasSuggestions = !!suggestedItems.length;
@@ -335,6 +337,7 @@ const MakeDecision = ({ data }) => {
           itemData.issue.issueType,
           issueBtn,
           suggestedItems,
+          extraAnalyticsParams,
         );
   };
 

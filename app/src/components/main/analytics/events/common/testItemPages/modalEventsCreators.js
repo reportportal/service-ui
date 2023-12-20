@@ -60,6 +60,7 @@ const getClickOnApplyEventCreator = (place) => (
   itemDataIssueType,
   issueActionType,
   suggestedItems,
+  extraParams,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
@@ -84,6 +85,7 @@ const getClickOnApplyEventCreator = (place) => (
     switcher,
     icon_name: iconName,
     element_name: getMakeDecisionElementName(issueActionType),
+    ...extraParams,
   };
 };
 

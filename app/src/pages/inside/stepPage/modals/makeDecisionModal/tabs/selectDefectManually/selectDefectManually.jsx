@@ -77,6 +77,7 @@ export const SelectDefectManually = ({
   const source = modalState.selectManualChoice;
 
   const handleManualChange = (value = {}) => {
+    console.log('Change in service UI');
     const issue = {
       ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
@@ -190,6 +191,15 @@ export const SelectDefectManually = ({
 
   const getDefectTypeNarrowView = () => width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
 
+  const updateExtraAnalyticsParams = (extraAnalyticsParams) => {
+    setModalState({
+      extraAnalyticsParams: {
+        ...modalState.extraAnalyticsParams,
+        ...extraAnalyticsParams,
+      },
+    });
+  };
+
   const createDefectTypesBlock = (params = {}) => (
     <>
       {!isBulkOperation && (
@@ -228,7 +238,11 @@ export const SelectDefectManually = ({
     <div className={cx('select-defect-wrapper')}>
       {!isBulkOperation && defectTypeExtensions.length
         ? defectTypeExtensions.map((extension) => (
-            <extension.component key={extension.name} item={itemData}>
+            <extension.component
+              key={extension.name}
+              item={itemData}
+              updateExtraAnalyticsParams={updateExtraAnalyticsParams}
+            >
               {createDefectTypesBlock}
             </extension.component>
           ))
@@ -258,6 +272,7 @@ export const SelectDefectManually = ({
               onChangeComment={handleDefectCommentChange}
               comment={source.issue.comment}
               item={itemData}
+              updateExtraAnalyticsParams={updateExtraAnalyticsParams}
             />
           ))}
       </div>
