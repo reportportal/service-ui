@@ -12,6 +12,7 @@ import {
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
+  EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -62,4 +63,7 @@ export const makeDecisionDefectCommentAddonSelector = createUiExtensionSelectorB
 );
 export const makeDecisionDefectTypeAddonSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
+);
+export const logStackTraceAddonSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
 );

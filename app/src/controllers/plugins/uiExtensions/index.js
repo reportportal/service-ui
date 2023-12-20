@@ -13,5 +13,6 @@ export {
   uniqueErrorGridHeaderCellComponentSelector,
   makeDecisionDefectCommentAddonSelector,
   makeDecisionDefectTypeAddonSelector,
+  logStackTraceAddonSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

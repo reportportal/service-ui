@@ -77,7 +77,6 @@ export const SelectDefectManually = ({
   const source = modalState.selectManualChoice;
 
   const handleManualChange = (value = {}) => {
-    console.log('Change in service UI');
     const issue = {
       ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
