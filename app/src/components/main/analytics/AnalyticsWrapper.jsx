@@ -23,7 +23,7 @@ import GA4 from 'react-ga4';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { normalizeDimensionValue, getAppVersion } from './utils';
+import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
@@ -51,7 +51,7 @@ export const analyticsEventObserver = ReactObserver();
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
         uid: `${userId}|${instanceId}`,
-        auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
+        auto_analysis: getAutoAnalysisEventValue(isAutoAnalyzerEnabled),
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
         timestamp: Date.now(),
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
