@@ -11,6 +11,7 @@ import {
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -58,4 +59,7 @@ export const uniqueErrorGridHeaderCellComponentSelector = createUiExtensionSelec
 
 export const makeDecisionDefectCommentAddonSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
+);
+export const makeDecisionDefectTypeAddonSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
 );

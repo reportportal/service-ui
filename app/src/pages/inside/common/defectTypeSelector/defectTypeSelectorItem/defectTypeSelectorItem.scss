@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+$COLOR--defect-type-highlighted: #eabcff;
 
 .defect-type-selector-item {
   display: flex;
@@ -35,6 +37,17 @@
 
   &.selected {
     border: solid 2px $COLOR--darkmode-topaz-main;
+    padding: 0 11px;
+  }
+
+  &.highlighted {
+    outline: 3px solid $COLOR--defect-type-highlighted;
+    &:hover {
+      outline-width: 2px;
+    }
+    &.selected {
+      outline-width: 1px;
+    }
   }
 }
 

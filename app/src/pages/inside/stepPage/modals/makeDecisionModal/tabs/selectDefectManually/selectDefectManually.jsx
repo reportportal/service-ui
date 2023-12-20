@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,10 @@ import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { makeDecisionDefectCommentAddonSelector } from 'controllers/plugins/uiExtensions/selectors';
+import {
+  makeDecisionDefectCommentAddonSelector,
+  makeDecisionDefectTypeAddonSelector,
+} from 'controllers/plugins/uiExtensions/selectors';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import {
   ADD_FOR_ALL,
@@ -60,7 +63,8 @@ export const SelectDefectManually = ({
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const extensions = useSelector(makeDecisionDefectCommentAddonSelector);
+  const defectCommentExtensions = useSelector(makeDecisionDefectCommentAddonSelector);
+  const defectTypeExtensions = useSelector(makeDecisionDefectTypeAddonSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
@@ -186,10 +190,11 @@ export const SelectDefectManually = ({
 
   const getDefectTypeNarrowView = () => width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
 
-  return (
-    <div className={cx('select-defect-wrapper')}>
+  const createDefectTypesBlock = (params = {}) => (
+    <>
       {!isBulkOperation && (
-        <div className={cx('ignore-analysis')}>
+        <div className={cx('defect-types-extra-block')}>
+          {params.addonBlock}
           <InputCheckbox
             value={
               modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -200,7 +205,7 @@ export const SelectDefectManually = ({
             iconTransparentBackground
             darkView
           >
-            <span className={cx('checkbox-text')}>
+            <span className={cx('ignore-analysis-text')}>
               {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
             </span>
           </InputCheckbox>
@@ -214,7 +219,20 @@ export const SelectDefectManually = ({
             : itemData.issue.issueType
         }
         isNarrowView={getDefectTypeNarrowView()}
+        highlightedItem={params.highlightedItem}
       />
+    </>
+  );
+
+  return (
+    <div className={cx('select-defect-wrapper')}>
+      {!isBulkOperation && defectTypeExtensions.length
+        ? defectTypeExtensions.map((extension) => (
+            <extension.component key={extension.name} item={itemData}>
+              {createDefectTypesBlock}
+            </extension.component>
+          ))
+        : createDefectTypesBlock()}
       <div className={cx('defect-comment')}>
         <MarkdownEditor
           value={
@@ -231,12 +249,12 @@ export const SelectDefectManually = ({
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"
-          controlled={extensions.length !== 0}
+          controlled={defectCommentExtensions.length !== 0}
         />
         {!isBulkOperation &&
-          extensions.map((extensionComponent) => (
-            <extensionComponent.component
-              key={extensionComponent.name}
+          defectCommentExtensions.map((extension) => (
+            <extension.component
+              key={extension.name}
               onChangeComment={handleDefectCommentChange}
               comment={source.issue.comment}
               item={itemData}
