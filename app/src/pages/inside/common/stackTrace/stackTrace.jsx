@@ -161,7 +161,7 @@ export class StackTrace extends Component {
     this.props.setActiveTabIdAction('logs');
   };
 
-  createStackTraceItem = (item, extraRow, extraCell) => {
+  createStackTraceItem = (item, { extraRow, extraCell } = {}) => {
     const { intl, hideAdditionalCells, designMode, eventsInfo } = this.props;
     const maxRowHeight = this.getMaxRowHeight();
 

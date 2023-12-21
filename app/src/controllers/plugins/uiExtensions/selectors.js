@@ -13,6 +13,7 @@ import {
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+  EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -66,4 +67,7 @@ export const makeDecisionDefectTypeAddonSelector = createUiExtensionSelectorByTy
 );
 export const logStackTraceAddonSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+);
+export const testItemDetailsAddonSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
 );

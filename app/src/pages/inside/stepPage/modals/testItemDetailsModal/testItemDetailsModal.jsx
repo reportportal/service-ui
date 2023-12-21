@@ -47,6 +47,7 @@ import {
   showNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
+import { testItemDetailsAddonSelector } from 'controllers/plugins/uiExtensions';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
@@ -75,6 +76,7 @@ const cx = classNames.bind(styles);
     userId: userIdSelector(state),
     currentProject: activeProjectSelector(state),
     launch: launchSelector(state),
+    extensions: testItemDetailsAddonSelector(state),
   }),
   {
     showNotification,
@@ -109,6 +111,7 @@ export class TestItemDetailsModal extends Component {
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
     invalid: PropTypes.bool.isRequired,
+    extensions: PropTypes.array,
   };
 
   static defaultProps = {
@@ -117,6 +120,7 @@ export class TestItemDetailsModal extends Component {
     userProjectRole: '',
     dirty: false,
     clearLogPageStackTrace: () => {},
+    extensions: [],
   };
 
   componentDidMount() {
@@ -217,17 +221,19 @@ export class TestItemDetailsModal extends Component {
     return formatMessage(messages.descriptionHint, { length: description.length });
   };
 
-  renderDetailsTab = (editable) => {
+  renderDetailsTabContent = (editable, { nameAddon, attributesAddon, descriptionAddon } = {}) => {
     const {
       intl,
       data: { item },
       tracking: { trackEvent },
     } = this.props;
+
     return (
       <div className={cx('details-tab')}>
         <div className={cx('name-row')}>
           <div className={cx('name')}>{item.name}</div>
           <div className={cx('status')}>
+            {nameAddon}
             <TestItemStatus status={item.status} />
           </div>
         </div>
@@ -254,7 +260,11 @@ export class TestItemDetailsModal extends Component {
             </div>
           </ModalField>
         )}
-        <ModalField label={intl.formatMessage(messages.attributesLabel)}>
+        <ModalField
+          label={intl.formatMessage(messages.attributesLabel)}
+          tip={editable && attributesAddon}
+          tipPosition="right"
+        >
           <FieldProvider name="attributes">
             <AttributeListField
               disabled={!editable}
@@ -274,7 +284,10 @@ export class TestItemDetailsModal extends Component {
             </ModalField>
           </Fragment>
         )}
-        <div className={cx('label')}>{intl.formatMessage(messages.description)}</div>
+        <div className={cx('label', 'description')}>
+          {intl.formatMessage(messages.description)}
+          {editable && descriptionAddon}
+        </div>
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
@@ -286,6 +299,7 @@ export class TestItemDetailsModal extends Component {
                     hintText: this.getDescriptionText,
                     hintCondition: this.checkDescriptionLengthForHint,
                   }}
+                  controlled={!!descriptionAddon}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -305,6 +319,21 @@ export class TestItemDetailsModal extends Component {
         )}
       </div>
     );
+  };
+
+  renderDetailsTab = (editable) => {
+    const {
+      data: { item },
+      extensions,
+    } = this.props;
+
+    return extensions.length
+      ? extensions.map((extension) => (
+          <extension.component key={extension.name} item={item} editable={editable}>
+            {this.renderDetailsTabContent}
+          </extension.component>
+        ))
+      : this.renderDetailsTabContent(editable);
   };
 
   renderStackTraceTab = () => {

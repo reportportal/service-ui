@@ -199,11 +199,11 @@ export const SelectDefectManually = ({
     });
   };
 
-  const createDefectTypesBlock = (params = {}) => (
+  const createDefectTypesBlock = (addons = {}) => (
     <>
       {!isBulkOperation && (
         <div className={cx('defect-types-extra-block')}>
-          {params.addonBlock}
+          {addons.addonBlock}
           <InputCheckbox
             value={
               modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -228,7 +228,7 @@ export const SelectDefectManually = ({
             : itemData.issue.issueType
         }
         isNarrowView={getDefectTypeNarrowView()}
-        highlightedItem={params.highlightedItem}
+        highlightedItem={addons.highlightedItem}
       />
     </>
   );

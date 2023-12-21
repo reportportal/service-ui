@@ -16,6 +16,7 @@ export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON =
 export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
   'uiExtension:makeDecisionDefectTypeAddon';
 export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAddon';
+export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
 
 export const COMMAND_GET_FILE = 'getFile';
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
