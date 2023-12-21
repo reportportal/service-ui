@@ -108,7 +108,7 @@ const messages = defineMessages({
   uninstallPluginNote: {
     id: 'InstancesSection.uninstallPluginNote',
     defaultMessage:
-      'Remove this plugin from the reportportal and revoke all access and authorizations.',
+      'Remove this plugin from the ReportPortal and revoke all access and authorizations.',
   },
 });
 
