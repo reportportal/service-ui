@@ -180,7 +180,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "Калі ласка, увядзіце ключ атрибута",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "1 ўзровень можа быць дададзены",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "{amount} узроўняў можна дадаць",
-  "AttributesBlock.attributesIcon": "Атрыбуты",
+  "AttributesBlock.attributesTitle": "Атрыбуты",
   "AutoAnalysis.AutoAnalysisMode": "Аўта-Аналіз на аснове",
   "AutoAnalysis.AutoAnalysisModeDescription": "Вы можаце вызначыць запускі, якія будуць выкарыстоўвацца ў якасці асновы для аўтаматычнага аналізу. <a>Дакументацыя</a>",
   "AutoAnalysis.allLaunchesCaption": "Усе папярэднія запускі",

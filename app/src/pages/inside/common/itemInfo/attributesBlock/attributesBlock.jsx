@@ -26,8 +26,8 @@ import styles from './attributesBlock.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  attributesIcon: {
-    id: 'AttributesBlock.attributesIcon',
+  attributesTitle: {
+    id: 'AttributesBlock.attributesTitle',
     defaultMessage: 'Attributes',
   },
 });
@@ -63,7 +63,7 @@ export const AttributesBlock = injectIntl(
         {!!attributeWithIcon && (
           <div className={cx('icon-block')}>
             <div
-              title={intl.formatMessage(messages.attributesIcon)}
+              title={intl.formatMessage(messages.attributesTitle)}
               className={cx('attributes-icon')}
             />
             {attributeWithIcon}
