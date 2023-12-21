@@ -16,6 +16,7 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   formatAttribute,
   formatAttributeWithSpacedDivider,
@@ -24,16 +25,16 @@ import {
 import styles from './attributesBlock.scss';
 
 const cx = classNames.bind(styles);
+const messages = defineMessages({
+  attributesIcon: {
+    id: 'AttributesBlock.attributesIcon',
+    defaultMessage: 'Attributes',
+  },
+});
 
-export const AttributesBlock = ({
-  attributes,
-  onClickAttribute,
-  isAttributeClickable,
-  noHoverEffects,
-}) => (
-  <div className={cx('attributes-block')}>
-    {attributes.some(notSystemAttributePredicate) && <div className={cx('attributes-icon')} />}
-    {attributes.filter(notSystemAttributePredicate).map((attribute) => (
+export const AttributesBlock = injectIntl(
+  ({ intl, attributes, onClickAttribute, isAttributeClickable, noHoverEffects }) => {
+    const allAttributes = attributes.filter(notSystemAttributePredicate).map((attribute) => (
       <div
         key={formatAttribute(attribute)}
         className={cx('attribute', {
@@ -53,8 +54,25 @@ export const AttributesBlock = ({
           <div>{attribute.value}</div>
         )}
       </div>
-    ))}
-  </div>
+    ));
+
+    const [attributeWithIcon, ...otherAttributes] = allAttributes;
+
+    return (
+      <div className={cx('attributes-block')}>
+        {!!attributeWithIcon && (
+          <div className={cx('icon-block')}>
+            <div
+              title={intl.formatMessage(messages.attributesIcon)}
+              className={cx('attributes-icon')}
+            />
+            {attributeWithIcon}
+          </div>
+        )}
+        {otherAttributes}
+      </div>
+    );
+  },
 );
 
 AttributesBlock.propTypes = {
