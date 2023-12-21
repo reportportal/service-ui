@@ -22,9 +22,9 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  isAdminSelector,
   activeProjectRoleSelector,
   activeProjectSelector,
+  userAccountRoleSelector,
 } from 'controllers/user';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -56,12 +56,12 @@ export const IntegrationInfo = (props) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
-  const isAdmin = useSelector(isAdminSelector);
+  const accountRole = useSelector(userAccountRoleSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const activeProject = useSelector(activeProjectSelector);
-  const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
+  const isAbleToClick = canUpdateSettings(accountRole, userProjectRole);
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
