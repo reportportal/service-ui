@@ -73,6 +73,7 @@ export const baseEventParametersSelector = createSelector(
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
   isAdminSelector,
+  analyzerExtensionsSelector,
   (
     instanceId,
     buildVersion,
@@ -81,6 +82,7 @@ export const baseEventParametersSelector = createSelector(
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    analyzerExtensions,
   ) => ({
     instanceId,
     buildVersion,
@@ -89,5 +91,6 @@ export const baseEventParametersSelector = createSelector(
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    isAnalyzerAvailable: !!analyzerExtensions.length,
   }),
 );
