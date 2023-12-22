@@ -180,6 +180,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "请输入属性名",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "可以再增加1层",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "可以再增加{amount}层",
+  "AttributesBlock.attributesTitle": "属性",
   "AutoAnalysis.AutoAnalysisMode": "自动分析服务基于的数据",
   "AutoAnalysis.AutoAnalysisModeDescription": "You can specify the launches that will be used as the base for Auto-Analysis. <a>Documentation</a>",
   "AutoAnalysis.allLaunchesCaption": "All previous launches",

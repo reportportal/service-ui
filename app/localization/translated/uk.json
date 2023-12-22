@@ -180,6 +180,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "Введить ключ атрибуту",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "1 рівень може бути доданий",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "{amount} рівнів можуть бути додані",
+  "AttributesBlock.attributesTitle": "Атрибути",
   "AutoAnalysis.AutoAnalysisMode": "Авто-Аналіз на основі",
   "AutoAnalysis.AutoAnalysisModeDescription": "Ви можете вказати запуски, які будуть використовуватися як основа для автоматичного аналізу. <a>Документація</a>",
   "AutoAnalysis.allLaunchesCaption": "Всі попередні запуски",
