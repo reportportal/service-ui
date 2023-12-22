@@ -44,6 +44,7 @@ export const analyticsEventObserver = ReactObserver();
       isPatternAnalyzerEnabled,
       projectInfoId,
       isAdmin,
+      isAnalyzerAvailable,
     } = baseEventParameters;
 
     if ('place' in data) {
@@ -51,7 +52,7 @@ export const analyticsEventObserver = ReactObserver();
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
         uid: `${userId}|${instanceId}`,
-        auto_analysis: getAutoAnalysisEventValue(isAutoAnalyzerEnabled),
+        auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
         timestamp: Date.now(),
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
