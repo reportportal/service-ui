@@ -89,7 +89,9 @@ const MakeDecision = ({ data }) => {
         !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
-    extraAnalyticsParams: {},
+    extraAnalyticsParams: {
+      link_name: false,
+    },
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
   const windowSize = useWindowResize();

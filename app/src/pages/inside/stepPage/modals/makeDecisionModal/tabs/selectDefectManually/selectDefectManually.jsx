@@ -76,7 +76,7 @@ export const SelectDefectManually = ({
 
   const source = modalState.selectManualChoice;
 
-  const handleManualChange = (value = {}) => {
+  const handleManualChange = (value = {}, extraAnalyticsParams = {}) => {
     const issue = {
       ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
@@ -85,6 +85,10 @@ export const SelectDefectManually = ({
       ...modalState,
       decisionType: SELECT_DEFECT_MANUALLY,
       selectManualChoice: { issue },
+      extraAnalyticsParams: {
+        ...modalState.extraAnalyticsParams,
+        ...extraAnalyticsParams,
+      },
     });
     if (!issue.comment) {
       commentEditor.focus();
@@ -100,7 +104,7 @@ export const SelectDefectManually = ({
     trackEvent(getClickIgnoreAACheckboxEvent(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
-    handleManualChange({ comment: value.trim() });
+    handleManualChange({ comment: value.trim() }, { link_name: true });
     if (isBulkOperation) {
       const isValueEmpty = value.trim() === '';
       if (!source.issue.comment && !isValueEmpty) {
