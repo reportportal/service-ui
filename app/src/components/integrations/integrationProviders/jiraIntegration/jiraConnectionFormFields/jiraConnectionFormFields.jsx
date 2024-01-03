@@ -83,7 +83,7 @@ export class JiraConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -107,7 +107,7 @@ export class JiraConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} isRequired />
+            <FieldText defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -123,25 +123,25 @@ export class JiraConnectionFormFields extends Component {
         <FieldElement
           name="username"
           label={formatMessage(messages.usernameLabel)}
-          validate={commonValidators.requiredField}
+          validate={commonValidators.btsUserName}
           disabled={disabled}
           className={cx('fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
           name="password"
           label={formatMessage(messages.passwordLabel)}
-          validate={commonValidators.requiredField}
+          validate={commonValidators.btsPassword}
           disabled={disabled}
           className={cx('last-fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} type="password" />
+            <FieldText defaultWidth={false} type="password" />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>

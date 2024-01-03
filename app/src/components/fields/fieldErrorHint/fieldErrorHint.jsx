@@ -200,6 +200,14 @@ const messages = defineMessages({
     id: 'BtsCommonMessages.btsProjectIdHint',
     defaultMessage: 'Project ID should have size from 1 to 55',
   },
+  btsUserNameHint: {
+    id: 'BtsCommonMessages.btsUserNameHint',
+    defaultMessage: 'Username should have size from 1 to 55',
+  },
+  btsPasswordHint: {
+    id: 'BtsCommonMessages.btsPasswordHint',
+    defaultMessage: 'Password should have size from 1 to 55',
+  },
   portFieldHint: {
     id: 'EmailFormFields.portFieldHint',
     defaultMessage: "Only numbers from '1' to '65535' are possible.",
