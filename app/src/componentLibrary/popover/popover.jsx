@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
@@ -39,7 +39,7 @@ export const Popover = ({
 
   useOnClickOutside(popoverRef, onClose);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const { current: parent } = parentRef;
     const parentTop = parent.offsetTop;
     const parentLeft = parent.offsetLeft;
