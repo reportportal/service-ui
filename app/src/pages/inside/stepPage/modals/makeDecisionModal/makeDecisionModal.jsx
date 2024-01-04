@@ -317,9 +317,6 @@ const MakeDecision = ({ data }) => {
 
     const hasSuggestions = !!suggestedItems.length;
 
-    const issueBtn =
-      isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType;
-
     return isBulkOperation
       ? editDefectsEvents.getClickOnApplyBulkEvent(
           defectFromTIGroup,
@@ -333,7 +330,7 @@ const MakeDecision = ({ data }) => {
           activeTab,
           issueType,
           itemData.issue.issueType,
-          issueBtn,
+          issueActionType,
           suggestedItems,
         );
   };
