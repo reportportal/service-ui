@@ -77,14 +77,14 @@ export class RallyConnectionFormFields extends Component {
       <Fragment>
         <FieldElement
           name="integrationName"
-          validate={commonValidators.requiredField}
+          validate={commonValidators.btsIntegrationName}
           disabled={disabled}
           label={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
           className={cx('fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -108,7 +108,7 @@ export class RallyConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement

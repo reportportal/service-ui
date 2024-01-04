@@ -18,7 +18,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { commonValidators } from 'common/utils/validation';
+import { bindMessageToValidator, commonValidators } from 'common/utils/validation';
+import * as validate from 'common/utils/validation/validate';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -30,6 +31,9 @@ import { messages } from '../messages';
 import styles from './jiraConnectionFormFields.scss';
 
 const cx = classNames.bind(styles);
+
+const userNameValidator = bindMessageToValidator(validate.btsUserName, 'btsUserNameHint');
+const passwordValidator = bindMessageToValidator(validate.btsPassword, 'btsPasswordHint');
 
 @injectIntl
 export class JiraConnectionFormFields extends Component {
@@ -83,7 +87,7 @@ export class JiraConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -107,7 +111,7 @@ export class JiraConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} isRequired />
+            <FieldText defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -123,25 +127,25 @@ export class JiraConnectionFormFields extends Component {
         <FieldElement
           name="username"
           label={formatMessage(messages.usernameLabel)}
-          validate={commonValidators.requiredField}
+          validate={userNameValidator}
           disabled={disabled}
           className={cx('fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
           name="password"
           label={formatMessage(messages.passwordLabel)}
-          validate={commonValidators.requiredField}
+          validate={passwordValidator}
           disabled={disabled}
           className={cx('last-fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText maxLength={55} defaultWidth={false} type="password" />
+            <FieldText defaultWidth={false} type="password" />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>
