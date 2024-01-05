@@ -221,11 +221,11 @@ export class StackTrace extends Component {
             ))}
           </ScrollWrapper>
         ) : (
-          items.map((item) => (
+          items.map((item, index) => (
             <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
               {extensions.length
                 ? extensions.map((extension) => (
-                    <extension.component key={extension.name} item={item}>
+                    <extension.component key={extension.name} item={item} index={index}>
                       {this.createStackTraceItem}
                     </extension.component>
                   ))
