@@ -389,7 +389,7 @@ const AddEditNotificationModal = ({
             autocompleteProps={{ useFixedPositioning: true }}
           />
         </FieldElement>
-        {attributesValue.length > 0 && (
+        {attributesValue.length > 0 && isEditorShown && (
           <FieldElement
             className={cx('attributes-operator-wrapper')}
             name={ATTRIBUTES_OPERATOR_FIELD_KEY}
