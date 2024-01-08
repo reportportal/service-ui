@@ -66,7 +66,6 @@ export const MakeDecisionTabs = ({
       decisionType: MACHINE_LEARNING_SUGGESTIONS,
       issueActionType: '',
       suggestChoice: { ...testItemResource, logs, suggestRs },
-      selectManualChoice: { issue: testItemResource.issue },
     });
   };
 
