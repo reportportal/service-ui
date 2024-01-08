@@ -307,13 +307,8 @@ const MakeDecision = ({ data }) => {
       eventsInfo: { editDefectsEvents = {} },
       items,
     } = data;
-    const {
-      issueActionType,
-      suggestedItems,
-      selectManualChoice: {
-        issue: { issueType },
-      },
-    } = modalState;
+    const { issueActionType, suggestedItems } = modalState;
+    const { issueType } = modalState[ACTIVE_TAB_MAP[activeTab]].issue;
 
     const hasSuggestions = !!suggestedItems.length;
 

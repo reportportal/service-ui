@@ -43,7 +43,7 @@ export const MakeDecisionTabs = ({
 }) => {
   const { formatMessage } = useIntl();
   const [selectedMLSuggest, setSelectedMLSuggest] = useState(null);
-  const [animationSuggest, setAimationSuggest] = useState(true);
+  const [animationSuggest, setAnimationSuggest] = useState(true);
   const [selectDefectTab, machineLearningTab, copyFromHistoryLineTab] = tabs;
   const source = modalState.suggestChoice;
 
@@ -55,7 +55,7 @@ export const MakeDecisionTabs = ({
     setSelectedMLSuggest(index);
 
     if (index === 0) {
-      setAimationSuggest(false);
+      setAnimationSuggest(false);
     }
 
     const { testItemResource, logs, suggestRs } = suggestedItems.find(
