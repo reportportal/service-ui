@@ -59,7 +59,7 @@ export const IntegrationHeader = (props) => {
       {PLUGIN_DESCRIPTIONS_MAP[name]}{' '}
       <FormattedDescription
         content={formatMessage(messages.linkToDocumentation, {
-          a: (link) => createExternalLink(link, documentationLink),
+          a: (link) => createExternalLink(link, documentationLink, 'documentationLink'),
         })}
         event={PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(analyticsData, name)}
       />
@@ -72,6 +72,7 @@ export const IntegrationHeader = (props) => {
         target="_blank"
         rel="noreferrer noopener"
         href={documentationLink}
+        data-automation-id="documentationLink"
       >
         Documentation
       </a>
@@ -98,11 +99,19 @@ export const IntegrationHeader = (props) => {
         </div>
         {withButton && (
           <div className={cx('buttons-section')}>
-            <Button disabled={!isAbleToClick} onClick={onAddProjectIntegration}>
+            <Button
+              disabled={!isAbleToClick}
+              onClick={onAddProjectIntegration}
+              dataAutomationId="addProjectIntegrationButton"
+            >
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
             {availableProjectIntegrations.length > 0 && isAbleToClick && (
-              <Button onClick={onResetProjectIntegration} variant="ghost">
+              <Button
+                onClick={onResetProjectIntegration}
+                variant="ghost"
+                dataAutomationId="resetToGlobalIntegrationsButton"
+              >
                 {formatMessage(messages.resetToGlobalIntegrationsButton)}
               </Button>
             )}

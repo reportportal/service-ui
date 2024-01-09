@@ -63,7 +63,12 @@ export const IntegrationCollectionItem = ({
     openIntegration(item);
   };
   return (
-    <li onClick={itemClickHandler} role="row" className={cx('instances-list-item', { disabled })}>
+    <li
+      onClick={itemClickHandler}
+      role="row"
+      className={cx('instances-list-item', { disabled })}
+      data-automation-id="listItem"
+    >
       <div className={cx('item-data')}>
         <div className={cx('general-info')}>
           <h4 className={cx('integration-name')}>{title}</h4>

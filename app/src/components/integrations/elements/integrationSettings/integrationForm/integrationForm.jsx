@@ -166,7 +166,11 @@ export class IntegrationForm extends Component {
             {!blocked && isEditable && (
               <div className={cx('controls-block')}>
                 {disabled ? (
-                  <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>
+                  <Button
+                    onClick={this.toggleDisabled}
+                    disabled={shouldFieldsBeHidden}
+                    dataAutomationId="editConfigurationButton"
+                  >
                     {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   </Button>
                 ) : (
@@ -175,6 +179,7 @@ export class IntegrationForm extends Component {
                       <Button
                         onClick={handleSubmit(this.submitIntegration)}
                         disabled={shouldFieldsBeHidden}
+                        dataAutomationId="submitConfigurationButton"
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
                       </Button>
@@ -186,6 +191,7 @@ export class IntegrationForm extends Component {
                           variant="ghost"
                           onClick={this.toggleDisabled}
                           disabled={shouldFieldsBeHidden}
+                          dataAutomationId="cancelConfigurationButton"
                         >
                           {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
                         </Button>

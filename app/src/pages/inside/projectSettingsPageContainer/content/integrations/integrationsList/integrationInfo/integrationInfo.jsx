@@ -273,6 +273,7 @@ export const IntegrationInfo = (props) => {
           handleDocumentationClick={handleDocumentationClick}
           buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
           disableButton={!isAbleToClick}
+          buttonDataAutomationId="addProjectIntegrationButton"
         />
       )}
     </>

@@ -225,13 +225,21 @@ export class ConnectionSection extends Component {
           {isEditable && (
             <div className={cx('buttons-block')}>
               {editAuthConfig && !blocked && (
-                <button onClick={this.onEditAuth} className={cx('action-button')}>
+                <button
+                  onClick={this.onEditAuth}
+                  className={cx('action-button')}
+                  data-automation-id="editIntegrationIcon"
+                >
                   {Parser(PencilIcon)}
                 </button>
               )}
 
               {!blocked && (
-                <button onClick={this.removeIntegrationHandler} className={cx('action-button')}>
+                <button
+                  onClick={this.removeIntegrationHandler}
+                  className={cx('action-button')}
+                  data-automation-id="deleteIntegrationIcon"
+                >
                   {Parser(TrashBin)}
                 </button>
               )}
