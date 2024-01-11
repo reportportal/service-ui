@@ -107,15 +107,6 @@ const AutoAnalysis = ({
         data[ANALYZER_MODE],
       ),
     );
-
-    const numberOfLogLines = data[NUMBER_OF_LOG_LINES] === '-1' ? 'all' : data[NUMBER_OF_LOG_LINES];
-
-    trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInIndexTab(
-        numberOfLogLines,
-        data[ALL_MESSAGES_SHOULD_MATCH],
-      ),
-    );
   };
 
   const isFieldDisabled = !hasPermission || isPending;
