@@ -100,10 +100,9 @@ const UniqueErrors = ({
           format={Boolean}
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
           dataAutomationId="switchUniqueErrorField"
+          title={analyzerUnavailableTitle}
         >
-          <Checkbox title={analyzerUnavailableTitle}>
-            {formatMessage(messages.uniqueError)}
-          </Checkbox>
+          <Checkbox>{formatMessage(messages.uniqueError)}</Checkbox>
         </FieldElement>
         <FieldElement
           name={formatFieldName(UNIQUE_ERROR_REMOVE_NUMBERS)}

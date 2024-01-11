@@ -25,6 +25,7 @@ const cx = classNames.bind(styles);
 export const FieldElement = (props) => {
   const {
     label,
+    title,
     description,
     descriptionSecondary,
     children,
@@ -41,7 +42,7 @@ export const FieldElement = (props) => {
   const getChildren = () =>
     withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>;
   return (
-    <div className={cx('wrapper', className)} data-automation-id={dataAutomationId}>
+    <div className={cx('wrapper', className)} data-automation-id={dataAutomationId} title={title}>
       {label ? (
         <>
           <span className={cx('label', labelClassName)}>
@@ -73,6 +74,7 @@ export const FieldElement = (props) => {
 FieldElement.propTypes = {
   children: PropTypes.node.isRequired,
   label: PropTypes.string,
+  title: PropTypes.string,
   description: PropTypes.string,
   descriptionSecondary: PropTypes.string,
   additionalInfo: PropTypes.node,
@@ -86,6 +88,7 @@ FieldElement.propTypes = {
 };
 FieldElement.defaultProps = {
   label: '',
+  title: '',
   description: '',
   descriptionSecondary: '',
   additionalInfo: null,

@@ -139,10 +139,9 @@ const AutoAnalysis = ({
           format={Boolean}
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
           dataAutomationId={ANALYZER_ENABLED + FIELD}
+          title={analyzerUnavailableTitle}
         >
-          <Checkbox title={analyzerUnavailableTitle}>
-            {formatMessage(messages.autoAnalysis)}
-          </Checkbox>
+          <Checkbox>{formatMessage(messages.autoAnalysis)}</Checkbox>
         </FieldElement>
         <FieldElement
           name={ANALYZER_MODE}
