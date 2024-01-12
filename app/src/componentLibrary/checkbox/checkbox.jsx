@@ -26,6 +26,7 @@ const DARK_VARIANT = 'dark';
 
 export const Checkbox = ({
   children,
+  title,
   disabled,
   onChange,
   onFocus,
@@ -61,6 +62,7 @@ export const Checkbox = ({
       onFocus={onFocus}
       onBlur={onBlur}
       data-automation-id={dataAutomationId}
+      title={title}
     >
       <input
         ref={inputRef}
@@ -86,6 +88,7 @@ export const Checkbox = ({
 };
 Checkbox.propTypes = {
   variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
+  title: PropTypes.string,
   children: PropTypes.node,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -98,6 +101,7 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   variant: LIGHT_VARIANT,
   children: '',
+  title: '',
   value: false,
   disabled: false,
   onChange: () => {},

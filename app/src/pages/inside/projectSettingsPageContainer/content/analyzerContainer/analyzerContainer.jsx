@@ -164,6 +164,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
             onFormSubmit={updateProjectConfig}
             hasPermission={hasPermission}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
+            analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
         ),
       },
