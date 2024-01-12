@@ -28,11 +28,8 @@ import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useTracking } from 'react-tracking';
 import { FieldText } from 'componentLibrary/fieldText';
-import classNames from 'classnames/bind';
 import { FieldElement } from '../../../elements';
-import styles from './editPatternModal.scss';
 
-const cx = classNames.bind(styles);
 const messages = defineMessages({
   patternName: {
     id: 'PatternAnalysis.patternName',
@@ -41,10 +38,6 @@ const messages = defineMessages({
   headerTitle: {
     id: 'PatternAnalysis.headerTitle',
     defaultMessage: 'Edit Pattern Rule',
-  },
-  editPatternName: {
-    id: 'PatternAnalysis.editPatternName',
-    defaultMessage: 'Edit Pattern Name',
   },
 });
 
@@ -76,7 +69,6 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
     >
-      <div className={cx('description')}>{formatMessage(messages.editPatternName)}</div>
       <FieldElement
         name="name"
         label={formatMessage(messages.patternName)}
