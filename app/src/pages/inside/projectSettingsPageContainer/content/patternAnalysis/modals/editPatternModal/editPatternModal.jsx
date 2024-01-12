@@ -28,11 +28,8 @@ import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useTracking } from 'react-tracking';
 import { FieldText } from 'componentLibrary/fieldText';
-import classNames from 'classnames/bind';
 import { FieldElement } from '../../../elements';
-import styles from './editPatternModal.scss';
 
-const cx = classNames.bind(styles);
 const messages = defineMessages({
   patternName: {
     id: 'PatternAnalysis.patternName',
@@ -77,7 +74,6 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
         label={formatMessage(messages.patternName)}
         isRequired
         dataAutomationId="patternNameField"
-        className={cx('pattern-name-field')}
       >
         <FieldErrorHint provideHint={false}>
           <FieldText maxLength={55} defaultWidth={false} />
