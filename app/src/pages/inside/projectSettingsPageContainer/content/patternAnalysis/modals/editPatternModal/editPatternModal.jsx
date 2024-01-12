@@ -42,10 +42,6 @@ const messages = defineMessages({
     id: 'PatternAnalysis.headerTitle',
     defaultMessage: 'Edit Pattern Rule',
   },
-  createPatternModalDescription: {
-    id: 'PatternAnalysis.createPatternModalDescription',
-    defaultMessage: 'Create a Pattern specifying a condition for common failure reason',
-  },
 });
 
 const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
@@ -76,14 +72,12 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
     >
-      <div className={cx('description')}>
-        {formatMessage(messages.createPatternModalDescription)}
-      </div>
       <FieldElement
         name="name"
         label={formatMessage(messages.patternName)}
         isRequired
         dataAutomationId="patternNameField"
+        className={cx('pattern-name-field')}
       >
         <FieldErrorHint provideHint={false}>
           <FieldText maxLength={55} defaultWidth={false} />

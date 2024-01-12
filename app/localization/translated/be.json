@@ -1501,7 +1501,6 @@
   "PatternAnalysis.deletePatternMsg": "Вы ўпэўненыя, што хочаце выдаліць гэты патэрн?",
   "PatternAnalysis.deletePatternSuccess": "Патэрн паспяхова выдалены",
   "PatternAnalysis.duplicatePattern": "Дубляваць Правіла Патэрна",
-  "PatternAnalysis.createPatternModalDescription": "Стварыце патэрн, паказаўшы ўмову для агульнай прычыны адмовы",
   "PatternAnalysis.headerTitle": "Рэдагаваць Правіла Патэрна",
   "PatternAnalysis.patternName": "Імя патэрна",
   "PatternAnalysis.patternNameDuplicateHint": "Патэрн з такой назвай ужо існуе ў праекце.",
