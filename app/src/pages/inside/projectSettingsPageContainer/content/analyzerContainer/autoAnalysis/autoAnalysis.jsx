@@ -100,11 +100,15 @@ const AutoAnalysis = ({
     await onFormSubmit(data);
     setPending(false);
 
+    const numberOfLogLines = data[NUMBER_OF_LOG_LINES] === '-1' ? 'all' : data[NUMBER_OF_LOG_LINES];
+
     trackEvent(
       PROJECT_SETTINGS_ANALYZER_EVENTS.clickSubmitInAutoAnalyzerTab(
         data[MIN_SHOULD_MATCH],
         data[ANALYZER_ENABLED],
         data[ANALYZER_MODE],
+        data[ALL_MESSAGES_SHOULD_MATCH],
+        numberOfLogLines,
       ),
     );
   };
