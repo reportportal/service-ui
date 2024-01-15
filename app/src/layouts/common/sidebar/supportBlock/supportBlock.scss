@@ -17,8 +17,12 @@
 .support-btn {
   display: inline-flex;
   width: 56px;
-  height: 54px;
+  height: 56px;
   cursor: pointer;
+
+  svg {
+    width: 100%;
+  }
 }
 
 .tooltip-text {
