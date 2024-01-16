@@ -82,7 +82,7 @@ const getClickOnApplyEventCreator = (place) => (
     ...basicEventParameters,
     status,
     switcher,
-    icon_name: iconName,
+    icon_name: iconName || 'not_set',
     element_name: getMakeDecisionElementName(issueActionType),
   };
 };
