@@ -73,11 +73,6 @@
         }
       }
 
-      .opblock-tag-section h3 {
-        padding: 0px 20px 0px 10px;
-        height: 14px;
-      }
-
       .opblock-tag {
         .nostyle {
           &:after {
@@ -85,6 +80,7 @@
           }
         }
 
+        .renderedMarkdown,
         .markdown {
           p {
             margin: 0;
