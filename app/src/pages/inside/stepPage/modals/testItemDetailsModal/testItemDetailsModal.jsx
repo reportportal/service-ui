@@ -178,25 +178,24 @@ export class TestItemDetailsModal extends Component {
   updateItemAndCloseModal = (closeModal) => (formData) => {
     const {
       dirty,
-      data: { eventsInfo },
+      data: { item, eventsInfo },
       tracking,
     } = this.props;
     dirty && this.updateItem(formData);
     closeModal();
-    eventsInfo.clickSaveEvent && tracking.trackEvent(eventsInfo.clickSaveEvent);
+
+    if (eventsInfo.getSaveBtnEvent) {
+      const isDescriptionUpdated = item.description !== formData.description;
+      tracking.trackEvent(eventsInfo.getSaveBtnEvent(isDescriptionUpdated));
+    }
   };
 
   updateItem = (data) => {
     const {
       intl: { formatMessage },
       currentProject,
-      data: { item, type, fetchFunc, eventsInfo },
-      tracking,
+      data: { item, type, fetchFunc },
     } = this.props;
-
-    if (item.description !== data.description) {
-      tracking.trackEvent(eventsInfo.editDescription);
-    }
 
     fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
       method: 'put',
@@ -362,7 +361,6 @@ export class TestItemDetailsModal extends Component {
       onClick: (closeModal) => {
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
-      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
