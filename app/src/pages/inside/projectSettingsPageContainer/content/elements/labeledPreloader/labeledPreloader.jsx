@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 export const LabeledPreloader = ({ text }) => (
   <span>
-    <BubblesPreloader color={'topaz'} bubblesCount={7} customClassName={cx('preloader')} />
+    <BubblesPreloader customClassName={cx('preloader')} />
     <span className={cx('preloader-text')}>{text}</span>
   </span>
 );
