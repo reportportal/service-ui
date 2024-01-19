@@ -1,0 +1,42 @@
+name: Build RC Docker image
+
+on:
+  push:
+    branches:
+      - "rc/*"
+      - "hotfix/*"
+
+jobs:
+  variables-setup:
+    name: Setting variables for docker build
+    runs-on: ubuntu-latest
+    environment: rc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create variables
+        id: vars
+        run: |
+          echo "platforms=${{ vars.BUILD_PLATFORMS }}" >> $GITHUB_OUTPUT
+          echo "version=$(echo '${{ github.ref_name }}' | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')" >> $GITHUB_OUTPUT
+          echo "tag=$(echo ${{ github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+    outputs:
+      platforms: ${{ steps.vars.outputs.platforms }}
+      version: ${{ steps.vars.outputs.version }}
+      tag: ${{ steps.vars.outputs.tag }}
+      date: ${{ steps.vars.outputs.date }}
+      
+  call-docker-build:
+    name: Call release candidate Docker build
+    needs: variables-setup
+    uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
+    with:
+      aws-region: ${{ vars.AWS_REGION }}
+      image-tag: ${{ needs.variables-setup.outputs.tag }}
+      additional-tag: 'latest'
+      build-platforms: ${{ needs.variables-setup.outputs.platforms }}
+      version: ${{ needs.variables-setup.outputs.version }}
+      date: ${{ needs.variables-setup.outputs.date }}
+    secrets: inherit

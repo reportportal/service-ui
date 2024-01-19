@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,12 @@ import styles from './defectTypeSelector.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelector = ({ selectDefectType, selectedItem, isNarrowView }) => {
+export const DefectTypeSelector = ({
+  selectDefectType,
+  selectedItem,
+  isNarrowView,
+  highlightedItem,
+}) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -39,6 +44,7 @@ export const DefectTypeSelector = ({ selectDefectType, selectedItem, isNarrowVie
                   <DefectTypeSelectorItem
                     defectType={defectType}
                     isSelected={defectType.locator === selectedItem}
+                    isHighlighted={defectType.longName.toLowerCase() === highlightedItem}
                     onClick={() => selectDefectType(defectType.locator)}
                     isNarrowView={isNarrowView}
                   />
@@ -55,9 +61,11 @@ DefectTypeSelector.propTypes = {
   selectDefectType: PropTypes.func,
   selectedItem: PropTypes.string,
   isNarrowView: PropTypes.bool,
+  highlightedItem: PropTypes.string,
 };
 DefectTypeSelector.defaultProps = {
   selectDefectType: null,
   selectedItem: '',
   isNarrowView: false,
+  highlightedItem: '',
 };

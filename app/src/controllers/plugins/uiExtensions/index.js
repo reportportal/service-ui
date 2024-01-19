@@ -11,5 +11,9 @@ export {
   uiExtensionPostIssueFormSelector,
   uniqueErrorGridCellComponentSelector,
   uniqueErrorGridHeaderCellComponentSelector,
+  makeDecisionDefectCommentAddonSelector,
+  makeDecisionDefectTypeAddonSelector,
+  logStackTraceAddonSelector,
+  testItemDetailsAddonSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

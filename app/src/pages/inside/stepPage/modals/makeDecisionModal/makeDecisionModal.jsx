@@ -89,6 +89,9 @@ const MakeDecision = ({ data }) => {
         !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
+    extraAnalyticsParams: {
+      link_name: false,
+    },
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
   const windowSize = useWindowResize();
@@ -301,24 +304,36 @@ const MakeDecision = ({ data }) => {
         return false;
     }
   };
+
   const getOnApplyEvent = () => {
     const {
       eventsInfo: { editDefectsEvents = {} },
+      items,
     } = data;
-    const { issueActionType, suggestedItems } = modalState;
-    let eventInfo;
+    const { issueActionType, suggestedItems, extraAnalyticsParams } = modalState;
+    const { issueType } = modalState[ACTIVE_TAB_MAP[activeTab]].issue;
+
     const hasSuggestions = !!suggestedItems.length;
-    if (isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType) {
-      eventInfo = editDefectsEvents.getClickOnApplyAndContinueEvent(
-        defectFromTIGroup,
-        hasSuggestions,
-        issueActionType.toLowerCase(),
-      );
-    } else {
-      eventInfo = editDefectsEvents.getClickOnApplyEvent(defectFromTIGroup, hasSuggestions);
-    }
-    return eventInfo;
+
+    return isBulkOperation
+      ? editDefectsEvents.getClickOnApplyBulkEvent(
+          defectFromTIGroup,
+          issueActionType,
+          items,
+          issueType,
+        )
+      : editDefectsEvents.getClickOnApplyEvent(
+          defectFromTIGroup,
+          hasSuggestions,
+          activeTab,
+          issueType,
+          itemData.issue.issueType,
+          issueActionType,
+          suggestedItems,
+          extraAnalyticsParams,
+        );
   };
+
   const applyChanges = () => {
     if (isBulkOperation) {
       modalHasChanges &&

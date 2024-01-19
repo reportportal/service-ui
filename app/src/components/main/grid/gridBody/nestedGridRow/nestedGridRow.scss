@@ -31,10 +31,10 @@ $LEVEL_OFFSET_STEP: 20px;
 
 .row-more {
   padding-left: 18px;
-  border-left-color: $COLOR--gray-91;
+  border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0;
-  background-color: $COLOR--gray-91;
+  background-color: $COLOR--primary-gray;
   font-size: 13px;
   @include levels(false);
 }

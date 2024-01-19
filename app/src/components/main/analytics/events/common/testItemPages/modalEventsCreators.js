@@ -15,9 +15,14 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { DEFECT_FROM_TI_GROUP_MAP } from './constants';
+import { DEFECT_FROM_TI_GROUP_MAP, ISSUE_TYPE_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
+import {
+  getMakeDecisionElementName,
+  getSwitchedDefectTypes,
+  getDefectTypesAnalyticsData,
+} from './utils';
 
 // GA4 events
 export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
@@ -46,41 +51,63 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   place: `${place}${actionPlace && `#${actionPlace}`}`,
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
-const getClickOnApplyBtnEventCreator = (place) => (defectFromTIGroup, hasSuggestions) => {
-  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
-    place,
-    defectFromTIGroup,
-  );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  if (!isBulkOperation) {
-    basicEventParameters.type = hasSuggestions ? 'with_ml' : 'without_ml';
-  }
-  return {
-    ...basicEventParameters,
-    element_name: 'apply',
-  };
-};
-const getClickOnApplyAndContinueBtnEventCreator = (place) => (
+
+const getClickOnApplyEventCreator = (place) => (
   defectFromTIGroup,
   hasSuggestions,
-  issueBtn,
+  status,
+  issueType,
+  itemDataIssueType,
+  issueActionType,
+  suggestedItems,
+  extraParams,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
     defectFromTIGroup,
   );
-  const isBulkOperation = basicEventParameters.condition === 'bulk';
-  const types = [];
-  if (!isBulkOperation) {
-    types.push(hasSuggestions ? 'with_ml' : 'without_ml');
-  }
-  types.push(issueBtn);
+
+  basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
+    issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
+  }`;
+
+  const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
+    issueType,
+  )}`;
+
+  const iconName = suggestedItems
+    .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
+    .join('#');
+
   return {
     ...basicEventParameters,
-    element_name: 'apply_and_continue',
-    type: types.join('#'),
+    status,
+    switcher,
+    icon_name: iconName,
+    element_name: getMakeDecisionElementName(issueActionType),
+    ...extraParams,
   };
 };
+
+const getClickOnApplyBulkEventCreator = (place) => (
+  defectFromTIGroup,
+  issueActionType,
+  items,
+  issueType,
+) => {
+  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
+    place,
+    defectFromTIGroup,
+  );
+
+  return {
+    ...basicEventParameters,
+    element_name: getMakeDecisionElementName(issueActionType),
+    switcher: getSwitchedDefectTypes(items, issueType),
+    type: ISSUE_TYPE_MAP[issueActionType] || undefined,
+  };
+};
+
 const getShowErrLogsSwitcherEventCreator = (place) => (defectFromTIGroup, switcherState) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
   element_name: 'show_error_logs',
@@ -127,8 +154,8 @@ const getOnChangeCommentOptionEventCreator = (place) => (label) => ({
 });
 export const getMakeDecisionModalEvents = (page) => ({
   getOpenModalEvent: getOpenModalEventCreator(page),
-  getClickOnApplyEvent: getClickOnApplyBtnEventCreator(page),
-  getClickOnApplyAndContinueEvent: getClickOnApplyAndContinueBtnEventCreator(page),
+  getClickOnApplyEvent: getClickOnApplyEventCreator(page),
+  getClickOnApplyBulkEvent: getClickOnApplyBulkEventCreator(page),
   getToggleShowErrLogsSwitcherEvent: getShowErrLogsSwitcherEventCreator(page),
   getClickIgnoreAACheckboxEvent: getClickIgnoreAACheckboxEventCreator(page),
   getClickCommentEditorIcon: getClickOnCommentEditorIconEventCreator(page),
@@ -289,21 +316,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
   },
-  DETAILS_TAB_EVENT: {
-    category,
-    action: `Click on tab "Details" on modal "Test item details"`,
-    label: 'Open tab "Details"',
-  },
-  STACK_TRACE_TAB_EVENT: {
-    category,
-    action: `Click on tab "Stack trace" on modal "Test item details"`,
-    label: 'Open tab "Stack trace"',
-  },
-  ADD_ATTRIBUTE: {
-    category,
-    action: 'Click on add new attributes on modal "Test item details"',
-    label: 'Add attributes',
-  },
 });
 
 const TEST_ITEM_DETAILS_MODAL = 'test_item_details';
@@ -328,10 +340,11 @@ export const getEditItemDetailsModalEvents = (category) => {
       modal,
       icon_name: 'arrow_to_expand',
     },
-    SAVE_BTN: {
+    getSaveBtnEvent: (isDescriptionUpdated) => ({
       ...basicClickEventParams,
       modal,
       element_name: 'save',
-    },
+      link_name: isDescriptionUpdated,
+    }),
   };
 };

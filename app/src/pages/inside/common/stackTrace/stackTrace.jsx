@@ -34,6 +34,7 @@ import {
   ERROR_LOG_INDEX_KEY,
   activeRetryIdSelector,
 } from 'controllers/log';
+import { logStackTraceAddonSelector } from 'controllers/plugins/uiExtensions';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import NavigateArrowIcon from 'common/img/navigate-arrow-inline.svg';
@@ -70,6 +71,7 @@ const LOAD_MORE_HEIGHT = 32;
     loading: logStackTraceLoadingSelector(state),
     loadMore: isLoadMoreStackTraceVisible(state),
     retryId: activeRetryIdSelector(state),
+    extensions: logStackTraceAddonSelector(state),
   }),
   {
     fetchLogPageStackTrace,
@@ -97,6 +99,7 @@ export class StackTrace extends Component {
     transparentBackground: PropTypes.bool,
     eventsInfo: PropTypes.object,
     retryId: PropTypes.number.isRequired,
+    extensions: PropTypes.array,
   };
 
   static defaultProps = {
@@ -111,6 +114,7 @@ export class StackTrace extends Component {
     designMode: '',
     transparentBackground: false,
     eventsInfo: {},
+    extensions: [],
   };
 
   componentDidMount() {
@@ -157,6 +161,41 @@ export class StackTrace extends Component {
     this.props.setActiveTabIdAction('logs');
   };
 
+  createStackTraceItem = (item, { extraRow, extraCell } = {}) => {
+    const { intl, hideAdditionalCells, designMode, eventsInfo } = this.props;
+    const maxRowHeight = this.getMaxRowHeight();
+
+    return (
+      <>
+        {extraRow}
+        <StackTraceMessageBlock
+          level={item.level}
+          maxHeight={maxRowHeight}
+          designMode={designMode}
+          eventsInfo={eventsInfo}
+        >
+          <div className={cx('message-container')}>
+            <div className={cx('cell', 'message-cell')}>{item.message}</div>
+            {!hideAdditionalCells && (
+              <>
+                <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
+                {extraCell}
+                <div className={cx('cell')}>
+                  <div className={cx('navigate-btn')} onClick={() => this.navigateToError(item.id)}>
+                    {!extraCell && <span>{intl.formatMessage(messages.jumpTo)}</span>}
+                    <i className={cx('navigate-icon')} title={intl.formatMessage(messages.jumpTo)}>
+                      {Parser(NavigateArrowIcon)}
+                    </i>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </StackTraceMessageBlock>
+      </>
+    );
+  };
+
   renderStackTraceMessage = () => {
     const {
       items,
@@ -165,42 +204,35 @@ export class StackTrace extends Component {
       intl,
       hideAdditionalCells,
       designMode,
-      eventsInfo,
+      extensions,
     } = this.props;
-    const maxRowHeight = this.getMaxRowHeight();
 
     return (
       <React.Fragment>
-        <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
-          {items.map((item) => (
-            <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
-              <StackTraceMessageBlock
-                level={item.level}
-                maxHeight={maxRowHeight}
-                designMode={designMode}
-                eventsInfo={eventsInfo}
+        {hideAdditionalCells ? (
+          <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className={cx('row', { [`design-mode-${designMode}`]: designMode })}
               >
-                <div className={cx('message-container')}>
-                  <div className={cx('cell', 'message-cell')}>{item.message}</div>
-                  {!hideAdditionalCells && (
-                    <>
-                      <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
-                      <div className={cx('cell')}>
-                        <div
-                          className={cx('navigate-btn')}
-                          onClick={() => this.navigateToError(item.id)}
-                        >
-                          <span>{intl.formatMessage(messages.jumpTo)}</span>
-                          <i className={cx('navigate-icon')}>{Parser(NavigateArrowIcon)}</i>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </StackTraceMessageBlock>
+                {this.createStackTraceItem(item)}
+              </div>
+            ))}
+          </ScrollWrapper>
+        ) : (
+          items.map((item, index) => (
+            <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
+              {extensions.length
+                ? extensions.map((extension) => (
+                    <extension.component key={extension.name} item={item} index={index}>
+                      {this.createStackTraceItem}
+                    </extension.component>
+                  ))
+                : this.createStackTraceItem(item)}
             </div>
-          ))}
-        </ScrollWrapper>
+          ))
+        )}
         {loadMore && (
           <div
             className={cx('load-more-container', {

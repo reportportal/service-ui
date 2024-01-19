@@ -1,0 +1,35 @@
+name: Build develop Docker image
+
+on:
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - '.github/**'
+      - README.md
+
+jobs:
+  variables-setup:
+    name: Setting variables for docker build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create variables
+        id: vars
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+    outputs:
+      date: ${{ steps.vars.outputs.date }}
+
+  call-docker-build:
+    name: Call develop Docker build
+    needs: variables-setup
+    uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
+    with:
+      aws-region: ${{ vars.AWS_REGION }}
+      image-tag: 'develop-${{ github.run_number }}'
+      version: 'develop-${{ github.run_number }}'
+      date: ${{ needs.variables-setup.outputs.date }}
+    secrets: inherit

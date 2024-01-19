@@ -96,6 +96,7 @@ import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controll
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
@@ -156,6 +157,7 @@ import {
   BTS_FIELDS_FORM,
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
@@ -239,6 +241,10 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
+    BubblesPreloader,
+  },
+  HOCs: {
+    withTooltip,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

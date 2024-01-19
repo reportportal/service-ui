@@ -29,10 +29,12 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
     static propTypes = {
       showTooltip: PropTypes.bool,
       children: PropTypes.node,
+      tooltipRoot: PropTypes.instanceOf(Element),
     };
     static defaultProps = {
       showTooltip: true,
       children: null,
+      tooltipRoot: null,
     };
     state = {
       shown: false,
@@ -100,7 +102,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                   </div>
                 )}
               </Popper>,
-              this.tooltipRoot,
+              this.props.tooltipRoot || this.tooltipRoot,
             )}
         </Manager>
       );
