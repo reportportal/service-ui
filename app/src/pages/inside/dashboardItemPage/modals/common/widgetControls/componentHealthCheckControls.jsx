@@ -30,7 +30,6 @@ import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Checkbox } from 'componentLibrary/checkbox';
 import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -65,10 +64,6 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckControls.attributesArrayValidationError',
     defaultMessage:
       'Enter an attribute key whose unique value will be used for combine tests into groups',
-  },
-  excludeSkipped: {
-    id: 'ComponentHealthCheckControls.ExcludeSkipped',
-    defaultMessage: 'Exclude Skipped tests from statistics',
   },
 });
 
@@ -118,7 +113,6 @@ export class ComponentHealthCheckControls extends Component {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
           attributeKeys: [],
-          excludeSkipped: false,
         },
       },
     });
@@ -184,13 +178,6 @@ export class ComponentHealthCheckControls extends Component {
                   formatMessage,
                 )}
               />
-            </FieldProvider>
-            <FieldProvider
-              name="contentParameters.widgetOptions.excludeSkipped"
-              format={Boolean}
-              className={cx('checkbox')}
-            >
-              <Checkbox>{formatMessage(messages.excludeSkipped)}</Checkbox>
             </FieldProvider>
             <FieldProvider
               name="contentParameters.widgetOptions.minPassingRate"

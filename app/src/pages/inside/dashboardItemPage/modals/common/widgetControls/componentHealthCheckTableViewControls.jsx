@@ -36,6 +36,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
+  CheckboxControl,
   FiltersControl,
   InputControl,
   AttributesFieldArrayControl,
@@ -79,6 +80,10 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.attributesArrayValidationError',
     defaultMessage:
       'Enter an attribute key whose unique value will be used for combine tests into groups',
+  },
+  excludeSkipped: {
+    id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
+    defaultMessage: 'Exclude Skipped tests from statistics',
   },
 });
 
@@ -133,6 +138,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
             asc: false,
             sortingColumn: WIDGET_OPTIONS.SORT.PASSING_RATE,
           },
+          excludeSkipped: false,
         },
       },
     });
@@ -226,6 +232,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
                     formatMessage,
                   )}
                 />
+              </FieldProvider>
+              <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+                <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
               </FieldProvider>
               <FieldProvider
                 name="contentParameters.widgetOptions.minPassingRate"
