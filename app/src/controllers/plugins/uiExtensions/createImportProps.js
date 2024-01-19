@@ -105,6 +105,7 @@ import {
 } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
@@ -294,6 +295,7 @@ export const createImportProps = (pluginName) => ({
     AttributeListFormField,
     Breadcrumbs,
     PlainTable,
+    BubblesPreloader,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {

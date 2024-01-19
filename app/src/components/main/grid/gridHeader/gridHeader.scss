@@ -16,7 +16,7 @@
 
 .grid-header {
   display: table-row;
-  border-bottom: solid 1px $COLOR--gray-91;
+  border-bottom: solid 1px $COLOR--primary-gray;
   background-color: $COLOR--primary-gray;
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;

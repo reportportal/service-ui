@@ -26,7 +26,7 @@ export const LoaderBlock = ({ text, className }) => {
   return (
     <div className={cx('loader-block', className)}>
       <div className={cx('loader')}>
-        <BubblesPreloader color={'topaz'} />
+        <BubblesPreloader />
       </div>
       <div className={cx('loader-text')}>{text}</div>
     </div>

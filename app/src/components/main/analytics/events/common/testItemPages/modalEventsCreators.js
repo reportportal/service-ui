@@ -60,6 +60,7 @@ const getClickOnApplyEventCreator = (place) => (
   itemDataIssueType,
   issueActionType,
   suggestedItems,
+  extraParams,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
@@ -84,6 +85,7 @@ const getClickOnApplyEventCreator = (place) => (
     switcher,
     icon_name: iconName || 'not_set',
     element_name: getMakeDecisionElementName(issueActionType),
+    ...extraParams,
   };
 };
 
@@ -314,21 +316,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
   },
-  DETAILS_TAB_EVENT: {
-    category,
-    action: `Click on tab "Details" on modal "Test item details"`,
-    label: 'Open tab "Details"',
-  },
-  STACK_TRACE_TAB_EVENT: {
-    category,
-    action: `Click on tab "Stack trace" on modal "Test item details"`,
-    label: 'Open tab "Stack trace"',
-  },
-  ADD_ATTRIBUTE: {
-    category,
-    action: 'Click on add new attributes on modal "Test item details"',
-    label: 'Add attributes',
-  },
 });
 
 const TEST_ITEM_DETAILS_MODAL = 'test_item_details';
@@ -353,10 +340,11 @@ export const getEditItemDetailsModalEvents = (category) => {
       modal,
       icon_name: 'arrow_to_expand',
     },
-    SAVE_BTN: {
+    getSaveBtnEvent: (isDescriptionUpdated) => ({
       ...basicClickEventParams,
       modal,
       element_name: 'save',
-    },
+      link_name: isDescriptionUpdated,
+    }),
   };
 };
