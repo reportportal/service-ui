@@ -304,10 +304,10 @@ export class ComponentHealthCheckTable extends Component {
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
-      isLatest: widget.contentParameters && widget.contentParameters.widgetOptions.latest,
+      isLatest: widget.contentParameters?.widgetOptions.latest,
       linkPayload: {
         projectId: project,
-        filterId: widget.appliedFilters[0] && widget.appliedFilters[0].id,
+        filterId: widget.appliedFilters[0]?.id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
       },
       getCompositeAttributes: this.getCompositeAttributes,
@@ -318,6 +318,10 @@ export class ComponentHealthCheckTable extends Component {
 
     return COLUMNS_SEQUENCE.reduce((columns, item) => {
       if (!customColumn && item === CUSTOM_COLUMN) {
+        return columns;
+      }
+
+      if (widget.contentParameters?.widgetOptions.excludeSkipped && item === STATS_SKIPPED) {
         return columns;
       }
 
