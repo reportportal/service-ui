@@ -65,7 +65,6 @@ ExecutionStatistics.propTypes = {
     payload: PropTypes.object,
     page: PropTypes.string,
   }),
-  excludeSkipped: PropTypes.bool,
 };
 ExecutionStatistics.defaultProps = {
   bold: false,

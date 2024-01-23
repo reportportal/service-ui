@@ -317,9 +317,9 @@ export const statisticsLinkSelector = createSelector(
       startTime,
       types,
     } = ownProps;
-    const linkPayload = (ownLinkParams && ownLinkParams.payload) || payload;
+    const linkPayload = ownLinkParams?.payload || payload;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
-    const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, true);
+    const page = ownLinkParams?.page || getNextPage(isDebugMode, true);
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
       levelIndex = !itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
