@@ -24,6 +24,7 @@ import {
   AUTOCOMPLETE_TYPE,
   MULTIPLE_AUTOCOMPLETE_TYPE,
   CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
+  MULTILINE_TEXT_TYPE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -67,7 +68,9 @@ export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldK
 export const getFieldComponent = (field) => {
   let fieldType = TEXT_TYPE;
 
-  if (field.fieldType === ARRAY_TYPE && field.definedValues && field.definedValues.length) {
+  if (field.fieldType === MULTILINE_TEXT_TYPE) {
+    fieldType = MULTILINE_TEXT_TYPE;
+  } else if (field.fieldType === ARRAY_TYPE && field.definedValues && field.definedValues.length) {
     fieldType = ARRAY_TYPE;
   } else if (field.fieldType === DATE_TYPE || field.fieldType.toLowerCase() === 'datetime') {
     fieldType = DATE_TYPE;
