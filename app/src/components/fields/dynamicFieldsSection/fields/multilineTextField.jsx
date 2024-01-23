@@ -22,7 +22,7 @@ import { DynamicField } from '../dynamicField';
 export const MultilineTextField = (props) => {
   const { field, darkView, ...rest } = props;
 
-  const formatInputValue = (value) => value && value[0];
+  const formatInputValue = (value) => value?.[0];
 
   const parseInputValue = (value) => (value ? [value] : []);
 
