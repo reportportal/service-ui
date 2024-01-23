@@ -313,6 +313,7 @@ export class ComponentHealthCheckTable extends Component {
       getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,
       isClickableAttribute: this.isClickableAttribute(),
+      excludeSkipped: widget.contentParameters?.widgetOptions.excludeSkipped,
     };
     const customColumn = this.getCustomColumn();
 

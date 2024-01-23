@@ -23,6 +23,7 @@ import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executi
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { getStatisticsStatuses } from 'components/widgets/singleLevelWidgets/tables/components/utils';
 import { defaultStatisticsMessages } from 'components/widgets/singleLevelWidgets/tables/components/messages';
+import { SKIPPED } from 'common/constants/testStatuses';
 import { TARGET } from '../constants';
 import styles from '../componentHealthCheckTable.scss';
 
@@ -31,14 +32,16 @@ const cx = classNames.bind(styles);
 export const StatisticsColumn = (
   { className, value },
   name,
-  { isLatest, getCompositeAttributes, linkPayload },
+  { isLatest, getCompositeAttributes, linkPayload, excludeSkipped },
 ) => {
   const itemValue = Number(value.statistics && value.statistics[name]);
   const totalValue = Number(value.total && value.total.statistics[name]);
   const defaultColumnProps = {
     itemId: TEST_ITEMS_TYPE_LIST,
     target: TARGET,
-    statuses: getStatisticsStatuses(name),
+    statuses: getStatisticsStatuses(name).filter(
+      (status) => !(excludeSkipped && status === SKIPPED),
+    ),
     listViewLinkParams: {
       isLatest,
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
