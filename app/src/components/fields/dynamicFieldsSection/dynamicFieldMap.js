@@ -22,6 +22,7 @@ import {
   MultipleAutocompleteField,
   CreatableMultipleAutocompleteField,
   TextField,
+  MultilineTextField,
 } from './fields';
 import {
   ARRAY_TYPE,
@@ -31,10 +32,12 @@ import {
   MULTIPLE_AUTOCOMPLETE_TYPE,
   CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
   TEXT_TYPE,
+  MULTILINE_TEXT_TYPE,
 } from './constants';
 
 export const FIELDS_MAP = {
   [TEXT_TYPE]: TextField,
+  [MULTILINE_TEXT_TYPE]: MultilineTextField,
   [DROPDOWN_TYPE]: DropdownField,
   [DATE_TYPE]: DateField,
   [ARRAY_TYPE]: ArrayField,
