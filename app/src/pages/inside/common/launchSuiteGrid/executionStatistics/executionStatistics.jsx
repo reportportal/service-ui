@@ -31,7 +31,6 @@ export const ExecutionStatistics = ({
   listViewLinkParams,
   statuses,
   ownLinkParams,
-  excludeSkipped,
 }) => (
   <div className={cx('execution-statistics')}>
     <span className={cx('title')}>{title.full}</span>
@@ -43,7 +42,6 @@ export const ExecutionStatistics = ({
         listViewLinkParams={listViewLinkParams}
         className={cx('value', { bold })}
         ownLinkParams={ownLinkParams}
-        excludeSkipped={excludeSkipped}
       >
         {value}
       </StatisticsLink>
