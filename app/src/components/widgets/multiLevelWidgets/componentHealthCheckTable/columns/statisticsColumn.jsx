@@ -51,7 +51,6 @@ export const StatisticsColumn = (
       type: TEST_ITEM_PAGE,
       payload: linkPayload,
     },
-    excludeSkipped,
   };
 
   return (

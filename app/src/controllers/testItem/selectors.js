@@ -316,7 +316,6 @@ export const statisticsLinkSelector = createSelector(
       statuses,
       startTime,
       types,
-      excludeSkipped,
     } = ownProps;
     const linkPayload = (ownLinkParams && ownLinkParams.payload) || payload;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
@@ -341,7 +340,6 @@ export const statisticsLinkSelector = createSelector(
       isLatest,
       ...(baselineLaunchId && { baselineLaunchId }),
       ...(launchId && { launchId }),
-      excludeSkipped,
     };
     if (statuses) {
       params['filter.in.status'] = statuses.join(',');

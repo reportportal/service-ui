@@ -523,10 +523,7 @@ export class StepLevelEntities extends Component {
               label: intl.formatMessage(messages.LaunchStatusInProgress),
               value: IN_PROGRESS.toUpperCase(),
             },
-          ].filter(
-            (option) =>
-              !(query.excludeSkipped === 'true' && option.value === SKIPPED.toUpperCase()),
-          ),
+          ],
           multiple: true,
           selectAll: true,
         },
