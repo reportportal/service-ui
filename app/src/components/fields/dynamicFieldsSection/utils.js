@@ -28,6 +28,12 @@ import {
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
+const AUTOCOMPLETE_TYPES = [
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
+];
+
 const normalizeDefinedValue = (item) =>
   !item[VALUE_ID_KEY] ? { ...item, [VALUE_ID_KEY]: item[VALUE_NAME_KEY] } : item;
 
@@ -76,16 +82,8 @@ export const getFieldComponent = (field) => {
     fieldType = DATE_TYPE;
   } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
-  } else if (field.commandName) {
-    if (field.fieldType === AUTOCOMPLETE_TYPE) {
-      fieldType = AUTOCOMPLETE_TYPE;
-    }
-    if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE) {
-      fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
-    }
-    if (field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE) {
-      fieldType = CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
-    }
+  } else if (field.commandName && AUTOCOMPLETE_TYPES.includes(field.fieldType)) {
+    fieldType = field.fieldType;
   }
 
   return FIELDS_MAP[fieldType];
