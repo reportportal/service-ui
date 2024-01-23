@@ -300,47 +300,62 @@ export const statisticsLinkSelector = createSelector(
   debugModeSelector,
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
-    const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
-    const launchesLimit = ownProps.launchesLimit;
-    const providerType = ownProps.providerType;
+    const {
+      launchesLimit,
+      providerType,
+      isLatest,
+      ownLinkParams,
+      itemId,
+      keepFilterParams,
+      attributeKey,
+      attributeValue,
+      compositeAttribute,
+      levelAttribute,
+      baselineLaunchId,
+      launchId,
+      statuses,
+      startTime,
+      types,
+      excludeSkipped,
+    } = ownProps;
+    const linkPayload = (ownLinkParams && ownLinkParams.payload) || payload;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
-    const isLatest = ownProps.isLatest;
-    const page =
-      (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
+    const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, true);
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
-      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+      levelIndex = !itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
     }
     const queryNamespace = getQueryNamespace(levelIndex);
     const params = {
-      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      ...(keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
-      'filter.has.attributeKey': ownProps.attributeKey,
-      'filter.has.attributeValue': ownProps.attributeValue,
-      'filter.has.compositeAttribute': ownProps.compositeAttribute,
-      'filter.has.levelAttribute': ownProps.levelAttribute,
+      'filter.has.attributeKey': attributeKey,
+      'filter.has.attributeValue': attributeValue,
+      'filter.has.compositeAttribute': compositeAttribute,
+      'filter.has.levelAttribute': levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
-      ...(ownProps.baselineLaunchId && { baselineLaunchId: ownProps.baselineLaunchId }),
-      ...(ownProps.launchId && { launchId: ownProps.launchId }),
+      ...(baselineLaunchId && { baselineLaunchId }),
+      ...(launchId && { launchId }),
+      excludeSkipped,
     };
-    if (ownProps.statuses) {
-      params['filter.in.status'] = ownProps.statuses.join(',');
+    if (statuses) {
+      params['filter.in.status'] = statuses.join(',');
     }
-    if (ownProps.startTime) {
-      params['filter.btw.startTime'] = ownProps.startTime.join(',');
+    if (startTime) {
+      params['filter.btw.startTime'] = startTime.join(',');
     }
-    if (ownProps.types === null) {
+    if (types === null) {
       delete params['filter.in.type'];
     }
 
     return createLink(
       testItemIds,
-      ownProps.itemId,
+      itemId,
       linkPayload,
       {
         ...query,
