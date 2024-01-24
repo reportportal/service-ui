@@ -50,6 +50,12 @@
     border: 1px solid $COLOR--e-200;
     color: $COLOR--almost-black;
 
+    &.disabled {
+      pointer-events: none;
+      background-color: $COLOR--bg-100;
+      color: $COLOR--e-300;
+    }
+
     &:hover {
       border-color: $COLOR--e-300;
     }
