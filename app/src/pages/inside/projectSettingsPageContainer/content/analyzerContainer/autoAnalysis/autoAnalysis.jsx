@@ -178,7 +178,7 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={MIN_SHOULD_MATCH + FIELD}
         >
-          <FieldErrorHint>
+          <FieldErrorHint widthContent>
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>

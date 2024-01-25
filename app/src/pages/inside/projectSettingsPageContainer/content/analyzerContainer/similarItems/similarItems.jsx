@@ -84,7 +84,7 @@ const SimilarItems = ({
           disabled={isFieldDisabled}
           dataAutomationId={SEARCH_LOGS_MIN_SHOULD_MATCH + FIELD}
         >
-          <FieldErrorHint>
+          <FieldErrorHint widthContent>
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
