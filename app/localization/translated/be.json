@@ -371,6 +371,7 @@
   "ComponentHealthCheckControls.PassingRateFieldLabel": "Мінімальны дапушчальны працэнт пройдзеных тэстаў для кампанента",
   "ComponentHealthCheckControls.PassingRateValidationError": "Павінен мець значэнне ад 50 да 100",
   "ComponentHealthCheckControls.attributesArrayValidationError": "Увядзіце ключы атрыбута чые унікальнае значэнне будзе выкарыстоўвацца для групоўкі тэстаў",
+  "ComponentHealthCheckControls.excludeSkipped": "Выключыць прапушчаныя тэсты са статыстыкі",
   "ComponentHealthCheckTable.automationBugColumnTitle": "Хіба аўтаматызацыі",
   "ComponentHealthCheckTable.customColumnHint": "Карыстацкі слупок:",
   "ComponentHealthCheckTable.nameColumn": "Імя",

@@ -183,7 +183,9 @@ export class ComponentHealthCheck extends Component {
     const compositeAttributes =
       breadcrumbs && getNewActiveAttributes(breadcrumbs.key, value, activeAttributes);
     const link = getStatisticsLink({
-      statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
+      statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED].filter(
+        (status) => !(widget.contentParameters?.widgetOptions.excludeSkipped && status === SKIPPED),
+      ),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
       compositeAttribute: compositeAttributes && compositeAttributes.map(formatAttribute).join(','),
       isLatest: widget.contentParameters.widgetOptions.latest,
