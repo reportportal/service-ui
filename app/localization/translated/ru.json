@@ -371,6 +371,7 @@
   "ComponentHealthCheckControls.PassingRateFieldLabel": "Минимальный допустимый процент пройденных тестов для компонента",
   "ComponentHealthCheckControls.PassingRateValidationError": "Должен иметь значение от 50 до 100",
   "ComponentHealthCheckControls.attributesArrayValidationError": "Введите ключи атрибута чье уникальное значение будет использоваться для группировки тестов",
+  "ComponentHealthCheckControls.excludeSkipped": "Исключить пропущенные тесты из статистики",
   "ComponentHealthCheckTable.automationBugColumnTitle": "Ошибка автоматизации",
   "ComponentHealthCheckTable.customColumnHint": "Пользовательский столбец:",
   "ComponentHealthCheckTable.nameColumn": "Имя",

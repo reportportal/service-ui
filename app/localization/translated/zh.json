@@ -371,6 +371,7 @@
   "ComponentHealthCheckControls.PassingRateFieldLabel": "组件所允许的最低合格率",
   "ComponentHealthCheckControls.PassingRateValidationError": "值应该在50到100之间",
   "ComponentHealthCheckControls.attributesArrayValidationError": "请输入一个唯一的关键词作为属性，用于将测试合并成组",
+  "ComponentHealthCheckControls.excludeSkipped": "Exclude Skipped tests from statistics",
   "ComponentHealthCheckTable.automationBugColumnTitle": "自动化错误",
   "ComponentHealthCheckTable.customColumnHint": "自定义列：",
   "ComponentHealthCheckTable.nameColumn": "Name",
