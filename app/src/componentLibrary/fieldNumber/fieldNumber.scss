@@ -71,18 +71,18 @@
   background: $COLOR--bg-000;
   user-select: none;
 
-  &:focus-within:not(.error.touched) {
+  &:focus-within:not(.error) {
     padding: 5px 7px;
     border-width: 2px;
     border-color: $COLOR--topaz-focused;
   }
 
-  &:hover:not(.disabled):not(:focus-within):not(.error.touched),
-  &.filled:not(:focus-within) {
+  &:hover:not(.disabled):not(:focus-within):not(.error),
+  &.filled {
     border-color: $COLOR--e-300;
   }
 
-  &.error.touched {
+  &.error {
     border-color: $COLOR--red-failed-2;
   }
 }
@@ -133,4 +133,15 @@
     appearance: none;
     margin: 0;
   }
+}
+
+.additional-content {
+  margin-top: 4px;
+}
+
+.error-text {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--red-failed-2;
 }
