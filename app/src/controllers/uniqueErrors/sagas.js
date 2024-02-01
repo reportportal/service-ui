@@ -56,8 +56,8 @@ function* getPlugin() {
     const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
     plugins = response.payload;
   }
-  const supportedPlugin = plugins.find(
-    (item) => item && item.details?.metadata?.supportedFeatures?.includes('uniqueErrorsClusters'),
+  const supportedPlugin = plugins.find((item) =>
+    item?.details?.metadata?.supportedFeatures?.includes('uniqueErrorsClusters'),
   );
   if (!supportedPlugin) return null;
 

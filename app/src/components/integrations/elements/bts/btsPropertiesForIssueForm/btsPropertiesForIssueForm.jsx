@@ -211,8 +211,7 @@ export class BtsPropertiesForIssueForm extends Component {
         const { defectFormFields } = this.props.initialData;
         let selectedIssueTypeValue = [];
         selectedIssueTypeValue =
-          (defectFormFields?.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {}).value ||
-          [];
+          defectFormFields?.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY)?.value || [];
         selectedIssueTypeValue = selectedIssueTypeValue[0] || issueTypes[0];
         this.changeIssueTypeConfig(issueTypes, selectedIssueTypeValue);
         return this.updateFields(selectedIssueTypeValue);
