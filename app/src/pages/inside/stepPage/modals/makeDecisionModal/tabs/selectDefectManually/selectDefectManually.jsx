@@ -65,8 +65,7 @@ export const SelectDefectManually = ({
   const debugMode = useSelector(debugModeSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const [commentEditor, setCommentEditor] = useState(null);
-  const defectFromTIGroup =
-    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const defectFromTIGroup = itemData.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const source = modalState.selectManualChoice;
 
@@ -164,7 +163,7 @@ export const SelectDefectManually = ({
     if (
       isBulkOperation
         ? itemData.some((item) => item.issue.externalSystemIssues.length > 0)
-        : itemData.issue && itemData.issue.externalSystemIssues.length > 0
+        : itemData.issue?.externalSystemIssues.length > 0
     ) {
       actionButtonItems.push({
         id: UNLINK_ISSUE,
@@ -221,9 +220,7 @@ export const SelectDefectManually = ({
           manipulateEditorOutside={setCommentEditor}
           onChange={handleDefectCommentChange}
           eventsInfo={{
-            onClickToolbarIcon:
-              eventsInfo.getClickCommentEditorIcon &&
-              eventsInfo.getClickCommentEditorIcon(defectFromTIGroup),
+            onClickToolbarIcon: eventsInfo.getClickCommentEditorIcon?.(defectFromTIGroup),
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"

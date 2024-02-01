@@ -61,12 +61,10 @@ const messages = defineMessages({
 @reduxForm({
   form: 'linkIssueForm',
   validate: ({ issues }) => ({
-    issues:
-      issues &&
-      issues.map((issue) => ({
-        issueLink: bindMessageToValidator(validate.url, 'urlHint')(issue.issueLink),
-        issueId: bindMessageToValidator(validate.issueId, 'issueIdHint')(issue.issueId),
-      })),
+    issues: issues?.map((issue) => ({
+      issueLink: bindMessageToValidator(validate.url, 'urlHint')(issue.issueLink),
+      issueId: bindMessageToValidator(validate.issueId, 'issueIdHint')(issue.issueId),
+    })),
   }),
 })
 @connect(
@@ -97,7 +95,7 @@ export class LinkIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
-    }).isRequired,
+    }),
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
     tracking: PropTypes.shape({

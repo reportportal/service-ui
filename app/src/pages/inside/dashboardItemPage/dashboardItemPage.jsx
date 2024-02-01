@@ -220,7 +220,7 @@ export class DashboardItemPage extends Component {
     ];
   };
 
-  getDashboardName = () => (this.props.dashboard && this.props.dashboard.name) || '';
+  getDashboardName = () => this.props.dashboard?.name || '';
 
   addWidget = (widget, closeModal) => {
     const {

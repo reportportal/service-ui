@@ -570,7 +570,7 @@ export class LaunchesPage extends Component {
   };
 
   finishForceLaunches = (eventData) => {
-    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    const launches = eventData?.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
       eventsInfo: {
@@ -714,7 +714,7 @@ export class LaunchesPage extends Component {
   };
 
   moveLaunches = (eventData) => {
-    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    const launches = eventData?.id ? [eventData] : this.props.selectedLaunches;
 
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,

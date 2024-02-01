@@ -33,7 +33,6 @@ export class EntityInputConditionalAttributes extends PureComponent {
   static defaultProps = {
     title: '',
     removable: true,
-    placeholder: '',
     onChange: () => {},
     onRemove: () => {},
     customProps: {},

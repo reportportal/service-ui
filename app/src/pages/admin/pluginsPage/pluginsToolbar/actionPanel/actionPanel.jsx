@@ -80,16 +80,7 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    initialParamsValues: PropTypes.array,
   };
-  static defaultProps = {
-    initialParamsValues: [],
-  };
-
-  prepareInitialParamsValue = (initialParamsValues) =>
-    JSON.stringify(
-      initialParamsValues.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {}),
-    );
 
   openUploadModal = () => {
     const {

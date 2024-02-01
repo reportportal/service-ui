@@ -52,7 +52,7 @@ const messages = defineMessages({
 
 const validators = {
   launchNames: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
+    !value?.length && formatMessage(messages.LaunchNamesValidationError),
 };
 
 @track()

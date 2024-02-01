@@ -152,7 +152,6 @@ export class PostIssueModal extends Component {
     showNotification: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
     getBtsIntegrationBackLink: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     postIssueExtensions: PropTypes.array,
@@ -160,7 +159,7 @@ export class PostIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
-    }).isRequired,
+    }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -259,7 +258,7 @@ export class PostIssueModal extends Component {
     },
   ];
 
-  initIntegrationFields = (defectFormFields = [], pluginName) => {
+  initIntegrationFields = (defectFormFields = [], pluginName = '') => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
     const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
       item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
@@ -323,10 +322,7 @@ export class PostIssueModal extends Component {
       integrationParameters: { project: btsProject, url: btsUrl },
       integrationType: { details },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1;
+    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_POST_ISSUE) !== -1;
     const requestParams = { data, method: 'POST' };
     let url = URLS.btsIntegrationPostTicket(activeProject, integrationId);
 

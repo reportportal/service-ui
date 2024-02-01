@@ -58,10 +58,8 @@ export const RetriesCounter = ({ testItem, onLabelClick }) => {
 };
 RetriesCounter.propTypes = {
   testItem: PropTypes.object.isRequired,
-  retries: PropTypes.arrayOf(PropTypes.object),
   onLabelClick: PropTypes.func,
 };
 RetriesCounter.defaultProps = {
-  retries: [],
   onLabelClick: () => {},
 };

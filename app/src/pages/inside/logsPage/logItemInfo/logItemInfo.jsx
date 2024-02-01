@@ -24,7 +24,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   activeLogSelector,
-  historyItemsSelector,
   activeRetryIdSelector,
   retriesSelector,
   RETRY_ID,
@@ -48,7 +47,6 @@ const messages = defineMessages({
 
 @connect((state) => ({
   logItem: activeLogSelector(state),
-  historyItems: historyItemsSelector(state),
   retryItemId: activeRetryIdSelector(state),
   retries: retriesSelector(state),
 }))
@@ -64,7 +62,6 @@ const messages = defineMessages({
 export class LogItemInfo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    historyItems: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
@@ -92,7 +89,7 @@ export class LogItemInfo extends Component {
   };
   isDefectTypeVisible = () => {
     const { logItem } = this.props;
-    return logItem.issue && logItem.issue.issueType;
+    return logItem.issue?.issueType;
   };
   addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
 

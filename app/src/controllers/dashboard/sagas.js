@@ -94,7 +94,7 @@ function* fetchDashboard() {
     );
   }
 
-  if (isAnalyticsEnabled && dashboard && dashboard.widgets.length) {
+  if (isAnalyticsEnabled && dashboard?.widgets.length) {
     const baseEventParameters = yield select(baseEventParametersSelector);
 
     provideEcGA({

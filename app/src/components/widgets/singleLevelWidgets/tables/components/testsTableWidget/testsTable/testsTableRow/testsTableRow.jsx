@@ -37,7 +37,7 @@ export class TestsTableRow extends Component {
     matrixComponent: func,
     status: array,
     duration: number,
-    getMaxtrixTooltip: func,
+    getMatrixTooltip: func,
     onItemClick: func,
   };
 
@@ -47,7 +47,7 @@ export class TestsTableRow extends Component {
     matrixComponent: null,
     status: null,
     duration: null,
-    getMaxtrixTooltip: null,
+    getMatrixTooltip: null,
     onItemClick: null,
   };
 
@@ -69,12 +69,12 @@ export class TestsTableRow extends Component {
       matrixComponent: Matrix,
       status,
       duration,
-      getMaxtrixTooltip,
+      getMatrixTooltip,
       intl: { formatMessage },
     } = this.props;
     const { total, uniqueId } = data;
     const percentage = count !== null ? ((count / total) * 100).toFixed(2) : null;
-    const matrixTooltip = getMaxtrixTooltip && getMaxtrixTooltip(count, total, formatMessage);
+    const matrixTooltip = getMatrixTooltip?.(count, total, formatMessage);
 
     return (
       <div className={cx('row')}>

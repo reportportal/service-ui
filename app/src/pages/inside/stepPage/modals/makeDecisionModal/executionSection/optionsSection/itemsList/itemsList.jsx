@@ -73,7 +73,6 @@ ItemsList.propTypes = {
   loading: PropTypes.bool,
   setItems: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  selectAllItems: PropTypes.func,
   eventsInfo: PropTypes.object,
 };
 ItemsList.defaultProps = {
@@ -83,6 +82,5 @@ ItemsList.defaultProps = {
   loading: false,
   setItems: () => {},
   optionValue: '',
-  selectAllItems: () => {},
   eventsInfo: {},
 };

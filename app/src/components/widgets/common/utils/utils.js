@@ -70,8 +70,7 @@ export const getItemColor = (itemName, defectTypes) => {
   }
   const defectTypeConfig = defectTypes[defectType.toUpperCase()];
   return (
-    (defectTypeConfig.find((item) => item.locator === locator) || {}).color ||
-    defectTypeConfig[0].color
+    defectTypeConfig.find((item) => item.locator === locator)?.color || defectTypeConfig[0].color
   );
 };
 
@@ -86,7 +85,7 @@ export const getItemName = ({ itemName, defectTypes, formatMessage, noTotal = fa
     return defectTypeConfig[0].longName;
   }
   return (
-    (defectTypeConfig.find((item) => item.locator === locator) || {}).longName ||
+    defectTypeConfig.find((item) => item.locator === locator)?.longName ||
     formatMessage(messages.total, {
       type: defectTypeConfig[0].shortName,
     })

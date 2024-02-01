@@ -35,7 +35,6 @@ export class EntityInputConditionalTags extends PureComponent {
     title: '',
     smallSize: false,
     removable: true,
-    placeholder: '',
     onChange: () => {},
     onRemove: () => {},
     customProps: {},

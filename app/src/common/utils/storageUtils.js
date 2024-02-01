@@ -15,7 +15,7 @@
  */
 
 export function getStorageItem(key) {
-  return localStorage && localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
+  return localStorage?.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
 }
 export function setStorageItem(key, value) {
   return localStorage && localStorage.setItem(key, JSON.stringify(value));
@@ -31,9 +31,7 @@ export function updateStorageItem(key, value = {}) {
 }
 
 export function getSessionItem(key) {
-  return sessionStorage && sessionStorage.getItem(key)
-    ? JSON.parse(sessionStorage.getItem(key))
-    : null;
+  return sessionStorage?.getItem(key) ? JSON.parse(sessionStorage.getItem(key)) : null;
 }
 export function setSessionItem(key, value) {
   return sessionStorage && sessionStorage.setItem(key, JSON.stringify(value));

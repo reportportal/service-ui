@@ -240,6 +240,8 @@ AttributeEditor.propTypes = {
   attributes: PropTypes.array,
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
+  keyURLCreator: PropTypes.func,
+  valueURLCreator: PropTypes.func,
   handleSubmit: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,

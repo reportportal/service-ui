@@ -27,8 +27,7 @@ import {
   MIME_TYPE_TO_EXTENSION_MAP,
 } from './constants';
 
-const getAttachmentTypeConfig = (contentType) =>
-  (contentType && contentType.toLowerCase().split('/')) || '';
+const getAttachmentTypeConfig = (contentType) => contentType?.toLowerCase().split('/') || '';
 
 export const extractExtension = (contentType) => {
   const attachmentTypeConfig = getAttachmentTypeConfig(contentType);

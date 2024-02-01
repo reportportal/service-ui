@@ -310,21 +310,5 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   );
 };
 Notifications.propTypes = {
-  enabled: PropTypes.bool,
-  notifications: PropTypes.array,
-  updateNotificationsConfig: PropTypes.func,
-  showModal: PropTypes.func,
-  projectRole: PropTypes.string,
-  userRole: PropTypes.string,
-  isEmailIntegrationAvailable: PropTypes.bool,
   setHeaderTitleNode: PropTypes.func.isRequired,
-};
-Notifications.defaultProps = {
-  enabled: false,
-  notifications: [],
-  showModal: () => {},
-  updateNotificationsConfig: () => {},
-  projectRole: '',
-  userRole: '',
-  isEmailIntegrationAvailable: true,
 };

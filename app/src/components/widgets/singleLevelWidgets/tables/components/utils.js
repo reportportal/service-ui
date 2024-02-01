@@ -44,8 +44,6 @@ export const getStatisticsStatuses = (type) => {
   return [];
 };
 
-export const getPassingRate = (passed = 0, total) => `${Math.round((100 * passed) / total)}%`;
-
 export const groupFieldsWithDefectTypes = (contentFields) =>
   contentFields.reduce((acc, item) => {
     const { defectType, locator } = getItemNameConfig(item);

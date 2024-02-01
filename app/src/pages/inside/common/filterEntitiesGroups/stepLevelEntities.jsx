@@ -343,7 +343,7 @@ export class StepLevelEntities extends Component {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     const options = getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => ({
       ...option,
-      value: option.meta && option.meta.subItem ? option.locator : option.typeRef,
+      value: option.meta?.subItem ? option.locator : option.typeRef,
     }));
     return {
       id: ENTITY_DEFECT_TYPE,

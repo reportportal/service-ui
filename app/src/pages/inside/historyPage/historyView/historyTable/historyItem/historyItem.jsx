@@ -57,8 +57,6 @@ export class HistoryItem extends Component {
     selectable: PropTypes.bool,
     singleDefectView: PropTypes.bool,
     onSelectItem: PropTypes.func,
-    includeAllLaunches: PropTypes.bool,
-    updateAttributes: PropTypes.func,
   };
 
   static defaultProps = {

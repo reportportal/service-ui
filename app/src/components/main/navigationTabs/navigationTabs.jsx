@@ -129,11 +129,11 @@ export class NavigationTabs extends Component {
         </div>
         <div
           className={cx('content-wrapper', {
-            'mobile-disabled': activeConfig && activeConfig.mobileDisabled,
+            'mobile-disabled': activeConfig?.mobileDisabled,
             'custom-content-wrapper': customBlock,
           })}
         >
-          {activeConfig && activeConfig.component}
+          {activeConfig?.component}
         </div>
       </div>
     );

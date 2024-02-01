@@ -147,7 +147,7 @@ export const previousLogLinkSelector = createSelector(
   debugModeSelector,
   groupedTestItemsSelector,
   (payload, query, logId, debugMode, testItems) => {
-    const previousItem = getPreviousItem(testItems, logId);
+    const previousItem = getPreviousItem(logId, testItems);
     if (!previousItem) {
       return null;
     }
@@ -174,7 +174,7 @@ export const nextLogLinkSelector = createSelector(
   debugModeSelector,
   groupedTestItemsSelector,
   (payload, query, logId, debugMode, testItems) => {
-    const nextItem = getNextItem(testItems, logId);
+    const nextItem = getNextItem(logId, testItems);
     if (!nextItem) {
       return null;
     }
@@ -197,13 +197,13 @@ export const nextLogLinkSelector = createSelector(
 export const previousItemSelector = createSelector(
   groupedTestItemsSelector,
   logItemIdSelector,
-  (testItems, logId) => getPreviousItem(testItems, logId),
+  (testItems, logId) => getPreviousItem(logId, testItems),
 );
 
 export const nextItemSelector = createSelector(
   groupedTestItemsSelector,
   logItemIdSelector,
-  (testItems, logId) => getNextItem(testItems, logId),
+  (testItems, logId) => getNextItem(logId, testItems),
 );
 
 export const retryLinkSelector = createSelector(
@@ -231,7 +231,7 @@ export const disablePrevItemLinkSelector = createSelector(
   logItemIdSelector,
   groupedTestItemsSelector,
   ({ number }, id, items) => {
-    const isNoPreviousItem = getPreviousItem(items, id) === null;
+    const isNoPreviousItem = getPreviousItem(id, items) === null;
     const isFirstPage = number ? number === 1 : true;
     return isNoPreviousItem && isFirstPage;
   },
@@ -242,7 +242,7 @@ export const disableNextItemLinkSelector = createSelector(
   logItemIdSelector,
   groupedTestItemsSelector,
   ({ number, totalPages }, id, items) => {
-    const isNoNextItem = getNextItem(items, id) === null;
+    const isNoNextItem = getNextItem(id, items) === null;
     const isLastPage = totalPages ? number === totalPages : true;
     return isNoNextItem && isLastPage;
   },
@@ -256,7 +256,7 @@ export const isLaunchLogSelector = (state) => parentItemsSelector(state).length 
 
 export const logViewModeSelector = (state) => {
   const parentTestItem = parentItemSelector(state);
-  const hasChildren = parentTestItem && parentTestItem.hasChildren;
+  const hasChildren = parentTestItem?.hasChildren;
   const isLaunchLog = isLaunchLogSelector(state);
   return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
 };

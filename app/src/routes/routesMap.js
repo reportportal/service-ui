@@ -226,7 +226,7 @@ const routesMap = {
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
     thunk: (dispatch, getState, { action }) => {
-      const location = (action.meta || {}).location || {};
+      const location = action.meta?.location || {};
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },

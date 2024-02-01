@@ -37,7 +37,7 @@ export const DropdownOption = ({
   customClass,
 }) => {
   const onChangeHandler = () => {
-    onChange && onChange(value);
+    onChange?.(value);
   };
 
   const renderOptionComponent = () => {

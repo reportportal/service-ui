@@ -40,9 +40,7 @@ export class JiraConnectionFormFields extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     editAuthMode: PropTypes.bool,
     updateMetaData: PropTypes.func,
@@ -50,8 +48,6 @@ export class JiraConnectionFormFields extends Component {
 
   static defaultProps = {
     disabled: false,
-    authEnabled: false,
-    lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
     editAuthMode: false,
     updateMetaData: () => {},

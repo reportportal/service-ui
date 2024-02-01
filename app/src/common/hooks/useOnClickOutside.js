@@ -23,7 +23,7 @@ export const useOnClickOutside = (ref, handler) => {
     }
 
     const listener = (event) => {
-      if (ref && ref.current && !ref.current.contains(event.target)) {
+      if (!ref?.current?.contains(event.target)) {
         handler(event);
       }
     };

@@ -41,7 +41,6 @@ export class SearchableFilterList extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    pagination: PropTypes.object.isRequired,
     searchValue: PropTypes.string,
     activeFilter: PropTypes.object,
     filters: PropTypes.array,
@@ -73,6 +72,7 @@ export class SearchableFilterList extends Component {
 
   render() {
     const {
+      intl: { formatMessage },
       filters,
       loading,
       touched,
@@ -107,9 +107,13 @@ export class SearchableFilterList extends Component {
           onLazyLoad={onLazyLoad}
           customClass={filterListCustomClass}
           noItemsMessage={
-            searchValue ? messages.filtersNotFound : messages.filtersNotFoundOnProject
+            searchValue
+              ? formatMessage(messages.filtersNotFound)
+              : formatMessage(messages.filtersNotFoundOnProject)
           }
-          noItemsAdditionalMessage={searchValue ? null : messages.filtersNotFoundAdditional}
+          noItemsAdditionalMessage={
+            searchValue ? null : formatMessage(messages.filtersNotFoundAdditional)
+          }
         />
       </Fragment>
     );

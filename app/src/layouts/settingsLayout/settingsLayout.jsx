@@ -33,11 +33,9 @@ export const SettingsLayout = ({ navigation, children }) => (
 );
 SettingsLayout.propTypes = {
   navigation: PropTypes.node,
-  header: PropTypes.node,
   children: PropTypes.node,
 };
 SettingsLayout.defaultProps = {
   navigation: null,
-  header: null,
   children: null,
 };

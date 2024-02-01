@@ -40,7 +40,7 @@ import {
   fetchAllUsersAction,
   DEFAULT_SORT_COLUMN,
 } from 'controllers/administrate/allUsers';
-import { userInfoSelector, userIdSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { UsersToolbar } from './usersToolbar';
@@ -93,7 +93,6 @@ const messages = defineMessages({
     loading: loadingSelector(state),
     selectedUsers: selectedUsersSelector(state),
     userInfo: userInfoSelector(state),
-    userId: userIdSelector(state),
   }),
   {
     toggleUserSelectionAction,
@@ -123,7 +122,6 @@ export class AllUsersPage extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
-    showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
@@ -135,7 +133,6 @@ export class AllUsersPage extends Component {
     toggleUserSelectionAction: PropTypes.func,
     userInfo: PropTypes.object,
     deleteItemsAction: PropTypes.func,
-    userId: PropTypes.string,
     showScreenLockAction: PropTypes.func,
     hideScreenLockAction: PropTypes.func,
     showNotification: PropTypes.func,
@@ -153,9 +150,7 @@ export class AllUsersPage extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
-    userId: '',
     onChangeSorting: () => {},
-    showModalAction: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,

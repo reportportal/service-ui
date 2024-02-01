@@ -34,7 +34,7 @@ import {
 } from './constants';
 import { updateItemsHistoryLaunchAttributes } from './utils';
 
-export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
+export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type = '' }) => {
   switch (type) {
     case RESET_HISTORY:
       return PAGINATION_INITIAL_STATE;
@@ -43,7 +43,7 @@ export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { typ
   }
 };
 
-export const historyReducer = (state = [], { type }) => {
+export const historyReducer = (state = [], { type = '' }) => {
   switch (type) {
     case RESET_HISTORY:
       return [];
@@ -52,7 +52,7 @@ export const historyReducer = (state = [], { type }) => {
   }
 };
 
-export const loadingReducer = (state = false, { type, payload }) => {
+export const loadingReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_HISTORY_PAGE_LOADING:
       return payload;
@@ -61,7 +61,10 @@ export const loadingReducer = (state = false, { type, payload }) => {
   }
 };
 
-export const updateHistoryItemLaunchAttributesReducer = (state = [], { type, payload }) => {
+export const updateHistoryItemLaunchAttributesReducer = (
+  state = [],
+  { type = '', payload = {} },
+) => {
   switch (type) {
     case UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES:
       return updateItemsHistoryLaunchAttributes(state, payload);
@@ -72,7 +75,7 @@ export const updateHistoryItemLaunchAttributesReducer = (state = [], { type, pay
 
 export const filterForCompareReducer = (
   state = FILTER_FOR_COMPARE_INITIAL_STATE,
-  { type, payload },
+  { type = '', payload = {} },
 ) => {
   switch (type) {
     case SET_FILTER_FOR_COMPARE:

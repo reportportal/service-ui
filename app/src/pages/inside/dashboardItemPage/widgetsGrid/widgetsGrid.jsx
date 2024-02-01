@@ -48,7 +48,6 @@ export class WidgetsGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
-    currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,

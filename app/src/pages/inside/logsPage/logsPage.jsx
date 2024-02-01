@@ -28,7 +28,6 @@ import {
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { userIdSelector } from 'controllers/user';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TestItemLogsToolbar } from './testItemLogsToolbar';
@@ -41,7 +40,6 @@ import { LogsGridWrapper } from './logsGridWrapper';
   (state) => ({
     loading: loadingSelector(state),
     pageLoading: pageLoadingSelector(state),
-    userId: userIdSelector(state),
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
@@ -58,7 +56,6 @@ export class LogsPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    userId: PropTypes.string.isRequired,
     debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,

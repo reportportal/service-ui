@@ -18,7 +18,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
-import { showDefaultErrorNotification } from 'controllers/notification';
 import {
   namedProjectIntegrationsSelector,
   namedGlobalIntegrationsSelector,
@@ -28,21 +27,16 @@ import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
 
-@connect(
-  (state, ownProps) => {
-    const projectIntegrations =
-      namedProjectIntegrationsSelector(state)[ownProps.integrationType.name] || [];
-    const globalIntegrations =
-      namedGlobalIntegrationsSelector(state)[ownProps.integrationType.name] || [];
-    return {
-      projectIntegrations,
-      globalIntegrations,
-    };
-  },
-  {
-    showDefaultErrorNotification,
-  },
-)
+@connect((state, ownProps) => {
+  const projectIntegrations =
+    namedProjectIntegrationsSelector(state)[ownProps.integrationType.name] || [];
+  const globalIntegrations =
+    namedGlobalIntegrationsSelector(state)[ownProps.integrationType.name] || [];
+  return {
+    projectIntegrations,
+    globalIntegrations,
+  };
+})
 export class IntegrationInfoContainer extends Component {
   static propTypes = {
     onItemClick: PropTypes.func.isRequired,
@@ -50,7 +44,6 @@ export class IntegrationInfoContainer extends Component {
     showToggleConfirmationModal: PropTypes.func.isRequired,
     projectIntegrations: PropTypes.array.isRequired,
     globalIntegrations: PropTypes.array.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
     onToggleActive: PropTypes.func,
     removePluginSuccessCallback: PropTypes.func,
     isGlobal: PropTypes.bool,

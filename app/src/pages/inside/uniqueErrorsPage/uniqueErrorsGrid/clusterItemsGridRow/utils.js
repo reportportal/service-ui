@@ -18,7 +18,7 @@ export const modifyColumnsFunc = (columns, settings) =>
   columns.reduce((acc, item) => {
     const { id } = item;
     let newItem = { ...item };
-    if (settings.excludeColumns && settings.excludeColumns.includes(id)) {
+    if (settings.excludeColumns?.includes(id)) {
       return acc;
     }
     if (settings.updateColumns && id in settings.updateColumns) {

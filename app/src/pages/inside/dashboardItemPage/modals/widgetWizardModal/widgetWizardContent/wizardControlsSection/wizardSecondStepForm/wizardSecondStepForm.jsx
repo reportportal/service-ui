@@ -26,7 +26,7 @@ import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   validate: ({ filters }) => ({
-    filters: (!filters || !filters.length) && 'error',
+    filters: !filters?.length && 'error',
   }),
 })
 @connect(

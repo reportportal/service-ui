@@ -114,7 +114,6 @@ export class BtsPropertiesForIssueForm extends Component {
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
     initialize: PropTypes.func,
-    change: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
     isGlobal: PropTypes.bool,
@@ -137,7 +136,6 @@ export class BtsPropertiesForIssueForm extends Component {
     updateMetaData: () => {},
     showNotification: () => {},
     initialize: () => {},
-    change: () => {},
   };
 
   constructor(props) {
@@ -212,11 +210,9 @@ export class BtsPropertiesForIssueForm extends Component {
       .then((issueTypes) => {
         const { defectFormFields } = this.props.initialData;
         let selectedIssueTypeValue = [];
-        if (defectFormFields && defectFormFields.length) {
-          selectedIssueTypeValue =
-            (defectFormFields.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {})
-              .value || [];
-        }
+        selectedIssueTypeValue =
+          (defectFormFields?.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {}).value ||
+          [];
         selectedIssueTypeValue = selectedIssueTypeValue[0] || issueTypes[0];
         this.changeIssueTypeConfig(issueTypes, selectedIssueTypeValue);
         return this.updateFields(selectedIssueTypeValue);
@@ -303,7 +299,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
       let checkedFieldsIds = {};
 
-      if (defectFormFields && defectFormFields.length) {
+      if (defectFormFields?.length) {
         const savedIssueType = defectFormFields.find(
           (item) => item.fieldType === ISSUE_TYPE_FIELD_KEY,
         );
@@ -337,10 +333,7 @@ export class BtsPropertiesForIssueForm extends Component {
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
+    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
     const requestParams = {};
     let url;
 
@@ -379,10 +372,7 @@ export class BtsPropertiesForIssueForm extends Component {
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1;
+    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1;
     const requestParams = {};
     let url;
 

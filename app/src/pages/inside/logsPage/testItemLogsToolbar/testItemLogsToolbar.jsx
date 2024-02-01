@@ -28,9 +28,6 @@ export class TestItemLogsToolbar extends Component {
   };
 
   static defaultProps = {
-    attachments: [],
-    attachmentsLoading: false,
-    attachmentsPagination: {},
     parentItem: {},
   };
 

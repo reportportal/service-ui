@@ -230,7 +230,7 @@ export class ProductStatus extends PureComponent {
     } = this.props;
     const filter = appliedFilters.find((item) => item.name === filterName);
 
-    return (filter && filter.id) || ALL;
+    return filter?.id || ALL;
   };
 
   getFilterTotals = (launches) => {

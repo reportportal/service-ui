@@ -51,8 +51,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
   const { optionValue, currentTestItems } = modalState;
   const historyItems = useSelector(historyItemsSelector).filter(
     (item) =>
-      item.issue &&
-      item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
+      item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
       item.id !== currentTestItems[0].id,
   );
   const defectFromTIGroup = isBulkOperation

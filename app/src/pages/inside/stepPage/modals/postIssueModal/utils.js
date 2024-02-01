@@ -30,7 +30,7 @@ import {
 } from './constants';
 
 const validateNonRequiredField = (value, type, hint) => {
-  const fieldValue = value && value[0];
+  const fieldValue = value?.[0];
   let isFieldValid = true;
   if (fieldValue) {
     try {

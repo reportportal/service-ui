@@ -129,7 +129,7 @@ export const Dropdown = ({
 
   const getDisplayedValue = () => {
     if (!value && value !== false) return placeholder;
-    let displayedValue = (value && value.label) || value;
+    let displayedValue = value?.label || value;
     options.forEach((option) => {
       if (option.value === value) {
         displayedValue = option.label;

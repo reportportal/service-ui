@@ -25,7 +25,7 @@ import { queueReducers } from 'common/utils/queueReducers';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { NAMESPACE, SET_PROJECTS_VIEW_MODE, GRID_VIEW } from './constants';
 
-export const setViewModeReducer = (state = GRID_VIEW, { type, payload }) => {
+export const setViewModeReducer = (state = GRID_VIEW, { type = '', payload = {} }) => {
   switch (type) {
     case SET_PROJECTS_VIEW_MODE:
       return payload;
@@ -40,7 +40,7 @@ export const projectFetchReducer = fetchReducer(NAMESPACE, {
   initialState: [],
 });
 
-export const assignProjectReducer = (state = [], { type, payload }) => {
+export const assignProjectReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case ASSIGN_TO_PROJECT_SUCCESS:
       return state.map((project) =>

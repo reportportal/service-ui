@@ -168,8 +168,7 @@ export class InstancesSection extends Component {
     super(props);
     const { instanceType, pluginDetails } = props;
     this.multiple =
-      isIntegrationSupportsMultipleInstances(instanceType) ||
-      (pluginDetails && pluginDetails.metadata && pluginDetails.metadata.multiple);
+      isIntegrationSupportsMultipleInstances(instanceType) || pluginDetails?.metadata?.multiple;
     this.builtin = isPluginBuiltin(instanceType);
   }
 

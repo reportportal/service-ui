@@ -45,22 +45,18 @@ const cx = classNames.bind(styles);
 export class DurationBlock extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    type: PropTypes.string,
     timing: PropTypes.shape({
       start: PropTypes.number,
       end: PropTypes.number,
       approxTime: PropTypes.number,
     }).isRequired,
     status: PropTypes.string,
-    itemNumber: PropTypes.number,
     iconClass: PropTypes.string,
     durationClass: PropTypes.string,
   };
 
   static defaultProps = {
-    type: '',
     status: '',
-    itemNumber: null,
     iconClass: '',
     durationClass: '',
   };

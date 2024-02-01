@@ -204,7 +204,7 @@ export class GridRow extends Component {
     } = this.props;
 
     const { expanded } = this.state;
-    const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
+    const customClasses = rowClassMapper?.(value) || {};
 
     return (
       <div

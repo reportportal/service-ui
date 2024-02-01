@@ -16,17 +16,14 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class PluginsFilter extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
     onFilterChange: PropTypes.func.isRequired,
     activeItem: PropTypes.string.isRequired,

@@ -25,14 +25,14 @@ import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTable = ({ tests, columns, getMaxtrixTooltip, onItemClick }) => (
+export const TestsTable = ({ tests, columns, getMatrixTooltip, onItemClick }) => (
   <div className={cx('tests-table')}>
     <ScrollWrapper>
       <TestsTableHeader columns={columns} />
       <TestsTableBody
         columns={columns}
         tests={tests}
-        getMaxtrixTooltip={getMaxtrixTooltip}
+        getMatrixTooltip={getMatrixTooltip}
         onItemClick={onItemClick}
       />
     </ScrollWrapper>
@@ -42,11 +42,11 @@ export const TestsTable = ({ tests, columns, getMaxtrixTooltip, onItemClick }) =
 TestsTable.propTypes = {
   tests: PTTests.isRequired,
   columns: PTColumns.isRequired,
-  getMaxtrixTooltip: func,
+  getMatrixTooltip: func,
   onItemClick: func,
 };
 
 TestsTable.defaultProps = {
-  getMaxtrixTooltip: null,
+  getMatrixTooltip: null,
   onItemClick: null,
 };

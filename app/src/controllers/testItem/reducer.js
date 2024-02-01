@@ -28,7 +28,7 @@ import {
   FETCH_PARENT_LAUNCH_SUCCESS,
 } from './constants';
 
-const levelReducer = (state = '', { type, payload }) => {
+const levelReducer = (state = '', { type = '', payload = {} }) => {
   switch (type) {
     case SET_LEVEL:
       return payload;
@@ -37,7 +37,7 @@ const levelReducer = (state = '', { type, payload }) => {
   }
 };
 
-const pageLoadingReducer = (state = false, { type, payload }) => {
+const pageLoadingReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_PAGE_LOADING:
       return payload;
@@ -46,7 +46,7 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
-const parentItemsReducer = (state = [], { type, payload }) => {
+const parentItemsReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_PARENT_LAUNCH_SUCCESS:
       return [payload, ...state.slice(1)];

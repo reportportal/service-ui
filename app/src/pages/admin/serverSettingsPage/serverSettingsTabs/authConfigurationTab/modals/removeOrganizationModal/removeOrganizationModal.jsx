@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { formValueSelector, change } from 'redux-form';
+import { formValueSelector } from 'redux-form';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -62,7 +62,7 @@ const messages = defineMessages({
       CLIENT_SECRET_KEY,
     ),
   }),
-  { showNotification, change },
+  { showNotification },
 )
 @injectIntl
 export class RemoveOrganizationModal extends Component {
@@ -70,13 +70,11 @@ export class RemoveOrganizationModal extends Component {
     intl: PropTypes.object,
     formData: PropTypes.object.isRequired,
     data: PropTypes.object,
-    change: PropTypes.func,
     showNotification: PropTypes.func,
   };
   static defaultProps = {
     intl: {},
     data: {},
-    change: () => {},
     showNotification: () => {},
   };
 

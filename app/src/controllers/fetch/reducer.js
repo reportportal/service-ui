@@ -25,9 +25,9 @@ const computeInitialState = (options) => {
 
 export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   state = computeInitialState(options),
-  { type, payload, meta, concat },
+  { type = '', payload = {}, meta = {}, concat = false },
 ) => {
-  if (meta && meta.namespace && meta.namespace !== namespace) {
+  if (meta?.namespace !== namespace) {
     return state;
   }
   const contentPath = options.contentPath || DEFAULT_OPTIONS.contentPath;

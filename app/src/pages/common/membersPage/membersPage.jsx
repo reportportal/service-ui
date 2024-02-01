@@ -59,7 +59,6 @@ const messages = defineMessages({
 export class MembersPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    onSearchChange: PropTypes.func,
     onFilterChange: PropTypes.func,
     fetchMembersAction: PropTypes.func,
     activePage: PropTypes.number,
@@ -77,7 +76,6 @@ export class MembersPage extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    onSearchChange: () => {},
     onFilterChange: () => {},
     fetchMembersAction: () => {},
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
@@ -122,7 +120,10 @@ export class MembersPage extends Component {
     }
     return (
       !!filter && (
-        <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.membersNotFound} />
+        <NoResultsForFilter
+          filter={this.props.filter}
+          notFoundMessage={this.props.intl.formatMessage(messages.membersNotFound)}
+        />
       )
     );
   };

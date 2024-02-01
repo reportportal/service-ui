@@ -50,7 +50,7 @@ export class AttachmentImageModal extends Component {
   };
 
   getImageSize = () =>
-    this.imageRef && this.imageRef.current
+    this.imageRef?.current
       ? {
           height: this.imageRef.current.clientHeight,
           width: this.imageRef.current.clientWidth,

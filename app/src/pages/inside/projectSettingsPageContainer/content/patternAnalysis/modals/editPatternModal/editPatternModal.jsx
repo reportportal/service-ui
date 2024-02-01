@@ -108,7 +108,7 @@ export default withModal('editPatternModalWindow')(
   reduxForm({
     form: 'editPatternForm',
     validate: ({ name }, { data: { pattern, patterns } }) => ({
-      name: commonValidators.createPatternNameValidator(patterns, pattern && pattern.id)(name),
+      name: commonValidators.createPatternNameValidator(patterns, pattern?.id)(name),
     }),
   })(EditPatternModal),
 );

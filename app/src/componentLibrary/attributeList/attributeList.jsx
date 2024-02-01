@@ -338,15 +338,14 @@ export const AttributeList = ({
 };
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
-  editedAttribute: PropTypes.object,
   disabled: PropTypes.bool,
+  keyURLCreator: PropTypes.func,
+  valueURLCreator: PropTypes.func,
   newAttrMessage: PropTypes.string,
   maxLength: PropTypes.number,
   customClass: PropTypes.string,
   onChange: PropTypes.func,
-  onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
-  onRemove: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
   showButton: PropTypes.bool,
@@ -357,7 +356,6 @@ AttributeList.propTypes = {
 };
 AttributeList.defaultProps = {
   attributes: [],
-  editedAttribute: null,
   disabled: false,
   keyURLCreator: null,
   valueURLCreator: null,
@@ -365,8 +363,6 @@ AttributeList.defaultProps = {
   maxLength: Infinity,
   customClass: '',
   onChange: () => {},
-  onRemove: () => {},
-  onEdit: () => {},
   onAddNew: () => {},
   getURIKey: () => {},
   getURIValue: () => {},

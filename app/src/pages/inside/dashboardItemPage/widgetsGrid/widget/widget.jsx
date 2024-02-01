@@ -79,7 +79,6 @@ export class SimpleWidget extends Component {
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
@@ -96,7 +95,6 @@ export class SimpleWidget extends Component {
 
   static defaultProps = {
     onDelete: () => {},
-    switchDraggable: () => {},
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
@@ -155,7 +153,7 @@ export class SimpleWidget extends Component {
     }
   };
 
-  getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
+  getWidgetOptions = () => this.state.widget.contentParameters?.widgetOptions || {};
 
   getWidgetNode = (node) => {
     this.node = node;
@@ -408,14 +406,8 @@ export class SimpleWidget extends Component {
       description: widget.description,
       type: widget.widgetType,
       meta: [widgetOptions.viewMode],
-      lastRefresh:
-        widget.contentParameters &&
-        widget.contentParameters.widgetOptions &&
-        widget.contentParameters.widgetOptions.lastRefresh,
-      state:
-        widget.contentParameters &&
-        widget.contentParameters.widgetOptions &&
-        widget.contentParameters.widgetOptions.state,
+      lastRefresh: widget.contentParameters?.widgetOptions?.lastRefresh,
+      state: widget.contentParameters?.widgetOptions?.state,
     };
     if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
       headerData.meta.push(widgetOptions.latest || true);

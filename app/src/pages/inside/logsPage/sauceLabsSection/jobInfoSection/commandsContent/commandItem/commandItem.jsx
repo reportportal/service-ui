@@ -89,7 +89,7 @@ export class CommandItem extends Component {
       screenShotLink,
       command,
     } = this.props;
-    const isUrlRequest = request && request.url;
+    const isUrlRequest = request?.url;
 
     return (
       <div className={cx('command-item')} onClick={this.commandItemClickHandler}>

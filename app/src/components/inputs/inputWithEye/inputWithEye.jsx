@@ -77,26 +77,18 @@ export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, class
   );
 };
 InputWithEye.propTypes = {
-  children: PropTypes.node,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
-  iconTransparentBackground: PropTypes.bool,
   className: PropTypes.string,
-  darkView: PropTypes.bool,
-  responsive: PropTypes.bool,
 };
 InputWithEye.defaultProps = {
-  children: '',
   value: false,
   disabled: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
-  iconTransparentBackground: false,
   className: '',
-  darkView: false,
-  responsive: false,
 };

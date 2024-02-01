@@ -33,7 +33,7 @@ const cx = classNames.bind(styles);
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   validate: ({ filters }) => ({
-    filters: (!filters || !filters.length) && 'error',
+    filters: !filters?.length && 'error',
   }),
 })
 @connect(null, {

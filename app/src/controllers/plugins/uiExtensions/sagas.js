@@ -18,9 +18,7 @@ export function* fetchExtensionsMetadata(action) {
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
-      plugin.details &&
-      plugin.details.binaryData &&
-      plugin.details.binaryData[METADATA_FILE_KEY] &&
+      plugin.details?.binaryData?.[METADATA_FILE_KEY] &&
       plugin.details.binaryData[MAIN_FILE_KEY],
   );
 
@@ -72,9 +70,7 @@ export function* fetchUiExtensions() {
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
-      plugin.details &&
-      plugin.details.binaryData &&
-      plugin.details.binaryData[MAIN_FILE_KEY] &&
+      plugin.details?.binaryData?.[MAIN_FILE_KEY] &&
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );

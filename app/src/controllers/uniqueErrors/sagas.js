@@ -57,12 +57,7 @@ function* getPlugin() {
     plugins = response.payload;
   }
   const supportedPlugin = plugins.find(
-    (item) =>
-      item &&
-      item.details &&
-      item.details.metadata &&
-      item.details.metadata.supportedFeatures &&
-      item.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
+    (item) => item && item.details?.metadata?.supportedFeatures?.includes('uniqueErrorsClusters'),
   );
   if (!supportedPlugin) return null;
 

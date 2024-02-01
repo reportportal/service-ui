@@ -31,7 +31,7 @@ export const DropdownOption = React.forwardRef((props, ref) => {
     highlightHovered,
     onMouseEnter,
   } = props;
-  const onChangeHandler = () => onChange && onChange(value);
+  const onChangeHandler = () => onChange?.(value);
 
   return (
     <div
@@ -73,7 +73,6 @@ DropdownOption.propTypes = {
 DropdownOption.defaultProps = {
   selected: false,
   onChange: () => {},
-  title: '',
   render: null,
   highlightHovered: false,
   onMouseEnter: () => {},

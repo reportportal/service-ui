@@ -111,13 +111,13 @@ export class LaunchStatisticsChart extends Component {
     this.node = node;
     this.chart = chart;
     this.chartData = chartData;
-    this.interactElems = d3.selectAll(
+    this.interactElements = d3.selectAll(
       node.querySelectorAll(this.isSingleColumn() ? '.c3-circle' : '.c3-area'),
     );
 
     if (this.isSingleColumn()) {
       // eslint-disable-next-line
-      this.interactElems._groups[0].forEach(function (item) {
+      this.interactElements._groups[0].forEach(function (item) {
         if (!item.value) {
           d3.select(this).style('display', 'none');
         }
@@ -248,16 +248,15 @@ export class LaunchStatisticsChart extends Component {
   createInteractiveTooltip = () => {
     this.tooltip = d3.select(this.node.querySelector('.c3-tooltip-container'));
 
-    this.interactElems &&
-      this.interactElems
-        .on('mousemove', this.onItemMouseMove)
-        .on('mouseover', this.onItemMouseOver)
-        .on('mouseout', this.onItemMouseOut)
-        .on('click', () => this.onChartClick(this.selectedLaunchData));
+    this.interactElements
+      ?.on('mousemove', this.onItemMouseMove)
+      .on('mouseover', this.onItemMouseOver)
+      .on('mouseout', this.onItemMouseOut)
+      .on('click', () => this.onChartClick(this.selectedLaunchData));
   };
 
   removeChartListeners = () => {
-    this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
+    this.interactElements?.on('click mousemove mouseover mouseout', null);
   };
 
   isCustomTooltipNeeded = () =>

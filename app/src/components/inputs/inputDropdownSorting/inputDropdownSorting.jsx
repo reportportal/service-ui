@@ -26,7 +26,6 @@ const cx = classNames.bind(styles);
 
 export class InputDropdownSorting extends Component {
   static propTypes = {
-    width: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     options: PropTypes.array,
     sortingMode: PropTypes.bool,
@@ -42,7 +41,6 @@ export class InputDropdownSorting extends Component {
   };
 
   static defaultProps = {
-    width: '100%',
     value: '',
     options: [],
     sortingMode: false,

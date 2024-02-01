@@ -60,7 +60,7 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
     });
   }
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
   render() {

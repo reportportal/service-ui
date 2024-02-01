@@ -62,7 +62,7 @@ export const MultipleAutocomplete = ({
   const inputRef = useRef(null);
 
   const handleChange = (...args) => {
-    updatePosition && updatePosition();
+    updatePosition?.();
     onChange(...args);
   };
   const getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({

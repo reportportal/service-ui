@@ -145,9 +145,7 @@ const TokenErrorSection = ({ tokenProvided }) => (
 );
 TokenErrorSection.propTypes = {
   tokenProvided: PropTypes.bool,
-  loading: PropTypes.bool,
 };
 TokenErrorSection.defaultProps = {
   tokenProvided: false,
-  loading: false,
 };

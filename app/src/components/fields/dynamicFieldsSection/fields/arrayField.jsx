@@ -36,24 +36,23 @@ export class ArrayField extends Component {
       label: item.valueName,
     }));
 
-  creatable = !this.props.field.definedValues || !this.props.field.definedValues.length;
+  creatable = !this.props.field?.definedValues?.length;
 
   formatTags = (tags) => {
     const { field, defaultOptionValueKey } = this.props;
     const values = [];
-    tags &&
-      tags.forEach((item) => {
-        const foundedItems = field.definedValues.find(
-          (defValue) => defValue[defaultOptionValueKey] === item,
-        );
-        foundedItems && values.push(foundedItems);
-      });
+    tags?.forEach((item) => {
+      const foundedItems = field.definedValues.find(
+        (defValue) => defValue[defaultOptionValueKey] === item,
+      );
+      foundedItems && values.push(foundedItems);
+    });
     return this.formatOptions(values);
   };
 
-  parseValueToString = (option) => (option && option.value) || '';
+  parseValueToString = (option) => option?.value || '';
 
-  parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
+  parseTags = (options) => options?.map(this.parseValueToString) || undefined;
 
   render() {
     const { field, darkView, ...rest } = this.props;

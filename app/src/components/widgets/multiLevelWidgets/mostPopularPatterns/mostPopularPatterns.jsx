@@ -48,7 +48,6 @@ export class MostPopularPatterns extends Component {
     navigate: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object,
-    fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
   };
 
@@ -68,7 +67,6 @@ export class MostPopularPatterns extends Component {
         },
       },
     },
-    fetchWidget: () => {},
     clearQueryParams: () => {},
   };
 
@@ -160,7 +158,7 @@ export class MostPopularPatterns extends Component {
     } = this.props;
     const { selectedAttribute } = this.state;
 
-    if (!result || !result.length) return <NoDataAvailable />;
+    if (!result?.length) return <NoDataAvailable />;
 
     return (
       <div className={cx('popular-patterns')}>

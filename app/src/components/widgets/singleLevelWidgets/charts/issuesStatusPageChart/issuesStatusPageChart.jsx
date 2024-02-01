@@ -55,7 +55,7 @@ export class IssuesStatusPageChart extends Component {
     this.chart = chart;
     this.node = node;
     this.chartData = chartData;
-    this.interactElems = d3.selectAll(this.node.querySelectorAll('.c3-area'));
+    this.interactElements = d3.selectAll(this.node.querySelectorAll('.c3-area'));
 
     this.createInteractiveTooltip();
   };
@@ -101,17 +101,16 @@ export class IssuesStatusPageChart extends Component {
   };
 
   removeChartListeners = () => {
-    this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
+    this.interactElements?.on('click mousemove mouseover mouseout', null);
   };
 
   createInteractiveTooltip = () => {
     this.tooltip = d3.select(this.node.querySelector('.c3-tooltip-container'));
 
-    this.interactElems &&
-      this.interactElems
-        .on('mousemove', this.onItemMouseMove)
-        .on('mouseover', this.onItemMouseOver)
-        .on('mouseout', this.onItemMouseOut);
+    this.interactElements
+      ?.on('mousemove', this.onItemMouseMove)
+      .on('mouseover', this.onItemMouseOver)
+      .on('mouseout', this.onItemMouseOut);
   };
 
   render() {

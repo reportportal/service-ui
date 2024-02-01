@@ -53,8 +53,8 @@ export const DatePicker = ({
   fixedHeight,
 }) => {
   const language = useSelector(langSelector);
-  const startDateToString = startDate && startDate.toDateString();
-  const endDateToString = endDate && endDate.toDateString();
+  const startDateToString = startDate?.toDateString();
+  const endDateToString = endDate?.toDateString();
   const isValidEndDate = endDate > startDate;
 
   useMemo(() => registerLocale(language, currentLanguageToLocale[language]), [language]);

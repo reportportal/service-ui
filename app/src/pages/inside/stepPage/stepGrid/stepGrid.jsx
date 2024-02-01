@@ -130,7 +130,7 @@ const DefectTypeColumn = ({
   customProps: { onEdit, onUnlinkSingleTicket, events },
 }) => (
   <div className={cx('defect-type-col', className)}>
-    {value.issue && value.issue.issueType && (
+    {value.issue?.issueType && (
       <DefectType
         issue={value.issue}
         patternTemplates={value.patternTemplates}
@@ -315,9 +315,7 @@ export class StepGrid extends Component {
           },
           onUnlinkSingleTicket,
           events: {
-            onEditEvent:
-              events.MAKE_DECISION_MODAL_EVENTS &&
-              events.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent,
+            onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
         },

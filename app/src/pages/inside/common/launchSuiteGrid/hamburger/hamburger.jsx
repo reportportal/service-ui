@@ -29,7 +29,6 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
 import {
   activeProjectRoleSelector,
   userIdSelector,
@@ -103,8 +102,6 @@ const messages = defineMessages({
   }),
   {
     showModal: showModalAction,
-    showNotification,
-    showDefaultErrorNotification,
     updateLaunchLocallyAction,
   },
 )
@@ -114,7 +111,6 @@ export class Hamburger extends Component {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
-    onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     customProps: PropTypes.object,
@@ -125,20 +121,15 @@ export class Hamburger extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     showModal: PropTypes.func,
-    showNotification: PropTypes.func,
-    showDefaultErrorNotification: PropTypes.func,
     updateLaunchLocallyAction: PropTypes.func,
     analyzerExtensions: PropTypes.array,
   };
 
   static defaultProps = {
-    onAction: () => {},
     customProps: {},
     accountRole: '',
     enabledPatterns: [],
     showModal: () => {},
-    showNotification: () => {},
-    showDefaultErrorNotification: () => {},
     updateLaunchLocallyAction: () => {},
     analyzerExtensions: [],
   };

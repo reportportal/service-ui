@@ -87,7 +87,7 @@ class Translator {
       if (el.type === 'messageTextElement') {
         el.value = this.translateText(el.value);
       } else {
-        const options = el.format && el.format.options;
+        const options = el.format?.options;
         if (options) {
           options.forEach(option => this.transform(option.value));
         }

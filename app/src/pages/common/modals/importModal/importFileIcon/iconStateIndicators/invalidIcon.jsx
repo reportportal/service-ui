@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
@@ -33,14 +32,6 @@ const cx = classNames.bind(styles);
   },
 })
 export class InvalidIcon extends Component {
-  static propTypes = {
-    rejectMessage: PropTypes.string,
-  };
-
-  static defaultProps = {
-    rejectMessage: '',
-  };
-
   render() {
     return <div className={cx('indicator-icon')}>{Parser(WarningIcon)}</div>;
   }

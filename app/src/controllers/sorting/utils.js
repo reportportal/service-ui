@@ -27,7 +27,7 @@ export const parseSortingString = (sortingString = '') => {
   };
 };
 
-export const formatSortingString = (fields = [], direction) => {
+export const formatSortingString = (fields = [], direction = undefined) => {
   const items = direction ? [...fields, direction] : fields;
   return items.join(',');
 };

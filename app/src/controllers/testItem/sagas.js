@@ -157,8 +157,8 @@ function* fetchTestItems({ payload = {} }) {
   let launchId = yield select(launchIdSelector);
   if (isNaN(Number(launchId))) {
     const launch = yield select(launchSelector);
-    launchId = launch && launch.id;
-    itemIdsArray[0] = launch && launch.id;
+    launchId = launch?.id;
+    itemIdsArray[0] = launch?.id;
   }
   const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   const isLostLaunch = yield select(isLostLaunchSelector);
@@ -246,10 +246,10 @@ function* fetchTestItems({ payload = {} }) {
     const previousLevel = yield select(levelSelector);
     const currentItemLevel = getStorageItem(CURRENT_ITEM_LEVEL);
     level = calculateLevel(
-      dataPayload.payload.content,
       previousLevel,
       currentItemLevel,
       isTestItemsList,
+      dataPayload.payload.content,
     );
   }
 

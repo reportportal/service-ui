@@ -61,7 +61,7 @@ export class FlakyTests extends Component {
   prepareWidgetData = ({ flaky }) =>
     flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
 
-  getMaxtrixTooltip = (count, total, formatMessage) => {
+  getMatrixTooltip = (count, total, formatMessage) => {
     return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
       statusNumber: count,
       statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
@@ -95,7 +95,7 @@ export class FlakyTests extends Component {
         tests={this.prepareWidgetData(content)}
         launch={content.latestLaunch}
         columns={cfg.columns}
-        getMaxtrixTooltip={this.getMaxtrixTooltip}
+        getMatrixTooltip={this.getMatrixTooltip}
         onItemClick={this.itemClickHandler}
       />
     );

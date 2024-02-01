@@ -96,14 +96,12 @@ const SelectedItemBody = ({ name, number, error, onUnselect }) => (
   </div>
 );
 SelectedItemBody.propTypes = {
-  className: PropTypes.string,
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
   error: PropTypes.string,
   number: PropTypes.number,
 };
 SelectedItemBody.defaultProps = {
-  className: '',
   onUnselect: () => {},
   error: null,
   number: null,
@@ -122,14 +120,12 @@ export const SelectedItem = ({ error, ...rest }) =>
   error ? <SelectedItemWithTooltip error={error} {...rest} /> : <SelectedItemBody {...rest} />;
 
 SelectedItem.propTypes = {
-  className: PropTypes.string,
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
   error: PropTypes.string,
   number: PropTypes.number,
 };
 SelectedItem.defaultProps = {
-  className: '',
   onUnselect: () => {},
   error: null,
   number: null,

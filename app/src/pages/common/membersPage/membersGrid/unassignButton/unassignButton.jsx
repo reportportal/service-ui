@@ -88,9 +88,7 @@ const messages = defineMessages({
     projectId: projectIdSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
-    entryType:
-      assignedProjectsSelector(state)[projectIdSelector(state)] &&
-      assignedProjectsSelector(state)[projectIdSelector(state)].entryType,
+    entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
   }),
   { showNotification, showModalAction },
 )

@@ -16,7 +16,7 @@
 
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 
-export const stringToArray = (str = '', separator) => {
+export const stringToArray = (str = '', separator = '') => {
   if (isEmptyValue(str)) {
     return [];
   }

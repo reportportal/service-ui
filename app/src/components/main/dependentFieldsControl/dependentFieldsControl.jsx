@@ -53,7 +53,7 @@ Field.defaultProps = {
 function renderFieldsRecursively(fields, values) {
   return fields.map(({ id, prefix, postfix, component, valueSelector, dependentFields = [] }) => {
     const value = valueSelector ? valueSelector(values) : values[id];
-    const nestedFields = (dependentFields.find((item) => item.value === value) || {}).fields || [];
+    const nestedFields = dependentFields.find((item) => item.value === value)?.fields || [];
 
     return (
       <React.Fragment key={id}>

@@ -52,7 +52,7 @@ export class C3Chart extends Component {
   }
 
   generateChart = (mountNode, config) => {
-    const newConfig = Object.assign({ bindto: mountNode }, config);
+    const newConfig = { bindto: mountNode, ...config };
     return c3.generate(newConfig);
   };
 

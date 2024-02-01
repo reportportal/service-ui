@@ -28,7 +28,7 @@ const handleError = (error) => {
   if (error.response && error.response.status === 401) {
     throw new Error(ERROR_UNAUTHORIZED);
   }
-  if (error.response && error.response.data) {
+  if (error.response?.data) {
     throw error.response.data;
   }
   throw error;
@@ -36,10 +36,10 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, params = {}, isRawResponse) => {
-  const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
-  const headersFromParams = params && params.headers;
-  const headers = Object.assign({}, headersFromParams || {});
+export const fetch = (url, params = {}, isRawResponse = false) => {
+  const cancelToken = params?.abort ? new CancelToken(params.abort) : null;
+  const headersFromParams = params?.headers;
+  const headers = { ...(headersFromParams || {}) };
 
   const requestParams = {
     ...params,
