@@ -339,7 +339,6 @@ export const AttributeList = ({
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
   disabled: PropTypes.bool,
-  valueURLCreator: PropTypes.func,
   newAttrMessage: PropTypes.string,
   maxLength: PropTypes.number,
   customClass: PropTypes.string,
@@ -356,7 +355,6 @@ AttributeList.propTypes = {
 AttributeList.defaultProps = {
   attributes: [],
   disabled: false,
-  valueURLCreator: null,
   newAttrMessage: '',
   maxLength: Infinity,
   customClass: '',
