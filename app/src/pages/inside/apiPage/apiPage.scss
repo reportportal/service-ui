@@ -144,6 +144,19 @@
       section.models h4 {
         padding: 10px 20px 10px 10px;
       }
+
+      .scheme-container {
+        box-shadow: none;
+
+        .schemes {
+          padding-left: 20px;
+        }
+      }
+
+      .servers-title {
+        margin-bottom: 8px;
+        display: block;
+      }
     }
     .url {
       display: none;
