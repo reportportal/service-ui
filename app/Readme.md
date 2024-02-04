@@ -4,7 +4,7 @@
 
 ## Installation
 
-For local development, you need a [node.js](https://nodejs.org)(minimum required version 12, recommended - 14).
+For local development, you need a [node.js](https://nodejs.org)(version 20 is recommended).
 
 To launch the development environment, follow these steps:
 

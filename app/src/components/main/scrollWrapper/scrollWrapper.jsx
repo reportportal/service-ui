@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
 import { Footer } from 'layouts/common/footer';
