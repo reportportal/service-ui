@@ -275,6 +275,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
                 disabled={isReadOnly}
                 value={enabled}
                 onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+                className={cx('checkbox')}
               >
                 {formatMessage(messages.toggleLabel)}
               </Checkbox>

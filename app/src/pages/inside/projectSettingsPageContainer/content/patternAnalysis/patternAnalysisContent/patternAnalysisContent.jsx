@@ -198,6 +198,7 @@ export const PatternAnalysisContent = ({
             disabled={disabled}
             value={PAState}
             onChange={(e) => onChangePatternAnalysis(e.target.checked)}
+            className={cx('checkbox')}
           >
             {formatMessage(messages.autoPatternAnalysis)}
           </Checkbox>

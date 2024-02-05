@@ -21,3 +21,9 @@
 .button {
   margin-left: auto;
 }
+
+.checkbox {
+  input + span {
+    border-color: $COLOR--e-300;
+  }
+}

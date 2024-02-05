@@ -26,4 +26,8 @@
 .toggle {
   margin-top: 8px;
   white-space: nowrap;
+
+  input + div {
+    background-color: $COLOR--e-300;
+  }
 }

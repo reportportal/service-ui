@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
@@ -30,6 +31,9 @@ import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
 import { formatFieldName } from '../utils';
 import { Layout } from '../../layout';
+import styles from './uniqueErrors.scss';
+
+const cx = classNames.bind(styles);
 
 const UniqueErrors = ({
   analyzerConfig,
@@ -101,7 +105,7 @@ const UniqueErrors = ({
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
           dataAutomationId="switchUniqueErrorField"
         >
-          <Checkbox title={analyzerUnavailableTitle}>
+          <Checkbox className={cx('checkbox')} title={analyzerUnavailableTitle}>
             {formatMessage(messages.uniqueError)}
           </Checkbox>
         </FieldElement>
