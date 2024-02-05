@@ -24,14 +24,6 @@
   &:first-child {
     margin-right: 30px;
   }
-
-  input:checked + span {
-    border-color: $COLOR--topaz-2 !important;
-  }
-
-  input + span {
-    border-color: $COLOR--e-300 !important;
-  }
 }
 
 .fields {

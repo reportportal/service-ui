@@ -18,7 +18,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
@@ -42,9 +41,6 @@ import {
   MIN_SHOULD_MATCH,
   NUMBER_OF_LOG_LINES,
 } from '../constants';
-import styles from './autoAnalysis.scss';
-
-const cx = classNames.bind(styles);
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -144,7 +140,7 @@ const AutoAnalysis = ({
           disabled={!isAnalyzerServiceAvailable || isFieldDisabled}
           dataAutomationId={ANALYZER_ENABLED + FIELD}
         >
-          <Checkbox className={cx('checkbox')} title={analyzerUnavailableTitle}>
+          <Checkbox title={analyzerUnavailableTitle}>
             {formatMessage(messages.autoAnalysis)}
           </Checkbox>
         </FieldElement>
@@ -203,9 +199,7 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={ALL_MESSAGES_SHOULD_MATCH + FIELD}
         >
-          <Checkbox className={cx('checkbox')}>
-            {formatMessage(messages.allMessagesShouldMatch)}
-          </Checkbox>
+          <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
         </FieldElement>
         <Button
           type="submit"
