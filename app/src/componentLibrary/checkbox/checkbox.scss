@@ -51,7 +51,7 @@
   position: absolute;
   width: 16px;
   height: 16px;
-  border: 1px solid $COLOR--e-200;
+  border: 1px solid $COLOR--e-300;
   border-radius: 3px;
   margin-left: -24px;
   box-sizing: border-box;
@@ -93,7 +93,7 @@
       @include checked-state($COLOR--topaz-focused, $COLOR--topaz-focused);
     }
     &:disabled + .checkbox {
-      border-color: $COLOR--e-200;
+      border-color: $COLOR--e-300;
     }
     &:checked:disabled + .checkbox {
       @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);

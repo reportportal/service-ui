@@ -125,7 +125,7 @@
 .light {
   &.toggler {
     @include toggler;
-    border-color: $COLOR--e-200;
+    border-color: $COLOR--e-300;
     background-color: $COLOR--white-two;
 
     &::after {
