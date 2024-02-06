@@ -96,14 +96,12 @@ export class EmailFormFields extends Component {
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
     authEnabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     authEnabled: false,
-    lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
   };
 

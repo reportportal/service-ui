@@ -79,7 +79,6 @@ export class DotsMenuButton extends Component {
     onClick: PropTypes.func,
   };
   static defaultProps = {
-    title: '',
     items: [],
     disabled: false,
     buttonClassName: 'menu-button',

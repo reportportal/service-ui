@@ -73,12 +73,10 @@ export class IssueInfoTooltip extends Component {
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
     plugin: PropTypes.object,
-    pluginName: PropTypes.string,
   };
 
   static defaultProps = {
     plugin: null,
-    pluginName: '',
   };
 
   constructor(props) {

@@ -73,7 +73,7 @@ export const TestItemDetails = ({
       ) : (
         showDetails && (
           <div className={cx('test-item-details-content')}>
-            {item.issue && item.issue.comment && (
+            {item.issue?.comment && (
               <div className={cx('defect-comment')}>
                 <div>{Parser(commentIcon)}</div>
                 <div className={cx('defect-comment-content')}>
@@ -118,8 +118,6 @@ TestItemDetails.propTypes = {
   item: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
-  nameLink: PropTypes.object,
-  preselected: PropTypes.bool,
   hideLabels: PropTypes.bool,
   logs: PropTypes.array,
   eventsInfo: PropTypes.object,
@@ -134,8 +132,6 @@ TestItemDetails.propTypes = {
 TestItemDetails.defaultProps = {
   isSelected: false,
   selectItem: () => {},
-  nameLink: {},
-  preselected: false,
   hideLabels: false,
   logs: [],
   eventsInfo: {},

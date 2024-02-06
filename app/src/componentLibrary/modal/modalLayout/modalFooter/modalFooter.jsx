@@ -45,8 +45,8 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               variant={okButton.danger ? 'danger' : 'topaz'}
               onClick={okButton.onClick}
               disabled={okButton.disabled}
-              type={okButton.attributes && okButton.attributes.type}
-              form={okButton.attributes && okButton.attributes.form}
+              type={okButton.attributes?.type}
+              form={okButton.attributes?.form}
               dataAutomationId={'submitButton'}
             >
               {okButton.text}

@@ -38,7 +38,7 @@ export class DateField extends Component {
 
   parseDateValue = (value) => [(value && moment(value).format(DATE_FORMAT)) || ''];
 
-  formatDateValue = (value) => value && value[0];
+  formatDateValue = (value) => value?.[0];
 
   render() {
     const { field, darkView, ...rest } = this.props;

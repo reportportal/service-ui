@@ -108,7 +108,7 @@ export class DemoBanner extends Component {
     }
   };
 
-  getAuthPath = () => (this.props.authExtensions.github || {}).path;
+  getAuthPath = () => this.props.authExtensions.github?.path;
 
   getDescription = () => {
     const {

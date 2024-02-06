@@ -29,13 +29,13 @@ export class TestsTableBody extends React.Component {
   static propTypes = {
     tests: PTTests,
     columns: PTColumns.isRequired,
-    getMaxtrixTooltip: func,
+    getMatrixTooltip: func,
     onItemClick: func,
   };
 
   static defaultProps = {
     tests: [],
-    getMaxtrixTooltip: null,
+    getMatrixTooltip: null,
     onItemClick: null,
   };
 
@@ -46,7 +46,7 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, getMaxtrixTooltip, onItemClick } = this.props;
+    const { columns, getMatrixTooltip, onItemClick } = this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
@@ -59,7 +59,7 @@ export class TestsTableBody extends React.Component {
       matrixComponent: this.matrixComponent,
       status: status && test[status.statusKey],
       duration: duration && formatDuration(test[duration.durationKey]),
-      getMaxtrixTooltip,
+      getMatrixTooltip,
       onItemClick,
     };
 

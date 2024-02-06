@@ -55,7 +55,6 @@ const cx = classNames.bind(styles);
   }),
   {
     restorePath: restorePathAction,
-    navigate: (linkAction) => linkAction,
   },
 )
 @injectIntl
@@ -85,7 +84,6 @@ export class TestItemActionPanel extends Component {
     onDelete: PropTypes.func,
     btsIntegrations: PropTypes.array,
     deleteDisabled: PropTypes.bool,
-    navigate: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -100,12 +98,10 @@ export class TestItemActionPanel extends Component {
     onRefresh: () => {},
     breadcrumbs: [],
     accountRole: '',
-    errors: {},
     restorePath: () => {},
     level: '',
     showBreadcrumbs: true,
     hasErrors: false,
-    actionsMenuDisabled: false,
     hasValidItems: false,
     onProceedValidItems: () => {},
     selectedItems: [],
@@ -136,8 +132,7 @@ export class TestItemActionPanel extends Component {
       const defectFromTIGroup =
         selectedItems.length > 1 && selectedItems.some(({ issue }) => issue)
           ? undefined
-          : selectedItems[0].issue &&
-            selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+          : selectedItems[0].issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
       tracking.trackEvent(
         pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(

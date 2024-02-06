@@ -56,7 +56,7 @@ export class ContainerWithTabs extends Component {
     const { eventInfo } = data[id];
     if (selectTabEventInfo) {
       tracking.trackEvent(selectTabEventInfo);
-    } else if (eventInfo && eventInfo.changeTab) {
+    } else if (eventInfo?.changeTab) {
       tracking.trackEvent(eventInfo.changeTab);
     }
   };

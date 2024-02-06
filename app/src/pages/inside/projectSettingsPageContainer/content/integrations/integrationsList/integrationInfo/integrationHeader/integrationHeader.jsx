@@ -122,7 +122,6 @@ export const IntegrationHeader = (props) => {
   );
 };
 IntegrationHeader.propTypes = {
-  goBackHandler: PropTypes.func,
   data: PropTypes.shape({
     creationDate: PropTypes.number,
     enabled: PropTypes.bool,
@@ -150,7 +149,6 @@ IntegrationHeader.propTypes = {
   ),
 };
 IntegrationHeader.defaultProps = {
-  goBackHandler: () => {},
   onAddProjectIntegration: () => {},
   onResetProjectIntegration: () => {},
   withButton: false,

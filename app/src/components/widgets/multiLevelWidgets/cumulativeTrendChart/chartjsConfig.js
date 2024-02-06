@@ -33,7 +33,7 @@ const getTotal = () => ['statistics$executions$total'];
 const getPercentageValue = (value, datasets, label, index) => {
   const totalDataset = datasets[0];
   const isDefectType = /defects/.test(label);
-  let totalValue = totalDataset && totalDataset.data[index];
+  let totalValue = totalDataset?.data[index];
 
   if (isDefectType) {
     const defects = datasets.filter((item) => /defects/.test(item.label));
@@ -45,19 +45,13 @@ const getPercentageValue = (value, datasets, label, index) => {
 };
 
 const convertIntoPercents = (datasets) => {
-  return datasets.map((dataset) =>
-    Object.assign(
-      {
-        absData: dataset.data,
-      },
-      dataset,
-      {
-        data: dataset.data.map((value, index) =>
-          getPercentageValue(value, datasets, dataset.label, index),
-        ),
-      },
+  return datasets.map((dataset) => ({
+    absData: dataset.data,
+    ...dataset,
+    data: dataset.data.map((value, index) =>
+      getPercentageValue(value, datasets, dataset.label, index),
     ),
-  );
+  }));
 };
 
 const firstCapital = (string) => string.charAt(0).toUpperCase() + string.slice(1);

@@ -23,7 +23,7 @@ import { HIDE_NOTIFICATION, SHOW_NOTIFICATION } from './constants';
  * @param payload
  * @returns Array
  */
-export const notificationReducer = (state = [], { type, payload }) => {
+export const notificationReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case SHOW_NOTIFICATION:
       return [...state, payload];

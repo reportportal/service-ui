@@ -183,8 +183,7 @@ export class SingleAutocomplete extends Component {
                           }
 
                           onBlur(e);
-                          isOptionUnique &&
-                            isOptionUnique(newValue ? !options.find((v) => v === newValue) : null);
+                          isOptionUnique?.(newValue ? !options.find((v) => v === newValue) : null);
                           setTouch(true);
                         },
                         disabled,

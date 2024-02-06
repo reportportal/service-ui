@@ -220,7 +220,7 @@ export class ConnectionSection extends Component {
             <p className={cx('created-date-block')}>
               {creator} on {moment(creationDate).format('ll')}
             </p>
-            {editAuthConfig && editAuthConfig.content}
+            {editAuthConfig?.content}
           </div>
           {isEditable && (
             <div className={cx('buttons-block')}>

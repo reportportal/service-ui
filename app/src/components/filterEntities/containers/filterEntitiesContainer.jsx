@@ -76,7 +76,7 @@ export class FilterEntitiesContainer extends Component {
     }, {});
 
   isValidChange = (entityId) => {
-    const value = this.state.values[entityId] && this.state.values[entityId].value;
+    const value = this.state.values[entityId]?.value;
     if (!value) {
       return true;
     }
@@ -103,7 +103,7 @@ export class FilterEntitiesContainer extends Component {
   };
 
   mergeEntityValue = (oldEntity, newEntity) => {
-    if (oldEntity && oldEntity.value) {
+    if (oldEntity?.value) {
       const oldEntityValue = oldEntity.value;
       const isNewValueValid =
         newEntity.value && oldEntityValue.split(',').indexOf(newEntity.value) === -1;

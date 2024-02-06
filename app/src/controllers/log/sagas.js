@@ -286,7 +286,7 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
     }
   }
 
-  yield callback && callback();
+  yield callback?.();
 }
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
@@ -310,7 +310,7 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
     const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
     yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
   }
-  callback && callback();
+  callback?.();
 }
 
 function* fetchDetailsLog() {

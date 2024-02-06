@@ -35,7 +35,7 @@ export const getItemLevel = (type) => {
   return level;
 };
 
-export const calculateLevel = (data = [], previousLevel, currentItemLevel, isTestItemsList) => {
+export const calculateLevel = (previousLevel, currentItemLevel, isTestItemsList, data = []) => {
   if (data.length === 0) {
     const launchLevel =
       (isTestItemsList && launchLevels.LEVEL_STEP) || currentItemLevel || launchLevels.LEVEL_SUITE;
@@ -79,14 +79,13 @@ export const createLink = (testItemIds, itemId, payload, query, nextPage) => {
   };
 };
 
-export const getDefectsString = (defects) =>
-  defects && defects.filter((k) => k !== 'total').join(',');
+export const getDefectsString = (defects) => defects?.filter((k) => k !== 'total').join(',');
 
 export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
   if (!testItem) {
     return null;
   }
-  const testItemDefects = (testItem.statistics && testItem.statistics.defects) || {};
+  const testItemDefects = testItem.statistics?.defects || {};
   const defectStatistics = Object.keys(defectTypesConfig).reduce((result, key) => {
     const defectTypeName = key.toLowerCase();
     const testItemDefectType = testItemDefects[defectTypeName] || {};
@@ -127,7 +126,7 @@ export const groupItemsByParent = (items) =>
 export const isItemOwner = (userId, item, launch) => {
   if (item.owner) {
     return userId === item.owner;
-  } else if (launch && launch.owner) {
+  } else if (launch?.owner) {
     return userId === launch.owner;
   }
 

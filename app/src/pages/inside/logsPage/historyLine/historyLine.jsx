@@ -134,7 +134,7 @@ export class HistoryLine extends Component {
     }
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_ON_MORE_BTN);
     this.setState({ isLoading: true, prevItemsCount: historyItems.length });
-    this.props.fetchHistoryItemsAction(true, this.finishLoading);
+    this.props.fetchHistoryItemsAction(this.finishLoading, true);
   };
 
   componentDidMount() {

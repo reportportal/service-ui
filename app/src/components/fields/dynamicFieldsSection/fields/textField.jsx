@@ -29,7 +29,7 @@ export class TextField extends Component {
     darkView: false,
   };
 
-  formatInputValue = (value) => value && value[0];
+  formatInputValue = (value) => value?.[0];
 
   parseInputValue = (value) => (value ? [value] : []);
 

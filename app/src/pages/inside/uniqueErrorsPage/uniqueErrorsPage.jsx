@@ -37,9 +37,7 @@ import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controll
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { UniqueErrorsGrid } from 'pages/inside/uniqueErrorsPage/uniqueErrorsGrid';
 import {
-  selectClusterItemsAction,
   selectedClusterItemsSelector,
-  toggleAllClusterItemsAction,
   toggleClusterItemSelectionAction,
   unselectAllClusterItemsAction,
   validationErrorsSelector,
@@ -98,9 +96,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
   }),
   {
     toggleClusterItemSelectionAction,
-    selectClusterItemsAction,
     unselectAllClusterItemsAction,
-    toggleAllClusterItemsAction,
     showModalAction,
     onUnlinkIssue: unlinkIssueAction,
     deleteClusterItemsAction,
@@ -133,9 +129,7 @@ export class UniqueErrorsPage extends Component {
     onChangePageSize: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     toggleClusterItemSelectionAction: PropTypes.func,
-    selectClusterItemsAction: PropTypes.func,
     unselectAllClusterItemsAction: PropTypes.func,
-    toggleAllClusterItemsAction: PropTypes.func,
     showModalAction: PropTypes.func,
     validationErrors: PropTypes.object,
     deleteTestItemsAction: PropTypes.func,
@@ -162,9 +156,7 @@ export class UniqueErrorsPage extends Component {
     onChangePageSize: () => {},
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     toggleClusterItemSelectionAction: PropTypes.func,
-    selectClusterItemsAction: PropTypes.func,
     unselectAllClusterItemsAction: PropTypes.func,
-    toggleAllClusterItemsAction: PropTypes.func,
     showModalAction: PropTypes.func,
     validationErrors: {},
     deleteTestItemsAction: () => {},
@@ -215,14 +207,14 @@ export class UniqueErrorsPage extends Component {
   };
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
-    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const items = eventData?.id ? [eventData] : selectedItems;
 
     tracking.trackEvent(
       UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
           ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        eventData && eventData.id ? '' : 'actions',
+        eventData?.id ? '' : 'actions',
       ),
     );
     this.props.editDefectsAction(items, {

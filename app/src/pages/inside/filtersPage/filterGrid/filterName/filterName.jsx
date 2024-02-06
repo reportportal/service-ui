@@ -15,7 +15,6 @@
  */
 
 import React, { Fragment, Component } from 'react';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -27,10 +26,8 @@ import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class FilterName extends Component {
   static propTypes = {
-    intl: PropTypes.object,
     userFilters: PropTypes.array,
     filter: PropTypes.object,
     onClickName: PropTypes.func,
@@ -44,7 +41,6 @@ export class FilterName extends Component {
   };
 
   static defaultProps = {
-    intl: {},
     userFilters: [],
     filter: {},
     onClickName: () => {},

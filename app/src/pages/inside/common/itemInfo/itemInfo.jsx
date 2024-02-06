@@ -81,7 +81,6 @@ export class ItemInfo extends Component {
     customProps: PropTypes.object,
     isStepLevel: PropTypes.bool,
     hideEdit: PropTypes.bool,
-    widgetView: PropTypes.bool,
     extensions: PropTypes.arrayOf(extensionType),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -103,7 +102,6 @@ export class ItemInfo extends Component {
     },
     isStepLevel: false,
     hideEdit: false,
-    widgetView: false,
     onClickRetries: () => {},
     refFunction: null,
     extensions: [],
@@ -147,13 +145,12 @@ export class ItemInfo extends Component {
       hideDescription,
     } = this.props;
 
-    const autoAnalysisLabel =
-      value.analysing &&
-      value.analysing.find(
-        (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
-      );
-    const patternAnalyzingLabel =
-      value.analysing && value.analysing.find((item) => item === ANALYZER_TYPES.PATTERN_ANALYSER);
+    const autoAnalysisLabel = value.analysing?.find(
+      (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
+    );
+    const patternAnalyzingLabel = value.analysing?.find(
+      (item) => item === ANALYZER_TYPES.PATTERN_ANALYSER,
+    );
 
     const onNameClick = () => {
       const { events } = customProps;
@@ -232,7 +229,7 @@ export class ItemInfo extends Component {
           )}
           {value.owner && <OwnerBlock owner={value.owner} onClick={customProps.onOwnerClick} />}
           {isStepLevel && this.renderSauceLabsLabel()}
-          {value.attributes && !!value.attributes.length && (
+          {!!value.attributes?.length && (
             <AttributesBlock
               attributes={value.attributes}
               onClickAttribute={customProps.onClickAttribute}

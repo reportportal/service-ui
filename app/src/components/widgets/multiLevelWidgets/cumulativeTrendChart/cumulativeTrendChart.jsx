@@ -74,10 +74,8 @@ export class CumulativeTrendChart extends PureComponent {
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
-    observer: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    queryParameters: PropTypes.object,
     onChangeLegend: PropTypes.func,
     uncheckedLegendItems: PropTypes.array,
     userSettings: PropTypes.object,
@@ -87,10 +85,8 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   static defaultProps = {
-    observer: null,
     fetchWidget: () => {},
     clearQueryParams: () => {},
-    queryParameters: {},
     onChangeLegend: () => {},
     uncheckedLegendItems: [],
     userSettings: {},
@@ -151,7 +147,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   setLegendControlsShown = (chartContainerWidth) => {
-    const isLegendControlsShown = !(chartContainerWidth < SCREEN_XS_MAX);
+    const isLegendControlsShown = chartContainerWidth >= SCREEN_XS_MAX;
 
     this.setState({
       isLegendControlsShown,
@@ -344,7 +340,7 @@ export class CumulativeTrendChart extends PureComponent {
     const height = container.offsetHeight - this.getLegendHeight();
     const width = container.offsetWidth;
     const isChartDataAvailable = chartData && !!chartData.labels.length;
-    const widgetState = widget.contentParameters && widget.contentParameters.widgetOptions.state;
+    const widgetState = widget.contentParameters?.widgetOptions.state;
 
     return this.state.chartData ? (
       <div className={cx('cumulative-trend-chart')}>

@@ -28,11 +28,9 @@ import { TextTooltip } from 'components/main/tooltips/textTooltip';
 })
 export class ProjectTooltipIcon extends Component {
   static propTypes = {
-    tooltipContent: PropTypes.string,
     children: PropTypes.node,
   };
   static defaultProps = {
-    tooltipContent: '',
     children: '',
   };
 

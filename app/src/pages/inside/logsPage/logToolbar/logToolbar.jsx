@@ -32,7 +32,7 @@ import {
   fetchTestItemsFromLogPageAction,
   restorePathAction,
 } from 'controllers/testItem';
-import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
+import { withPagination } from 'controllers/pagination';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,
@@ -106,7 +106,6 @@ export class LogToolbar extends Component {
     navigate: PropTypes.func,
     previousLinkDisable: PropTypes.bool,
     nextLinkDisable: PropTypes.bool,
-    activePage: PropTypes.number,
     fetchTestItems: PropTypes.func,
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
@@ -124,7 +123,6 @@ export class LogToolbar extends Component {
     navigate: () => {},
     previousLinkDisable: false,
     nextLinkDisable: false,
-    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
@@ -202,7 +200,7 @@ export class LogToolbar extends Component {
                   <GhostButton
                     icon={LeftArrowIcon}
                     disabled={previousLinkDisable}
-                    title={previousItem && previousItem.name}
+                    title={previousItem?.name}
                     onClick={this.handleBackClick}
                     transparentBackground
                   />
@@ -210,7 +208,7 @@ export class LogToolbar extends Component {
                 <GhostButton
                   icon={RightArrowIcon}
                   disabled={nextLinkDisable}
-                  title={nextItem && nextItem.name}
+                  title={nextItem?.name}
                   onClick={this.handleForwardClick}
                   transparentBackground
                 />

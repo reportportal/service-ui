@@ -54,9 +54,9 @@ const selectAll = (state, items) => {
 
 export const selectedItemsReducer = (namespace) => (
   state = SELECTED_ITEMS_INITIAL_STATE,
-  { type, payload, meta },
+  { type = '', payload = {}, meta = {} },
 ) => {
-  if (meta && meta.namespace && meta.namespace !== namespace) {
+  if (meta?.namespace !== namespace) {
     return state;
   }
   switch (type) {
@@ -77,9 +77,9 @@ export const selectedItemsReducer = (namespace) => (
 
 export const validationErrorsReducer = (namespace) => (
   state = VALIDATION_ERRORS_INITIAL_STATE,
-  { type, payload, meta },
+  { type = '', payload = {}, meta = {} },
 ) => {
-  if (meta && meta.namespace && meta.namespace !== namespace) {
+  if (meta?.namespace !== namespace) {
     return state;
   }
   switch (type) {
@@ -104,9 +104,9 @@ export const validationErrorsReducer = (namespace) => (
 
 export const lastOperationReducer = (namespace) => (
   state = LAST_OPERATION_INITIAL_STATE,
-  { type, payload, meta },
+  { type = '', payload = {}, meta = {} },
 ) => {
-  if (meta && meta.namespace && meta.namespace !== namespace) {
+  if (meta?.namespace !== namespace) {
     return state;
   }
   switch (type) {

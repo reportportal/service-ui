@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
+import { activeProjectSelector } from 'controllers/user/selectors';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
@@ -88,7 +88,6 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
@@ -108,7 +107,6 @@ export class FiltersControl extends Component {
     touched: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-    userId: PropTypes.string,
     activeProject: PropTypes.string,
     value: PropTypes.shape({
       value: PropTypes.string,
@@ -134,7 +132,6 @@ export class FiltersControl extends Component {
     formAppearance: {},
     touched: false,
     error: '',
-    userId: '',
     value: {},
     activeProject: '',
     loading: false,
@@ -381,7 +378,7 @@ export class FiltersControl extends Component {
 
   handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
-    const name = filter ? filter.name : newFilter && newFilter.name;
+    const name = filter ? filter.name : newFilter?.name;
     const newActiveFilter = {
       value: id,
       name,

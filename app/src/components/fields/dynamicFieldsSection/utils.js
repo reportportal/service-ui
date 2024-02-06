@@ -39,12 +39,12 @@ const normalizeDefinedValue = (item) =>
 
 export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE_NAME_KEY) =>
   fields.map((field) => {
-    if (!field.definedValues || !field.definedValues.length) {
+    if (!field?.definedValues?.length) {
       return field;
     }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
-    if (!value || !value.length) {
+    if (!value?.length) {
       value = [definedValues[0][defaultOptionValueKey]];
     }
     return { ...field, definedValues, value };
@@ -76,11 +76,11 @@ export const getFieldComponent = (field) => {
 
   if (field.fieldType === MULTILINE_TEXT_TYPE) {
     fieldType = MULTILINE_TEXT_TYPE;
-  } else if (field.fieldType === ARRAY_TYPE && field.definedValues && field.definedValues.length) {
+  } else if (field.fieldType === ARRAY_TYPE && field.definedValues?.length) {
     fieldType = ARRAY_TYPE;
   } else if (field.fieldType === DATE_TYPE || field.fieldType.toLowerCase() === 'datetime') {
     fieldType = DATE_TYPE;
-  } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
+  } else if (field.definedValues?.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
   } else if (field.commandName && AUTOCOMPLETE_TYPES.includes(field.fieldType)) {
     fieldType = field.fieldType;

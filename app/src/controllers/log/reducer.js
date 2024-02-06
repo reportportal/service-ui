@@ -44,7 +44,7 @@ import {
   updateHistoryItemLaunchAttributes,
 } from './utils';
 
-const stackTracePaginationReducer = (state = {}, { type }) => {
+const stackTracePaginationReducer = (state = {}, { type = '' }) => {
   switch (type) {
     case CLEAR_LOG_PAGE_STACK_TRACE:
       return {};
@@ -53,7 +53,7 @@ const stackTracePaginationReducer = (state = {}, { type }) => {
   }
 };
 
-const stackTraceContentReducer = (state = {}, { type }) => {
+const stackTraceContentReducer = (state = {}, { type = '' }) => {
   switch (type) {
     case CLEAR_LOG_PAGE_STACK_TRACE:
       return [];
@@ -62,7 +62,7 @@ const stackTraceContentReducer = (state = {}, { type }) => {
   }
 };
 
-const pageLoadingReducer = (state = false, { type, payload }) => {
+const pageLoadingReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_LOG_PAGE_LOADING:
       return payload;
@@ -71,7 +71,7 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
-const historyItemsReducer = (state = [], { type, payload }) => {
+const historyItemsReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_HISTORY_ITEMS_SUCCESS:
       return normalizeHistoryItems(payload);
@@ -84,7 +84,7 @@ const historyItemsReducer = (state = [], { type, payload }) => {
   }
 };
 
-const includeAllLaunchesReducer = (state = false, { type, payload }) => {
+const includeAllLaunchesReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_INCLUDE_ALL_LAUNCHES:
       return payload;
@@ -93,7 +93,7 @@ const includeAllLaunchesReducer = (state = false, { type, payload }) => {
   }
 };
 
-const shouldShowLoadMoreReducer = (state = false, { type, payload }) => {
+const shouldShowLoadMoreReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_SHOULD_SHOW_LOAD_MORE:
       return payload;
@@ -102,7 +102,7 @@ const shouldShowLoadMoreReducer = (state = false, { type, payload }) => {
   }
 };
 
-const activeTabIdReducer = (state = 'logs', { type, payload }) => {
+const activeTabIdReducer = (state = 'logs', { type = '', payload = {} }) => {
   switch (type) {
     case SET_ACTIVE_TAB_ID:
       return payload;

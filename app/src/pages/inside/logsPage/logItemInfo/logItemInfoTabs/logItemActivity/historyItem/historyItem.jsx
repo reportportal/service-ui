@@ -148,7 +148,7 @@ export class HistoryItem extends Component {
   };
 
   renderPatternValue = (value = '') =>
-    (this.props.patterns.find((pattern) => pattern.id.toString() === value) || {}).name || '';
+    this.props.patterns.find((pattern) => pattern.id.toString() === value)?.name || '';
 
   render() {
     const { historyItem } = this.props;

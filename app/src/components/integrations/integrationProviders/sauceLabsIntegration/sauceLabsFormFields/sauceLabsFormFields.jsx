@@ -48,9 +48,7 @@ export class SauceLabsFormFields extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     pluginDetails: PropTypes.object,
     updateMetaData: PropTypes.func,
@@ -58,7 +56,6 @@ export class SauceLabsFormFields extends Component {
 
   static defaultProps = {
     disabled: false,
-    lineAlign: false,
     initialData: {},
     pluginDetails: {
       dataCenters: [],

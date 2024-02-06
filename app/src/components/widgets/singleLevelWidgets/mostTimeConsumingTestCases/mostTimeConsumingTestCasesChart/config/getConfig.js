@@ -36,7 +36,7 @@ export const getConfig = ({ content, formatMessage, positionCallback, size, onCh
   const timeType = getTimeType(maxDuration);
 
   const getItemColor = (color, { index }) => {
-    const status = itemsData[index] && itemsData[index].status;
+    const status = itemsData[index]?.status;
 
     return COLORS[`COLOR_${status}`];
   };

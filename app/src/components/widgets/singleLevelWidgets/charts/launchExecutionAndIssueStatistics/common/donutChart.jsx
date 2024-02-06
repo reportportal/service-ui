@@ -128,7 +128,7 @@ export class DonutChart extends Component {
       const launchesLimit = contentParameters.itemsCount;
       const isLatest = contentParameters.widgetOptions.latest;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
-      const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
+      const activeFilterId = activeFilter?.id || appliedWidgetFilterId;
 
       linkParams = {
         isListType: true,

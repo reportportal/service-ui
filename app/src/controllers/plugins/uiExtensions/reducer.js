@@ -22,7 +22,7 @@ import {
   UPDATE_EXTENSION_METADATA,
 } from './constants';
 
-const extensionsLoadedReducer = (state = false, { type }) => {
+const extensionsLoadedReducer = (state = false, { type = '' }) => {
   switch (type) {
     case EXTENSION_LOAD_START:
       return false;
@@ -33,7 +33,7 @@ const extensionsLoadedReducer = (state = false, { type }) => {
   }
 };
 
-const extensionsMetadataReducer = (state = [], { type, payload }) => {
+const extensionsMetadataReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_EXTENSIONS_METADATA_SUCCESS:
       return payload;

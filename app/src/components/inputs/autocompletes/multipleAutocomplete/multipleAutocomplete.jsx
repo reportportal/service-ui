@@ -100,7 +100,7 @@ export class MultipleAutocomplete extends Component {
     });
 
   handleChange = (...args) => {
-    this.updatePosition && this.updatePosition();
+    this.updatePosition?.();
     this.props.onChange(...args);
   };
 
@@ -124,7 +124,7 @@ export class MultipleAutocomplete extends Component {
       ...props
     } = this.props;
     const { focused } = this.state;
-    const isClearable = !!(value && value.length && !disabled);
+    const isClearable = !!(value?.length && !disabled);
     return (
       <Manager>
         <MultipleDownshift

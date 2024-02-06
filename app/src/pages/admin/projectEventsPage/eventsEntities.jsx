@@ -142,8 +142,6 @@ export class EventsEntities extends Component {
   };
 
   static defaultProps = {
-    loading: false,
-    events: [],
     filterValues: {},
   };
 

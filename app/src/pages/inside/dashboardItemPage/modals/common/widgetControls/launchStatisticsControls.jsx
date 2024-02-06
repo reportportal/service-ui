@@ -108,7 +108,7 @@ export class LaunchStatisticsControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
   render() {

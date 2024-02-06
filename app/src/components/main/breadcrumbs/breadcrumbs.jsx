@@ -67,7 +67,7 @@ export class Breadcrumbs extends Component {
   isListView = () => this.getListViewIndex() >= 0;
   isLostLaunch = () => {
     const { descriptors } = this.props;
-    return descriptors[1] && descriptors[1].lost;
+    return descriptors[1]?.lost;
   };
   toggleExpand = () => {
     this.props.togglerEventInfo &&

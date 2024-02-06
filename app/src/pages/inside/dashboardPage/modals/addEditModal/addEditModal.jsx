@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -28,7 +27,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
-import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -85,9 +83,6 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
 @withModal('dashboardAddEditModal')
 @injectIntl
 @track()
-@connect((state) => ({
-  dashboardItems: dashboardItemsSelector(state),
-}))
 @reduxForm({
   form: 'addEditDashboard',
   validate: ({ name }, { dashboardItems = [], data: { dashboardItem = {} } }) => ({
@@ -110,7 +105,6 @@ export class AddEditModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    dashboardItems: PropTypes.array.isRequired,
   };
 
   static defaultProps = {

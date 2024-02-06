@@ -85,7 +85,7 @@ export class ChartContainer extends Component {
     const { isPreview, observer, isCustomTooltip } = this.props;
     if (!isPreview) {
       observer.unsubscribe('widgetResized', this.resizeChart);
-      !isCustomTooltip && this.node && this.node.removeEventListener('mousemove', this.setupCoords);
+      !isCustomTooltip && this.node?.removeEventListener('mousemove', this.setupCoords);
     }
     this.chart = null;
   }
@@ -197,11 +197,11 @@ export class ChartContainer extends Component {
       if (this.config.size) {
         this.config.size.height = newHeight;
       }
-      resizedCallback && resizedCallback();
+      resizedCallback?.();
     } else if (this.width !== newWidth) {
       this.width = newWidth;
       this.chart.flush();
-      resizedCallback && resizedCallback();
+      resizedCallback?.();
     }
   };
 

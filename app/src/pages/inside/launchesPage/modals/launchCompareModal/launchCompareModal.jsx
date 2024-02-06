@@ -34,7 +34,6 @@ import {
 import { withModal, ModalLayout } from 'components/main/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { defectColorsSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { LaunchesComparisonChart } from 'components/widgets/singleLevelWidgets/charts';
 import styles from './launchCompareModal.scss';
@@ -63,14 +62,12 @@ const contentParameters = {
 @withModal('launchCompareModal')
 @injectIntl
 @connect((state) => ({
-  defectColors: defectColorsSelector(state),
   activeProject: activeProjectSelector(state),
 }))
 export class LaunchCompareModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
-    defectColors: PropTypes.object.isRequired,
     data: PropTypes.shape({
       ids: PropTypes.array,
     }).isRequired,

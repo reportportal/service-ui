@@ -181,7 +181,7 @@ export class DefectDetails extends Component {
 
   isDefectTypeVisible = () => {
     const { logItem } = this.props;
-    return logItem.issue && logItem.issue.issueType;
+    return logItem.issue?.issueType;
   };
 
   handleLinkIssue = () => {

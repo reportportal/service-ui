@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   STATS_TOTAL,
@@ -33,10 +32,8 @@ import { FiltersControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '2';
 
-@injectIntl
 export class DifferentLaunchesComparisonControls extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
@@ -69,7 +66,7 @@ export class DifferentLaunchesComparisonControls extends Component {
     });
   }
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
   render() {

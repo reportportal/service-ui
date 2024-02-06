@@ -78,10 +78,6 @@ export class HistoryLineItemTooltip extends Component {
     includeAllLaunches: PropTypes.bool,
   };
 
-  static defaultProps = {
-    updateHistoryItemLaunchAttributes: () => {},
-  };
-
   state = {
     loading: false,
   };
@@ -170,7 +166,7 @@ export class HistoryLineItemTooltip extends Component {
           </div>
         )}
         {this.renderAttributes()}
-        {issue && issue.issueType && (
+        {issue?.issueType && (
           <div className={cx('defect-type-block')}>
             <span className={cx('title')}>{formatMessage(messages.defectType)}</span>
             <DefectTypeItem
@@ -193,21 +189,18 @@ export class HistoryLineItemTooltip extends Component {
             )}
           </div>
         )}
-        {issue && issue.comment && (
+        {issue?.comment && (
           <div className={cx('defect-asset', 'comment')}>
             <span className={cx('icon')}>{Parser(CommentIcon)}</span>
             {formatMessage(messages.comment)}
           </div>
         )}
-        {issue &&
-          issue.issueType &&
-          issue.externalSystemIssues &&
-          !!issue.externalSystemIssues.length && (
-            <div className={cx('defect-asset')}>
-              <span className={cx('icon')}>{Parser(BugIcon)}</span>
-              {formatMessage(messages.bts)}
-            </div>
-          )}
+        {issue?.issueType && issue.externalSystemIssues && !!issue.externalSystemIssues.length && (
+          <div className={cx('defect-asset')}>
+            <span className={cx('icon')}>{Parser(BugIcon)}</span>
+            {formatMessage(messages.bts)}
+          </div>
+        )}
       </div>
     );
   }

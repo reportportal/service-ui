@@ -175,7 +175,7 @@ export class DefectTypeTooltip extends Component {
       intl: { formatMessage },
     } = this.props;
 
-    const defectConfig = projectConfig.subTypes && projectConfig.subTypes[type.toUpperCase()];
+    const defectConfig = projectConfig.subTypes?.[type.toUpperCase()];
 
     const filteredBodyData = this.getFilteredBodyData(defectConfig);
 

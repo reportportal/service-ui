@@ -26,7 +26,7 @@ import {
   SET_BAD_CREDENTIALS,
 } from './constants';
 
-export const authorizedReducer = (state = false, { type }) => {
+export const authorizedReducer = (state = false, { type = '' }) => {
   switch (type) {
     case AUTH_SUCCESS:
       return true;
@@ -37,7 +37,7 @@ export const authorizedReducer = (state = false, { type }) => {
   }
 };
 
-export const tokenReducer = (state = DEFAULT_TOKEN, { type, payload }) => {
+export const tokenReducer = (state = DEFAULT_TOKEN, { type = '', payload = {} }) => {
   switch (type) {
     case SET_TOKEN:
       return payload || DEFAULT_TOKEN;
@@ -56,13 +56,11 @@ const badCredentialsReducer = (state, { type }) => {
 };
 
 const getLastFailedLoginDefaultState = () =>
-  (getStorageItem(APPLICATION_SETTINGS) &&
-    getStorageItem(APPLICATION_SETTINGS).lastFailedLoginTime) ||
-  null;
+  getStorageItem(APPLICATION_SETTINGS)?.lastFailedLoginTime || null;
 
 export const lastFailedLoginTimeReducer = (
   state = getLastFailedLoginDefaultState(),
-  { type, payload },
+  { type = '', payload = {} },
 ) => {
   switch (type) {
     case SET_LAST_FAILED_LOGIN_TIME:

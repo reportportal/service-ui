@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { dynamicFieldShape } from './dynamicFieldShape';
 import { getFieldComponent } from './utils';
@@ -25,10 +24,8 @@ import styles from './dynamicFieldsSection.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class DynamicFieldsSection extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     fields: PropTypes.arrayOf(dynamicFieldShape),
     withValidation: PropTypes.bool,
     customBlockCreator: PropTypes.func,

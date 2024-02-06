@@ -68,7 +68,7 @@ function* executeGroupOperation({ payload, meta }) {
   const state = yield select(getState);
   yield put(setLastOperationAction(namespace)(name, additionalArgs));
   yield put(resetValidationErrorsAction(namespace)());
-  const errors = validateItems(selectedItems, descriptor.validator, state);
+  const errors = validateItems(descriptor.validator, state, selectedItems);
   if (Object.keys(errors).length > 0) {
     yield put(setValidationErrorsAction(namespace)(errors));
     return;
@@ -90,7 +90,7 @@ function* proceedWithValidItems({ payload, meta }) {
   const { action, validator } = descriptor;
   const { namespace } = meta;
   const state = yield select(getState);
-  const errors = validateItems(selectedItems, validator, state);
+  const errors = validateItems(validator, state, selectedItems);
   const validItems = selectedItems.filter((item) => !errors[item.id]);
   const invalidItems = selectedItems.filter((item) => errors[item.id]);
 

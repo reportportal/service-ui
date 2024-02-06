@@ -120,7 +120,6 @@ SuiteTestToolbar.propTypes = {
   onFilterChange: PropTypes.func,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
-  currentFilter: PropTypes.object,
   isTestItemsList: PropTypes.bool,
 };
 SuiteTestToolbar.defaultProps = {
@@ -140,7 +139,6 @@ SuiteTestToolbar.defaultProps = {
   onEditItems: () => {},
   onDelete: () => {},
   debugMode: false,
-  updateFilters: () => {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},
   onFilterValidate: () => {},
@@ -150,6 +148,5 @@ SuiteTestToolbar.defaultProps = {
   events: {
     REFINE_FILTERS_PANEL_EVENTS: {},
   },
-  currentFilter: null,
   isTestItemsList: false,
 };

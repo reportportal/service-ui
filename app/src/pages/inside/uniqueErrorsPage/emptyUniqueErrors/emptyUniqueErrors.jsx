@@ -23,11 +23,9 @@ import PropTypes from 'prop-types';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
-import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { loadingSelector } from 'controllers/uniqueErrors';
 import { fetchParentLaunchSuccessAction } from 'controllers/testItem/actionCreators';
-import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
@@ -41,23 +39,17 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
     loading: loadingSelector(state),
   }),
   {
     showModal: showModalAction,
-    showNotification,
-    showDefaultErrorNotification,
     fetchParentLaunchSuccessAction,
   },
 )
 export class EmptyUniqueErrors extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string,
     showModal: PropTypes.func,
-    showNotification: PropTypes.func,
-    showDefaultErrorNotification: PropTypes.func,
     parentLaunch: PropTypes.object,
     loading: PropTypes.bool,
     fetchParentLaunchSuccessAction: PropTypes.func,
@@ -68,10 +60,7 @@ export class EmptyUniqueErrors extends Component {
   };
 
   static defaultProps = {
-    projectId: '',
     showModal: () => {},
-    showNotification: () => {},
-    showDefaultErrorNotification: () => {},
     parentLaunch: {},
     loading: false,
   };
@@ -95,10 +84,9 @@ export class EmptyUniqueErrors extends Component {
       parentLaunch: { status, metadata, analysing },
       intl: { formatMessage },
     } = this.props;
-    const clusterActive =
-      analysing && analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
+    const clusterActive = analysing?.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
     const disabled = status === IN_PROGRESS;
-    const lastRunAnalysis = metadata && metadata[RP_CLUSTER_LAST_RUN];
+    const lastRunAnalysis = metadata?.[RP_CLUSTER_LAST_RUN];
 
     if (clusterActive) {
       return (

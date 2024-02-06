@@ -68,8 +68,7 @@ const MakeDecision = ({ data }) => {
     ? Array.from(new Set(data.items.map(({ clusterId }) => clusterId)))
     : [];
   const isMLSuggestionsAvailable = !isBulkOperation || clusterIds.length === 1;
-  const defectFromTIGroup =
-    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const defectFromTIGroup = itemData.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
@@ -84,9 +83,7 @@ const MakeDecision = ({ data }) => {
     suggestChoice: {},
     historyChoice: historyItems.find(
       (item) =>
-        item.issue &&
-        item.id !== itemData.id &&
-        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
   });
@@ -387,9 +384,7 @@ const MakeDecision = ({ data }) => {
   const getMakeDecisionTabs = () => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) =>
-        item.issue &&
-        item.id !== itemData.id &&
-        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     );
 
     const tabsData = [

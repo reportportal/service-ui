@@ -87,8 +87,7 @@ export const OptionsBlock = ({
       historyItems.length > 0 &&
       historyItems.some(
         (item) =>
-          item.issue &&
-          item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
+          item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
           currentTestItem.id !== item.id,
       ) &&
       options.push({

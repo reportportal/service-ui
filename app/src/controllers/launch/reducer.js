@@ -38,10 +38,9 @@ import {
 } from './constants';
 
 const getDefaultLaunchDistinctState = () =>
-  (getStorageItem(APPLICATION_SETTINGS) && getStorageItem(APPLICATION_SETTINGS).launchDistinct) ||
-  ALL;
+  getStorageItem(APPLICATION_SETTINGS)?.launchDistinct || ALL;
 
-const debugModeReducer = (state = false, { type, payload }) => {
+const debugModeReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_DEBUG_MODE:
       return payload;
@@ -50,7 +49,10 @@ const debugModeReducer = (state = false, { type, payload }) => {
   }
 };
 
-const launchDistinctReducer = (state = getDefaultLaunchDistinctState(), { type, payload }) => {
+const launchDistinctReducer = (
+  state = getDefaultLaunchDistinctState(),
+  { type = '', payload = {} },
+) => {
   switch (type) {
     case CHANGE_LAUNCH_DISTINCT:
       return payload;
@@ -74,7 +76,7 @@ const updateLaunchLocallyReducer = (state, { type, payload }) => {
   }
 };
 
-export const localSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, payload }) => {
+export const localSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type = '', payload = {} }) => {
   switch (type) {
     case UPDATE_LOCAL_SORTING:
       return payload;
@@ -83,7 +85,10 @@ export const localSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, paylo
   }
 };
 
-export const debugLocalSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, payload }) => {
+export const debugLocalSortingReducer = (
+  state = DEFAULT_LOCAL_SORTING,
+  { type = '', payload = {} },
+) => {
   switch (type) {
     case UPDATE_DEBUG_LOCAL_SORTING:
       return payload;
@@ -92,7 +97,7 @@ export const debugLocalSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, 
   }
 };
 
-export const debugLocalFilterReducer = (state = {}, { type, payload }) => {
+export const debugLocalFilterReducer = (state = {}, { type = '', payload = {} }) => {
   switch (type) {
     case UPDATE_DEBUG_LOCAL_FILTER:
       return payload;

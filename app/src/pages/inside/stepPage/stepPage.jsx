@@ -344,7 +344,7 @@ export class StepPage extends Component {
 
   handleEditDefects = (eventData) => {
     const { selectedItems } = this.props;
-    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const items = eventData?.id ? [eventData] : selectedItems;
     const MAKE_DECISION = 'make_decision';
 
     this.props.editDefectsAction(items, {

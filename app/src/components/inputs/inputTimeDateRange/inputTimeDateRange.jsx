@@ -99,7 +99,7 @@ export class InputTimeDateRange extends Component {
 
   getDateRangeString() {
     const { value, intl } = this.props;
-    return value && value.start && value.end
+    return value?.start && value.end
       ? `${moment(value.start).format(TIME_DATE_FORMAT)} - ${moment(value.end).format(
           TIME_DATE_FORMAT,
         )}`

@@ -191,14 +191,14 @@ export class EditWidgetModal extends Component {
   };
 
   preprocessInputData = (data) => {
-    if (this.widgetInfo && this.widgetInfo.convertInput) {
+    if (this.widgetInfo?.convertInput) {
       return this.widgetInfo.convertInput(data);
     }
     return data;
   };
 
   preprocessOutputData = (data) => {
-    if (this.widgetInfo && this.widgetInfo.convertOutput) {
+    if (this.widgetInfo?.convertOutput) {
       return this.widgetInfo.convertOutput(data);
     }
     return data;

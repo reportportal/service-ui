@@ -24,7 +24,7 @@ import { loadingReducer } from 'controllers/loading';
 import { clusterItemsReducer } from './clusterItems';
 import { NAMESPACE, SET_PAGE_LOADING } from './constants';
 
-const pageLoadingReducer = (state = false, { type, payload }) => {
+const pageLoadingReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_PAGE_LOADING:
       return payload;

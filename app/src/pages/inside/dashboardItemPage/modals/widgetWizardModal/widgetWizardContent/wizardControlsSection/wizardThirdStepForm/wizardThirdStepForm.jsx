@@ -71,7 +71,6 @@ export class WizardThirdStepForm extends Component {
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
     loading: PropTypes.bool,
-    change: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
 

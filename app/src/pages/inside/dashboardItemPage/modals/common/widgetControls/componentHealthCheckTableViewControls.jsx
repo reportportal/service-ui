@@ -146,10 +146,10 @@ export class ComponentHealthCheckTableViewControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
-  formatSortingValue = (value) => value && value.sortingColumn;
+  formatSortingValue = (value) => value?.sortingColumn;
 
   parseSortingValue = (value) => {
     const sortObj = this.getSortObj();
@@ -164,19 +164,16 @@ export class ComponentHealthCheckTableViewControls extends Component {
     );
   };
 
-  getSortObj = () =>
-    this.props.widgetSettings.contentParameters &&
-    this.props.widgetSettings.contentParameters.widgetOptions.sort;
+  getSortObj = () => this.props.widgetSettings.contentParameters?.widgetOptions.sort;
 
   getItemAttributeKeysAllSearchURL = () => {
     const {
       activeProject,
       widgetSettings: { contentParameters, filters },
     } = this.props;
-    const filterId = filters && filters.length && filters[0].value;
+    const filterId = filters?.length && filters[0].value;
     const isLatest =
-      (contentParameters && contentParameters.widgetOptions.latest) ||
-      MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
+      contentParameters?.widgetOptions.latest || MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
     return URLS.itemAttributeKeysAllSearch(
       activeProject,
@@ -281,8 +278,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
               name="contentParameters.widgetOptions.sort"
             >
               <SortingControl
-                sortingColumn={sortObj && sortObj.sortingColumn}
-                sortingDirection={sortObj && sortObj.asc}
+                sortingColumn={sortObj?.sortingColumn}
+                sortingDirection={sortObj?.asc}
               />
             </FieldProvider>
           </Fragment>

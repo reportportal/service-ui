@@ -40,7 +40,10 @@ const updateFilterOrders = (filters, filterId, orders) => {
   return updateFilter(filters, { ...filter, orders });
 };
 
-export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldId } = {} }) => {
+export const launchesFiltersReducer = (
+  state = [],
+  { type = '', payload = {}, meta: { oldId } = {} },
+) => {
   switch (type) {
     case FETCH_USER_FILTERS_SUCCESS: {
       const unsavedFilters = state.filter(({ id }) => id < 0);
@@ -62,7 +65,7 @@ export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldI
   }
 };
 
-export const launchesFiltersReadyReducer = (state = false, { type }) => {
+export const launchesFiltersReadyReducer = (state = false, { type = '' }) => {
   switch (type) {
     case FETCH_USER_FILTERS_SUCCESS:
       return true;
@@ -71,7 +74,7 @@ export const launchesFiltersReadyReducer = (state = false, { type }) => {
   }
 };
 
-export const pageLoadingReducer = (state = false, { type, payload }) => {
+export const pageLoadingReducer = (state = false, { type = '', payload = {} }) => {
   switch (type) {
     case SET_PAGE_LOADING:
       return payload;

@@ -86,7 +86,7 @@ export const updatePluginLocallyReducer = (state, { type, payload }) => {
   }
 };
 
-export const integrationsReducer = (state = {}, { type, payload }) => {
+export const integrationsReducer = (state = {}, { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_GLOBAL_INTEGRATIONS_SUCCESS:
       return {

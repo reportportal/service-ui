@@ -34,7 +34,6 @@ import {
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
-import { getDefectTypeSelector } from 'controllers/project';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,
@@ -77,7 +76,6 @@ const getLinkIssueEventsInfo = (place) => ({
 @connect(
   (state) => ({
     parentLaunch: launchSelector(state),
-    getDefectType: getDefectTypeSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
@@ -118,7 +116,6 @@ export class ActionPanelWithGroupOperations extends Component {
     isBtsPluginsExist: PropTypes.bool,
     debugMode: PropTypes.bool,
     parentItem: PropTypes.object,
-    getDefectType: PropTypes.func,
     onRefresh: PropTypes.func,
     onUnselect: PropTypes.func,
     onUnselectAll: PropTypes.func,
@@ -142,7 +139,6 @@ export class ActionPanelWithGroupOperations extends Component {
     isBtsPluginsExist: false,
     debugMode: false,
     parentItem: null,
-    getDefectType: () => {},
     onRefresh: () => {},
     onUnselect: () => {},
     onUnselectAll: () => {},
@@ -292,13 +288,13 @@ export class ActionPanelWithGroupOperations extends Component {
 
   handleEditDefects = (eventData) => {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
-    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const items = eventData?.id ? [eventData] : selectedItems;
     const MAKE_DECISION = 'make_decision';
 
     tracking.trackEvent(
       HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
-          ? items[0].issue && items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          ? items[0].issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
         'actions',
       ),

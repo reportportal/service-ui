@@ -69,7 +69,6 @@ OptionsSection.propTypes = {
   currentTestItem: PropTypes.object,
   setModalState: PropTypes.func,
   loading: PropTypes.bool,
-  isBulkOperation: PropTypes.bool,
   modalState: PropTypes.object,
   eventsInfo: PropTypes.object,
 };
@@ -77,7 +76,6 @@ OptionsSection.defaultProps = {
   currentTestItem: {},
   setModalState: () => {},
   loading: false,
-  isBulkOperation: false,
   modalState: {},
   eventsInfo: {},
 };

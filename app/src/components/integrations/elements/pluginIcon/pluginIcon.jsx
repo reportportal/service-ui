@@ -31,7 +31,7 @@ import { Image } from 'components/main/image';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;
-  const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
+  const isDynamicIconAvailable = details?.binaryData?.icon;
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
 

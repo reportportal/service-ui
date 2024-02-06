@@ -29,9 +29,9 @@ export const sortItemsByGroupType = (items) =>
   });
 
 export const groupItems = (items) =>
-  items.reduce((accum, item) => {
+  items.reduce((acc, item) => {
     const groupType = item.groupType || item.integrationType.groupType;
-    const groupedItems = { ...accum };
+    const groupedItems = { ...acc };
     if (!groupedItems[groupType]) {
       groupedItems[groupType] = [item];
     } else {
@@ -48,11 +48,7 @@ export const resolveIntegrationUrl = (integrationUrl, pluginName, id) =>
 
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&
-  integrations.some(
-    (item) =>
-      item.integrationParameters.defectFormFields &&
-      item.integrationParameters.defectFormFields.length,
-  );
+  integrations.some((item) => item.integrationParameters.defectFormFields?.length);
 
 export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
 
@@ -62,22 +58,13 @@ export const filterAvailablePlugins = (plugins = []) =>
   plugins.filter((item) => {
     const { details } = item;
     const isEmbedded =
-      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType ||
-      (details && details.metadata && details.metadata.embedded);
+      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType || details?.metadata?.embedded;
 
     return item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE && isEmbedded;
   });
 
 export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
-  enabled &&
-  details &&
-  details.commonCommands &&
-  details.commonCommands.length &&
-  details.commonCommands.includes(command);
+  enabled && details?.commonCommands?.length && details.commonCommands.includes(command);
 
 export const isPluginSupportsAllowedCommand = ({ enabled, details }, command) =>
-  enabled &&
-  details &&
-  details.allowedCommands &&
-  details.allowedCommands.length &&
-  details.allowedCommands.includes(command);
+  enabled && details?.allowedCommands?.length && details.allowedCommands.includes(command);

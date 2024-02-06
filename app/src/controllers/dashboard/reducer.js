@@ -38,7 +38,7 @@ import {
   UPDATE_DASHBOARD_SUCCESS,
 } from './constants';
 
-const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type, payload }) => {
+const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type = '', payload = {} }) => {
   switch (type) {
     case ADD_DASHBOARD_SUCCESS:
       return [...state, payload];
@@ -51,10 +51,13 @@ const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type, payload }) 
   }
 };
 
-const gridTypeReducer = (state = INITIAL_STATE.gridType, { type, payload }) =>
+const gridTypeReducer = (state = INITIAL_STATE.gridType, { type = '', payload = {} }) =>
   type === CHANGE_VISIBILITY_TYPE ? payload : state;
 
-const fullScreenModeReducer = (state = INITIAL_STATE.fullScreenMode, { type, payload }) => {
+const fullScreenModeReducer = (
+  state = INITIAL_STATE.fullScreenMode,
+  { type = '', payload = {} },
+) => {
   switch (type) {
     case CHANGE_FULL_SCREEN_MODE:
       return payload;
@@ -65,7 +68,7 @@ const fullScreenModeReducer = (state = INITIAL_STATE.fullScreenMode, { type, pay
   }
 };
 
-const totalDashboardsReducer = (state = INITIAL_STATE.pagination, { type }) => {
+const totalDashboardsReducer = (state = INITIAL_STATE.pagination, { type = '' }) => {
   switch (type) {
     case INCREASE_TOTAL_DASHBOARDS_LOCALLY:
       return { ...state, totalElements: state.totalElements + 1 };

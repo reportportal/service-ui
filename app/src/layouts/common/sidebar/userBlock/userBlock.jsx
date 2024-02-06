@@ -112,12 +112,7 @@ export class UserBlock extends Component {
   };
 
   handleOutsideClick = (e) => {
-    if (
-      this.controlNode &&
-      this.controlNode.current &&
-      !this.controlNode.current.contains(e.target) &&
-      this.state.menuOpened
-    ) {
+    if (!this.controlNode?.current?.contains(e.target) && this.state.menuOpened) {
       this.setState({ menuOpened: false });
     }
   };

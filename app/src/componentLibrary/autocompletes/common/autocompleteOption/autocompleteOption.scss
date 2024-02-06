@@ -76,13 +76,15 @@
   align-items: center;
 }
 
-.item, .new-item {
+.item,
+.new-item {
   min-height: 36px;
   padding: 4px 12px;
   cursor: pointer;
   box-sizing: border-box;
 
-  &.active, &:hover {
+  &.active,
+  &:hover {
     background-color: $COLOR--bg-100;
   }
 
@@ -132,11 +134,13 @@
 }
 
 .dark {
-  &.item, &.new-item {
+  &.item,
+  &.new-item {
     background-color: transparent;
     color: $COLOR--darkmode-gray-100;
 
-    &.active, &:hover {
+    &.active,
+    &:hover {
       background-color: $COLOR--darkmode-bg-solid-98;
     }
 

@@ -52,7 +52,7 @@ export class DefectTypeBlock extends Component {
 
   render() {
     const { projectConfig, type, data, detailedView, detailedData } = this.props;
-    const defectType = projectConfig.subTypes && projectConfig.subTypes[type.toUpperCase()][0];
+    const defectType = projectConfig.subTypes?.[type.toUpperCase()][0];
 
     return (
       <div className={cx('defect-type-block', { 'detailed-view': detailedView })}>

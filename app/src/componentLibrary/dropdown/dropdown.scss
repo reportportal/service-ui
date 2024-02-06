@@ -193,7 +193,11 @@
 
 .dark {
   &.dropdown {
-    @include dropdown( $COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-96, $COLOR--darkmode-gray-150);
+    @include dropdown(
+      $COLOR--darkmode-gray-200,
+      $COLOR--darkmode-bg-solid-96,
+      $COLOR--darkmode-gray-150
+    );
     @include hover-state($COLOR--darkmode-gray-150, $COLOR--darkmode-gray-150);
     @include active-state($COLOR--darkmode-topaz-focused, $COLOR--bg-000);
 

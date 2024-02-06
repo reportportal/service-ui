@@ -192,10 +192,7 @@ export const ProjectSettingsPageContainer = () => {
         <div className={cx('settings-page-content-wrapper')}>
           {!subPage && (
             <div className={cx('header')}>
-              <Header
-                title={config[activeTab] && config[activeTab].name}
-                titleNode={headerNodes.titleNode}
-              >
+              <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
                 {headerNodes.children}
               </Header>
             </div>

@@ -42,9 +42,6 @@ const messages = defineMessages({
 export class NoItemsDemo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
     onGenerate: PropTypes.func,
   };
 

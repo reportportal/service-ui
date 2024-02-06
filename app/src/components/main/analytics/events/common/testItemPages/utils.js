@@ -38,7 +38,7 @@ export const getFilterEntityType = ({ id: entityId, meta }) => {
     const isTotal = statisticsEntityIdParts[3] === STATISTICS_TOTAL_KEY;
     type = statisticsEntityIdParts[2];
 
-    if (isTotal || (meta && meta.subItem)) {
+    if (isTotal || meta?.subItem) {
       type = `total_${type}`;
     }
   }

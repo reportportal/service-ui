@@ -17,7 +17,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
 import {
   CONDITION_HAS,
   CONDITION_NOT_HAS,
@@ -32,15 +31,11 @@ import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class InputConditionalAttributes extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     value: PropTypes.object,
     conditions: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
     projectId: PropTypes.string,
@@ -50,8 +45,6 @@ export class InputConditionalAttributes extends Component {
   static defaultProps = {
     value: {},
     onChange: () => {},
-    onFocus: () => {},
-    onBlur: () => {},
     valueURLCreator: () => {},
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
@@ -174,29 +167,27 @@ export class InputConditionalAttributes extends Component {
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
               {inputConditions.length &&
-                value &&
-                value.condition &&
+                value?.condition &&
                 inputConditions.filter((condition) => condition.value === value.condition)[0]
                   .shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {inputConditions &&
-              inputConditions.map((condition) => (
-                <div
-                  key={condition.value}
-                  className={cx('condition', {
-                    active: condition.value === value.condition,
-                    disabled: condition.disabled,
-                  })}
-                  onClick={() => {
-                    !condition.disabled && this.onClickConditionItem(condition);
-                  }}
-                >
-                  {condition.label}
-                </div>
-              ))}
+            {inputConditions?.map((condition) => (
+              <div
+                key={condition.value}
+                className={cx('condition', {
+                  active: condition.value === value.condition,
+                  disabled: condition.disabled,
+                })}
+                onClick={() => {
+                  !condition.disabled && this.onClickConditionItem(condition);
+                }}
+              >
+                {condition.label}
+              </div>
+            ))}
           </div>
         </div>
       </div>

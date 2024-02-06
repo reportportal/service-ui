@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
 });
 
-const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
+const widgetNameValidator = (formatMessage, widgetId, widgets = []) =>
   composeBoundValidators([
     bindMessageToValidator(validate.widgetName, formatMessage(messages.widgetNameHint)),
     bindMessageToValidator(
@@ -87,7 +87,7 @@ export class CommonWidgetControls extends Component {
 
   constructor(props) {
     super(props);
-    props.initializeControlsForm && props.initializeControlsForm();
+    props.initializeControlsForm?.();
   }
 
   isShowDashboardsList = () => {
@@ -110,7 +110,7 @@ export class CommonWidgetControls extends Component {
         <ModalField label={formatMessage(messages.nameLabel)} labelWidth={FIELD_LABEL_WIDTH}>
           <FieldProvider
             name="name"
-            validate={widgetNameValidator(formatMessage, widgets, widgetId)}
+            validate={widgetNameValidator(formatMessage, widgetId, widgets)}
             placeholder={formatMessage(messages.namePlaceholder)}
             onChange={() => trackEvent(eventsInfo.changeName)}
           >

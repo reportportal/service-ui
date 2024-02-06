@@ -51,12 +51,10 @@ MessageBadgeToolTip.defaultProps = {
 })
 export class MessageBadge extends Component {
   static propTypes = {
-    data: PropTypes.array,
     icon: PropTypes.string,
   };
 
   static defaultProps = {
-    data: [],
     icon: '',
   };
 

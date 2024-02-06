@@ -29,7 +29,7 @@ export const TestsTableWidget = ({
   tests,
   issueType,
   columns,
-  getMaxtrixTooltip,
+  getMatrixTooltip,
   hideInfoBlock,
   onItemClick,
 }) => {
@@ -42,7 +42,7 @@ export const TestsTableWidget = ({
         <TestsTable
           columns={columns}
           tests={tests}
-          getMaxtrixTooltip={getMaxtrixTooltip}
+          getMatrixTooltip={getMatrixTooltip}
           onItemClick={onItemClick}
         />
       </div>
@@ -55,7 +55,7 @@ TestsTableWidget.propTypes = {
   tests: PTTests.isRequired,
   issueType: element,
   columns: PTColumns.isRequired,
-  getMaxtrixTooltip: func,
+  getMatrixTooltip: func,
   onItemClick: func,
   hideInfoBlock: bool,
 };
@@ -63,6 +63,6 @@ TestsTableWidget.propTypes = {
 TestsTableWidget.defaultProps = {
   issueType: null,
   hideInfoBlock: false,
-  getMaxtrixTooltip: null,
+  getMatrixTooltip: null,
   onItemClick: null,
 };

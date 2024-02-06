@@ -54,15 +54,15 @@ export const MultipleDownshift = ({
     }
   };
   const addSelectedItem = (newItemData, downshift) => {
-    const customisedNewItemData = customizeNewSelectedValue(newItemData);
-    const newItem = Array.isArray(customisedNewItemData)
-      ? customisedNewItemData
-      : [customisedNewItemData];
+    const customizedNewItemData = customizeNewSelectedValue(newItemData);
+    const newItem = Array.isArray(customizedNewItemData)
+      ? customizedNewItemData
+      : [customizedNewItemData];
     const filteredSelectedItems = selectedItems.filter((item) => newItem.indexOf(item) < 0);
     const newSelectedItems = [...filteredSelectedItems, ...newItem];
     onChange(newSelectedItems, downshift);
     const collectStoredItemsCb = (storedItems) =>
-      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItems);
+      handleUnStoredItemCb?.(newSelectedItems, storedItems);
     collectStoredItems(newItem, collectStoredItemsCb);
   };
   const editItem = (oldItem, newItem) => {
@@ -75,7 +75,7 @@ export const MultipleDownshift = ({
     const newSelectedItems = selectedItems.filter((item) => !isEqual(item, removedItem));
     onChange(newSelectedItems, downshift);
     const filterStoredItemsCb = (storedItems) =>
-      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItems);
+      handleUnStoredItemCb?.(newSelectedItems, storedItems);
     filterStoredItems(removedItem, filterStoredItemsCb);
   };
   const handleSelection = (selectedItem, downshift) => {

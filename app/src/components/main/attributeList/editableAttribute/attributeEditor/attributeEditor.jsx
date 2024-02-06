@@ -67,8 +67,6 @@ export class AttributeEditor extends Component {
     attributes: PropTypes.array,
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    invalid: PropTypes.bool,
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
     intl: PropTypes.object.isRequired,
@@ -86,12 +84,10 @@ export class AttributeEditor extends Component {
   static defaultProps = {
     projectId: null,
     attributes: [],
-    handleSubmit: () => {},
     onConfirm: () => {},
     onCancel: () => {},
     keyURLCreator: null,
     valueURLCreator: null,
-    invalid: false,
     attribute: {
       edited: true,
       system: false,

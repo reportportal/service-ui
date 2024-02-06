@@ -164,8 +164,8 @@ export class ModalFooter extends Component {
                   okButton.onClick(onClickOk);
                 }}
                 disabled={okButton.disabled || !submitConfirmed}
-                type={okButton.attributes && okButton.attributes.type}
-                form={okButton.attributes && okButton.attributes.form}
+                type={okButton.attributes?.type}
+                form={okButton.attributes?.form}
               >
                 {okButton.text}
               </BigButton>

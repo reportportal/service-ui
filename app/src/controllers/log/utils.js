@@ -62,7 +62,7 @@ export const normalizeHistoryItem = (historyItem, index) => {
   };
 };
 
-export const getPreviousItem = (testItems = [], currentId) => {
+export const getPreviousItem = (currentId, testItems = []) => {
   if (testItems.length < 2) {
     return null;
   }
@@ -70,7 +70,7 @@ export const getPreviousItem = (testItems = [], currentId) => {
   return testItems[itemIndex - 1] || null;
 };
 
-export const getNextItem = (testItems = [], currentId) => {
+export const getNextItem = (currentId, testItems = []) => {
   const itemIndex = testItems.findIndex((item) => item.id === currentId);
 
   if (testItems.length < 2) {
@@ -102,7 +102,7 @@ export const normalizeHistoryItems = (items) => {
   return calculateGrowthDuration(historyItems);
 };
 
-export const updateHistoryItemIssues = (items = [], issues) => {
+export const updateHistoryItemIssues = (items = [], issues = []) => {
   return items.map((item) => {
     const itemForUpdate = issues.find((issueForItem) => issueForItem.testItemId === item.id);
 
@@ -117,7 +117,7 @@ export const updateHistoryItemIssues = (items = [], issues) => {
   });
 };
 
-export const updateHistoryItemLaunchAttributes = (items = [], launch) => {
+export const updateHistoryItemLaunchAttributes = (items = [], launch = {}) => {
   return items.map((item) => {
     if (item.launchId === launch.id) {
       return {

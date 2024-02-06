@@ -27,7 +27,6 @@ const cx = classNames.bind(styles);
 
 export class HistoryLineItemBadge extends Component {
   static propTypes = {
-    active: PropTypes.bool,
     status: PropTypes.string,
     issue: PropTypes.object,
     defects: PropTypes.object,
@@ -35,7 +34,6 @@ export class HistoryLineItemBadge extends Component {
   };
 
   static defaultProps = {
-    active: false,
     status: '',
     issue: {},
     defects: {},

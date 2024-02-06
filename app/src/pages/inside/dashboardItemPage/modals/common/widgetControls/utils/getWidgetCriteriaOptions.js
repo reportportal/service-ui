@@ -326,7 +326,7 @@ export const getWidgetCriteriaOptions = (optionGroups, formatMessage, meta) => {
         break;
       case DEFECT_TYPES_GROUPS_OPTIONS:
         options = options.concat(
-          meta && meta.withoutNoDefect
+          meta?.withoutNoDefect
             ? getDefectTypesGroupsOptions(formatMessage).slice(0, -1)
             : getDefectTypesGroupsOptions(formatMessage),
         );

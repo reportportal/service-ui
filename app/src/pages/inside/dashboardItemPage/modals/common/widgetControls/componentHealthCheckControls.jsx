@@ -126,7 +126,7 @@ export class ComponentHealthCheckControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
@@ -134,10 +134,9 @@ export class ComponentHealthCheckControls extends Component {
       activeProject,
       widgetSettings: { contentParameters, filters },
     } = this.props;
-    const filterId = filters && filters.length && filters[0].value;
+    const filterId = filters?.length && filters[0].value;
     const isLatest =
-      (contentParameters && contentParameters.widgetOptions.latest) ||
-      MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
+      contentParameters?.widgetOptions.latest || MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
     return (
       <AttributesFieldArrayControl

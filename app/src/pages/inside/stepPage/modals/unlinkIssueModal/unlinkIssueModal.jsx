@@ -59,7 +59,6 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
-    activeProject: activeProjectSelector(state),
   }),
   {
     showNotification,
@@ -71,7 +70,6 @@ export class UnlinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,

@@ -209,7 +209,7 @@ export class WidgetWizardContent extends Component {
 
   preprocessOutputData = (data) => {
     const widgetInfo = this.widgets.find((widget) => widget.id === data.widgetType);
-    if (widgetInfo && widgetInfo.convertOutput) {
+    if (widgetInfo?.convertOutput) {
       return widgetInfo.convertOutput(data);
     }
     return data;

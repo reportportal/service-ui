@@ -37,16 +37,12 @@ export class DefectBadge extends Component {
     defectTitle: PropTypes.string,
     color: PropTypes.string,
     backgroundColor: PropTypes.string,
-    type: PropTypes.string,
-    data: PropTypes.object,
   };
 
   static defaultProps = {
     defectTitle: '',
     color: '',
     backgroundColor: '',
-    type: '',
-    data: {},
   };
 
   render() {

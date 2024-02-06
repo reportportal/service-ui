@@ -23,7 +23,6 @@ import {
   logItemsSelector,
   logPaginationSelector,
   loadingSelector,
-  pageLoadingSelector,
   NAMESPACE,
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
@@ -55,7 +54,6 @@ import { calculateNextIndex } from './utils';
   (state) => ({
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
-    pageLoading: pageLoadingSelector(state),
     userId: userIdSelector(state),
     logViewMode: logViewModeSelector(state),
     isNestedStepView: isLogPageWithNestedSteps(state),
@@ -113,7 +111,6 @@ export class LogsGridWrapper extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     userId: PropTypes.string.isRequired,
-    logItem: PropTypes.object,
     logItems: PropTypes.array,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -122,7 +119,6 @@ export class LogsGridWrapper extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
-    pageLoading: PropTypes.bool,
     filter: PropTypes.string,
     onFilterChange: PropTypes.func,
     sortingColumn: PropTypes.string,
@@ -147,7 +143,6 @@ export class LogsGridWrapper extends Component {
   };
 
   static defaultProps = {
-    logItem: {},
     logItems: [],
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
@@ -156,7 +151,6 @@ export class LogsGridWrapper extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,
-    pageLoading: false,
     filter: '',
     onFilterChange: () => {},
     sortingColumn: '',
@@ -263,9 +257,7 @@ export class LogsGridWrapper extends Component {
       errorLogs,
     } = this.props;
     const rowHighlightingConfig = {
-      highlightedRowId:
-        this.props.errorLogs[this.state.errorLogIndex] &&
-        this.props.errorLogs[this.state.errorLogIndex].id,
+      highlightedRowId: this.props.errorLogs[this.state.errorLogIndex]?.id,
       isGridRowHighlighted: true,
       onGridRowHighlighted: () => this.setState(() => ({ skipHighlightOnRender: true })),
       highlightErrorRow: true,

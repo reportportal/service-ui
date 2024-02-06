@@ -34,7 +34,7 @@ export class DropdownField extends Component {
 
   parseDropdownValue = (value) => value && [value];
 
-  formatDropdownValue = (value) => value && value[0];
+  formatDropdownValue = (value) => value?.[0];
 
   render() {
     const { field, darkView, ...rest } = this.props;

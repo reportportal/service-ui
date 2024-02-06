@@ -32,11 +32,7 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import {
-  fetchAllUsersAction,
-  allUsersSelector,
-  querySelector,
-} from 'controllers/administrate/allUsers';
+import { fetchAllUsersAction, querySelector } from 'controllers/administrate/allUsers';
 import { fetch } from 'common/utils';
 import { INTERNAL } from 'common/constants/accountType';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
@@ -68,8 +64,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    users: allUsersSelector(state),
-    filterEnities: collectFilterEntities(querySelector(state)),
+    filterEntities: collectFilterEntities(querySelector(state)),
   }),
   {
     showModalAction,
@@ -82,8 +77,7 @@ const messages = defineMessages({
 export class ActionPanel extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    users: PropTypes.arrayOf(PropTypes.object),
-    filterEnities: PropTypes.object,
+    filterEntities: PropTypes.object,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     fetchAllUsersAction: PropTypes.func.isRequired,
@@ -95,13 +89,12 @@ export class ActionPanel extends Component {
   };
 
   static defaultProps = {
-    users: [],
-    filterEnities: {},
+    filterEntities: {},
   };
 
   onExportUsers = () => {
     this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.EXPORT_BTN);
-    downloadFile(URLS.exportUsers(this.props.filterEnities));
+    downloadFile(URLS.exportUsers(this.props.filterEntities));
   };
 
   showAddUserModal = () => {

@@ -71,7 +71,7 @@ export class PassingRateSummary extends Component {
     this.props.navigate(Object.assign(link, navigationParams));
   };
 
-  getFilterName = ({ appliedFilters = [] }) => appliedFilters[0] && appliedFilters[0].name;
+  getFilterName = ({ appliedFilters = [] }) => appliedFilters[0]?.name;
 
   render() {
     return (

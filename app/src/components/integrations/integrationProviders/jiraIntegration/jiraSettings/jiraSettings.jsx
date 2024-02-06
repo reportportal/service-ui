@@ -108,10 +108,7 @@ export const JiraSettings = (props) => {
       formKey={BTS_FIELDS_FORM}
       editAuthConfig={getEditAuthConfig()}
       isGlobal={isGlobal}
-      isEmptyConfiguration={
-        !data.integrationParameters.defectFormFields ||
-        !data.integrationParameters.defectFormFields.length
-      }
+      isEmptyConfiguration={!data.integrationParameters.defectFormFields?.length}
     />
   );
 };

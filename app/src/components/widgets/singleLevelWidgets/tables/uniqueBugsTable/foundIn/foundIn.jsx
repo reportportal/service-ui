@@ -33,7 +33,6 @@ export const cx = classNames.bind(styles);
 export class FoundIn extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
     className: PropTypes.string.isRequired,
     items: PropTypes.array,
   };
