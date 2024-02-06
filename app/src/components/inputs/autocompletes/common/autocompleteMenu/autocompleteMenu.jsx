@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable react/no-unknown-property */
-
 import React from 'react';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
@@ -79,6 +77,8 @@ export const AutocompleteMenu = React.forwardRef(
       <ul
         ref={ref}
         className={cx('menu', { opened: isOpen && menuContent })}
+        // placement used by Popper
+        /* eslint-disable-next-line react/no-unknown-property */
         placement={placement}
         style={style}
       >

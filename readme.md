@@ -8,13 +8,13 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/reportportal/service-ui?sort=semver)](https://github.com/reportportal/service-ui/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/reportportal/service-ui.svg?maxAge=159200)](https://hub.docker.com/r/reportportal/service-ui/)
 
-1. Install nodejs (minimum required version 12, recommended - 20)
+1. Install nodejs (version 20 is recommended)
 
 2. Open console from the project root
 
 3. Run the command `cd app`
 
-4. Run the command `npm install` or `npm ci`
+4. Run the command `npm install --legacy-peer-deps` or `npm ci --legacy-peer-deps`
 
 5. Create file `.env` in `app` folder
 

@@ -164,7 +164,7 @@ export class RolesRow extends Component {
         : intl.formatMessage(messages.unAssignFromProject);
       const Tooltip = () => <TextTooltip tooltipContent={tooltipMessage} />;
       const disable = this.isPersonalProject();
-      const componentClickHandler = !this.isPersonalProject() ? clickHandler : null;
+      const componentClickHandler = !disable ? clickHandler : null;
       const WrappedComponent = () => (
         <IconComponent
           different={different}

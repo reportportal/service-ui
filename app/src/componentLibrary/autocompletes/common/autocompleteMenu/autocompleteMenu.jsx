@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable react/no-unknown-property */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -39,6 +37,8 @@ export const AutocompleteMenu = React.forwardRef(
           { opened: isOpen && isReadyForSearch(minLength, inputValue) },
           className,
         )}
+        // placement used by Popper
+        /* eslint-disable-next-line react/no-unknown-property */
         placement={placement}
         style={style}
       >
