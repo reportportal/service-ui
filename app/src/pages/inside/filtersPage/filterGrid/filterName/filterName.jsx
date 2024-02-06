@@ -82,6 +82,7 @@ export class FilterName extends Component {
       nameLink,
     } = this.props;
 
+    // eslint-disable-next-line react/prop-types
     const NameLink = ({ link, children }) =>
       link ? (
         <Link className={cx('name-link')} to={link}>

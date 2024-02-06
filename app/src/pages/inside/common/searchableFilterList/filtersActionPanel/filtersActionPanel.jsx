@@ -53,6 +53,7 @@ export class FiltersActionPanel extends Component {
     invalid: PropTypes.bool,
     customBlock: PropTypes.node,
     change: PropTypes.func,
+    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -62,6 +63,7 @@ export class FiltersActionPanel extends Component {
     value: null,
     customBlock: null,
     change: () => {},
+    onFilterChange: () => {},
   };
 
   componentDidMount() {

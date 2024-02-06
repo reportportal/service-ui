@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable react/no-unknown-property */
+
 import React from 'react';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
