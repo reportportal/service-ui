@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
-import { injectIntl, defineMessages } from 'react-intl';
+import React, { PureComponent, Fragment } from 'react';
+import { defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
@@ -36,10 +36,8 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class SearchableFilterList extends Component {
+export class SearchableFilterList extends PureComponent {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     searchValue: PropTypes.string,
     activeFilter: PropTypes.object,
@@ -72,7 +70,6 @@ export class SearchableFilterList extends Component {
 
   render() {
     const {
-      intl: { formatMessage },
       filters,
       loading,
       touched,
@@ -107,13 +104,9 @@ export class SearchableFilterList extends Component {
           onLazyLoad={onLazyLoad}
           customClass={filterListCustomClass}
           noItemsMessage={
-            searchValue
-              ? formatMessage(messages.filtersNotFound)
-              : formatMessage(messages.filtersNotFoundOnProject)
+            searchValue ? messages.filtersNotFound : messages.filtersNotFoundOnProject
           }
-          noItemsAdditionalMessage={
-            searchValue ? null : formatMessage(messages.filtersNotFoundAdditional)
-          }
+          noItemsAdditionalMessage={searchValue ? null : messages.filtersNotFoundAdditional}
         />
       </Fragment>
     );

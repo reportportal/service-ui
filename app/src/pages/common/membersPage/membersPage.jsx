@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import {
   membersPaginationSelector,
   fetchMembersAction,
@@ -54,11 +54,9 @@ const messages = defineMessages({
 @withPagination({
   paginationSelector: membersPaginationSelector,
 })
-@injectIntl
 @track({ page: MEMBERS_PAGE })
 export class MembersPage extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     onFilterChange: PropTypes.func,
     fetchMembersAction: PropTypes.func,
     activePage: PropTypes.number,
@@ -120,10 +118,7 @@ export class MembersPage extends Component {
     }
     return (
       !!filter && (
-        <NoResultsForFilter
-          filter={this.props.filter}
-          notFoundMessage={this.props.intl.formatMessage(messages.membersNotFound)}
-        />
+        <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.membersNotFound} />
       )
     );
   };
