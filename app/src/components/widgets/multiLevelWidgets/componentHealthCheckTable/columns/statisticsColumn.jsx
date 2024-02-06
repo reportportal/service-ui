@@ -35,7 +35,7 @@ export const StatisticsColumn = (
   { isLatest, getCompositeAttributes, linkPayload, excludeSkipped },
 ) => {
   const itemValue = Number(value.statistics?.[name]);
-  const totalValue = Number(value.total.statistics?.[name]);
+  const totalValue = Number(value.total?.statistics?.[name]);
   const defaultColumnProps = {
     itemId: TEST_ITEMS_TYPE_LIST,
     target: TARGET,
