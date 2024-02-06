@@ -38,7 +38,7 @@ jobs:
           NODE_OPTIONS: '--max_old_space_size=2048'
 
         run: |
-          npm --prefix ${{ env.UI_BUILD_REACT }} ci
+          npm --prefix ${{ env.UI_BUILD_REACT }} ci --legacy-peer-deps
           npm --prefix ${{ env.UI_BUILD_REACT }} run lint
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
