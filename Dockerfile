@@ -13,6 +13,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 RUN npm ci --legacy-peer-deps && npm run build
 
 FROM --platform=$BUILDPLATFORM nginxinc/nginx-unprivileged:alpine
