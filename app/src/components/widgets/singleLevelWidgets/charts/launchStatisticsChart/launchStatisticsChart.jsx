@@ -20,7 +20,11 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
+import {
+  defectTypesSelector,
+  orderedContentFieldsSelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -37,7 +41,6 @@ import {
   getDefectTypeLocators,
   getChartDefaultProps,
   projectKeySelector,
-  projectOrganizationSlugSelector,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';

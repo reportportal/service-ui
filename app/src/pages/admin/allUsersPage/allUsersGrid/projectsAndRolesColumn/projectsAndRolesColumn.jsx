@@ -46,7 +46,7 @@ const messages = defineMessages({
     defaultMessage: 'User "{user}" has been updated',
   },
   btnTitle: {
-    id: 'projectsAndRolesColumn.unassignUser',
+    id: 'projectsAndRolesColumn.btnTitle',
     defaultMessage: 'Unassign',
   },
   unAssignTitle: {
