@@ -42,6 +42,7 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
@@ -58,6 +59,8 @@ import { ProjectSelector } from '../../common/projectSelector';
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensions: uiExtensionSidebarComponentsSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
@@ -72,6 +75,8 @@ export class AppSidebar extends Component {
     availableProjects: PropTypes.object,
     extensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     availableProjects: {},
@@ -85,12 +90,19 @@ export class AppSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
-    const { projectRole, accountRole, activeProject, onClickNavBtn, extensions } = this.props;
+    const {
+      projectRole,
+      accountRole,
+      onClickNavBtn,
+      extensions,
+      organizationSlug,
+      projectKey,
+    } = this.props;
 
     const topItems = [
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
-        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } },
+        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectKey, organizationSlug } },
         icon: DashboardIcon,
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
@@ -98,14 +110,14 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
         link: {
           type: LAUNCHES_PAGE,
-          payload: { projectId: activeProject },
+          payload: { projectKey, organizationSlug },
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-        link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
+        link: { type: PROJECT_FILTERS_PAGE, payload: { projectKey, organizationSlug } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
       },
@@ -116,7 +128,7 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
-          payload: { projectId: activeProject, filterId: ALL },
+          payload: { projectKey, filterId: ALL, organizationSlug },
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
@@ -128,7 +140,7 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
-          payload: { projectId: activeProject },
+          payload: { projectKey, organizationSlug },
         },
         icon: MembersIcon,
         message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
@@ -139,7 +151,7 @@ export class AppSidebar extends Component {
       onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
-        payload: { projectId: activeProject },
+        payload: { projectKey, organizationSlug },
       },
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
@@ -176,6 +188,7 @@ export class AppSidebar extends Component {
     const { availableProjects, activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
+
     const mainBlock = (
       <ProjectSelector
         projects={Object.keys(availableProjects).sort()}

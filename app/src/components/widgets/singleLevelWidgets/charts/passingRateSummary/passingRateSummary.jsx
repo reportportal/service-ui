@@ -20,14 +20,15 @@ import { connect } from 'react-redux';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
 import { PassingRateChart } from '../common/passingRateChart';
 
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -38,15 +39,17 @@ export class PassingRateSummary extends Component {
   static propTypes = {
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
+    projectKey: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   onChartClick = (data) => {
     const {
       widget,
       getStatisticsLink,
-      project,
+      projectKey,
+      organizationSlug,
       widget: {
         contentParameters: {
           widgetOptions: { includeSkipped },
@@ -63,9 +66,10 @@ export class PassingRateSummary extends Component {
       launchesLimit: widget.contentParameters.itemsCount,
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
 
     this.props.navigate(Object.assign(link, navigationParams));

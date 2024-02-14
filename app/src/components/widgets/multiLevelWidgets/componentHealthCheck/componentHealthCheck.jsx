@@ -35,7 +35,7 @@ import {
   TEST_ITEMS_TYPE_LIST,
   DEFAULT_LAUNCHES_LIMIT,
 } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
@@ -65,7 +65,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  project: activeProjectSelector(state),
+  projectKey: activeProjectKeySelector(state),
   getStatisticsLink: statisticsLinkSelector(state),
 }))
 export class ComponentHealthCheck extends Component {
@@ -75,7 +75,7 @@ export class ComponentHealthCheck extends Component {
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     getStatisticsLink: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -195,7 +195,7 @@ export class ComponentHealthCheck extends Component {
 
   getDefaultLinkParams = (filterId) => ({
     payload: {
-      projectId: this.props.project,
+      projectKey: this.props.projectKey,
       filterId,
       testItemIds: TEST_ITEMS_TYPE_LIST,
     },

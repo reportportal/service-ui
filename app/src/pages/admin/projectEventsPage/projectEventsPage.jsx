@@ -24,12 +24,15 @@ import {
   eventsPaginationSelector,
   loadingSelector,
 } from 'controllers/administrate/events';
+import { URLS } from 'common/urls';
 import { ENTITY_CREATED_AT } from 'components/filterEntities/constants';
 import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
+import { projectKeySelector } from 'controllers/project';
 import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
+  url: URLS.events(projectKeySelector),
   events: eventsSelector(state),
   loading: loadingSelector(state),
 }))

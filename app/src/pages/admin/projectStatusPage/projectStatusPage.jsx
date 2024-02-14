@@ -44,7 +44,7 @@ const messages = defineMessages({
 export class ProjectStatusPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   state = {
@@ -73,7 +73,10 @@ export class ProjectStatusPage extends Component {
             onChange={this.onPeriodChange}
           />
         </div>
-        <StatusPageContent interval={this.state.selectedPeriod} projectId={this.props.projectId} />
+        <StatusPageContent
+          interval={this.state.selectedPeriod}
+          projectKey={this.props.projectKey}
+        />
       </div>
     );
   }

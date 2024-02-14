@@ -25,7 +25,7 @@ import {
 } from 'components/widgets/common/utils';
 import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { getConfig } from './config/getConfig';
 import styles from './nonPassedTestCasesTrendChart.scss';
@@ -37,7 +37,8 @@ const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal'
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -51,7 +52,8 @@ export class NonPassedTestCasesTrendChart extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -64,16 +66,17 @@ export class NonPassedTestCasesTrendChart extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getStatisticsLink, project } = this.props;
+    const { widget, getStatisticsLink, projectKey, organizationSlug } = this.props;
     const launchIds = widget.content.result.map((item) => item.id);
     const link = getStatisticsLink({
       statuses: [FAILED, SKIPPED, INTERRUPTED],
       types: null,
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       launchIds[data.index],
+      organizationSlug,
     );
 
     this.props.navigate(Object.assign(link, navigationParams));

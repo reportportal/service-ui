@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
@@ -88,7 +88,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -107,7 +107,7 @@ export class FiltersControl extends Component {
     touched: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-    activeProject: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     value: PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
@@ -133,7 +133,6 @@ export class FiltersControl extends Component {
     touched: false,
     error: '',
     value: {},
-    activeProject: '',
     loading: false,
     filters: [],
     pagination: {},
@@ -175,7 +174,7 @@ export class FiltersControl extends Component {
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
-      activeProject,
+      projectKey,
       eventsInfo,
     } = this.props;
 
@@ -198,7 +197,7 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
-              activeProject={activeProject}
+              projectKey={projectKey}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
@@ -317,12 +316,12 @@ export class FiltersControl extends Component {
   handleFilterInsert = () => {
     const {
       intl,
-      activeProject,
+      projectKey,
       notify,
       formAppearance: { filter },
     } = this.props;
 
-    fetch(URLS.filters(activeProject), {
+    fetch(URLS.filters(projectKey), {
       method: 'post',
       data: this.getFilterForSubmit(filter),
     })
@@ -346,10 +345,10 @@ export class FiltersControl extends Component {
   };
 
   handleFilterUpdate = (filter) => {
-    const { intl, notify, activeProject } = this.props;
+    const { intl, notify, projectKey } = this.props;
     const data = this.getFilterForSubmit(filter);
 
-    fetch(URLS.filter(activeProject, filter.id), {
+    fetch(URLS.filter(projectKey, filter.id), {
       method: 'put',
       data,
     })

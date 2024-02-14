@@ -157,21 +157,21 @@ export class ProjectMenu extends Component {
   navigateToMembers = () => {
     const {
       tracking: { trackEvent },
-      project: { projectName },
+      project: { projectKey, organizationSlug },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
-    this.props.navigateToProjectSection(projectName, MEMBERS);
+    this.props.navigateToProjectSection({ projectKey, organizationSlug }, MEMBERS);
   };
 
   navigateToSettings = () => {
     const {
       tracking: { trackEvent },
-      project: { projectName },
+      project: { projectKey, organizationSlug },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
-    this.props.navigateToProjectSettings(projectName);
+    this.props.navigateToProjectSettings({ projectKey, organizationSlug });
   };
 
   navigateToEventsMonitoring = () => {

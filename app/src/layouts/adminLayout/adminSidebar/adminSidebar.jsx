@@ -16,7 +16,8 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -52,7 +53,7 @@ import styles from './adminSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-const BackToProject = ({ activeProject }) => {
+const BackToProject = ({ organizationSlug, projectKey }) => {
   const { trackEvent } = useTracking();
   return (
     <Link
@@ -60,7 +61,7 @@ const BackToProject = ({ activeProject }) => {
       onClick={() => trackEvent(ADMIN_SIDEBAR_EVENTS.CLICK_BACK_TO_PROJECT_BTN)}
       to={{
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: activeProject, filterId: ALL },
+        payload: { projectKey, filterId: ALL, organizationSlug },
       }}
     >
       <i className={cx('icon')}>{Parser(BackIcon)}</i>
@@ -68,10 +69,8 @@ const BackToProject = ({ activeProject }) => {
   );
 };
 BackToProject.propTypes = {
-  activeProject: PropTypes.string,
-};
-BackToProject.defaultProps = {
-  activeProject: '',
+  organizationSlug: PropTypes.string.isRequired,
+  projectKey: PropTypes.string.isRequired,
 };
 
 const BackToProjectWithTooltip = withTooltip({
@@ -85,7 +84,8 @@ const BackToProjectWithTooltip = withTooltip({
 })(BackToProject);
 
 function AdminSidebarComponent({
-  activeProject,
+  projectKey,
+  organizationSlug,
   onClickNavBtn,
   tracking,
   extensions,
@@ -157,7 +157,7 @@ function AdminSidebarComponent({
       onClick: onClickNavBtn,
       link: {
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: activeProject, filterId: ALL },
+        payload: { projectKey, filterId: ALL, organizationSlug },
       },
       icon: BackIcon,
       message: (
@@ -178,7 +178,8 @@ function AdminSidebarComponent({
   const bottomSidebarItems = createBottomSidebarItems();
   const mainBlock = (
     <BackToProjectWithTooltip
-      activeProject={activeProject}
+      organizationSlug={organizationSlug}
+      projectKey={projectKey}
       className={cx('back-to-project-tooltip')}
       tooltipContent={
         <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
@@ -197,7 +198,8 @@ function AdminSidebarComponent({
 }
 AdminSidebarComponent.propTypes = {
   onClickNavBtn: PropTypes.func,
-  activeProject: PropTypes.string.isRequired,
+  organizationSlug: PropTypes.string.isRequired,
+  projectKey: PropTypes.string.isRequired,
   tracking: PropTypes.shape({
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
@@ -213,7 +215,8 @@ AdminSidebarComponent.defaultProps = {
 
 export const AdminSidebar = track()(
   connect((state) => ({
-    activeProject: activeProjectSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
+    projectKey: activeProjectKeySelector(state),
     extensions: uiExtensionAdminSidebarComponentsSelector(state),
     adminPageExtensions: uiExtensionAdminPagesSelector(state),
   }))(AdminSidebarComponent),

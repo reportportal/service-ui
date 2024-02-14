@@ -87,6 +87,7 @@ export class RolesRow extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectName: PropTypes.string,
   };
   static defaultProps = {
     value: MEMBER,
@@ -97,6 +98,7 @@ export class RolesRow extends Component {
     createNew: false,
     entryType: '',
     userId: '',
+    projectName: '',
   };
   constructor(props) {
     super(props);
@@ -184,7 +186,7 @@ export class RolesRow extends Component {
     );
   };
   render() {
-    const { createNew, intl, entryType } = this.props;
+    const { createNew, intl, entryType, projectName } = this.props;
     const { value, project } = this.state;
     return (
       <div className={cx('roles-row')}>
@@ -201,8 +203,9 @@ export class RolesRow extends Component {
             <div className={cx('roles-row-label')}>
               <ProjectName
                 project={{
-                  projectName: project,
+                  projectKey: project,
                   entryType,
+                  projectName,
                 }}
               />
             </div>

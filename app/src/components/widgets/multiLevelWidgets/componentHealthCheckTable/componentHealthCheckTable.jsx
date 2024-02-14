@@ -34,7 +34,8 @@ import {
 import { formatAttribute, isEmptyObject } from 'common/utils';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
@@ -144,7 +145,8 @@ const getColumn = (name, customProps, customColumn) => {
 
 @injectIntl
 @connect((state) => ({
-  project: activeProjectSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
@@ -152,7 +154,8 @@ export class ComponentHealthCheckTable extends Component {
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    project: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -291,17 +294,19 @@ export class ComponentHealthCheckTable extends Component {
   getColumns = () => {
     const {
       intl: { formatMessage },
-      project,
       widget,
+      organizationSlug,
+      projectKey,
     } = this.props;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
       isLatest: widget.contentParameters?.widgetOptions.latest,
       linkPayload: {
-        projectId: project,
         filterId: widget.appliedFilters[0]?.id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
+        organizationSlug,
+        projectKey,
       },
       getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,

@@ -22,11 +22,11 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 import styles from './ignoreInAAModal.scss';
 
 const cx = classNames.bind(styles);
@@ -66,7 +66,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -74,7 +74,7 @@ const messages = defineMessages({
 )
 export class IgnoreInAAModal extends Component {
   static propTypes = {
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
@@ -86,7 +86,7 @@ export class IgnoreInAAModal extends Component {
 
   onIgnore = (closeModal) => {
     const {
-      activeProject,
+      projectKey,
       data: { items, fetchFunc },
     } = this.props;
     const issues = items.map((item) => ({
@@ -97,7 +97,7 @@ export class IgnoreInAAModal extends Component {
         autoAnalyzed: false,
       },
     }));
-    fetch(URLS.testItems(activeProject), {
+    fetch(URLS.testItems(projectKey), {
       method: 'put',
       data: {
         issues,

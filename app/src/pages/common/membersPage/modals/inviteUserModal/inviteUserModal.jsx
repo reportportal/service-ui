@@ -42,6 +42,7 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputUserSearch } from 'components/inputs/inputUserSearch';
+import { projectKeySelector } from 'controllers/project';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -89,6 +90,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
       : projectIdSelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
+    projectKey: projectKeySelector(state),
     initialValues: {
       role: DEFAULT_PROJECT_ROLE,
       project: projectIdSelector(state),
@@ -123,6 +125,7 @@ export class InviteUserModal extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    projectKey: PropTypes.string.isRequired,
     selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
@@ -152,6 +155,7 @@ export class InviteUserModal extends Component {
       intl: { formatMessage },
       data: { onInvite },
       selectedProject,
+      projectKey,
     } = this.props;
     const data = {};
 
@@ -188,7 +192,7 @@ export class InviteUserModal extends Component {
       [userData.user.userLogin]: userData.role,
     };
 
-    return fetch(URLS.userInviteInternal(selectedProject), {
+    return fetch(URLS.userInviteInternal(projectKey), {
       method: 'put',
       data,
     })
@@ -231,7 +235,7 @@ export class InviteUserModal extends Component {
   filterProject = (value) => !(value && this.props.selectedUser?.assignedProjects?.[value]);
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, data } = this.props;
+    const { intl, handleSubmit, selectedProject, isAdmin, data, projectKey } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
@@ -261,6 +265,7 @@ export class InviteUserModal extends Component {
                   projectId={selectedProject}
                   isAdmin={isAdmin}
                   placeholder={intl.formatMessage(messages.inputPlaceholder)}
+                  projectKey={projectKey}
                 />
               </FieldErrorHint>
             </FieldProvider>

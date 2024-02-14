@@ -17,14 +17,16 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
+import { activeProjectKeySelector } from 'controllers/user';
 import { NAMESPACE, FETCH_EVENTS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchEvents() {
   const { appliedFilters, alternativePaginationAndSortParams } = yield select(querySelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.events(), {
+    fetchDataAction(NAMESPACE)(URLS.events(projectKey), {
       method: 'POST',
       params: alternativePaginationAndSortParams,
       data: appliedFilters,

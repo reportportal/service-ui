@@ -58,3 +58,5 @@ export const availableProjectsSelector = createSelector(
 );
 
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
+
+export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;

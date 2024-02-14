@@ -19,7 +19,6 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import {
   activeRetryIdSelector,
   isLaunchLogSelector,
@@ -31,6 +30,8 @@ import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
@@ -52,23 +53,23 @@ import {
 } from './utils';
 
 function* getAttachmentURL() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
   const activeRetryId = yield select(activeRetryIdSelector);
   if (isLaunchLog) {
-    return URLS.launchLogs(activeProject, activeRetryId);
+    return URLS.launchLogs(projectKey, activeRetryId);
   }
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
     const activeRetry = yield select(activeRetrySelector);
     const retryParentId = yield select(activeLogIdSelector);
     return URLS.logsUnderPath(
-      activeProject,
+      projectKey,
       activeRetry.path,
       retryParentId === activeRetryId ? retryParentId : undefined,
     );
   }
-  return URLS.logItems(activeProject, activeRetryId);
+  return URLS.logItems(projectKey, activeRetryId);
 }
 
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
@@ -87,8 +88,8 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchFileData({ projectId, id }, params) {
-  return fetch(URLS.getFileById(projectId, id), params);
+export function fetchFileData({ projectKey, id }, params) {
+  return fetch(URLS.getFileById(projectKey, id), params);
 }
 
 /* HAR */
@@ -129,10 +130,10 @@ const ATTACHMENT_MODAL_WORKERS = {
 
 function* openAttachmentInModal({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   if (modalId) {
-    const data = { projectId, id, extension: extractExtension(contentType), contentType };
+    const data = { projectKey, id, extension: extractExtension(contentType), contentType };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty
@@ -140,14 +141,14 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
 }
 
 function* downloadAttachment({ payload: { id, contentType } }) {
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
-  downloadFile(URLS.getFileById(projectId, id), createAttachmentName(id, contentType));
+  downloadFile(URLS.getFileById(projectKey, id), createAttachmentName(id, contentType));
 }
 
 function* openAttachmentInBrowser({ payload: id }) {
-  const projectId = yield select(activeProjectSelector);
-  const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
+  const projectKey = yield select(projectKeySelector);
+  const data = yield call(fetch, URLS.getFileById(projectKey, id), { responseType: 'blob' });
 
   if (window.navigator?.msSaveOrOpenBlob) {
     window.navigator.msSaveOrOpenBlob(data);

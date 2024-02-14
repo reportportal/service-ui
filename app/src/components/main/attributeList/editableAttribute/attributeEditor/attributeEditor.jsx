@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   validate,
   commonValidators,
@@ -58,12 +58,12 @@ const attributeFilterValueValidator = bindMessageToValidator(
 );
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @injectIntl
 export class AttributeEditor extends Component {
   static propTypes = {
-    projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     attributes: PropTypes.array,
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
@@ -82,7 +82,6 @@ export class AttributeEditor extends Component {
   };
 
   static defaultProps = {
-    projectId: null,
     attributes: [],
     onConfirm: () => {},
     onCancel: () => {},
@@ -185,7 +184,7 @@ export class AttributeEditor extends Component {
 
   render() {
     const {
-      projectId,
+      projectKey,
       attributes,
       keyURLCreator,
       valueURLCreator,
@@ -202,7 +201,7 @@ export class AttributeEditor extends Component {
               attributes={attributes}
               minLength={1}
               attributeComparator={this.byKeyComparator}
-              getURI={keyURLCreator(projectId)}
+              getURI={keyURLCreator(projectKey)}
               creatable
               placeholder={intl.formatMessage(messages.keyLabel)}
               onChange={this.handleKeyChange}
@@ -221,7 +220,7 @@ export class AttributeEditor extends Component {
               minLength={1}
               attributes={attributes}
               attributeComparator={this.byValueComparator}
-              getURI={valueURLCreator(projectId, this.state.key)}
+              getURI={valueURLCreator(projectKey, this.state.key)}
               creatable
               onChange={this.handleValueChange}
               value={this.state.value}

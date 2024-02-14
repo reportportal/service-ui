@@ -22,8 +22,8 @@ import { FAILED, PASSED, INTERRUPTED, SKIPPED } from 'common/constants/testStatu
 import { ALL } from 'common/constants/reservedFilterIds';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { STATS_PASSED } from 'common/constants/statistics';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { PassingRateChart } from '../common/passingRateChart';
 
 const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>
@@ -31,7 +31,8 @@ const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}
 
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -42,15 +43,17 @@ export class PassingRatePerLaunch extends Component {
   static propTypes = {
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   onChartClick = (data) => {
     const {
       widget,
       getStatisticsLink,
-      project,
+      projectKey,
+      organizationSlug,
       widget: {
         contentParameters: {
           widgetOptions: { includeSkipped },
@@ -65,7 +68,12 @@ export class PassingRatePerLaunch extends Component {
     const link = getStatisticsLink({
       statuses,
     });
-    const navigationParams = getDefaultTestItemLinkParams(project, ALL, launchId);
+    const navigationParams = getDefaultTestItemLinkParams(
+      projectKey,
+      ALL,
+      launchId,
+      organizationSlug,
+    );
 
     this.props.navigate(Object.assign(link, navigationParams));
   };

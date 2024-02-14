@@ -20,10 +20,11 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import {
   PROJECT_SETTINGS_TAB_PAGE,
-  projectIdSelector,
+  urlProjectKeySelector,
   querySelector,
   settingsTabSelector,
 } from 'controllers/pages';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
   ANALYSIS,
@@ -58,7 +59,8 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
-  const projectId = useSelector(projectIdSelector);
+  const organizationSlug = useSelector(projectOrganizationSlugSelector);
+  const projectKey = useSelector(urlProjectKeySelector);
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
@@ -68,9 +70,9 @@ export const ProjectSettingsPageContainer = () => {
   const createTabLink = useCallback(
     (tabName, extendedParams = {}) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId, settingsTab: tabName, ...extendedParams },
+      payload: { projectKey, settingsTab: tabName, organizationSlug, ...extendedParams },
     }),
-    [projectId],
+    [projectKey, organizationSlug],
   );
 
   const extensionsConfig = useMemo(() => {

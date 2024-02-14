@@ -40,14 +40,17 @@ import {
   PROJECT_LAUNCHES_PAGE,
 } from 'controllers/pages';
 import {
-  activeProjectSelector,
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
   fetchUserAction,
-  SET_ACTIVE_PROJECT,
   userIdSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
+import {
+  FETCH_PROJECT_SUCCESS,
+  fetchProjectAction,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -56,6 +59,8 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
+import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
+
 import {
   authSuccessAction,
   resetTokenAction,
@@ -112,9 +117,9 @@ function* loginSuccessHandler({ payload }) {
     }),
   );
   yield put(fetchUserAction());
-  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
-  const projectId = yield select(activeProjectSelector);
-  yield put(fetchProjectAction(projectId));
+  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT_KEY)]);
+  const projectKey = yield select(activeProjectKeySelector);
+  yield put(fetchProjectAction(projectKey));
   yield take(FETCH_PROJECT_SUCCESS);
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
@@ -130,14 +135,15 @@ function* loginSuccessHandler({ payload }) {
     }
   } else {
     const isDemoInstance = yield select(isDemoInstanceSelector);
+    const organizationSlug = yield select(projectOrganizationSlugSelector);
     const page = isDemoInstance
       ? {
           type: PROJECT_LAUNCHES_PAGE,
-          payload: { projectId, filterId: ALL },
+          payload: { projectKey, filterId: ALL, organizationSlug },
         }
       : {
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId },
+          payload: { projectKey, organizationSlug },
         };
     yield put(redirect(page));
   }

@@ -18,10 +18,10 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NameColumn,
   DescriptionColumn,
@@ -57,7 +57,8 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
@@ -69,6 +70,8 @@ export class DashboardTable extends Component {
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -82,7 +85,7 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, intl, projectId } = this.props;
+    const { onDeleteItem, onEditItem, intl, projectId, organizationSlug, projectKey } = this.props;
 
     return [
       {
@@ -93,6 +96,8 @@ export class DashboardTable extends Component {
         component: NameColumn,
         customProps: {
           projectId,
+          organizationSlug,
+          projectKey,
         },
       },
       {

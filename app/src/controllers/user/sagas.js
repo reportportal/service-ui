@@ -24,7 +24,7 @@ import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
+  SET_ACTIVE_PROJECT_KEY,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
@@ -41,6 +41,7 @@ import {
   setApiKeysAction,
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
+  setActiveProjectKeyAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -52,13 +53,13 @@ function* assignToProject({ payload: project }) {
     },
   };
   try {
-    yield call(fetch, URLS.userInviteInternal(project.projectName), {
+    yield call(fetch, URLS.userInviteInternal(project.projectKey), {
       method: 'put',
       data,
     });
     yield put(
       assignToProjectSuccessAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -73,7 +74,7 @@ function* assignToProject({ payload: project }) {
     const error = err.message;
     yield put(
       assignToProjectErrorAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -94,7 +95,7 @@ function* unassignFromProject({ payload: project }) {
     userNames: [userId],
   };
   try {
-    yield call(fetch, URLS.userUnasign(project.projectName), {
+    yield call(fetch, URLS.userUnassign(project), {
       method: 'put',
       data,
     });
@@ -127,18 +128,29 @@ function* fetchUserWorker() {
     return;
   }
   const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProject = userSettings.activeProject;
-  const activeProject =
-    savedActiveProject && savedActiveProject in user.assignedProjects
-      ? savedActiveProject
-      : Object.keys(user.assignedProjects)[0];
-  yield put(setActiveProjectAction(activeProject));
+  const { activeProjectKey: savedActiveProjectKey } = userSettings ?? {};
+  const defaultProjectKey = Object.keys(user.assignedProjects)[0];
+  const defaultProjectName = user.assignedProjects[defaultProjectKey].projectName;
+
+  const activeProjectKey =
+    savedActiveProjectKey && savedActiveProjectKey in user.assignedProjects
+      ? savedActiveProjectKey
+      : defaultProjectKey;
+
+  const activeProjectName =
+    user.assignedProjects[savedActiveProjectKey]?.projectName ?? defaultProjectName;
+
+  yield put(setActiveProjectAction(activeProjectName));
+  yield put(setActiveProjectKeyAction(activeProjectKey));
 }
 
-function* saveActiveProject({ payload: project }) {
+function* saveActiveProjectKeyWorker({ payload: activeProjectKey }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
+  setStorageItem(`${user.userId}_settings`, {
+    ...currentUserSettings,
+    activeProject: activeProjectKey,
+  });
 }
 
 function* addApiKey({ payload = {} }) {
@@ -259,8 +271,8 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSetActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
+function* watchSaveActiveProjectKey() {
+  yield takeEvery(SET_ACTIVE_PROJECT_KEY, saveActiveProjectKeyWorker);
 }
 
 function* watchFetchUser() {
@@ -280,7 +292,7 @@ export function* userSagas() {
     watchAssignToProject(),
     watchUnassignFromProject(),
     watchFetchUser(),
-    watchSetActiveProject(),
+    watchSaveActiveProjectKey(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

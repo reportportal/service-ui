@@ -21,9 +21,12 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  defectTypesSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   getDefaultTestItemLinkParams,
   getDefectTypeLocators,
@@ -39,8 +42,9 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     defectTypes: defectTypesSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -53,7 +57,6 @@ export class LaunchesComparisonChart extends Component {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
@@ -63,6 +66,8 @@ export class LaunchesComparisonChart extends Component {
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
     clickable: PropTypes.bool,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -84,11 +89,18 @@ export class LaunchesComparisonChart extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      defectTypes,
+      projectKey,
+      organizationSlug,
+    } = this.props;
 
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
+    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = defectLocators

@@ -27,7 +27,7 @@ import { projectInfoIdSelector } from 'controllers/project/selectors';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
-
+import { projectKeySelector } from 'controllers/project';
 import styles from './issueInfoTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -60,6 +60,7 @@ const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
 @connect((state, ownProps) => ({
   activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
   plugin: pluginByNameSelector(state, ownProps.pluginName),
   projectId: projectInfoIdSelector(state),
 }))
@@ -73,6 +74,7 @@ export class IssueInfoTooltip extends Component {
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
     plugin: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -128,7 +130,7 @@ export class IssueInfoTooltip extends Component {
   };
 
   fetchData = () => {
-    const { activeProject, projectId, ticketId, btsProject, btsUrl, plugin } = this.props;
+    const { projectId, ticketId, btsProject, btsUrl, plugin, projectKey } = this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
@@ -139,7 +141,7 @@ export class IssueInfoTooltip extends Component {
     let data;
 
     if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_ISSUE);
+      url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_ISSUE);
       data = {
         ticketId,
         url: btsUrl,
@@ -147,7 +149,7 @@ export class IssueInfoTooltip extends Component {
         projectId,
       };
     } else {
-      url = URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl);
+      url = URLS.btsTicket(projectKey, ticketId, btsProject, btsUrl);
     }
 
     fetch(url, {

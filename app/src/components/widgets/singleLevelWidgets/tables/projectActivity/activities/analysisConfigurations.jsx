@@ -20,7 +20,7 @@ import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
 import { ANALYSIS } from 'common/constants/settingsTabs';
 import { GENERATE_INDEX } from 'common/constants/actionTypes';
-import { getProjectSettingTabPageLink } from './utils';
+import { getProjectKey, getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
@@ -31,7 +31,11 @@ export const AnalysisConfigurations = ({ activity }) => (
     <span className={cx('user-name')}>{activity.user}</span>
     <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
     <Link
-      to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
+      to={getProjectSettingTabPageLink(
+        getProjectKey(activity),
+        ANALYSIS,
+        activity.organizationSlug,
+      )}
       className={cx('link')}
       target="_blank"
     >
