@@ -124,8 +124,6 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   static defaultProps = {
-    projectName: '',
-    projectInfo: {},
     pluginName: '',
     initialData: {
       defectFormFields: [],

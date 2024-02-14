@@ -42,7 +42,6 @@ export class RetriesContainer extends Component {
   };
 
   static defaultProps = {
-    activeProject: '',
     retries: [],
   };
 

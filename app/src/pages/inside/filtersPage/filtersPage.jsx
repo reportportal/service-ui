@@ -135,7 +135,6 @@ export class FiltersPage extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     userId: '',
     filter: '',
-    activeProject: '',
     onFilterChange: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},

@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import {
   defectTypesSelector,
+  projectKeySelector,
   orderedContentFieldsSelector,
   projectOrganizationSlugSelector,
 } from 'controllers/project';
@@ -40,7 +41,6 @@ import {
   getItemNameConfig,
   getDefectTypeLocators,
   getChartDefaultProps,
-  projectKeySelector,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';

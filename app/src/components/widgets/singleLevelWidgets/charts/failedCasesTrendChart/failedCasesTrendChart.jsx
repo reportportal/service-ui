@@ -62,7 +62,6 @@ export class FailedCasesTrendChart extends Component {
     isPreview: false,
     height: 0,
     observer: {},
-    organizationSlug: '',
   };
 
   onChartClick = (data) => {
