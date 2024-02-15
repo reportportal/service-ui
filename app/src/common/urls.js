@@ -114,8 +114,8 @@ export const URLS = {
     `${urlBase}${projectKey}/launch/compare${getQueryParams({ ids })}`,
 
   launchImport: (projectKey) => `${urlBase}${projectKey}/launch/import`,
-  exportLaunch: (projectId, launchId, exportType) =>
-    `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({
+  exportLaunch: (projectKey, launchId, exportType) =>
+    `${urlBase}${projectKey}/launch/${launchId}/report${getQueryParams({
       view: exportType,
     })}`,
   launchAnalyze: (projectKey) => `${urlBase}${projectKey}/launch/analyze`,
@@ -246,9 +246,9 @@ export const URLS = {
   userInviteExternal: () => `${urlCommonBase}users/bid`,
   userUnassign: (projectKey) => `${urlBase}project/${projectKey}/unassign`,
 
-  generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
-  getFileById: (projectId, dataId, loadThumbnail) =>
-    `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
+  generateDemoData: (projectKey) => `${urlBase}demo/${projectKey}/generate`,
+  getFileById: (projectKey, dataId, loadThumbnail) =>
+    `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
   authSettings: (authTypeOrId, id = '') => `${uatBase}settings/auth/${authTypeOrId}/${id}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,

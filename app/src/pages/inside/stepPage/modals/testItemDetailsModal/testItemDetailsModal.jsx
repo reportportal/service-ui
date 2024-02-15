@@ -157,18 +157,18 @@ export class TestItemDetailsModal extends Component {
     ];
   };
 
-  testItemAttributeKeyURLCreator = (projectId) => {
+  testItemAttributeKeyURLCreator = (projectKey) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeKeysSearch(projectId, item.launchId || item.id);
+    return URLS.testItemAttributeKeysSearch(projectKey, item.launchId || item.id);
   };
 
-  testItemAttributeValueURLCreator = (projectId, key) => {
+  testItemAttributeValueURLCreator = (projectKey, key) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
+    return URLS.testItemAttributeValuesSearch(projectKey, item.launchId || item.id, key);
   };
 
   updateItemAndCloseModal = (closeModal) => (formData) => {

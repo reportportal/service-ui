@@ -24,7 +24,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -55,7 +54,6 @@ const messages = defineMessages({
 @withModal('editWidgetModal')
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
     valid: isValid(WIDGET_WIZARD_FORM)(state),
@@ -85,7 +83,6 @@ export class EditWidgetModal extends Component {
       widget: PropTypes.object,
       eventsInfo: PropTypes.object,
     }),
-    projectId: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -99,7 +96,6 @@ export class EditWidgetModal extends Component {
       widget: {},
     },
     widgetSettings: {},
-    projectId: '',
   };
 
   constructor(props) {
@@ -222,7 +218,7 @@ export class EditWidgetModal extends Component {
     const {
       intl: { formatMessage },
       data: { widget, eventsInfo },
-      projectId,
+      projectKey,
       widgetSettings,
       valid,
     } = this.props;
@@ -254,7 +250,7 @@ export class EditWidgetModal extends Component {
       >
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
-            projectId={projectId}
+            projectKey={projectKey}
             widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings))}
             activeWidget={this.widgetInfo}
           />

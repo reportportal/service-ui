@@ -21,18 +21,20 @@ import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
 import styles from './foundIn.scss';
 
 export const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
 }))
 export class FoundIn extends Component {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
     className: PropTypes.string.isRequired,
     items: PropTypes.array,
   };
@@ -42,14 +44,16 @@ export class FoundIn extends Component {
   };
 
   getItemFragment = (item) => {
+    const { organizationSlug, projectKey } = this.props;
     const pathToItem = item.path || '';
     const path = `${item.launchId}/${pathToItem.replace(/\./g, '/')}`;
     const link = {
       type: PROJECT_LOG_PAGE,
       payload: {
-        projectId: this.props.projectId,
+        projectKey,
         filterId: ALL,
         testItemIds: path,
+        organizationSlug,
       },
     };
 
