@@ -273,7 +273,7 @@ const routesMap = {
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/:projectId/settings/:settingsTab/:subTab*`,
+  [PROJECT_SETTINGS_TAB_PAGE]: `/:organizationSlug?/:projectKey/settings/:settingsTab/:subTab*`,
   PROJECT_SANDBOX_PAGE: '/:organizationSlug?/:projectKey/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:organizationSlug?/:projectKey/launches/:filterId/:testItemIds+',

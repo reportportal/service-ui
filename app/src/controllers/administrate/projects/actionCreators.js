@@ -86,9 +86,10 @@ export const navigateToProjectSectionAction = ({ organizationSlug, projectKey },
   },
 });
 
-export const navigateToProjectSettingsAction = (projectId) => ({
+export const navigateToProjectSettingsAction = ({ organizationSlug, projectKey }) => ({
   type: PROJECT_SETTINGS_PAGE,
   payload: {
-    projectId,
+    projectKey,
+    organizationSlug,
   },
 });
