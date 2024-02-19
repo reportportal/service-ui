@@ -51,12 +51,12 @@ export class AppHeader extends Component {
 
   render() {
     const { sideMenuOpened, toggleSideMenu, activeProject, assignedProjects } = this.props;
-    const projects = Object.keys(assignedProjects).sort();
+
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
-          <ProjectSelector projects={projects} activeProject={activeProject} mobileOnly />
+          <ProjectSelector projects={assignedProjects} activeProject={activeProject} mobileOnly />
         </div>
       </header>
     );

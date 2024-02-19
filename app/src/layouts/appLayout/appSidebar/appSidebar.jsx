@@ -190,10 +190,7 @@ export class AppSidebar extends Component {
     const bottomSidebarItems = this.createBottomSidebarItems();
 
     const mainBlock = (
-      <ProjectSelector
-        projects={Object.keys(availableProjects).sort()}
-        activeProject={activeProject}
-      />
+      <ProjectSelector projects={availableProjects} activeProject={activeProject} />
     );
 
     return (

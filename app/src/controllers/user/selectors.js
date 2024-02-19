@@ -24,7 +24,7 @@ const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
 export const defaultProjectSelector = (state) => userInfoSelector(state).defaultProject || '';
 export const activeProjectSelector = (state) =>
-  userSelector(state).activeProject || defaultProjectSelector(state) || '';
+  userSelector(state).activeProjectKey || defaultProjectSelector(state) || '';
 export const idSelector = (state) => userInfoSelector(state).id;
 export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const userEmailSelector = (state) => userInfoSelector(state).email || '';
@@ -36,8 +36,8 @@ export const photoTimeStampSelector = (state) => settingsSelector(state).photoTi
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {
-  const activeProject = activeProjectSelector(state);
-  const assignedProject = assignedProjectsSelector(state)[activeProject];
+  const activeProjectKey = activeProjectSelector(state);
+  const assignedProject = assignedProjectsSelector(state)[activeProjectKey];
   return assignedProject?.projectRole;
 };
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;

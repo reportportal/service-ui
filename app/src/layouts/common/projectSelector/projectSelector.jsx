@@ -62,7 +62,7 @@ const CurrentProjectNameWithTooltip = withTooltip({
 export class ProjectSelector extends Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.string),
-    activeProject: PropTypes.string,
+    activeProject: PropTypes.string.isRequired,
     mobileOnly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -71,11 +71,12 @@ export class ProjectSelector extends Component {
   };
   static defaultProps = {
     projects: [],
-    activeProject: '',
     mobileOnly: false,
   };
 
   controlNode = null;
+
+  projectKeys = [];
 
   state = {
     opened: false,
@@ -148,22 +149,29 @@ export class ProjectSelector extends Component {
                 data-placement={placement}
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
-                  {projects.map((project) => (
-                    <NavLink
-                      to={{
-                        type: PROJECT_PAGE,
-                        payload: {
-                          projectKey: project,
-                        },
-                      }}
-                      key={project}
-                      className={cx('project-list-item')}
-                      activeClassName={cx('active')}
-                      onClick={this.onClickProjectName}
-                    >
-                      <span title={project}>{project}</span>
-                    </NavLink>
-                  ))}
+                  {Object.keys(projects)
+                    .sort()
+                    .map((projectKey) => {
+                      const { projectSlug: projectName, organizationSlug } = projects[projectKey];
+
+                      return (
+                        <NavLink
+                          to={{
+                            type: PROJECT_PAGE,
+                            payload: {
+                              projectKey,
+                              organizationSlug,
+                            },
+                          }}
+                          key={projectKey}
+                          className={cx('project-list-item')}
+                          activeClassName={cx('active')}
+                          onClick={this.onClickProjectName}
+                        >
+                          <span title={projectName}>{projectName}</span>
+                        </NavLink>
+                      );
+                    })}
                 </ScrollWrapper>
               </div>
             )}
