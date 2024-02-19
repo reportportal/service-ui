@@ -37,6 +37,8 @@ export const AutocompleteMenu = React.forwardRef(
           { opened: isOpen && isReadyForSearch(minLength, inputValue) },
           className,
         )}
+        // placement used by Popper
+        /* eslint-disable-next-line react/no-unknown-property */
         placement={placement}
         style={style}
       >

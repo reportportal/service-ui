@@ -24,7 +24,7 @@ import styles from './overallDefects.scss';
 
 const cx = classNames.bind(styles);
 
-export class OverallDefects extends React.Component {
+export class OverallDefects extends React.PureComponent {
   static propTypes = {
     valuesArray: PropTypes.array.isRequired,
     onChartClick: PropTypes.func.isRequired,
