@@ -76,8 +76,6 @@ export class ProjectSelector extends Component {
 
   controlNode = null;
 
-  projectKeys = [];
-
   state = {
     opened: false,
   };
