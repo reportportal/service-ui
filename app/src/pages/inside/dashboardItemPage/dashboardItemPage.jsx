@@ -50,7 +50,7 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
-import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { WIDGETS_EVENTS, DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -159,10 +159,13 @@ export class DashboardItemPage extends Component {
       userInfo: { userId },
       deleteDashboard,
       dashboard,
+      tracking: { trackEvent },
     } = this.props;
+    const { id } = dashboard;
+
     const warning =
       dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_DASHBOARD);
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('delete', id));
     this.props.showModalAction({
       id: 'deleteItemsModal',
       data: {
@@ -177,16 +180,21 @@ export class DashboardItemPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
-          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_DELETE_IN_MODAL_DELETE_DASHBOARD(id),
         },
       },
     });
   };
 
   onEditDashboardItem = () => {
-    const { showModalAction: showModal, editDashboard, dashboard } = this.props;
+    const {
+      showModalAction: showModal,
+      editDashboard,
+      dashboard,
+      tracking: { trackEvent },
+    } = this.props;
 
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_DASHBOARD_BTN);
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('edit', dashboard.id));
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -197,7 +205,7 @@ export class DashboardItemPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_UPDATE_IN_MODAL_EDIT_DASHBOARD(dashboard.id),
         },
       },
     });
@@ -254,9 +262,22 @@ export class DashboardItemPage extends Component {
   };
 
   toggleFullscreen = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.FULL_SCREEN_BTN);
+    const {
+      dashboard: { id },
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('full_screen', id));
     this.props.toggleFullScreenModeAction();
   };
+
+  onPrintDashboard = () => {
+    const {
+      dashboard: { id },
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('print', id));
+  };
+
   showWidgetWizard = () => {
     const modalId = 'widgetWizardModal';
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
@@ -300,11 +321,14 @@ export class DashboardItemPage extends Component {
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
+    const eventsInfo = {
+      submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(dashboard.id),
+    };
 
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader />
+          <DashboardPageHeader eventsInfo={eventsInfo} />
         </PageHeader>
         <PageSection>
           <div className={cx('dashboard-item')}>
@@ -334,6 +358,7 @@ export class DashboardItemPage extends Component {
                   }}
                   target={'_blank'}
                   className={cx('print-button')}
+                  onClick={this.onPrintDashboard}
                 >
                   <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
                 </Link>

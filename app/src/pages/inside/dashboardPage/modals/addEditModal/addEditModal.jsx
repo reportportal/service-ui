@@ -118,6 +118,10 @@ export class AddEditModal extends Component {
     handleSubmit: () => {},
   };
 
+  state = {
+    description: this.props.data.dashboardItem?.description || '',
+  };
+
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
@@ -144,6 +148,10 @@ export class AddEditModal extends Component {
     closeModal();
   };
 
+  onChangeDescription = (e) => {
+    this.setState({ description: e.target.value });
+  };
+
   render() {
     const {
       intl,
@@ -162,7 +170,9 @@ export class AddEditModal extends Component {
           onClick: (closeModal) => {
             handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
-          eventInfo: eventsInfo.submitBtn,
+          eventInfo: eventsInfo.submitBtn(
+            this.state.description !== (this.props.data.dashboardItem?.description || ''),
+          ),
         }}
         cancelButton={{
           text: cancelText,
@@ -193,6 +203,8 @@ export class AddEditModal extends Component {
               name="description"
               maxLength="1500"
               placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
+              onChange={this.onChangeDescription}
+              value={this.state.description}
             >
               <InputTextArea />
             </FieldProvider>

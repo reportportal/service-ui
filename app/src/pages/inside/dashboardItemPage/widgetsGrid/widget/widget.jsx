@@ -34,7 +34,7 @@ import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
 import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';

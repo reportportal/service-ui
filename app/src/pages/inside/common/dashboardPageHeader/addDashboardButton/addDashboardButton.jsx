@@ -23,8 +23,8 @@ import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { addDashboardAction } from 'controllers/dashboard';
 import { showModalAction } from 'controllers/modal';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import styles from './addDashboardButton.scss';
 
@@ -80,7 +80,7 @@ export class AddDashboardButton extends Component {
 
   onAddDashboardItem = () => {
     const { showModal, addDashboard, eventsInfo, tracking } = this.props;
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_DASHBOARD_BTN);
+    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_ADD_NEW_DASHBOARD_BTN);
     showModal({
       id: 'dashboardAddEditModal',
       data: {

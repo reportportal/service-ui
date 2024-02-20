@@ -33,6 +33,7 @@ import {
   loadingSelector,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -133,6 +134,8 @@ export class DashboardPage extends Component {
       deleteDashboard,
       tracking,
     } = this.props;
+    const { id } = item;
+
     const warning = item.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
@@ -149,7 +152,7 @@ export class DashboardPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
-          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_DELETE_IN_MODAL_DELETE_DASHBOARD(id),
         },
       },
     });
@@ -168,7 +171,7 @@ export class DashboardPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_UPDATE_IN_MODAL_EDIT_DASHBOARD(item.id),
         },
       },
     });
@@ -187,7 +190,9 @@ export class DashboardPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(
+            addDashboard.id,
+          ),
         },
       },
     });
@@ -214,7 +219,7 @@ export class DashboardPage extends Component {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
       cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-      submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
+      submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(),
     };
     return (
       <PageLayout>
