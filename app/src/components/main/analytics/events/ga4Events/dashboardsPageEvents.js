@@ -15,26 +15,23 @@
  */
 
 import { normalizeEventString } from '../../utils';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const RATIO_BASED_ON = 'ratio_based_on';
+const DASHBOARDS = 'dashboards';
 
 const modalNames = {
   editWidgetModal: 'edit_modal',
   widgetWizardModal: 'add_modal',
 };
 
-const getBasicEventConfig = {
-  action: 'click',
-  category: 'dashboards',
-};
-
 const getBasicEventTypeConfig = (type) => ({
-  ...getBasicEventConfig,
+  ...getBasicClickEventParameters(DASHBOARDS),
   type: normalizeEventString(type),
 });
 
 export const WIDGETS_EVENTS = {
-  CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS: (modalId) => (place, type) => ({
+  createClickOnRatioBasedOptionInPassingRateCharts: (modalId) => (place, type) => ({
     ...getBasicEventTypeConfig(type),
     place: normalizeEventString(place),
     modal: modalNames[modalId],
@@ -44,40 +41,40 @@ export const WIDGETS_EVENTS = {
 
 export const DASHBOARD_EVENTS = {
   CLICK_ON_ADD_NEW_DASHBOARD_BTN: {
-    ...getBasicEventConfig,
+    ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add_new_dashboard',
   },
 
-  CLICK_ON_DASHBOARD_NAME: (dashboardName, dashboardId) => ({
-    ...getBasicEventConfig,
+  clickOnDashboardName: (dashboardName, dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
     element_name: dashboardName,
     number: dashboardId,
   }),
 
-  CLICK_ON_ICON_DASHBOARD: (iconName, dashboardId) => ({
-    ...getBasicEventConfig,
+  clickOnIconDashboard: (iconName, dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: iconName,
     number: dashboardId,
   }),
 
-  CLICK_ON_BUTTON_UPDATE_IN_MODAL_EDIT_DASHBOARD: (dashboardId) => (linkName) => ({
-    ...getBasicEventConfig,
+  createClickOnButtonUpdateInModalEditDashboard: (dashboardId) => (linkName) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'update',
     modal: 'edit_dashboard',
     link_name: linkName,
     number: dashboardId,
   }),
 
-  CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD: (dashboardId) => (linkName) => ({
-    ...getBasicEventConfig,
+  createCreateClickOnButtonAddInModalAddNewDashboard: (dashboardId) => (linkName) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add',
     modal: 'add_new_dashboard',
     link_name: linkName,
     number: dashboardId,
   }),
 
-  CLICK_ON_BUTTON_DELETE_IN_MODAL_DELETE_DASHBOARD: (dashboardId) => ({
-    ...getBasicEventConfig,
+  clickOnButtonDeleteInModalDeleteDashboard: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'delete',
     modal: 'delete_dashboard',
     number: dashboardId,

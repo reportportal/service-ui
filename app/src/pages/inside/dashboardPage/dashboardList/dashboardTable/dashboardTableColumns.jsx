@@ -34,7 +34,7 @@ export const NameColumn = track()(
         className={cx(className, 'name')}
         to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
         onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.CLICK_ON_DASHBOARD_NAME(name, dashboardId));
+          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(name, dashboardId));
         }}
       >
         {name}
@@ -82,7 +82,7 @@ export const EditColumn = track()(({ value, customProps, className, tracking: { 
   const { id } = value;
 
   const editItemHandler = () => {
-    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('edit', id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', id));
     onEdit(value);
   };
 
@@ -107,7 +107,7 @@ export const DeleteColumn = track()(
   ({ value, customProps, className, tracking: { trackEvent } }) => {
     const deleteItemHandler = () => {
       const { id } = value;
-      trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('delete', id));
+      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
       customProps.onDelete(value);
     };
 

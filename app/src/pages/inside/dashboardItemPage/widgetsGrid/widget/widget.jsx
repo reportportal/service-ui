@@ -326,7 +326,7 @@ export class SimpleWidget extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
-          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
+          ratioBasedOnChange: WIDGETS_EVENTS.createClickOnRatioBasedOptionInPassingRateCharts(
             modalId,
           ),
         },

@@ -152,7 +152,7 @@ export class DashboardPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
-          deleteBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_DELETE_IN_MODAL_DELETE_DASHBOARD(id),
+          deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
       },
     });
@@ -171,7 +171,7 @@ export class DashboardPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_UPDATE_IN_MODAL_EDIT_DASHBOARD(item.id),
+          submitBtn: DASHBOARD_EVENTS.createClickOnButtonUpdateInModalEditDashboard(item.id),
         },
       },
     });
@@ -190,7 +190,7 @@ export class DashboardPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(
+          submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(
             addDashboard.id,
           ),
         },
@@ -219,7 +219,7 @@ export class DashboardPage extends Component {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
       cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-      submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(),
+      submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(),
     };
     return (
       <PageLayout>

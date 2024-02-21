@@ -165,7 +165,7 @@ export class DashboardItemPage extends Component {
 
     const warning =
       dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
-    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('delete', id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
     this.props.showModalAction({
       id: 'deleteItemsModal',
       data: {
@@ -180,7 +180,7 @@ export class DashboardItemPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
-          deleteBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_DELETE_IN_MODAL_DELETE_DASHBOARD(id),
+          deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
       },
     });
@@ -194,7 +194,7 @@ export class DashboardItemPage extends Component {
       tracking: { trackEvent },
     } = this.props;
 
-    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('edit', dashboard.id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', dashboard.id));
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -205,7 +205,7 @@ export class DashboardItemPage extends Component {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_UPDATE_IN_MODAL_EDIT_DASHBOARD(dashboard.id),
+          submitBtn: DASHBOARD_EVENTS.createClickOnButtonUpdateInModalEditDashboard(dashboard.id),
         },
       },
     });
@@ -266,7 +266,7 @@ export class DashboardItemPage extends Component {
       dashboard: { id },
       tracking: { trackEvent },
     } = this.props;
-    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('full_screen', id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('full_screen', id));
     this.props.toggleFullScreenModeAction();
   };
 
@@ -275,7 +275,7 @@ export class DashboardItemPage extends Component {
       dashboard: { id },
       tracking: { trackEvent },
     } = this.props;
-    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ICON_DASHBOARD('print', id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('print', id));
   };
 
   showWidgetWizard = () => {
@@ -305,7 +305,7 @@ export class DashboardItemPage extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
-          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
+          ratioBasedOnChange: WIDGETS_EVENTS.createClickOnRatioBasedOptionInPassingRateCharts(
             modalId,
           ),
         },
@@ -322,7 +322,7 @@ export class DashboardItemPage extends Component {
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
     const eventsInfo = {
-      submitBtn: DASHBOARD_EVENTS.CLICK_ON_BUTTON_ADD_IN_MODAL_ADD_NEW_DASHBOARD(dashboard.id),
+      submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(dashboard.id),
     };
 
     return (
