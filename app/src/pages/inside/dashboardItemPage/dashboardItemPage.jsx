@@ -201,12 +201,6 @@ export class DashboardItemPage extends Component {
         dashboardItem: dashboard,
         onSubmit: editDashboard,
         type: 'edit',
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.createClickOnButtonUpdateInModalEditDashboard(dashboard.id),
-        },
       },
     });
   };
@@ -321,14 +315,11 @@ export class DashboardItemPage extends Component {
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
-    const eventsInfo = {
-      submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(dashboard.id),
-    };
 
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader eventsInfo={eventsInfo} />
+          <DashboardPageHeader />
         </PageHeader>
         <PageSection>
           <div className={cx('dashboard-item')}>

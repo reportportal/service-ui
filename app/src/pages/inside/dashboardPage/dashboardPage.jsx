@@ -167,12 +167,6 @@ export class DashboardPage extends Component {
         dashboardItem: item,
         onSubmit: editDashboard,
         type: 'edit',
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.createClickOnButtonUpdateInModalEditDashboard(item.id),
-        },
       },
     });
   };
@@ -186,14 +180,6 @@ export class DashboardPage extends Component {
       data: {
         onSubmit: addDashboard,
         type: 'add',
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(
-            addDashboard.id,
-          ),
-        },
       },
     });
   };
@@ -215,16 +201,11 @@ export class DashboardPage extends Component {
 
   render() {
     const { gridType, userInfo, onFilterChange, filter, dashboardItems, loading } = this.props;
-    const eventsInfo = {
-      closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
-      changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
-      cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-      submitBtn: DASHBOARD_EVENTS.createCreateClickOnButtonAddInModalAddNewDashboard(),
-    };
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader eventsInfo={eventsInfo} />
+          <DashboardPageHeader />
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar

@@ -63,7 +63,6 @@ export class AddDashboardButton extends Component {
     intl: PropTypes.object.isRequired,
     showModal: PropTypes.func,
     addDashboard: PropTypes.func,
-    eventsInfo: PropTypes.object,
     disabled: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -74,19 +73,17 @@ export class AddDashboardButton extends Component {
   static defaultProps = {
     showModal: () => {},
     addDashboard: () => {},
-    eventsInfo: {},
     disabled: false,
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard, eventsInfo, tracking } = this.props;
+    const { showModal, addDashboard, tracking } = this.props;
     tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_ADD_NEW_DASHBOARD_BTN);
     showModal({
       id: 'dashboardAddEditModal',
       data: {
         onSubmit: addDashboard,
         type: 'add',
-        eventsInfo,
       },
     });
   };

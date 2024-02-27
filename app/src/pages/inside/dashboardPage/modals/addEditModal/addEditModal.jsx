@@ -26,6 +26,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import styles from './addEditModal.scss';
 
@@ -95,7 +96,6 @@ export class AddEditModal extends Component {
       dashboardItem: PropTypes.object,
       onSubmit: PropTypes.func,
       type: PropTypes.string,
-      eventsInfo: PropTypes.object,
     }),
     intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
@@ -112,14 +112,9 @@ export class AddEditModal extends Component {
       dashboardItem: {},
       onSubmit: () => {},
       type: '',
-      eventsInfo: {},
     },
     initialize: () => {},
     handleSubmit: () => {},
-  };
-
-  state = {
-    description: this.props.data.dashboardItem?.description || '',
   };
 
   componentDidMount() {
@@ -137,26 +132,35 @@ export class AddEditModal extends Component {
 
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
-      tracking,
-      data: { dashboardItem, eventsInfo = {} },
+      tracking: { trackEvent },
+      data: { dashboardItem, type },
       dirty,
     } = this.props;
+
+    const dashboardId = dashboardItem?.id || '';
+
     if (dirty) {
-      !dashboardItem && item.description && tracking.trackEvent(eventsInfo.changeDescription);
+      const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
+      const dashboardEvent =
+        type === 'edit'
+          ? DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+              dashboardId,
+              isChangedDescription,
+            )
+          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(dashboardId, isChangedDescription);
+
+      trackEvent(dashboardEvent);
       this.props.data.onSubmit(item);
     }
-    closeModal();
-  };
 
-  onChangeDescription = (e) => {
-    this.setState({ description: e.target.value });
+    closeModal();
   };
 
   render() {
     const {
       intl,
       handleSubmit,
-      data: { type, eventsInfo = {} },
+      data: { type },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);
@@ -170,16 +174,11 @@ export class AddEditModal extends Component {
           onClick: (closeModal) => {
             handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
-          eventInfo: eventsInfo.submitBtn(
-            this.state.description !== (this.props.data.dashboardItem?.description || ''),
-          ),
         }}
         cancelButton={{
           text: cancelText,
-          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
           <ModalField
@@ -203,8 +202,6 @@ export class AddEditModal extends Component {
               name="description"
               maxLength="1500"
               placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
-              onChange={this.onChangeDescription}
-              value={this.state.description}
             >
               <InputTextArea />
             </FieldProvider>

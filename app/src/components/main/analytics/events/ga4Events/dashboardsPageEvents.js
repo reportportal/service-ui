@@ -57,7 +57,7 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  createClickOnButtonUpdateInModalEditDashboard: (dashboardId) => (linkName) => ({
+  clickOnButtonUpdateInModalEditDashboard: (dashboardId, linkName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'update',
     modal: 'edit_dashboard',
@@ -65,7 +65,7 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  createCreateClickOnButtonAddInModalAddNewDashboard: (dashboardId) => (linkName) => ({
+  clickOnButtonInModalAddNewDashboard: (dashboardId, linkName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add',
     modal: 'add_new_dashboard',
