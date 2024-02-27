@@ -21,7 +21,7 @@ import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
@@ -34,7 +34,7 @@ export const NameColumn = track()(
         className={cx(className, 'name')}
         to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
         onClick={() => {
-          trackEvent(DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK);
+          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(name, dashboardId));
         }}
       >
         {name}
@@ -77,10 +77,12 @@ OwnerColumn.defaultProps = {
   className: '',
 };
 
-export const EditColumn = ({ value, customProps, className }) => {
+export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
   const { onEdit } = customProps;
+  const { id } = value;
 
   const editItemHandler = () => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', id));
     onEdit(value);
   };
 
@@ -89,7 +91,7 @@ export const EditColumn = ({ value, customProps, className }) => {
       <Icon type="icon-pencil" onClick={editItemHandler} />
     </div>
   );
-};
+});
 EditColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
@@ -101,19 +103,23 @@ EditColumn.defaultProps = {
   className: '',
 };
 
-export const DeleteColumn = ({ value, customProps, className }) => {
-  const deleteItemHandler = () => {
-    customProps.onDelete(value);
-  };
+export const DeleteColumn = track()(
+  ({ value, customProps, className, tracking: { trackEvent } }) => {
+    const deleteItemHandler = () => {
+      const { id } = value;
+      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
+      customProps.onDelete(value);
+    };
 
-  return (
-    <div className={cx(className, 'icon-cell', 'with-button')}>
-      <div className={cx('icon-holder')}>
-        <Icon type="icon-delete" onClick={deleteItemHandler} />
+    return (
+      <div className={cx(className, 'icon-cell', 'with-button')}>
+        <div className={cx('icon-holder')}>
+          <Icon type="icon-delete" onClick={deleteItemHandler} />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
 DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
