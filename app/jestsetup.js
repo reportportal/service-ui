@@ -17,7 +17,7 @@
 import 'raf/polyfill';
 import React from 'react';
 import { configure } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import * as Utils from './src/common/utils';
 
 configure({ adapter: new Adapter() });
@@ -27,6 +27,11 @@ global.Utils = Utils;
 global.JEST = true;
 global.localStorage = (() => {
   let store = {};
+
+  // eslint-disable-next-line global-require
+  const { TextEncoder, TextDecoder } = require('util');
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
 
   return {
     getItem(key) {

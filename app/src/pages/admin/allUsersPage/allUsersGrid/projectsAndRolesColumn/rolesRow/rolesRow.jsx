@@ -165,11 +165,13 @@ export class RolesRow extends Component {
         ? intl.formatMessage(messages.unAssignFromPersonalProject)
         : intl.formatMessage(messages.unAssignFromProject);
       const Tooltip = () => <TextTooltip tooltipContent={tooltipMessage} />;
+      const disable = this.isPersonalProject();
+      const componentClickHandler = !disable ? clickHandler : null;
       const WrappedComponent = () => (
         <IconComponent
           different={different}
-          disable={this.isPersonalProject()}
-          clickHandler={!this.isPersonalProject() ? clickHandler : null}
+          disable={disable}
+          clickHandler={componentClickHandler}
           icon={CrossIcon}
         />
       );

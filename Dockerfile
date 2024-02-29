@@ -1,6 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM --platform=$BUILDPLATFORM alpine:3.16.2 AS generate-build-info
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -8,12 +8,12 @@ ARG BUILD_BRANCH
 ARG BUILD_DATE
 RUN echo {\"build\": { \"version\": \"${APP_VERSION}\", \"branch\": \"${BUILD_BRANCH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
-FROM --platform=$BUILDPLATFORM node:14-alpine AS build-frontend 
+FROM --platform=$BUILDPLATFORM node:20-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
-RUN npm ci && npm run build
+RUN npm ci --legacy-peer-deps && npm run build
 
 FROM --platform=$BUILDPLATFORM nginxinc/nginx-unprivileged:alpine
 

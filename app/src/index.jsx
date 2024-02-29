@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import { createHashHistory } from 'history';
@@ -55,11 +55,10 @@ const { store, initialDispatch } = configureStore(queryParseHistory, window.REDU
 initPluginRegistration(store);
 
 const rerenderApp = (TheApp) => {
-  render(
+  createRoot(document.querySelector('#app')).render(
     <Provider store={store}>
       <TheApp initialDispatch={initialDispatch} />
     </Provider>,
-    document.querySelector('#app'),
   );
 };
 

@@ -77,6 +77,8 @@ export const AutocompleteMenu = React.forwardRef(
       <ul
         ref={ref}
         className={cx('menu', { opened: isOpen && menuContent })}
+        // placement used by Popper
+        /* eslint-disable-next-line react/no-unknown-property */
         placement={placement}
         style={style}
       >

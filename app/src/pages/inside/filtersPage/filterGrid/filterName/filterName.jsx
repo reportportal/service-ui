@@ -26,6 +26,23 @@ import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
 
+const NameLink = ({ link, children }) =>
+  link ? (
+    <Link className={cx('name-link')} to={link}>
+      {children}
+    </Link>
+  ) : (
+    children
+  );
+NameLink.propTypes = {
+  link: PropTypes.string,
+  children: PropTypes.node,
+};
+NameLink.defaultProps = {
+  link: '',
+  children: null,
+};
+
 export class FilterName extends Component {
   static propTypes = {
     userFilters: PropTypes.array,
@@ -81,15 +98,6 @@ export class FilterName extends Component {
       isLink,
       nameLink,
     } = this.props;
-
-    const NameLink = ({ link, children }) =>
-      link ? (
-        <Link className={cx('name-link')} to={link}>
-          {children}
-        </Link>
-      ) : (
-        children
-      );
 
     return (
       <Fragment>
