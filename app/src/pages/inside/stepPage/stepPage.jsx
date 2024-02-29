@@ -245,7 +245,7 @@ export class StepPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
         eventsInfo: {
-          saveBtn: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.SAVE_BTN,
+          getSaveBtnEvent: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.getSaveBtnEvent,
           detailsTab: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.DETAILS_TAB,
           stackTraceTab: STEP_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.STACK_TRACE_TAB,
           onOpenStackTraceEvent: () =>

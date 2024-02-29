@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ export const DefectTypeSelectorItem = ({
   isSelected,
   className,
   isNarrowView,
+  isHighlighted,
 }) => {
   return (
     <div
@@ -35,6 +36,7 @@ export const DefectTypeSelectorItem = ({
         'defect-type-selector-item',
         {
           selected: isSelected,
+          highlighted: isHighlighted,
         },
         className,
       )}
@@ -53,10 +55,12 @@ DefectTypeSelectorItem.propTypes = {
   isSelected: PropTypes.bool,
   className: PropTypes.string,
   isNarrowView: PropTypes.bool,
+  isHighlighted: PropTypes.bool,
 };
 DefectTypeSelectorItem.defaultProps = {
   onClick: () => {},
   isSelected: false,
-  className: 'PropTypes.string',
+  className: '',
   isNarrowView: false,
+  isHighlighted: false,
 };

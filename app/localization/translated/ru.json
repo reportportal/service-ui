@@ -1503,7 +1503,6 @@
   "PatternAnalysis.deletePatternMsg": "Вы уверены, что хотите удалить этот паттерн?",
   "PatternAnalysis.deletePatternSuccess": "Паттерн успешно удален",
   "PatternAnalysis.duplicatePattern": "Дублировать Правило Паттерна",
-  "PatternAnalysis.editPatternName": "Редактировать имя паттерна",
   "PatternAnalysis.headerTitle": "Редактировать Правило Паттерна",
   "PatternAnalysis.patternName": "Имя паттерна",
   "PatternAnalysis.patternNameDuplicateHint": "Паттерн с таким названием уже существует в проекте.",

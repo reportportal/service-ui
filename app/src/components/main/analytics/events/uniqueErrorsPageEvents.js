@@ -45,6 +45,7 @@ import {
   getPostIssueModalEvents,
   getUnlinkIssueModalEvents,
   getIgnoreBtnIgnoreItemsInAAModalEvent,
+  getEditItemDetailsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const UNIQUE_ERRORS_PAGE = 'unique_errors';
@@ -90,6 +91,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(UNIQUE_ERRORS_PAGE),
+  EDIT_ITEM_DETAILS_MODAL_EVENTS: getEditItemDetailsModalEvents(UNIQUE_ERRORS_PAGE),
   CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(UNIQUE_ERRORS_PAGE),
   getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
     UNIQUE_ERRORS_PAGE,

@@ -86,6 +86,9 @@ const MakeDecision = ({ data }) => {
         item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
+    extraAnalyticsParams: {
+      link_name: false,
+    },
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
   const windowSize = useWindowResize();
@@ -304,18 +307,10 @@ const MakeDecision = ({ data }) => {
       eventsInfo: { editDefectsEvents = {} },
       items,
     } = data;
-    const {
-      issueActionType,
-      suggestedItems,
-      selectManualChoice: {
-        issue: { issueType },
-      },
-    } = modalState;
+    const { issueActionType, suggestedItems, extraAnalyticsParams } = modalState;
+    const { issueType } = modalState[ACTIVE_TAB_MAP[activeTab]].issue;
 
     const hasSuggestions = !!suggestedItems.length;
-
-    const issueBtn =
-      isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType;
 
     return isBulkOperation
       ? editDefectsEvents.getClickOnApplyBulkEvent(
@@ -330,8 +325,9 @@ const MakeDecision = ({ data }) => {
           activeTab,
           issueType,
           itemData.issue.issueType,
-          issueBtn,
+          issueActionType,
           suggestedItems,
+          extraAnalyticsParams,
         );
   };
 

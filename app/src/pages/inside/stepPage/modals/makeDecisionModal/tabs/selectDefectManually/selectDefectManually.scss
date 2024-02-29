@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@
   position: relative;
 }
 
-.ignore-analysis {
+.defect-types-extra-block {
   position: absolute;
   display: flex;
   top: -35px;
   right: 2px;
 }
 
-.checkbox-text {
+.ignore-analysis-text {
   color: $COLOR--darkmode-gray-100;
   font-size: 13px;
 }

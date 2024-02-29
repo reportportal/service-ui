@@ -24,9 +24,10 @@ $ARROW_WIDTH: 16px;
 /* stylelint-disable selector-max-attribute */
 .tooltip {
   transition: opacity 300ms ease;
+  z-index: 2;
+
   &[data-placement*='bottom'] {
     padding-top: $ARROW_HEIGHT;
-    z-index: 2;
   }
 
   &[data-placement*='top'] {

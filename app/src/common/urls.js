@@ -18,6 +18,8 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
+export const UAT_API_PATH = '/uat';
+
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
 export const UAT_API_URL_PREFIX = '../uat';

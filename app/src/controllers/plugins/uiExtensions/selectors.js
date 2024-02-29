@@ -14,6 +14,10 @@ import {
   EXTENSION_TYPE_LOGIN_BLOCK,
   EXTENSION_TYPE_LOGIN_PAGE,
   EXTENSION_TYPE_REGISTRATION_PAGE,
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
+  EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+  EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
 } from './constants';
 import {
   domainSelector,
@@ -94,4 +98,17 @@ export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
 export const uiExtensionRegistrationPageSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_REGISTRATION_PAGE,
   enabledPublicPluginNamesSelector,
+);
+
+export const makeDecisionDefectCommentAddonSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
+);
+export const makeDecisionDefectTypeAddonSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
+);
+export const logStackTraceAddonSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+);
+export const testItemDetailsAddonSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
 );
