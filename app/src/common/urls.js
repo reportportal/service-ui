@@ -102,7 +102,7 @@ export const URLS = {
   launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
-  launches: (activeProject) => `${urlBase}${activeProject}/launch`,
+  launches: (activeProject, ids = []) => `${urlBase}${activeProject}/launch?ids=${ids.join(',')}`,
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
