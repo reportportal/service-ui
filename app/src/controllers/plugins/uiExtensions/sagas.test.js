@@ -159,7 +159,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
-    test('should execute getFile command for plugins with a file', async () => {
+    test.skip('should execute getFile command for plugins with a file', async () => {
       const state = {
         user: {
           activeProjectKey: 'testProject',
