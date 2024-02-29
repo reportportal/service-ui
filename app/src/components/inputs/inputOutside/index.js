@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { InputOutside } from './inputOutside';
+import { InputOutside } from './inputOutside';
+
+export { InputOutside };
+
+export default InputOutside;

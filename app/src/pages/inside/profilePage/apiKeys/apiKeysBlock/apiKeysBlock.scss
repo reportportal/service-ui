@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-.api-keys-block {
-  max-width: 860px;
-  margin: 0 auto;
-}
-
 .description {
   font-family: $FONT-REGULAR;
   font-size: 12px;
   color: $COLOR--gray-60;
   margin-bottom: 24px;
+  line-height: 17px;
+
+  a {
+    color: $COLOR--topaz;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      color: $COLOR--topaz-hover-2;
+    }
+  }
 }
 
 .api-keys {

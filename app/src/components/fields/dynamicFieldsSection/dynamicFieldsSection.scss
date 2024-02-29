@@ -16,6 +16,15 @@
 
 .dynamic-fields-section {
   display: flex;
+}
+
+.dynamic-fields-section-block {
+  display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+.hint {
+  position: absolute;
+  right: 44%;
 }

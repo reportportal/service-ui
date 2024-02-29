@@ -27,11 +27,15 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
-import { analyticsEnabledSelector } from 'controllers/appInfo';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { provideEcGA } from 'components/main/analytics';
+import { provideEcGA, baseEventParametersShape } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
-import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import {
+  getWidgetModeValuesString,
+  getEcWidget,
+} from 'components/main/analytics/events/common/widgetPages/utils';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -47,6 +51,7 @@ const cx = classNames.bind(styles);
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
+    baseEventParameters: baseEventParametersSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -78,6 +83,7 @@ export class WidgetWizardContent extends Component {
     fetchDashboards: PropTypes.func,
     activeDashboardId: PropTypes.number,
     currentPage: PropTypes.string,
+    baseEventParameters: baseEventParametersShape,
   };
   static defaultProps = {
     formValues: {
@@ -110,7 +116,27 @@ export class WidgetWizardContent extends Component {
       formValues,
       submitWidgetWizardForm,
       isAnalyticsEnabled,
+      activeDashboardId,
+      baseEventParameters,
     } = this.props;
+
+    if (isAnalyticsEnabled) {
+      provideEcGA({
+        eventName: 'view_item',
+        baseEventParameters,
+        additionalParameters: {
+          item_list_name: activeDashboardId || 'noID',
+          items: [
+            getEcWidget({
+              itemName: widgetTypesMessages[formValues.widgetType].defaultMessage,
+              itemVariant: this.props.currentPage,
+              itemListName: activeDashboardId || 'noID',
+            }),
+          ],
+        },
+      });
+    }
+
     tracking.trackEvent(eventsInfo.nextStep);
     if (this.state.step === 1 && formValues.contentParameters.contentFields) {
       tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
@@ -124,18 +150,6 @@ export class WidgetWizardContent extends Component {
     }
 
     submitWidgetWizardForm();
-    if (isAnalyticsEnabled && this.state.step === 0) {
-      provideEcGA({
-        name: 'addProduct',
-        data: {
-          name: formValues.widgetType,
-          variant: this.props.currentPage,
-          category: 'diagram/unassigned',
-        },
-        action: 'detail',
-        additionalData: { list: this.props.activeDashboardId || 'noID' },
-      });
-    }
   };
 
   onClickPrevStep = () => {
@@ -150,6 +164,7 @@ export class WidgetWizardContent extends Component {
       projectId,
       onConfirm,
       isAnalyticsEnabled,
+      baseEventParameters,
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
@@ -170,16 +185,19 @@ export class WidgetWizardContent extends Component {
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
         if (isAnalyticsEnabled) {
           provideEcGA({
-            name: 'addProduct',
-            data: {
-              id,
-              name: data.widgetType,
-              category: `diagram/${data.contentParameters.widgetOptions.viewMode ||
-                'unclassified'}`,
-              variant: this.props.currentPage,
+            eventName: 'add_to_cart',
+            baseEventParameters,
+            additionalParameters: {
+              item_list_name: selectedDashboard.id,
+              items: [
+                getEcWidget({
+                  itemId: id,
+                  itemName: widgetTypesMessages[data.widgetType].defaultMessage,
+                  itemVariant: this.props.currentPage,
+                  itemListName: selectedDashboard.id,
+                }),
+              ],
             },
-            action: 'add',
-            additionalData: { list: selectedDashboard.id },
           });
         }
       })

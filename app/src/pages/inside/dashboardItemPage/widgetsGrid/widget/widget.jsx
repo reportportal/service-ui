@@ -27,14 +27,17 @@ import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import { analyticsEnabledSelector } from 'controllers/appInfo';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
-import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
+import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -62,6 +65,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
     activeProject: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
+    baseEventParameters: baseEventParametersSelector(state),
   }),
   {
     showModalAction,
@@ -87,6 +91,7 @@ export class SimpleWidget extends Component {
     }).isRequired,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
+    baseEventParameters: baseEventParametersShape,
   };
 
   static defaultProps = {
@@ -295,9 +300,10 @@ export class SimpleWidget extends Component {
   };
 
   showEditWidgetModal = () => {
+    const modalId = 'editWidgetModal';
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
     this.props.showModalAction({
-      id: 'editWidgetModal',
+      id: modalId,
       data: {
         widget: this.state.widget,
         onConfirm: (isForceUpdateNeeded) =>
@@ -322,6 +328,9 @@ export class SimpleWidget extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
+          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
+            modalId,
+          ),
         },
       },
     });
@@ -333,25 +342,29 @@ export class SimpleWidget extends Component {
   };
 
   showDeleteWidgetModal = () => {
-    const { tracking, isAnalyticsEnabled, onDelete } = this.props;
+    const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
 
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     const onConfirm = () => {
       const { widgetId, activeDashboardId } = this.props;
       const {
-        widget: { id, widgetType, contentParameters },
+        widget: { id, widgetType },
       } = this.state;
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
         provideEcGA({
-          name: 'addProduct',
-          data: {
-            id,
-            name: widgetType,
-            category: `diagram/${contentParameters.widgetOptions.viewMode || 'unclassified'}`,
+          eventName: 'remove_from_cart',
+          baseEventParameters,
+          additionalParameters: {
+            item_list_name: activeDashboardId,
+            items: [
+              getEcWidget({
+                itemId: id,
+                itemName: widgetTypesMessages[widgetType].defaultMessage,
+                itemListName: activeDashboardId,
+              }),
+            ],
           },
-          action: 'remove',
-          additionalData: { list: activeDashboardId },
         });
       }
     };

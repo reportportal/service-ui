@@ -18,6 +18,9 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import React from 'react';
+import Link from 'redux-first-router-link';
+import { LOGIN_PAGE } from 'controllers/pages';
 import { BlockHeader } from '../common/pageBlockContainer/blockHeader';
 import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
@@ -29,15 +32,23 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   welcome: {
     id: 'RegistrationPage.welcome',
-    defaultMessage: 'Welcome,',
+    defaultMessage: ' ',
   },
   registration: {
     id: 'RegistrationPage.registration',
-    defaultMessage: 'complete the registration form',
+    defaultMessage: 'Welcome, create your profile',
   },
 });
 
-export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistrationSubmit }) => {
+export const RegistrationPage = ({
+  tokenActive,
+  tokenProvided,
+  email,
+  onRegistrationSubmit,
+  loading,
+  initialData,
+  submitButtonTitle,
+}) => {
   const backgroundClasses = {
     background: true,
     failed: !tokenProvided || !tokenActive,
@@ -55,16 +66,22 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
             <div className={cx('couple-minutes')}>
               <FormattedMessage
                 id={'RegistrationPage.coupleMinutes'}
-                defaultMessage={'It should only take a couple of minutes to get started'}
+                defaultMessage={'It only takes a couple of minutes to get started'}
               />
             </div>
           )}
         </RegistrationPageSection>
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
           {tokenProvided && tokenActive ? (
-            <div>
+            <div className={cx('main-content')}>
               <BlockHeader header={messages.welcome} hint={messages.registration} />
-              <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
+              <RegistrationForm
+                email={email}
+                submitForm={onRegistrationSubmit}
+                loading={loading}
+                initialData={initialData}
+                submitButtonTitle={submitButtonTitle}
+              />
             </div>
           ) : (
             <TokenErrorSection tokenProvided={tokenProvided} />
@@ -79,12 +96,18 @@ RegistrationPage.propTypes = {
   tokenProvided: PropTypes.bool,
   email: PropTypes.string,
   onRegistrationSubmit: PropTypes.func,
+  loading: PropTypes.bool,
+  initialData: PropTypes.object,
+  submitButtonTitle: PropTypes.string,
 };
 RegistrationPage.defaultProps = {
   tokenActive: false,
   tokenProvided: false,
   email: '',
   onRegistrationSubmit: () => {},
+  loading: false,
+  initialData: {},
+  submitButtonTitle: '',
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
@@ -111,12 +134,20 @@ const TokenErrorSection = ({ tokenProvided }) => (
       <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
         ReportPortal.io
       </a>
+      <br />
+      <FormattedMessage id={'RegistrationPage.or'} defaultMessage={'or '} />
+      <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
+        <FormattedMessage id={'RegistrationPage.login'} defaultMessage={'Log In'} />
+      </Link>
+      <FormattedMessage id={'RegistrationPage.again'} defaultMessage={' again'} />
     </div>
   </RegistrationFailBlock>
 );
 TokenErrorSection.propTypes = {
   tokenProvided: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 TokenErrorSection.defaultProps = {
   tokenProvided: false,
+  loading: false,
 };

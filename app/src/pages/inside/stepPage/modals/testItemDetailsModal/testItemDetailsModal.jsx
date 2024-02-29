@@ -37,6 +37,7 @@ import {
 } from 'controllers/user';
 import { clearLogPageStackTrace } from 'controllers/log';
 import { launchSelector } from 'controllers/testItem';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
@@ -111,7 +112,7 @@ export class TestItemDetailsModal extends Component {
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
     invalid: PropTypes.bool.isRequired,
-    extensions: PropTypes.array,
+    extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
@@ -328,9 +329,14 @@ export class TestItemDetailsModal extends Component {
 
     return extensions.length
       ? extensions.map((extension) => (
-          <extension.component key={extension.name} item={item} editable={editable}>
+          <ExtensionLoader
+            key={extension.name}
+            extension={extension}
+            item={item}
+            editable={editable}
+          >
             {this.renderDetailsTabContent}
-          </extension.component>
+          </ExtensionLoader>
         ))
       : this.renderDetailsTabContent(editable);
   };

@@ -106,7 +106,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
         <IssueList issues={issue.externalSystemIssues} onClick={onClickIssue} onRemove={onRemove} />
       </div>
       <div className={cx('comment')}>
-        <ScrollWrapper autoHeight autoHeightMax={90}>
+        <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={90}>
           <MarkdownViewer value={issue.comment} />
         </ScrollWrapper>
       </div>

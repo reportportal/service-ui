@@ -343,11 +343,9 @@ export class StepPage extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems, tracking } = this.props;
+    const { selectedItems } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
     const MAKE_DECISION = 'make_decision';
-
-    tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
 
     this.props.editDefectsAction(items, {
       fetchFunc: this.unselectAndFetchItems,

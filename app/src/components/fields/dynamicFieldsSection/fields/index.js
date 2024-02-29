@@ -18,3 +18,6 @@ export { TextField } from './textField';
 export { DateField } from './dateField';
 export { DropdownField } from './dropdownField';
 export { ArrayField } from './arrayField';
+export { AutocompleteField } from './autocompleteField';
+export { MultipleAutocompleteField } from './multipleAutocompleteField';
+export { CreatableMultipleAutocompleteField } from './creatableMultipleAutocompleteField';

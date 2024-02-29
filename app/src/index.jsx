@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ if (!process.env.production) {
     whyDidYouUpdate(React, { include: new RegExp(whyDidYouUpdateComponent) });
     // eslint-disable-next-line no-console
     console.log(
-      'Use http://localhost:3000/?whyDidYouUpdateComponent=^Component$# (with regex as query value) to check why certain component rerender.',
+      'Use http://localhost:3000/?whyDidYouUpdateComponent=^Component$# (with regex as a query value) to check why certain component rerender.',
     );
   }
 }

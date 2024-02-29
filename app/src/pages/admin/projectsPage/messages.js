@@ -15,7 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
-import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
+import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 
 export const messages = defineMessages({
   statisticButtonTooltip: {
@@ -41,10 +41,6 @@ export const messages = defineMessages({
   projectLengthHint: {
     id: 'ProjectsPage.projectLengthHint',
     defaultMessage: 'Project name ',
-  },
-  [`${SETTINGS}HeaderButton`]: {
-    id: 'ProjectDetailsPageSettings.headerButton',
-    defaultMessage: 'Project Settings',
   },
   [`${MEMBERS}HeaderButton`]: {
     id: 'ProjectDetailsPageMembers.headerButton',

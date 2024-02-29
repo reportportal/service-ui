@@ -55,6 +55,7 @@ import {
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
+import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
@@ -82,8 +83,16 @@ export const pageRendering = {
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
-  PROJECT_SETTINGS_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
-  PROJECT_SETTINGS_TAB_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
+  PROJECT_SETTINGS_PAGE: {
+    component: ProjectSettingsPageContainer,
+    layout: AppLayout,
+    rawContent: true,
+  },
+  PROJECT_SETTINGS_TAB_PAGE: {
+    component: ProjectSettingsPageContainer,
+    layout: AppLayout,
+    rawContent: true,
+  },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
@@ -109,7 +118,7 @@ export const pageRendering = {
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
     component: AdminUiExtensionPage,
-    layout: AdminLayout,
+    layout: UIExtensionPageLayout,
     access: ADMIN_ACCESS,
   },
 };

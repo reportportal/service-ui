@@ -17,7 +17,11 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
+import { DEFECT_TYPES_SEQUENCE, DEFAULT_DEFECT_TYPES_LOCATORS } from 'common/constants/defectTypes';
+import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
+
+const DEFECT_STATISTICS_BASE = 'statistics$defects$';
 
 export const getIssueTitle = (
   formatMessage,
@@ -134,4 +138,52 @@ export const createStepActionDescriptors = (params) => {
       onClick: onDelete,
     },
   ];
+};
+
+export const isDefaultDefectType = (defectType) =>
+  DEFAULT_DEFECT_TYPES_LOCATORS.includes(defectType.locator);
+
+export const getGroupedDefectTypesOptions = (
+  defectTypes,
+  formatMessage,
+  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
+) => {
+  let defectTypesOptions = [];
+  defectTypesSequence.forEach((defectTypeId) => {
+    const defectTypeGroup = defectTypes[defectTypeId];
+    defectTypesOptions.push({
+      label: formatMessage(defectTypesLocalization[`${defectTypeGroup[0].typeRef}_TOTAL`]),
+      value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
+      groupId: defectTypeGroup[0].typeRef,
+      color: defectTypeGroup[0].color,
+      typeRef: defectTypeGroup[0].typeRef,
+    });
+    defectTypesOptions = defectTypesOptions.concat(
+      defectTypeGroup.map((defectType) => {
+        const label = isDefaultDefectType(defectType)
+          ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+          : defectType.longName;
+        return {
+          groupRef: defectType.typeRef,
+          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
+            defectType.locator
+          }`,
+          label,
+          color: defectType.color,
+          locator: defectType.locator,
+          meta: {
+            subItem: true,
+            subItemLabel: `${
+              defectTypesLocalization[defectType.typeRef.toLowerCase()]
+                ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+                : defectType.longName
+            } ${defectType.shortName}`,
+            longName: defectType.longName,
+          },
+        };
+      }),
+    );
+  });
+
+  return defectTypesOptions;
 };

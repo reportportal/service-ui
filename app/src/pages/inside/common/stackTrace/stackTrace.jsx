@@ -24,6 +24,7 @@ import Parser from 'html-react-parser';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { dateFormat, setStorageItem } from 'common/utils';
 import {
   logStackTraceItemsSelector,
@@ -99,7 +100,7 @@ export class StackTrace extends Component {
     transparentBackground: PropTypes.bool,
     eventsInfo: PropTypes.object,
     retryId: PropTypes.number.isRequired,
-    extensions: PropTypes.array,
+    extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
@@ -225,9 +226,14 @@ export class StackTrace extends Component {
             <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
               {extensions.length
                 ? extensions.map((extension) => (
-                    <extension.component key={extension.name} item={item} index={index}>
+                    <ExtensionLoader
+                      key={extension.name}
+                      extension={extension}
+                      item={item}
+                      index={index}
+                    >
                       {this.createStackTraceItem}
-                    </extension.component>
+                    </ExtensionLoader>
                   ))
                 : this.createStackTraceItem(item)}
             </div>

@@ -29,11 +29,10 @@ import {
   projectSectionSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
-import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
+import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
-import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectMonitoringIcon from 'common/img/project-monitoring-inline.svg';
 import { MembersPage } from 'pages/common/membersPage';
 import {
@@ -43,7 +42,6 @@ import {
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
-import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
 import { messages } from './messages';
 import styles from './projectsPage.scss';
 
@@ -53,10 +51,6 @@ const HEADER_BUTTONS = [
   {
     key: MONITORING,
     icon: ProjectMonitoringIcon,
-  },
-  {
-    key: SETTINGS,
-    icon: ProjectSettingsIcon,
   },
   {
     key: MEMBERS,
@@ -193,8 +187,6 @@ export class ProjectsPage extends Component {
     }
 
     switch (section) {
-      case SETTINGS:
-        return <AdminProjectSettingsPageContainer projectId={projectId} />;
       case MEMBERS:
         return <MembersPage />;
       case MONITORING:

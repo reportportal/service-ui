@@ -15,12 +15,17 @@
  */
 
 import React, { Component } from 'react';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import semverDiff from 'semver-diff';
 import { appInfoSelector } from 'controllers/appInfo';
-import { ServiceVersionsBlock } from './serviceVersionsBlock';
+import { FormattedMessage } from 'react-intl';
+import styles from './serviceVersionBlockWithData.scss';
+import { ServiceVersionItemTooltip } from './serviceVersionBlockTooltip';
+
+const cx = classNames.bind(styles);
 
 @connect((state) => ({
   appInfo: appInfoSelector(state),
@@ -37,6 +42,8 @@ export class ServiceVersionsBlockWithData extends Component {
   state = {
     services: {},
   };
+
+  isDeprecated = false;
 
   componentDidMount() {
     fetchJsonp('https://status.reportportal.io/versions', {
@@ -72,6 +79,8 @@ export class ServiceVersionsBlockWithData extends Component {
         isDeprecated = false;
       }
 
+      if (isDeprecated) this.isDeprecated = true;
+
       services[serviceKey] = {
         name: serviceValue.build.name,
         version: serviceValue.build.version,
@@ -87,6 +96,29 @@ export class ServiceVersionsBlockWithData extends Component {
   };
 
   render() {
-    return <ServiceVersionsBlock services={this.state.services} />;
+    return (
+      <div className={cx('service-versions-block')}>
+        <ServiceVersionItemTooltip
+          className={cx('tooltip-block')}
+          services={this.state.services}
+          isDeprecated={this.isDeprecated}
+        />
+        {this.isDeprecated ? (
+          <span className={cx('current-version')}>
+            <FormattedMessage
+              id={'ServiceVersionsBlock.deprecatedVersion'}
+              defaultMessage={'New versions are available.'}
+            />
+          </span>
+        ) : (
+          <span className={cx('current-version')}>
+            <FormattedMessage
+              id={'ServiceVersionsBlock.currentVersion'}
+              defaultMessage={'Current version'}
+            />
+          </span>
+        )}
+      </div>
+    );
   }
 }

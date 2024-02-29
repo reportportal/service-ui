@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
+import { MultipleAutocomplete } from 'componentLibrary/autocompletes/multipleAutocomplete';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -70,7 +70,7 @@ export class ArrayField extends Component {
           options={this.formatOptions(field.definedValues)}
           parseValueToString={this.parseValueToString}
           creatable={this.creatable}
-          darkView={darkView}
+          variant={darkView ? 'dark' : 'light'}
           mobileDisabled
         />
       </DynamicField>

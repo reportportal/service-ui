@@ -1,25 +1,80 @@
-import { select, put } from 'redux-saga/effects';
+import { select, call, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { COMMAND_GET_FILE } from './constants';
-import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
+import { PUBLIC_PLUGINS } from 'controllers/plugins/constants';
+import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
+import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
-import { extensionLoadFinishAction, extensionLoadStartAction } from './actions';
+import {
+  extensionLoadFinishAction,
+  extensionLoadStartAction,
+  fetchExtensionsMetadataSuccessAction,
+} from './actions';
 
+export function* fetchExtensionsMetadata(action) {
+  const isPublicPluginNamespace = action && action.meta.namespace === PUBLIC_PLUGINS;
+  const plugins = yield select(isPublicPluginNamespace ? publicPluginsSelector : pluginsSelector);
+  const uiExtensionPlugins = plugins.filter(
+    (plugin) =>
+      plugin.enabled &&
+      plugin.details &&
+      plugin.details.binaryData &&
+      plugin.details.binaryData[METADATA_FILE_KEY] &&
+      plugin.details.binaryData[MAIN_FILE_KEY],
+  );
+
+  if (!uiExtensionPlugins.length) {
+    return;
+  }
+
+  // TODO: discuss with BE whether we can fetch plugins metadata via single API call
+  const calls = uiExtensionPlugins.map((plugin) => {
+    const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
+    return fetch(URLS.pluginPublicFile(plugin.name, metadataFile), {
+      contentType: 'application/json',
+    });
+  });
+
+  if (calls.length === 0) {
+    return;
+  }
+
+  try {
+    const results = yield Promise.allSettled(calls);
+    const metadataArray = results.reduce((acc, result, index) => {
+      if (result.status !== 'fulfilled') {
+        return acc;
+      }
+      return acc.concat({
+        ...result.value,
+        pluginName: uiExtensionPlugins[index].name,
+      });
+    }, []);
+
+    yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
+  } catch (error) {
+    console.error('Plugins metadata load error'); // eslint-disable-line no-console
+  }
+}
+
+// TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
 export function* fetchUiExtensions() {
+  yield call(fetchExtensionsMetadata);
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
   // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
   const globalIntegrations = yield select(globalIntegrationsSelector);
   if (!globalIntegrations.length) {
     return;
   }
+
   const plugins = yield select(pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&
       plugin.details.binaryData &&
+      plugin.details.binaryData[MAIN_FILE_KEY] &&
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );

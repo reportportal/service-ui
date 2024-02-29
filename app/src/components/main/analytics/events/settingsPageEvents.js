@@ -83,11 +83,6 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Edit input Keep screenshots on tab General',
     label: period,
   }),
-  GENERAL_SUBMIT: {
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Submit on tab General',
-    label: 'Submit changes on tab General',
-  },
   NOTIFICATIONS_TAB: {
     category: SETTINGS_PAGE,
     action: 'Click on tab Notifications in Settings',
@@ -192,6 +187,11 @@ export const SETTINGS_PAGE_EVENTS = {
     category: SETTINGS_PAGE,
     action: 'Click on Btn Add new rule on tab Notifications',
     label: 'Add new rule on tab Notifications',
+  },
+  CLONE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Clone Notification Rule',
+    label: 'Arrise Modal Clone Notification Rule',
   },
   INTEGRATIONS_TAB: {
     category: SETTINGS_PAGE,

@@ -30,6 +30,7 @@ export const BigButton = ({
   roundedCorners,
   onClick,
   form,
+  title,
 }) => {
   const classes = cx('big-button', className, {
     'rounded-corners': roundedCorners,
@@ -39,7 +40,14 @@ export const BigButton = ({
   });
 
   return (
-    <button type={type} disabled={disabled} className={classes} onClick={onClick} form={form}>
+    <button
+      type={type}
+      disabled={disabled}
+      className={classes}
+      onClick={onClick}
+      form={form}
+      title={title}
+    >
       {children}
     </button>
   );
@@ -55,6 +63,7 @@ BigButton.propTypes = {
   roundedCorners: PropTypes.bool,
   onClick: PropTypes.func,
   form: PropTypes.string,
+  title: PropTypes.string,
 };
 
 BigButton.defaultProps = {
@@ -67,4 +76,5 @@ BigButton.defaultProps = {
   roundedCorners: false,
   onClick: () => {},
   form: null,
+  title: '',
 };

@@ -51,6 +51,7 @@ export {
   debugLocalSortingSelector,
   debugLocalFilterSelector,
   getLaunchFilterLinkSelector,
+  queryParametersSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';

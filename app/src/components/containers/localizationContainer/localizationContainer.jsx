@@ -24,6 +24,7 @@ import { polyfillLocales } from 'common/polyfills';
 import localeUK from '../../../../localization/translated/uk.json';
 import localeRU from '../../../../localization/translated/ru.json';
 import localeBE from '../../../../localization/translated/be.json';
+import localeZH from '../../../../localization/translated/zh.json';
 
 const localesReadyPromise = polyfillLocales();
 
@@ -47,6 +48,7 @@ export class LocalizationContainer extends React.Component {
       ru: localeRU,
       be: localeBE,
       uk: localeUK,
+      zh: localeZH,
     };
   }
 

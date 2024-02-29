@@ -18,6 +18,9 @@ export const TEXT_TYPE = 'text';
 export const ARRAY_TYPE = 'array';
 export const DROPDOWN_TYPE = 'dropdown';
 export const DATE_TYPE = 'date';
+export const AUTOCOMPLETE_TYPE = 'autocomplete';
+export const MULTIPLE_AUTOCOMPLETE_TYPE = 'multiAutocomplete';
+export const CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE = 'creatableMultiAutocomplete';
 
 export const VALUE_NAME_KEY = 'valueName';
 export const VALUE_ID_KEY = 'valueId';

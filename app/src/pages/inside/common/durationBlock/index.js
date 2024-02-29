@@ -15,3 +15,5 @@
  */
 
 export { DurationBlock } from './durationBlock';
+export { isInProgress, isStopped, isSkipped, isInterrupted } from './utils';
+export { messages } from './messages';

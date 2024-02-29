@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { NavLinkWrapper as NavLink } from './navLinkWrapper';
+import { NavLinkWrapper as NavLink } from './navLinkWrapper';
+
+export { NavLink };
+
+export default NavLink;

@@ -30,6 +30,7 @@ import { userIdSelector } from 'controllers/user';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
+  FETCH_PUBLIC_PLUGINS,
   REMOVE_PLUGIN,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_INTEGRATION,
@@ -38,6 +39,8 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
+  UPDATE_PLUGIN_SUCCESS,
+  PUBLIC_PLUGINS,
 } from './constants';
 import { resolveIntegrationUrl } from './utils';
 import { pluginByNameSelector } from './selectors';
@@ -53,7 +56,7 @@ import {
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
-import { fetchUiExtensions } from './uiExtensions';
+import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -214,14 +217,22 @@ function* fetchPlugins() {
   yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
 }
 
+function* fetchPublicPlugins() {
+  yield put(fetchDataAction(PUBLIC_PLUGINS, true)(URLS.pluginPublic()));
+}
+
 function* watchFetchPlugins() {
   yield takeEvery(FETCH_PLUGINS, fetchPlugins);
+}
+
+function* watchFetchPublicPlugins() {
+  yield takeEvery(FETCH_PUBLIC_PLUGINS, fetchPublicPlugins);
 }
 
 function* removePlugin({ payload: { id, callback, pluginName } }) {
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.pluginUpdate(id), {
+    yield call(fetch, URLS.pluginById(id), {
       method: 'delete',
     });
     yield put(removePluginSuccessAction(id));
@@ -247,8 +258,15 @@ function* watchRemovePlugin() {
 // TODO: in the future plugins with js parts should not depend on integrations, only on plugins.
 function* watchPluginChange() {
   yield takeEvery(
-    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
+    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS, UPDATE_PLUGIN_SUCCESS],
     fetchUiExtensions,
+  );
+}
+
+function* watchPublicPluginChange() {
+  yield takeEvery(
+    [createFetchPredicate(PUBLIC_PLUGINS), UPDATE_PLUGIN_SUCCESS],
+    fetchExtensionsMetadata,
   );
 }
 
@@ -260,7 +278,9 @@ export function* pluginSagas() {
     watchRemoveIntegrationsByType(),
     watchFetchGlobalIntegrations(),
     watchFetchPlugins(),
+    watchFetchPublicPlugins(),
     watchRemovePlugin(),
     watchPluginChange(),
+    watchPublicPluginChange(),
   ]);
 }

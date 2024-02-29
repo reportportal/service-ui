@@ -20,7 +20,7 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { assignToProjectSuccessAction } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
-import { SETTINGS } from 'common/constants/projectSections';
+import { MEMBERS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
@@ -75,7 +75,7 @@ function* addProject({ payload: projectName }) {
       },
     });
     const projectInfo = {
-      projectName,
+      projectName: projectName.toLowerCase(),
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
@@ -88,7 +88,7 @@ function* addProject({ payload: projectName }) {
         values: { name: projectName },
       }),
     );
-    yield put(navigateToProjectSectionAction(projectName, SETTINGS));
+    yield put(navigateToProjectSectionAction(projectName, MEMBERS));
   } catch (err) {
     if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
       yield put(

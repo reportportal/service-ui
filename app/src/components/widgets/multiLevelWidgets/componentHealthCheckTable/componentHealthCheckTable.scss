@@ -36,6 +36,11 @@
     color: $COLOR--topaz;
     font-size: 12px;
     line-height: 1.3;
+
+    &::after {
+      content: '';
+      display: block;
+    }
   }
 
   .cursor-pointer {

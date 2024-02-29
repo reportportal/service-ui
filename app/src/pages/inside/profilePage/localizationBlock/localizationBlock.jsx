@@ -28,16 +28,18 @@ import {
   UKRAINIAN,
   RUSSIAN,
   BELARUSIAN,
+  SIMPLIFIED_CHINESE,
   DEFAULT_LANGUAGE,
 } from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import UkrainianFlagIcon from './img/ua-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
 import BelarusFlagIcon from './img/be-flag-inline.svg';
+import ChineseFlagIcon from './img/zh-flag-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -62,6 +64,10 @@ const messages = defineMessages({
     id: 'LocalizationBlock.english',
     defaultMessage: 'English (United States)',
   },
+  chinese: {
+    id: 'LocalizationBlock.chinese',
+    defaultMessage: '简体中文',
+  },
   note: {
     id: 'LocalizationBlock.note',
     defaultMessage: 'Note',
@@ -71,6 +77,16 @@ const messages = defineMessages({
     defaultMessage: `This lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/ru.json' >file.</a>`,
   },
 });
+
+const langName = {
+  [ENGLISH]: 'english',
+  [UKRAINIAN]: 'ukrainian',
+  [RUSSIAN]: 'russian',
+  [BELARUSIAN]: 'belarusian',
+  [SIMPLIFIED_CHINESE]: 'chinese',
+};
+
+const langNameByCode = (code) => langName[code];
 
 const LanguageOption = ({ icon, label }) => (
   <div className={cx('icon-block')}>
@@ -108,6 +124,11 @@ const LANG_OPTIONS = [
     icon: BelarusFlagIcon,
     label: messages.belarusian,
   },
+  {
+    value: SIMPLIFIED_CHINESE,
+    icon: ChineseFlagIcon,
+    label: messages.chinese,
+  },
 ];
 
 @connect(
@@ -132,7 +153,8 @@ export class LocalizationBlock extends Component {
   };
 
   onChangeLanguage = (lang) => {
-    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_LANGUAGE);
+    const { trackEvent } = this.props.tracking;
+    trackEvent(PROFILE_EVENTS.CHANGE_LANGUAGE(langNameByCode(lang)));
     updateStorageItem(APPLICATION_SETTINGS, { appLanguage: lang });
     this.props.setLangAction(lang);
   };

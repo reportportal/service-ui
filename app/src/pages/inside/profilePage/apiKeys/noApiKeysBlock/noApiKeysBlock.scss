@@ -47,3 +47,17 @@
   width: fit-content;
   margin: 0 auto 24px;
 }
+
+.documentation {
+  width: fit-content;
+  margin: 0 auto 24px;
+}
+
+.documentation-link {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: $COLOR--topaz;
+  text-decoration: none;
+}

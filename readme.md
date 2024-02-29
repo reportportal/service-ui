@@ -1,4 +1,5 @@
-# UI service for Report Portal 
+# UI service for Report Portal
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![stackoverflow](https://img.shields.io/badge/reportportal-stackoverflow-orange.svg?style=flat)](http://stackoverflow.com/questions/tagged/reportportal)
 
@@ -7,13 +8,13 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/reportportal/service-ui?sort=semver)](https://github.com/reportportal/service-ui/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/reportportal/service-ui.svg?maxAge=159200)](https://hub.docker.com/r/reportportal/service-ui/)
 
-1. Install nodejs (minimum required version 10)
+1. Install nodejs (minimum required version 12, recommended - 14)
 
 2. Open console from the project root
 
 3. Run the command `cd app`
 
-4. Run the command `npm install`
+4. Run the command `npm install` or `npm ci`
 
 5. Create file `.env` in `app` folder
 

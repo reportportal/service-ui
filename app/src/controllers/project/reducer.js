@@ -15,21 +15,27 @@
  */
 
 import { combineReducers } from 'redux';
-import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS, updateFilter } from 'controllers/filter';
+import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS } from 'controllers/filter/constants';
+import { updateFilter } from 'controllers/filter/utils';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  ADD_DEFECT_SUBTYPE_SUCCESS,
-  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_DEFECT_TYPE_SUCCESS,
+  ADD_DEFECT_TYPE_SUCCESS,
+  DELETE_DEFECT_TYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN_SUCCESS,
   DELETE_PATTERN_SUCCESS,
   FETCH_PROJECT,
+  ADD_PROJECT_NOTIFICATION_SUCCESS,
+  FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  SET_PROJECT_NOTIFICATION_LOADING,
+  FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -47,15 +53,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS:
-      return {
-        ...state,
-        configuration: {
-          ...state.configuration,
-          notificationsConfiguration: payload,
-        },
-      };
-    case UPDATE_DEFECT_SUBTYPE_SUCCESS:
+    case UPDATE_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {
@@ -72,7 +70,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           ),
         },
       };
-    case ADD_DEFECT_SUBTYPE_SUCCESS:
+    case ADD_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {
@@ -83,7 +81,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case DELETE_DEFECT_SUBTYPE_SUCCESS:
+    case DELETE_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {
@@ -157,8 +155,50 @@ export const projectInfoLoadingReducer = (state = false, { type }) => {
   }
 };
 
+export const projectNotificationsReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case FETCH_PROJECT_NOTIFICATIONS_SUCCESS:
+      return { ...state, notifications: payload };
+    case ADD_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: [...state.notifications, payload],
+      };
+    case UPDATE_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: state.notifications.map((item) => {
+          if (payload.id === item.id) return payload;
+          return item;
+        }),
+      };
+    case DELETE_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: state.notifications.filter((item) => item.id !== payload),
+      };
+    case SET_PROJECT_NOTIFICATION_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
+    case FETCH_EXISTING_LAUNCH_NAMES_SUCCESS:
+      return {
+        ...state,
+        isExistingLaunchNames: payload.reduce(
+          (initialValue, launchName) => Object.assign(initialValue, { [launchName]: !!launchName }),
+          {},
+        ),
+      };
+
+    default:
+      return state;
+  }
+};
+
 export const projectReducer = combineReducers({
   info: projectInfoReducer,
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
+  notifications: projectNotificationsReducer,
 });

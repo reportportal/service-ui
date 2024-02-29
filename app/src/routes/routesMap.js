@@ -59,7 +59,7 @@ import {
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
-import { SETTINGS, MEMBERS, MONITORING } from 'common/constants/projectSections';
+import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
@@ -90,6 +90,7 @@ import {
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
+import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -129,7 +130,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${MONITORING})?/:settingsTab?`,
+    path: `/administrate/projects/:projectId/:projectSection(${MEMBERS}|${MONITORING})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -207,7 +208,7 @@ const routesMap = {
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
-      dispatch(fetchLaunchesAction());
+      dispatch(parseQueryToFilterEntityAction());
     },
   },
   [HISTORY_PAGE]: {
@@ -266,7 +267,7 @@ const routesMap = {
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/:projectId/settings/:settingsTab`,
+  [PROJECT_SETTINGS_TAB_PAGE]: `/:projectId/settings/:settingsTab/:subTab*`,
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',

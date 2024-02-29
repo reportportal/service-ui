@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call, take } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call, take, takeLatest } from 'redux-saga/effects';
 import {
   fetchDataAction,
   createFetchPredicate,
@@ -25,16 +25,18 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
+import { userFiltersSelector } from 'controllers/project/selectors';
 import {
-  userFiltersSelector,
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
-  FETCH_PROJECT_PREFERENCES_SUCCESS,
-} from 'controllers/project';
-import { launchDistinctSelector } from 'controllers/launch';
+} from 'controllers/project/actionCreators';
+import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants';
+import { launchDistinctSelector } from 'controllers/launch/selectors';
+import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
+import { redirect } from 'redux-first-router';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -49,14 +51,16 @@ import {
   RESET_FILTER,
   FETCH_FILTERS_PAGE,
   COPY_PREFIX,
+  PARSE_QUERY_TO_FILTER_ENTITY,
 } from './constants';
-import { querySelector, launchFiltersSelector } from './selectors';
+import { querySelector, launchFiltersSelector, filterFromQuerySelector } from './selectors';
 import {
   addFilterAction,
   changeActiveFilterAction,
   updateFilterSuccessAction,
   removeFilterAction,
   setPageLoadingAction,
+  createFilterFromParsedQueryAction,
 } from './actionCreators';
 
 function* fetchFilters() {
@@ -103,15 +107,17 @@ function* updateLaunchesFilter({ payload: filter }) {
   );
 }
 
-function* changeActiveFilter({ payload: filterId }) {
+function* changeActiveFilter({ payload: filterId, meta }) {
   const activeProject = yield select(activeProjectSelector);
-  yield put({
+  const action = {
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
       projectId: activeProject,
       filterId,
     },
-  });
+  };
+
+  yield put(meta.redirect ? redirect(action) : action);
 }
 
 function* resetFilter({ payload: filterId }) {
@@ -120,7 +126,7 @@ function* resetFilter({ payload: filterId }) {
   yield put(updateFilterSuccessAction(savedFilter));
 }
 
-function* createFilter({ payload: filter = {} }) {
+function* createFilter({ payload: filter = {}, meta = {} }) {
   const launchFilters = yield select(launchFiltersSelector);
   const userId = yield select(userIdSelector);
   const lastNewFilterId = launchFilters.reduce(
@@ -137,7 +143,7 @@ function* createFilter({ payload: filter = {} }) {
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
-  yield put(changeActiveFilterAction(newFilter.id));
+  yield put(changeActiveFilterAction(newFilter.id, meta));
 }
 
 function* saveNewFilter({ payload: filter }) {
@@ -172,6 +178,15 @@ function* saveNewFilter({ payload: filter }) {
   );
   yield put(updateProjectFilterPreferencesAction(newFilter.id, 'PUT'));
   yield put(changeActiveFilterAction(newId));
+}
+
+function* parseQueryToFilterEntity() {
+  const filterConditions = yield select(filterFromQuerySelector);
+  if (filterConditions) {
+    yield put(createFilterFromParsedQueryAction(filterConditions));
+  } else {
+    yield put(fetchLaunchesAction());
+  }
 }
 
 function* watchFetchFilters() {
@@ -229,6 +244,10 @@ function* watchFetchFiltersPage() {
   yield takeEvery(FETCH_FILTERS_PAGE, fetchFiltersPage);
 }
 
+function* watchParseQueryToFilterEntity() {
+  yield takeLatest(PARSE_QUERY_TO_FILTER_ENTITY, parseQueryToFilterEntity);
+}
+
 export function* filterSagas() {
   yield all([
     watchFetchFilters(),
@@ -240,5 +259,6 @@ export function* filterSagas() {
     watchSaveNewFilter(),
     watchRemoveFilter(),
     watchFetchFiltersPage(),
+    watchParseQueryToFilterEntity(),
   ]);
 }

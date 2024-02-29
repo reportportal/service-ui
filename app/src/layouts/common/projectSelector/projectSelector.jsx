@@ -127,6 +127,7 @@ export class ProjectSelector extends Component {
                   ref(node);
                   this.controlNode = node;
                 }}
+                tabIndex={0}
                 className={cx('current-project-block')}
                 onClick={this.toggleShowList}
               >

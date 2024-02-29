@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,20 @@
  */
 
 .integration-form {
+  margin-top: 32px;
+  margin-left: 24px;
   width: 100%;
   max-width: 450px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 100%;
     margin-bottom: 30px;
+  }
+
+  &.configuration-not-specified-view {
+    align-self: center;
+    margin-left: 0;
+    margin-top: 54px;
   }
 }
 
@@ -33,23 +41,24 @@
 }
 
 .block-header {
-  margin-bottom: 20px;
-  color: $COLOR--black-2;
-  font-size: 20px;
-  font-family: $FONT-SEMIBOLD;
+  margin-bottom: 16px;
+  color: $COLOR--almost-black;
+  font-size: 15px;
+  line-height: 24px;
+  font-family: $FONT-ROBOTO-MEDIUM;
 }
 
 .configuration-not-specified-info {
-  color: $COLOR--gray-60;
-  font-size: 13px;
+  color: $COLOR--e-400;
+  font-size: 20px;
   font-family: $FONT-REGULAR;
-  line-height: 1.54;
+  line-height: 31px;
+  text-align: center;
 }
 
 .controls-block {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
+  margin-top: 20px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;

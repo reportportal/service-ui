@@ -22,7 +22,7 @@ import {
   SETTINGS_INITIAL_STATE,
   START_TIME_FORMAT_ABSOLUTE,
   SET_PHOTO_TIME_STAMP,
-  ASSIGN_TO_RROJECT_SUCCESS,
+  ASSIGN_TO_PROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   SET_API_KEYS,
 } from './constants';
@@ -145,7 +145,7 @@ describe('user reducer', () => {
       expect(userAssignedProjectReducer(oldState, { type: 'foo' })).toBe(oldState);
     });
 
-    test('should handle ASSIGN_TO_RROJECT_SUCCESS', () => {
+    test('should handle ASSIGN_TO_PROJECT_SUCCESS', () => {
       const payloadProject = {
         projectName: 'superadmin_personal',
         entryType: 'INTERNAL',
@@ -163,7 +163,7 @@ describe('user reducer', () => {
       };
       expect(
         userAssignedProjectReducer(oldState, {
-          type: ASSIGN_TO_RROJECT_SUCCESS,
+          type: ASSIGN_TO_PROJECT_SUCCESS,
           payload: payloadProject,
         }),
       ).toEqual(assignResult);

@@ -22,8 +22,13 @@ import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
 import { DemoBanner } from './demoBanner';
 
-const AppLayoutComponent = ({ children, isDemoInstance }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={isDemoInstance ? DemoBanner : null}>
+const AppLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
+  <Layout
+    Header={AppHeader}
+    Sidebar={AppSidebar}
+    Banner={isDemoInstance ? DemoBanner : null}
+    rawContent={rawContent}
+  >
     {children}
   </Layout>
 );
@@ -31,10 +36,12 @@ const AppLayoutComponent = ({ children, isDemoInstance }) => (
 AppLayoutComponent.propTypes = {
   children: PropTypes.node,
   isDemoInstance: PropTypes.bool,
+  rawContent: PropTypes.bool,
 };
 AppLayoutComponent.defaultProps = {
   children: null,
   isDemoInstance: false,
+  rawContent: false,
 };
 
 export const AppLayout = connect((state) => ({

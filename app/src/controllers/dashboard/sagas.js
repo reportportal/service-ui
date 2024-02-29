@@ -33,7 +33,7 @@ import {
 } from 'controllers/pages';
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
-import { analyticsEnabledSelector } from 'controllers/appInfo';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -95,10 +95,15 @@ function* fetchDashboard() {
   }
 
   if (isAnalyticsEnabled && dashboard && dashboard.widgets.length) {
+    const baseEventParameters = yield select(baseEventParametersSelector);
+
     provideEcGA({
-      name: 'addImpression',
-      data: formatEcDashboardData(dashboard),
-      action: 'impression',
+      eventName: 'view_item_list',
+      baseEventParameters,
+      additionalParameters: {
+        item_list_name: dashboard.id,
+        items: formatEcDashboardData(dashboard),
+      },
     });
   }
 }

@@ -31,6 +31,7 @@ import {
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { ApiKeys } from './apiKeys';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
@@ -76,6 +77,7 @@ const getNavigationTabsConfig = (formatMessage) => ({
     name: formatMessage(messages.profilePageProjectApiKeysTab),
     link: getProfilePageLink(API_KEYS_ROUTE),
     component: <ApiKeys />,
+    eventInfo: PROFILE_EVENTS.CLICK_API_KEYS_TAB_EVENT,
   },
   [CONFIG_EXAMPLES_ROUTE]: {
     name: formatMessage(messages.profilePageConfigurationExamplesTab),
@@ -111,10 +113,8 @@ export class ProfilePage extends Component {
       <PageHeader breadcrumbs={this.getBreadcrumbs()} />
       <div className={cx('container')}>
         <section className={cx('content-wrapper')}>
-          <div>
-            <div className={cx('section-wrapper')}>
-              <PersonalInfoBlock />
-            </div>
+          <div className={cx('section-wrapper')}>
+            <PersonalInfoBlock />
             <NavigationTabs
               config={getNavigationTabsConfig(this.props.intl.formatMessage)}
               activeTab={this.props.activeTab}

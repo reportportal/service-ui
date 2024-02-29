@@ -14,28 +14,43 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter, fetch } from 'common/utils';
 import { loginAction } from 'controllers/auth';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
+import { uiExtensionRegistrationPageSelector } from 'controllers/plugins/uiExtensions';
+import { ExtensionLoader } from 'components/extensionLoader';
+import { pagePropertiesSelector } from 'controllers/pages';
 import { RegistrationPage } from './registrationPage';
 
-@connect(null, {
-  loginAction,
-  showNotification,
-})
+const TYPE_SIGNUP = 'signup';
+
+@connect(
+  (state) => ({
+    extensions: uiExtensionRegistrationPageSelector(state),
+    pageProps: pagePropertiesSelector(state),
+  }),
+  {
+    loginAction,
+    showNotification,
+  },
+)
 @connectRouter(({ uuid }) => ({ uuid }))
 export class RegistrationPageContainer extends Component {
   static propTypes = {
     uuid: PropTypes.string,
     loginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    extensions: PropTypes.array,
+    pageProps: PropTypes.object,
   };
   static defaultProps = {
     uuid: undefined,
+    extensions: [],
+    pageProps: {},
   };
 
   state = {
@@ -90,13 +105,34 @@ export class RegistrationPageContainer extends Component {
 
   render() {
     const uuid = this.props.uuid;
-    return !uuid || this.state.isLoadingFinished ? (
-      <RegistrationPage
-        tokenProvided={Boolean(uuid)}
-        tokenActive={this.state.isTokenActive}
-        email={this.state.email}
-        onRegistrationSubmit={this.registrationHandler}
-      />
-    ) : null;
+    const {
+      extensions,
+      pageProps: { type },
+    } = this.props;
+
+    return (
+      !uuid ||
+      (this.state.isLoadingFinished &&
+        (type === TYPE_SIGNUP && extensions.length !== 0 ? (
+          extensions.map((extension) => (
+            <ExtensionLoader
+              components={{ RegistrationPage }}
+              tokenProvided={Boolean(uuid)}
+              tokenActive={this.state.isTokenActive}
+              uuid={uuid}
+              extension={extension}
+              withPreloader
+              silentOnError={false}
+            />
+          ))
+        ) : (
+          <RegistrationPage
+            tokenProvided={Boolean(uuid)}
+            tokenActive={this.state.isTokenActive}
+            email={this.state.email}
+            onRegistrationSubmit={this.registrationHandler}
+          />
+        )))
+    );
   }
 }

@@ -15,7 +15,7 @@
  */
 
 import { all, select, put, takeEvery } from 'redux-saga/effects';
-import { MONITORING, SETTINGS, MEMBERS } from 'common/constants/projectSections';
+import { MONITORING, MEMBERS } from 'common/constants/projectSections';
 import { projectSectionSelector, projectIdSelector } from 'controllers/pages';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchMembersAction } from 'controllers/members';
@@ -26,7 +26,6 @@ import { FETCH_PROJECT_DATA } from './constants';
 
 const pageDataActions = {
   [MONITORING]: fetchEventsAction,
-  [SETTINGS]: fetchProjectAction,
   [MEMBERS]: fetchMembersAction,
 };
 function* fetchProjectData() {

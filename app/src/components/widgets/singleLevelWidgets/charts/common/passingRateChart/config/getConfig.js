@@ -15,7 +15,7 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { STATS_PASSED } from 'common/constants/statistics';
+import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { IssueTypeStatTooltip } from '../../issueTypeStatTooltip';
 import { getPercentage, getChartViewModeOptions, calculateTooltipParams } from './utils';
@@ -31,24 +31,30 @@ export const getConfig = ({
   onRendered,
   viewMode,
   onChartClick,
+  includeSkipped,
 }) => {
-  const totalItems = content.total;
+  const totalItems = includeSkipped ? content.total : content.total - (content.skipped ?? 0);
+  const statisticKey = includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED;
+  const notPassed = totalItems - content.passed;
+
   const columnData = {
     [STATS_PASSED]: content.passed,
-    [NOT_PASSED_STATISTICS_KEY]: totalItems - content.passed,
+    [statisticKey]: notPassed,
   };
+
   const columns = [
     [STATS_PASSED, columnData[STATS_PASSED]],
-    [NOT_PASSED_STATISTICS_KEY, columnData[NOT_PASSED_STATISTICS_KEY]],
+    [statisticKey, columnData[statisticKey]],
   ];
+
   const chartData = {
     columns,
     type: viewMode,
-    groups: [[STATS_PASSED, NOT_PASSED_STATISTICS_KEY]],
+    groups: [[STATS_PASSED, statisticKey]],
     order: null,
     colors: {
       [STATS_PASSED]: COLORS.COLOR_PASSED,
-      [NOT_PASSED_STATISTICS_KEY]: COLORS.COLOR_NOTPASSED,
+      [statisticKey]: COLORS.COLOR_NOTPASSED,
     },
     labels: {
       show: !isPreview,

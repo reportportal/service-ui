@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,142 +14,135 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import classNames from 'classnames/bind';
+import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import track from 'react-tracking';
+import { defineMessages, useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ModalLayout, withModal } from 'components/main/modal';
-import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
+import { withModal } from 'components/main/modal';
+import { ModalLayout } from 'componentLibrary/modal';
+import { hideModalAction } from 'controllers/modal';
+import { SystemMessage } from 'componentLibrary/systemMessage';
+import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations/formFieldComponentsMap';
+import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
+import { ExtensionLoader } from 'components/extensionLoader';
+import { INTEGRATION_FORM } from 'components/integrations/elements';
+import { useTracking } from 'react-tracking';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { connect } from 'react-redux';
-import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins/uiExtensions/selectors';
-import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
+import styles from './addIntegrationModal.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  createManualTitle: {
-    id: 'AddIntegrationModal.createManualTitle',
-    defaultMessage: 'Create manual integration',
+  globalIntegrationsSystemMessageModalCaption: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption',
+    defaultMessage: 'Global and Project Integrations can’t work at the same time.',
+  },
+  globalIntegrationsSystemMessageModalText: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalText',
+    defaultMessage:
+      'Note that Global integrations will be unlinked if you create a Project Integration!',
+  },
+  createProjectTitle: {
+    id: 'AddIntegrationModal.createProjectTitle',
+    defaultMessage: 'Create Project Integration',
   },
   createGlobalTitle: {
     id: 'AddIntegrationModal.createGlobalTitle',
-    defaultMessage: 'Create global integration',
+    defaultMessage: 'Create Global Integration',
   },
-  editAuthTitle: {
-    id: 'AddIntegrationModal.editAuthTitle',
-    defaultMessage: 'Edit authorization',
+  editProjectIntegrationTitle: {
+    id: 'AddIntegrationModal.editProjectIntegrationTitle',
+    defaultMessage: 'Edit Project Integration',
+  },
+  editGlobalIntegrationTitle: {
+    id: 'AddIntegrationModal.editGlobalIntegrationTitle',
+    defaultMessage: 'Edit Global Integration',
   },
 });
 
-@withModal('addIntegrationModal')
-@reduxForm({
-  form: INTEGRATION_FORM,
-})
-@connect((state) => ({
-  fieldsExtensions: uiExtensionIntegrationFormFieldsSelector(state),
-}))
-@injectIntl
-@track()
-export class AddIntegrationModal extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
-    dirty: PropTypes.bool.isRequired,
-    fieldsExtensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        pluginName: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        component: PropTypes.func.isRequired,
-      }),
-    ),
-    data: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
+const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
+  const [metaData, setMetaData] = useState({});
+  const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const { onConfirm, customProps, isGlobal } = data;
+  const integrationFieldsExtension = fieldsExtensions.find(
+    (ext) => ext.pluginName === data.instanceType,
+  );
+
+  const updateMetaData = (newMetaData) => {
+    setMetaData({ ...metaData, ...newMetaData });
   };
 
-  static defaultProps = {
-    fieldsExtensions: [],
-    data: {},
-  };
-
-  state = {
-    metaData: {},
-  };
-
-  getCloseConfirmationConfig = () => {
-    if (!this.props.dirty) {
-      return null;
+  const onSubmit = (newData) => {
+    if (isGlobal && !customProps.editAuthMode) {
+      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
     }
-    return {
-      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
-    };
+
+    onConfirm(newData, metaData);
   };
 
-  updateMetaData = (metaData) => {
-    this.setState({
-      metaData: {
-        ...this.state.metaData,
-        ...metaData,
-      },
-    });
+  const okButton = {
+    text: customProps.editAuthMode
+      ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+      : formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    onClick: () => handleSubmit(onSubmit)(),
+  };
+  const cancelButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
-  onSubmit = (data) => {
-    this.props.data.onConfirm(data, this.state.metaData);
-    this.props.tracking.trackEvent(
-      PLUGINS_PAGE_EVENTS.clickSaveEditAuthorizationBtn(this.props.data.instanceType),
-    );
-  };
+  const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
+  const editTitle = isGlobal
+    ? messages.editGlobalIntegrationTitle
+    : messages.editProjectIntegrationTitle;
 
-  render() {
-    const {
-      intl: { formatMessage },
-      data: { instanceType, isGlobal, customProps = {}, eventsInfo = {} },
-      handleSubmit,
-      initialize,
-      change,
-      fieldsExtensions,
-    } = this.props;
+  const FieldsComponent =
+    INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
+    (integrationFieldsExtension && ExtensionLoader);
 
-    const createTitle = isGlobal
-      ? formatMessage(messages.createGlobalTitle)
-      : formatMessage(messages.createManualTitle);
-    const integrationFieldsExtension = fieldsExtensions.find(
-      (ext) => ext.pluginName === instanceType,
-    );
-    const FieldsComponent =
-      INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType] ||
-      (integrationFieldsExtension && integrationFieldsExtension.component);
+  return (
+    <ModalLayout
+      title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      onClose={() => dispatch(hideModalAction())}
+      allowCloseOutside={!dirty}
+    >
+      {data.hasWarningMessage && (
+        <SystemMessage
+          header={formatMessage(COMMON_LOCALE_KEYS.warning)}
+          mode="warning"
+          caption={formatMessage(messages.globalIntegrationsSystemMessageModalCaption)}
+        >
+          {formatMessage(messages.globalIntegrationsSystemMessageModalText)}
+        </SystemMessage>
+      )}
 
-    return (
-      <ModalLayout
-        title={customProps.editAuthMode ? formatMessage(messages.editAuthTitle) : createTitle}
-        okButton={{
-          text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-          onClick: handleSubmit(this.onSubmit),
-          eventInfo: eventsInfo.saveBtn,
-        }}
-        cancelButton={{
-          text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-          eventInfo: eventsInfo.cancelBtn,
-        }}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
-      >
+      <div className={cx('content')}>
         <FieldsComponent
           initialize={initialize}
           change={change}
-          updateMetaData={this.updateMetaData}
-          lineAlign
+          updateMetaData={updateMetaData}
+          extension={integrationFieldsExtension}
           {...customProps}
         />
-      </ModalLayout>
-    );
-  }
-}
+      </div>
+    </ModalLayout>
+  );
+};
+AddIntegrationModal.propTypes = {
+  data: PropTypes.object,
+  initialize: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  dirty: PropTypes.bool.isRequired,
+};
+
+export default withModal('addIntegrationModal')(
+  reduxForm({ form: INTEGRATION_FORM })(AddIntegrationModal),
+);

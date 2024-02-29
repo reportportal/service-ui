@@ -205,7 +205,7 @@ export class AllUsersPage extends Component {
   confirmDeleteItems = (items) => {
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.user(), {
+    fetch(URLS.users(), {
       method: 'delete',
       data: {
         ids,

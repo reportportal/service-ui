@@ -62,6 +62,15 @@ const messages = defineMessages({
     id: 'LogsGridToolbar.hidePassedLogs',
     defaultMessage: 'Hide All Passed Logs',
   },
+  errorLogs: {
+    id: 'LogsGridToolbar.errorLogs',
+    defaultMessage:
+      '{count, plural, =0 {No Error Logs} one {{totalItems} Error Log} other {{currentItem} of {totalItems} Error Logs}}',
+  },
+  showErrorLog: {
+    id: 'LogsGridToolbar.showErrorLog',
+    defaultMessage: 'Show',
+  },
 });
 
 @injectIntl

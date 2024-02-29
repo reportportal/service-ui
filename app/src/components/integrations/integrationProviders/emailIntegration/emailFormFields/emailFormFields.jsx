@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,11 @@ import {
 } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { IntegrationFormField, INTEGRATION_FORM } from 'components/integrations/elements';
+import { Checkbox } from 'componentLibrary/checkbox';
+import { INTEGRATION_FORM } from 'components/integrations/elements';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { FieldText } from 'componentLibrary/fieldText';
+import { Dropdown } from 'componentLibrary/dropdown';
 import {
   DEFAULT_FORM_CONFIG,
   AUTH_ENABLED_KEY,
@@ -134,92 +135,102 @@ export class EmailFormFields extends Component {
       intl: { formatMessage },
       authEnabled,
       disabled,
-      lineAlign,
     } = this.props;
 
     return (
       <Fragment>
-        <IntegrationFormField
+        <FieldElement
           name={HOST_KEY}
-          required
-          disabled={disabled}
           label={formatMessage(messages.hostLabel)}
           validate={commonValidators.requiredField}
-          lineAlign={lineAlign}
+          disabled={disabled}
+          className={cx('fields')}
+          isRequired
         >
-          <FieldErrorHint>
-            <Input mobileDisabled />
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
+        </FieldElement>
+        <FieldElement
           name={PROTOCOL_KEY}
-          disabled={disabled}
           label={formatMessage(messages.protocolLabel)}
-          lineAlign={lineAlign}
+          disabled={disabled}
+          className={cx('fields')}
         >
-          <InputDropdown options={this.protocolOptions} mobileDisabled />
-        </IntegrationFormField>
-        <IntegrationFormField
+          <FieldErrorHint provideHint={false}>
+            <Dropdown options={this.protocolOptions} defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
           name={FROM_KEY}
-          disabled={disabled}
           label={formatMessage(messages.fromLabel)}
-          lineAlign={lineAlign}
-        >
-          <Input mobileDisabled />
-        </IntegrationFormField>
-        <IntegrationFormField
-          name={PORT_KEY}
-          required
           disabled={disabled}
+          className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name={PORT_KEY}
           label={formatMessage(messages.portLabel)}
+          validate={portValidator}
+          disabled={disabled}
           format={this.formatPortValue}
           normalize={this.normalizeValue}
-          lineAlign={lineAlign}
-          validate={portValidator}
+          className={cx('fields')}
+          isRequired
         >
-          <FieldErrorHint>
-            <Input maxLength="5" mobileDisabled />
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} maxLength={5} />
           </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name={AUTH_ENABLED_KEY}
+        </FieldElement>
+        <FieldElement
+          name={USERNAME_KEY}
+          label={formatMessage(messages.usernameLabel)}
           disabled={disabled}
+          className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name={AUTH_ENABLED_KEY}
           label={formatMessage(messages.authLabel)}
+          disabled={disabled}
           format={Boolean}
-          lineAlign={lineAlign}
           onChange={this.onChangeAuthAvailability}
         >
-          <InputDropdown options={this.authOptions} mobileDisabled />
-        </IntegrationFormField>
+          <FieldErrorHint provideHint={false}>
+            <Dropdown options={this.authOptions} defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
         {authEnabled && (
-          <Fragment>
-            <IntegrationFormField
-              name={USERNAME_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.usernameLabel)}
-              lineAlign={lineAlign}
-            >
-              <Input mobileDisabled />
-            </IntegrationFormField>
-            <IntegrationFormField
-              name={PASSWORD_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.passwordLabel)}
-              lineAlign={lineAlign}
-            >
-              <Input type="password" mobileDisabled />
-            </IntegrationFormField>
-          </Fragment>
+          <FieldElement
+            name={PASSWORD_KEY}
+            label={formatMessage(messages.passwordLabel)}
+            disabled={disabled}
+            className={cx('fields')}
+          >
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                defaultWidth={false}
+                type="password"
+                placeholder={formatMessage(messages.passwordLabel)}
+              />
+            </FieldErrorHint>
+          </FieldElement>
         )}
-        <div className={cx('checkboxes-container', { 'line-align': lineAlign })}>
+        <div className={cx('checkboxes-container')}>
           <div className={cx('checkbox-wrapper')}>
             <FieldProvider name={TLS_KEY} disabled={disabled} format={Boolean}>
-              <InputCheckbox>TLS</InputCheckbox>
+              <Checkbox>TLS</Checkbox>
             </FieldProvider>
           </div>
           <div className={cx('checkbox-wrapper')}>
             <FieldProvider name={SSL_KEY} disabled={disabled} format={Boolean}>
-              <InputCheckbox>SSL</InputCheckbox>
+              <Checkbox>SSL</Checkbox>
             </FieldProvider>
           </div>
         </div>

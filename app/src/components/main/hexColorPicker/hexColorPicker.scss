@@ -1,0 +1,119 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.hex-color-picker {
+  :global {
+    .react-colorful {
+      width: 100%;
+      border-radius: 0;
+      background-color: $COLOR--white-two;
+    }
+
+    .react-colorful__saturation {
+      height: 215px;
+      border-radius: 0;
+    }
+
+    .react-colorful__last-control {
+      width: 90%;
+      height: 16px;
+      margin-top: 8px;
+      margin-left: 20px;
+      border-radius: 4px;
+    }
+
+    .react-colorful__saturation-pointer {
+      width: 18px;
+      height: 18px;
+      border-width: 3px;
+    }
+
+    .react-colorful__hue-pointer {
+      width: 14px;
+      height: 14px;
+      border-width: 2px;
+    }
+  }
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--almost-black;
+}
+
+.section {
+  background-color: $COLOR--white-two;
+  padding-bottom: 18px;
+  border-radius: 0 0 8px 8px;
+}
+
+.hex-color-presets {
+  width: 92%;
+  display: flex;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+.hex-color-preset {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+  border: none;
+  padding: 0;
+  border-radius: 2.67px;
+  cursor: pointer;
+  outline: none;
+
+  &.current {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    cursor: initial;
+  }
+}
+
+.hex-color-input-wrapper {
+  width: 91%;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 21px 20px 24px;
+  color: $COLOR--almost-black;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.hex-color-input-wrapper > input {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding: 7px 12px;
+  width: 70%;
+  height: 36px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $COLOR--e-200;
+  border-radius: 3px;
+  background: $COLOR--bg-000;
+  box-sizing: border-box;
+  transition: border-color 200ms linear;
+  color: $COLOR--almost-black;
+  font-family: $FONT-ROBOTO-REGULAR;
+  text-transform: uppercase;
+}

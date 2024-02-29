@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,17 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { commonValidators } from 'common/utils/validation';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { IntegrationFormField } from 'components/integrations/elements';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { FieldText } from 'componentLibrary/fieldText';
+import styles from './sauceLabsFormFields.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   userNameTitle: {
@@ -91,41 +95,44 @@ export class SauceLabsFormFields extends Component {
     const {
       intl: { formatMessage },
       disabled,
-      lineAlign,
     } = this.props;
 
     return (
       <Fragment>
-        <IntegrationFormField
+        <FieldElement
           name="username"
-          disabled={disabled}
           label={formatMessage(messages.userNameTitle)}
           validate={commonValidators.requiredField}
-          lineAlign={lineAlign}
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="accessToken"
           disabled={disabled}
+          className={cx('fields')}
+          isRequired
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name="accessToken"
           label={formatMessage(messages.accessTokenTitle)}
           validate={commonValidators.requiredField}
-          lineAlign={lineAlign}
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="dataCenter"
           disabled={disabled}
-          label={formatMessage(messages.dataCenter)}
-          lineAlign={lineAlign}
+          className={cx('fields')}
+          isRequired
         >
-          <InputDropdown options={this.dataCenterOptions} mobileDisabled />
-        </IntegrationFormField>
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name="dataCenter"
+          label={formatMessage(messages.dataCenter)}
+          disabled={disabled}
+          className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <Dropdown options={this.dataCenterOptions} defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
       </Fragment>
     );
   }

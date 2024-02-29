@@ -118,7 +118,9 @@ export class EmptyUniqueErrors extends Component {
       return (
         <>
           <p className={cx('empty-unique-errors-headline')}>
-            {formatMessage(messages.emptyUniqueErrHeadline)}
+            {lastRunAnalysis
+              ? formatMessage(messages.noUniqueErrHeadline)
+              : formatMessage(messages.noUniqueErrRunHeadline)}
           </p>
 
           <p className={cx('empty-unique-errors-text')}>

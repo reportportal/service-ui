@@ -30,6 +30,7 @@ export const InputCheckbox = ({
   iconTransparentBackground,
   className,
   darkView,
+  responsive,
 }) => (
   // eslint-disable-next-line
   <label className={cx('input-checkbox', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
@@ -46,8 +47,11 @@ export const InputCheckbox = ({
       checked={value}
       transparentBackground={iconTransparentBackground}
       darkView={darkView}
+      responsive={responsive}
     />
-    {children && <span className={cx('children-container', { disabled })}>{children}</span>}
+    {children && (
+      <span className={cx('children-container', { disabled, responsive })}>{children}</span>
+    )}
   </label>
 );
 InputCheckbox.propTypes = {
@@ -60,6 +64,7 @@ InputCheckbox.propTypes = {
   iconTransparentBackground: PropTypes.bool,
   className: PropTypes.string,
   darkView: PropTypes.bool,
+  responsive: PropTypes.bool,
 };
 InputCheckbox.defaultProps = {
   children: '',
@@ -71,4 +76,5 @@ InputCheckbox.defaultProps = {
   iconTransparentBackground: false,
   className: '',
   darkView: false,
+  responsive: false,
 };

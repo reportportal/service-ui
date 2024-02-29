@@ -1,0 +1,155 @@
+/*
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin option-state($color, $bgcolor) {
+  color: $color;
+  .tag {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: $bgcolor;
+  }
+
+  .value {
+    border: 1px solid $bgcolor;
+  }
+}
+
+@mixin draw-button-border($displayValue, $width) {
+  content: '';
+  display: block;
+  position: absolute;
+  width: $width;
+  height: 25px;
+  border-radius: 4px;
+  border: 1px solid $COLOR--topaz-focused;
+  top: 0;
+  left: 0;
+  transform: translate(-2px, -2px);
+}
+
+@mixin button-active-state($width) {
+  .button-active:not(.disabled, :hover) {
+    position: relative;
+    color: $COLOR--topaz-focused;
+
+    &::after {
+      @include draw-button-border(block, $width);
+    }
+
+    svg * {
+      fill: $COLOR--topaz-focused;
+    }
+  }
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+}
+
+.divider {
+  display: block;
+  height: 1px;
+  margin: 0 12px;
+  background: $COLOR--e-100;
+}
+
+.new-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item, .new-item {
+  min-height: 36px;
+  padding: 4px 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  &.active, &:hover {
+    background-color: $COLOR--bg-100;
+  }
+
+  &.active:not(:hover) {
+    border: 1px solid $COLOR--topaz-focused;
+    padding: 3px 11px;
+  }
+}
+
+.value {
+  display: inline-block;
+  height: 28px;
+  max-width: 50%;
+  padding: 4px 8px;
+  font-size: 13px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.key-variant {
+  @include option-state($COLOR--tag-key-text, $COLOR--tag-key-background);
+
+  &.active:hover {
+    background-color: $COLOR--bg-200;
+  }
+
+  &:not(:hover) {
+    @include button-active-state(80px);
+  }
+}
+
+.value-variant {
+  @include option-state($COLOR--tag-value-text, $COLOR--tag-value-background);
+
+  &.active:hover {
+    background-color: $COLOR--bg-200;
+  }
+
+  &:not(:hover) {
+    @include button-active-state(88px);
+  }
+}
+
+.dark {
+  &.item, &.new-item {
+    background-color: transparent;
+    color: $COLOR--darkmode-gray-100;
+
+    &.active, &:hover {
+      background-color: $COLOR--darkmode-bg-solid-98;
+    }
+
+    &.active {
+      color: $COLOR--darkmode-topaz-text;
+    }
+
+    &:hover {
+      color: $COLOR--bg-000;
+    }
+  }
+
+  &.divider {
+    background-color: $COLOR--darkmode-gray-200;
+  }
+}

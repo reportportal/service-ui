@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
+import { createSelector } from 'reselect';
+import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
-  ANALYICS_INSTANCE_KEY,
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+} from 'controllers/project/selectors';
+import {
+  ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
   OLD_HISTORY_KEY,
   GA_MEASUREMENT_ID,
@@ -43,7 +50,7 @@ const apiJobsSelector = (state) => apiInfoSelector(state).jobs || {};
 const extensionsSelector = (state) => apiInfoSelector(state).extensions || {};
 const extensionsConfigSelector = (state) => extensionsSelector(state).result || {};
 export const instanceIdSelector = (state) =>
-  extensionsConfigSelector(state)[ANALYICS_INSTANCE_KEY] || '';
+  extensionsConfigSelector(state)[ANALYTICS_INSTANCE_KEY] || '';
 export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
@@ -53,9 +60,34 @@ export const isOldHistorySelector = (state) =>
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
 export const flushDataInSelector = (state) =>
   (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;
-
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
+export const baseEventParametersSelector = createSelector(
+  instanceIdSelector,
+  apiBuildVersionSelector,
+  idSelector,
+  autoAnalysisEnabledSelector,
+  patternAnalysisEnabledSelector,
+  projectInfoIdSelector,
+  isAdminSelector,
+  (
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  ) => ({
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectInfoId,
+    isAdmin,
+  }),
+);

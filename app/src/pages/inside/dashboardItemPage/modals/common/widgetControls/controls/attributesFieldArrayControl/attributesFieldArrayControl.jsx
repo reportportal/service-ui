@@ -129,7 +129,7 @@ export class AttributesFieldArrayControl extends Component {
                 <span
                   className={cx('remove-icon')}
                   onClick={() => {
-                    this.numberRemainingLevels = this.numberRemainingLevels + 1;
+                    this.numberRemainingLevels += 1;
                     return fields.remove(index);
                   }}
                 >
@@ -144,7 +144,7 @@ export class AttributesFieldArrayControl extends Component {
             <div
               className={cx('add-level')}
               onClick={() => {
-                this.numberRemainingLevels = this.numberRemainingLevels - 1;
+                this.numberRemainingLevels -= 1;
                 return fields.push('');
               }}
             >

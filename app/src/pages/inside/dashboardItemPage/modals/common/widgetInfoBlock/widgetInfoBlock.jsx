@@ -49,6 +49,7 @@ export class WidgetInfoBlock extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { filterIds = [], contentParameters = { widgetOptions: {} } } = this.props.widgetSettings;
+
     if (prevProps.activeWidget.id !== this.props.activeWidget.id) {
       this.resetPrevWidgetData();
       return;

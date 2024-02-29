@@ -18,14 +18,12 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_NOTIFICATIONS_CONFIG,
-  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  UPDATE_DEFECT_SUBTYPE,
-  UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  ADD_DEFECT_SUBTYPE,
-  ADD_DEFECT_SUBTYPE_SUCCESS,
-  DELETE_DEFECT_SUBTYPE,
-  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_DEFECT_TYPE,
+  UPDATE_DEFECT_TYPE_SUCCESS,
+  ADD_DEFECT_TYPE,
+  ADD_DEFECT_TYPE_SUCCESS,
+  DELETE_DEFECT_TYPE,
+  DELETE_DEFECT_TYPE_SUCCESS,
   ADD_PATTERN,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN,
@@ -39,6 +37,17 @@ import {
   SHOW_FILTER_ON_LAUNCHES,
   HIDE_FILTER_ON_LAUNCHES,
   UPDATE_PROJECT_FILTER_PREFERENCES,
+  ADD_PROJECT_NOTIFICATION,
+  ADD_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_NOTIFICATION_STATE,
+  UPDATE_PROJECT_NOTIFICATION,
+  DELETE_PROJECT_NOTIFICATION,
+  FETCH_PROJECT_NOTIFICATIONS,
+  FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  SET_PROJECT_NOTIFICATION_LOADING,
+  FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -54,16 +63,6 @@ export const fetchProjectPreferencesSuccessAction = (preferences) => ({
 export const updateConfigurationAttributesAction = (project) => ({
   type: UPDATE_CONFIGURATION_ATTRIBUTES,
   payload: project.configuration.attributes,
-});
-
-export const updateProjectNotificationsConfigAction = (config) => ({
-  type: UPDATE_NOTIFICATIONS_CONFIG,
-  payload: config,
-});
-
-export const updateProjectNotificationsConfigSuccessAction = (config) => ({
-  type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  payload: config,
 });
 
 export const updateProjectFilterPreferencesAction = (filterId, method) => ({
@@ -96,34 +95,34 @@ export const fetchConfigurationAttributesAction = (projectId) => ({
   payload: projectId,
 });
 
-export const updateDefectSubTypeAction = (subType) => ({
-  type: UPDATE_DEFECT_SUBTYPE,
-  payload: subType,
+export const updateDefectTypeAction = (defectType) => ({
+  type: UPDATE_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const updateDefectSubTypeSuccessAction = (subType) => ({
-  type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const updateDefectTypeSuccessAction = (defectType) => ({
+  type: UPDATE_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
-export const addDefectSubTypeAction = (subType) => ({
-  type: ADD_DEFECT_SUBTYPE,
-  payload: subType,
+export const addDefectTypeAction = (defectType) => ({
+  type: ADD_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const addDefectSubTypeSuccessAction = (subType) => ({
-  type: ADD_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const addDefectTypeSuccessAction = (defectType) => ({
+  type: ADD_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
-export const deleteDefectSubTypeAction = (subType) => ({
-  type: DELETE_DEFECT_SUBTYPE,
-  payload: subType,
+export const deleteDefectTypeAction = (defectType) => ({
+  type: DELETE_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const deleteDefectSubTypeSuccessAction = (subType) => ({
-  type: DELETE_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const deleteDefectTypeSuccessAction = (defectType) => ({
+  type: DELETE_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
 export const addPatternAction = (pattern) => ({
@@ -159,4 +158,58 @@ export const deletePatternSuccessAction = (pattern) => ({
 export const updatePAStateAction = (PAState) => ({
   type: UPDATE_PA_STATE,
   payload: PAState,
+});
+
+export const fetchProjectNotificationsAction = () => ({
+  type: FETCH_PROJECT_NOTIFICATIONS,
+});
+
+export const fetchProjectNotificationsSuccessAction = (notifications) => ({
+  type: FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  payload: notifications,
+});
+
+export const addProjectNotificationAction = (notification) => ({
+  type: ADD_PROJECT_NOTIFICATION,
+  payload: notification,
+});
+
+export const addProjectNotificationSuccessAction = (notification) => ({
+  type: ADD_PROJECT_NOTIFICATION_SUCCESS,
+  payload: notification,
+});
+
+export const updateNotificationStateAction = (notificationState) => ({
+  type: UPDATE_NOTIFICATION_STATE,
+  payload: notificationState,
+});
+
+export const updateProjectNotificationAction = (notification) => ({
+  type: UPDATE_PROJECT_NOTIFICATION,
+  payload: notification,
+});
+
+export const updateProjectNotificationSuccessAction = (notification) => ({
+  type: UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  payload: notification,
+});
+
+export const deleteProjectNotificationAction = (id) => ({
+  type: DELETE_PROJECT_NOTIFICATION,
+  payload: id,
+});
+
+export const deleteProjectNotificationSuccessAction = (id) => ({
+  type: DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  payload: id,
+});
+
+export const setProjectNotificationsLoadingAction = (loading) => ({
+  type: SET_PROJECT_NOTIFICATION_LOADING,
+  payload: loading,
+});
+
+export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
+  type: FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  payload,
 });

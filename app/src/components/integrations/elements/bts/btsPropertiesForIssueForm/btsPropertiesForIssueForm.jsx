@@ -21,7 +21,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { projectIdSelector } from 'controllers/pages';
 import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -30,8 +30,13 @@ import {
   COMMAND_GET_ISSUE_FIELDS,
 } from 'controllers/plugins/uiExtensions/constants';
 import { URLS } from 'common/urls';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { withPopover } from 'componentLibrary/popover';
+import Parser from 'html-react-parser';
+import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { InputWithEye } from 'components/inputs/inputWithEye';
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
@@ -40,7 +45,6 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
-import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
 
@@ -63,7 +67,31 @@ const messages = defineMessages({
     id: 'DefaultPropertiesForIssueForm.showFieldsHeader',
     defaultMessage: 'Show',
   },
+  tooltip: {
+    id: 'DefaultPropertiesForIssueForm.tooltip',
+    defaultMessage: 'Fields for posting issues to your BTS',
+  },
 });
+
+const Popover = ({ formatMessage }) => (
+  <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>
+);
+Popover.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+};
+
+const IconShow = () => {
+  return <i>{Parser(InfoIcon)}</i>;
+};
+
+const ShowWithPopover = withPopover({
+  ContentComponent: Popover,
+  side: 'bottom',
+  arrowPosition: 'middle',
+})(IconShow);
+ShowWithPopover.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+};
 
 @connect(
   (state) => ({
@@ -186,7 +214,8 @@ export class BtsPropertiesForIssueForm extends Component {
         let selectedIssueTypeValue = [];
         if (defectFormFields && defectFormFields.length) {
           selectedIssueTypeValue =
-            (defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY) || {}).value || [];
+            (defectFormFields.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {})
+              .value || [];
         }
         selectedIssueTypeValue = selectedIssueTypeValue[0] || issueTypes[0];
         this.changeIssueTypeConfig(issueTypes, selectedIssueTypeValue);
@@ -195,18 +224,16 @@ export class BtsPropertiesForIssueForm extends Component {
       .catch(this.catchError);
   };
 
-  getCustomBLockConfig = (field) => {
-    const customBlock = (
-      <InputCheckbox
-        onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
-        value={field.checked}
-        disabled={field.required || this.props.disabled}
-      />
+  getAvailabilityControl = (field) => {
+    return (
+      <div className={cx('checkbox-wrapper')}>
+        <InputWithEye
+          onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
+          value={field.checked}
+          disabled={field.required || this.props.disabled}
+        />
+      </div>
     );
-    return {
-      node: customBlock,
-      wrapperClassName: cx('checkbox-wrapper'),
-    };
   };
 
   setupInitialFieldsConfig = () => {
@@ -258,10 +285,11 @@ export class BtsPropertiesForIssueForm extends Component {
     const updatedFields = [...fields];
 
     updatedFields.forEach((field, index) => {
+      const checked = checkedFieldsIds[field.id] || field.required;
       updatedFields[index] = {
         ...updatedFields[index],
-        checked: checkedFieldsIds[field.id] || field.required,
-        disabled: field.id === ISSUE_TYPE_FIELD_KEY ? true : disabled,
+        checked,
+        disabled: field.fieldType === ISSUE_TYPE_FIELD_KEY ? true : disabled || !checked,
       };
     });
 
@@ -272,10 +300,13 @@ export class BtsPropertiesForIssueForm extends Component {
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
       const { defectFormFields } = this.props.initialData;
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
+
       let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {
-        const savedIssueType = defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY);
+        const savedIssueType = defectFormFields.find(
+          (item) => item.fieldType === ISSUE_TYPE_FIELD_KEY,
+        );
         if (
           !savedIssueType ||
           (savedIssueType.value && savedIssueType.value[0] === issueTypeValue)
@@ -378,51 +409,70 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled } = this.props;
+    const { intl, disabled, integrationId, pluginName, projectName, projectInfo } = this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
+    const integrationInfo = {
+      integrationId,
+      projectName: projectName || projectInfo.projectName,
+      pluginName,
+    };
 
     return (
       <div className={cx('bts-properties-for-issue-form')}>
         {loading && !this.state.issueType ? (
-          <SpinningPreloader />
+          <BubblesPreloader customClassName={cx('center')} />
         ) : (
           <Fragment>
-            <h4 className={cx('default-properties-title')}>
-              {!disabled
-                ? intl.formatMessage(messages.availableIssueTypesHeader)
-                : intl.formatMessage(messages.defaultIssueFormPropsHeader)}
-            </h4>
             {!disabled && (
               <Fragment>
-                <IntegrationFormField label="Issue Type" required withoutProvider>
-                  <InputDropdown
-                    value={this.state.issueType}
-                    onChange={this.handleIssueTypeChange}
-                    mobileDisabled
-                    options={this.issueTypeDropdownOptions}
-                  />
-                </IntegrationFormField>
-                <h4 className={cx('default-properties-title')}>
-                  {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
-                </h4>
+                <FieldElement
+                  label="Issue Type"
+                  disabled={loading}
+                  withoutProvider
+                  description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                >
+                  <FieldErrorHint provideHint={false}>
+                    <Dropdown
+                      value={this.state.issueType}
+                      onChange={this.handleIssueTypeChange}
+                      options={this.issueTypeDropdownOptions}
+                      defaultWidth={false}
+                    />
+                  </FieldErrorHint>
+                </FieldElement>
+                <div className={cx('default-property-block')}>
+                  <h4 className={cx('default-properties-title')}>
+                    {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
+                  </h4>
+                  <div className={cx('show-hint-wrapper')}>
+                    <span className={cx('show-hint-text')}>
+                      {intl.formatMessage(messages.showFieldsHeader)}
+                    </span>
+                    <ShowWithPopover formatMessage={intl.formatMessage} />
+                  </div>
+                </div>
               </Fragment>
             )}
             {loading ? (
-              <SpinningPreloader />
+              <BubblesPreloader customClassName={cx('center')} />
             ) : (
               <Fragment>
-                <div className={cx('show-hint-wrapper')}>
-                  <span className={cx('show-hint')}>
-                    {intl.formatMessage(messages.showFieldsHeader)}
-                  </span>
-                </div>
                 <DynamicFieldsSection
                   fields={preparedFields}
-                  customBlockCreator={this.getCustomBLockConfig}
-                  customFieldWrapper={IntegrationFormField}
+                  customBlockCreator={this.getAvailabilityControl}
                   defaultOptionValueKey={this.defaultOptionValueKey}
-                />
+                  integrationInfo={integrationInfo}
+                >
+                  {disabled && (
+                    <div className={cx('show-hint-wrapper')}>
+                      <span className={cx('show-hint-text')}>
+                        {intl.formatMessage(messages.showFieldsHeader)}
+                      </span>
+                      <ShowWithPopover formatMessage={intl.formatMessage} />
+                    </div>
+                  )}
+                </DynamicFieldsSection>
               </Fragment>
             )}
           </Fragment>

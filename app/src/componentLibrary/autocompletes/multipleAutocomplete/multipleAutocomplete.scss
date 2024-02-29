@@ -1,0 +1,148 @@
+/*
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin container($borderColor, $backgroundColor) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 3px 12px;
+  box-sizing: border-box;
+  border: 1px solid $borderColor;
+  border-radius: 3px;
+  background-color: $backgroundColor;
+  transition: border-color 200ms linear;
+}
+
+@mixin hover-state($borderColor) {
+  &:hover:not(.disabled) {
+    border-color: $borderColor;
+  }
+}
+
+@mixin focus-state($borderColor) {
+  &:focus-within:not(.error.touched) {
+    padding: 2px 11px;
+    border: 2px solid $borderColor;
+  }
+}
+
+@mixin error-state($borderColor) {
+  border-color: $borderColor;
+}
+
+@mixin fill-svg($color) {
+  svg {
+    & > rect {
+      fill: $color;
+    }
+  }
+}
+
+.autocomplete {
+  @include container($COLOR--e-200, $COLOR--bg-000);
+  @include hover-state($COLOR--e-300);
+  @include focus-state($COLOR--topaz-focused);
+
+  &.disabled {
+    background-color: $COLOR--bg-100;
+  }
+
+  &.error.touched {
+    @include error-state($COLOR--red-failed-2);
+  }
+}
+
+.autocomplete-input {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
+
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-right: 0;
+    }
+  }
+}
+
+.input {
+  flex-grow: 1;
+  padding: 0;
+  margin-top: 2px;
+  border: 0;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  color: $COLOR--almost-black;
+  box-sizing: border-box;
+  outline: none;
+  background-color: transparent;
+
+  &::placeholder {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-indent: inherit;
+    color: $COLOR--e-300;
+  }
+
+  &:-webkit-autofill {
+    box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
+  }
+
+  &.type-number::-webkit-inner-spin-button,
+  &.type-number::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      background-color: $COLOR--gray-91;
+      pointer-events: none;
+    }
+  }
+}
+
+.error-text {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--red-failed-2;
+}
+
+.dark {
+  &.autocomplete {
+    @include hover-state($COLOR--darkmode-gray-150);
+    @include focus-state($COLOR--darkmode-topaz-focused);
+    background-color: $COLOR--darkmode-bg-solid-96;
+    border-color: $COLOR--darkmode-gray-200;
+  }
+
+  .input {
+    color: $COLOR--bg-000;
+  }
+
+  &.error.touched {
+    @include error-state($COLOR--darkmode-error-default);
+  }
+}

@@ -1,0 +1,57 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.breadcrumb {
+  display: inline-block;
+  width: auto;
+  height: 100%;
+}
+
+.breadcrumb-text {
+  display: inline-block;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--e-300;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.link .breadcrumb-text {
+  &:hover {
+    color: $COLOR--topaz-hover-2;
+  }
+}
+
+.breadcrumb-text::before {
+  float: right;
+  content: attr(data-tail);
+}
+
+.breadcrumb + .breadcrumb::before {
+  content: '';
+  display: inline-block;
+  height: 20px;
+  width: 12px;
+  background-image: url(../img/arrow.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0 4px;
+}

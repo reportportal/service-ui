@@ -53,8 +53,8 @@ export class LogItemActivity extends Component {
     }).isRequired,
   };
 
-  isAnalyzerActivity = ({ actionType }) =>
-    actionType === 'analyze_item' || actionType === 'link_issue_aa';
+  isAnalyzerActivity = ({ event_name: eventName }) =>
+    eventName === 'analyze_item' || eventName === 'link_issue_aa';
 
   trackClickOnHistoryRelevantItemLink = () =>
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_HISTORY_RELEVANT_ITEM_LINK);
@@ -67,13 +67,13 @@ export class LogItemActivity extends Component {
       <div className={cx('activity-item')} key={activityItem.id}>
         {isAnalyzerActivity ? (
           <div className={cx('analyzer-user-column', 'column')}>
-            <span className={cx('analyzer-user')}>{activityItem.user}</span>{' '}
+            <span className={cx('analyzer-user')}>{activityItem.subject_name}</span>{' '}
             <span className={cx('action')}>{getActionMessage(intl, activityItem)}</span>
           </div>
         ) : (
           <Fragment>
             <div className={cx('user-column', 'column')}>
-              <OwnerBlock owner={activityItem.user} />
+              <OwnerBlock owner={activityItem.subject_name} />
             </div>
             <div className={cx('action-column', 'column')}>
               <span className={cx('action')}>{getActionMessage(intl, activityItem)}</span>
@@ -82,7 +82,7 @@ export class LogItemActivity extends Component {
         )}
         <div className={cx('time-column', 'column')}>
           <span className={cx('time')}>
-            <AbsRelTime startTime={activityItem.lastModified} />
+            <AbsRelTime startTime={activityItem.created_at} />
           </span>
         </div>
         <div className={cx('history-column', 'column')}>

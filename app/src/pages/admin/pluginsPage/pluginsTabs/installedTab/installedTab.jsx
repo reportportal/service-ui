@@ -67,7 +67,7 @@ const messages = defineMessages({
   disablePluginMessage: {
     id: 'PluginItem.disablePluginMessage',
     defaultMessage:
-      'Are you sure you want to disable a plugin {pluginName}? If you disable plugin, information about it will be hidden on the Project Settings and users can not interact with it',
+      'Are you sure you want to disable a plugin {pluginName}? If you disable plugin, information about it will be hidden on the {pluginLocation} and users can not interact with it',
   },
   enablePluginTitle: {
     id: 'PluginItem.enablePluginTitle',
@@ -115,7 +115,7 @@ export class InstalledTab extends Component {
     } = this.props;
     const toggleActive = !itemData.enabled;
 
-    return fetch(URLS.pluginUpdate(itemData.type), {
+    return fetch(URLS.pluginById(itemData.type), {
       method: 'PUT',
       data: {
         enabled: toggleActive,
@@ -153,7 +153,7 @@ export class InstalledTab extends Component {
     });
   };
 
-  showDisablePluginModal = (pluginName, callback) => {
+  showDisablePluginModal = (pluginName, pluginLocation, callback) => {
     const {
       intl: { formatMessage },
     } = this.props;
@@ -161,7 +161,7 @@ export class InstalledTab extends Component {
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.disablePluginMessage, { pluginName }),
+        message: formatMessage(messages.disablePluginMessage, { pluginName, pluginLocation }),
         onConfirm: callback,
         dangerConfirm: true,
         title: formatMessage(messages.disablePluginTitle),
@@ -171,9 +171,14 @@ export class InstalledTab extends Component {
     });
   };
 
-  showToggleConfirmationModal = (isEnabled, pluginName, callback) => {
+  showToggleConfirmationModal = (
+    isEnabled,
+    pluginName,
+    callback,
+    pluginLocation = 'Project Settings',
+  ) => {
     isEnabled
-      ? this.showDisablePluginModal(pluginName, callback)
+      ? this.showDisablePluginModal(pluginName, pluginLocation, callback)
       : this.showEnablePluginModal(pluginName, callback);
   };
 

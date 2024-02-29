@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
-import { STATS_PASSED } from 'common/constants/statistics';
+import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
 import { getConfig, NOT_PASSED_STATISTICS_KEY } from './config/getConfig';
@@ -65,6 +65,7 @@ export class PassingRateChart extends Component {
       getConfig,
       onChartClick,
       viewMode: contentParameters.widgetOptions.viewMode,
+      includeSkipped: contentParameters.widgetOptions.includeSkipped,
       onRendered: this.resizeHelper,
     };
   };
@@ -110,10 +111,12 @@ export class PassingRateChart extends Component {
   render() {
     const { widget } = this.props;
     const viewMode = widget.contentParameters.widgetOptions.viewMode;
+    const includeSkipped = widget.contentParameters.widgetOptions.includeSkipped;
+    const items = [STATS_PASSED, includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED];
     const legendConfig = {
       showLegend: true,
       legendProps: {
-        items: [STATS_PASSED, NOT_PASSED_STATISTICS_KEY],
+        items,
         clickable: false,
         customBlock: this.getCustomBlock(),
       },

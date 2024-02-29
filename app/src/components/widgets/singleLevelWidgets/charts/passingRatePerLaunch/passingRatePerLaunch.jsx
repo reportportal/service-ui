@@ -47,10 +47,23 @@ export class PassingRatePerLaunch extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getStatisticsLink, project } = this.props;
+    const {
+      widget,
+      getStatisticsLink,
+      project,
+      widget: {
+        contentParameters: {
+          widgetOptions: { includeSkipped },
+        },
+      },
+    } = this.props;
     const launchId = widget.content.result.id;
+    const linkCreationParametersForFailed = includeSkipped
+      ? [FAILED, INTERRUPTED, SKIPPED]
+      : [FAILED, INTERRUPTED];
+    const statuses = data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed;
     const link = getStatisticsLink({
-      statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
+      statuses,
     });
     const navigationParams = getDefaultTestItemLinkParams(project, ALL, launchId);
 

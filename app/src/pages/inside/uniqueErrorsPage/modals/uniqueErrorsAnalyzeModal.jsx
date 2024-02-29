@@ -31,7 +31,7 @@ import { ModalField, ModalLayout } from 'components/main/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import classNames from 'classnames/bind';
-import { messages } from 'pages/inside/uniqueErrorsPage';
+import { messages } from 'pages/inside/uniqueErrorsPage/messages';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

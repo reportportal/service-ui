@@ -53,7 +53,9 @@ ProjectTypeColumn.defaultProps = {
 };
 
 export const OrganizationColumn = ({ className, value }) => (
-  <div className={cx('projects-col', className)}>{value.organization}</div>
+  <div className={cx('projects-col', className)} title={value.organization}>
+    {value.organization}
+  </div>
 );
 OrganizationColumn.propTypes = {
   className: PropTypes.string.isRequired,

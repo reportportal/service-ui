@@ -29,7 +29,13 @@ module.exports = {
     '^layouts[/](.+)': '<rootDir>/src/layouts/$1',
   },
   notify: false,
-  collectCoverageFrom: ['src/common/**/*.js', '!src/common/urls.js', '!src/common/polyfills.js'],
+  collectCoverageFrom: [
+    'src/componentLibrary/dropdown/utils.js',
+    'src/common/**/*.js',
+    '!src/common/urls.js',
+    '!src/common/polyfills.js',
+    '!src/common/hooks/*.js',
+  ],
   coverageThreshold: {
     global: {
       branches: 60,

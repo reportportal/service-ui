@@ -30,6 +30,7 @@ import {
   isBtsPluginsExistSelector,
   isPostIssueActionAvailable,
 } from 'controllers/plugins';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
@@ -241,13 +242,14 @@ export const SelectDefectManually = ({
     <div className={cx('select-defect-wrapper')}>
       {!isBulkOperation && defectTypeExtensions.length
         ? defectTypeExtensions.map((extension) => (
-            <extension.component
+            <ExtensionLoader
               key={extension.name}
+              extension={extension}
               item={itemData}
               updateExtraAnalyticsParams={updateExtraAnalyticsParams}
             >
               {createDefectTypesBlock}
-            </extension.component>
+            </ExtensionLoader>
           ))
         : createDefectTypesBlock()}
       <div className={cx('defect-comment')}>
@@ -270,8 +272,9 @@ export const SelectDefectManually = ({
         />
         {!isBulkOperation &&
           defectCommentExtensions.map((extension) => (
-            <extension.component
+            <ExtensionLoader
               key={extension.name}
+              extension={extension}
               onChangeComment={handleDefectCommentChange}
               comment={source.issue.comment}
               item={itemData}

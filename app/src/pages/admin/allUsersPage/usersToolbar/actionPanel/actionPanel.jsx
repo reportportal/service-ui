@@ -115,7 +115,7 @@ export class ActionPanel extends Component {
   };
 
   addUser = (values) => {
-    fetch(URLS.user(), {
+    fetch(URLS.users(), {
       method: 'post',
       data: {
         accountRole: values.accountRole,

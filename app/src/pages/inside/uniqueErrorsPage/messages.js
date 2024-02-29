@@ -29,9 +29,13 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErr.button',
     defaultMessage: 'Run Unique Error Analysis',
   },
-  emptyUniqueErrHeadline: {
-    id: 'EmptyUniqueErr.headline',
+  noUniqueErrHeadline: {
+    id: 'EmptyUniqueErr.noUniqueErrHeadline',
     defaultMessage: 'No Unique Errors',
+  },
+  noUniqueErrRunHeadline: {
+    id: 'EmptyUniqueErr.noUniqueErrRunHeadline',
+    defaultMessage: 'No unique error analysis was run',
   },
   emptyUniqueErrText: {
     id: 'EmptyUniqueErr.text',
@@ -50,7 +54,7 @@ export const messages = defineMessages({
   },
   uniqueErrAnalyzeModalText: {
     id: 'EmptyUniqueErrsAnalyzeModal.text',
-    defaultMessage: 'Choose the base on witch the Unique Error Analysis will be performed:',
+    defaultMessage: 'Choose the base on which the Unique Error Analysis will be performed:',
   },
   uniqueErrAnalyzeModalFieldName: {
     id: 'EmptyUniqueErrsAnalyzeModal.fieldName',

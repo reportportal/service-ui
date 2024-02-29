@@ -42,6 +42,7 @@ import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { RetriesCounter } from './retriesCounter';
@@ -67,7 +68,7 @@ const ItemNameTooltip = withTooltip({
 @injectIntl
 @connect((state) => ({
   sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
-  extensionComponents: uiExtensionLaunchItemComponentsSelector(state),
+  extensions: uiExtensionLaunchItemComponentsSelector(state),
   isStepLevel: isStepLevelSelector(state),
 }))
 @track()
@@ -81,7 +82,7 @@ export class ItemInfo extends Component {
     isStepLevel: PropTypes.bool,
     hideEdit: PropTypes.bool,
     widgetView: PropTypes.bool,
-    extensionComponents: PropTypes.array,
+    extensions: PropTypes.arrayOf(extensionType),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -105,7 +106,7 @@ export class ItemInfo extends Component {
     widgetView: false,
     onClickRetries: () => {},
     refFunction: null,
-    extensionComponents: [],
+    extensions: [],
     hideDescription: false,
   };
 
@@ -142,7 +143,7 @@ export class ItemInfo extends Component {
       tracking,
       onClickRetries,
       customProps,
-      extensionComponents,
+      extensions,
       hideDescription,
     } = this.props;
 
@@ -199,8 +200,13 @@ export class ItemInfo extends Component {
         <div className={cx('additional-info')}>
           {value.status !== IN_PROGRESS &&
             customProps.withExtensions &&
-            extensionComponents.map((extensionComponent) => (
-              <extensionComponent.component key={extensionComponent.name} item={value} />
+            extensions.map((extension) => (
+              <ExtensionLoader
+                key={extension.name}
+                extension={extension}
+                item={value}
+                withPreloader
+              />
             ))}
           {value.startTime && (
             <span className={cx('duration-block')}>

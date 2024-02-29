@@ -21,6 +21,9 @@ import {
   TEXT_TYPE,
   VALUE_ID_KEY,
   VALUE_NAME_KEY,
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -49,7 +52,11 @@ export const mergeFields = (savedFields, fetchedFields) =>
 export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldKey) => {
   const valuesMap = {};
   fields.forEach((field) => {
-    valuesMap[field.id] = field.value;
+    const isAutocomplete =
+      field.fieldType === AUTOCOMPLETE_TYPE ||
+      field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
+      field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
+    valuesMap[field.id] = isAutocomplete ? field.namedValue : field.value;
     if (field.fieldType === predefinedFieldKey && predefinedFieldValue) {
       valuesMap[field.id] = [predefinedFieldValue];
     }
@@ -58,15 +65,24 @@ export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldK
 };
 
 export const getFieldComponent = (field) => {
-  let fieldType = null;
+  let fieldType = TEXT_TYPE;
+
   if (field.fieldType === ARRAY_TYPE && field.definedValues && field.definedValues.length) {
     fieldType = ARRAY_TYPE;
   } else if (field.fieldType === DATE_TYPE || field.fieldType.toLowerCase() === 'datetime') {
     fieldType = DATE_TYPE;
   } else if (field.definedValues && field.definedValues.length && field.fieldType !== ARRAY_TYPE) {
     fieldType = DROPDOWN_TYPE;
-  } else {
-    fieldType = TEXT_TYPE;
+  } else if (field.commandName) {
+    if (field.fieldType === AUTOCOMPLETE_TYPE) {
+      fieldType = AUTOCOMPLETE_TYPE;
+    }
+    if (field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE) {
+      fieldType = MULTIPLE_AUTOCOMPLETE_TYPE;
+    }
+    if (field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE) {
+      fieldType = CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
+    }
   }
 
   return FIELDS_MAP[fieldType];

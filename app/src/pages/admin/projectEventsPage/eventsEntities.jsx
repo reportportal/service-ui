@@ -66,8 +66,7 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
-  START_IMPORT,
-  FINISH_IMPORT,
+  ACTIONS_WITH_IMPORT,
   UPDATE_ITEM,
   LINK_ISSUE_AA,
   ANALYZE_ITEM,
@@ -75,6 +74,15 @@ import {
   UPDATE_PATTERN,
   DELETE_PATTERN,
   MATCHED_PATTERN,
+  CREATE_INVITATION_LINK,
+  ASSIGN_USER,
+  UNASSIGN_USER,
+  CHANGE_ROLE,
+  UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  CREATE_PROJECT,
+  IMPORT as EVENT_ACTIONS_IMPORT,
+  START_IMPORT,
+  FINISH_IMPORT,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -94,6 +102,8 @@ import {
   ITEM_ISSUE_FILTERING_OPTION,
   PATTERN_RULE_FILTERING_OPTION,
   INDEX,
+  INVITATION_LINK,
+  INVITATION_LINK_FILTERING_OPTION,
 } from 'common/constants/eventsObjectTypes';
 
 import {
@@ -160,6 +170,10 @@ export class EventsEntities extends Component {
         customProps: {
           multiple: true,
           selectAll: true,
+          actionToGroup: {
+            [START_IMPORT]: ACTIONS_WITH_IMPORT,
+            [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
+          },
           options: [
             {
               label: intl.formatMessage(actionMessages[CREATE_DASHBOARD]),
@@ -254,6 +268,22 @@ export class EventsEntities extends Component {
               value: UNLINK_ISSUE,
             },
             {
+              label: intl.formatMessage(actionMessages[ASSIGN_USER]),
+              value: ASSIGN_USER,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UNASSIGN_USER]),
+              value: UNASSIGN_USER,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CHANGE_ROLE]),
+              value: CHANGE_ROLE,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
+              value: CREATE_INVITATION_LINK,
+            },
+            {
               label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
               value: GENERATE_INDEX,
             },
@@ -262,12 +292,8 @@ export class EventsEntities extends Component {
               value: DELETE_INDEX,
             },
             {
-              label: intl.formatMessage(actionMessages[START_IMPORT]),
-              value: START_IMPORT,
-            },
-            {
-              label: intl.formatMessage(actionMessages[FINISH_IMPORT]),
-              value: FINISH_IMPORT,
+              label: intl.formatMessage(actionMessages[EVENT_ACTIONS_IMPORT]),
+              value: ACTIONS_WITH_IMPORT,
             },
             {
               label: intl.formatMessage(actionMessages[UPDATE_ITEM]),
@@ -280,6 +306,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[ANALYZE_ITEM]),
               value: ANALYZE_ITEM,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
+              value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
             },
             {
               label: intl.formatMessage(actionMessages[CREATE_PATTERN]),
@@ -296,6 +326,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
               value: MATCHED_PATTERN,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_PROJECT]),
+              value: CREATE_PROJECT,
             },
           ],
         },
@@ -357,6 +391,10 @@ export class EventsEntities extends Component {
               value: USER,
             },
             {
+              label: intl.formatMessage(objectTypesMessages[INVITATION_LINK]),
+              value: INVITATION_LINK_FILTERING_OPTION,
+            },
+            {
               label: intl.formatMessage(objectTypesMessages[WIDGET]),
               value: WIDGET,
             },
@@ -400,9 +438,9 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.projectUsernamesSearch(activeProject),
+          getURI: URLS.searchEventsBySubjectName(activeProject),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
-          minLength: 3,
+          minLength: 1,
         },
       },
     ];

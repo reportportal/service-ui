@@ -29,7 +29,7 @@ import styles from './launchAnalysisModal.scss';
 
 const {
   ANALYZER_MODE,
-  ANALYZER_MODE: { ALL, LAUNCH_NAME, CURRENT_LAUNCH },
+  ANALYZER_MODE: { ALL, LAUNCH_NAME, CURRENT_LAUNCH, PREVIOUS_LAUNCH, CURRENT_AND_THE_SAME_NAME },
   ANALYZE_ITEMS_MODE,
   ANALYZE_ITEMS_MODE: { TO_INVESTIGATE, AUTO_ANALYZED, MANUALLY_ANALYZED },
 } = LAUNCH_ANALYZE_TYPES;
@@ -55,15 +55,23 @@ const messages = defineMessages({
   },
   ALL: {
     id: 'launchAnalysisModal.baseOptions.allLaunches',
-    defaultMessage: 'All launches',
+    defaultMessage: 'All previous launches',
   },
   LAUNCH_NAME: {
     id: 'launchAnalysisModal.baseOptions.withSameName',
-    defaultMessage: 'Launches with the same name',
+    defaultMessage: 'All previous launches with the same name',
   },
   CURRENT_LAUNCH: {
     id: 'launchAnalysisModal.baseOptions.current',
     defaultMessage: 'Only current launch',
+  },
+  PREVIOUS_LAUNCH: {
+    id: 'launchAnalysisModal.baseOptions.previousLaunch',
+    defaultMessage: 'Only previous launch with the same name',
+  },
+  CURRENT_AND_THE_SAME_NAME: {
+    id: 'launchAnalysisModal.baseOptions.currentAndWithSameName',
+    defaultMessage: 'Current and all previous launches with the same name',
   },
   TO_INVESTIGATE: {
     id: 'launchAnalysisModal.itemOptions.investigate',
@@ -101,7 +109,13 @@ export class LaunchAnalysisModal extends Component {
     data: PropTypes.shape({
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,
-      analyzerMode: PropTypes.oneOf([ALL, LAUNCH_NAME, CURRENT_LAUNCH]).isRequired,
+      analyzerMode: PropTypes.oneOf([
+        ALL,
+        LAUNCH_NAME,
+        CURRENT_LAUNCH,
+        PREVIOUS_LAUNCH,
+        CURRENT_AND_THE_SAME_NAME,
+      ]).isRequired,
     }).isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

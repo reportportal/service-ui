@@ -54,6 +54,8 @@ export const UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS = 'updatePatternAnalysisSetti
 export const DELETE_PATTERN = 'deletePattern';
 export const MATCHED_PATTERN = 'patternMatched';
 export const CREATE_PROJECT = 'createProject';
+export const CREATE_INVITATION_LINK = 'createInvitationLink';
+export const IMPORT = 'import';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';

@@ -18,11 +18,15 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const DEFAULT_API_URL_PREFIX = '/api/v1';
-export const UAT_API_URL_PREFIX = '/uat';
-export const COMPOSITE_API_URL_PREFIX = '/composite/';
+export const UAT_API_PATH = '/uat';
+
+export const DEFAULT_API_URL_PREFIX = '../api/v1';
+export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
+export const UAT_API_URL_PREFIX = '../uat';
+export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
+const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
@@ -97,6 +101,7 @@ export const URLS = {
   choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
+  launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (activeProject) => `${urlBase}${activeProject}/launch`,
@@ -120,15 +125,15 @@ export const URLS = {
   login: () => `${uatBase}sso/oauth/token`,
   sessionToken: () => `${uatBase}sso/me`,
 
-  apiKeys: (userId) => `${urlBase}user/${userId}/api-keys`,
-  apiKeyById: (userId, apiKeyId) => `${urlBase}user/${userId}/api-keys/${apiKeyId}`,
+  apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
+  apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
-  projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
-  projectDeleteDefectSubType: (activeProject, id) =>
+  projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
+  projectDeleteDefectType: (activeProject, id) =>
     `${urlBase}${activeProject}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
@@ -142,7 +147,7 @@ export const URLS = {
       term: searchTerm,
     })}`,
   searchUsers: (term) =>
-    `${urlBase}user/search${getQueryParams({
+    `${urlCommonBase}users/search${getQueryParams({
       term,
     })}`,
   projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
@@ -165,9 +170,11 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  projectNotificationConfiguration: (activeProject) =>
-    `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
+
+  notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
+  notificationById: (activeProject, notificationId) =>
+    `${urlBase}${activeProject}/settings/notification/${notificationId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
   testItemsWithProviderType: (activeProject, ids) =>
@@ -230,17 +237,17 @@ export const URLS = {
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
-  user: () => `${urlBase}user`,
-  userRegistration: () => `${urlBase}user/registration`,
-  userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
-  userPasswordReset: () => `${urlBase}user/password/reset`,
-  userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
-  userPasswordRestore: () => `${urlBase}user/password/restore`,
-  userChangePassword: () => `${urlBase}user/password/change`,
+  users: () => `${urlCommonBase}users`,
+  userRegistration: () => `${urlCommonBase}users/registration`,
+  userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
+  userPasswordReset: () => `${urlCommonBase}users/password/reset`,
+  userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
+  userPasswordRestore: () => `${urlCommonBase}users/password/restore`,
+  userChangePassword: () => `${urlCommonBase}users/password/change`,
   userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
-  userInfo: (userId) => `${urlBase}user/${userId}`,
+  userInfo: (userId) => `${urlCommonBase}users/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
-  userInviteExternal: () => `${urlBase}user/bid`,
+  userInviteExternal: () => `${urlCommonBase}users/bid`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
@@ -251,10 +258,12 @@ export const URLS = {
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlBase}activities/searches`,
-  allUsers: () => `${urlBase}user/all`,
+  searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
+    `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
+  allUsers: () => `${urlCommonBase}users/all`,
 
   exportUsers: (filterEntities) =>
-    `${urlBase}user/export${getQueryParams({
+    `${urlCommonBase}users/export${getQueryParams({
       view: 'csv',
       ...createFilterQuery(filterEntities),
     })}`,
@@ -262,9 +271,13 @@ export const URLS = {
   appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
-  pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
+  pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
+  pluginPublic: () => `${urlBase}plugin/public`,
+  pluginPublicFile: (pluginName, fileKey) =>
+    `${urlBase}plugin/public/${pluginName}/file/${fileKey}`,
   pluginCommandCommon: (projectId, pluginName, command) =>
     `${urlBase}plugin/${projectId}/${pluginName}/common/${command}`,
+  pluginCommandPublic: (pluginName, command) => `${urlBase}plugin/public/${pluginName}/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>

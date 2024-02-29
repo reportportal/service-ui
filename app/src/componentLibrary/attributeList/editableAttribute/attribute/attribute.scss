@@ -1,0 +1,163 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin draw-attribute-border($width, $height, $translateX: 0, $translateY: 0) {
+  &:not(.disabled, :active) {
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+      width: $width;
+      height: $height;
+      border-radius: 6px;
+      border: 2px solid $COLOR--topaz-focused;
+      transform: translate($translateX, $translateY);
+    }
+  }
+}
+
+@mixin attribute($bgColor, $bgHover) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  background-color: $bgColor;
+  border-radius: 6px;
+  cursor: pointer;
+  box-sizing: border-box;
+  max-width: 100%;
+  column-gap: 8px;
+
+  &:hover:not(:focus-visible) {
+    background-color: $bgHover;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+@mixin label($color) {
+  display: inline-block;
+  color: $color;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 4px 8px;
+
+  .key,
+  .value,
+  .value-without-key {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 20px;
+    vertical-align: middle;
+  }
+
+  .separator {
+    display: inline-block;
+    margin: auto 4px;
+  }
+
+  .value-without-key {
+    width: 100%;
+  }
+}
+
+@mixin disabled-state($color, $bgColor) {
+  &.disabled {
+    background-color: $bgColor;
+    cursor: default;
+
+    & .label {
+      color: $color;
+    }
+  }
+}
+
+@mixin remove-icon($color) {
+  flex: none;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  margin-right: 8px;
+  line-height: 8px;
+
+  svg {
+    fill: $color;
+  }
+}
+
+.hover-light {
+  background-color: $COLOR--e-100 !important;
+}
+
+.hover-dark {
+  background-color: $COLOR--darkmode-gray-300 !important;
+}
+
+.light {
+  &.attribute {
+    @include attribute($COLOR--bg-200, $COLOR--e-100);
+    @include disabled-state($COLOR--almost-black, $COLOR--bg-200);
+
+    &:focus-visible {
+      @include draw-attribute-border(calc(100% - 2px), 85%);
+      background-color: $COLOR--e-100;
+    }
+  }
+  &.label {
+    position: relative;
+    @include label($COLOR--almost-black);
+
+    &:focus:not(.disabled),
+    &:focus-visible:not(.disabled) {
+      outline: none;
+      @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);
+      background-color: $COLOR--e-100;
+    }
+  }
+  &.remove-icon {
+    position: relative;
+    @include remove-icon($COLOR--almost-black);
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      @include draw-attribute-border(120%, 140%, -3px, -4px);
+      background-color: $COLOR--e-100;
+    }
+  }
+}
+
+.dark {
+  &.attribute {
+    @include attribute($COLOR--darkmode-gray-200, $COLOR--darkmode-gray-300);
+    @include disabled-state($COLOR--darkmode-gray-50, $COLOR--darkmode-gray-300);
+  }
+  &.label {
+    @include label($COLOR--darkmode-gray-50);
+  }
+  &.remove-icon {
+    @include remove-icon($COLOR--darkmode-gray-50);
+  }
+}

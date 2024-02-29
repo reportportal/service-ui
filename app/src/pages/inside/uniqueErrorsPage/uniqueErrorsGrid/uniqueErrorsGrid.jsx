@@ -26,6 +26,7 @@ import { useIntl } from 'react-intl';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from 'controllers/uniqueErrors';
 import { querySelector } from 'controllers/pages';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
@@ -60,10 +61,10 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
   ];
 
   if (extensions.length) {
-    extensions.forEach((extensionComponent) => {
+    extensions.forEach((extension) => {
       columns.push({
         title: {
-          component: extensionComponent.component,
+          component: (params) => <ExtensionLoader extension={extension} {...params} />,
         },
       });
     });

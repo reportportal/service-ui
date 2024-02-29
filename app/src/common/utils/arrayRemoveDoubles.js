@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export const arrayRemoveDoubles = (arr) =>
+export const arrayRemoveDoubles = (arr = []) =>
   arr.filter((elem, index, self) => index === self.indexOf(elem));

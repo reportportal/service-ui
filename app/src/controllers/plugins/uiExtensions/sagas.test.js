@@ -217,11 +217,11 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchUiExtensions,
       ).done;
       expect(fetch).toHaveBeenCalledTimes(2);
-      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/testProject/123/getFile', {
+      expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/123/getFile', {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
-      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/testProject/124/getFile', {
+      expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/124/getFile', {
         method: 'PUT',
         data: { fileKey: 'main' },
       });

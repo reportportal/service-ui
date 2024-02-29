@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { UAT_API_URL_PREFIX } from 'common/urls';
+import { UAT_API_PATH } from 'common/urls';
 
 export const normalizePathWithPrefix = (path) => {
-  if (path.indexOf(UAT_API_URL_PREFIX) === -1) {
-    return `${UAT_API_URL_PREFIX}${path}`;
+  if (path.indexOf(UAT_API_PATH) === -1) {
+    return `${UAT_API_PATH}${path}`;
   }
   return path;
 };
 
 export const setWindowLocationToNewPath = (path) => {
-  window.location = `${window.location.protocol}//${window.location.host}${path}`;
+  window.location = path;
 };

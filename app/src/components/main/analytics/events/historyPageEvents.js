@@ -16,7 +16,6 @@
 
 import {
   getDeleteActionEvent,
-  getEditDefectActionEvent,
   getLinkIssueActionEvent,
   getUnlinkIssueActionEvent,
   getPostIssueActionEvent,
@@ -87,7 +86,6 @@ export const HISTORY_PAGE_EVENTS = {
   },
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(HISTORY_PAGE),
   EDIT_ITEMS_ACTION,
-  EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),
   DELETE_ACTION: getDeleteActionEvent(HISTORY_PAGE),

@@ -14,33 +14,16 @@
  *  limitations under the License.
  */
 
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  uiExtensionAdminPagesSelector,
-  extensionsLoadedSelector,
-} from 'controllers/plugins/uiExtensions';
+import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { pluginPageSelector } from 'controllers/pages';
 import { UiExtensionPage } from 'pages/common/uiExtensionPage';
 
-@connect((state) => ({
-  extensions: uiExtensionAdminPagesSelector(state),
-  activePluginPage: pluginPageSelector(state),
-  isExtensionsLoaded: extensionsLoadedSelector(state),
-}))
-export class AdminUiExtensionPage extends Component {
-  render() {
-    return (
-      <UiExtensionPage
-        extensions={this.props.extensions}
-        activePluginPage={this.props.activePluginPage}
-        isExtensionsLoaded={this.props.isExtensionsLoaded}
-      />
-    );
-  }
-}
-AdminUiExtensionPage.propTypes = {
+const AdminExtensionPage = ({ extensions, activePluginPage }) => (
+  <UiExtensionPage extensions={extensions} activePluginPage={activePluginPage} />
+);
+AdminExtensionPage.propTypes = {
   extensions: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -49,10 +32,13 @@ AdminUiExtensionPage.propTypes = {
     }),
   ),
   activePluginPage: PropTypes.string,
-  isExtensionsLoaded: PropTypes.bool,
 };
-AdminUiExtensionPage.defaultProps = {
+AdminExtensionPage.defaultProps = {
   extensions: [],
   activePluginPage: null,
-  isExtensionsLoaded: false,
 };
+
+export const AdminUiExtensionPage = connect((state) => ({
+  extensions: uiExtensionAdminPagesSelector(state),
+  activePluginPage: pluginPageSelector(state),
+}))(AdminExtensionPage);

@@ -92,18 +92,24 @@ export class PluginsItem extends Component {
 
   onChangeHandler = () => {
     const {
-      data: { name, enabled },
+      data: { name, enabled, details: { pluginLocation } = {} },
       showToggleConfirmationModal,
     } = this.props;
     const pluginName = PLUGIN_NAME_TITLES[name] || name;
 
-    showToggleConfirmationModal(enabled, pluginName, this.toggleActiveHandler);
+    showToggleConfirmationModal(enabled, pluginName, this.toggleActiveHandler, pluginLocation);
   };
 
   render() {
     const {
       intl: { formatMessage },
-      data: { name, uploadedBy, enabled, groupType, details: { version } = {} },
+      data: {
+        name,
+        uploadedBy,
+        enabled,
+        groupType,
+        details: { version, disabledPluginTooltip } = {},
+      },
       toggleable,
     } = this.props;
     const pluginName = PLUGIN_NAME_TITLES[name] || name;
@@ -115,7 +121,8 @@ export class PluginsItem extends Component {
         title={
           enabled
             ? ''
-            : formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], { name: pluginName })
+            : disabledPluginTooltip ||
+              formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], { name: pluginName })
         }
       >
         <div className={cx('plugins-info-block')}>

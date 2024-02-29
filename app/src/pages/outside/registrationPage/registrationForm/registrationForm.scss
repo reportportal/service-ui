@@ -24,29 +24,33 @@
   }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 25px 20px;
+    padding: 0 20px;
     box-sizing: border-box;
   }
 }
 .login-field {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 .name-field {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 .email-field {
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 .password-field {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 .confirm-password-field {
   width: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 32px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 40px;
+  }
 }
 .buttons-container {
   width: 355px;

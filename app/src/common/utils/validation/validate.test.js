@@ -344,8 +344,8 @@ describe('validate.patternNameLength', () => {
   });
 });
 
-describe('validate.createPatternNameUniqueValidator', () => {
-  const patterns = [
+describe('validate.createNameUniqueValidator', () => {
+  const items = [
     {
       id: 1,
       name: 'abc',
@@ -359,13 +359,13 @@ describe('validate.createPatternNameUniqueValidator', () => {
       name: 'third',
     },
   ];
-  const patternNameUniqueValidator = validate.createPatternNameUniqueValidator(2, patterns);
+  const nameUniqueValidator = validate.createNameUniqueValidator(2, items);
   test('validation should be correct', () => {
-    expect(patternNameUniqueValidator('new_name')).toBe(true);
-    expect(patternNameUniqueValidator('old_name')).toBe(true);
+    expect(nameUniqueValidator('new_name')).toBe(true);
+    expect(nameUniqueValidator('old_name')).toBe(true);
   });
   test('Validation should not be correct', () => {
-    expect(patternNameUniqueValidator('abc')).toBe(false);
+    expect(nameUniqueValidator('abc')).toBe(false);
   });
 });
 

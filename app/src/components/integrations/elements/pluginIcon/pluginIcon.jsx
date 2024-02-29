@@ -21,42 +21,64 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from 'controllers/plugins/uiExtensions/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
-import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'controllers/plugins/utils';
+import {
+  filterIntegrationsByName,
+  isPluginSupportsAllowedCommand,
+  isPluginSupportsCommonCommand,
+} from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
+  const { details, name, enabled } = pluginData;
+  const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
-  const { details, name } = pluginData;
-  const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
 
-  const calculateIconSrc = () => {
-    if (isDynamicIconAvailable) {
+  const calculateIconParams = () => {
+    const commandParams = { method: 'PUT', data: { fileKey: 'icon' } };
+
+    if (isDynamicIconAvailable && enabled) {
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
+      const isAllowedCommandSupported = isPluginSupportsAllowedCommand(
+        pluginData,
+        COMMAND_GET_FILE,
+      );
 
       if (isCommonCommandSupported) {
-        return URLS.pluginCommandCommon(projectId, name, COMMAND_GET_FILE);
+        return {
+          url: URLS.pluginCommandCommon(projectId, name, COMMAND_GET_FILE),
+          requestParams: commandParams,
+        };
       }
 
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
-      if (!integration) {
-        return null;
+      if (integration && isAllowedCommandSupported) {
+        return {
+          url: URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE),
+          requestParams: commandParams,
+        };
       }
 
-      return URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
+      return {
+        url: URLS.pluginPublicFile(name, details.binaryData.icon),
+      };
     }
 
-    return PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE;
+    return {
+      url: PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE,
+    };
   };
+
+  const { url, requestParams } = calculateIconParams();
 
   return (
     <div className={className}>
       <Image
-        src={calculateIconSrc()}
+        src={url}
         fallback={PLUGIN_DEFAULT_IMAGE}
         isStatic={!isDynamicIconAvailable}
-        requestParams={{ method: 'PUT', data: { fileKey: 'icon' } }}
+        requestParams={requestParams}
         preloaderColor="charcoal"
         className={className}
         {...rest}

@@ -35,10 +35,9 @@ import {
 } from 'controllers/filter';
 
 import {
-  UPDATE_DEFECT_SUBTYPE,
-  ADD_DEFECT_SUBTYPE,
-  DELETE_DEFECT_SUBTYPE,
-  UPDATE_NOTIFICATIONS_CONFIG,
+  UPDATE_DEFECT_TYPE,
+  ADD_DEFECT_TYPE,
+  DELETE_DEFECT_TYPE,
   ADD_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
@@ -50,12 +49,17 @@ import {
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
   UPDATE_PROJECT_FILTER_PREFERENCES,
+  ADD_PROJECT_NOTIFICATION,
+  NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
+  UPDATE_NOTIFICATION_STATE,
+  UPDATE_PROJECT_NOTIFICATION,
+  DELETE_PROJECT_NOTIFICATION,
+  FETCH_PROJECT_NOTIFICATIONS,
 } from './constants';
 import {
-  updateDefectSubTypeSuccessAction,
-  addDefectSubTypeSuccessAction,
-  deleteDefectSubTypeSuccessAction,
-  updateProjectNotificationsConfigSuccessAction,
+  updateDefectTypeSuccessAction,
+  addDefectTypeSuccessAction,
+  deleteDefectTypeSuccessAction,
   addPatternSuccessAction,
   updatePatternSuccessAction,
   deletePatternSuccessAction,
@@ -64,92 +68,155 @@ import {
   fetchProjectSuccessAction,
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
+  addProjectNotificationSuccessAction,
+  fetchProjectNotificationsSuccessAction,
+  deleteProjectNotificationSuccessAction,
+  updateProjectNotificationSuccessAction,
+  setProjectNotificationsLoadingAction,
+  fetchExistingLaunchNamesSuccessAction,
 } from './actionCreators';
-import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
+import { patternsSelector } from './selectors';
 
-function* updateDefectSubType({ payload: subTypes }) {
+function* updateDefectType({ payload: defectTypes }) {
+  yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
     const data = {
-      ids: subTypes,
+      ids: defectTypes,
     };
-    yield call(fetch, URLS.projectDefectSubType(projectId), {
+    yield call(fetch, URLS.projectDefectType(projectId), {
       method: 'put',
       data,
     });
-    yield put(updateDefectSubTypeSuccessAction(subTypes));
+    yield put(updateDefectTypeSuccessAction(defectTypes));
     yield put(
       showNotification({
-        messageId: 'updateDefectSubTypeSuccess',
+        messageId: 'updateDefectTypeSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
+    yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
   }
 }
 
-function* watchUpdateDefectSubType() {
-  yield takeEvery(UPDATE_DEFECT_SUBTYPE, updateDefectSubType);
+function* watchUpdateDefectType() {
+  yield takeEvery(UPDATE_DEFECT_TYPE, updateDefectType);
 }
 
-function* addDefectSubType({ payload: subType }) {
-  try {
-    const projectId = yield select(projectIdSelector);
-    const response = yield call(fetch, URLS.projectDefectSubType(projectId), {
-      method: 'post',
-      data: subType,
-    });
-    yield put(addDefectSubTypeSuccessAction({ ...response, ...subType }));
-    yield put(
-      showNotification({
-        messageId: 'updateDefectSubTypeSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-function* watchAddDefectSubType() {
-  yield takeEvery(ADD_DEFECT_SUBTYPE, addDefectSubType);
-}
-
-function* deleteDefectSubType({ payload: subType }) {
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectDeleteDefectSubType(projectId, subType.id), {
-      method: 'delete',
-    });
-    yield put(deleteDefectSubTypeSuccessAction(subType));
-    yield put(
-      showNotification({
-        messageId: 'deleteDefectSubTypeSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-function* watchDeleteDefectSubType() {
-  yield takeEvery(DELETE_DEFECT_SUBTYPE, deleteDefectSubType);
-}
-
-function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
+function* addDefectType({ payload: defectType }) {
   yield put(showScreenLockAction());
   try {
-    const currentConfig = yield select(projectNotificationsConfigurationSelector);
     const projectId = yield select(projectIdSelector);
-    const newConfig = { ...currentConfig, ...notificationsConfig };
-
-    yield call(fetch, URLS.projectNotificationConfiguration(projectId), {
-      method: 'put',
-      data: newConfig,
+    const response = yield call(fetch, URLS.projectDefectType(projectId), {
+      method: 'post',
+      data: defectType,
     });
-    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
+    yield put(addDefectTypeSuccessAction({ ...response, ...defectType }));
+    yield put(
+      showNotification({
+        messageId: 'addDefectTypeSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchAddDefectType() {
+  yield takeEvery(ADD_DEFECT_TYPE, addDefectType);
+}
+
+function* deleteDefectType({ payload: defectType }) {
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+    yield call(fetch, URLS.projectDeleteDefectType(projectId, defectType.id), {
+      method: 'delete',
+    });
+    yield put(deleteDefectTypeSuccessAction(defectType));
+    yield put(
+      showNotification({
+        messageId: 'deleteDefectTypeSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteDefectType() {
+  yield takeEvery(DELETE_DEFECT_TYPE, deleteDefectType);
+}
+
+function* fetchProjectNotifications() {
+  yield put(setProjectNotificationsLoadingAction(true));
+  try {
+    const projectId = yield select(projectIdSelector);
+    const [notifications, existingLaunchNames] = yield all([
+      call(fetch, URLS.notification(projectId)),
+      call(fetch, URLS.launchesExistingNames(projectId)),
+    ]);
+    yield put(fetchProjectNotificationsSuccessAction(notifications));
+    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(setProjectNotificationsLoadingAction(false));
+  }
+}
+
+function* watchFetchProjectNotifications() {
+  yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
+}
+
+function* addProjectNotification({ payload: notification }) {
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    const response = yield call(fetch, URLS.notification(projectId), {
+      method: 'post',
+      data: notification,
+    });
+
+    yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchAddProjectNotification() {
+  yield takeEvery(ADD_PROJECT_NOTIFICATION, addProjectNotification);
+}
+
+function* updateProjectNotification({ payload: notification }) {
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    yield call(fetch, URLS.notification(projectId), {
+      method: 'put',
+      data: notification,
+    });
+    yield put(updateProjectNotificationSuccessAction(notification));
     yield put(
       showNotification({
         messageId: 'updateProjectNotificationsConfigurationSuccess',
@@ -164,8 +231,73 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
   }
 }
 
-function* watchUpdateProjectNotificationsConfig() {
-  yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
+function* watchUpdateProjectNotification() {
+  yield takeEvery(UPDATE_PROJECT_NOTIFICATION, updateProjectNotification);
+}
+
+function* deleteProjectNotification({ payload: id }) {
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    yield call(fetch, URLS.notificationById(projectId, id), {
+      method: 'delete',
+    });
+    yield put(deleteProjectNotificationSuccessAction(id));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteProjectNotification() {
+  yield takeEvery(DELETE_PROJECT_NOTIFICATION, deleteProjectNotification);
+}
+
+function* updateNotificationState(enabled) {
+  const projectId = yield select(projectIdSelector);
+  const updatedConfig = {
+    configuration: {
+      attributes: {
+        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
+      },
+    },
+  };
+
+  yield call(fetch, URLS.project(projectId), {
+    method: 'put',
+    data: updatedConfig,
+  });
+  yield put(updateConfigurationAttributesAction(updatedConfig));
+}
+
+function* updateNotificationStateWithNotification({ payload: enabled }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(updateNotificationState, enabled);
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateNotificationState() {
+  yield takeEvery(UPDATE_NOTIFICATION_STATE, updateNotificationStateWithNotification);
 }
 
 function* updatePAState(PAEnabled) {
@@ -350,10 +482,9 @@ function* watchUpdateProjectFilterPreferences() {
 
 export function* projectSagas() {
   yield all([
-    watchUpdateDefectSubType(),
-    watchAddDefectSubType(),
-    watchDeleteDefectSubType(),
-    watchUpdateProjectNotificationsConfig(),
+    watchUpdateDefectType(),
+    watchAddDefectType(),
+    watchDeleteDefectType(),
     watchAddPattern(),
     watchUpdatePattern(),
     watchUpdatePAState(),
@@ -364,5 +495,10 @@ export function* projectSagas() {
     watchHideFilterOnLaunches(),
     watchShowFilterOnLaunches(),
     watchUpdateProjectFilterPreferences(),
+    watchAddProjectNotification(),
+    watchUpdateNotificationState(),
+    watchUpdateProjectNotification(),
+    watchDeleteProjectNotification(),
+    watchFetchProjectNotifications(),
   ]);
 }

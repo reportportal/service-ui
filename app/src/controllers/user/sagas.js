@@ -22,7 +22,7 @@ import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
-  ASSIGN_TO_RROJECT,
+  ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
   SET_ACTIVE_PROJECT,
   ADD_API_KEY,
@@ -120,7 +120,7 @@ function* unassignFromProject({ payload: project }) {
 function* fetchUserWorker() {
   let user;
   try {
-    user = yield call(fetch, URLS.user());
+    user = yield call(fetch, URLS.users());
     yield put(fetchUserSuccessAction(user));
   } catch (err) {
     yield put(fetchUserErrorAction());
@@ -268,7 +268,7 @@ function* watchFetchUser() {
 }
 
 function* watchAssignToProject() {
-  yield takeLatest(ASSIGN_TO_RROJECT, assignToProject);
+  yield takeLatest(ASSIGN_TO_PROJECT, assignToProject);
 }
 
 function* watchUnassignFromProject() {

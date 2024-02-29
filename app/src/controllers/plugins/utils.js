@@ -74,3 +74,10 @@ export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
   details.commonCommands &&
   details.commonCommands.length &&
   details.commonCommands.includes(command);
+
+export const isPluginSupportsAllowedCommand = ({ enabled, details }, command) =>
+  enabled &&
+  details &&
+  details.allowedCommands &&
+  details.allowedCommands.length &&
+  details.allowedCommands.includes(command);

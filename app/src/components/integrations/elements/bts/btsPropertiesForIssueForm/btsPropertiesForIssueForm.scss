@@ -20,16 +20,18 @@
   width: 100%;
 }
 
+.center {
+  margin: 30px auto;
+}
+
 .default-properties-title {
   display: inline-block;
-  margin-bottom: 5px;
   padding: 0;
-  opacity: 0.9;
-  color: $COLOR--gray-47;
-  font-size: 12px;
-  line-height: 30px;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  font-family: $FONT-ROBOTO-MEDIUM;
 
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0 10px;
@@ -37,29 +39,57 @@
   }
 }
 
+.default-property-block {
+  margin-top: 16px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .show-hint-wrapper {
   display: flex;
-  justify-content: flex-end;
-  color: $COLOR--charcoal-grey;
-  font-size: 13px;
-  font-family: $FONT-SEMIBOLD;
+  align-items: center;
+  width: 54px;
 
-  .show-hint {
-    position: relative;
-    top: 15px;
+  svg {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+
+    path {
+      fill: $COLOR--e-300;
+    }
+
+    path:first-child {
+      stroke: $COLOR--e-300;
+      fill: none;
+    }
   }
+  .show-hint-text {
+    color: $COLOR--almost-black;
+    font-size: 13px;
+    line-height: 20px;
+    text-indent: 1px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    margin-right: 3px;
+  }
+}
+
+.checkbox-wrapper {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  padding: 0 15px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
 
-.checkbox-wrapper {
-  position: absolute;
-  top: 38px;
-  right: 5px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
+.popover {
+  width: max-content;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 20px;
+  color: $COLOR--almost-black;
 }

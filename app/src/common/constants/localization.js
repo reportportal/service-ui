@@ -169,9 +169,113 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.openInNewTab',
     defaultMessage: 'Open in new tab',
   },
+  ANALYZER_DISABLED: {
+    id: 'Common.analyzerDisabled',
+    defaultMessage: 'Service analyzer is not running',
+  },
   changesWarning: {
     id: 'Common.changesWarning',
     defaultMessage: 'Field is invalid or changes were not saved',
+  },
+  processData: {
+    id: 'Common.processData',
+    defaultMessage: 'Please wait, we process your data',
+  },
+  documentation: {
+    id: 'Common.documentation',
+    defaultMessage: 'Documentation',
+  },
+  warning: {
+    id: 'Common.warning',
+    defaultMessage: 'Warning',
+  },
+  CREATE: {
+    id: 'Common.create',
+    defaultMessage: 'Create',
+  },
+  january: {
+    id: 'Common.january',
+    defaultMessage: 'January',
+  },
+  february: {
+    id: 'Common.february',
+    defaultMessage: 'February',
+  },
+  march: {
+    id: 'Common.march',
+    defaultMessage: 'March',
+  },
+  april: {
+    id: 'Common.april',
+    defaultMessage: 'April',
+  },
+  may: {
+    id: 'Common.may',
+    defaultMessage: 'May',
+  },
+  june: {
+    id: 'Common.june',
+    defaultMessage: 'June',
+  },
+  july: {
+    id: 'Common.july',
+    defaultMessage: 'July',
+  },
+  august: {
+    id: 'Common.august',
+    defaultMessage: 'August',
+  },
+  september: {
+    id: 'Common.september',
+    defaultMessage: 'September',
+  },
+  october: {
+    id: 'Common.october',
+    defaultMessage: 'October',
+  },
+  november: {
+    id: 'Common.november',
+    defaultMessage: 'November',
+  },
+  december: {
+    id: 'Common.december',
+    defaultMessage: 'December',
+  },
+  today: {
+    id: 'Common.today',
+    defaultMessage: 'Today',
+  },
+  yesterday: {
+    id: 'Common.yesterday',
+    defaultMessage: 'Yesterday',
+  },
+  monday: {
+    id: 'Common.monday',
+    defaultMessage: 'Monday',
+  },
+  tuesday: {
+    id: 'Common.tuesday',
+    defaultMessage: 'Tuesday',
+  },
+  wednesday: {
+    id: 'Common.wednesday',
+    defaultMessage: 'Wednesday',
+  },
+  thursday: {
+    id: 'Common.thursday',
+    defaultMessage: 'Thursday',
+  },
+  friday: {
+    id: 'Common.friday',
+    defaultMessage: 'Friday',
+  },
+  saturday: {
+    id: 'Common.saturday',
+    defaultMessage: 'Saturday',
+  },
+  sunday: {
+    id: 'Common.sunday',
+    defaultMessage: 'Sunday',
   },
   KEY: {
     id: 'Common.key',
@@ -182,3 +286,20 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     defaultMessage: 'Value',
   },
 });
+
+export const months = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
+];
+
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

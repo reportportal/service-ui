@@ -19,9 +19,9 @@ import {
   SET_START_TIME_FORMAT,
   SET_API_KEYS,
   SET_PHOTO_TIME_STAMP,
-  ASSIGN_TO_RROJECT,
-  ASSIGN_TO_RROJECT_SUCCESS,
-  ASSIGN_TO_RROJECT_ERROR,
+  ASSIGN_TO_PROJECT,
+  ASSIGN_TO_PROJECT_SUCCESS,
+  ASSIGN_TO_PROJECT_ERROR,
   UNASSIGN_FROM_PROJECT,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_API_KEYS,
@@ -95,17 +95,17 @@ export const setStartTimeFormatAction = (format) => ({
 });
 
 export const assignToProjectAction = (project) => ({
-  type: ASSIGN_TO_RROJECT,
+  type: ASSIGN_TO_PROJECT,
   payload: project,
 });
 
 export const assignToProjectSuccessAction = (projectInfo) => ({
-  type: ASSIGN_TO_RROJECT_SUCCESS,
+  type: ASSIGN_TO_PROJECT_SUCCESS,
   payload: projectInfo,
 });
 
 export const assignToProjectErrorAction = (projectInfo) => ({
-  type: ASSIGN_TO_RROJECT_ERROR,
+  type: ASSIGN_TO_PROJECT_ERROR,
   payload: projectInfo,
 });
 

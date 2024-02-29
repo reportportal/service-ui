@@ -1,5 +1,6 @@
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
 export const EXTENSION_TYPE_PAGE = 'uiExtension:page';
+export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
 export const EXTENSION_TYPE_MODAL = 'uiExtension:modal';
 export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';
@@ -11,6 +12,9 @@ export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridCellComponent';
 export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridHeaderCellComponent';
+export const EXTENSION_TYPE_LOGIN_BLOCK = 'uiExtension:loginBlock';
+export const EXTENSION_TYPE_LOGIN_PAGE = 'uiExtension:loginPage';
+export const EXTENSION_TYPE_REGISTRATION_PAGE = 'uiExtension:registrationPage';
 export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON =
   'uiExtension:makeDecisionDefectCommentAddon';
 export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
@@ -27,3 +31,11 @@ export const COMMAND_GET_CLUSTERS = 'getClusters';
 
 export const EXTENSION_LOAD_START = 'extensionLoadStart';
 export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
+
+/* New plugins mechanism related code below */
+
+export const METADATA_FILE_KEY = 'metadata';
+export const MAIN_FILE_KEY = 'main';
+
+export const FETCH_EXTENSIONS_METADATA_SUCCESS = 'fetchExtensionsMetadataSuccess';
+export const UPDATE_EXTENSION_METADATA = 'updateExtensionMetadata';

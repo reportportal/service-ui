@@ -286,7 +286,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.passingRatePerLaunch'}
         defaultMessage={
-          'Shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.'
+          'Shows the percentage ratio of Passed test cases to Total test cases including or excluding Skipped ones of the selected launch.'
         }
       />
     ),
@@ -300,7 +300,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.passingRateSummary'}
         defaultMessage={
-          'Shows the percentage ratio of Passed test cases to Total cases for set of launches.'
+          'Shows the percentage ratio of Passed test cases to Total test cases including or excluding Skipped ones for set of launches.'
         }
       />
     ),
@@ -313,9 +313,7 @@ export const getWidgets = (formatMessage) => [
     description: (
       <FormattedMessage
         id={'Widgets.Description.flakyTestCases'}
-        defaultMessage={
-          'Shows the TOP-50 the most flaky test cases within the specified previous launches.'
-        }
+        defaultMessage={'Shows the TOP-50 the most flaky test cases within the specified launches.'}
       />
     ),
     preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),

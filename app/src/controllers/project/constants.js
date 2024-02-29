@@ -26,14 +26,13 @@ export const FETCH_PROJECT_PREFERENCES = 'fetchProjectPreferences';
 export const FETCH_PROJECT_PREFERENCES_SUCCESS = 'fetchProjectPreferencesSuccess';
 export const FETCH_CONFIGURATION_ATTRIBUTES = 'fetchConfigurationAttributes';
 export const UPDATE_CONFIGURATION_ATTRIBUTES = 'updateConfigurationAttributes';
-export const UPDATE_NOTIFICATIONS_CONFIG = 'updateNotificationsConfig';
-export const UPDATE_NOTIFICATIONS_CONFIG_SUCCESS = 'updateNotificationsConfigSuccess';
-export const UPDATE_DEFECT_SUBTYPE = 'updateDefectSubType';
-export const UPDATE_DEFECT_SUBTYPE_SUCCESS = 'updateDefectSubTypeSuccess';
-export const ADD_DEFECT_SUBTYPE = 'addDefectSubType';
-export const ADD_DEFECT_SUBTYPE_SUCCESS = 'addDefectSubTypeSuccess';
-export const DELETE_DEFECT_SUBTYPE = 'deleteDefectSubType';
-export const DELETE_DEFECT_SUBTYPE_SUCCESS = 'deleteDefectSubTypeSuccess';
+export const UPDATE_DEFECT_TYPE = 'updateDefectType';
+export const UPDATE_DEFECT_TYPE_SUCCESS = 'updateDefectTypeSuccess';
+export const ADD_DEFECT_TYPE = 'addDefectType';
+export const ADD_DEFECT_TYPE_SUCCESS = 'addDefectTypeSuccess';
+export const DELETE_DEFECT_TYPE = 'deleteDefectType';
+export const DELETE_DEFECT_TYPE_SUCCESS = 'deleteDefectTypeSuccess';
+export const FETCH_EXISTING_LAUNCH_NAMES_SUCCESS = 'fetchExistingLaunchNamesSuccess';
 
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
@@ -47,6 +46,18 @@ export const UPDATE_PATTERN_SUCCESS = 'updatePatternSuccess';
 export const DELETE_PATTERN = 'deletePattern';
 export const DELETE_PATTERN_SUCCESS = 'deletePatternSuccess';
 export const UPDATE_PA_STATE = 'updatePAState';
+
+export const ADD_PROJECT_NOTIFICATION = 'addProjectNotification';
+export const ADD_PROJECT_NOTIFICATION_SUCCESS = 'addProjectNotificationSuccess';
+export const FETCH_PROJECT_NOTIFICATIONS = 'fetchProjectNotification';
+export const FETCH_PROJECT_NOTIFICATIONS_SUCCESS = 'fetchProjectNotificationSuccess';
+export const UPDATE_NOTIFICATION_STATE = 'updateNotificationState';
+export const NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY = 'notifications.enabled';
+export const UPDATE_PROJECT_NOTIFICATION = 'updateProjectNotification';
+export const UPDATE_PROJECT_NOTIFICATION_SUCCESS = 'updateProjectNotificationSuccess';
+export const DELETE_PROJECT_NOTIFICATION = 'deleteProjectNotification';
+export const DELETE_PROJECT_NOTIFICATION_SUCCESS = 'deleteProjectNotificationSuccess';
+export const SET_PROJECT_NOTIFICATION_LOADING = 'setProjectNotificationLoading';
 
 export const NAMESPACE = 'project';
 

@@ -14,7 +14,23 @@
  * limitations under the License.
  */
 
+import {
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
+} from 'components/fields/dynamicFieldsSection/constants';
+
 export const getDefectFormFields = (fields, checkedFieldsIds, values) =>
   fields
     .filter((item) => item.required || checkedFieldsIds[item.id])
-    .map((item) => ({ ...item, value: values[item.id] }));
+    .map((item) => {
+      const isAutocomplete =
+        item.fieldType === AUTOCOMPLETE_TYPE ||
+        item.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
+        item.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
+      const valueKey = isAutocomplete ? 'namedValue' : 'value';
+      return {
+        ...item,
+        [valueKey]: values[item.id],
+      };
+    });

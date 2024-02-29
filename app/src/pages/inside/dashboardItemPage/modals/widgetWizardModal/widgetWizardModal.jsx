@@ -26,6 +26,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
+import { ENTER_KEY_CODE, ESCAPE_KEY_CODE } from 'common/constants/keyCodes';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
 import { WidgetWizardContent } from './widgetWizardContent';
 import styles from './widgetWizardModal.scss';
@@ -103,10 +104,13 @@ export class WidgetWizardModal extends Component {
   };
 
   onKeydown = (e) => {
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESCAPE_KEY_CODE) {
       this.closeModal();
     }
-    if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+    if (
+      (e.ctrlKey && e.keyCode === ENTER_KEY_CODE) ||
+      (e.metaKey && e.keyCode === ENTER_KEY_CODE)
+    ) {
       this.onClickOk();
     }
   };

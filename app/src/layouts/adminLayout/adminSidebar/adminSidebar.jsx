@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
@@ -27,17 +27,21 @@ import {
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
-  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_PAGE,
-} from 'controllers/pages';
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+} from 'controllers/pages/constants';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import track, { useTracking } from 'react-tracking';
-import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
+import {
+  uiExtensionAdminPagesSelector,
+  uiExtensionAdminSidebarComponentsSelector,
+} from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -80,55 +84,36 @@ const BackToProjectWithTooltip = withTooltip({
   },
 })(BackToProject);
 
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-  extensions: uiExtensionAdminPagesSelector(state),
-}))
-@track()
-export class AdminSidebar extends Component {
-  static propTypes = {
-    onClickNavBtn: PropTypes.func,
-    activeProject: PropTypes.string.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    extensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        buttonTitle: PropTypes.string,
-        buttonIcon: PropTypes.string,
-      }),
-    ),
-  };
-  static defaultProps = {
-    onClickNavBtn: () => {},
-    extensions: [],
-  };
-
-  handleClickButton = (eventInfo) => () => {
-    this.props.onClickNavBtn();
+function AdminSidebarComponent({
+  activeProject,
+  onClickNavBtn,
+  tracking,
+  extensions,
+  adminPageExtensions,
+}) {
+  const handleClickButton = (eventInfo) => () => {
+    onClickNavBtn();
     if (eventInfo) {
-      this.props.tracking.trackEvent(eventInfo);
+      tracking.trackEvent(eventInfo);
     }
   };
 
-  createTopSidebarItems = () => {
+  const createTopSidebarItems = () => {
     const items = [
       {
-        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
+        onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
         link: { type: PROJECTS_PAGE },
         icon: ProjectsIcon,
         message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
       },
       {
-        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
+        onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
         link: { type: ALL_USERS_PAGE },
         icon: UsersIcon,
         message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
       },
       {
-        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
+        onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
         link: { type: SERVER_SETTINGS_PAGE },
         icon: SettingsIcon,
         message: (
@@ -136,27 +121,43 @@ export class AdminSidebar extends Component {
         ),
       },
       {
-        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
+        onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
         link: { type: PLUGINS_PAGE },
         icon: PluginsIcon,
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
       },
     ];
-    const extensionItems = this.props.extensions.map((extension) => ({
-      onClick: this.handleClickButton(),
-      link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
-      icon: extension.buttonIcon,
-      message: extension.buttonLabel || extension.name,
-    }));
-    return [...items, ...extensionItems];
+
+    // for backward compatibility only
+    // iterate over admin page extensions as well to add sidebar components for old plugins
+    adminPageExtensions
+      .filter((ext) => !!ext.buttonIcon)
+      .forEach((extension) =>
+        items.push({
+          onClick: handleClickButton(),
+          link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
+          icon: extension.buttonIcon,
+          message: extension.buttonLabel || extension.name,
+        }),
+      );
+
+    extensions.forEach((extension) =>
+      items.push({
+        name: extension.name,
+        component: <ExtensionLoader extension={extension} />,
+        onClick: onClickNavBtn,
+      }),
+    );
+
+    return items;
   };
 
-  createBottomSidebarItems = () => [
+  const createBottomSidebarItems = () => [
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: onClickNavBtn,
       link: {
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: ALL },
+        payload: { projectId: activeProject, filterId: ALL },
       },
       icon: BackIcon,
       message: (
@@ -164,7 +165,7 @@ export class AdminSidebar extends Component {
       ),
     },
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: onClickNavBtn,
       link: {
         type: USER_PROFILE_PAGE,
       },
@@ -173,27 +174,47 @@ export class AdminSidebar extends Component {
     },
   ];
 
-  render() {
-    const { activeProject } = this.props;
-    const topSidebarItems = this.createTopSidebarItems();
-    const bottomSidebarItems = this.createBottomSidebarItems();
-    const mainBlock = (
-      <BackToProjectWithTooltip
-        activeProject={activeProject}
-        className={cx('back-to-project-tooltip')}
-        tooltipContent={
-          <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
-        }
-        preventParsing
-      />
-    );
+  const topSidebarItems = createTopSidebarItems();
+  const bottomSidebarItems = createBottomSidebarItems();
+  const mainBlock = (
+    <BackToProjectWithTooltip
+      activeProject={activeProject}
+      className={cx('back-to-project-tooltip')}
+      tooltipContent={
+        <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
+      }
+      preventParsing
+    />
+  );
 
-    return (
-      <Sidebar
-        mainBlock={mainBlock}
-        topSidebarItems={topSidebarItems}
-        bottomSidebarItems={bottomSidebarItems}
-      />
-    );
-  }
+  return (
+    <Sidebar
+      mainBlock={mainBlock}
+      topSidebarItems={topSidebarItems}
+      bottomSidebarItems={bottomSidebarItems}
+    />
+  );
 }
+AdminSidebarComponent.propTypes = {
+  onClickNavBtn: PropTypes.func,
+  activeProject: PropTypes.string.isRequired,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
+  extensions: PropTypes.arrayOf(extensionType),
+  adminPageExtensions: PropTypes.arrayOf(extensionType),
+};
+AdminSidebarComponent.defaultProps = {
+  onClickNavBtn: () => {},
+  extensions: [],
+  adminPageExtensions: [],
+};
+
+export const AdminSidebar = track()(
+  connect((state) => ({
+    activeProject: activeProjectSelector(state),
+    extensions: uiExtensionAdminSidebarComponentsSelector(state),
+    adminPageExtensions: uiExtensionAdminPagesSelector(state),
+  }))(AdminSidebarComponent),
+);

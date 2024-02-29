@@ -39,6 +39,10 @@ const messages = defineMessages({
     id: 'UpdateAnalysisSettings.numbersInErrorLog',
     defaultMessage: 'remove numbers in error log',
   },
+  'analyzer.allMessagesShouldMatch': {
+    id: 'UpdateAnalysisSettings.allMessagesShouldMatch',
+    defaultMessage: "switch 'All logs with 3 or more rows should match'",
+  },
   'analyzer.numberOfLogLines': {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
     defaultMessage: 'Number of log lines',

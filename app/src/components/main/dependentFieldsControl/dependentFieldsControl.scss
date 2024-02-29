@@ -16,45 +16,23 @@
 
 .dependent-fields-control {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
-  min-height: 40px;
+  gap: 16px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     flex-direction: column;
-    align-items: flex-start;
   }
 }
 
 .field-caption {
-  margin-right: 10px;
   font-size: 13px;
-  color: $COLOR--gray-60;
-
-  &:last-child {
-    margin-right: 0;
-    margin-left: 10px;
-  }
+  color: $COLOR--e-300;
 }
 
 .dependent-control-field {
   display: flex;
   align-items: center;
-  margin-right: 10px;
-  margin-bottom: 10px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  &:first-child {
-    .field-caption {
-      margin: 0;
-      min-width: 26px;
-    }
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-right: 0;
-  }
+  gap: 16px;
+  min-height: 36px;
 }

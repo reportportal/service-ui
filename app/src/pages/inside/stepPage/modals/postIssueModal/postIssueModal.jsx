@@ -40,7 +40,7 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { Checkbox } from 'componentLibrary/checkbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
@@ -49,6 +49,11 @@ import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
+import {
+  AUTOCOMPLETE_TYPE,
+  MULTIPLE_AUTOCOMPLETE_TYPE,
+  CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
+} from 'components/fields/dynamicFieldsSection/constants';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
@@ -274,7 +279,18 @@ export class PostIssueModal extends Component {
       data: { items },
     } = this.props;
 
-    const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
+    const fields = this.state.fields.map((field) => {
+      const isAutocomplete =
+        field.fieldType === AUTOCOMPLETE_TYPE ||
+        field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
+        field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
+      const formFieldData = formData[field.id];
+      let preparedFormFieldData = formFieldData;
+      if (!Array.isArray(formFieldData)) {
+        preparedFormFieldData = formFieldData ? [formFieldData] : [];
+      }
+      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
+    });
     const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
@@ -411,9 +427,15 @@ export class PostIssueModal extends Component {
       namedBtsIntegrations,
       intl: { formatMessage },
       data: { items },
+      projectInfo,
     } = this.props;
     const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
+    const integrationInfo = {
+      integrationId,
+      projectName: projectInfo.projectName,
+      pluginName,
+    };
 
     return (
       <DarkModalLayout
@@ -431,14 +453,13 @@ export class PostIssueModal extends Component {
           />
         }
       >
-        <form className={cx('post-issue-form', 'dark-view')}>
+        <form className={cx('post-issue-form')}>
           <BtsIntegrationSelector
             namedBtsIntegrations={namedBtsIntegrations}
             pluginName={pluginName}
             integrationId={integrationId}
             onChangeIntegration={this.onChangeIntegration}
             onChangePluginName={this.onChangePlugin}
-            darkView
           />
           {fields.length ? (
             <DynamicFieldsSection
@@ -446,6 +467,7 @@ export class PostIssueModal extends Component {
               fields={fields}
               defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
               darkView
+              integrationInfo={integrationInfo}
             />
           ) : (
             <div className={cx('no-default-properties-message')}>
@@ -454,22 +476,20 @@ export class PostIssueModal extends Component {
             </div>
           )}
           {!this.isBulkOperation && (
-            <div className={cx('include-block-wrapper')}>
-              <h4 className={cx('form-block-header', 'dark-view')}>
-                <span className={cx('header-text', 'dark-view')}>
-                  {formatMessage(messages.includeDataHeader)}
-                </span>
+            <>
+              <h4 className={cx('include-data-header')}>
+                {formatMessage(messages.includeDataHeader)}
               </h4>
-              <div className={cx('include-data-block')}>
+              <div className={cx('include-data-fields')}>
                 {this.dataFieldsConfig.map((item) => (
                   <FieldProvider key={item.name} name={item.name} format={Boolean}>
-                    <InputCheckbox iconTransparentBackground>
-                      <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
-                    </InputCheckbox>
+                    <Checkbox>
+                      <span className={cx('field-label')}>{item.title}</span>
+                    </Checkbox>
                   </FieldProvider>
                 ))}
               </div>
-            </div>
+            </>
           )}
           {currentExtension && <currentExtension.component />}
         </form>

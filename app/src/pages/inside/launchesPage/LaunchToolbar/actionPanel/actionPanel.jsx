@@ -265,7 +265,7 @@ export class ActionPanel extends Component {
               </GhostButton>
             </div>
           )}
-          <div className={cx('action-button', 'mobile-hidden')}>
+          <div className={cx('action-button', 'tablet-hidden')}>
             <GhostMenuButton
               tooltip={
                 !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null

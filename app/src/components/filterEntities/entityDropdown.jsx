@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
+import { GROUP_TO_ACTION_MAP } from 'common/constants/actionTypes';
+import { arrayRemoveDoubles } from 'common/utils';
 
 @track()
 export class EntityDropdown extends Component {
@@ -51,17 +53,23 @@ export class EntityDropdown extends Component {
     events: {},
   };
 
+  formatActionTypes = ({ value }, actionToGroup = {}) =>
+    arrayRemoveDoubles(value.split(',').map((action) => actionToGroup[action] || action));
+
+  parseActionTypes = (value) => value.map((group) => GROUP_TO_ACTION_MAP[group] || group).join(',');
+
   getValue = () => {
     const {
       value,
-      customProps: { multiple },
+      customProps: { multiple, actionToGroup },
     } = this.props;
     if (!multiple) {
       return value.value;
     } else if (!value.value) {
       return [];
     }
-    return value.value.split(',');
+
+    return this.formatActionTypes(value, actionToGroup);
   };
 
   getOptionLabelByValue = (value) => {
@@ -83,9 +91,10 @@ export class EntityDropdown extends Component {
       const label = this.getOptionLabelByValue(value);
       tracking.trackEvent(events.getChangeFilterEvent(title, label));
     }
+
     this.props.onChange({
       condition: this.props.value.condition,
-      value: multiple ? value.join(',') : value,
+      value: multiple ? this.parseActionTypes(value) : value,
     });
   };
 

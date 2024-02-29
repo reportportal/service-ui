@@ -23,6 +23,7 @@ import {
   PROJECT_ATTRIBUTES_DELIMITER,
   PA_ATTRIBUTE_ENABLED_KEY,
   AA_ATTRIBUTE_ENABLED_KEY,
+  NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
 } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -110,6 +111,8 @@ export const externalSystemSelector = (state) => projectConfigSelector(state).ex
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};
 
+export const projectNotificationSelector = (state) => projectSelector(state).notifications || {};
+
 export const projectNotificationsCasesSelector = createSelector(
   projectNotificationsConfigurationSelector,
   ({ cases = [] }) =>
@@ -120,8 +123,27 @@ export const projectNotificationsCasesSelector = createSelector(
     })),
 );
 
+export const projectNotificationsSelector = createSelector(
+  projectNotificationSelector,
+  ({ notifications = [] }) =>
+    notifications.map((notification) => ({
+      ...notification,
+      informOwner: notification.recipients.includes(OWNER),
+      recipients: notification.recipients.filter((item) => item !== OWNER),
+    })),
+);
+
+export const isExistingLaunchNamesSelector = (state) =>
+  projectNotificationSelector(state).isExistingLaunchNames ?? {};
+
 export const projectNotificationsEnabledSelector = (state) =>
   projectNotificationsConfigurationSelector(state).enabled || false;
+
+export const projectNotificationsStateSelector = (state) =>
+  !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
+
+export const projectNotificationsLoadingSelector = (state) =>
+  projectNotificationSelector(state).loading || false;
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

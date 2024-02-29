@@ -16,6 +16,7 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -23,6 +24,7 @@ import { LoaderBlock } from 'pages/inside/profilePage/modals/loaderBlock';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { deleteApiKeyAction } from 'controllers/user';
+import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
 import styles from './revokeApiKeyModal.scss';
 
 const cx = classNames.bind(styles);
@@ -56,6 +58,7 @@ const messages = defineMessages({
 const RevokeApiKey = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { name, id } = data;
   const [loading, setLoading] = useState(false);
 
@@ -69,6 +72,7 @@ const RevokeApiKey = ({ data }) => {
         closeModal,
       ),
     );
+    trackEvent(PROFILE_EVENTS.CLICK_REVOKE_BUTTON_IN_MODAL);
   };
 
   const revokeButton = {
