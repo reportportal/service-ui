@@ -308,14 +308,14 @@ const MakeDecision = ({ data }) => {
       issueActionType,
       suggestedItems,
       selectManualChoice: {
-        issue: { issueType },
+        issue: { issueType, comment },
       },
     } = modalState;
-
     const hasSuggestions = !!suggestedItems.length;
 
     const issueBtn =
       isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType;
+    const linkName = (comment?.trim() || '') !== (itemData.issue?.comment?.trim() || '');
 
     return isBulkOperation
       ? editDefectsEvents.getClickOnApplyBulkEvent(
@@ -323,6 +323,7 @@ const MakeDecision = ({ data }) => {
           issueActionType,
           items,
           issueType,
+          linkName,
         )
       : editDefectsEvents.getClickOnApplyEvent(
           defectFromTIGroup,
