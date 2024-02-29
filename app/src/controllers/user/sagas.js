@@ -131,11 +131,11 @@ function* fetchUserWorker() {
   const { lastProject: savedLastProject } = userSettings ?? {};
   const defaultOrganization = Object.keys(assignedOrganizations)[0];
   const { organizationId } = assignedOrganizations[defaultOrganization];
-  const organizationProjects = assignedProjects.filter(
-    ({ organizationId: id }) => id === organizationId,
+  const organizationProjects = Object.keys(assignedProjects).filter(
+    (key) => assignedProjects[key].organizationId === organizationId,
   );
-  const defaultProject = Object.keys(organizationProjects)[0];
-  const { organizationSlug, projectSlug } = savedLastProject;
+  const defaultProject = organizationProjects[0];
+  const { organizationSlug, projectSlug } = savedLastProject || {};
 
   const lastProject =
     organizationSlug &&
