@@ -137,7 +137,7 @@ export class AddEditModal extends Component {
       dirty,
     } = this.props;
 
-    const dashboardId = dashboardItem?.id || '';
+    const dashboardId = dashboardItem?.id;
 
     if (dirty) {
       const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
