@@ -127,6 +127,7 @@ export const URLS = {
   apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
+  projectsDelete: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
   addProject: () => `${urlBase}project`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
