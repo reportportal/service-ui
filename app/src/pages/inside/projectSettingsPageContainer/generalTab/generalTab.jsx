@@ -177,7 +177,7 @@ export class GeneralTab extends Component {
         },
       },
     };
-    fetch(URLS.project(this.props.projectId), { method: 'put', data })
+    fetch(URLS.projectByName(this.props.projectId), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
