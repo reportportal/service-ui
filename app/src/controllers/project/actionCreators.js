@@ -87,7 +87,7 @@ export const fetchProjectPreferencesAction = (projectKey) => ({
 
 export const fetchProjectAction = (projectKey, fetchInfoOnly) => ({
   type: FETCH_PROJECT,
-  payload: { fetchInfoOnly, projectKey },
+  payload: { projectKey, fetchInfoOnly },
 });
 
 export const fetchConfigurationAttributesAction = (projectKey) => ({

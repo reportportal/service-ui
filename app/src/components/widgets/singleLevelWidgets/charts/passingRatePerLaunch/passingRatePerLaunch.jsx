@@ -23,7 +23,7 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { STATS_PASSED } from 'common/constants/statistics';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { PassingRateChart } from '../common/passingRateChart';
 
 const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>
@@ -31,8 +31,7 @@ const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -43,17 +42,18 @@ export class PassingRatePerLaunch extends Component {
   static propTypes = {
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    projectKey: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   onChartClick = (data) => {
     const {
       widget,
       getStatisticsLink,
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
       widget: {
         contentParameters: {
           widgetOptions: { includeSkipped },
@@ -69,7 +69,7 @@ export class PassingRatePerLaunch extends Component {
       statuses,
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      projectKey,
+      projectSlug,
       ALL,
       launchId,
       organizationSlug,

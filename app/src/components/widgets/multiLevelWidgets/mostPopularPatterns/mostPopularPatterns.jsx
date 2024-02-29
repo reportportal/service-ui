@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { getQueryNamespace, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
@@ -36,8 +36,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -49,8 +48,10 @@ export class MostPopularPatterns extends Component {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object,
     clearQueryParams: PropTypes.func,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -89,13 +90,16 @@ export class MostPopularPatterns extends Component {
   }
 
   onPatternClick = (patternName) => {
-    const { widget, projectKey, organizationSlug } = this.props;
+    const {
+      widget,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const { selectedAttribute } = this.state;
 
     const launchesLimit = widget.contentParameters.itemsCount;
     const compositeAttribute = `${widget.contentParameters.widgetOptions.attributeKey}:${selectedAttribute}`;
     const defaultNavigationParams = getDefaultTestItemLinkParams(
-      projectKey,
+      projectSlug,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
       organizationSlug,

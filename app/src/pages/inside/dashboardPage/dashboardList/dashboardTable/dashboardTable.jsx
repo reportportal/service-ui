@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   NameColumn,
   DescriptionColumn,
@@ -57,8 +57,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
@@ -70,8 +69,10 @@ export class DashboardTable extends Component {
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -85,7 +86,13 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, intl, projectId, organizationSlug, projectKey } = this.props;
+    const {
+      onDeleteItem,
+      onEditItem,
+      intl,
+      projectId,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     return [
       {
@@ -97,7 +104,7 @@ export class DashboardTable extends Component {
         customProps: {
           projectId,
           organizationSlug,
-          projectKey,
+          projectSlug,
         },
       },
       {

@@ -34,8 +34,7 @@ import {
 import { formatAttribute, isEmptyObject } from 'common/utils';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { activeProjectKeySelector } from 'controllers/user';
-import { projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
@@ -145,8 +144,7 @@ const getColumn = (name, customProps, customColumn) => {
 
 @injectIntl
 @connect((state) => ({
-  organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: activeProjectKeySelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
@@ -154,8 +152,10 @@ export class ComponentHealthCheckTable extends Component {
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -295,8 +295,7 @@ export class ComponentHealthCheckTable extends Component {
     const {
       intl: { formatMessage },
       widget,
-      organizationSlug,
-      projectKey,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
@@ -306,7 +305,7 @@ export class ComponentHealthCheckTable extends Component {
         filterId: widget.appliedFilters[0]?.id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
         organizationSlug,
-        projectKey,
+        projectSlug,
       },
       getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,

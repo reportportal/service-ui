@@ -16,8 +16,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import { activeProjectKeySelector } from 'controllers/user';
-import { urlProjectKeySelector } from 'controllers/pages';
+import { urlOrganizationAndProjectSelector, getProjectKeyFromSlugs } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import Parser from 'html-react-parser';
@@ -45,12 +45,17 @@ export const IntegrationCollectionItem = ({
   item,
 }) => {
   const [connected, setConnected] = useState(true);
-  const projectKey = useSelector(activeProjectKeySelector);
-  const payloadProjectKey = useSelector(urlProjectKeySelector);
+  const projectKey = useSelector(projectKeySelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    fetch(URLS.testIntegrationConnection(projectKey || payloadProjectKey, id))
+    fetch(
+      URLS.testIntegrationConnection(
+        projectKey || getProjectKeyFromSlugs(organizationSlug, projectSlug),
+        id,
+      ),
+    )
       .then(() => {
         setConnected(true);
       })

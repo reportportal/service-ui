@@ -19,8 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { PROJECT_DASHBOARD_ITEM_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
@@ -28,8 +27,7 @@ import styles from './dashboardGridItem.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -38,8 +36,6 @@ export class DashboardGridItem extends Component {
   }
 
   static propTypes = {
-    projectKey: PropTypes.string.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
@@ -48,6 +44,10 @@ export class DashboardGridItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -74,7 +74,10 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const { item, projectKey, organizationSlug } = this.props;
+    const {
+      item,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const { name, description, owner, id } = item;
 
     return (
@@ -82,7 +85,7 @@ export class DashboardGridItem extends Component {
         <NavLink
           to={{
             type: PROJECT_DASHBOARD_ITEM_PAGE,
-            payload: { projectKey, organizationSlug, dashboardId: id },
+            payload: { organizationSlug, projectSlug, dashboardId: id },
           }}
           className={cx('grid-view-inner')}
           onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}

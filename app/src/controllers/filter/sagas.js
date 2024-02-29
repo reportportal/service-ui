@@ -30,11 +30,12 @@ import {
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
 } from 'controllers/project/actionCreators';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectKeySelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants';
 import { launchDistinctSelector } from 'controllers/launch/selectors';
 import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
@@ -106,13 +107,12 @@ function* updateLaunchesFilter({ payload: filter }) {
 }
 
 function* changeActiveFilter({ payload: filterId, meta }) {
-  const projectKey = yield select(projectKeySelector);
-  const organizationSlug = yield select(projectOrganizationSlugSelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
 
   const action = {
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectKey,
+      projectSlug,
       filterId,
       organizationSlug,
     },

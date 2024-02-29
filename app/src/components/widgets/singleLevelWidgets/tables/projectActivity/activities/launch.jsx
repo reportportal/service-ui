@@ -69,10 +69,10 @@ export class Launch extends Component {
   };
   static defaultProps = activityItemDefaultProps;
 
-  getLaunchesPageLink = (projectKey, organizationSlug) => ({
+  getLaunchesPageLink = (projectSlug, organizationSlug) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectKey,
+      projectSlug,
       filterId: ALL,
       organizationSlug,
     },

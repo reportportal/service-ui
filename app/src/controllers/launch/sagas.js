@@ -25,13 +25,12 @@ import {
   changeActiveFilterAction,
   launchFiltersReadySelector,
 } from 'controllers/filter';
-import { showFilterOnLaunchesAction } from 'controllers/project';
+import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
 import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
-import { activeProjectKeySelector } from 'controllers/user';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -49,7 +48,7 @@ import {
 } from './selectors';
 
 function* fetchLaunchesWithParams({ payload }) {
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
@@ -80,7 +79,7 @@ function* fetchLaunches() {
       activeFilter = yield select(activeFilterSelector);
     }
     if (!activeFilter) {
-      const projectKey = yield select(activeProjectKeySelector);
+      const projectKey = yield select(projectKeySelector);
       let filter = null;
       try {
         filter = yield call(fetch, URLS.filter(projectKey, filterId), { method: 'get' });

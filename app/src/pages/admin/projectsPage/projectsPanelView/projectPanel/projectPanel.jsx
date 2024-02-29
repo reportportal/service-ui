@@ -92,7 +92,7 @@ export class ProjectPanel extends Component {
   render() {
     const {
       project: {
-        projectKey,
+        projectSlug,
         entryType,
         lastRun,
         launchesQuantity,
@@ -141,7 +141,7 @@ export class ProjectPanel extends Component {
               emptyValueCaption={intl.formatMessage(messages.noMembers)}
             />
             <ProjectStatisticButton
-              projectKey={projectKey}
+              projectSlug={projectSlug}
               organizationSlug={organizationSlug}
               onClick={() =>
                 this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.STATISTIC_ICON)

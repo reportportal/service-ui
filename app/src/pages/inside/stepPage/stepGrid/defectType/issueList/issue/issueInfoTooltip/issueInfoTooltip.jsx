@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { projectInfoIdSelector } from 'controllers/project/selectors';
@@ -54,12 +53,11 @@ const messages = defineMessages({
 });
 
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
-const getStorageKey = (activeProject) => `${activeProject}_tickets`;
+const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
 @connect((state, ownProps) => ({
-  activeProject: activeProjectSelector(state),
   projectKey: projectKeySelector(state),
   plugin: pluginByNameSelector(state, ownProps.pluginName),
   projectId: projectInfoIdSelector(state),
@@ -68,7 +66,6 @@ const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 export class IssueInfoTooltip extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     projectId: PropTypes.number.isRequired,
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
@@ -115,16 +112,16 @@ export class IssueInfoTooltip extends Component {
   };
 
   getIssueFromStorage = () => {
-    const { activeProject, ticketId, btsProject } = this.props;
-    const storageKey = getStorageKey(activeProject);
+    const { projectKey, ticketId, btsProject } = this.props;
+    const storageKey = getStorageKey(projectKey);
 
     const data = getStorageItem(storageKey) || {};
     return data[`${btsProject}_${ticketId}`] || {};
   };
 
   updateIssueInStorage = (data = {}) => {
-    const { activeProject, btsProject, ticketId } = this.props;
-    const storageKey = getStorageKey(activeProject);
+    const { projectKey, btsProject, ticketId } = this.props;
+    const storageKey = getStorageKey(projectKey);
 
     updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
   };

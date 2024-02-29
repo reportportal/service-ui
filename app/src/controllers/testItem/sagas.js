@@ -22,9 +22,8 @@ import {
   createFetchPredicate,
 } from 'controllers/fetch';
 import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
-import { activeFilterSelector } from 'controllers/filter';
-import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
+  urlOrganizationAndProjectSelector,
   testItemIdsArraySelector,
   launchIdSelector,
   pagePropertiesSelector,
@@ -37,6 +36,8 @@ import {
   testItemIdsSelector,
   LAUNCHES_PAGE,
 } from 'controllers/pages';
+import { activeFilterSelector } from 'controllers/filter';
+import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
@@ -51,7 +52,6 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { activeProjectKeySelector } from 'controllers/user';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -121,7 +121,7 @@ function* restorePath() {
 
 export function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
   const urls = itemIds.map((id, i) =>
     i === 0 ? URLS.launch(projectKey, id) : URLS.testItem(projectKey, id),
   );
@@ -219,12 +219,14 @@ function* fetchTestItems({ payload = {} }) {
     } catch {
       const testItemIds = yield select(testItemIdsSelector);
       const currentPage = yield select(pageSelector);
+      const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
       const link = {
         type: isTestItemsList ? LAUNCHES_PAGE : currentPage,
         payload: {
-          projectKey,
+          projectSlug,
           filterId: ALL,
           testItemIds: isTestItemsList ? '' : testItemIds,
+          organizationSlug,
         },
         meta: {
           query: pageQuery,
@@ -292,7 +294,7 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const stepParams = yield call(calculateStepPagination, { next, offset });
   yield call(fetchTestItems, { payload: { offset, params: stepParams } });
   const testItems = yield select(itemsSelector);
-  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
   const { launchId, path } = testItem;
   const testItemIds = [launchId, ...path.split('.')].join('/');
@@ -307,8 +309,9 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const link = {
     type: PROJECT_LOG_PAGE,
     payload: {
+      organizationSlug,
+      projectSlug,
       filterId,
-      projectKey,
       testItemIds,
     },
     query,

@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   activeDashboardIdSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
@@ -48,8 +48,7 @@ const DASHBOARD_PAGE_ITEM_VALUE = 'All';
 const DASHBOARDS_LIMIT = 300;
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
-  organizationSlug: projectOrganizationSlugSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
   dashboardsToDisplay: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
   totalDashboards: totalDashboardsSelector(state),
@@ -64,8 +63,10 @@ export class DashboardPageHeader extends Component {
     eventsInfo: PropTypes.object,
     isLoading: PropTypes.bool,
     totalDashboards: PropTypes.number,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -77,7 +78,9 @@ export class DashboardPageHeader extends Component {
   };
 
   getDashboardPageItem = () => {
-    const { organizationSlug, projectKey } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     return {
       label: (
@@ -85,7 +88,7 @@ export class DashboardPageHeader extends Component {
           exact
           to={{
             type: PROJECT_DASHBOARD_PAGE,
-            payload: { projectKey, organizationSlug },
+            payload: { organizationSlug, projectSlug },
           }}
           className={cx('link')}
           activeClassName={cx('active-link')}
@@ -98,11 +101,13 @@ export class DashboardPageHeader extends Component {
   };
 
   createDashboardLink = (dashboardId) => {
-    const { organizationSlug, projectKey } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     return {
       type: PROJECT_DASHBOARD_ITEM_PAGE,
-      payload: { projectKey, dashboardId, organizationSlug },
+      payload: { projectSlug, dashboardId, organizationSlug },
     };
   };
 

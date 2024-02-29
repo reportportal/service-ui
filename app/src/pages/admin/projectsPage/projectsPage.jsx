@@ -25,10 +25,9 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
-  urlProjectKeySelector,
   projectSectionSelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { projectOrganizationSlugSelector } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -40,6 +39,7 @@ import {
   addProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
+import { projectKeySelector } from 'controllers/project';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -61,8 +61,8 @@ const HEADER_BUTTONS = [
 
 @connect(
   (state) => ({
-    projectKey: urlProjectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
+    projectKey: projectKeySelector(state),
     section: projectSectionSelector(state),
   }),
   {
@@ -80,12 +80,15 @@ export class ProjectsPage extends Component {
     addProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     section: PropTypes.string,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -96,8 +99,8 @@ export class ProjectsPage extends Component {
     this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.HEADER_BUTTON_CLICK(section));
     this.props.navigateToSection(
       {
-        organizationSlug: this.props.organizationSlug,
-        projectKey: this.props.projectKey,
+        organizationSlug: this.props.slugs.organizationSlug,
+        projectSlug: this.props.slugs.projectSlug,
       },
       section,
     );
@@ -107,8 +110,7 @@ export class ProjectsPage extends Component {
     const {
       intl: { formatMessage },
       section,
-      organizationSlug,
-      projectKey,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
 
     const breadcrumbs = [
@@ -120,12 +122,12 @@ export class ProjectsPage extends Component {
       },
     ];
 
-    if (projectKey) {
+    if (projectSlug) {
       breadcrumbs.push({
-        title: `${projectKey}`,
+        title: projectSlug,
         link: {
           type: PROJECT_DETAILS_PAGE,
-          payload: { projectKey, projectSection: null, organizationSlug },
+          payload: { projectSlug, projectSection: null, organizationSlug },
         },
       });
     }

@@ -38,7 +38,7 @@ export class InputConditionalAttributes extends Component {
     onChange: PropTypes.func,
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
-    projectKey: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     isAttributeValueRequired: PropTypes.bool,
   };
 

@@ -26,7 +26,7 @@ import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectSlugSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -87,13 +87,13 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
   (state, ownProps) => ({
     selectedProject: ownProps.data.isProjectSelector
       ? inviteFormSelector(state, 'project')
-      : projectIdSelector(state),
+      : urlProjectSlugSelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
     projectKey: projectKeySelector(state),
     initialValues: {
       role: DEFAULT_PROJECT_ROLE,
-      project: projectIdSelector(state),
+      project: urlProjectSlugSelector(state),
     },
   }),
   {
@@ -235,7 +235,7 @@ export class InviteUserModal extends Component {
   filterProject = (value) => !(value && this.props.selectedUser?.assignedProjects?.[value]);
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, data, projectKey } = this.props;
+    const { intl, handleSubmit, isAdmin, data, projectKey } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
@@ -262,7 +262,6 @@ export class InviteUserModal extends Component {
             <FieldProvider name="user" format={this.formatUser}>
               <FieldErrorHint>
                 <InputUserSearch
-                  projectId={selectedProject}
                   isAdmin={isAdmin}
                   placeholder={intl.formatMessage(messages.inputPlaceholder)}
                   projectKey={projectKey}

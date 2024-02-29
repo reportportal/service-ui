@@ -32,8 +32,12 @@ import {
   SYSTEM_ISSUE,
 } from 'common/constants/defectTypes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
-import { TEST_ITEM_PAGE, LAUNCHES_PAGE } from 'controllers/pages';
+import {
+  urlOrganizationAndProjectSelector,
+  TEST_ITEM_PAGE,
+  LAUNCHES_PAGE,
+} from 'controllers/pages';
+
 import { createFilterAction } from 'controllers/filter';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -258,8 +262,7 @@ const getColumn = (name, customProps, fieldKeys) => ({
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     createFilterAction,
@@ -271,22 +274,23 @@ export class LaunchesTable extends PureComponent {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     createFilterAction: PropTypes.func.isRequired,
-    projectKey: PropTypes.string.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   getColumns = () => {
     const {
       intl: { formatMessage },
       widget: { contentParameters },
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const fieldsMap = groupFieldsWithDefectTypes(contentParameters.contentFields);
     const customProps = {
       formatMessage,
       linkPayload: {
-        projectKey,
+        projectSlug,
         filterId: ALL,
         organizationSlug,
       },

@@ -35,7 +35,6 @@ import {
 } from 'controllers/pages';
 import { isOldHistorySelector } from 'controllers/appInfo';
 import { projectKeySelector } from 'controllers/project';
-import { activeProjectKeySelector } from 'controllers/user';
 import {
   fetchItemsHistoryAction,
   resetHistoryAction,
@@ -94,7 +93,7 @@ function* fetchItemsHistory({ payload = {} }) {
     yield put(setHistoryPageLoadingAction(true));
   }
   const params = yield call(getHistoryParams, payload);
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
 
   const historyDepth =
     payload.historyDepth ||

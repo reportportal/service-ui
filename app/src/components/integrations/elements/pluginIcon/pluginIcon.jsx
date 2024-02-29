@@ -18,7 +18,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
-import { activeProjectKeySelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { COMMAND_GET_FILE } from 'controllers/plugins/uiExtensions/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
 import {
@@ -32,7 +32,7 @@ import { Image } from 'components/main/image';
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;
   const isDynamicIconAvailable = details?.binaryData?.icon;
-  const projectKey = useSelector(activeProjectKeySelector);
+  const projectKey = useSelector(projectKeySelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
 
   const calculateIconParams = () => {

@@ -22,11 +22,8 @@ import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import {
-  defectTypesSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { defectTypesSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   getDefaultTestItemLinkParams,
   getDefectTypeLocators,
@@ -42,9 +39,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -66,8 +62,10 @@ export class LaunchesComparisonChart extends Component {
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
     clickable: PropTypes.bool,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -94,13 +92,12 @@ export class LaunchesComparisonChart extends Component {
       getDefectLink,
       getStatisticsLink,
       defectTypes,
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
 
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = defectLocators

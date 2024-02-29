@@ -22,7 +22,6 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
-import { projectIdSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
@@ -95,7 +94,6 @@ ShowWithPopover.propTypes = {
 
 @connect(
   (state) => ({
-    projectName: projectIdSelector(state),
     projectKey: projectKeySelector(state),
   }),
   {

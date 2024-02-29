@@ -33,11 +33,8 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
-import {
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-  defectTypesSelector,
-} from 'controllers/project';
+import { defectTypesSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
@@ -50,9 +47,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -79,8 +75,10 @@ export class InvestigatedTrendChart extends Component {
     integerValueType: PropTypes.bool,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -155,10 +153,15 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, projectKey, organizationSlug } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
-    const defectTypeLocators = this.getDefectTypeLocators(data.id, projectKey);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+    const defectTypeLocators = this.getDefectTypeLocators(data.id);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
       : getStatisticsLink({

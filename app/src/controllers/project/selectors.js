@@ -48,8 +48,7 @@ export const subTypesSelector = (state) => projectConfigSelector(state).subTypes
 
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
-export const projectOrganizationSlugSelector = (state) =>
-  projectInfoSelector(state).organizationSlug || '';
+export const projectNameSelector = (state) => projectInfoSelector(state).projectName || '';
 
 export const projectKeySelector = (state) => projectInfoSelector(state).projectKey || '';
 

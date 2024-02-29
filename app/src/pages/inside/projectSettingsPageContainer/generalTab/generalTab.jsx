@@ -33,11 +33,12 @@ import {
   normalizeAttributesWithPrefix,
   JOB_ATTRIBUTE_PREFIX,
   projectInfoLoadingSelector,
+  projectKeySelector,
+  projectNameSelector,
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { urlProjectKeySelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -88,7 +89,8 @@ const getAnalyticsData = (...periods) =>
 })
 @connect(
   (state) => ({
-    projectKey: urlProjectKeySelector(state),
+    projectKey: projectKeySelector(state),
+    projectName: projectNameSelector(state),
     isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
@@ -108,6 +110,7 @@ export class GeneralTab extends Component {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     projectKey: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
     jobConfig: PropTypes.shape({
       interruptJobTime: PropTypes.string.isRequired,
       keepLogs: PropTypes.string.isRequired,
@@ -326,7 +329,7 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoading, projectKey } = this.props;
+    const { intl, accountRole, userRole, isLoading, projectName } = this.props;
     const { processingData } = this.state;
     const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
     return isLoading ? (
@@ -338,8 +341,8 @@ export class GeneralTab extends Component {
             <div className={cx('fake-input-label')}>
               {intl.formatMessage(Messages.projectNameLabel)}
             </div>
-            <div className={cx('fake-input')} title={projectKey}>
-              {projectKey}
+            <div className={cx('fake-input')} title={projectName}>
+              {projectName}
             </div>
           </div>
           <FormField

@@ -22,12 +22,8 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import {
-  userFiltersSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { userFiltersSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector, TEST_ITEM_PAGE } from 'controllers/pages';
 import {
   getItemNameConfig,
   getChartDefaultProps,
@@ -42,9 +38,8 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     launchFilters: userFiltersSelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -57,7 +52,6 @@ export class DonutChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
-    projectKey: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
@@ -67,7 +61,10 @@ export class DonutChart extends Component {
     getLink: PropTypes.func,
     configParams: PropTypes.object,
     chartText: PropTypes.string,
-    organizationSlug: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -120,8 +117,7 @@ export class DonutChart extends Component {
       },
       launchFilters,
       getLink,
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
@@ -147,7 +143,7 @@ export class DonutChart extends Component {
         isListType: false,
         itemId: id,
       };
-      navigationParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
+      navigationParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
     }
     const link = getLink(nameConfig, linkParams);
 
@@ -155,11 +151,13 @@ export class DonutChart extends Component {
   };
 
   getDefaultItemsTypeListLinkParams = (activeFilterId) => {
-    const { organizationSlug, projectKey } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     return {
       payload: {
-        projectKey,
+        projectSlug,
         filterId: activeFilterId,
         testItemIds: TEST_ITEMS_TYPE_LIST,
         organizationSlug,

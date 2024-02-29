@@ -26,7 +26,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectSlugSelector } from 'controllers/pages';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -86,10 +86,10 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: projectIdSelector(state),
+    projectSlug: urlProjectSlugSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
-    entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
+    entryType: assignedProjectsSelector(state)[urlProjectSlugSelector(state)]?.entryType,
     projectKey: projectKeySelector(state),
   }),
   { showNotification, showModalAction },
@@ -100,7 +100,7 @@ export class UnassignButton extends Component {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     userId: PropTypes.string,
-    projectId: PropTypes.string,
+    projectSlug: PropTypes.string.isRequired,
     accountRole: PropTypes.string,
     projectRole: PropTypes.string,
     currentUser: PropTypes.string,
@@ -115,7 +115,6 @@ export class UnassignButton extends Component {
   };
   static defaultProps = {
     userId: '',
-    projectId: '',
     accountRole: '',
     projectRole: '',
     currentUser: '',
@@ -135,9 +134,9 @@ export class UnassignButton extends Component {
   };
   isPersonalProject = () =>
     this.props.entryType === 'PERSONAL' &&
-    this.props.projectId === `${this.props.userId.replace('.', '_')}_personal`;
+    this.props.projectSlug === `${this.props.userId.replace('.', '_')}_personal`;
   showUnassignModal = () => {
-    const { tracking, intl, userId, projectId } = this.props;
+    const { tracking, intl, userId, projectSlug } = this.props;
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
     this.props.showModalAction({
       id: 'confirmationModal',
@@ -145,7 +144,7 @@ export class UnassignButton extends Component {
         message: intl.formatMessage(messages.modalText, {
           b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           user: userId,
-          project: projectId,
+          project: projectSlug,
         }),
         onConfirm: this.unassignAction,
         title: intl.formatMessage(messages.modalHeader),

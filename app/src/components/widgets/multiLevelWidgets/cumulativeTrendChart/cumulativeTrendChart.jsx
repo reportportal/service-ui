@@ -23,6 +23,7 @@ import { injectIntl } from 'react-intl';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -58,6 +59,7 @@ const PRINTED_LEGEND_HEIGHT = 80;
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -79,6 +81,10 @@ export class CumulativeTrendChart extends PureComponent {
     isPrintMode: PropTypes.bool,
     onChangeUserSettings: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -279,10 +285,17 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   navigateToTestListView = () => {
-    const { selectedItem, activeAttributes, organizationSlug, projectKey } = this.state;
-    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes } = this.props;
+    const { selectedItem, activeAttributes } = this.state;
+    const {
+      widget,
+      userSettings,
+      getStatisticsLink,
+      getDefectLink,
+      defectTypes,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const navigationParams = getDefaultTestItemLinkParams(
-      projectKey,
+      projectSlug,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
       organizationSlug,

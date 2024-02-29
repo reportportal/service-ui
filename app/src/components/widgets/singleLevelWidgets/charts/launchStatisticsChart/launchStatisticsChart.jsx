@@ -20,12 +20,8 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import {
-  defectTypesSelector,
-  projectKeySelector,
-  orderedContentFieldsSelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -56,8 +52,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
     getDefectLink: defectLinkSelector(state),
@@ -73,8 +68,6 @@ export class LaunchStatisticsChart extends Component {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
-    projectKey: PropTypes.string.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -87,6 +80,10 @@ export class LaunchStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -213,12 +210,11 @@ export class LaunchStatisticsChart extends Component {
       getDefectLink,
       getStatisticsLink,
       defectTypes,
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = locators
@@ -233,14 +229,13 @@ export class LaunchStatisticsChart extends Component {
       getDefectLink,
       getStatisticsLink,
       defectTypes,
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const chartFilterId = widget.appliedFilters[0].id;
     const launchesLimit = widget.contentParameters.itemsCount;
     const nameConfig = getItemNameConfig(data.id);
     const defaultParams = getDefaultTestItemLinkParams(
-      projectKey,
+      projectSlug,
       chartFilterId,
       TEST_ITEMS_TYPE_LIST,
       organizationSlug,

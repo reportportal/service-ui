@@ -26,9 +26,9 @@ import {
   payloadSelector,
   pageSelector,
   PROJECT_LAUNCHES_PAGE,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import { activeProjectKeySelector } from 'controllers/user';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.launches || {};
@@ -69,15 +69,15 @@ export const launchesDistinctLinksSelectorsMap = {
 };
 
 export const getLaunchFilterLinkSelector = createSelector(
-  activeProjectKeySelector,
+  urlOrganizationAndProjectSelector,
   launchDistinctSelector,
-  (projectKey, allLatest) => (filter, active, organizationSlug) => {
+  ({ organizationSlug, projectSlug }, allLatest) => (filter, active) => {
     const filterId = active ? allLatest : filter;
 
     return {
       type: PROJECT_LAUNCHES_PAGE,
       payload: {
-        projectKey,
+        projectSlug,
         filterId,
         organizationSlug,
       },

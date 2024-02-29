@@ -27,10 +27,10 @@ import {
   updatePagePropertiesAction,
   PROJECT_SETTINGS_TAB_PAGE,
   querySelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { redirect } from 'redux-first-router';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
 import styles from './integrations.scss';
@@ -41,8 +41,7 @@ export const Integrations = () => {
   const loading = useSelector(pluginsLoadingSelector);
   const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const plugins = useSelector(availablePluginsSelector);
-  const organizationSlug = useSelector(projectOrganizationSlugSelector);
-  const projectKey = useSelector(projectKeySelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const dispatch = useDispatch();
   const query = useSelector(querySelector);
   const [plugin, setPlugin] = useState({});
@@ -50,12 +49,12 @@ export const Integrations = () => {
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
       payload: {
-        projectKey,
+        projectSlug,
         settingsTab: INTEGRATIONS,
         organizationSlug,
       },
     }),
-    [projectKey, organizationSlug],
+    [projectSlug, organizationSlug],
   );
 
   useEffect(() => {

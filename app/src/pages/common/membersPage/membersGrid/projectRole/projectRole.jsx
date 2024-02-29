@@ -25,7 +25,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectSlugSelector } from 'controllers/pages';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -36,6 +36,7 @@ import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
+
 import styles from './projectRole.scss';
 
 const cx = classNames.bind(styles);
@@ -55,7 +56,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: projectIdSelector(state),
+    projectSlug: urlProjectSlugSelector(state),
     canChangeRole: canChangeUserRole(
       userAccountRoleSelector(state),
       activeProjectRoleSelector(state),
@@ -71,7 +72,6 @@ export class ProjectRole extends Component {
     assignedProjects: PropTypes.object,
     showNotification: PropTypes.func,
     accountRole: PropTypes.string,
-    projectId: PropTypes.string,
     userId: PropTypes.string,
     currentUser: PropTypes.string,
     canChangeRole: PropTypes.bool,
@@ -80,11 +80,11 @@ export class ProjectRole extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     projectKey: PropTypes.string.isRequired,
+    projectSlug: PropTypes.string.isRequired,
   };
   static defaultProps = {
     assignedProjects: {},
     accountRole: '',
-    projectId: '',
     userId: '',
     currentUser: '',
     showNotification: () => {},
@@ -123,8 +123,8 @@ export class ProjectRole extends Component {
       });
   };
   getUserRole() {
-    const { assignedProjects, projectId } = this.props;
-    return assignedProjects[projectId]?.projectRole;
+    const { assignedProjects, projectSlug } = this.props;
+    return assignedProjects[projectSlug]?.projectRole;
   }
   render() {
     this.getUserRole();

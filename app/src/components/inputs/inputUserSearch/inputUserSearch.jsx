@@ -16,8 +16,10 @@
 
 import PropTypes from 'prop-types';
 import { validate } from 'common/utils/validation';
+import { useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { urlProjectSlugSelector } from 'controllers/pages';
 import { InviteNewUserItem } from './inviteNewUserItem';
 import { UserItem } from './userItem';
 
@@ -33,13 +35,14 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
-const makeOptions = (isAdmin, projectKey) => ({ content: options }) =>
+
+const makeOptions = (isAdmin, projectKey, projectSlug) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',
     userLogin: isAdmin ? option.userId : option.login,
     email: option.email || '',
-    disabled: isAdmin ? !!option.assignedProjects[projectKey] : false,
-    isAssigned: isAdmin ? !!option.assignedProjects[projectKey] : false,
+    disabled: isAdmin ? !!option.assignedProjects[projectSlug] : false,
+    isAssigned: isAdmin ? !!option.assignedProjects[projectSlug] : false,
     userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
     assignedProjects: option.assignedProjects || {},
   }));
@@ -72,7 +75,7 @@ export const InputUserSearch = ({
     error={error}
     touched={touched}
     isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(isAdmin, projectKey)}
+    makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlProjectSlugSelector))}
     createNewOption={newOptionCreator}
     value={value}
     parseValueToString={parseValueToString}

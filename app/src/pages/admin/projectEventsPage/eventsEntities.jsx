@@ -436,7 +436,7 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.projectUsernamesSearch(projectKey),
+          getURI: URLS.searchEventsBySubjectName(projectKey),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
           minLength: 1,
         },

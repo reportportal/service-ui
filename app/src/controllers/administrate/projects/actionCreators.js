@@ -77,19 +77,19 @@ export const confirmAssignToProject = (project) => ({
   payload: project,
 });
 
-export const navigateToProjectSectionAction = ({ organizationSlug, projectKey }, section) => ({
+export const navigateToProjectSectionAction = ({ organizationSlug, projectSlug }, section) => ({
   type: PROJECT_DETAILS_PAGE,
   payload: {
-    projectKey,
+    projectSlug,
     projectSection: section,
     organizationSlug,
   },
 });
 
-export const navigateToProjectSettingsAction = ({ organizationSlug, projectKey }) => ({
+export const navigateToProjectSettingsAction = ({ organizationSlug, projectSlug }) => ({
   type: PROJECT_SETTINGS_PAGE,
   payload: {
-    projectKey,
+    projectSlug,
     organizationSlug,
   },
 });

@@ -35,8 +35,9 @@ import {
   updateDashboardAction,
 } from 'controllers/dashboard';
 import { userInfoSelector } from 'controllers/user';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
@@ -109,7 +110,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     projectKey: projectKeySelector(state),
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
@@ -147,7 +148,10 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     activeDashboardId: PropTypes.number,
-    organizationSlug: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
     projectKey: PropTypes.string.isRequired,
   };
 
@@ -207,13 +211,16 @@ export class DashboardItemPage extends Component {
   };
 
   getBreadcrumbs = () => {
-    const { intl, organizationSlug, projectKey } = this.props;
+    const {
+      intl,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     return [
       {
         title: intl.formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectKey, organizationSlug },
+          payload: { organizationSlug, projectSlug },
         },
         eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },
@@ -299,10 +306,10 @@ export class DashboardItemPage extends Component {
     const {
       intl: { formatMessage },
       dashboard,
-      fullScreenMode,
-      organizationSlug,
       projectKey,
+      fullScreenMode,
       changeFullScreenModeAction: changeFullScreenMode,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
 
     return (
@@ -332,7 +339,7 @@ export class DashboardItemPage extends Component {
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
-                      projectKey,
+                      projectSlug,
                       dashboardId: this.props.activeDashboardId,
                       organizationSlug,
                     },

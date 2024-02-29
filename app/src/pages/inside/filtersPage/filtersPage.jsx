@@ -42,7 +42,6 @@ import {
   showFilterOnLaunchesAction,
   hideFilterOnLaunchesAction,
   projectKeySelector,
-  projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
@@ -76,7 +75,6 @@ const messages = defineMessages({
     userFilters: userFiltersSelector(state),
     filters: filtersSelector(state),
     loading: pageLoadingSelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
     projectKey: projectKeySelector(state),
   }),
   {
@@ -123,7 +121,6 @@ export class FiltersPage extends Component {
     createFilter: PropTypes.func,
     updateFilterSuccessAction: PropTypes.func,
     showNotification: PropTypes.func,
-    organizationSlug: PropTypes.string.isRequired,
     projectKey: PropTypes.string.isRequired,
   };
 
@@ -227,8 +224,6 @@ export class FiltersPage extends Component {
       onChangePageSize,
       filters,
       loading,
-      organizationSlug,
-      projectKey,
       ...rest
     } = this.props;
 
@@ -247,8 +242,6 @@ export class FiltersPage extends Component {
             onDelete={this.confirmDelete}
             filters={filters}
             loading={loading}
-            organizationSlug={organizationSlug}
-            projectKey={projectKey}
             {...rest}
           />
           {!filters.length && !loading && this.renderNoFiltersBlock()}

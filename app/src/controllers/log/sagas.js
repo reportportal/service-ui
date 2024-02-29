@@ -23,7 +23,7 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectKeySelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
   logItemIdSelector,
   pathnameChangedSelector,
@@ -96,7 +96,7 @@ import { nestedStepSagas } from './nestedSteps/sagas';
 import { getFormattedPageLocation } from './utils';
 
 function* fetchActivity() {
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
   const activeLogItemId = yield select(activeLogIdSelector);
   yield put(fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(projectKey, activeLogItemId)));
   yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
@@ -286,7 +286,7 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
   const { loadMore, callback } = payload;
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
   const logItemId = yield select(logItemIdSelector);
   const historyItems = yield select(historyItemsSelector);
   const isAllLaunches = yield select(includeAllLaunchesSelector);

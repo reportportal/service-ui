@@ -18,7 +18,6 @@ export {
   pageSelector,
   pagePropertiesSelector,
   activeDashboardIdSelector,
-  projectIdSelector,
   projectSectionSelector,
   launchIdSelector,
   suiteIdSelector,
@@ -40,7 +39,9 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
-  urlProjectKeySelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+  urlOrganizationAndProjectSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
@@ -87,3 +88,4 @@ export {
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';
+export { getProjectKeyFromSlugs } from './utils';

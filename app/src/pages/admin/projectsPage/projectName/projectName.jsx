@@ -72,7 +72,7 @@ export class ProjectName extends Component {
 
   render() {
     const {
-      project: { projectKey, organizationSlug, projectName },
+      project: { projectSlug, organizationSlug, projectName },
       isAssigned,
     } = this.props;
 
@@ -84,7 +84,7 @@ export class ProjectName extends Component {
         to={{
           type: PROJECT_PAGE,
           payload: {
-            projectKey,
+            projectSlug,
             organizationSlug,
           },
         }}

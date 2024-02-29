@@ -31,7 +31,7 @@ import {
   fetchPublicPluginsAction,
 } from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
-import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
+import { SET_LAST_PROJECT } from 'controllers/user/constants';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
@@ -41,8 +41,8 @@ function* fetchInitialData() {
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
-    const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
-    yield put(fetchProjectAction(activeProjectKey));
+    const { payload: lastProject } = yield take(SET_LAST_PROJECT);
+    yield put(fetchProjectAction(lastProject));
     yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());

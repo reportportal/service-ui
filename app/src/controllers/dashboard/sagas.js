@@ -20,17 +20,19 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils/fetch';
-import { setStorageItem } from 'common/utils/storageUtils';
+import { userIdSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PAGE,
   activeDashboardIdSelector,
   pageSelector,
 } from 'controllers/pages';
+import { hideModalAction } from 'controllers/modal';
+import { fetch } from 'common/utils/fetch';
+import { setStorageItem } from 'common/utils/storageUtils';
+
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -56,7 +58,7 @@ import {
 } from './actionCreators';
 
 function* fetchDashboards({ payload: params }) {
-  const projectKey = yield select(activeProjectKeySelector);
+  const projectKey = yield select(projectKeySelector);
   const query = yield select(querySelector);
 
   yield put(
@@ -70,8 +72,8 @@ function* fetchDashboards({ payload: params }) {
 }
 
 function* fetchDashboard() {
-  const projectKey = yield select(activeProjectKeySelector);
-  const organizationSlug = yield select(projectOrganizationSlugSelector);
+  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
   const dashboardItems = yield select(dashboardItemsSelector);
   const isAnalyticsEnabled = yield select(analyticsEnabledSelector);
@@ -89,7 +91,7 @@ function* fetchDashboard() {
     yield put(
       redirect({
         type: PROJECT_DASHBOARD_PAGE,
-        payload: { projectKey, organizationSlug },
+        payload: { organizationSlug, projectSlug },
       }),
     );
   }
@@ -110,7 +112,7 @@ function* fetchDashboard() {
 
 function* addDashboard({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
-  const organizationSlug = yield select(projectOrganizationSlugSelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const owner = yield select(userIdSelector);
   const { id } = yield call(fetch, URLS.dashboards(projectKey), {
     method: 'post',
@@ -128,7 +130,7 @@ function* addDashboard({ payload: dashboard }) {
   yield put(hideModalAction());
   yield put({
     type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectKey, dashboardId: id, organizationSlug },
+    payload: { projectSlug, dashboardId: id, organizationSlug },
   });
 }
 
@@ -177,16 +179,15 @@ function* removeDashboard({ payload: id }) {
 
 function* redirectAfterDelete({ payload: dashboardId }) {
   const activePage = yield select(pageSelector);
-  const organizationSlug = yield select(projectOrganizationSlugSelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   if (activePage === PROJECT_DASHBOARD_ITEM_PAGE) {
     const activeDashboardId = yield select(activeDashboardIdSelector);
     if (activeDashboardId === dashboardId) {
-      const projectKey = yield select(projectKeySelector);
       yield put(hideModalAction());
       yield put(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectKey, organizationSlug },
+          payload: { organizationSlug, projectSlug },
         }),
       );
     }

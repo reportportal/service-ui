@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
   getChartDefaultProps,
@@ -34,8 +34,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -50,8 +49,10 @@ export class LaunchesDurationChart extends Component {
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -63,11 +64,10 @@ export class LaunchesDurationChart extends Component {
   onChartClick = (data) => {
     const {
       widget: { content },
-      projectKey,
-      organizationSlug,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const link = getDefaultTestItemLinkParams(
-      projectKey,
+      projectSlug,
       ALL,
       `${content.result[data.index].id}`,
       organizationSlug,

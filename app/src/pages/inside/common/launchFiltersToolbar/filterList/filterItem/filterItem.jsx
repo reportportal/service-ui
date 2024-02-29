@@ -21,7 +21,7 @@ import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
-import { projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -71,7 +71,7 @@ const FilterItemBase = ({
 );
 
 export const FilterItem = connect((state) => ({
-  organizationSlug: projectOrganizationSlugSelector(state),
+  organizationSlug: urlOrganizationSlugSelector(state),
   getLaunchFilterLink: getLaunchFilterLinkSelector(state),
 }))(FilterItemBase);
 

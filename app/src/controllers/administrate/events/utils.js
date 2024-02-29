@@ -24,12 +24,12 @@ import {
 } from 'components/filterEntities/constants';
 import { parseSortingString } from 'controllers/sorting/utils';
 
-export const getAppliedFilters = (filters, projectId) => {
+export const getAppliedFilters = (filters, projectKey) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
 
   const projectIdFilterParam = {
     filter_key: 'projectName',
-    value: projectId,
+    value: projectKey,
     operation: CONDITION_EQ,
   };
 

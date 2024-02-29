@@ -71,8 +71,8 @@ export {
   projectAttributesSelector,
   projectNotificationsLoadingSelector,
   projectNotificationsStateSelector,
-  projectOrganizationSlugSelector,
   projectKeySelector,
+  projectNameSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

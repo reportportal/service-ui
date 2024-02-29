@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { activeProjectKeySelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
   validate,
   commonValidators,
@@ -58,7 +58,7 @@ const attributeFilterValueValidator = bindMessageToValidator(
 );
 
 @connect((state) => ({
-  projectKey: activeProjectKeySelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @injectIntl
 export class AttributeEditor extends Component {

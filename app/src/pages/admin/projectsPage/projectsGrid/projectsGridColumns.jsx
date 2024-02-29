@@ -120,7 +120,7 @@ MenuColumn.defaultProps = {
 export const StatisticColumn = ({ className, value }) => (
   <div className={cx('projects-col', className)}>
     <ProjectStatisticButton
-      projectKey={value.projectKey}
+      projectSlug={value.projectSlug}
       organizationSlug={value.organizationSlug}
     />
   </div>

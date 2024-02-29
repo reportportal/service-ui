@@ -22,3 +22,13 @@ export const stringToArray = (str = '', separator = '') => {
   }
   return str.toString().split(separator);
 };
+
+export const getProjectKeyFromSlugs = (organizationSlug, projectSlug) => {
+  if (!organizationSlug) {
+    return '';
+  }
+  if (!projectSlug) {
+    return organizationSlug;
+  }
+  return `${organizationSlug}-${projectSlug}`;
+};

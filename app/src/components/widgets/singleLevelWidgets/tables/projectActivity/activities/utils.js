@@ -19,15 +19,15 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { getItemLevel } from 'controllers/testItem';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
 
-export const getProjectSettingTabPageLink = (projectKey, settingsTab, organizationSlug) => ({
+export const getProjectSettingTabPageLink = (projectSlug, settingsTab, organizationSlug) => ({
   type: PROJECT_SETTINGS_TAB_PAGE,
-  payload: { projectKey, settingsTab, organizationSlug },
+  payload: { projectSlug, settingsTab, organizationSlug },
 });
 
-export const getTestItemPageLink = (projectKey, testItemIds, organizationSlug, itemType) => ({
+export const getTestItemPageLink = (projectSlug, testItemIds, organizationSlug, itemType) => ({
   type: getItemLevel(itemType) === LEVEL_STEP ? PROJECT_LOG_PAGE : TEST_ITEM_PAGE,
   payload: {
-    projectKey,
+    projectSlug,
     filterId: ALL,
     testItemIds,
     organizationSlug,

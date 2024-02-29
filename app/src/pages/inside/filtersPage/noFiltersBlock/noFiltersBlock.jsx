@@ -22,30 +22,30 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
 
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
-  organizationSlug: projectOrganizationSlugSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 @track()
 export class NoFiltersBlock extends PureComponent {
   static propTypes = {
-    projectKey: PropTypes.string.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     onAddFilter: PropTypes.func,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
   static defaultProps = {
     onAddFilter: () => {},
@@ -55,7 +55,9 @@ export class NoFiltersBlock extends PureComponent {
     this.props.onAddFilter();
   };
   render() {
-    const { organizationSlug, projectKey } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     return (
       <div className={cx('no-filters-block')}>
         <div className={cx('flex-wrapper')}>
@@ -73,7 +75,7 @@ export class NoFiltersBlock extends PureComponent {
               to={{
                 type: PROJECT_LAUNCHES_PAGE,
                 payload: {
-                  projectKey,
+                  projectSlug,
                   filterId: ALL,
                   organizationSlug,
                 },

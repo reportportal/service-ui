@@ -21,19 +21,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   payloadSelector,
   PROJECT_SETTINGS_TAB_PAGE,
-  urlProjectKeySelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { Tabs } from 'components/main/tabs';
-import classNames from 'classnames/bind';
-import { ANALYSIS } from 'common/constants/settingsTabs';
 import {
+  projectKeySelector,
   ANALYZER_ATTRIBUTE_PREFIX,
   analyzerAttributesSelector,
   fetchConfigurationAttributesAction,
   normalizeAttributesWithPrefix,
   updateConfigurationAttributesAction,
-  projectOrganizationSlugSelector,
 } from 'controllers/project';
+import { Tabs } from 'components/main/tabs';
+import classNames from 'classnames/bind';
+import { ANALYSIS } from 'common/constants/settingsTabs';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
@@ -63,8 +63,8 @@ const cx = classNames.bind(styles);
 export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectKey = useSelector(urlProjectKeySelector);
-  const organizationSlug = useSelector(projectOrganizationSlugSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -84,13 +84,13 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     (subTabName) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
       payload: {
-        projectKey,
+        projectSlug,
         settingsTab: ANALYSIS,
         subTab: subTabName,
         organizationSlug,
       },
     }),
-    [organizationSlug, projectKey],
+    [organizationSlug, projectSlug],
   );
 
   const indexingRunning = useMemo(() => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'), [

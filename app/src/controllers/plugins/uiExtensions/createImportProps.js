@@ -54,18 +54,23 @@ import {
   CANCELLED,
   STOPPED,
 } from 'common/constants/testStatuses';
+import { activeProjectRoleSelector, isAdminSelector, lastProjectSelector } from 'controllers/user';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  isAdminSelector,
-} from 'controllers/user';
+  projectMembersSelector,
+  projectInfoSelector,
+  projectAttributesSelector,
+  fetchProjectAction,
+  projectInfoLoadingSelector,
+  defectTypesSelector,
+  updateConfigurationAttributesAction,
+} from 'controllers/project';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
-  projectIdSelector,
+  urlProjectSlugSelector,
   querySelector,
   payloadSelector,
 } from 'controllers/pages';
@@ -108,15 +113,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
-import {
-  projectMembersSelector,
-  projectInfoSelector,
-  projectAttributesSelector,
-  fetchProjectAction,
-  projectInfoLoadingSelector,
-  defectTypesSelector,
-  updateConfigurationAttributesAction,
-} from 'controllers/project';
+
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -335,8 +332,8 @@ export const createImportProps = (pluginName) => ({
   selectors: {
     pluginRouteSelector,
     payloadSelector,
-    activeProjectSelector,
-    projectIdSelector,
+    activeProjectSelector: lastProjectSelector,
+    projectIdSelector: urlProjectSlugSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,

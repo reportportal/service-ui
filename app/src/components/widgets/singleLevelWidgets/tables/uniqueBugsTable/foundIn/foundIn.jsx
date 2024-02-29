@@ -20,23 +20,23 @@ import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { PROJECT_LOG_PAGE } from 'controllers/pages';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { PROJECT_LOG_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
 import styles from './foundIn.scss';
 
 export const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
-  organizationSlug: projectOrganizationSlugSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 export class FoundIn extends Component {
   static propTypes = {
-    projectKey: PropTypes.string.isRequired,
-    organizationSlug: PropTypes.string.isRequired,
     className: PropTypes.string.isRequired,
     items: PropTypes.array,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -44,13 +44,15 @@ export class FoundIn extends Component {
   };
 
   getItemFragment = (item) => {
-    const { organizationSlug, projectKey } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const pathToItem = item.path || '';
     const path = `${item.launchId}/${pathToItem.replace(/\./g, '/')}`;
     const link = {
       type: PROJECT_LOG_PAGE,
       payload: {
-        projectKey,
+        projectSlug,
         filterId: ALL,
         testItemIds: path,
         organizationSlug,

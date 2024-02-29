@@ -31,7 +31,7 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { projectKeySelector } from 'controllers/project';
-import { activeProjectKeySelector } from 'controllers/user';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
@@ -130,10 +130,16 @@ const ATTACHMENT_MODAL_WORKERS = {
 
 function* openAttachmentInModal({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
-  const projectKey = yield select(activeProjectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
 
   if (modalId) {
-    const data = { projectKey, id, extension: extractExtension(contentType), contentType };
+    const data = {
+      organizationSlug,
+      projectSlug,
+      extension: extractExtension(contentType),
+      contentType,
+      id,
+    };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty

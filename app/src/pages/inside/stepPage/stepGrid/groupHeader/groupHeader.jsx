@@ -19,17 +19,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
-import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
+import {
+  TEST_ITEM_PAGE,
+  launchIdSelector,
+  filterIdSelector,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { isTestItemsListSelector } from 'controllers/testItem';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
 
-const createLink = (projectKey, filterId, launchId, testItemIds, organizationSlug) => ({
+const createLink = (projectSlug, filterId, launchId, testItemIds, organizationSlug) => ({
   type: TEST_ITEM_PAGE,
   payload: {
-    projectKey,
+    projectSlug,
     filterId,
     testItemIds: [launchId, ...testItemIds].join('/'),
     organizationSlug,
@@ -40,9 +44,8 @@ export const GroupHeader = connect((state) => ({
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
-  organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
-}))(({ data, launchId, filterId, isTestItemsList, organizationSlug, projectKey }) => {
+  slugs: urlOrganizationAndProjectSelector(state),
+}))(({ data, launchId, filterId, isTestItemsList, slugs: { organizationSlug, projectSlug } }) => {
   const { itemPaths = [], launchPathName } = data[0].pathNames;
 
   let pathNames = itemPaths;
@@ -67,7 +70,7 @@ export const GroupHeader = connect((state) => ({
             <Link
               className={cx('link')}
               to={createLink(
-                projectKey,
+                projectSlug,
                 filterId,
                 launchId || data[0].launchId,
                 array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
@@ -85,8 +88,10 @@ export const GroupHeader = connect((state) => ({
 });
 GroupHeader.propTypes = {
   data: PropTypes.array,
-  organizationSlug: PropTypes.string.isRequired,
-  projectKey: PropTypes.string.isRequired,
+  slugs: PropTypes.shape({
+    organizationSlug: PropTypes.string.isRequired,
+    projectSlug: PropTypes.string.isRequired,
+  }),
 };
 GroupHeader.defaultProps = {
   data: [],

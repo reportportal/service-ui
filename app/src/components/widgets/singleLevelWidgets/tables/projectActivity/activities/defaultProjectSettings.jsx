@@ -83,9 +83,9 @@ export class DefaultProjectSettings extends Component {
     return `${activities.join(', ')}.`;
   };
 
-  getProjectSettingsLink = (projectKey, organizationSlug) => ({
+  getProjectSettingsLink = (projectSlug, organizationSlug) => ({
     type: PROJECT_SETTINGS_PAGE,
-    payload: { projectKey, organizationSlug },
+    payload: { organizationSlug, projectSlug },
   });
 
   render() {

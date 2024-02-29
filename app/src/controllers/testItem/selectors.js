@@ -33,6 +33,7 @@ import {
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
   pageSelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
@@ -47,11 +48,7 @@ import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
 import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
-import {
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-  defectTypesSelector,
-} from 'controllers/project';
+import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
@@ -161,7 +158,6 @@ const itemTitleFormatter = (item) => {
 };
 
 export const breadcrumbsSelector = createSelector(
-  projectKeySelector,
   activeFilterSelector,
   parentItemsSelector,
   testItemIdsArraySelector,
@@ -169,9 +165,8 @@ export const breadcrumbsSelector = createSelector(
   debugModeSelector,
   filterIdSelector,
   isTestItemsListSelector,
-  projectOrganizationSlugSelector,
+  urlOrganizationAndProjectSelector,
   (
-    projectKey,
     filter,
     parentItems,
     testItemIdsArray,
@@ -179,8 +174,9 @@ export const breadcrumbsSelector = createSelector(
     debugMode,
     filterCategory,
     isTestItemsListView,
-    organizationSlug,
+    slugs,
   ) => {
+    const { organizationSlug, projectSlug } = slugs;
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = filter?.id || filterCategory;
@@ -192,7 +188,7 @@ export const breadcrumbsSelector = createSelector(
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
-            projectKey,
+            projectSlug,
             filterId,
             organizationSlug,
           },
@@ -216,7 +212,7 @@ export const breadcrumbsSelector = createSelector(
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
-              projectKey,
+              projectSlug,
               filterId,
               testItemIds: TEST_ITEMS_TYPE_LIST,
               organizationSlug,
@@ -252,7 +248,7 @@ export const breadcrumbsSelector = createSelector(
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
-              projectKey,
+              projectSlug,
               filterId,
               testItemIds: testItemIdsArray?.slice(0, i + 1).join('/'),
               organizationSlug,
@@ -448,10 +444,9 @@ export const defectLinkSelector = createSelector(
 );
 
 export const testCaseNameLinkSelector = (state) => (ownProps) => {
-  const projectKey = projectKeySelector(state);
-  const organizationSlug = projectOrganizationSlugSelector(state);
+  const { organizationSlug, projectSlug } = urlOrganizationAndProjectSelector(state);
   const payload = {
-    projectKey,
+    projectSlug,
     filterId: ALL,
     organizationSlug,
   };
@@ -562,11 +557,10 @@ export const uniqueErrorsLinkSelector = createSelector(
 );
 
 export const getLogItemLinkSelector = createSelector(
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-  (projectKey, organizationSlug) => (testItem) => {
+  urlOrganizationAndProjectSelector,
+  ({ organizationSlug, projectSlug }) => (testItem) => {
     const payload = {
-      projectKey,
+      projectSlug,
       filterId: ALL,
       organizationSlug,
     };

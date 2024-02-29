@@ -17,11 +17,12 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
 import { DisplayFilter } from './displayFilter';
@@ -38,7 +39,7 @@ const messages = defineMessages({
 });
 
 const NameColumn = ({ className, value, customProps }) => {
-  const { organizationSlug, projectKey } = customProps;
+  const { organizationSlug, projectSlug } = customProps;
   return (
     <div className={cx('name-col', className)}>
       <FilterName
@@ -48,7 +49,7 @@ const NameColumn = ({ className, value, customProps }) => {
         onEdit={customProps.onEdit}
         nameLink={{
           type: PROJECT_LAUNCHES_PAGE,
-          payload: { projectKey, filterId: value.id, organizationSlug },
+          payload: { projectSlug, filterId: value.id, organizationSlug },
         }}
         isLink
         isBold
@@ -129,6 +130,9 @@ DeleteColumn.defaultProps = {
   customProps: {},
 };
 
+@connect((state) => ({
+  slugs: urlOrganizationAndProjectSelector(state),
+}))
 @injectIntl
 @track()
 export class FilterGrid extends Component {
@@ -145,8 +149,10 @@ export class FilterGrid extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    organizationSlug: PropTypes.string.isRequired,
-    projectKey: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -179,8 +185,8 @@ export class FilterGrid extends Component {
           this.props.onEdit(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
         },
-        projectKey: this.props.projectKey,
-        organizationSlug: this.props.organizationSlug,
+        organizationSlug: this.props.slugs.organizationSlug,
+        projectSlug: this.props.slugs.projectSlug,
       },
     },
     {

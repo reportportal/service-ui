@@ -29,7 +29,7 @@ const cx = classNames.bind(styles);
 export const NameColumn = track()(
   ({
     value,
-    customProps: { organizationSlug, projectKey },
+    customProps: { organizationSlug, projectSlug },
     className,
     tracking: { trackEvent },
   }) => {
@@ -39,7 +39,7 @@ export const NameColumn = track()(
         className={cx(className, 'name')}
         to={{
           type: PROJECT_DASHBOARD_ITEM_PAGE,
-          payload: { projectKey, dashboardId, organizationSlug },
+          payload: { projectSlug, dashboardId, organizationSlug },
         }}
         onClick={() => {
           trackEvent(DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK);

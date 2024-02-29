@@ -20,7 +20,7 @@ import styles from './configExamplesBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const javaConfig = (activeProject) => ({
+const javaConfig = (projectName) => ({
   name: 'Java',
   content: (
     <div className={cx('content-wrapper')}>
@@ -30,7 +30,7 @@ const javaConfig = (activeProject) => ({
         <p>rp.endpoint = {window.location.origin}</p>
         <p>{`rp.api.key = <API_KEY>`}</p>
         <p>rp.launch = Java launch</p>
-        <p>rp.project = {activeProject}</p>
+        <p>rp.project = {projectName}</p>
       </div>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <div className={cx('options')}>
@@ -50,7 +50,7 @@ const javaConfig = (activeProject) => ({
     </div>
   ),
 });
-const rubyConfig = (activeProject) => ({
+const rubyConfig = (projectName) => ({
   name: 'Ruby',
   content: (
     <div className={cx('content-wrapper')}>
@@ -58,7 +58,7 @@ const rubyConfig = (activeProject) => ({
       <div className={cx('options')}>
         <p>{`uuid: <API_KEY>`}</p>
         <p>endpoint: {window.location.origin}/api/v1</p>
-        <p>project: {activeProject}</p>
+        <p>project: {projectName}</p>
         <p>launch: Ruby_launch</p>
         <p>attributes: [key:value, value]</p>
       </div>
@@ -68,7 +68,7 @@ const rubyConfig = (activeProject) => ({
     </div>
   ),
 });
-const pythonConfig = (activeProject) => ({
+const pythonConfig = (projectName) => ({
   name: 'Python',
   content: (
     <div className={cx('content-wrapper')}>
@@ -80,7 +80,7 @@ const pythonConfig = (activeProject) => ({
       <p>[pytest]</p>
       <p>{`rp_endpoint = ${window.location.origin}`}</p>
       <p>{`rp_api_key = <API_KEY>`}</p>
-      <p>{`rp_project = ${activeProject}`}</p>
+      <p>{`rp_project = ${projectName}`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>rp_launch = Pytest Launch</p>
       <p>rp_launch_description = My awesome launch</p>
@@ -107,7 +107,7 @@ const pythonConfig = (activeProject) => ({
       <div className={cx('options')}>
         <p>{`--variable RP_ENDPOINT:"${window.location.origin}" \\`}</p>
         <p>{`--variable RP_API_KEY:"<API_KEY>" \\`}</p>
-        <p>{`--variable RP_PROJECT:"${activeProject}" \\`}</p>
+        <p>{`--variable RP_PROJECT:"${projectName}" \\`}</p>
         <p>--variable RP_LAUNCH:"Robot Framework Launch" \</p>
         <p>./tests</p>
       </div>
@@ -129,7 +129,7 @@ const pythonConfig = (activeProject) => ({
       <p>[report_portal]</p>
       <p>{`endpoint = ${window.location.origin}`}</p>
       <p>{`api_key = <API_KEY>`}</p>
-      <p>{`project = ${activeProject}`}</p>
+      <p>{`project = ${projectName}`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>launch_name = Behave Launch</p>
       <p>launch_description = 'My awesome launch'</p>
@@ -149,7 +149,7 @@ const pythonConfig = (activeProject) => ({
     </div>
   ),
 });
-const dotNetConfig = (activeProject) => ({
+const dotNetConfig = (projectName) => ({
   name: '.net',
   content: (
     <div className={cx('content-wrapper')}>
@@ -163,7 +163,7 @@ const dotNetConfig = (activeProject) => ({
         <p>{`"server": {`}</p>
         <div className={cx('options')}>
           <p>{`"url": "${window.location.origin}",`}</p>
-          <p>{`"project": "${activeProject}",`}</p>
+          <p>{`"project": "${projectName}",`}</p>
           <p>{`"apiKey": "<API_KEY>"`}</p>
         </div>
         <p>{`},`}</p>
@@ -183,7 +183,7 @@ const dotNetConfig = (activeProject) => ({
     </div>
   ),
 });
-const nodejsConfig = (activeProject) => ({
+const nodejsConfig = (projectName) => ({
   name: 'NodeJS',
   content: (
     <div className={cx('content-wrapper')}>
@@ -202,7 +202,7 @@ const nodejsConfig = (activeProject) => ({
       <div className={cx('options')}>
         <p>{`endpoint: "${window.location.origin}/api/v1",`}</p>
         <p>{`apiKey: "<API_KEY>",`}</p>
-        <p>{`project: "${activeProject}",`}</p>
+        <p>{`project: "${projectName}",`}</p>
         <p>launch: "Launch name",</p>
         <p>description: "My awesome launch",</p>
         <p>attributes: [</p>
@@ -210,12 +210,12 @@ const nodejsConfig = (activeProject) => ({
           <p>{`{`}</p>
           <div className={cx('options')}>
             <p>key: "attributeKey",</p>
-            <p>value: "attrbiuteValue",</p>
+            <p>value: "attributeValue",</p>
           </div>
           <p>{`},`}</p>
           <p>{`{`}</p>
           <div className={cx('options')}>
-            <p>value: "anotherAttrbiuteValue",</p>
+            <p>value: "anotherAttributeValue",</p>
           </div>
           <p>{`},`}</p>
         </div>

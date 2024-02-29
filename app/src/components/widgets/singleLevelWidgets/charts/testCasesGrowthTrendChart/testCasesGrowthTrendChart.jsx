@@ -31,7 +31,7 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getConfig } from './config/getConfig';
 import styles from './testCasesGrowthTrendChart.scss';
 
@@ -39,8 +39,7 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
-    organizationSlug: projectOrganizationSlugSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -54,14 +53,16 @@ export class TestCasesGrowthTrendChart extends Component {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    projectKey: PropTypes.string.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     createFilterAction: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
-    organizationSlug: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -125,9 +126,13 @@ export class TestCasesGrowthTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getStatisticsLink, projectKey, organizationSlug } = this.props;
+    const {
+      widget,
+      getStatisticsLink,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
     const statisticsLink = getStatisticsLink({
       statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
     });
