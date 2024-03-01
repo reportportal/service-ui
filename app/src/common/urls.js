@@ -18,6 +18,8 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
+export const UAT_API_PATH = '/uat';
+
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
 export const UAT_API_URL_PREFIX = '../uat';
@@ -102,7 +104,7 @@ export const URLS = {
   launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
-  launches: (activeProject) => `${urlBase}${activeProject}/launch`,
+  launches: (activeProject, ids = []) => `${urlBase}${activeProject}/launch?ids=${ids.join(',')}`,
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
@@ -235,7 +237,7 @@ export const URLS = {
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
-  users: () => `${urlCommonBase}users`,
+  users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlCommonBase}users/registration`,
   userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,

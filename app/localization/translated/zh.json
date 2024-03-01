@@ -1503,7 +1503,6 @@
   "PatternAnalysis.deletePatternMsg": "您确定要删除该模板吗？",
   "PatternAnalysis.deletePatternSuccess": "已删除模板规则",
   "PatternAnalysis.duplicatePattern": "复制模板规则",
-  "PatternAnalysis.editPatternName": "编辑模板名称",
   "PatternAnalysis.headerTitle": "编辑模板",
   "PatternAnalysis.patternName": "模板名称",
   "PatternAnalysis.patternNameDuplicateHint": "项目中已存在同名模版",

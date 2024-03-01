@@ -136,6 +136,7 @@ export class IntegrationForm extends Component {
         className={cx('integration-form', {
           'configuration-not-specified-view': isConfigurationNotSpecified,
         })}
+        data-automation-id="fieldsConfigurationForm"
       >
         {!shouldFieldsBeHidden && (
           <>

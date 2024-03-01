@@ -431,11 +431,7 @@ export class GeneralTab extends Component {
             </Button>
             {processingData && (
               <div className={cx('preloader-block')}>
-                <BubblesPreloader
-                  color={'topaz'}
-                  bubblesCount={7}
-                  customClassName={cx('preloader')}
-                />
+                <BubblesPreloader customClassName={cx('preloader')} />
                 <span className={cx('preloader-text')}>
                   {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
                 </span>

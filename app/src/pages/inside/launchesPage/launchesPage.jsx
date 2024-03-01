@@ -507,11 +507,8 @@ export class LaunchesPage extends Component {
     );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject), {
+    fetch(URLS.launches(this.props.activeProject, ids), {
       method: 'delete',
-      data: {
-        ids,
-      },
     })
       .then(() => {
         this.unselectAndFetchLaunches();

@@ -17,12 +17,13 @@
 import { normalizeEventString } from '../../utils';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
-const RATIO_BASED_ON = 'ratio_based_on';
 const DASHBOARDS = 'dashboards';
+const RATIO_BASED_ON = 'ratio_based_on';
+const EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS = 'exclude_skipped_tests_from_statistics';
 
 const modalNames = {
-  editWidgetModal: 'edit_modal',
-  widgetWizardModal: 'add_modal',
+  editWidgetModal: 'edit_widget',
+  widgetWizardModal: 'add_widget',
 };
 
 const getBasicEventTypeConfig = (type) => ({
@@ -36,6 +37,14 @@ export const WIDGETS_EVENTS = {
     place: normalizeEventString(place),
     modal: modalNames[modalId],
     element_name: RATIO_BASED_ON,
+  }),
+
+  createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
+    ...getBasicEventTypeConfig(type),
+    type,
+    status,
+    modal: modalNames[modalId],
+    element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
   }),
 };
 

@@ -177,6 +177,12 @@ export const PatternAnalysisContent = ({
     },
   ];
 
+  const handleRuleItemClick = (isShown) => {
+    if (isShown) {
+      trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.OPEN_NAME_PATTERN_ANALYSIS);
+    }
+  };
+
   return (
     <>
       <Layout
@@ -211,6 +217,7 @@ export const PatternAnalysisContent = ({
           onToggle={onToggleHandler}
           ruleItemContent={PatternRuleContent}
           dataAutomationId="patternsList"
+          handleRuleItemClick={handleRuleItemClick}
         />
       </div>
     </>

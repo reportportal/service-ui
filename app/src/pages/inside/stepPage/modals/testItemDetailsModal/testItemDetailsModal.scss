@@ -36,6 +36,7 @@
 }
 
 .status {
+  display: flex;
   white-space: nowrap;
 }
 
@@ -91,6 +92,11 @@
   line-height: 1.2;
   color: $COLOR--charcoal-grey;
   padding-bottom: 10px;
+}
+
+.description {
+  display: flex;
+  justify-content: space-between;
 }
 
 .tab-header {
