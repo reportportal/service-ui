@@ -307,10 +307,19 @@ const MakeDecision = ({ data }) => {
       eventsInfo: { editDefectsEvents = {} },
       items,
     } = data;
-    const { issueActionType, suggestedItems, extraAnalyticsParams } = modalState;
-    const { issueType } = modalState[ACTIVE_TAB_MAP[activeTab]].issue;
+
+    const {
+      issueActionType,
+      suggestedItems,
+      extraAnalyticsParams,
+      selectManualChoice: {
+        issue: { comment },
+      },
+    } = modalState;
 
     const hasSuggestions = !!suggestedItems.length;
+    const linkName = (comment?.trim() || '') !== (itemData.issue?.comment?.trim() || '');
+    const { issueType } = modalState[ACTIVE_TAB_MAP[activeTab]].issue;
 
     return isBulkOperation
       ? editDefectsEvents.getClickOnApplyBulkEvent(
@@ -318,6 +327,7 @@ const MakeDecision = ({ data }) => {
           issueActionType,
           items,
           issueType,
+          linkName,
         )
       : editDefectsEvents.getClickOnApplyEvent(
           defectFromTIGroup,
