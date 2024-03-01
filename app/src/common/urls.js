@@ -128,8 +128,8 @@ export const URLS = {
   apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
-  project: (activeProject) => `${urlBase}project/${activeProject}`,
-  addProject: () => `${urlBase}project`,
+  projectByName: (activeProject) => `${urlBase}project/${activeProject}`,
+  project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
   projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
