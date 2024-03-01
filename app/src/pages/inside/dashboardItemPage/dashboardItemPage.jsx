@@ -302,6 +302,7 @@ export class DashboardItemPage extends Component {
           ratioBasedOnChange: WIDGETS_EVENTS.createClickOnRatioBasedOptionInPassingRateCharts(
             modalId,
           ),
+          excludeSkippedTests: WIDGETS_EVENTS.createClickExcludeSkippedTestsOnHealthCheck(modalId),
         },
       },
     });

@@ -16,6 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -90,6 +91,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@track()
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -100,6 +102,9 @@ export class ComponentHealthCheckControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -154,6 +159,16 @@ export class ComponentHealthCheckControls extends Component {
     );
   };
 
+  handleExcludeSkipped = ({ target: { checked } }) => {
+    const {
+      eventsInfo: { excludeSkippedTests },
+      tracking: { trackEvent },
+    } = this.props;
+    const type = 'component_health_check';
+
+    trackEvent(excludeSkippedTests(type, checked));
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -184,7 +199,11 @@ export class ComponentHealthCheckControls extends Component {
                 )}
               />
             </FieldProvider>
-            <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+            <FieldProvider
+              onChange={this.handleExcludeSkipped}
+              name="contentParameters.widgetOptions.excludeSkipped"
+              format={Boolean}
+            >
               <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
             </FieldProvider>
             <FieldProvider

@@ -329,6 +329,7 @@ export class SimpleWidget extends Component {
           ratioBasedOnChange: WIDGETS_EVENTS.createClickOnRatioBasedOptionInPassingRateCharts(
             modalId,
           ),
+          excludeSkippedTests: WIDGETS_EVENTS.createClickExcludeSkippedTestsOnHealthCheck(modalId),
         },
       },
     });
