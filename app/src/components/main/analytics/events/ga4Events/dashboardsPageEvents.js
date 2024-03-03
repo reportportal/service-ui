@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { normalizeEventString } from '../../utils';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
-const RATIO_BASED_ON = 'ratio_based_on';
 const EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS = 'exclude_skipped_tests_from_statistics';
 
 const modalNames = {
@@ -26,21 +24,9 @@ const modalNames = {
   widgetWizardModal: 'add_widget',
 };
 
-const getBasicEventTypeConfig = (type) => ({
-  ...getBasicClickEventParameters(DASHBOARDS),
-  type: normalizeEventString(type),
-});
-
 export const WIDGETS_EVENTS = {
-  createClickOnRatioBasedOptionInPassingRateCharts: (modalId) => (place, type) => ({
-    ...getBasicEventTypeConfig(type),
-    place: normalizeEventString(place),
-    modal: modalNames[modalId],
-    element_name: RATIO_BASED_ON,
-  }),
-
   createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
-    ...getBasicEventTypeConfig(type),
+    ...getBasicClickEventParameters(DASHBOARDS),
     type,
     status,
     modal: modalNames[modalId],

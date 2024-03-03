@@ -31,10 +31,10 @@ export const getConfig = ({
   onRendered,
   viewMode,
   onChartClick,
-  includeSkipped,
+  excludeSkipped,
 }) => {
-  const totalItems = includeSkipped ? content.total : content.total - (content.skipped ?? 0);
-  const statisticKey = includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED;
+  const totalItems = excludeSkipped ? content.total - (content.skipped ?? 0) : content.total;
+  const statisticKey = excludeSkipped ? STATS_FAILED : NOT_PASSED_STATISTICS_KEY;
   const notPassed = totalItems - content.passed;
 
   const columnData = {

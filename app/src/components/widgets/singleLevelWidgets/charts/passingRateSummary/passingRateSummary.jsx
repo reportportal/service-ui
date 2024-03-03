@@ -49,14 +49,14 @@ export class PassingRateSummary extends Component {
       project,
       widget: {
         contentParameters: {
-          widgetOptions: { includeSkipped },
+          widgetOptions: { excludeSkipped },
         },
       },
     } = this.props;
 
-    const linkCreationParametersForFailed = includeSkipped
-      ? [FAILED, INTERRUPTED, SKIPPED]
-      : [FAILED, INTERRUPTED];
+    const linkCreationParametersForFailed = excludeSkipped
+      ? [FAILED, INTERRUPTED]
+      : [FAILED, INTERRUPTED, SKIPPED];
 
     const link = getStatisticsLink({
       statuses: data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed,
