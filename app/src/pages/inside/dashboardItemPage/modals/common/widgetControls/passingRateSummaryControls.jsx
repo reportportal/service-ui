@@ -84,16 +84,6 @@ export class PassingRateSummaryControls extends Component {
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
-  handleExcludeSkippedChange = ({ target: { checked } }) => {
-    const {
-      eventsInfo: { excludeSkippedTests },
-      tracking: { trackEvent },
-    } = this.props;
-    const type = 'passing_rate_summary';
-
-    trackEvent(excludeSkippedTests(type, checked));
-  };
-
   render() {
     const {
       intl: { formatMessage },
@@ -137,11 +127,7 @@ export class PassingRateSummaryControls extends Component {
                 )}
               />
             </FieldProvider>
-            <FieldProvider
-              onChange={this.handleExcludeSkippedChange}
-              name="contentParameters.widgetOptions.excludeSkipped"
-              format={Boolean}
-            >
+            <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
               <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
             </FieldProvider>
           </Fragment>

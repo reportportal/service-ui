@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+import {
+  PASSING_RATE_PER_LAUNCH,
+  PASSING_RATE_SUMMARY,
+  COMPONENT_HEALTH_CHECK,
+  COMPONENT_HEALTH_CHECK_TABLE,
+} from 'common/constants/widgetTypes';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
@@ -24,10 +30,17 @@ const modalNames = {
   widgetWizardModal: 'add_widget',
 };
 
+const widgetType = {
+  [PASSING_RATE_PER_LAUNCH]: 'passing_rate_per_launch',
+  [PASSING_RATE_SUMMARY]: 'passing_rate_summary',
+  [COMPONENT_HEALTH_CHECK]: 'component_health_check',
+  [COMPONENT_HEALTH_CHECK_TABLE]: 'component_health_check_table_view',
+};
+
 export const WIDGETS_EVENTS = {
   createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    type,
+    type: widgetType[type],
     status,
     modal: modalNames[modalId],
     element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
