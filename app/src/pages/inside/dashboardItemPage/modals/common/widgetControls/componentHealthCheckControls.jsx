@@ -159,16 +159,6 @@ export class ComponentHealthCheckControls extends Component {
     );
   };
 
-  handleExcludeSkipped = ({ target: { checked } }) => {
-    const {
-      eventsInfo: { excludeSkippedTests },
-      tracking: { trackEvent },
-    } = this.props;
-    const type = 'component_health_check';
-
-    trackEvent(excludeSkippedTests(type, checked));
-  };
-
   render() {
     const {
       intl: { formatMessage },
@@ -199,11 +189,7 @@ export class ComponentHealthCheckControls extends Component {
                 )}
               />
             </FieldProvider>
-            <FieldProvider
-              onChange={this.handleExcludeSkipped}
-              name="contentParameters.widgetOptions.excludeSkipped"
-              format={Boolean}
-            >
+            <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
               <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
             </FieldProvider>
             <FieldProvider

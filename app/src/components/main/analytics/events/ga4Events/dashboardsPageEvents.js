@@ -24,10 +24,17 @@ const modalNames = {
   widgetWizardModal: 'add_widget',
 };
 
+const typeWidget = {
+  passingRatePerLaunch: 'passing_rate_per_launch',
+  passingRateSummary: 'passing_rate_summary',
+  componentHealthCheck: 'component_health_check',
+  componentHealthCheckTable: 'component_health_check_table_view',
+};
+
 export const WIDGETS_EVENTS = {
   createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    type,
+    type: typeWidget[type],
     status,
     modal: modalNames[modalId],
     element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
