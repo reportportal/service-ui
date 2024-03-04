@@ -21,17 +21,10 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
-import {
-  EXCLUDING_SKIPPED,
-  TOTAL_TEST_CASES,
-  FORM_GROUP_CONTROL,
-  passingRateOptionMessages,
-} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import track from 'react-tracking';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
-import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
-import { widgetTypesMessages } from '../messages';
+import { TogglerControl, FiltersControl, InputControl, CheckboxControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
 
@@ -43,6 +36,10 @@ const messages = defineMessages({
   ItemsValidationError: {
     id: 'PassingRateSummaryControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 600',
+  },
+  excludeSkipped: {
+    id: 'PassingRateSummaryControls.excludeSkipped',
+    defaultMessage: 'Exclude Skipped tests from statistics',
   },
 });
 
@@ -76,7 +73,7 @@ export class PassingRateSummaryControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
-          includeSkipped: true,
+          excludeSkipped: false,
         },
       },
     });
@@ -87,18 +84,14 @@ export class PassingRateSummaryControls extends Component {
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
-  handleIncludeSkippedChange = (includeSkipped) => {
+  handleExcludeSkippedChange = ({ target: { checked } }) => {
     const {
-      eventsInfo: { ratioBasedOnChange },
+      eventsInfo: { excludeSkippedTests },
       tracking: { trackEvent },
-      widgetType,
     } = this.props;
+    const type = 'passing_rate_summary';
 
-    const eventType = includeSkipped
-      ? 'total_test_cases'
-      : passingRateOptionMessages[EXCLUDING_SKIPPED].defaultMessage;
-
-    trackEvent(ratioBasedOnChange(widgetTypesMessages[widgetType].defaultMessage, eventType));
+    trackEvent(excludeSkippedTests(type, checked));
   };
 
   render() {
@@ -108,11 +101,6 @@ export class PassingRateSummaryControls extends Component {
       onFormAppearanceChange,
       eventsInfo,
     } = this.props;
-
-    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-      label: formatMessage(passingRateOptionMessages[option]),
-      value: `${option === TOTAL_TEST_CASES}`,
-    }));
 
     return (
       <Fragment>
@@ -150,13 +138,11 @@ export class PassingRateSummaryControls extends Component {
               />
             </FieldProvider>
             <FieldProvider
-              onChange={this.handleIncludeSkippedChange}
-              name="contentParameters.widgetOptions.includeSkipped"
+              onChange={this.handleExcludeSkippedChange}
+              name="contentParameters.widgetOptions.excludeSkipped"
+              format={Boolean}
             >
-              <RadioGroupControl
-                options={options}
-                fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
-              />
+              <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
             </FieldProvider>
           </Fragment>
         )}

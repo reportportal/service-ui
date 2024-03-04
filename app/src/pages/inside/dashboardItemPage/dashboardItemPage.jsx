@@ -299,9 +299,6 @@ export class DashboardItemPage extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
-          ratioBasedOnChange: WIDGETS_EVENTS.createClickOnRatioBasedOptionInPassingRateCharts(
-            modalId,
-          ),
           excludeSkippedTests: WIDGETS_EVENTS.createClickExcludeSkippedTestsOnHealthCheck(modalId),
         },
       },
