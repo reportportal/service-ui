@@ -16,7 +16,8 @@
 
 import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { createSelector } from 'reselect';
-import { createQueryParametersSelector, projectIdSelector } from 'controllers/pages';
+import { createQueryParametersSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { SORTING_KEY } from 'controllers/sorting';
 import { administrateDomainSelector } from '../selectors';
 import { DEFAULT_SORTING } from './constants';
@@ -35,8 +36,11 @@ export const createEventsPageQueryParametersSelector = ({
 } = {}) =>
   createSelector(
     createQueryParametersSelector({ staticNamespace, defaultPagination, defaultSorting }),
-    projectIdSelector,
-    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...filters }, projectId) => {
+    projectKeySelector,
+    (
+      { [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...filters },
+      projectKey,
+    ) => {
       const alternativePaginationAndSortParams = getAlternativePaginationAndSortParams(
         sort,
         limit,
@@ -44,7 +48,7 @@ export const createEventsPageQueryParametersSelector = ({
       );
 
       return {
-        appliedFilters: getAppliedFilters(filters, projectId),
+        appliedFilters: getAppliedFilters(filters, projectKey),
         alternativePaginationAndSortParams,
       };
     },

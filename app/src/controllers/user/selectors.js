@@ -36,8 +36,8 @@ export const photoTimeStampSelector = (state) => settingsSelector(state).photoTi
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {
-  const activeProject = activeProjectSelector(state);
-  const assignedProject = assignedProjectsSelector(state)[activeProject];
+  const { projectSlug } = activeProjectSelector(state);
+  const assignedProject = assignedProjectsSelector(state)[projectSlug];
   return assignedProject?.projectRole;
 };
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
@@ -47,14 +47,16 @@ export const availableProjectsSelector = createSelector(
   projectInfoSelector,
   activeProjectSelector,
   isAdminSelector,
-  ({ assignedProjects }, { entryType = INTERNAL }, activeProjectName, isAdmin) => {
-    const isAssignedToProject = activeProjectName && assignedProjects[activeProjectName];
+  ({ assignedProjects }, { entryType = INTERNAL }, { projectSlug }, isAdmin) => {
+    const isAssignedToProject = projectSlug && assignedProjects[projectSlug];
     const isPropagatedToUnassignedProject = isAdmin && !isAssignedToProject;
 
     return isPropagatedToUnassignedProject
-      ? { ...assignedProjects, [activeProjectName]: { entryType } }
+      ? { ...assignedProjects, [projectSlug]: { entryType } }
       : assignedProjects;
   },
 );
 
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
+
+export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;

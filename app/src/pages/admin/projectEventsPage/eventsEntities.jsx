@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 
 import {
   EntityDropdown,
@@ -128,7 +128,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {},
 )
@@ -138,7 +138,7 @@ export class EventsEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -146,7 +146,7 @@ export class EventsEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, activeProject } = this.props;
+    const { intl, projectKey } = this.props;
     return [
       {
         id: ACTIVITIES,
@@ -436,7 +436,7 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.searchEventsBySubjectName(activeProject),
+          getURI: URLS.projectUsernamesSearch(projectKey),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
           minLength: 1,
         },

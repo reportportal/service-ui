@@ -18,7 +18,6 @@ export {
   pageSelector,
   pagePropertiesSelector,
   activeDashboardIdSelector,
-  projectIdSelector,
   projectSectionSelector,
   launchIdSelector,
   suiteIdSelector,
@@ -40,6 +39,9 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+  urlOrganizationAndProjectSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 

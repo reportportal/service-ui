@@ -80,10 +80,10 @@ export class ProjectPanel extends Component {
   getOrganization() {
     const {
       intl,
-      project: { entryType, organization },
+      project: { entryType, organizationSlug },
     } = this.props;
     return (
-      organization ||
+      organizationSlug ||
       (entryType === PERSONAL_PROJECT && intl.formatMessage(messages.personal)) ||
       (entryType === INTERNAL_PROJECT && intl.formatMessage(messages.internal))
     );
@@ -91,13 +91,19 @@ export class ProjectPanel extends Component {
 
   render() {
     const {
-      project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
+      project: {
+        projectSlug,
+        entryType,
+        lastRun,
+        launchesQuantity,
+        usersQuantity,
+        organizationSlug,
+      },
       intl,
     } = this.props;
     const { value: relativeTime, unit } = getRelativeUnits(new Date(lastRun).getTime());
 
     const organization = this.getOrganization();
-
     return (
       <div className={cx('container')}>
         <div className={cx('info-block')}>
@@ -135,7 +141,8 @@ export class ProjectPanel extends Component {
               emptyValueCaption={intl.formatMessage(messages.noMembers)}
             />
             <ProjectStatisticButton
-              projectName={projectName}
+              projectSlug={projectSlug}
+              organizationSlug={organizationSlug}
               onClick={() =>
                 this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.STATISTIC_ICON)
               }

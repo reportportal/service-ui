@@ -38,7 +38,7 @@ export class InputConditionalAttributes extends Component {
     onChange: PropTypes.func,
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
-    projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     isAttributeValueRequired: PropTypes.bool,
   };
 
@@ -48,7 +48,6 @@ export class InputConditionalAttributes extends Component {
     valueURLCreator: () => {},
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
-    projectId: '',
     isAttributeValueRequired: true,
   };
 
@@ -140,7 +139,7 @@ export class InputConditionalAttributes extends Component {
       value,
       keyURLCreator,
       valueURLCreator,
-      projectId,
+      projectKey,
       isAttributeValueRequired,
     } = this.props;
     const inputConditions = this.getConditions();
@@ -157,7 +156,7 @@ export class InputConditionalAttributes extends Component {
           <AttributeEditor
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
-            projectId={projectId}
+            projectKey={projectKey}
             onConfirm={this.onChangeAttributes}
             nakedView
             isAttributeValueRequired={isAttributeValueRequired}

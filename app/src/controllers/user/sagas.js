@@ -41,6 +41,7 @@ import {
   setApiKeysAction,
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
+  setActiveProjectKeyAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -52,13 +53,13 @@ function* assignToProject({ payload: project }) {
     },
   };
   try {
-    yield call(fetch, URLS.userInviteInternal(project.projectName), {
+    yield call(fetch, URLS.userInviteInternal(project.projectKey), {
       method: 'put',
       data,
     });
     yield put(
       assignToProjectSuccessAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -73,7 +74,7 @@ function* assignToProject({ payload: project }) {
     const error = err.message;
     yield put(
       assignToProjectErrorAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -94,7 +95,7 @@ function* unassignFromProject({ payload: project }) {
     userNames: [userId],
   };
   try {
-    yield call(fetch, URLS.userUnasign(project.projectName), {
+    yield call(fetch, URLS.userUnassign(project), {
       method: 'put',
       data,
     });
@@ -126,19 +127,49 @@ function* fetchUserWorker() {
     yield put(fetchUserErrorAction());
     return;
   }
-  const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProject = userSettings.activeProject;
-  const activeProject =
-    savedActiveProject && savedActiveProject in user.assignedProjects
-      ? savedActiveProject
-      : Object.keys(user.assignedProjects)[0];
+  const { userId, assignedOrganizations, assignedProjects } = user;
+  const userSettings = getStorageItem(`${userId}_settings`) || {};
+  const { activeProject: savedActiveProject } = userSettings ?? {};
+  const { organizationSlug: savedOrganizationSlug, projectSlug: savedProjectSlug } =
+    savedActiveProject || {};
+
+  const defaultProject = Object.keys(assignedProjects)[0];
+  const {
+    projectSlug: defaultProjectSlug,
+    projectKey: defaultProjectKey,
+    organizationId,
+  } = assignedProjects[defaultProject];
+  const defaultOrganization =
+    Object.keys(assignedOrganizations).find(
+      (key) => assignedOrganizations[key].organizationId === organizationId,
+    ) || {};
+  const { organizationSlug: defaultOrganizationSlug } = assignedOrganizations[defaultOrganization];
+
+  const isSavedProjectExist =
+    savedOrganizationSlug &&
+    savedOrganizationSlug in assignedOrganizations &&
+    savedProjectSlug &&
+    savedProjectSlug in assignedProjects;
+
+  const activeProject = isSavedProjectExist
+    ? savedActiveProject
+    : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+
+  const projectKey = isSavedProjectExist
+    ? assignedProjects[savedProjectSlug].projectKey
+    : defaultProjectKey;
+
   yield put(setActiveProjectAction(activeProject));
+  yield put(setActiveProjectKeyAction(projectKey));
 }
 
-function* saveActiveProject({ payload: project }) {
+function* saveActiveProjectWorker({ payload: activeProject }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
+  setStorageItem(`${user.userId}_settings`, {
+    ...currentUserSettings,
+    activeProject,
+  });
 }
 
 function* addApiKey({ payload = {} }) {
@@ -259,8 +290,8 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSetActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
+function* watchSaveActiveProject() {
+  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
 }
 
 function* watchFetchUser() {
@@ -280,7 +311,7 @@ export function* userSagas() {
     watchAssignToProject(),
     watchUnassignFromProject(),
     watchFetchUser(),
-    watchSetActiveProject(),
+    watchSaveActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

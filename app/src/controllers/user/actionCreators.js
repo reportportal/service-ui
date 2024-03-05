@@ -33,6 +33,7 @@ import {
   DELETE_API_KEY_SUCCESS,
   ADD_API_KEY_SUCCESS,
   DELETE_USER_ACCOUNT,
+  SET_ACTIVE_PROJECT_KEY,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -55,9 +56,14 @@ export const setApiKeysAction = (apiKeys = []) => ({
   payload: apiKeys,
 });
 
-export const setActiveProjectAction = (project) => ({
+export const setActiveProjectAction = (activeProject) => ({
   type: SET_ACTIVE_PROJECT,
-  payload: project,
+  payload: activeProject,
+});
+
+export const setActiveProjectKeyAction = (activeProjectKey) => ({
+  type: SET_ACTIVE_PROJECT_KEY,
+  payload: activeProjectKey,
 });
 
 export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({

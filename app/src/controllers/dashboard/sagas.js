@@ -20,17 +20,19 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import { hideModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils/fetch';
-import { setStorageItem } from 'common/utils/storageUtils';
+import { userIdSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PAGE,
   activeDashboardIdSelector,
   pageSelector,
-  projectIdSelector,
 } from 'controllers/pages';
+import { hideModalAction } from 'controllers/modal';
+import { fetch } from 'common/utils/fetch';
+import { setStorageItem } from 'common/utils/storageUtils';
+
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -56,11 +58,11 @@ import {
 } from './actionCreators';
 
 function* fetchDashboards({ payload: params }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const query = yield select(querySelector);
 
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject), {
+    fetchDataAction(NAMESPACE)(URLS.dashboards(projectKey), {
       params: {
         ...query,
         ...params,
@@ -70,7 +72,8 @@ function* fetchDashboards({ payload: params }) {
 }
 
 function* fetchDashboard() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
   const dashboardItems = yield select(dashboardItemsSelector);
   const isAnalyticsEnabled = yield select(analyticsEnabledSelector);
@@ -82,14 +85,13 @@ function* fetchDashboard() {
   }
 
   try {
-    dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
+    dashboard = yield call(fetch, URLS.dashboard(projectKey, activeDashboardId));
     yield put(updateDashboardItemSuccessAction(dashboard));
   } catch (error) {
-    const projectId = yield select(projectIdSelector);
     yield put(
       redirect({
         type: PROJECT_DASHBOARD_PAGE,
-        payload: { projectId },
+        payload: { organizationSlug, projectSlug },
       }),
     );
   }
@@ -109,9 +111,10 @@ function* fetchDashboard() {
 }
 
 function* addDashboard({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const owner = yield select(userIdSelector);
-  const { id } = yield call(fetch, URLS.dashboards(activeProject), {
+  const { id } = yield call(fetch, URLS.dashboards(projectKey), {
     method: 'post',
     data: dashboard,
   });
@@ -127,15 +130,15 @@ function* addDashboard({ payload: dashboard }) {
   yield put(hideModalAction());
   yield put({
     type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectId: activeProject, dashboardId: id },
+    payload: { projectSlug, dashboardId: id, organizationSlug },
   });
 }
 
 function* updateDashboard({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const { name, description, id } = dashboard;
 
-  yield call(fetch, URLS.dashboard(activeProject, id), {
+  yield call(fetch, URLS.dashboard(projectKey, id), {
     method: 'put',
     data: { name, description },
   });
@@ -143,9 +146,9 @@ function* updateDashboard({ payload: dashboard }) {
 }
 
 function* updateDashboardWidgets({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
-  yield call(fetch, URLS.dashboard(activeProject, dashboard.id), {
+  yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
     method: 'put',
     data: {
       name: dashboard.name,
@@ -157,8 +160,8 @@ function* updateDashboardWidgets({ payload: dashboard }) {
 
 function* removeDashboard({ payload: id }) {
   try {
-    const activeProject = yield select(activeProjectSelector);
-    yield call(fetch, URLS.dashboard(activeProject, id), {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.dashboard(projectKey, id), {
       method: 'delete',
     });
     yield put(deleteDashboardSuccessAction(id));
@@ -176,15 +179,15 @@ function* removeDashboard({ payload: id }) {
 
 function* redirectAfterDelete({ payload: dashboardId }) {
   const activePage = yield select(pageSelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   if (activePage === PROJECT_DASHBOARD_ITEM_PAGE) {
     const activeDashboardId = yield select(activeDashboardIdSelector);
     if (activeDashboardId === dashboardId) {
-      const activeProject = yield select(projectIdSelector);
       yield put(hideModalAction());
       yield put(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
         }),
       );
     }

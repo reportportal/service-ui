@@ -19,7 +19,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   availableProjectsSelector,
@@ -42,6 +41,8 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { projectNameSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
@@ -53,17 +54,18 @@ import SettingsIcon from './img/settings-icon-inline.svg';
 import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectName: projectNameSelector(state),
   availableProjects: availableProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensions: uiExtensionSidebarComponentsSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
   static propTypes = {
     projectRole: PropTypes.string.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -72,6 +74,10 @@ export class AppSidebar extends Component {
     availableProjects: PropTypes.object,
     extensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
   static defaultProps = {
     availableProjects: {},
@@ -85,12 +91,18 @@ export class AppSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
-    const { projectRole, accountRole, activeProject, onClickNavBtn, extensions } = this.props;
+    const {
+      projectRole,
+      accountRole,
+      onClickNavBtn,
+      extensions,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     const topItems = [
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
-        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } },
+        link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
@@ -98,14 +110,14 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
         link: {
           type: LAUNCHES_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-        link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
+        link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
       },
@@ -116,7 +128,7 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
-          payload: { projectId: activeProject, filterId: ALL },
+          payload: { projectSlug, filterId: ALL, organizationSlug },
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
@@ -128,7 +140,7 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
         },
         icon: MembersIcon,
         message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
@@ -139,7 +151,7 @@ export class AppSidebar extends Component {
       onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
-        payload: { projectId: activeProject },
+        payload: { organizationSlug, projectSlug },
       },
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
@@ -173,15 +185,11 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { availableProjects, activeProject } = this.props;
+    const { availableProjects, projectName } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
-    const mainBlock = (
-      <ProjectSelector
-        projects={Object.keys(availableProjects).sort()}
-        activeProject={activeProject}
-      />
-    );
+
+    const mainBlock = <ProjectSelector projects={availableProjects} projectName={projectName} />;
 
     return (
       <Sidebar

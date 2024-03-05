@@ -22,9 +22,10 @@ import { assignToProjectSuccessAction } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
 import { MEMBERS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
-import { PROJECT_PAGE } from 'controllers/pages';
+import { PROJECT_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -79,6 +80,7 @@ function* addProject({ payload: projectName }) {
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
+    const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
@@ -88,7 +90,7 @@ function* addProject({ payload: projectName }) {
         values: { name: projectName },
       }),
     );
-    yield put(navigateToProjectSectionAction(projectName, MEMBERS));
+    yield put(navigateToProjectSectionAction({ organizationSlug, projectSlug }, MEMBERS));
   } catch (err) {
     if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
       yield put(
@@ -116,7 +118,7 @@ function* watchAddProject() {
 
 function* deleteProject({ payload: project }) {
   try {
-    yield call(fetch, URLS.project(project.id), {
+    yield call(fetch, URLS.project(project.projectKey), {
       method: 'delete',
     });
   } catch (err) {
@@ -138,10 +140,11 @@ function* watchDeleteProject() {
 
 function* navigateToProject({ payload }) {
   const { project } = payload;
+  const { organizationSlug, projectSlug } = project;
 
   yield put({
     type: PROJECT_PAGE,
-    payload: { projectId: project.projectName },
+    payload: { organizationSlug, projectSlug },
   });
 }
 

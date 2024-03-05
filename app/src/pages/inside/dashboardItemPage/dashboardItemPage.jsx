@@ -34,8 +34,10 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
@@ -108,7 +110,8 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
+    projectKey: projectKeySelector(state),
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
@@ -133,7 +136,6 @@ export class DashboardItemPage extends Component {
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     dashboard: PropTypes.object.isRequired,
     userInfo: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
@@ -146,6 +148,11 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     activeDashboardId: PropTypes.number,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -204,13 +211,16 @@ export class DashboardItemPage extends Component {
   };
 
   getBreadcrumbs = () => {
-    const { activeProject, intl } = this.props;
+    const {
+      intl,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     return [
       {
         title: intl.formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
         },
         eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },
@@ -225,11 +235,11 @@ export class DashboardItemPage extends Component {
   addWidget = (widget, closeModal) => {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
       dashboard,
     } = this.props;
 
-    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+    return fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
       method: 'put',
       data: { addWidget: widget },
     })
@@ -296,9 +306,10 @@ export class DashboardItemPage extends Component {
     const {
       intl: { formatMessage },
       dashboard,
+      projectKey,
       fullScreenMode,
-      activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
 
     return (
@@ -328,8 +339,9 @@ export class DashboardItemPage extends Component {
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
-                      projectId: this.props.activeProject,
+                      projectSlug,
                       dashboardId: this.props.activeDashboardId,
+                      organizationSlug,
                     },
                   }}
                   target={'_blank'}
@@ -345,7 +357,7 @@ export class DashboardItemPage extends Component {
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
-                activeProject={activeProject}
+                projectKey={projectKey}
                 showNotification={this.props.showNotification}
                 updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
               />

@@ -34,7 +34,6 @@ export const currentPathSelector = (state) => {
 };
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
-export const projectIdSelector = (state) => payloadSelector(state).projectId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
 export const filterIdSelector = (state) => payloadSelector(state).filterId || ALL;
 export const testItemIdsSelector = (state) =>
@@ -141,3 +140,12 @@ export const prevTestItemSelector = ({ location }) => {
   if (currentPath.length >= prevPath.length) return null;
   return parseInt(prevPath[currentPath.length], 10);
 };
+
+export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
+
+export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
+
+export const urlOrganizationAndProjectSelector = (state) => ({
+  organizationSlug: urlOrganizationSlugSelector(state),
+  projectSlug: urlProjectSlugSelector(state),
+});

@@ -69,7 +69,10 @@ export {
   projectInfoSelector,
   projectInfoLoadingSelector,
   projectAttributesSelector,
+  projectNotificationsLoadingSelector,
   projectNotificationsStateSelector,
+  projectKeySelector,
+  projectNameSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

@@ -22,7 +22,7 @@ jest.mock('common/utils/fetch', () => ({
 }));
 
 const mockParams = {
-  projectId: 'test_project',
+  projectKey: 'test_project',
   id: 'abcd',
 };
 

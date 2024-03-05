@@ -22,13 +22,13 @@ import { Icon } from 'components/main/icon/icon';
 import { useIntl } from 'react-intl';
 import { messages } from '../messages';
 
-export const ProjectStatisticButton = ({ projectName, onClick }) => {
+export const ProjectStatisticButton = ({ projectSlug, onClick, organizationSlug }) => {
   const { formatMessage } = useIntl();
   return (
     <Link
       to={{
         type: PROJECT_DETAILS_PAGE,
-        payload: { projectId: projectName },
+        payload: { projectSlug, organizationSlug },
       }}
       onClick={onClick}
       title={formatMessage(messages.statisticButtonTooltip)}
@@ -39,7 +39,8 @@ export const ProjectStatisticButton = ({ projectName, onClick }) => {
 };
 
 ProjectStatisticButton.propTypes = {
-  projectName: PropTypes.string.isRequired,
+  projectSlug: PropTypes.string.isRequired,
+  organizationSlug: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
 

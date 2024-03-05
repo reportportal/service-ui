@@ -30,8 +30,8 @@ const cx = classNames.bind(styles);
 export class StatusPageContent extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     interval: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -50,20 +50,20 @@ export class StatusPageContent extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.interval !== this.props.interval ||
-      prevProps.projectId !== this.props.projectId
+      prevProps.projectKey !== this.props.projectKey
     ) {
       this.fetchData();
     }
   }
 
   fetchData = () => {
-    const { projectId, interval } = this.props;
+    const { projectKey, interval } = this.props;
     this.setState({
       loading: true,
     });
     const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
-    Promise.all(widgetsWithUrls.map((item) => fetch(item.getUrl(projectId, interval))))
+    Promise.all(widgetsWithUrls.map((item) => fetch(item.getUrl(projectKey, interval))))
       .then((responses) => {
         const widgetsData = widgetsWithUrls.reduce(
           (acc, item, index) => ({

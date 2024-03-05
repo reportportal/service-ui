@@ -30,7 +30,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
@@ -55,6 +54,7 @@ import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
+import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
@@ -73,8 +73,8 @@ const cx = classNames.bind(styles);
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
-    currentProject: activeProjectSelector(state),
     launch: launchSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -100,7 +100,6 @@ export class TestItemDetailsModal extends Component {
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
@@ -109,6 +108,7 @@ export class TestItemDetailsModal extends Component {
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
     invalid: PropTypes.bool.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -157,18 +157,18 @@ export class TestItemDetailsModal extends Component {
     ];
   };
 
-  testItemAttributeKeyURLCreator = (projectId) => {
+  testItemAttributeKeyURLCreator = (projectKey) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeKeysSearch(projectId, item.launchId || item.id);
+    return URLS.testItemAttributeKeysSearch(projectKey, item.launchId || item.id);
   };
 
-  testItemAttributeValueURLCreator = (projectId, key) => {
+  testItemAttributeValueURLCreator = (projectKey, key) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
+    return URLS.testItemAttributeValuesSearch(projectKey, item.launchId || item.id, key);
   };
 
   updateItemAndCloseModal = (closeModal) => (formData) => {
@@ -185,7 +185,7 @@ export class TestItemDetailsModal extends Component {
   updateItem = (data) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       data: { item, type, fetchFunc, eventsInfo },
       tracking,
     } = this.props;
@@ -194,7 +194,7 @@ export class TestItemDetailsModal extends Component {
       tracking.trackEvent(eventsInfo.editDescription);
     }
 
-    fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
+    fetch(URLS.launchesItemsUpdate(projectKey, item.id, type), {
       method: 'put',
       data,
     })

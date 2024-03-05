@@ -29,7 +29,7 @@ export const MultipleAutocompleteField = ({
 }) => {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
-      integrationInfo.projectName,
+      integrationInfo.projectKey,
       integrationInfo.integrationId,
       field.commandName,
     );

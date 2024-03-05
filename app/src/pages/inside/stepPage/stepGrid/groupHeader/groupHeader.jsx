@@ -19,28 +19,33 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
-import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  TEST_ITEM_PAGE,
+  launchIdSelector,
+  filterIdSelector,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { isTestItemsListSelector } from 'controllers/testItem';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
 
-const createLink = (projectId, filterId, launchId, testItemIds) => ({
+const createLink = (projectSlug, filterId, launchId, testItemIds, organizationSlug) => ({
   type: TEST_ITEM_PAGE,
   payload: {
-    projectId,
+    projectSlug,
     filterId,
     testItemIds: [launchId, ...testItemIds].join('/'),
+    organizationSlug,
   },
 });
 
 export const GroupHeader = connect((state) => ({
-  activeProject: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
-}))(({ data, activeProject, launchId, filterId, isTestItemsList }) => {
+  slugs: urlOrganizationAndProjectSelector(state),
+}))(({ data, launchId, filterId, isTestItemsList, slugs: { organizationSlug, projectSlug } }) => {
   const { itemPaths = [], launchPathName } = data[0].pathNames;
 
   let pathNames = itemPaths;
@@ -65,10 +70,11 @@ export const GroupHeader = connect((state) => ({
             <Link
               className={cx('link')}
               to={createLink(
-                activeProject,
+                projectSlug,
                 filterId,
                 launchId || data[0].launchId,
                 array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
+                organizationSlug,
               )}
             >
               {key.name}
@@ -82,6 +88,10 @@ export const GroupHeader = connect((state) => ({
 });
 GroupHeader.propTypes = {
   data: PropTypes.array,
+  slugs: PropTypes.shape({
+    organizationSlug: PropTypes.string.isRequired,
+    projectSlug: PropTypes.string.isRequired,
+  }),
 };
 GroupHeader.defaultProps = {
   data: [],

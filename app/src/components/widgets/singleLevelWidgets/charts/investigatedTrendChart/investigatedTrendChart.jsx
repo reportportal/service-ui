@@ -27,14 +27,14 @@ import {
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
-import { defectTypesSelector } from 'controllers/project';
 import {
   getUpdatedFilterWithTime,
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
+import { defectTypesSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
@@ -47,7 +47,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
@@ -61,7 +61,6 @@ export class InvestigatedTrendChart extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -76,6 +75,10 @@ export class InvestigatedTrendChart extends Component {
     integerValueType: PropTypes.bool,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -150,10 +153,15 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, projectId } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
-    const defectTypeLocators = this.getDefectTypeLocators(data.id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+    const defectTypeLocators = this.getDefectTypeLocators(data.id);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
       : getStatisticsLink({

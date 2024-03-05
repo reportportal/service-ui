@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
 import {
+  urlOrganizationAndProjectSelector,
   activeDashboardIdSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
@@ -48,7 +48,7 @@ const DASHBOARD_PAGE_ITEM_VALUE = 'All';
 const DASHBOARDS_LIMIT = 300;
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
   dashboardsToDisplay: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
   totalDashboards: totalDashboardsSelector(state),
@@ -58,12 +58,15 @@ const DASHBOARDS_LIMIT = 300;
 export class DashboardPageHeader extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
     eventsInfo: PropTypes.object,
     isLoading: PropTypes.bool,
     totalDashboards: PropTypes.number,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -74,27 +77,39 @@ export class DashboardPageHeader extends Component {
     totalDashboards: 0,
   };
 
-  getDashboardPageItem = () => ({
-    label: (
-      <NavLink
-        exact
-        to={{
-          type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: this.props.projectId },
-        }}
-        className={cx('link')}
-        activeClassName={cx('active-link')}
-      >
-        {this.props.intl.formatMessage(messages.allDashboardsTitle)}
-      </NavLink>
-    ),
-    value: DASHBOARD_PAGE_ITEM_VALUE,
-  });
+  getDashboardPageItem = () => {
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
-  createDashboardLink = (dashboardId) => ({
-    type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectId: this.props.projectId, dashboardId },
-  });
+    return {
+      label: (
+        <NavLink
+          exact
+          to={{
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: { organizationSlug, projectSlug },
+          }}
+          className={cx('link')}
+          activeClassName={cx('active-link')}
+        >
+          {this.props.intl.formatMessage(messages.allDashboardsTitle)}
+        </NavLink>
+      ),
+      value: DASHBOARD_PAGE_ITEM_VALUE,
+    };
+  };
+
+  createDashboardLink = (dashboardId) => {
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
+
+    return {
+      type: PROJECT_DASHBOARD_ITEM_PAGE,
+      payload: { projectSlug, dashboardId, organizationSlug },
+    };
+  };
 
   generateOptions = () =>
     [this.getDashboardPageItem()].concat(

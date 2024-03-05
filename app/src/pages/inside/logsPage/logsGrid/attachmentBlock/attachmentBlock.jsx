@@ -22,7 +22,7 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
 import { Image } from 'components/main/image';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   openAttachmentInModalAction,
@@ -38,7 +38,7 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     openAttachmentInModalAction,
@@ -52,18 +52,17 @@ export class AttachmentBlock extends Component {
     customProps: PropTypes.object,
     openAttachmentInModalAction: PropTypes.func,
     downloadAttachmentAction: PropTypes.func,
-    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     value: {},
     customProps: {},
     openAttachmentInModalAction: () => {},
-    activeProject: '',
   };
 
   openAttachmentInModal = () => {
@@ -80,7 +79,7 @@ export class AttachmentBlock extends Component {
     const {
       value,
       customProps: { consoleView },
-      activeProject,
+      projectKey,
     } = this.props;
     const isValidToOpenInModal = isFileActionAllowed(
       value.contentType,
@@ -97,7 +96,7 @@ export class AttachmentBlock extends Component {
           <Fragment>
             <Image
               className={cx('attachment')}
-              src={getFileIconSource(value, activeProject, true)}
+              src={getFileIconSource(value, projectKey, true)}
               alt={value.contentType}
               onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
             />

@@ -21,13 +21,14 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
-import { omit } from 'common/utils/omit';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+  urlOrganizationAndProjectSelector,
+  querySelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+} from 'controllers/pages';
+import { omit } from 'common/utils/omit';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
   removeIntegrationAction,
@@ -50,8 +51,8 @@ export const IntegrationSettings = (props) => {
   const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const projectId = useSelector(projectIdSelector);
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const accountRole = useSelector(userAccountRoleSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const isEditable = canUpdateSettings(accountRole, userRole);
@@ -69,18 +70,18 @@ export const IntegrationSettings = (props) => {
   const namedSubPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+      payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
       meta: {
         query: omit(query, ['id']),
       },
     }),
-    [activeProject, query],
+    [organizationSlug, projectSlug, query],
   );
 
   const testIntegrationConnection = useCallback(() => {
     if ('id' in props.data && !props.preventTestConnection) {
       setLoading(true);
-      fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
+      fetch(URLS.testIntegrationConnection(projectKey, props.data.id))
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -90,7 +91,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, activeProject, projectId, props.preventTestConnection]);
+  }, [props.data, projectKey, props.preventTestConnection]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);

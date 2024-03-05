@@ -19,8 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
+import { PROJECT_DASHBOARD_ITEM_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
@@ -28,7 +27,7 @@ import styles from './dashboardGridItem.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -37,7 +36,6 @@ export class DashboardGridItem extends Component {
   }
 
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
@@ -46,6 +44,10 @@ export class DashboardGridItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -72,13 +74,19 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const { item, projectId } = this.props;
+    const {
+      item,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const { name, description, owner, id } = item;
 
     return (
       <div className={cx('grid-view')}>
         <NavLink
-          to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
+          to={{
+            type: PROJECT_DASHBOARD_ITEM_PAGE,
+            payload: { organizationSlug, projectSlug, dashboardId: id },
+          }}
           className={cx('grid-view-inner')}
           onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
         >

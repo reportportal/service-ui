@@ -46,7 +46,7 @@ const messages = defineMessages({
 export class WizardInfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     step: PropTypes.number,
     activeWidget: PropTypes.object,
     widgetSettings: PropTypes.object,
@@ -65,8 +65,8 @@ export class WizardInfoSection extends Component {
       step,
       activeWidget,
       widgetSettings,
-      projectId,
       showConfirmation,
+      projectKey,
     } = this.props;
 
     return (
@@ -83,7 +83,7 @@ export class WizardInfoSection extends Component {
           ))}
         </div>
         <WidgetInfoBlock
-          projectId={projectId}
+          projectKey={projectKey}
           widgetSettings={widgetSettings}
           activeWidget={activeWidget}
           customCondition={step === 1}

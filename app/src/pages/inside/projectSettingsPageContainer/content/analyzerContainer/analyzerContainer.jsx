@@ -18,17 +18,22 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { payloadSelector, PROJECT_SETTINGS_TAB_PAGE, projectIdSelector } from 'controllers/pages';
-import { Tabs } from 'components/main/tabs';
-import classNames from 'classnames/bind';
-import { ANALYSIS } from 'common/constants/settingsTabs';
 import {
+  payloadSelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
+import {
+  projectKeySelector,
   ANALYZER_ATTRIBUTE_PREFIX,
   analyzerAttributesSelector,
   fetchConfigurationAttributesAction,
   normalizeAttributesWithPrefix,
   updateConfigurationAttributesAction,
 } from 'controllers/project';
+import { Tabs } from 'components/main/tabs';
+import classNames from 'classnames/bind';
+import { ANALYSIS } from 'common/constants/settingsTabs';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
@@ -58,7 +63,8 @@ const cx = classNames.bind(styles);
 export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectId = useSelector(projectIdSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -71,15 +77,20 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const hasPermission = canUpdateSettings(accountRole, userRole);
 
   useEffect(() => {
-    dispatch(fetchConfigurationAttributesAction(projectId));
+    dispatch(fetchConfigurationAttributesAction(projectKey));
   }, []);
 
   const createTabLink = useCallback(
     (subTabName) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId, settingsTab: ANALYSIS, subTab: subTabName },
+      payload: {
+        projectSlug,
+        settingsTab: ANALYSIS,
+        subTab: subTabName,
+        organizationSlug,
+      },
     }),
-    [projectId],
+    [organizationSlug, projectSlug],
   );
 
   const indexingRunning = useMemo(() => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'), [
@@ -109,7 +120,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     };
 
     try {
-      await fetch(URLS.project(projectId), { method: 'put', data });
+      await fetch(URLS.project(projectKey), { method: 'put', data });
       dispatch(
         showNotification({
           message: formatMessage(messages.updateSuccessNotification),

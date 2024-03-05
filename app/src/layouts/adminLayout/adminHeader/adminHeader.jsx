@@ -29,7 +29,7 @@ import {
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
   pageSelector,
-  projectIdSelector,
+  urlProjectSlugSelector,
 } from 'controllers/pages';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import styles from './adminHeader.scss';
@@ -56,7 +56,7 @@ const pageTitles = defineMessages({
 });
 @connect((state) => ({
   currentPage: pageSelector(state),
-  projectId: projectIdSelector(state),
+  projectSlug: urlProjectSlugSelector(state),
 }))
 @injectIntl
 @track()
@@ -66,25 +66,24 @@ export class AdminHeader extends Component {
     toggleSideMenu: PropTypes.func,
     currentPage: PropTypes.string,
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     currentPage: '',
     sideMenuOpened: false,
     toggleSideMenu: () => {},
-    projectId: '',
   };
 
   getHeaderCrumbs = () => {
-    const { currentPage, intl, projectId } = this.props;
+    const { currentPage, intl, projectSlug } = this.props;
     switch (currentPage) {
       case PROJECT_DETAILS_PAGE:
-        return projectId;
+        return projectSlug;
       case SERVER_SETTINGS_TAB_PAGE:
         return intl.formatMessage(pageTitles[SERVER_SETTINGS_PAGE]);
       case PLUGINS_TAB_PAGE:

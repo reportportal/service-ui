@@ -28,6 +28,7 @@ export {
 export {
   fetchUserAction,
   setActiveProjectAction,
+  setActiveProjectKeyAction,
   setStartTimeFormatAction,
   addApiKeyAction,
   addApiKeySuccessAction,
@@ -57,5 +58,6 @@ export {
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
+  activeProjectKeySelector,
 } from './selectors';
 export { userSagas } from './sagas';

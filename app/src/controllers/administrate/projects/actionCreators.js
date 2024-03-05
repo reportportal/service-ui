@@ -57,9 +57,9 @@ export const deleteItemsAction = defineGroupOperation(
   () => {},
 );
 
-export const addProjectAction = (projectName) => ({
+export const addProjectAction = (projectKey) => ({
   type: ADD_PROJECT,
-  payload: projectName,
+  payload: projectKey,
 });
 
 export const deleteProjectAction = (project) => ({
@@ -77,17 +77,19 @@ export const confirmAssignToProject = (project) => ({
   payload: project,
 });
 
-export const navigateToProjectSectionAction = (projectName, section) => ({
+export const navigateToProjectSectionAction = ({ organizationSlug, projectSlug }, section) => ({
   type: PROJECT_DETAILS_PAGE,
   payload: {
-    projectId: projectName,
+    projectSlug,
     projectSection: section,
+    organizationSlug,
   },
 });
 
-export const navigateToProjectSettingsAction = (projectId) => ({
+export const navigateToProjectSettingsAction = ({ organizationSlug, projectSlug }) => ({
   type: PROJECT_SETTINGS_PAGE,
   payload: {
-    projectId,
+    projectSlug,
+    organizationSlug,
   },
 });

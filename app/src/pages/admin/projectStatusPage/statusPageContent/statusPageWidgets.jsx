@@ -48,16 +48,16 @@ export const statusPageWidgets = [
     id: WIDGETS_IDS.lastLaunch,
     source: WIDGETS_IDS.lastLaunch,
     component: (data) => <LastLaunch data={data} />,
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.lastLaunch, interval),
+    getUrl: (projectKey, interval) =>
+      URLS.projectWidget(projectKey, WIDGETS_IDS.lastLaunch, interval),
   },
   {
     title: messages.launchesQuantity,
     id: WIDGETS_IDS.launchesQuantity,
     source: WIDGETS_IDS.launchesQuantity,
     component: (data, interval) => <LaunchesQuantity data={data} interval={interval} />,
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.launchesQuantity, interval),
+    getUrl: (projectKey, interval) =>
+      URLS.projectWidget(projectKey, WIDGETS_IDS.launchesQuantity, interval),
   },
   {
     title: messages.launchStatistics,
@@ -70,8 +70,8 @@ export const statusPageWidgets = [
     id: WIDGETS_IDS.investigated,
     source: WIDGETS_IDS.investigated,
     component: (data, interval) => <Investigated data={data} interval={interval} />,
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.investigated, interval),
+    getUrl: (projectKey, interval) =>
+      URLS.projectWidget(projectKey, WIDGETS_IDS.investigated, interval),
   },
   {
     title: messages.issuesChart,
@@ -80,8 +80,8 @@ export const statusPageWidgets = [
     component: (data, interval) => (
       <IssuesChartWrapper data={data} interval={interval} targetFieldKey={PRODUCT_BUG} />
     ),
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
+    getUrl: (projectKey, interval) =>
+      URLS.projectWidget(projectKey, WIDGETS_IDS.issuesChart, interval),
   },
   {
     title: messages.systemIssues,
@@ -106,5 +106,6 @@ export const activityItem = {
   id: WIDGETS_IDS.activities,
   source: WIDGETS_IDS.activities,
   component: (data) => <ActivityPanel data={data} />,
-  getUrl: (projectId, interval) => URLS.projectWidget(projectId, WIDGETS_IDS.activities, interval),
+  getUrl: (projectKey, interval) =>
+    URLS.projectWidget(projectKey, WIDGETS_IDS.activities, interval),
 };

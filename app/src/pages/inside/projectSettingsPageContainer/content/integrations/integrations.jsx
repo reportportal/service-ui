@@ -27,9 +27,9 @@ import {
   updatePagePropertiesAction,
   PROJECT_SETTINGS_TAB_PAGE,
   querySelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
@@ -41,16 +41,20 @@ export const Integrations = () => {
   const loading = useSelector(pluginsLoadingSelector);
   const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const plugins = useSelector(availablePluginsSelector);
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const dispatch = useDispatch();
   const query = useSelector(querySelector);
   const [plugin, setPlugin] = useState({});
   const initialPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+      payload: {
+        projectSlug,
+        settingsTab: INTEGRATIONS,
+        organizationSlug,
+      },
     }),
-    [activeProject],
+    [projectSlug, organizationSlug],
   );
 
   useEffect(() => {
