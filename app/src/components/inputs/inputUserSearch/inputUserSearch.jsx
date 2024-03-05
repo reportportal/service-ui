@@ -15,8 +15,8 @@
  */
 
 import PropTypes from 'prop-types';
-import { validate } from 'common/utils/validation';
 import { useSelector } from 'react-redux';
+import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { urlProjectSlugSelector } from 'controllers/pages';
@@ -35,7 +35,6 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
-
 const makeOptions = (isAdmin, projectKey, projectSlug) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',

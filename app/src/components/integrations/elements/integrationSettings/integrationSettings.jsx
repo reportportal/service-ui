@@ -23,7 +23,6 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
   urlOrganizationAndProjectSelector,
-  getProjectKeyFromSlugs,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
 } from 'controllers/pages';
@@ -82,12 +81,7 @@ export const IntegrationSettings = (props) => {
   const testIntegrationConnection = useCallback(() => {
     if ('id' in props.data && !props.preventTestConnection) {
       setLoading(true);
-      fetch(
-        URLS.testIntegrationConnection(
-          projectKey || getProjectKeyFromSlugs(organizationSlug, projectSlug),
-          props.data.id,
-        ),
-      )
+      fetch(URLS.testIntegrationConnection(projectKey, props.data.id))
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -97,7 +91,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, projectKey, organizationSlug, projectSlug, props.preventTestConnection]);
+  }, [props.data, projectKey, props.preventTestConnection]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);

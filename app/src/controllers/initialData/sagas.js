@@ -17,7 +17,6 @@
 import { put, takeEvery, take, all } from 'redux-saga/effects';
 import { fetchAppInfoAction } from 'controllers/appInfo';
 import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, fetchUserAction } from 'controllers/user';
-import { getProjectKeyFromSlugs } from 'controllers/pages';
 import {
   DEFAULT_TOKEN,
   resetTokenAction,
@@ -32,7 +31,7 @@ import {
   fetchPublicPluginsAction,
 } from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
-import { SET_LAST_PROJECT } from 'controllers/user/constants';
+import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
@@ -42,10 +41,8 @@ function* fetchInitialData() {
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
-    const {
-      payload: { organizationSlug, projectSlug },
-    } = yield take(SET_LAST_PROJECT);
-    yield put(fetchProjectAction(getProjectKeyFromSlugs(organizationSlug, projectSlug)));
+    const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
+    yield put(fetchProjectAction(activeProjectKey));
     yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());

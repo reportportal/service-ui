@@ -54,7 +54,11 @@ import {
   CANCELLED,
   STOPPED,
 } from 'common/constants/testStatuses';
-import { activeProjectRoleSelector, isAdminSelector, lastProjectSelector } from 'controllers/user';
+import {
+  activeProjectRoleSelector,
+  isAdminSelector,
+  activeProjectSelector,
+} from 'controllers/user';
 import {
   projectMembersSelector,
   projectInfoSelector,
@@ -332,7 +336,8 @@ export const createImportProps = (pluginName) => ({
   selectors: {
     pluginRouteSelector,
     payloadSelector,
-    activeProjectSelector: lastProjectSelector,
+    activeProjectSelector,
+    // TODO: rename properties in plugins in the future
     projectIdSelector: urlProjectSlugSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),

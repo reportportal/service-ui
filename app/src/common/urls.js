@@ -254,8 +254,8 @@ export const URLS = {
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectKey) => `${urlBase}${projectKey}/activity`,
-  searchEventsBySubjectName: (projectKey) => (searchTerm = '') =>
-    `${urlBase}activities/${projectKey}/subjectName?filter.cnt.subjectName=${searchTerm}`,
+  searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
+    `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
   allUsers: () => `${urlCommonBase}users/all`,
 
   exportUsers: (filterEntities) =>

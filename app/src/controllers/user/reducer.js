@@ -16,6 +16,7 @@
 
 import { combineReducers } from 'redux';
 import {
+  SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
@@ -25,7 +26,7 @@ import {
   SET_API_KEYS,
   ADD_API_KEY_SUCCESS,
   DELETE_API_KEY_SUCCESS,
-  SET_LAST_PROJECT,
+  SET_ACTIVE_PROJECT_KEY,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type = '', payload = {} }) => {
@@ -39,9 +40,18 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type = '', pay
   }
 };
 
-export const lastProjectReducer = (state = '', { type, payload }) => {
+export const activeProjectKeyReducer = (state = '', { type, payload }) => {
   switch (type) {
-    case SET_LAST_PROJECT:
+    case SET_ACTIVE_PROJECT_KEY:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const activeProjectReducer = (state = '', { type = '', payload = {} }) => {
+  switch (type) {
+    case SET_ACTIVE_PROJECT:
       return payload;
     default:
       return state;
@@ -108,7 +118,8 @@ export const apiKeysReducer = (state = [], { type, payload }) => {
 
 export const userReducer = combineReducers({
   info: userInfoReducer,
-  lastProject: lastProjectReducer,
+  activeProject: activeProjectReducer,
+  activeProjectKey: activeProjectKeyReducer,
   settings: settingsReducer,
   apiKeys: apiKeysReducer,
 });

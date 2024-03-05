@@ -38,15 +38,16 @@ import {
   PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
   PROJECT_LAUNCHES_PAGE,
-  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import {
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
   fetchUserAction,
   userIdSelector,
+  activeProjectSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction, projectKeySelector } from 'controllers/project';
+import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -55,7 +56,7 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
-import { SET_LAST_PROJECT } from 'controllers/user/constants';
+import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 
 import {
   authSuccessAction,
@@ -113,8 +114,8 @@ function* loginSuccessHandler({ payload }) {
     }),
   );
   yield put(fetchUserAction());
-  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_LAST_PROJECT)]);
-  const projectKey = yield select(projectKeySelector);
+  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT_KEY)]);
+  const projectKey = yield select(activeProjectKeySelector);
   yield put(fetchProjectAction(projectKey));
   yield take(FETCH_PROJECT_SUCCESS);
   yield put(fetchPluginsAction());
@@ -131,11 +132,11 @@ function* loginSuccessHandler({ payload }) {
     }
   } else {
     const isDemoInstance = yield select(isDemoInstanceSelector);
-    const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
+    const { organizationSlug, projectSlug } = yield select(activeProjectSelector);
     const page = isDemoInstance
       ? {
           type: PROJECT_LAUNCHES_PAGE,
-          payload: { projectSlug, filterId: ALL, organizationSlug },
+          payload: { organizationSlug, projectSlug, filterId: ALL },
         }
       : {
           type: PROJECT_DASHBOARD_PAGE,

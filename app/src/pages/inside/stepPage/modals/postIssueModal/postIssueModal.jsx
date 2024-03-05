@@ -423,14 +423,13 @@ export class PostIssueModal extends Component {
       namedBtsIntegrations,
       intl: { formatMessage },
       data: { items },
-      projectInfo,
+      projectKey,
     } = this.props;
     const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
     const integrationInfo = {
+      projectKey,
       integrationId,
-      projectName: projectInfo.projectName,
-      pluginName,
     };
 
     return (

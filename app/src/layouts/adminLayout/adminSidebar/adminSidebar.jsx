@@ -37,7 +37,7 @@ import {
   uiExtensionAdminPagesSelector,
   uiExtensionAdminSidebarComponentsSelector,
 } from 'controllers/plugins/uiExtensions';
-import { lastProjectSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
@@ -55,7 +55,7 @@ const cx = classNames.bind(styles);
 
 const BackToProject = () => {
   const { trackEvent } = useTracking();
-  const { organizationSlug, projectSlug } = useSelector(lastProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 
   return (
     <Link

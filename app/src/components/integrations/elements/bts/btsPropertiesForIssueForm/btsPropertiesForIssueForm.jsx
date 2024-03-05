@@ -319,6 +319,7 @@ export class BtsPropertiesForIssueForm extends Component {
     });
 
   fetchFieldsSet = (issueTypeValue) => {
+    // TODO: There was a case when projectName (projectKey) was empty using this component on Admin page.
     const { pluginDetails: details, isGlobal, integrationId, projectKey } = this.props;
     const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
     const requestParams = {};
@@ -379,13 +380,12 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled, integrationId, pluginName, projectKey } = this.props;
+    const { intl, disabled, integrationId, projectKey } = this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
     const integrationInfo = {
-      integrationId,
       projectKey,
-      pluginName,
+      integrationId,
     };
 
     return (

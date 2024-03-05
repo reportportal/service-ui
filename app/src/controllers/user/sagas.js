@@ -24,7 +24,7 @@ import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
-  SET_LAST_PROJECT,
+  SET_ACTIVE_PROJECT,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
@@ -35,12 +35,13 @@ import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
   unassignFromProjectSuccessAction,
+  setActiveProjectAction,
   fetchUserSuccessAction,
   fetchUserErrorAction,
   setApiKeysAction,
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
-  setLastProjectAction,
+  setActiveProjectKeyAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -128,32 +129,46 @@ function* fetchUserWorker() {
   }
   const { userId, assignedOrganizations, assignedProjects } = user;
   const userSettings = getStorageItem(`${userId}_settings`) || {};
-  const { lastProject: savedLastProject } = userSettings ?? {};
-  const defaultOrganization = Object.keys(assignedOrganizations)[0];
-  const { organizationId } = assignedOrganizations[defaultOrganization];
-  const organizationProjects = Object.keys(assignedProjects).filter(
-    (key) => assignedProjects[key].organizationId === organizationId,
-  );
-  const defaultProject = organizationProjects[0];
-  const { organizationSlug, projectSlug } = savedLastProject || {};
+  const { activeProject: savedActiveProject } = userSettings ?? {};
+  const { organizationSlug: savedOrganizationSlug, projectSlug: savedProjectSlug } =
+    savedActiveProject || {};
 
-  const lastProject =
-    organizationSlug &&
-    organizationSlug in assignedOrganizations &&
-    projectSlug &&
-    projectSlug in assignedProjects
-      ? savedLastProject
-      : { organizationSlug: defaultOrganization, projectSlug: defaultProject };
+  const defaultProject = Object.keys(assignedProjects)[0];
+  const {
+    projectSlug: defaultProjectSlug,
+    projectKey: defaultProjectKey,
+    organizationId,
+  } = assignedProjects[defaultProject];
+  const defaultOrganization =
+    Object.keys(assignedOrganizations).find(
+      (key) => assignedOrganizations[key].organizationId === organizationId,
+    ) || {};
+  const { organizationSlug: defaultOrganizationSlug } = assignedOrganizations[defaultOrganization];
 
-  yield put(setLastProjectAction(lastProject));
+  const isSavedProjectExist =
+    savedOrganizationSlug &&
+    savedOrganizationSlug in assignedOrganizations &&
+    savedProjectSlug &&
+    savedProjectSlug in assignedProjects;
+
+  const activeProject = isSavedProjectExist
+    ? savedActiveProject
+    : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+
+  const projectKey = isSavedProjectExist
+    ? assignedProjects[savedProjectSlug].projectKey
+    : defaultProjectKey;
+
+  yield put(setActiveProjectAction(activeProject));
+  yield put(setActiveProjectKeyAction(projectKey));
 }
 
-function* saveLastProjectWorker({ payload: lastProject }) {
+function* saveActiveProjectWorker({ payload: activeProject }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
   setStorageItem(`${user.userId}_settings`, {
     ...currentUserSettings,
-    lastProject,
+    activeProject,
   });
 }
 
@@ -275,8 +290,8 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSaveLastProject() {
-  yield takeEvery(SET_LAST_PROJECT, saveLastProjectWorker);
+function* watchSaveActiveProject() {
+  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
 }
 
 function* watchFetchUser() {
@@ -296,7 +311,7 @@ export function* userSagas() {
     watchAssignToProject(),
     watchUnassignFromProject(),
     watchFetchUser(),
-    watchSaveLastProject(),
+    watchSaveActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

@@ -16,10 +16,15 @@
 
 import { redirect, actionToPath } from 'redux-first-router';
 import qs from 'qs';
-import { lastProjectSelector, userAccountRoleSelector, userInfoSelector } from 'controllers/user';
-import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
-  urlOrganizationAndProjectSelector,
+  activeProjectSelector,
+  userAccountRoleSelector,
+  userInfoSelector,
+  setActiveProjectAction,
+  setActiveProjectKeyAction,
+} from 'controllers/user';
+import { fetchProjectAction } from 'controllers/project';
+import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
   PROJECT_DASHBOARD_PAGE,
@@ -52,7 +57,6 @@ import {
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
-import { setLastProjectAction } from 'controllers/user/actionCreators';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -127,6 +131,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
+    // TODO: All administrate pages it will be changed accordingly, f.e '/administrate/users' => '/users'
     path: `/administrate/projects/organizations/:organizationSlug?/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
@@ -160,7 +165,7 @@ const routesMap = {
       dispatch(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: lastProjectSelector(getState()),
+          payload: activeProjectSelector(getState()),
         }),
       );
     },
@@ -288,33 +293,42 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
-  let { organizationSlug, projectSlug } = urlOrganizationAndProjectSelector(getState());
+  let { organizationSlug, projectSlug } = activeProjectSelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
-  const projectKey = projectKeySelector(getState());
-  const userProjects = userInfo.assignedProjects ?? {};
+  const { assignedOrganizations, assignedProjects } = userInfo || {};
   const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const isProjectKeyExist = hashProjectSlug in userProjects;
+  const projectKey = assignedProjects[hashProjectSlug]?.projectKey;
+  const isProjectExists =
+    hashOrganizationSlug in assignedOrganizations && hashProjectSlug in assignedProjects;
+  const isChangedProject =
+    organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
   if (
+    hashOrganizationSlug &&
+    assignedOrganizations &&
     hashProjectSlug &&
-    userProjects &&
-    (hashProjectSlug !== projectSlug || isAdminCurrentPageType) &&
+    assignedProjects &&
+    (isChangedProject || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (isProjectKeyExist) {
-      setLastProjectAction({
-        organizationSlug: hashOrganizationSlug,
-        projectSlug: hashProjectSlug,
-      });
+    if (isProjectExists) {
+      dispatch(
+        setActiveProjectAction({
+          organizationSlug: hashOrganizationSlug,
+          projectSlug: hashProjectSlug,
+        }),
+      );
+      dispatch(setActiveProjectKeyAction(projectKey));
       dispatch(fetchProjectAction(projectKey));
-      projectSlug = hashProjectSlug;
       organizationSlug = hashOrganizationSlug;
-    } else if (hashProjectSlug !== projectSlug) {
+      projectSlug = hashProjectSlug;
+      // TODO: to provide redirect in case of an existing organization and a non-existing project.
+    } else if (isChangedProject) {
       dispatch(
         redirect({
           ...action,
@@ -339,10 +353,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
           dispatch(
             redirect({
               type: PROJECT_DASHBOARD_PAGE,
-              payload: {
-                organizationSlug,
-                projectSlug,
-              },
+              payload: { organizationSlug, projectSlug },
             }),
           );
         }

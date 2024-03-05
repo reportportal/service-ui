@@ -118,7 +118,7 @@ function* watchAddProject() {
 
 function* deleteProject({ payload: project }) {
   try {
-    yield call(fetch, URLS.project(project.id), {
+    yield call(fetch, URLS.project(project.projectKey), {
       method: 'delete',
     });
   } catch (err) {

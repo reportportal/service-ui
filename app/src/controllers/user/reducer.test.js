@@ -17,8 +17,7 @@
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
   FETCH_USER_SUCCESS,
-  // SET_ACTIVE_PROJECT,
-  SET_LAST_PROJECT,
+  SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   START_TIME_FORMAT_ABSOLUTE,
@@ -30,7 +29,7 @@ import {
 import {
   settingsReducer,
   userInfoReducer,
-  lastProjectReducer,
+  activeProjectReducer,
   userAssignedProjectReducer,
   apiKeysReducer,
 } from './reducer';
@@ -90,20 +89,20 @@ describe('user reducer', () => {
     });
   });
 
-  describe('lastProjectReducer', () => {
+  describe('activeProjectReducer', () => {
     test('should return initial state', () => {
-      expect(lastProjectReducer(undefined, {})).toEqual('');
+      expect(activeProjectReducer(undefined, {})).toEqual('');
     });
 
     test('should return old state on unknown action', () => {
       const oldState = { foo: 1 };
-      expect(lastProjectReducer(oldState, { type: 'foo' })).toBe(oldState);
+      expect(activeProjectReducer(oldState, { type: 'foo' })).toBe(oldState);
     });
 
     test('should handle SET_ACTIVE_PROJECT', () => {
       const payload = 'testProject';
-      const newState = lastProjectReducer(undefined, {
-        type: SET_LAST_PROJECT,
+      const newState = activeProjectReducer(undefined, {
+        type: SET_ACTIVE_PROJECT,
         payload,
       });
       expect(newState).toEqual(payload);

@@ -20,7 +20,7 @@ import styles from './configExamplesBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const javaConfig = (projectName) => ({
+const javaConfig = (projectKey) => ({
   name: 'Java',
   content: (
     <div className={cx('content-wrapper')}>
@@ -30,7 +30,7 @@ const javaConfig = (projectName) => ({
         <p>rp.endpoint = {window.location.origin}</p>
         <p>{`rp.api.key = <API_KEY>`}</p>
         <p>rp.launch = Java launch</p>
-        <p>rp.project = {projectName}</p>
+        <p>rp.project = {projectKey}</p>
       </div>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <div className={cx('options')}>
@@ -50,7 +50,7 @@ const javaConfig = (projectName) => ({
     </div>
   ),
 });
-const rubyConfig = (projectName) => ({
+const rubyConfig = (projectKey) => ({
   name: 'Ruby',
   content: (
     <div className={cx('content-wrapper')}>
@@ -58,7 +58,7 @@ const rubyConfig = (projectName) => ({
       <div className={cx('options')}>
         <p>{`uuid: <API_KEY>`}</p>
         <p>endpoint: {window.location.origin}/api/v1</p>
-        <p>project: {projectName}</p>
+        <p>project: {projectKey}</p>
         <p>launch: Ruby_launch</p>
         <p>attributes: [key:value, value]</p>
       </div>
@@ -68,7 +68,7 @@ const rubyConfig = (projectName) => ({
     </div>
   ),
 });
-const pythonConfig = (projectName) => ({
+const pythonConfig = (projectKey) => ({
   name: 'Python',
   content: (
     <div className={cx('content-wrapper')}>
@@ -80,7 +80,7 @@ const pythonConfig = (projectName) => ({
       <p>[pytest]</p>
       <p>{`rp_endpoint = ${window.location.origin}`}</p>
       <p>{`rp_api_key = <API_KEY>`}</p>
-      <p>{`rp_project = ${projectName}`}</p>
+      <p>{`rp_project = ${projectKey}`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>rp_launch = Pytest Launch</p>
       <p>rp_launch_description = My awesome launch</p>
@@ -107,7 +107,7 @@ const pythonConfig = (projectName) => ({
       <div className={cx('options')}>
         <p>{`--variable RP_ENDPOINT:"${window.location.origin}" \\`}</p>
         <p>{`--variable RP_API_KEY:"<API_KEY>" \\`}</p>
-        <p>{`--variable RP_PROJECT:"${projectName}" \\`}</p>
+        <p>{`--variable RP_PROJECT:"${projectKey}" \\`}</p>
         <p>--variable RP_LAUNCH:"Robot Framework Launch" \</p>
         <p>./tests</p>
       </div>
@@ -129,7 +129,7 @@ const pythonConfig = (projectName) => ({
       <p>[report_portal]</p>
       <p>{`endpoint = ${window.location.origin}`}</p>
       <p>{`api_key = <API_KEY>`}</p>
-      <p>{`project = ${projectName}`}</p>
+      <p>{`project = ${projectKey}`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>launch_name = Behave Launch</p>
       <p>launch_description = 'My awesome launch'</p>

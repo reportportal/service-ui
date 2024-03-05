@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { projectNameSelector } from 'controllers/project';
+import { projectKeySelector } from 'controllers/project';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
@@ -27,17 +27,17 @@ import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
 @connect((state) => ({
-  projectName: projectNameSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
-    projectName: PropTypes.string,
+    projectKey: PropTypes.string,
   };
   static defaultProps = {
-    projectName: '',
+    projectKey: '',
   };
   render() {
-    const { projectName } = this.props;
+    const { projectKey } = this.props;
     return (
       <div className={cx('config-example-block')}>
         <BlockContainerBody>
@@ -45,11 +45,11 @@ export class ConfigExamplesBlock extends Component {
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(projectName),
-                TabsConfig.pythonConfig(projectName),
-                TabsConfig.dotNetConfig(projectName),
-                TabsConfig.nodejsConfig(projectName),
-                TabsConfig.rubyConfig(projectName),
+                TabsConfig.javaConfig(projectKey),
+                TabsConfig.pythonConfig(projectKey),
+                TabsConfig.dotNetConfig(projectKey),
+                TabsConfig.nodejsConfig(projectKey),
+                TabsConfig.rubyConfig(projectKey),
               ]}
             />
           </div>

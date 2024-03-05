@@ -21,12 +21,14 @@ export {
   ASSIGN_TO_PROJECT_SUCCESS,
   ASSIGN_TO_PROJECT_ERROR,
   UNASSIGN_FROM_PROJECT_SUCCESS,
+  SET_ACTIVE_PROJECT,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
 } from './constants';
 export {
   fetchUserAction,
-  setLastProjectAction,
+  setActiveProjectAction,
+  setActiveProjectKeyAction,
   setStartTimeFormatAction,
   addApiKeyAction,
   addApiKeySuccessAction,
@@ -44,6 +46,7 @@ export { userReducer } from './reducer';
 export {
   userInfoSelector,
   defaultProjectSelector,
+  activeProjectSelector,
   userIdSelector,
   userEmailSelector,
   startTimeFormatSelector,
@@ -55,6 +58,6 @@ export {
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
-  lastProjectSelector,
+  activeProjectKeySelector,
 } from './selectors';
 export { userSagas } from './sagas';
