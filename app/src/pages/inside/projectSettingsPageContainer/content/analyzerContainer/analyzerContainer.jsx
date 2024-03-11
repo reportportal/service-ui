@@ -120,7 +120,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     };
 
     try {
-      await fetch(URLS.project(projectKey), { method: 'put', data });
+      await fetch(URLS.projectByName(projectKey), { method: 'put', data });
       dispatch(
         showNotification({
           message: formatMessage(messages.updateSuccessNotification),
@@ -175,6 +175,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
             onFormSubmit={updateProjectConfig}
             hasPermission={hasPermission}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
+            analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
         ),
       },

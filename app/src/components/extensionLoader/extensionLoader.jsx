@@ -53,12 +53,11 @@ export function ExtensionLoaderWrapper({
   );
 }
 ExtensionLoaderWrapper.propTypes = {
-  extension: extensionType,
+  extension: extensionType.isRequired,
   withPreloader: PropTypes.bool,
   silentOnError: PropTypes.bool,
 };
 ExtensionLoaderWrapper.defaultProps = {
-  extension: {},
   withPreloader: false,
   silentOnError: true,
 };

@@ -102,7 +102,7 @@ export class ProjectRole extends Component {
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
-    fetch(URLS.project(this.props.projectKey), {
+    fetch(URLS.projectByName(this.props.projectKey), {
       method: 'put',
       data: param,
     })

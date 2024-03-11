@@ -83,7 +83,9 @@ export const IntegrationCollectionItem = ({
         </span>
       </div>
 
-      <div className={cx('arrow-control')}>{Parser(ArrowIcon)}</div>
+      <div className={cx('arrow-control')} data-automation-id="openIntegraionIcon">
+        {Parser(ArrowIcon)}
+      </div>
     </li>
   );
 };

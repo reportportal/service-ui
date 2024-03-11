@@ -56,14 +56,14 @@ export class PassingRatePerLaunch extends Component {
       slugs: { organizationSlug, projectSlug },
       widget: {
         contentParameters: {
-          widgetOptions: { includeSkipped },
+          widgetOptions: { excludeSkipped },
         },
       },
     } = this.props;
     const launchId = widget.content.result.id;
-    const linkCreationParametersForFailed = includeSkipped
-      ? [FAILED, INTERRUPTED, SKIPPED]
-      : [FAILED, INTERRUPTED];
+    const linkCreationParametersForFailed = excludeSkipped
+      ? [FAILED, INTERRUPTED]
+      : [FAILED, INTERRUPTED, SKIPPED];
     const statuses = data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed;
     const link = getStatisticsLink({
       statuses,

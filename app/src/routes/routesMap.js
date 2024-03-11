@@ -302,9 +302,12 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const projectKey = assignedProjects[hashProjectSlug]?.projectKey;
+  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
   const isProjectExists =
-    hashOrganizationSlug in assignedOrganizations && hashProjectSlug in assignedProjects;
+    assignedOrganizations &&
+    hashOrganizationSlug in assignedOrganizations &&
+    assignedProjects &&
+    hashProjectSlug in assignedProjects;
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 

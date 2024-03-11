@@ -51,40 +51,15 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Click on icon Close on Dashboard tile',
     label: 'Arise Modal Delete Dashboard',
   },
-  CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Close on Modal Add New Dashboard',
-    label: 'Close Modal Add New Dashboard',
-  },
-  ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Enter description in Modal Add New Dashboard',
-    label: 'Description',
-  },
-  CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Cancel in Modal Add New Dashboard',
-    label: 'Close Modal Add New Dashboard',
-  },
   ADD_BTN_ADD_NEW_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on Btn Add in Modal Add New Dashboard',
     label: 'Add Dashboard',
   },
-  CLOSE_ICON_EDIT_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Close on Modal Edit Dashboard',
-    label: 'Close Modal Edit Dashboard',
-  },
   ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Enter description in Modal Edit Dashboard',
     label: 'Description',
-  },
-  CANCEL_BTN_EDIT_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Cancel in Modal Edit Dashboard',
-    label: 'Close Modal Edit Dashboard',
   },
   UPDATE_BTN_EDIT_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,

@@ -64,7 +64,7 @@ $LEVEL_OFFSET_STEP: 20px;
 
 .grid-row-wrapper {
   display: table-row-group;
-  border-bottom: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--primary-gray;
   background-color: $COLOR--white-two;
   transition: background-color 0.2s ease 0s;
 
@@ -87,13 +87,13 @@ $LEVEL_OFFSET_STEP: 20px;
     left: 0;
     right: 0;
     height: 1px;
-    background-color: $COLOR--gray-91;
+    background-color: $COLOR--primary-gray;
   }
 }
 .grid-row {
   position: relative;
   display: table-row;
-  border-left-color: $COLOR--gray-91;
+  border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0px;
   background-color: transparent;
@@ -301,7 +301,7 @@ $LEVEL_OFFSET_STEP: 20px;
 
 .first-col-wrapper {
   display: table-cell;
-  border-left-color: $COLOR--gray-91;
+  border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   @include levels-desktop;
 }

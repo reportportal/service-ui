@@ -18,6 +18,8 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
+export const UAT_API_PATH = '/uat';
+
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
 export const UAT_API_URL_PREFIX = '../uat';
@@ -102,7 +104,7 @@ export const URLS = {
   launchesExistingNames: (projectKey) => `${urlBase}${projectKey}/launch/names`,
   launchOwnersSearch: (projectKey) => (searchTerm = '') =>
     `${urlBase}${projectKey}/launch/owners?filter.cnt.user=${searchTerm}`,
-  launches: (projectKey) => `${urlBase}${projectKey}/launch`,
+  launches: (projectKey, ids = []) => `${urlBase}${projectKey}/launch?ids=${ids.join(',')}`,
   launchesLatest: (projectKey, ids) =>
     `${urlBase}${projectKey}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (projectKey) => `${urlBase}${projectKey}/launch/update`,
@@ -125,8 +127,8 @@ export const URLS = {
   apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
-  project: (projectKey) => `${urlBase}project/${projectKey}`,
-  addProject: () => `${urlBase}project`,
+  projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
+  project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
   projectDefectType: (projectKey) => `${urlBase}${projectKey}/settings/sub-type`,
@@ -233,7 +235,7 @@ export const URLS = {
     })}`,
   logSearch: (projectKey, itemId) => `${urlBase}${projectKey}/log/search/${itemId}`,
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
-  users: () => `${urlCommonBase}users`,
+  users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlCommonBase}users/registration`,
   userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,

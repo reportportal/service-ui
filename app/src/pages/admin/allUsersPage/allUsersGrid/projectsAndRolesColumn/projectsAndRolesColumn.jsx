@@ -116,7 +116,7 @@ export class ProjectsAndRolesColumn extends Component {
       intl,
       value: { userId },
     } = this.props;
-    fetch(URLS.project(projectKey), {
+    fetch(URLS.projectByName(projectKey), {
       method: 'put',
       data: { users: { [userId]: role } },
     })

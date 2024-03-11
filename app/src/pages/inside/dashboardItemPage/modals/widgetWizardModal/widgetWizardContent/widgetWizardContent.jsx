@@ -160,16 +160,24 @@ export class WidgetWizardContent extends Component {
   onAddWidget = (formData) => {
     const {
       tracking: { trackEvent },
-      eventsInfo: { addWidget },
+      eventsInfo: { excludeSkippedTests },
       projectKey,
       onConfirm,
       isAnalyticsEnabled,
       baseEventParameters,
     } = this.props;
+
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
+    const {
+      widgetType,
+      name,
+      contentParameters: {
+        widgetOptions: { excludeSkipped },
+      },
+    } = data;
+    trackEvent(excludeSkippedTests(widgetType, excludeSkipped));
 
-    trackEvent(addWidget);
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectKey), {
       method: 'post',
@@ -178,9 +186,9 @@ export class WidgetWizardContent extends Component {
       .then(({ id }) => {
         const newWidget = {
           widgetId: id,
-          widgetName: data.name,
-          widgetType: data.widgetType,
-          ...getDefaultWidgetConfig(data.widgetType),
+          widgetName: name,
+          widgetType,
+          ...getDefaultWidgetConfig(widgetType),
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
         if (isAnalyticsEnabled) {
@@ -192,7 +200,7 @@ export class WidgetWizardContent extends Component {
               items: [
                 getEcWidget({
                   itemId: id,
-                  itemName: widgetTypesMessages[data.widgetType].defaultMessage,
+                  itemName: widgetTypesMessages[widgetType].defaultMessage,
                   itemVariant: this.props.currentPage,
                   itemListName: selectedDashboard.id,
                 }),

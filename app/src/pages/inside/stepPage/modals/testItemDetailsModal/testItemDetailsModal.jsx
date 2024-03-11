@@ -36,6 +36,7 @@ import {
 } from 'controllers/user';
 import { clearLogPageStackTrace } from 'controllers/log';
 import { launchSelector } from 'controllers/testItem';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
@@ -46,6 +47,7 @@ import {
   showNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
+import { testItemDetailsAddonSelector } from 'controllers/plugins/uiExtensions';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
@@ -75,6 +77,7 @@ const cx = classNames.bind(styles);
     userId: userIdSelector(state),
     launch: launchSelector(state),
     projectKey: projectKeySelector(state),
+    extensions: testItemDetailsAddonSelector(state),
   }),
   {
     showNotification,
@@ -109,6 +112,7 @@ export class TestItemDetailsModal extends Component {
     clearLogPageStackTrace: PropTypes.func,
     invalid: PropTypes.bool.isRequired,
     projectKey: PropTypes.string.isRequired,
+    extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
@@ -117,6 +121,7 @@ export class TestItemDetailsModal extends Component {
     userProjectRole: '',
     dirty: false,
     clearLogPageStackTrace: () => {},
+    extensions: [],
   };
 
   componentDidMount() {
@@ -174,12 +179,16 @@ export class TestItemDetailsModal extends Component {
   updateItemAndCloseModal = (closeModal) => (formData) => {
     const {
       dirty,
-      data: { eventsInfo },
+      data: { item, eventsInfo },
       tracking,
     } = this.props;
     dirty && this.updateItem(formData);
     closeModal();
-    eventsInfo.clickSaveEvent && tracking.trackEvent(eventsInfo.clickSaveEvent);
+
+    if (eventsInfo.getSaveBtnEvent) {
+      const isDescriptionUpdated = item.description !== formData.description;
+      tracking.trackEvent(eventsInfo.getSaveBtnEvent(isDescriptionUpdated));
+    }
   };
 
   updateItem = (data) => {
@@ -217,17 +226,19 @@ export class TestItemDetailsModal extends Component {
     return formatMessage(messages.descriptionHint, { length: description.length });
   };
 
-  renderDetailsTab = (editable) => {
+  renderDetailsTabContent = (editable, { nameAddon, attributesAddon, descriptionAddon } = {}) => {
     const {
       intl,
       data: { item },
       tracking: { trackEvent },
     } = this.props;
+
     return (
       <div className={cx('details-tab')}>
         <div className={cx('name-row')}>
           <div className={cx('name')}>{item.name}</div>
           <div className={cx('status')}>
+            {nameAddon}
             <TestItemStatus status={item.status} />
           </div>
         </div>
@@ -254,7 +265,11 @@ export class TestItemDetailsModal extends Component {
             </div>
           </ModalField>
         )}
-        <ModalField label={intl.formatMessage(messages.attributesLabel)}>
+        <ModalField
+          label={intl.formatMessage(messages.attributesLabel)}
+          tip={editable && attributesAddon}
+          tipPosition="right"
+        >
           <FieldProvider name="attributes">
             <AttributeListField
               disabled={!editable}
@@ -274,7 +289,10 @@ export class TestItemDetailsModal extends Component {
             </ModalField>
           </Fragment>
         )}
-        <div className={cx('label')}>{intl.formatMessage(messages.description)}</div>
+        <div className={cx('label', 'description')}>
+          {intl.formatMessage(messages.description)}
+          {editable && descriptionAddon}
+        </div>
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
@@ -286,6 +304,7 @@ export class TestItemDetailsModal extends Component {
                     hintText: this.getDescriptionText,
                     hintCondition: this.checkDescriptionLengthForHint,
                   }}
+                  controlled={!!descriptionAddon}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -305,6 +324,26 @@ export class TestItemDetailsModal extends Component {
         )}
       </div>
     );
+  };
+
+  renderDetailsTab = (editable) => {
+    const {
+      data: { item },
+      extensions,
+    } = this.props;
+
+    return extensions.length
+      ? extensions.map((extension) => (
+          <ExtensionLoader
+            key={extension.name}
+            extension={extension}
+            item={item}
+            editable={editable}
+          >
+            {this.renderDetailsTabContent}
+          </ExtensionLoader>
+        ))
+      : this.renderDetailsTabContent(editable);
   };
 
   renderStackTraceTab = () => {
@@ -333,7 +372,6 @@ export class TestItemDetailsModal extends Component {
       onClick: (closeModal) => {
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
-      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

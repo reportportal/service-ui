@@ -65,7 +65,7 @@ export class PassingRateChart extends Component {
       getConfig,
       onChartClick,
       viewMode: contentParameters.widgetOptions.viewMode,
-      includeSkipped: contentParameters.widgetOptions.includeSkipped,
+      excludeSkipped: contentParameters.widgetOptions.excludeSkipped,
       onRendered: this.resizeHelper,
     };
   };
@@ -111,8 +111,8 @@ export class PassingRateChart extends Component {
   render() {
     const { widget } = this.props;
     const viewMode = widget.contentParameters.widgetOptions.viewMode;
-    const includeSkipped = widget.contentParameters.widgetOptions.includeSkipped;
-    const items = [STATS_PASSED, includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED];
+    const excludeSkipped = widget.contentParameters.widgetOptions.excludeSkipped;
+    const items = [STATS_PASSED, excludeSkipped ? STATS_FAILED : NOT_PASSED_STATISTICS_KEY];
     const legendConfig = {
       showLegend: true,
       legendProps: {

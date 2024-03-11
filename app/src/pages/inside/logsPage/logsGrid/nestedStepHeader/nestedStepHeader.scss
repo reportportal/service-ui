@@ -39,7 +39,7 @@ $LEVEL_OFFSET_STEP: 20px;
   display: table-row;
   font-family: $FONT-SEMIBOLD;
   font-size: 13px;
-  border-left-color: $COLOR--gray-91;
+  border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0;
   @media (max-width: $SCREEN_SM_MAX) {
@@ -56,15 +56,15 @@ $LEVEL_OFFSET_STEP: 20px;
   display: table-cell;
   vertical-align: middle;
   height: 45px;
-  border-bottom: 4px solid $COLOR--gray-91;
-  border-top: 4px solid $COLOR--gray-91;
+  border-bottom: 4px solid $COLOR--primary-gray;
+  border-top: 4px solid $COLOR--primary-gray;
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 0 0 5px 40px;
   }
 }
 
 .first-col-wrapper {
-  border-left-color: $COLOR--gray-91;
+  border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0;
   width: 78%;

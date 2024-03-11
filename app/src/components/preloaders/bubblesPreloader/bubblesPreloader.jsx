@@ -22,12 +22,12 @@ import styles from './bubblesPreloader.scss';
 const cx = classNames.bind(styles);
 
 export const BubblesPreloader = ({ color, bubblesCount, customClassName }) => (
-  <div className={cx('bubbles-preloader', customClassName, { [`color-${color}`]: color })}>
+  <div className={cx('bubbles-preloader', customClassName)}>
     {Array(bubblesCount)
       .fill(null)
       .map((item, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <div className={cx('bubble')} key={index} />
+        <div className={cx('bubble')} style={{ backgroundColor: color }} key={index} />
       ))}
   </div>
 );
@@ -37,7 +37,7 @@ BubblesPreloader.propTypes = {
   customClassName: PropTypes.string,
 };
 BubblesPreloader.defaultProps = {
-  color: 'topaz',
+  color: '#1a9cb0',
   bubblesCount: 7,
   customClassName: '',
 };
