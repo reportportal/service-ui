@@ -1,9 +1,3 @@
-## Compiled
-build/
-*/**/build/
-*/**/sl_instrumented/
-.gradle/
-
 ## IDE
 */**/.idea/
 .idea/
@@ -13,6 +7,12 @@ build/
 *.log
 .vscode
 .devcontainer
+
+## Compiled
+build/
+*/**/build/
+*/**/sl_instrumented/
+.gradle/
 
 ## Coverage
 coverage
