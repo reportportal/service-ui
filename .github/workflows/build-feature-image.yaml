@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
+      - develop
       - 'feature/orgs'
   workflow_dispatch:
 
