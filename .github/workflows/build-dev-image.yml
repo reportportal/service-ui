@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - develop
+      - feature/orgs
     paths-ignore:
       - '.github/**'
       - README.md
+  workflow_dispatch:
 
 jobs:
   variables-setup:
@@ -19,8 +21,10 @@ jobs:
       - name: Create variables
         id: vars
         run: |
+          echo "tag=$(echo ${{ github.head_ref }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
+      tag: ${{ steps.vars.outputs.tag }}
       date: ${{ steps.vars.outputs.date }}
 
   call-docker-build:
@@ -29,7 +33,7 @@ jobs:
     uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
     with:
       aws-region: ${{ vars.AWS_REGION }}
-      image-tag: 'develop-${{ github.run_number }}'
-      version: 'develop-${{ github.run_number }}'
+      image-tag: ${{ needs.variables-setup.outputs.tag }}
+      version: ${{ needs.variables-setup.outputs.tag }}
       date: ${{ needs.variables-setup.outputs.date }}
     secrets: inherit
