@@ -1,8 +1,10 @@
+## Compiled
 build/
 */**/build/
 */**/sl_instrumented/
 .gradle/
 
+## IDE
 */**/.idea/
 .idea/
 *.ipr
@@ -12,17 +14,18 @@ build/
 .vscode
 .devcontainer
 
+## Coverage
 coverage
 
 ## Binaries
 bin/
 
-##Vendor
+## Vendor
 vendor/*/
 !vendor/vendor.json
 
 ## Data
 data/
 
-##Release dir
+## Release dir
 release/
