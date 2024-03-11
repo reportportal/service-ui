@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,17 @@ import {
   isBtsPluginsExistSelector,
   isPostIssueActionAvailable,
 } from 'controllers/plugins';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import {
+  makeDecisionDefectCommentAddonSelector,
+  makeDecisionDefectTypeAddonSelector,
+} from 'controllers/plugins/uiExtensions/selectors';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import {
   ADD_FOR_ALL,
@@ -59,6 +64,8 @@ export const SelectDefectManually = ({
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const defectCommentExtensions = useSelector(makeDecisionDefectCommentAddonSelector);
+  const defectTypeExtensions = useSelector(makeDecisionDefectTypeAddonSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
@@ -69,7 +76,7 @@ export const SelectDefectManually = ({
 
   const source = modalState.selectManualChoice;
 
-  const handleManualChange = (value = {}) => {
+  const handleManualChange = (value = {}, extraAnalyticsParams = {}) => {
     const issue = {
       ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
@@ -78,8 +85,14 @@ export const SelectDefectManually = ({
       ...modalState,
       decisionType: SELECT_DEFECT_MANUALLY,
       selectManualChoice: { issue },
+      extraAnalyticsParams: {
+        ...modalState.extraAnalyticsParams,
+        ...extraAnalyticsParams,
+      },
     });
-    !issue.comment && commentEditor.focus();
+    if (!issue.comment) {
+      commentEditor.focus();
+    }
   };
 
   const selectDefectTypeManually = (value) => {
@@ -91,7 +104,7 @@ export const SelectDefectManually = ({
     trackEvent(getClickIgnoreAACheckboxEvent(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
-    handleManualChange({ comment: value.trim() });
+    handleManualChange({ comment: value.trim() }, { link_name: true });
     if (isBulkOperation) {
       const isValueEmpty = value.trim() === '';
       if (!source.issue.comment && !isValueEmpty) {
@@ -181,10 +194,20 @@ export const SelectDefectManually = ({
 
   const getDefectTypeNarrowView = () => width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
 
-  return (
-    <div className={cx('select-defect-wrapper')}>
+  const updateExtraAnalyticsParams = (extraAnalyticsParams) => {
+    setModalState({
+      extraAnalyticsParams: {
+        ...modalState.extraAnalyticsParams,
+        ...extraAnalyticsParams,
+      },
+    });
+  };
+
+  const createDefectTypesBlock = (addons = {}) => (
+    <>
       {!isBulkOperation && (
-        <div className={cx('ignore-analysis')}>
+        <div className={cx('defect-types-extra-block')}>
+          {addons.addonBlock}
           <InputCheckbox
             value={
               modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -195,7 +218,7 @@ export const SelectDefectManually = ({
             iconTransparentBackground
             darkView
           >
-            <span className={cx('checkbox-text')}>
+            <span className={cx('ignore-analysis-text')}>
               {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
             </span>
           </InputCheckbox>
@@ -209,7 +232,25 @@ export const SelectDefectManually = ({
             : itemData.issue.issueType
         }
         isNarrowView={getDefectTypeNarrowView()}
+        highlightedItem={addons.highlightedItem}
       />
+    </>
+  );
+
+  return (
+    <div className={cx('select-defect-wrapper')}>
+      {!isBulkOperation && defectTypeExtensions.length
+        ? defectTypeExtensions.map((extension) => (
+            <ExtensionLoader
+              key={extension.name}
+              extension={extension}
+              item={itemData}
+              updateExtraAnalyticsParams={updateExtraAnalyticsParams}
+            >
+              {createDefectTypesBlock}
+            </ExtensionLoader>
+          ))
+        : createDefectTypesBlock()}
       <div className={cx('defect-comment')}>
         <MarkdownEditor
           value={
@@ -224,7 +265,19 @@ export const SelectDefectManually = ({
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"
+          controlled={defectCommentExtensions.length !== 0}
         />
+        {!isBulkOperation &&
+          defectCommentExtensions.map((extension) => (
+            <ExtensionLoader
+              key={extension.name}
+              extension={extension}
+              onChangeComment={handleDefectCommentChange}
+              comment={source.issue.comment}
+              item={itemData}
+              updateExtraAnalyticsParams={updateExtraAnalyticsParams}
+            />
+          ))}
       </div>
       {!debugMode && (
         <ActionButtonsBar

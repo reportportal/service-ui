@@ -15,6 +15,12 @@ export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT =
 export const EXTENSION_TYPE_LOGIN_BLOCK = 'uiExtension:loginBlock';
 export const EXTENSION_TYPE_LOGIN_PAGE = 'uiExtension:loginPage';
 export const EXTENSION_TYPE_REGISTRATION_PAGE = 'uiExtension:registrationPage';
+export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON =
+  'uiExtension:makeDecisionDefectCommentAddon';
+export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
+  'uiExtension:makeDecisionDefectTypeAddon';
+export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAddon';
+export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
 
 export const COMMAND_GET_FILE = 'getFile';
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';

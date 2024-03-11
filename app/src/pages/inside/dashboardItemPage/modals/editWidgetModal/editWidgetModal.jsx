@@ -83,6 +83,7 @@ export class EditWidgetModal extends Component {
       widget: PropTypes.object,
       eventsInfo: PropTypes.object,
     }),
+    eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -96,6 +97,7 @@ export class EditWidgetModal extends Component {
       widget: {},
     },
     widgetSettings: {},
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -132,18 +134,27 @@ export class EditWidgetModal extends Component {
 
   onSave = (closeModal) => {
     const {
-      data: { onConfirm, widget },
+      tracking: { trackEvent },
+      data: {
+        onConfirm,
+        widget,
+        eventsInfo: { excludeSkippedTests },
+      },
       intl: { formatMessage },
       widgetSettings,
       projectKey,
     } = this.props;
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
+    const { widgetType, contentParameters, filterIds } = data;
+    const { excludeSkipped } = contentParameters.widgetOptions;
+    trackEvent(excludeSkippedTests(widgetType, excludeSkipped));
+
     const isForceUpdateNeeded =
-      !isEqual(widget.contentParameters, data.contentParameters) ||
+      !isEqual(widget.contentParameters, contentParameters) ||
       !isEqual(
         widget.appliedFilters.map((filter) => filter.id.toString()),
-        data.filterIds,
+        filterIds,
       );
 
     this.props.showScreenLockAction();

@@ -189,7 +189,7 @@ function* updateNotificationState(enabled) {
     },
   };
 
-  yield call(fetch, URLS.project(projectKey), {
+  yield call(fetch, URLS.projectByName(projectKey), {
     method: 'put',
     data: updatedConfig,
   });
@@ -313,7 +313,7 @@ function* updatePAState(PAEnabled) {
     },
   };
 
-  yield call(fetch, URLS.project(projectKey), {
+  yield call(fetch, URLS.projectByName(projectKey), {
     method: 'put',
     data: updatedConfig,
   });
@@ -416,7 +416,7 @@ function* watchUpdatePAState() {
 
 function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   try {
-    const project = yield call(fetch, URLS.project(projectKey));
+    const project = yield call(fetch, URLS.projectByName(projectKey));
     yield put(fetchProjectSuccessAction(project));
     yield put(setProjectIntegrationsAction(project.integrations));
     if (!fetchInfoOnly) {
@@ -443,7 +443,7 @@ function* watchFetchProjectPreferences() {
 }
 
 function* fetchConfigurationAttributes({ payload: projectKey }) {
-  const project = yield call(fetch, URLS.project(projectKey));
+  const project = yield call(fetch, URLS.projectByName(projectKey));
   yield put(updateConfigurationAttributesAction(project));
 }
 

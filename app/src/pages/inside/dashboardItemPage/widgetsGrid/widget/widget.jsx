@@ -34,7 +34,7 @@ import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
 import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
@@ -326,9 +326,7 @@ export class SimpleWidget extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
-          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
-            modalId,
-          ),
+          excludeSkippedTests: WIDGETS_EVENTS.createClickExcludeSkippedTestsOnHealthCheck(modalId),
         },
       },
     });

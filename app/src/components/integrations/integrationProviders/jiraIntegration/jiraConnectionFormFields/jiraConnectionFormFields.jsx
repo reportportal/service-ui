@@ -81,6 +81,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled}
           className={cx('fields')}
           isRequired
+          dataAutomationId="integrationNameField"
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -93,6 +94,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled || editAuthMode}
           className={cx('fields')}
           isRequired
+          dataAutomationId="linkToBTSField"
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -105,6 +107,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled || editAuthMode}
           className={cx('fields')}
           isRequired
+          dataAutomationId="projectKeyInBTSField"
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} isRequired />
@@ -115,6 +118,7 @@ export class JiraConnectionFormFields extends Component {
           label={formatMessage(COMMON_BTS_MESSAGES.authTypeLabel)}
           disabled={disabled}
           className={cx('fields')}
+          dataAutomationId="authorizationTypeField"
         >
           <FieldErrorHint provideHint={false}>
             <Dropdown options={this.systemAuthTypes} defaultWidth={false} />
@@ -127,6 +131,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled}
           className={cx('fields')}
           isRequired
+          dataAutomationId="usernameBTSField"
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -139,6 +144,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled}
           className={cx('last-fields')}
           isRequired
+          dataAutomationId="passwordBTSField"
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} type="password" />

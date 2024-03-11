@@ -15,5 +15,9 @@ export {
   uiExtensionLoginBlockSelector,
   uiExtensionLoginPageSelector,
   uiExtensionRegistrationPageSelector,
+  makeDecisionDefectCommentAddonSelector,
+  makeDecisionDefectTypeAddonSelector,
+  logStackTraceAddonSelector,
+  testItemDetailsAddonSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

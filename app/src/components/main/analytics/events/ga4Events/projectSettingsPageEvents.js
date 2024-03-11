@@ -61,21 +61,15 @@ const getStatus = (status) => (status ? 'active' : 'disabled');
 const getSwitcher = (switcher) => (switcher ? 'on' : 'off');
 
 export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
-  clickSubmitInIndexTab: (number, status) => ({
-    ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
-    element_name: 'button_submit',
-    place: `${ANALYZER}_index_settings`,
-    number,
-    status: getStatus(status),
-  }),
-
-  clickSubmitInAutoAnalyzerTab: (number, status, condition) => ({
+  clickSubmitInAutoAnalyzerTab: (number, status, condition, switcher, type) => ({
     ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_auto_analyzer`,
     element_name: 'button_submit',
     number,
     status: getStatus(status),
     condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[condition],
+    switcher,
+    type,
   }),
 
   clickSubmitInSimilarItemsTab: (number) => ({

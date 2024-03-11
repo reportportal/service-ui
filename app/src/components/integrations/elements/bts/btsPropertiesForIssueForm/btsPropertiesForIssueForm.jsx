@@ -216,7 +216,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   getAvailabilityControl = (field) => {
     return (
-      <div className={cx('checkbox-wrapper')}>
+      <div className={cx('checkbox-wrapper')} data-automation-id="enableBTSFieldCheckbox">
         <InputWithEye
           onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
           value={field.checked}
@@ -401,6 +401,7 @@ export class BtsPropertiesForIssueForm extends Component {
                   disabled={loading}
                   withoutProvider
                   description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                  dataAutomationId="issueTypeField"
                 >
                   <FieldErrorHint provideHint={false}>
                     <Dropdown

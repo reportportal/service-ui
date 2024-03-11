@@ -39,6 +39,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
+  UPDATE_PLUGIN_SUCCESS,
   PUBLIC_PLUGINS,
 } from './constants';
 import { resolveIntegrationUrl } from './utils';
@@ -257,13 +258,16 @@ function* watchRemovePlugin() {
 // TODO: in the future plugins with js parts should not depend on integrations, only on plugins.
 function* watchPluginChange() {
   yield takeEvery(
-    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
+    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS, UPDATE_PLUGIN_SUCCESS],
     fetchUiExtensions,
   );
 }
 
 function* watchPublicPluginChange() {
-  yield takeEvery(createFetchPredicate(PUBLIC_PLUGINS), fetchExtensionsMetadata);
+  yield takeEvery(
+    [createFetchPredicate(PUBLIC_PLUGINS), UPDATE_PLUGIN_SUCCESS],
+    fetchExtensionsMetadata,
+  );
 }
 
 export function* pluginSagas() {

@@ -180,11 +180,11 @@ export class UniqueErrorsPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
         eventsInfo: {
-          stackTraceTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
-          addAttribute: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.ADD_ATTRIBUTE,
-          clickSaveEvent:
-            UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          onOpenStackTraceEvent: () => UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
+          getSaveBtnEvent: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.getSaveBtnEvent,
+          detailsTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.DETAILS_TAB,
+          stackTraceTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.STACK_TRACE_TAB,
+          onOpenStackTraceEvent: () =>
+            UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEM_DETAILS_MODAL_EVENTS.EXPAND_STACK_TRACE,
         },
       },
     });

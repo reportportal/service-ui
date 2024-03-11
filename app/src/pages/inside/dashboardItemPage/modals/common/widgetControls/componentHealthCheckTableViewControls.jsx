@@ -16,6 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -105,6 +106,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
 @connect((state) => ({
   projectKey: projectKeySelector(state),
 }))
+@track()
 @injectIntl
 export class ComponentHealthCheckTableViewControls extends Component {
   static propTypes = {
@@ -115,6 +117,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     projectKey: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
