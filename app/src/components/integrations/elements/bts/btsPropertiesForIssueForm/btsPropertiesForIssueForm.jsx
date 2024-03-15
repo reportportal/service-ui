@@ -325,14 +325,16 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchFieldsSet = (issueTypeValue) => {
     const {
-      pluginDetails: details,
+      pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
       projectName,
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
     const requestParams = {};
     let url;
 
@@ -364,14 +366,16 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchIssueTypes = () => {
     const {
-      pluginDetails: details,
+      pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
       projectName,
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
     const requestParams = {};
     let url;
 
