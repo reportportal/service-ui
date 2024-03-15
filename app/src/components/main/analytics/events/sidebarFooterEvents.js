@@ -55,31 +55,6 @@ export const SIDEBAR_EVENTS = {
     action: 'Click on Menu button Debug',
     label: 'Transition on Debug Page',
   },
-  CLICK_PROFILE_DROPDOWN: {
-    category: SIDEBAR,
-    action: 'Click on Profile Dropdown',
-    label: 'Arise Dropdown Menu',
-  },
-  CLICK_PROFILE_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Profile link on Dropdown',
-    label: 'Transition on Profile Page',
-  },
-  CLICK_ADMINISTRATE_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Administrate link on Dropdown',
-    label: 'Transition to Administrate Mode',
-  },
-  CLICK_API_LINK: {
-    category: SIDEBAR,
-    action: 'Click on link API',
-    label: 'Transition to API page',
-  },
-  CLICK_LOGOUT_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Logout link',
-    label: 'Logout and transition on Landing Page',
-  },
 };
 
 export const ADMIN_SIDEBAR_EVENTS = {

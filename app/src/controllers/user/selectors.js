@@ -16,8 +16,6 @@
 
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
-import { INTERNAL } from 'common/constants/accountType';
-import { projectInfoSelector } from 'controllers/project/selectors';
 import { START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
@@ -34,6 +32,8 @@ export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;
 export const photoTimeStampSelector = (state) => settingsSelector(state).photoTimeStamp || null;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
+export const assignedOrganizationsSelector = (state) =>
+  userInfoSelector(state).assignedOrganizations || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {
   const { projectSlug } = activeProjectSelector(state);
@@ -44,16 +44,34 @@ export const isAdminSelector = (state) => userInfoSelector(state).userRole === A
 
 export const availableProjectsSelector = createSelector(
   userInfoSelector,
-  projectInfoSelector,
-  activeProjectSelector,
-  isAdminSelector,
-  ({ assignedProjects }, { entryType = INTERNAL }, { projectSlug }, isAdmin) => {
-    const isAssignedToProject = projectSlug && assignedProjects[projectSlug];
-    const isPropagatedToUnassignedProject = isAdmin && !isAssignedToProject;
+  ({ assignedProjects, assignedOrganizations }) => {
+    const assignedProjectMap = Object.keys(assignedProjects).map(
+      (assignedProject) => assignedProjects[assignedProject],
+    );
 
-    return isPropagatedToUnassignedProject
-      ? { ...assignedProjects, [projectSlug]: { entryType } }
-      : assignedProjects;
+    return Object.keys(assignedOrganizations)
+      .sort()
+      .reduce((projects, assignedOrganization) => {
+        const { organizationSlug, organizationId, organizationName } = assignedOrganizations[
+          assignedOrganization
+        ];
+        const organizationProjects = assignedProjectMap
+          .filter((assignedProject) => assignedProject.organizationId === organizationId)
+          .map(({ projectName, projectSlug }) => ({ projectName, projectSlug }));
+
+        return organizationProjects.length > 0
+          ? [
+              ...projects,
+              {
+                organizationSlug,
+                organizationName,
+                projects: organizationProjects.sort((a, b) =>
+                  a.projectName > b.projectName ? 1 : -1,
+                ),
+              },
+            ]
+          : projects;
+      }, []);
   },
 );
 

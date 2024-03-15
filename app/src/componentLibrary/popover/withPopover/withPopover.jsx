@@ -14,18 +14,34 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
+import { activeModalSelector, hideModalAction } from 'controllers/modal';
+import { useDispatch, useSelector } from 'react-redux';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popoverConfig }) => (
-  WrappedComponent,
-) => (props) => {
+export const withPopover = ({
+  ContentComponent,
+  popoverWrapperClassName,
+  popoverId,
+  ...popoverConfig
+}) => (WrappedComponent) => (props) => {
   const parentRef = useRef();
+  const dispatch = useDispatch();
+  const activePopover = useSelector(activeModalSelector)?.id || '';
   const [isOpened, setOpened] = useState(false);
+
+  useEffect(() => {
+    popoverId && setOpened(activePopover === popoverId);
+  }, [activePopover]);
+
+  const onClose = () => {
+    dispatch(hideModalAction());
+    setOpened(false);
+  };
 
   return (
     <>
@@ -39,7 +55,7 @@ export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popo
         <WrappedComponent isPopoverOpen={isOpened} {...props} />
       </div>
       {isOpened && (
-        <Popover onClose={() => setOpened(false)} parentRef={parentRef} {...popoverConfig}>
+        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
           <ContentComponent {...props} />
         </Popover>
       )}

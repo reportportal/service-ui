@@ -18,11 +18,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  availableProjectsSelector,
-} from 'controllers/user';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
 import { CUSTOMER } from 'common/constants/projectRoles';
@@ -41,7 +37,6 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
-import { projectNameSelector } from 'controllers/project';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
@@ -51,11 +46,8 @@ import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
-import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
-  projectName: projectNameSelector(state),
-  availableProjects: availableProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensions: uiExtensionSidebarComponentsSelector(state),
@@ -65,13 +57,11 @@ import { ProjectSelector } from '../../common/projectSelector';
 export class AppSidebar extends Component {
   static propTypes = {
     projectRole: PropTypes.string.isRequired,
-    projectName: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    availableProjects: PropTypes.object,
     extensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
     slugs: PropTypes.shape({
@@ -80,7 +70,6 @@ export class AppSidebar extends Component {
     }),
   };
   static defaultProps = {
-    availableProjects: {},
     extensions: [],
     onClickNavBtn: () => {},
   };
@@ -185,18 +174,9 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { availableProjects, projectName } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
 
-    const mainBlock = <ProjectSelector projects={availableProjects} projectName={projectName} />;
-
-    return (
-      <Sidebar
-        mainBlock={mainBlock}
-        topSidebarItems={topSidebarItems}
-        bottomSidebarItems={bottomSidebarItems}
-      />
-    );
+    return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
   }
 }

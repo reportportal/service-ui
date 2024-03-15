@@ -1,0 +1,72 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.organizations-control {
+  width: 240px;
+  height: 40px;
+  background-color: $COLOR--darkmode-gray-300;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.organization-btn {
+  height: 16px;
+  display: flex;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: $COLOR--darkmode-gray-100;
+  line-height: 16px;
+  font-size: 11px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  cursor: pointer;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+.project-name {
+  color: $COLOR--darkmode-gray-100;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  line-height: 20px;
+  margin-top: 4px;
+}
+
+.open-popover {
+  width: 16px;
+  height: 16px;
+}
+
+.popover {
+  top: 102px !important;
+  background-color: $COLOR--darkmode-gray-400 !important;
+  max-height: calc(100% - 118px);
+  margin-left: 4px;
+
+  &::after {
+    top: 16px !important;
+    border-right-color: $COLOR--darkmode-gray-400 !important;
+  }
+}

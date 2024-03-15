@@ -17,6 +17,7 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { assignedOrganizationsSelector } from 'controllers/user';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -49,6 +50,19 @@ export const subTypesSelector = (state) => projectConfigSelector(state).subTypes
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 export const projectNameSelector = (state) => projectInfoSelector(state).projectName || '';
+
+export const organizationNameSelector = createSelector(
+  assignedOrganizationsSelector,
+  projectInfoSelector,
+  (assignedOrganizations, { organizationId }) => {
+    const assignedOrganizationKey = Object.keys(assignedOrganizations).find(
+      (assignedOrganization) =>
+        assignedOrganizations[assignedOrganization].organizationId === organizationId,
+    );
+
+    return assignedOrganizations[assignedOrganizationKey]?.organizationName;
+  },
+);
 
 export const projectKeySelector = (state) => projectInfoSelector(state).projectKey || '';
 
