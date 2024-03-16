@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
 import { OrganizationsItem } from './organizationsItem';
@@ -56,14 +57,22 @@ export const OrganizationsPopover = () => {
           </Link>
         </div>
       )}
-      {availableProjects.map(({ organizationName, organizationSlug, projects }) => (
-        <OrganizationsItem
-          organizationName={organizationName}
-          organizationSlug={organizationSlug}
-          projects={projects}
-          isOpen={currentOrganization === organizationSlug}
-        />
-      ))}
+      <ScrollWrapper
+        autoHide
+        autoHeight
+        autoHeightMax={window.innerHeight - 195}
+        hideTracksWhenNotNeeded
+        className={cx('scroll-wrapper')}
+      >
+        {availableProjects.map(({ organizationName, organizationSlug, projects }) => (
+          <OrganizationsItem
+            organizationName={organizationName}
+            organizationSlug={organizationSlug}
+            projects={projects}
+            isOpen={currentOrganization === organizationSlug}
+          />
+        ))}
+      </ScrollWrapper>
     </div>
   );
 };

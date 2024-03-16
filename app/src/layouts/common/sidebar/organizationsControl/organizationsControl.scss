@@ -64,6 +64,7 @@
   background-color: $COLOR--darkmode-gray-400 !important;
   max-height: calc(100% - 118px);
   margin-left: 4px;
+  padding-right: 8px;
 
   &::after {
     top: 16px !important;

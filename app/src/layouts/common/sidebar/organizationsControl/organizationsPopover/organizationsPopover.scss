@@ -15,8 +15,7 @@
  */
 
 .organizations-popover {
-  width: 176px;
-  padding: 8px 16px;
+  width: 216px;
   background-color: $COLOR--darkmode-gray-400;
 }
 
@@ -24,6 +23,7 @@
   border-bottom: 1px solid $COLOR--almost-black;
   padding: 8px 0;
   margin-bottom: 8px;
+  margin-right: 8px;
 }
 
 .all-organizations-link {
@@ -37,4 +37,14 @@
   font-size: 13px;
   line-height: 20px;
   font-family: $FONT-ROBOTO-MEDIUM;
+}
+
+.scroll-wrapper {
+  > div:last-child {
+    width: 4px !important;
+
+    div {
+      background-color: $COLOR--darkmode-gray-200;
+    }
+  }
 }
