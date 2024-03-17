@@ -25,7 +25,7 @@
   padding-bottom: 24px;
   background-color: $COLOR--darkmode-gray-350;
   transform: translateX(-100%);
-  transition: transform 0.1s ease-out;
+  transition: transform 0.3s ease-out;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -47,11 +47,7 @@
   height: 24px;
 }
 
-.sidebar-btn-wrapper {
-  height: 40px;
-}
-
-.sidebar-btn {
+.navbar-btn {
   height: 40px;
   display: flex;
   align-items: center;
@@ -66,6 +62,10 @@
     font-size: 13px;
     line-height: 20px;
     padding: 10px 16px;
+  }
+
+  &:hover > div {
+    background-color: $COLOR--darkmode-gray-500;
   }
 }
 
@@ -83,6 +83,14 @@
   line-height: 16px;
   width: calc(100% - 32px);
   padding: 10px 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+    a {
+      color: $COLOR--white-two;
+    }
+  }
 
   a {
     text-decoration: none;
@@ -92,10 +100,6 @@
       outline: none;
       border: 2px solid $COLOR--topaz-focused;
       color: $COLOR--topaz-focused;
-    }
-
-    &:hover {
-      color: $COLOR--white-two;
     }
 
     &:active {

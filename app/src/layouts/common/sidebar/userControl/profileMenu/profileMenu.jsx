@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -27,7 +28,7 @@ import styles from './profileMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProfileMenu = () => {
+export const ProfileMenu = ({ closePopover, closeNavbar }) => {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
@@ -42,6 +43,10 @@ export const ProfileMenu = () => {
         }}
         className={cx('menu-item')}
         activeClassName={cx('active')}
+        onClick={() => {
+          closePopover();
+          closeNavbar();
+        }}
       >
         {Parser(MyProfileIcon)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
@@ -52,4 +57,9 @@ export const ProfileMenu = () => {
       </div>
     </>
   );
+};
+
+ProfileMenu.propTypes = {
+  closePopover: PropTypes.func.isRequired,
+  closeNavbar: PropTypes.func.isRequired,
 };

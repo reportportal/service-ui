@@ -27,6 +27,7 @@ import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
+const MARGIN_TOP_AND_MARGIN_BOTTOM = 195;
 
 const messages = defineMessages({
   allOrganizations: {
@@ -35,7 +36,7 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsPopover = () => {
+export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const { organizationSlug: currentOrganization, projectSlug } = useSelector(
@@ -60,7 +61,7 @@ export const OrganizationsPopover = () => {
       <ScrollWrapper
         autoHide
         autoHeight
-        autoHeightMax={window.innerHeight - 195}
+        autoHeightMax={window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM}
         hideTracksWhenNotNeeded
         className={cx('scroll-wrapper')}
       >
@@ -69,7 +70,12 @@ export const OrganizationsPopover = () => {
             organizationName={organizationName}
             organizationSlug={organizationSlug}
             projects={projects}
+            onClick={() => {
+              closeNavbar();
+              closePopover();
+            }}
             isOpen={currentOrganization === organizationSlug}
+            key={`${organizationSlug}-${projectSlug}`}
           />
         ))}
       </ScrollWrapper>
@@ -78,5 +84,6 @@ export const OrganizationsPopover = () => {
 };
 
 OrganizationsPopover.propTypes = {
-  availableProjects: PropTypes.array.isRequired,
+  closeNavbar: PropTypes.func.isRequired,
+  closePopover: PropTypes.func.isRequired,
 };

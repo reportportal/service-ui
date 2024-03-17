@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
+ @mixin truncate ($maxSize: 'auto') {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxSize;
+}
+
 .user-control {
   position: relative;
   display: block;
   color: $COLOR--darkmode-gray-100;
   width: 280px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+    .user-details {
+      color: $COLOR--white-two;
+    }
+  }
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -46,7 +60,7 @@
   margin-right: 16px;
 }
 
-.username {
+.username-wrapper {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
@@ -59,6 +73,10 @@
   }
 }
 
+.username {
+  @include truncate(160px);
+}
+
 .arrow-icon {
   display: flex;
   align-items: center;
@@ -69,10 +87,11 @@
   line-height: 16px;
   font-family: $FONT-ROBOTO-REGULAR;
   margin-top: 2px;
+  @include truncate();
 }
 
 .popover {
-  background-color: $COLOR--darkmode-gray-400 !important;
+  background-color: $COLOR--darkmode-gray-400;
   padding: 8px 16px;
   margin-left: -4px;
   margin-top: -8px;

@@ -145,7 +145,10 @@ export const urlProjectSlugSelector = (state) => payloadSelector(state).projectS
 
 export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
 
-export const urlOrganizationAndProjectSelector = (state) => ({
-  organizationSlug: urlOrganizationSlugSelector(state),
-  projectSlug: urlProjectSlugSelector(state),
-});
+export const urlOrganizationAndProjectSelector = createSelector(
+  [urlOrganizationSlugSelector, urlProjectSlugSelector],
+  (organizationSlug, projectSlug) => ({
+    organizationSlug,
+    projectSlug,
+  }),
+);

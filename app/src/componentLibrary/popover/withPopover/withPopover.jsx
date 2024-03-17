@@ -56,7 +56,7 @@ export const withPopover = ({
       </div>
       {isOpened && (
         <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
-          <ContentComponent {...props} />
+          <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
     </>

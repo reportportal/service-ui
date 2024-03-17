@@ -46,16 +46,18 @@ export const Navbar = ({ active, topSidebarItems, closeNavbar }) => {
       <div className={cx('logo-text-wrapper')}>
         <i className={cx('logo-text')}>{Parser(LogoTextIcon)}</i>
       </div>
-      <OrganizationsControlWithPopover />
+      <OrganizationsControlWithPopover closeNavbar={closeNavbar} test={10} />
       <div className={cx('top-block')}>
         {topSidebarItems.map((item) => (
           <div
             key={item.component ? item.name : item.link.type}
-            className={cx('sidebar-btn')}
+            className={cx('navbar-btn')}
             onClick={() => {
               item.onClick();
               closeNavbar();
             }}
+            role="button"
+            tabIndex={0}
           >
             {item.component || (
               <SidebarButton link={item.link} isNavbar>
@@ -71,7 +73,7 @@ export const Navbar = ({ active, topSidebarItems, closeNavbar }) => {
             {formatMessage(messages.privacyPolicy)}
           </a>
         </div>
-        <UserControlWithPopover />
+        <UserControlWithPopover closeNavbar={closeNavbar} />
       </div>
     </div>
   );
@@ -81,7 +83,6 @@ Navbar.propTypes = {
   active: PropTypes.bool,
   topSidebarItems: PropTypes.array,
   closeNavbar: PropTypes.func.isRequired,
-  openPopover: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {

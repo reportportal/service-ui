@@ -119,7 +119,7 @@ const routesMap = {
     payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
   })),
 
-  [USER_PROFILE_SUB_PAGE]: `organizations/:organizationSlug?/projects/:projectSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 

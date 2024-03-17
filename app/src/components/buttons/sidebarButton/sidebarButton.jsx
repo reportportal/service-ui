@@ -40,7 +40,7 @@ export const SidebarButton = ({
   });
 
   const linkBody = isNavbar ? (
-    <span className={cx('title')}>{children}</span>
+    <span>{children}</span>
   ) : (
     <div>
       <i className={cx('btn-icon')}>{Parser(icon)}</i>

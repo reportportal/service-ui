@@ -28,7 +28,7 @@ export const OrganizationsBlock = ({ openNavbar }) => {
   const organizationName = useSelector(organizationNameSelector);
   const title = `${organizationName[0]}${organizationName[organizationName.length - 1]}`;
 
-  const onClick = () => {
+  const onOpenNavbar = () => {
     dispatch(
       showModalAction({
         id: 'organizationPopover',
@@ -38,7 +38,7 @@ export const OrganizationsBlock = ({ openNavbar }) => {
   };
 
   return (
-    <button className={cx('organization-block')} tabIndex={0} onClick={onClick}>
+    <button className={cx('organization-block')} tabIndex={0} onClick={onOpenNavbar}>
       {title}
     </button>
   );

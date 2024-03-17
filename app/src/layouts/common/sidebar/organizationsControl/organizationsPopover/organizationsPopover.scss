@@ -15,7 +15,7 @@
  */
 
 .organizations-popover {
-  width: 216px;
+  width: 240px;
   background-color: $COLOR--darkmode-gray-400;
 }
 
@@ -23,7 +23,7 @@
   border-bottom: 1px solid $COLOR--almost-black;
   padding: 8px 0;
   margin-bottom: 8px;
-  margin-right: 8px;
+  margin: 0 16px 8px 16px;
 }
 
 .all-organizations-link {
@@ -42,6 +42,7 @@
 .scroll-wrapper {
   > div:last-child {
     width: 4px !important;
+    margin-right: 8px;
 
     div {
       background-color: $COLOR--darkmode-gray-200;

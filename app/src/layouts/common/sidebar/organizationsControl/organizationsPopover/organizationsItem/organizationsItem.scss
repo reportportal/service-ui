@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+@mixin truncate ($maxSize) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxSize;
+}
+
 .organizations-item {
   background-color: $COLOR--darkmode-gray-400;
   cursor: pointer;
@@ -21,14 +28,16 @@
 
 .header-item {
   display: flex;
+  align-items: center;
   color: $COLOR--darkmode-gray-100;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   line-height: 20px;
   padding: 8px 0;
+  margin-left: 16px;
 
   svg {
-    width: 16px;
+    min-width: 16px;
     height: 16px;
     margin-right: 8px;
   }
@@ -37,10 +46,19 @@
 .project-item {
   display: flex;
   flex-direction: column;
-  margin-left: 24px;
+  padding-left: 40px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+  }
+}
+
+.organizations-name {
+  @include truncate(185px);
 }
 
 .project-item-link {
+  @include truncate(185px);
   display: inline-block;
   width: 100%;
   height: 100%;

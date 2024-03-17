@@ -41,10 +41,10 @@ const UserControl = () => {
   };
 
   return (
-    <div className={cx('user-control')} onClick={onClick}>
+    <div className={cx('user-control')} onClick={onClick} role="button" tabIndex={0}>
       <div className={cx('user-details')}>
-        <div className={cx('username')}>
-          {fullName}
+        <div className={cx('username-wrapper')}>
+          <div className={cx('username')}>{fullName}</div>
           <div className={cx('arrow-icon')}>
             {userRole === ADMINISTRATOR && (
               <div className={cx('admin-badge')}>

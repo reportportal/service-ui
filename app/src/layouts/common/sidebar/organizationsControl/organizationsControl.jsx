@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
@@ -29,6 +29,8 @@ import styles from './organizationsControl.scss';
 
 const cx = classNames.bind(styles);
 
+const ORGANIZATION_POPOVER_ID = 'organizationPopover';
+
 const messages = defineMessages({
   organization: {
     id: 'OrganizationsControl.organization',
@@ -36,39 +38,48 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsControl = () => {
+export const OrganizationsControl = ({ isPopoverOpen }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const organizationName = useSelector(organizationNameSelector);
   const projectName = useSelector(projectNameSelector);
-  const [isOpenPopover, setIsOpenPopover] = useState(false);
   const onClick = () => {
     dispatch(
       showModalAction({
-        id: 'organizationPopover',
+        id: ORGANIZATION_POPOVER_ID,
       }),
     );
-    setIsOpenPopover(!isOpenPopover);
   };
 
   return (
-    <div className={cx('organizations-control')} onClick={onClick}>
+    <div className={cx('organizations-control')} onClick={onClick} role="button" tabIndex={0}>
       <div>
         <button className={cx('organization-btn')}>
           <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-          {formatMessage(messages.organization)}: {organizationName}
+          <div className={cx('organization-name')}>
+            {formatMessage(messages.organization)}: {organizationName}
+          </div>
         </button>
         <div className={cx('project-name')}>{projectName}</div>
       </div>
-      <i className={cx('open-popover')}>{Parser(OpenPopoverIcon)}</i>
+      <i
+        className={cx('open-popover', {
+          action: isPopoverOpen,
+        })}
+      >
+        {Parser(OpenPopoverIcon)}
+      </i>
     </div>
   );
 };
 
+OrganizationsControl.propTypes = {
+  isPopoverOpen: PropTypes.bool.isRequired,
+};
+
 export const OrganizationsControlWithPopover = withPopover({
   ContentComponent: OrganizationsPopover,
-  popoverId: 'organizationPopover',
+  popoverId: ORGANIZATION_POPOVER_ID,
   side: 'right',
-  arrowPosition: 'top',
   popoverClassName: cx('popover'),
 })(OrganizationsControl);

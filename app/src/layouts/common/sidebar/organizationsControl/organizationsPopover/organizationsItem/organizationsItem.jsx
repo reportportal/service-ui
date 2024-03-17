@@ -26,15 +26,26 @@ import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsItem = ({ organizationName, organizationSlug, projects, isOpen }) => {
+export const OrganizationsItem = ({
+  organizationName,
+  organizationSlug,
+  projects,
+  isOpen,
+  onClick,
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
   return (
     <div className={cx('organizations-item')}>
-      <div className={cx('header-item')} onClick={() => setIsCollapsed(!isCollapsed)}>
+      <div
+        className={cx('header-item')}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        role="button"
+        tabIndex={0}
+      >
         {Parser(ArrowIcon)}
-        {organizationName}
+        <div className={cx('organizations-name')}>{organizationName}</div>
       </div>
       {isCollapsed && (
         <div className={cx('project-item')}>
@@ -50,6 +61,7 @@ export const OrganizationsItem = ({ organizationName, organizationSlug, projects
               key={`${organizationSlug}-${projectSlug}`}
               className={cx('project-item-link')}
               activeClassName={cx('active')}
+              onClick={onClick}
             >
               <span title={projectName}>{projectName}</span>
             </NavLink>
@@ -65,4 +77,5 @@ OrganizationsItem.propTypes = {
   organizationSlug: PropTypes.string.isRequired,
   projects: PropTypes.array.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
