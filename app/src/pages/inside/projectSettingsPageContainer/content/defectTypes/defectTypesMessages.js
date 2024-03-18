@@ -67,7 +67,7 @@ export const messages = defineMessages({
   },
   createDefectIcon: {
     id: 'DefectTypesTab.createDefectIcon',
-    defaultMessage: 'Create a new Defect',
+    defaultMessage: 'Create a new Defect Type',
   },
   description: {
     id: 'DefectTypesTab.description',
