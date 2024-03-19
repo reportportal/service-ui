@@ -182,7 +182,3 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
 ProjectSidebar.propTypes = {
   onClickNavBtn: PropTypes.func.isRequired,
 };
-
-ProjectSidebar.defaultProps = {
-  onClickNavBtn: () => {},
-};

@@ -53,14 +53,14 @@ export const SupportBlock = ({ options }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const [isModalShown, setModalShown] = useState(false);
+  const [isModalShown, setIsModalShown] = useState(false);
   const [userChoice, setUserChoice] = useState(options[0].value);
   const wrapperRef = useRef();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!wrapperRef?.current?.contains(event.target)) {
-        setModalShown(false);
+        setIsModalShown(false);
       }
     };
     document.addEventListener('click', handleClickOutside, false);
@@ -69,12 +69,12 @@ export const SupportBlock = ({ options }) => {
   }, []);
 
   const toggleModal = () => {
-    setModalShown(!isModalShown);
+    setIsModalShown(!isModalShown);
     !isModalShown && trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_HELP_AND_SUPPORT_BUTTON);
   };
 
   const openModal = () => {
-    setModalShown(false);
+    setIsModalShown(false);
     dispatch(
       showModalAction({
         id: 'requestSupportModal',
