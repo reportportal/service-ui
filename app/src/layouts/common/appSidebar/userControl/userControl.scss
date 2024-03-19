@@ -91,12 +91,7 @@
 }
 
 .popover {
-  background-color: $COLOR--darkmode-gray-400;
   padding: 8px 16px;
   margin-left: -4px;
   margin-top: -8px;
-
-  &::after {
-    border-right-color: $COLOR--darkmode-gray-400 !important;
-  }
 }

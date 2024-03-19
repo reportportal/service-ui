@@ -55,4 +55,5 @@ export const UserControlWithPopover = withPopover({
   side: 'right',
   arrowPosition: 'middle',
   popoverClassName: cx('popover'),
+  variant: 'dark',
 })(UserControl);

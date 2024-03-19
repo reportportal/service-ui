@@ -70,4 +70,5 @@ export const OrganizationsControlWithPopover = withPopover({
   ContentComponent: OrganizationsPopover,
   side: 'right',
   popoverClassName: cx('popover'),
+  variant: 'dark',
 })(OrganizationsControl);

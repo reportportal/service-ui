@@ -32,6 +32,7 @@ export const Popover = ({
   dataAutomationId,
   onClose,
   parentRef,
+  variant,
   popoverClassName,
 }) => {
   const popoverRef = useRef();
@@ -98,7 +99,13 @@ export const Popover = ({
 
   return (
     <div
-      className={cx('popover', `side-${side}`, `position-${arrowPosition}`, popoverClassName)}
+      className={cx(
+        'popover',
+        `side-${side}`,
+        `position-${arrowPosition}`,
+        variant,
+        popoverClassName,
+      )}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
       style={{ top, left }}
@@ -118,6 +125,7 @@ Popover.propTypes = {
   onClose: PropTypes.func,
   parentRef: PropTypes.shape({ current: PropTypes.object }),
   popoverClassName: PropTypes.string,
+  variant: PropTypes.oneOf(['light', 'dark']),
 };
 
 Popover.defaultProps = {
@@ -129,4 +137,5 @@ Popover.defaultProps = {
   onClose: () => {},
   parentRef: null,
   popoverClassName: '',
+  variant: 'light',
 };

@@ -85,14 +85,13 @@
 }
 
 .popover {
-  top: 102px !important;
-  background-color: $COLOR--darkmode-gray-400;
+  margin-top: 72px;
   max-height: calc(100% - 118px);
   margin-left: 4px;
   padding: 8px 0;
 
   &::after {
-    top: 16px !important;
-    border-right-color: $COLOR--darkmode-gray-400 !important;
+    border-right-color: $COLOR--darkmode-gray-400;
+    margin-top: -71px;
   }
 }

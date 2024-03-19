@@ -74,6 +74,14 @@
       top: calc(100% / 2 - 9px);
     }
   }
+
+  &.dark.side-right::after {
+    border-right-color: $COLOR--darkmode-gray-400;
+  }
+
+  &.dark {
+    background-color: $COLOR--darkmode-gray-400;
+  }
 }
 
 .content {
