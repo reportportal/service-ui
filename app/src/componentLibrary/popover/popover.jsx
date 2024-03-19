@@ -34,6 +34,8 @@ export const Popover = ({
   parentRef,
   variant,
   popoverClassName,
+  arrowVerticalPosition,
+  topPosition,
 }) => {
   const popoverRef = useRef();
   const [top, setTop] = useState(0);
@@ -97,18 +99,23 @@ export const Popover = ({
     }
   }, [parentRef, side, arrowPosition]);
 
+  const className = cx(
+    'popover',
+    `side-${side}`,
+    `position-${arrowPosition}`,
+    variant,
+    popoverClassName,
+    {
+      [`position-${arrowVerticalPosition}`]: arrowVerticalPosition,
+    },
+  );
+
   return (
     <div
-      className={cx(
-        'popover',
-        `side-${side}`,
-        `position-${arrowPosition}`,
-        variant,
-        popoverClassName,
-      )}
+      className={className}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
-      style={{ top, left }}
+      style={{ top: topPosition || top, left }}
     >
       {title && <div className={cx('title')}>{title}</div>}
       <div className={cx('content')}>{children}</div>
@@ -126,6 +133,11 @@ Popover.propTypes = {
   parentRef: PropTypes.shape({ current: PropTypes.object }),
   popoverClassName: PropTypes.string,
   variant: PropTypes.oneOf(['light', 'dark']),
+  arrowVerticalPosition: PropTypes.oneOfType([
+    PropTypes.oneOf(['vertical-top, vertical-bottom']),
+    null,
+  ]),
+  topPosition: PropTypes.number,
 };
 
 Popover.defaultProps = {
@@ -138,4 +150,6 @@ Popover.defaultProps = {
   parentRef: null,
   popoverClassName: '',
   variant: 'light',
+  arrowVerticalPosition: null,
+  topPosition: null,
 };

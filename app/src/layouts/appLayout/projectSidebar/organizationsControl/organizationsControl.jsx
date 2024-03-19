@@ -71,4 +71,6 @@ export const OrganizationsControlWithPopover = withPopover({
   side: 'right',
   popoverClassName: cx('popover'),
   variant: 'dark',
+  arrowVerticalPosition: 'vertical-top',
+  topPosition: 96,
 })(OrganizationsControl);

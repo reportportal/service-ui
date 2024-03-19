@@ -63,6 +63,15 @@
     right: 100%;
   }
 
+  &.side-right.position-vertical-top::after {
+    top: 22px;
+  }
+
+  &.side-right.position-vertical-bottom::after {
+    bottom: 22px;
+    top: auto;
+  }
+
   &.side-left::after {
     border-left-color: $COLOR--white-two;
     left: 100%;
