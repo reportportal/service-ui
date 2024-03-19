@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,16 @@
  * limitations under the License.
  */
 
-export { Sidebar } from './sidebar';
+import { PropTypes } from 'prop-types';
+
+export const SidebarButton = ({ className, onClick, children }) => (
+  <div className={className} onClick={onClick} role="button" tabIndex={0}>
+    {children}
+  </div>
+);
+
+SidebarButton.propTypes = {
+  className: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
+};

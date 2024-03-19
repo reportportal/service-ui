@@ -41,7 +41,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { Sidebar } from 'layouts/common/sidebar';
+import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
@@ -184,7 +184,7 @@ function AdminSidebarComponent({
   );
 
   return (
-    <Sidebar
+    <AppSidebar
       mainBlock={mainBlock}
       topSidebarItems={topSidebarItems}
       bottomSidebarItems={bottomSidebarItems}

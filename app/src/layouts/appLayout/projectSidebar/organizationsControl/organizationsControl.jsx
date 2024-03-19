@@ -15,21 +15,18 @@
  */
 
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { showModalAction } from 'controllers/modal';
 import { withPopover } from 'componentLibrary/popover';
 import { organizationNameSelector, projectNameSelector } from 'controllers/project';
-import ArrowLeftIcon from '../img/arrow-left-inline.svg';
-import OpenPopoverIcon from '../img/open-popover-inline.svg';
+import ArrowLeftIcon from './img/arrow-left-inline.svg';
+import OpenPopoverIcon from './img/open-popover-inline.svg';
 import { OrganizationsPopover } from './organizationsPopover/organizationsPopover';
 import styles from './organizationsControl.scss';
 
 const cx = classNames.bind(styles);
-
-const ORGANIZATION_POPOVER_ID = 'organizationPopover';
 
 const messages = defineMessages({
   organization: {
@@ -40,19 +37,11 @@ const messages = defineMessages({
 
 export const OrganizationsControl = ({ isPopoverOpen }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const organizationName = useSelector(organizationNameSelector);
   const projectName = useSelector(projectNameSelector);
-  const onClick = () => {
-    dispatch(
-      showModalAction({
-        id: ORGANIZATION_POPOVER_ID,
-      }),
-    );
-  };
 
   return (
-    <div className={cx('organizations-control')} onClick={onClick} role="button" tabIndex={0}>
+    <div className={cx('organizations-control')} role="button" tabIndex={0}>
       <div>
         <button className={cx('organization-btn')}>
           <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
@@ -79,7 +68,6 @@ OrganizationsControl.propTypes = {
 
 export const OrganizationsControlWithPopover = withPopover({
   ContentComponent: OrganizationsPopover,
-  popoverId: ORGANIZATION_POPOVER_ID,
   side: 'right',
   popoverClassName: cx('popover'),
 })(OrganizationsControl);

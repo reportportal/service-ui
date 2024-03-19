@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userInfoSelector } from 'controllers/user';
-import { showModalAction } from 'controllers/modal';
 import { withPopover } from 'componentLibrary/popover';
 import { ProfileMenu } from './profileMenu';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
@@ -29,19 +28,10 @@ import styles from './userControl.scss';
 const cx = classNames.bind(styles);
 
 const UserControl = () => {
-  const dispatch = useDispatch();
   const { userRole, fullName, email } = useSelector(userInfoSelector);
 
-  const onClick = () => {
-    dispatch(
-      showModalAction({
-        id: 'userControlPopover',
-      }),
-    );
-  };
-
   return (
-    <div className={cx('user-control')} onClick={onClick} role="button" tabIndex={0}>
+    <div className={cx('user-control')} role="button" tabIndex={0}>
       <div className={cx('user-details')}>
         <div className={cx('username-wrapper')}>
           <div className={cx('username')}>{fullName}</div>

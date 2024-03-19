@@ -16,24 +16,18 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { organizationNameSelector } from 'controllers/project';
-import { showModalAction } from 'controllers/modal';
 import styles from './organizationsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsBlock = ({ openNavbar }) => {
-  const dispatch = useDispatch();
+export const OrganizationsBlock = ({ openNavbar, openPopover }) => {
   const organizationName = useSelector(organizationNameSelector);
   const title = `${organizationName[0]}${organizationName[organizationName.length - 1]}`;
 
   const onOpenNavbar = () => {
-    dispatch(
-      showModalAction({
-        id: 'organizationPopover',
-      }),
-    );
+    openPopover();
     openNavbar();
   };
 
@@ -46,4 +40,5 @@ export const OrganizationsBlock = ({ openNavbar }) => {
 
 OrganizationsBlock.propTypes = {
   openNavbar: PropTypes.func.isRequired,
+  openPopover: PropTypes.func.isRequired,
 };

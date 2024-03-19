@@ -16,30 +16,28 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
-import { activeModalSelector, hideModalAction } from 'controllers/modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({
-  ContentComponent,
-  popoverWrapperClassName,
-  popoverId,
-  ...popoverConfig
-}) => (WrappedComponent) => (props) => {
+export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popoverConfig }) => (
+  WrappedComponent,
+  // eslint-disable-next-line react/prop-types
+) => ({ isOpenPopover, closePopover, setIsOpenPopover, ...props }) => {
   const parentRef = useRef();
-  const dispatch = useDispatch();
-  const activePopover = useSelector(activeModalSelector)?.id || '';
   const [isOpened, setOpened] = useState(false);
 
   useEffect(() => {
-    popoverId && setOpened(activePopover === popoverId);
-  }, [activePopover]);
+    if (isOpenPopover) {
+      setOpened(true);
+      setIsOpenPopover?.(true);
+    }
+  }, [isOpenPopover, setIsOpenPopover]);
 
   const onClose = () => {
-    dispatch(hideModalAction());
+    closePopover?.();
+    setIsOpenPopover?.(false);
     setOpened(false);
   };
 
@@ -50,6 +48,7 @@ export const withPopover = ({
         className={cx('with-popover', popoverWrapperClassName)}
         onClick={() => {
           setOpened(true);
+          setIsOpenPopover?.(true);
         }}
       >
         <WrappedComponent isPopoverOpen={isOpened} {...props} />

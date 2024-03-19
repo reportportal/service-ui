@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -29,74 +29,46 @@ import {
   PROJECT_USERDEBUG_PAGE,
   LAUNCHES_PAGE,
   PROJECT_FILTERS_PAGE,
-  ADMINISTRATE_PAGE,
   PROJECT_MEMBERS_PAGE,
   PROJECT_SETTINGS_PAGE,
-  USER_PROFILE_PAGE,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
-import { Sidebar } from 'layouts/common/sidebar';
-import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { AppSidebar } from 'layouts/common/appSidebar';
+import { ExtensionLoader } from 'components/extensionLoader';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
-import ProfileIcon from './img/profile-icon-inline.svg';
-import AdministrateIcon from './img/administrate-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
+import { OrganizationsBlock } from './organizationsBlock';
+import { OrganizationsControlWithPopover } from './organizationsControl';
 
-@connect((state) => ({
-  projectRole: activeProjectRoleSelector(state),
-  accountRole: userAccountRoleSelector(state),
-  extensions: uiExtensionSidebarComponentsSelector(state),
-  slugs: urlOrganizationAndProjectSelector(state),
-}))
-@track()
-export class AppSidebar extends Component {
-  static propTypes = {
-    projectRole: PropTypes.string.isRequired,
-    accountRole: PropTypes.string.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    extensions: PropTypes.arrayOf(extensionType),
-    onClickNavBtn: PropTypes.func,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
-  static defaultProps = {
-    extensions: [],
-    onClickNavBtn: () => {},
+export const ProjectSidebar = ({ onClickNavBtn }) => {
+  const { trackEvent } = useTracking();
+  const projectRole = useSelector(activeProjectRoleSelector);
+  const accountRole = useSelector(userAccountRoleSelector);
+  const extensions = useSelector(uiExtensionSidebarComponentsSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const [isOpenPopover, setIsOpenPopover] = useState(false);
+
+  const onClickButton = (eventInfo) => {
+    onClickNavBtn();
+    trackEvent(eventInfo);
   };
 
-  onClickButton = (eventInfo) => {
-    this.props.onClickNavBtn();
-    this.props.tracking.trackEvent(eventInfo);
-  };
-
-  createTopSidebarItems = () => {
-    const {
-      projectRole,
-      accountRole,
-      onClickNavBtn,
-      extensions,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-
+  const [topSidebarItems, topSidebarControlItems] = (() => {
     const topItems = [
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
         link: {
           type: LAUNCHES_PAGE,
           payload: { organizationSlug, projectSlug },
@@ -105,7 +77,7 @@ export class AppSidebar extends Component {
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
@@ -114,7 +86,7 @@ export class AppSidebar extends Component {
 
     if (projectRole !== CUSTOMER) {
       topItems.push({
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
           payload: { projectSlug, filterId: ALL, organizationSlug },
@@ -126,7 +98,7 @@ export class AppSidebar extends Component {
 
     if (canSeeMembers(accountRole, projectRole)) {
       topItems.push({
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
           payload: { organizationSlug, projectSlug },
@@ -137,7 +109,7 @@ export class AppSidebar extends Component {
     }
 
     topItems.push({
-      onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
+      onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
         payload: { organizationSlug, projectSlug },
@@ -153,30 +125,64 @@ export class AppSidebar extends Component {
       }),
     );
 
-    return topItems;
-  };
+    const topSidebarItemsMap = topItems.map(
+      ({ link, icon, message, name, component, onClick }) => ({
+        key: component ? name : link.type,
+        onClick,
+        topSidebarItem: (
+          <>
+            {component || (
+              <SidebarButton link={link} icon={icon}>
+                {message}
+              </SidebarButton>
+            )}
+          </>
+        ),
+      }),
+    );
 
-  createBottomSidebarItems = () => [
-    {
-      onClick: this.props.onClickNavBtn,
-      link: {
-        type: USER_PROFILE_PAGE,
-      },
-      icon: ProfileIcon,
-      message: <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />,
-    },
-    {
-      onClick: this.props.onClickNavBtn,
-      link: { type: ADMINISTRATE_PAGE },
-      icon: AdministrateIcon,
-      message: <FormattedMessage id={'Sidebar.administrateBtn'} defaultMessage={'Administrate'} />,
-    },
-  ];
+    const topSidebarControlItemsMap = topItems.map(
+      ({ component, name, link, onClick, message }) => ({
+        key: component ? name : link.type,
+        onClick,
+        sidebarBlockItem: component || (
+          <SidebarButton link={link} isNavbar>
+            {message}
+          </SidebarButton>
+        ),
+      }),
+    );
 
-  render() {
-    const topSidebarItems = this.createTopSidebarItems();
-    const bottomSidebarItems = this.createBottomSidebarItems();
+    return [topSidebarItemsMap, topSidebarControlItemsMap];
+  })();
 
-    return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
-  }
-}
+  const createMainBlock = (openNavbar) => (
+    <OrganizationsBlock openNavbar={openNavbar} openPopover={() => setIsOpenPopover(true)} />
+  );
+
+  const mainControlBlock = (closeNavbar, setIsOpenNavbarPopover) => (
+    <OrganizationsControlWithPopover
+      closeNavbar={closeNavbar}
+      isOpenPopover={isOpenPopover}
+      closePopover={() => setIsOpenPopover(false)}
+      setIsOpenPopover={setIsOpenNavbarPopover}
+    />
+  );
+
+  return (
+    <AppSidebar
+      createMainBlock={createMainBlock}
+      mainControlBlock={mainControlBlock}
+      topSidebarItems={topSidebarItems}
+      topSidebarControlItems={topSidebarControlItems}
+    />
+  );
+};
+
+ProjectSidebar.propTypes = {
+  onClickNavBtn: PropTypes.func.isRequired,
+};
+
+ProjectSidebar.defaultProps = {
+  onClickNavBtn: () => {},
+};
