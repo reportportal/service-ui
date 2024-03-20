@@ -85,11 +85,11 @@
   }
 
   &.dark.side-right::after {
-    border-right-color: $COLOR--darkmode-gray-400;
+    border-right-color: $COLOR--darkmode-gray-475;
   }
 
   &.dark {
-    background-color: $COLOR--darkmode-gray-400;
+    background-color: $COLOR--darkmode-gray-475;
   }
 }
 

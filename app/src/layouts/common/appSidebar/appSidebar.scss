@@ -77,8 +77,7 @@
 .policy-block {
   font-size: 11px;
   line-height: 16px;
-  width: calc(100% - 32px);
-  padding: 10px 16px;
+  width: 100%;
   cursor: pointer;
 
   &:hover {
@@ -91,11 +90,15 @@
   a {
     text-decoration: none;
     color: $COLOR--darkmode-gray-100;
+    padding: 10px 16px;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
 
     &:focus-visible {
       outline: none;
-      border: 2px solid $COLOR--topaz-focused;
-      color: $COLOR--topaz-focused;
+      box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
     }
 
     &:active {

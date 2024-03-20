@@ -38,8 +38,9 @@ export const Popover = ({
   topPosition,
 }) => {
   const popoverRef = useRef();
-  const [top, setTop] = useState(0);
+  const [top, setTop] = useState(topPosition);
   const [left, setLeft] = useState(0);
+  const isNotDefaultTopPosition = !topPosition;
 
   useOnClickOutside(popoverRef, onClose);
 
@@ -77,27 +78,27 @@ export const Popover = ({
 
     switch (side) {
       case 'bottom': {
-        setTop(parentTop + parentHeight + SAFE_ZONE + TRIANGLE_SIZE);
+        isNotDefaultTopPosition && setTop(parentTop + parentHeight + SAFE_ZONE + TRIANGLE_SIZE);
         setHorizontalPosition();
         break;
       }
       case 'top': {
-        setTop(parentTop - SAFE_ZONE - TRIANGLE_SIZE - popoverHeight);
+        isNotDefaultTopPosition && setTop(parentTop - SAFE_ZONE - TRIANGLE_SIZE - popoverHeight);
         setHorizontalPosition();
         break;
       }
       case 'right': {
-        setVerticalMiddlePosition();
+        isNotDefaultTopPosition && setVerticalMiddlePosition();
         setLeft(parentLeft + parentWidth + SAFE_ZONE + TRIANGLE_SIZE);
         break;
       }
       case 'left':
       default: {
-        setVerticalMiddlePosition();
+        isNotDefaultTopPosition && setVerticalMiddlePosition();
         setLeft(parentLeft - SAFE_ZONE - TRIANGLE_SIZE - popoverWidth);
       }
     }
-  }, [parentRef, side, arrowPosition]);
+  }, [parentRef, side, arrowPosition, isNotDefaultTopPosition]);
 
   const className = cx(
     'popover',
@@ -115,7 +116,7 @@ export const Popover = ({
       className={className}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
-      style={{ top: topPosition || top, left }}
+      style={{ top, left }}
     >
       {title && <div className={cx('title')}>{title}</div>}
       <div className={cx('content')}>{children}</div>
@@ -151,5 +152,5 @@ Popover.defaultProps = {
   popoverClassName: '',
   variant: 'light',
   arrowVerticalPosition: null,
-  topPosition: null,
+  topPosition: 0,
 };

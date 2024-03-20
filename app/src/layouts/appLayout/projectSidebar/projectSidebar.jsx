@@ -59,7 +59,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     trackEvent(eventInfo);
   };
 
-  const [topSidebarItems, topSidebarControlItems] = (() => {
+  const getSidebarItems = () => {
     const topItems = [
       {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
@@ -125,36 +125,34 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       }),
     );
 
-    const topSidebarItemsMap = topItems.map(
-      ({ link, icon, message, name, component, onClick }) => ({
-        key: component ? name : link.type,
-        onClick,
-        topSidebarItem: (
-          <>
-            {component || (
-              <SidebarButton link={link} icon={icon}>
-                {message}
-              </SidebarButton>
-            )}
-          </>
-        ),
-      }),
-    );
+    const topSidebarItems = topItems.map(({ link, icon, message, name, component, onClick }) => ({
+      key: component ? name : link.type,
+      onClick,
+      topSidebarItem: (
+        <>
+          {component || (
+            <SidebarButton link={link} icon={icon}>
+              {message}
+            </SidebarButton>
+          )}
+        </>
+      ),
+    }));
 
-    const topSidebarControlItemsMap = topItems.map(
-      ({ component, name, link, onClick, message }) => ({
-        key: component ? name : link.type,
-        onClick,
-        sidebarBlockItem: component || (
-          <SidebarButton link={link} isNavbar>
-            {message}
-          </SidebarButton>
-        ),
-      }),
-    );
+    const topSidebarControlItems = topItems.map(({ component, name, link, onClick, message }) => ({
+      key: component ? name : link.type,
+      onClick,
+      sidebarBlockItem: component || (
+        <SidebarButton link={link} isNavbar>
+          {message}
+        </SidebarButton>
+      ),
+    }));
 
-    return [topSidebarItemsMap, topSidebarControlItemsMap];
-  })();
+    return { topSidebarItems, topSidebarControlItems };
+  };
+
+  const { topSidebarItems, topSidebarControlItems } = getSidebarItems();
 
   const createMainBlock = (openNavbar) => (
     <OrganizationsBlock openNavbar={openNavbar} openPopover={() => setIsOpenPopover(true)} />

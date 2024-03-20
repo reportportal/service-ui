@@ -32,7 +32,7 @@ export const OrganizationsBlock = ({ openNavbar, openPopover }) => {
   };
 
   return (
-    <button className={cx('organization-block')} tabIndex={0} onClick={onOpenNavbar}>
+    <button className={cx('organization-block')} onClick={onOpenNavbar}>
       {title}
     </button>
   );

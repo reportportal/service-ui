@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,33 +14,10 @@
  * limitations under the License.
  */
 
-.menu-item {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background-color: $COLOR--darkmode-gray-475;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 13px;
-  color: $COLOR--darkmode-gray-100;
-  line-height: 20px;
-  box-sizing: border-box;
-  text-decoration: none;
+.sidebar-button {
+  padding: 0;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  width: 208px;
-  padding: 8px 0px;
-
-  &:hover:not(.active) {
-    color: $COLOR--white-two;
-  }
-  &.active {
-    color: $COLOR--darkmode-topaz-text;
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-  }
+  width: 100%;
 }

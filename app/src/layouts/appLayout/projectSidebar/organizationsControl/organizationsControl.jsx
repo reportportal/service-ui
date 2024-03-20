@@ -41,9 +41,9 @@ export const OrganizationsControl = ({ isPopoverOpen }) => {
   const projectName = useSelector(projectNameSelector);
 
   return (
-    <div className={cx('organizations-control')} role="button" tabIndex={0}>
+    <div className={cx('organizations-control')}>
       <div>
-        <button className={cx('organization-btn')}>
+        <button className={cx('organization-btn')} tabIndex={-1}>
           <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
           <div className={cx('organization-name')}>
             {formatMessage(messages.organization)}: {organizationName}
@@ -70,7 +70,9 @@ export const OrganizationsControlWithPopover = withPopover({
   ContentComponent: OrganizationsPopover,
   side: 'right',
   popoverClassName: cx('popover'),
+  popoverWrapperClassName: cx('popover-control'),
   variant: 'dark',
   arrowVerticalPosition: 'vertical-top',
   topPosition: 96,
+  tabIndex: 0,
 })(OrganizationsControl);

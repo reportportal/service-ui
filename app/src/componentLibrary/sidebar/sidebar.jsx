@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ export const Sidebar = ({
               {bottomSidebarItem}
             </SidebarButton>
           ))}
-          <div className={cx('main-block')}>{footerBlock}</div>
+          <div className={cx('footer-block')}>{footerBlock}</div>
         </div>
       </aside>
       <Navbar

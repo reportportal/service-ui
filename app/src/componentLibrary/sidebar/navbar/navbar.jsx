@@ -31,53 +31,45 @@ export const Navbar = ({
   bottomSidebarControlItems,
   footerControlBlock,
   setIsOpenPopover,
-}) => {
-  const classes = cx('navbar', {
-    active,
-  });
-
-  return (
-    <div className={classes}>
-      {logoControlIcon && (
-        <div className={cx('logo-wrapper')}>
-          <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
-        </div>
-      )}
-      <div className={cx('main-block')}>{mainControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
-      <div className={cx('top-block')}>
-        {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
-          <SidebarButton
-            key={key}
-            className={cx('navbar-btn')}
-            onClick={() => {
-              onClick();
-              onCloseNavbar();
-            }}
-          >
-            {sidebarBlockItem}
-          </SidebarButton>
-        ))}
+}) => (
+  <div className={cx('navbar', { active })}>
+    {logoControlIcon && (
+      <div className={cx('logo-wrapper')}>
+        <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
       </div>
-      <div className={cx('bottom-block')}>
-        {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
-          <SidebarButton
-            key={key}
-            className={cx('navbar-btn')}
-            onClick={() => {
-              onClick();
-              onCloseNavbar();
-            }}
-          >
-            {bottomSidebarItem}
-          </SidebarButton>
-        ))}
-      </div>
-      <div className={cx('bottom-block')}>
-        {footerControlBlock(onCloseNavbar, setIsOpenPopover)}
-      </div>
+    )}
+    <div className={cx('main-block')}>{mainControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+    <div className={cx('top-block')}>
+      {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
+        <SidebarButton
+          key={key}
+          className={cx('navbar-btn')}
+          onClick={() => {
+            onClick();
+            onCloseNavbar();
+          }}
+        >
+          {sidebarBlockItem}
+        </SidebarButton>
+      ))}
     </div>
-  );
-};
+    <div className={cx('bottom-block')}>
+      {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
+        <SidebarButton
+          key={key}
+          className={cx('navbar-btn')}
+          onClick={() => {
+            onClick();
+            onCloseNavbar();
+          }}
+        >
+          {bottomSidebarItem}
+        </SidebarButton>
+      ))}
+    </div>
+    <div className={cx('bottom-block')}>{footerControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+  </div>
+);
 
 Navbar.propTypes = {
   active: PropTypes.bool,

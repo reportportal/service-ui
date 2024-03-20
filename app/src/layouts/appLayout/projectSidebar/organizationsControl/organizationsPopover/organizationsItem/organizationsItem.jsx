@@ -22,6 +22,7 @@ import { PROJECT_PAGE } from 'controllers/pages/constants';
 import { useState } from 'react';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
+import OpenIcon from './img/open-inline.svg';
 import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -38,14 +39,17 @@ export const OrganizationsItem = ({
 
   return (
     <div className={cx('organizations-item')}>
-      <div
-        className={cx('header-item')}
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        role="button"
-        tabIndex={0}
-      >
-        {Parser(ArrowIcon)}
-        <div className={cx('organizations-name')}>{organizationName}</div>
+      <div className={cx('header-item')}>
+        <div className={cx('header-item-wrapper')}>
+          <button className={cx('collapse-projects')} onClick={() => setIsCollapsed(!isCollapsed)}>
+            {Parser(ArrowIcon)}
+            <div className={cx('organizations-name')}>{organizationName}</div>
+          </button>
+          <button className={cx('organization-open')}>
+            <div className={cx('organizations-open-text')}>Open</div>
+            {Parser(OpenIcon)}
+          </button>
+        </div>
       </div>
       {isCollapsed && (
         <div className={cx('project-item')}>

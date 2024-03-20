@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,12 @@ const UserControl = () => {
   const { userRole, fullName, email } = useSelector(userInfoSelector);
 
   return (
-    <div className={cx('user-control')} role="button" tabIndex={0}>
+    <div className={cx('user-control')}>
       <div className={cx('user-details')}>
         <div className={cx('username-wrapper')}>
           <div className={cx('username')}>{fullName}</div>
           <div className={cx('arrow-icon')}>
+            {/* TODO: Need to manage this permission via common permission engine */}
             {userRole === ADMINISTRATOR && (
               <div className={cx('admin-badge')}>
                 <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
@@ -55,5 +56,7 @@ export const UserControlWithPopover = withPopover({
   side: 'right',
   arrowPosition: 'middle',
   popoverClassName: cx('popover'),
+  popoverWrapperClassName: cx('popover-control'),
   variant: 'dark',
+  tabIndex: 0,
 })(UserControl);

@@ -33,12 +33,12 @@
 
   &:hover {
     color: $COLOR--white-two;
+    background-color: $COLOR--darkmode-gray-350;
   }
 
   &:focus-visible {
     outline: none;
     border: 2px solid $COLOR--topaz-focused;
-    color: $COLOR--topaz-focused;
   }
 
   &:active {

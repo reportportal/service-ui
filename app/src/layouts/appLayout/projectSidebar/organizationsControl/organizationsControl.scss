@@ -22,18 +22,22 @@
 }
 
 .organizations-control {
-  width: 240px;
-  height: 40px;
+  width: 260px;
+  height: 56px;
   background-color: $COLOR--darkmode-gray-300;
   border-radius: 8px;
-  padding: 10px 12px;
   cursor: pointer;
-  margin-left: 8px;
+  box-sizing: border-box;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border: 2px solid transparent;
+  outline: none;
 
   &:hover {
+    background-color: $COLOR--darkmode-gray-350;
+
     .project-name {
       color: $COLOR--white-two;
     }
@@ -77,6 +81,7 @@
   font-family: $FONT-ROBOTO-MEDIUM;
   line-height: 20px;
   margin-top: 4px;
+  text-align: start;
 }
 
 .open-popover {
@@ -91,5 +96,25 @@
 
   &::after {
     border-right-color: $COLOR--darkmode-gray-400;
+  }
+}
+
+.popover-control {
+  border-radius: 8px;
+  margin-left: 8px;
+  border: 2px solid $COLOR--darkmode-gray-300;
+  background-color: $COLOR--darkmode-gray-300;
+  height: 60px;
+  outline: none;
+  border-radius: 8px;
+
+  &:hover {
+    border: 2px solid $COLOR--darkmode-gray-350;
+    background-color: $COLOR--darkmode-gray-350;
+  }
+
+
+  &:focus-visible {
+    border: 2px solid $COLOR--topaz-focused;
   }
 }

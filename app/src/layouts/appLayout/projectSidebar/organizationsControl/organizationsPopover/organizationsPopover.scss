@@ -16,13 +16,25 @@
 
 .organizations-popover {
   width: 240px;
-  background-color: $COLOR--darkmode-gray-400;
+  background-color: $COLOR--darkmode-gray-475;
 }
 
 .all-organizations {
-  border-bottom: 1px solid $COLOR--almost-black;
-  padding: 8px 0;
-  margin: 0 16px 8px 16px;
+  padding: 0px 8px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+  }
+
+  a {
+    padding: 8px;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+      border-radius: 4px;
+    }
+  }
 }
 
 .all-organizations-link {
@@ -47,4 +59,9 @@
       background-color: $COLOR--darkmode-gray-200;
     }
   }
+}
+
+.divider {
+  border-bottom: 1px solid $COLOR--almost-black;
+  margin: 0 16px 8px 16px;
 }

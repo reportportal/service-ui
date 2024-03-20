@@ -15,11 +15,15 @@
  */
 
 import { PropTypes } from 'prop-types';
+import classNames from 'classnames/bind';
+import styles from './sidebarButton.scss';
+
+const cx = classNames.bind(styles);
 
 export const SidebarButton = ({ className, onClick, children }) => (
-  <div className={className} onClick={onClick} role="button" tabIndex={0}>
+  <button className={cx('sidebar-button', className)} onClick={onClick} tabIndex={-1}>
     {children}
-  </div>
+  </button>
 );
 
 SidebarButton.propTypes = {

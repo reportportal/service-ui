@@ -43,20 +43,29 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
     urlOrganizationAndProjectSelector,
   );
 
+  const onClose = () => {
+    closeNavbar();
+    closePopover();
+  };
+
   return (
     <div className={cx('organizations-popover')}>
       {availableProjects.length > 0 && (
-        <div className={cx('all-organizations')}>
-          <Link
-            to={{
-              type: PROJECT_SETTINGS_PAGE,
-              payload: { organizationSlug: currentOrganization, projectSlug },
-            }}
-            className={cx('all-organizations-link')}
-          >
-            {formatMessage(messages.allOrganizations)}
-          </Link>
-        </div>
+        <>
+          <div className={cx('all-organizations')}>
+            <Link
+              to={{
+                type: PROJECT_SETTINGS_PAGE,
+                payload: { organizationSlug: currentOrganization, projectSlug },
+              }}
+              className={cx('all-organizations-link')}
+              onClick={onClose}
+            >
+              {formatMessage(messages.allOrganizations)}
+            </Link>
+          </div>
+          <div className={cx('divider')} />
+        </>
       )}
       <ScrollWrapper
         autoHide
@@ -70,10 +79,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
             organizationName={organizationName}
             organizationSlug={organizationSlug}
             projects={projects}
-            onClick={() => {
-              closeNavbar();
-              closePopover();
-            }}
+            onClick={onClose}
             isOpen={currentOrganization === organizationSlug}
             key={`${organizationSlug}-${projectSlug}`}
           />

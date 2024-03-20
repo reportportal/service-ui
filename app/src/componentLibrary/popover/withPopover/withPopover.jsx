@@ -21,7 +21,12 @@ import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popoverConfig }) => (
+export const withPopover = ({
+  ContentComponent,
+  popoverWrapperClassName,
+  tabIndex,
+  ...popoverConfig
+}) => (
   WrappedComponent,
   // eslint-disable-next-line react/prop-types
 ) => ({ isOpenPopover, closePopover, setIsOpenPopover, ...props }) => {
@@ -43,16 +48,17 @@ export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popo
 
   return (
     <>
-      <div
+      <button
         ref={parentRef}
         className={cx('with-popover', popoverWrapperClassName)}
         onClick={() => {
           setOpened(true);
           setIsOpenPopover?.(true);
         }}
+        tabIndex={tabIndex ?? -1}
       >
         <WrappedComponent isPopoverOpen={isOpened} {...props} />
-      </div>
+      </button>
       {isOpened && (
         <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
           <ContentComponent closePopover={onClose} {...props} />
