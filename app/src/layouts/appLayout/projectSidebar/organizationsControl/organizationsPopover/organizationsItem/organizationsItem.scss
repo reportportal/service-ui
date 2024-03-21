@@ -37,6 +37,7 @@
 
 .header-item-wrapper {
   display: flex;
+  justify-content: space-between;
 }
 
 .collapse-projects,
@@ -68,7 +69,7 @@
 
 .collapse-projects {
   color: $COLOR--darkmode-gray-100;
-  width: 155px;
+  min-width: 155px;
 
   &:focus-visible {
     color: $COLOR--darkmode-gray-100;
@@ -82,7 +83,7 @@
 
 .organization-open {
   color: $COLOR--darkmode-topaz-text;
-  width: 69px;
+  min-width: 69px;
 
   svg {
     margin-left: 8px;

@@ -78,6 +78,8 @@
   font-size: 11px;
   line-height: 16px;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
   cursor: pointer;
 
   &:hover {
@@ -90,7 +92,7 @@
   a {
     text-decoration: none;
     color: $COLOR--darkmode-gray-100;
-    padding: 10px 16px;
+    padding: 10px 8px;
     display: inline-block;
     width: 100%;
     box-sizing: border-box;
@@ -104,5 +106,16 @@
     &:active {
       color: $COLOR--darkmode-topaz-pressed;
     }
+  }
+}
+
+.user-block {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
   }
 }

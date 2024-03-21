@@ -54,7 +54,9 @@ export const AppSidebar = ({
           {formatMessage(messages.privacyPolicy)}
         </a>
       </div>
-      <UserControlWithPopover closeNavbar={onCloseNavbar} setIsOpenPopover={setIsOpenPopover} />
+      <div className={cx('user-block')}>
+        <UserControlWithPopover closeNavbar={onCloseNavbar} setIsOpenPopover={setIsOpenPopover} />
+      </div>
     </>
   );
 

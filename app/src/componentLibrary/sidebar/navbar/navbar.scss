@@ -54,6 +54,7 @@
 
   & > div {
     background-color: $COLOR--darkmode-gray-450;
+    padding: 0 8px;
   }
 
   a {
@@ -61,7 +62,7 @@
     font-family: $FONT-ROBOTO-MEDIUM;
     font-size: 13px;
     line-height: 20px;
-    padding: 10px 16px;
+    padding: 10px 8px;
   }
 
   &:hover > div {
