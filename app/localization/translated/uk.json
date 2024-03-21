@@ -1481,6 +1481,7 @@
   "NotificationsEnableForm.toggleNotificationsNote": "Надсилайте сповіщення електронною поштою про завершення запуску",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налаштування сповіщень були успішно оновлені!",
   "OrganizationsControl.organization": "Організація",
+  "OrganizationsItem.open": "відкрити",
   "OrganizationsPopover.allOrganizations": "Всі організації",
   "OverallStatisticsControls.ContentFieldsValidationError": "Виберіть не менше одного елемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерії для віджету",

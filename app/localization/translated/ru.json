@@ -1481,6 +1481,7 @@
   "NotificationsEnableForm.toggleNotificationsNote": "Отправлять уведомления по электронной почте о завершении запуска",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Настройки уведомлений были успешно обновлены!",
   "OrganizationsControl.organization": "Организация",
+  "OrganizationsItem.open": "открыть",
   "OrganizationsPopover.allOrganizations": "Все организации",
   "OverallStatisticsControls.ContentFieldsValidationError": "Выберите не меньше одного элемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерии для виджета",

@@ -1481,6 +1481,7 @@
   "NotificationsEnableForm.toggleNotificationsNote": "在启测试任务成时发送电子邮件通知",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "通知设置已更新！",
   "OrganizationsControl.organization": "组织",
+  "OrganizationsItem.open": "open",
   "OrganizationsPopover.allOrganizations": "All organizations",
   "OverallStatisticsControls.ContentFieldsValidationError": "您必须选中至少一个测试项",
   "OverallStatisticsControls.CriteriaFieldLabel": "小部件的标准",

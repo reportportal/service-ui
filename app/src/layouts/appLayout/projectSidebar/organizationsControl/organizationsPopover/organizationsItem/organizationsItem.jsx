@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
+import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
 import { useState } from 'react';
@@ -27,6 +28,13 @@ import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  open: {
+    id: 'OrganizationsItem.open',
+    defaultMessage: 'open',
+  },
+});
+
 export const OrganizationsItem = ({
   organizationName,
   organizationSlug,
@@ -34,6 +42,7 @@ export const OrganizationsItem = ({
   isOpen,
   onClick,
 }) => {
+  const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
@@ -46,7 +55,7 @@ export const OrganizationsItem = ({
             <div className={cx('organizations-name')}>{organizationName}</div>
           </button>
           <button className={cx('organization-open')}>
-            <div className={cx('organizations-open-text')}>Open</div>
+            <div className={cx('organizations-open-text')}>{formatMessage(messages.open)}</div>
             {Parser(OpenIcon)}
           </button>
         </div>

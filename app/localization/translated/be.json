@@ -1481,6 +1481,7 @@
   "NotificationsEnableForm.toggleNotificationsNote": "Адпраўляць апавяшчэнні па электроннай пошце аб заканчэнні запуску",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налады апавяшчэнняў былі паспяхова абноўлены!",
   "OrganizationsControl.organization": "Арганізацыя",
+  "OrganizationsItem.open": "адкрыць",
   "OrganizationsPopover.allOrganizations": "Усе арганізацыі",
   "OverallStatisticsControls.ContentFieldsValidationError": "Абярыце па меншай меры адзін элемент",
   "OverallStatisticsControls.CriteriaFieldLabel": "Крытэрыі для віджэта",
