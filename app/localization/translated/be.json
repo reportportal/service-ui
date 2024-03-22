@@ -523,7 +523,7 @@
   "DefectTypesTab.automationBugsGroup": "Група Automation Bugs",
   "DefectTypesTab.copyToClipboardLocator": "Сродак вызначэння тыпу дэфекту было паспяхова скапіявана",
   "DefectTypesTab.createDefectHeader": "Стварыць Тып Дэфекту",
-  "DefectTypesTab.createDefectIcon": "Стварыце новы Дэфект",
+  "DefectTypesTab.createDefectIcon": "Стварыце новы Тып Дэфекту",
   "DefectTypesTab.defectLongNameHint": "Назва Тыпу Дэфекту павінна мець памер ад '3' да '55' сімвалаў",
   "DefectTypesTab.defectNameCol": "Імя Тыпу Дэфекту",
   "DefectTypesTab.defectShortNameHint": "Абрэвіятура Тыпу Дэфекту павінна мець памер ад '1' да '4' сімвалаў",

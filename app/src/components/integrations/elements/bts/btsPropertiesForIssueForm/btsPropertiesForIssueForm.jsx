@@ -320,8 +320,15 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchFieldsSet = (issueTypeValue) => {
     // TODO: There was a case when projectName (projectKey) was empty using this component on Admin page.
-    const { pluginDetails: details, isGlobal, integrationId, projectKey } = this.props;
-    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
+    const {
+      pluginDetails: { allowedCommands },
+      isGlobal,
+      integrationId,
+      projectKey,
+    } = this.props;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
     const requestParams = {};
     let url;
 
@@ -352,8 +359,16 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   fetchIssueTypes = () => {
-    const { pluginDetails: details, isGlobal, integrationId, projectKey } = this.props;
-    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1;
+    const {
+      pluginDetails: { allowedCommands },
+      isGlobal,
+      integrationId,
+      projectKey,
+    } = this.props;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
+
     const requestParams = {};
     let url;
 

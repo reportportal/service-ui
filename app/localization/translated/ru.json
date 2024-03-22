@@ -523,7 +523,7 @@
   "DefectTypesTab.automationBugsGroup": "Группа ошибок тестов",
   "DefectTypesTab.copyToClipboardLocator": "Средство определения типа дефекта было успешно скопировано",
   "DefectTypesTab.createDefectHeader": "Создать Тип Дефекта",
-  "DefectTypesTab.createDefectIcon": "Создать новый Дефект",
+  "DefectTypesTab.createDefectIcon": "Создать новый Тип Дефекта",
   "DefectTypesTab.defectLongNameHint": "Имя Типа Дефекта должно иметь размер от '3' до '55' символов",
   "DefectTypesTab.defectNameCol": "Имя Типа Дефекта",
   "DefectTypesTab.defectShortNameHint": "Аббревиатура Типа Дефекта должна иметь размер от '1' до '4' символов",
