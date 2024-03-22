@@ -178,7 +178,7 @@ export class FiltersControl extends Component {
       eventsInfo,
     } = this.props;
 
-    const component = (() => {
+    const getComponent = () => {
       switch (formAppearanceMode) {
         case FORM_APPEARANCE_MODE_EDIT: {
           return (
@@ -211,9 +211,9 @@ export class FiltersControl extends Component {
         default:
           return null;
       }
-    })();
+    };
 
-    return <div className={cx('filters-control-form')}>{component}</div>;
+    return <div className={cx('filters-control-form')}>{getComponent()}</div>;
   };
 
   getFilterById = (filterId) => this.getFiltersList().find((elem) => elem.id === Number(filterId));

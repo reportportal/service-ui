@@ -19,13 +19,13 @@ import { connect } from 'react-redux';
 import { Layout } from 'layouts/common/layout';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { AppHeader } from './appHeader';
-import { AppSidebar } from './appSidebar';
+import { ProjectSidebar } from './projectSidebar';
 import { DemoBanner } from './demoBanner';
 
 const AppLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
   <Layout
     Header={AppHeader}
-    Sidebar={AppSidebar}
+    Sidebar={ProjectSidebar}
     Banner={isDemoInstance ? DemoBanner : null}
     rawContent={rawContent}
   >

@@ -1,0 +1,80 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.navbar {
+  position: absolute;
+  width: 280px;
+  height: calc(100% - 40px);
+  left: 48px;
+  top: 0;
+  z-index: 2;
+  padding-top: 16px;
+  padding-bottom: 24px;
+  background-color: $COLOR--darkmode-gray-450;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.active {
+  transform: translateX(0);
+}
+
+.logo-wrapper {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+}
+
+.logo {
+  width: 102px;
+  height: 24px;
+}
+
+.navbar-btn {
+  height: 40px;
+  display: flex;
+  align-items: center;
+
+  & > div {
+    background-color: $COLOR--darkmode-gray-450;
+    padding: 0 8px;
+  }
+
+  a {
+    text-align: start;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 10px 8px;
+  }
+
+  &:hover > div {
+    background-color: $COLOR--darkmode-gray-500;
+  }
+}
+
+.bottom-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  flex-grow: 1;
+  gap: 8px;
+}

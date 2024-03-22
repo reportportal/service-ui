@@ -59,5 +59,6 @@ export {
   photoIdSelector,
   availableProjectsSelector,
   activeProjectKeySelector,
+  assignedOrganizationsSelector,
 } from './selectors';
 export { userSagas } from './sagas';

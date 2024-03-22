@@ -14,33 +14,54 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popoverConfig }) => (
+export const withPopover = ({
+  ContentComponent,
+  popoverWrapperClassName,
+  tabIndex,
+  ...popoverConfig
+}) => (
   WrappedComponent,
-) => (props) => {
+  // eslint-disable-next-line react/prop-types
+) => ({ isOpenPopover, closePopover, setIsOpenPopover, ...props }) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
+  useEffect(() => {
+    if (isOpenPopover) {
+      setOpened(true);
+      setIsOpenPopover?.(true);
+    }
+  }, [isOpenPopover, setIsOpenPopover]);
+
+  const onClose = () => {
+    closePopover?.();
+    setIsOpenPopover?.(false);
+    setOpened(false);
+  };
+
   return (
     <>
-      <div
+      <button
         ref={parentRef}
         className={cx('with-popover', popoverWrapperClassName)}
         onClick={() => {
           setOpened(true);
+          setIsOpenPopover?.(true);
         }}
+        tabIndex={tabIndex ?? -1}
       >
         <WrappedComponent isPopoverOpen={isOpened} {...props} />
-      </div>
+      </button>
       {isOpened && (
-        <Popover onClose={() => setOpened(false)} parentRef={parentRef} {...popoverConfig}>
-          <ContentComponent {...props} />
+        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
+          <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
     </>
