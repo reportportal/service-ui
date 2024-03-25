@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { referenceDictionary } from 'common/utils';
@@ -44,8 +44,16 @@ export const AppSidebar = ({
   bottomSidebarControlItems,
 }) => {
   const { formatMessage } = useIntl();
+  const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
 
-  const footerBlock = <UserAvatar />;
+  const createFooterBlock = (openNavbar) => (
+    <UserAvatar
+      onClick={() => {
+        openNavbar();
+        setIsOpenAvatarPopover(true);
+      }}
+    />
+  );
 
   const footerControlBlock = (onCloseNavbar, setIsOpenPopover) => (
     <>
@@ -55,7 +63,12 @@ export const AppSidebar = ({
         </a>
       </div>
       <div className={cx('user-block')}>
-        <UserControlWithPopover closeNavbar={onCloseNavbar} setIsOpenPopover={setIsOpenPopover} />
+        <UserControlWithPopover
+          closeNavbar={onCloseNavbar}
+          setIsOpenPopover={setIsOpenPopover}
+          isOpenPopover={isOpenAvatarPopover}
+          closePopover={() => setIsOpenAvatarPopover(false)}
+        />
       </div>
     </>
   );
@@ -70,7 +83,7 @@ export const AppSidebar = ({
       topSidebarControlItems={topSidebarControlItems}
       bottomSidebarItems={bottomSidebarItems}
       bottomSidebarControlItems={bottomSidebarControlItems}
-      footerBlock={footerBlock}
+      createFooterBlock={createFooterBlock}
       footerControlBlock={footerControlBlock}
     />
   );

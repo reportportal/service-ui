@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-.avatar-wrapper {
+.avatar-block {
   height: 48px;
   width: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: transparent;
+  border-radius: 4px;
+  border: none;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+  }
 }
 
-.avatar {
+.avatar-img {
   height: 32px;
   width: 32px;
   border-radius: 50%;

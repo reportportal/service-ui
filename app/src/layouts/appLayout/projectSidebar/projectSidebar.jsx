@@ -52,7 +52,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const accountRole = useSelector(userAccountRoleSelector);
   const extensions = useSelector(uiExtensionSidebarComponentsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const [isOpenPopover, setIsOpenPopover] = useState(false);
+  const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
@@ -158,14 +158,17 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { topSidebarItems, topSidebarControlItems } = getSidebarItems();
 
   const createMainBlock = (openNavbar) => (
-    <OrganizationsBlock openNavbar={openNavbar} openPopover={() => setIsOpenPopover(true)} />
+    <OrganizationsBlock
+      openNavbar={openNavbar}
+      openPopover={() => setIsOpenOrganizationPopover(true)}
+    />
   );
 
   const mainControlBlock = (closeNavbar, setIsOpenNavbarPopover) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
-      isOpenPopover={isOpenPopover}
-      closePopover={() => setIsOpenPopover(false)}
+      isOpenPopover={isOpenOrganizationPopover}
+      closePopover={() => setIsOpenOrganizationPopover(false)}
       setIsOpenPopover={setIsOpenNavbarPopover}
     />
   );
