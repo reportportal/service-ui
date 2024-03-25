@@ -26,7 +26,8 @@ import {
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   projectSectionSelector,
-  urlOrganizationAndProjectSelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
@@ -39,7 +40,7 @@ import {
   addProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
-import { projectKeySelector } from 'controllers/project';
+import { projectNameSelector, projectKeySelector } from 'controllers/project';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -61,7 +62,9 @@ const HEADER_BUTTONS = [
 
 @connect(
   (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
+    projectSlug: urlProjectSlugSelector(state),
+    organizationSlug: urlOrganizationSlugSelector(state),
+    projectName: projectNameSelector(state),
     projectKey: projectKeySelector(state),
     section: projectSectionSelector(state),
   }),
@@ -84,11 +87,10 @@ export class ProjectsPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectName: PropTypes.string.isRequired,
     projectKey: PropTypes.string.isRequired,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
+    organizationSlug: PropTypes.string.isRequired,
+    projectSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -99,8 +101,8 @@ export class ProjectsPage extends Component {
     this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.HEADER_BUTTON_CLICK(section));
     this.props.navigateToSection(
       {
-        organizationSlug: this.props.slugs.organizationSlug,
-        projectSlug: this.props.slugs.projectSlug,
+        organizationSlug: this.props.organizationSlug,
+        projectSlug: this.props.projectSlug,
       },
       section,
     );
@@ -110,7 +112,9 @@ export class ProjectsPage extends Component {
     const {
       intl: { formatMessage },
       section,
-      slugs: { organizationSlug, projectSlug },
+      organizationSlug,
+      projectSlug,
+      projectName,
     } = this.props;
 
     const breadcrumbs = [
@@ -124,7 +128,7 @@ export class ProjectsPage extends Component {
 
     if (projectSlug) {
       breadcrumbs.push({
-        title: projectSlug,
+        title: projectName,
         link: {
           type: PROJECT_DETAILS_PAGE,
           payload: { projectSlug, projectSection: null, organizationSlug },
@@ -159,11 +163,11 @@ export class ProjectsPage extends Component {
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
-      projectKey,
+      projectSlug,
       section,
     } = this.props;
 
-    if (!projectKey) {
+    if (!projectSlug) {
       return (
         <div className={cx('mobile-hide')}>
           <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
@@ -191,9 +195,9 @@ export class ProjectsPage extends Component {
   };
 
   renderSection = () => {
-    const { projectKey, section } = this.props;
+    const { projectSlug, projectKey, section } = this.props;
 
-    if (!projectKey) {
+    if (!projectSlug) {
       return <Projects />;
     }
 
