@@ -31,7 +31,7 @@ export const Sidebar = ({
   createMainBlock,
   topSidebarItems,
   bottomSidebarItems,
-  footerBlock,
+  createFooterBlock,
   ...navbarProps
 }) => {
   const [isOpenNavbarPopover, setIsOpenNavbarPopover] = useState(false);
@@ -101,7 +101,7 @@ export const Sidebar = ({
               {bottomSidebarItem}
             </SidebarButton>
           ))}
-          <div className={cx('footer-block')}>{footerBlock}</div>
+          <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
         </div>
       </aside>
       <Navbar
@@ -119,7 +119,7 @@ Sidebar.propTypes = {
   bottomSidebarItems: PropTypes.array,
   logoBlockIcon: PropTypes.element,
   createMainBlock: PropTypes.element,
-  footerBlock: PropTypes.element,
+  createFooterBlock: PropTypes.func,
 };
 
 Sidebar.defaultProps = {
@@ -127,5 +127,5 @@ Sidebar.defaultProps = {
   createMainBlock: null,
   topSidebarItems: [],
   bottomSidebarItems: [],
-  footerBlock: null,
+  createFooterBlock: () => {},
 };

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Image } from 'components/main/image';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
@@ -24,17 +25,27 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = () => {
+export const UserAvatar = ({ openNavbar, openPopover }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
+  const onOpenNavbar = () => {
+    openPopover();
+    openNavbar();
+  };
+
   return (
-    <div className={cx('avatar-wrapper')}>
+    <button className={cx('avatar-block')} onClick={onOpenNavbar}>
       <Image
-        className={cx('avatar')}
+        className={cx('avatar-img')}
         src={URLS.dataPhoto(photoTimeStamp, true)}
         alt="avatar"
         fallback={DefaultUserImage}
       />
-    </div>
+    </button>
   );
+};
+
+UserAvatar.propTypes = {
+  openNavbar: PropTypes.func.isRequired,
+  openPopover: PropTypes.func.isRequired,
 };
