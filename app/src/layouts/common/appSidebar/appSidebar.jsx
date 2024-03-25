@@ -47,7 +47,12 @@ export const AppSidebar = ({
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
 
   const createFooterBlock = (openNavbar) => (
-    <UserAvatar openNavbar={openNavbar} openPopover={() => setIsOpenAvatarPopover(true)} />
+    <UserAvatar
+      onClick={() => {
+        openNavbar();
+        setIsOpenAvatarPopover(true);
+      }}
+    />
   );
 
   const footerControlBlock = (onCloseNavbar, setIsOpenPopover) => (

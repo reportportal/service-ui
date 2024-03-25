@@ -25,16 +25,11 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ openNavbar, openPopover }) => {
+export const UserAvatar = (onClick) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
-  const onOpenNavbar = () => {
-    openPopover();
-    openNavbar();
-  };
-
   return (
-    <button className={cx('avatar-block')} onClick={onOpenNavbar}>
+    <button className={cx('avatar-block')} onClick={onClick}>
       <Image
         className={cx('avatar-img')}
         src={URLS.dataPhoto(photoTimeStamp, true)}
@@ -46,6 +41,5 @@ export const UserAvatar = ({ openNavbar, openPopover }) => {
 };
 
 UserAvatar.propTypes = {
-  openNavbar: PropTypes.func.isRequired,
-  openPopover: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
