@@ -19,7 +19,7 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
 import { SORTING_KEY } from 'controllers/sorting/constants';
 import { getStorageItem } from 'common/utils/storageUtils';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
@@ -146,9 +146,15 @@ export const urlProjectSlugSelector = (state) => payloadSelector(state).projectS
 export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
 
 export const urlOrganizationAndProjectSelector = createSelector(
-  [urlOrganizationSlugSelector, urlProjectSlugSelector],
-  (organizationSlug, projectSlug) => ({
-    organizationSlug,
-    projectSlug,
-  }),
+  [urlOrganizationSlugSelector, urlProjectSlugSelector, activeProjectSelector],
+  (organizationSlug, projectSlug, activeProject) => {
+    if (organizationSlug && projectSlug) {
+      return {
+        organizationSlug,
+        projectSlug,
+      };
+    }
+
+    return activeProject;
+  },
 );
