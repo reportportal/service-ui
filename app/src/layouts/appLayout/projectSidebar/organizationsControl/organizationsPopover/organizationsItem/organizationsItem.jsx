@@ -44,18 +44,55 @@ export const OrganizationsItem = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
+  const [isHoveredOpenButton, setIsHoveredShowOpenButton] = useState(false);
+  const [isFocusedOpenButton, setIsFocusedShowOpenButton] = useState(false);
+
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
+  const onShowOpenButton = () => {
+    setIsFocusedShowOpenButton(true);
+  };
+
+  const onCloseOpenButton = () => {
+    setIsFocusedShowOpenButton(false);
+  };
+
+  const onCollapse = ({ target }) => {
+    setIsCollapsed(!isCollapsed);
+
+    const notFocusedBorderColor = 'rgba(0, 0, 0, 0)';
+    const { borderColor } = window.getComputedStyle(target.closest('button'));
+
+    if (notFocusedBorderColor === borderColor) {
+      setIsFocusedShowOpenButton(false);
+    }
+  };
+
   return (
-    <div className={cx('organizations-item')}>
-      <div className={cx('header-item')}>
+    <div className={cx('organization-item')}>
+      <div
+        className={cx('header-item')}
+        onMouseEnter={() => setIsHoveredShowOpenButton(true)}
+        onMouseLeave={() => setIsHoveredShowOpenButton(false)}
+      >
         <div className={cx('header-item-wrapper')}>
-          <button className={cx('collapse-projects')} onClick={() => setIsCollapsed(!isCollapsed)}>
+          <button
+            className={cx('collapse-projects')}
+            onClick={onCollapse}
+            onFocus={onShowOpenButton}
+            onBlur={onCloseOpenButton}
+          >
             {Parser(ArrowIcon)}
-            <div className={cx('organizations-name')}>{organizationName}</div>
+            <div className={cx('organization-name')}>{organizationName}</div>
           </button>
-          <button className={cx('organization-open')}>
-            <div className={cx('organizations-open-text')}>{formatMessage(messages.open)}</div>
+          <button
+            className={cx('organization-open', {
+              displayed: isFocusedOpenButton || isHoveredOpenButton,
+            })}
+            onFocus={onShowOpenButton}
+            onBlur={onCloseOpenButton}
+          >
+            <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
             {Parser(OpenIcon)}
           </button>
         </div>

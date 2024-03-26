@@ -21,7 +21,7 @@
   max-width: $maxSize;
 }
 
-.organizations-item {
+.organization-item {
   background-color: $COLOR--darkmode-gray-475;
   cursor: pointer;
 }
@@ -82,12 +82,17 @@
 }
 
 .organization-open {
+  opacity: 0;
   color: $COLOR--darkmode-topaz-text;
   min-width: 69px;
 
   svg {
     margin-left: 8px;
   }
+}
+
+.displayed {
+  opacity: 1;
 }
 
 .project-item {
@@ -100,7 +105,7 @@
   }
 }
 
-.organizations-name {
+.organization-name {
   margin-left: 8px;
   @include truncate(185px);
 }
