@@ -52,21 +52,21 @@ export class ProjectsPanelView extends Component {
     onDelete: () => {},
   };
 
+  // TODO: The request for organizations is made together with the request for all projects.
+  // Create a store for organizations and drop a selector here that returns organizations.
   constructor(props) {
     super(props);
     this.state = {
       organizations: [],
     };
 
-    fetch(URLS.organizationsList(), {
-      method: 'get',
-    }).then((response) => {
-      this.setState({ organizations: response?.content });
+    fetch(URLS.organizationsList()).then((response) => {
+      this.setState({ organizations: response?.content || [] });
     });
   }
 
   getPanelList = (projects) => {
-    const { organizations } = this.state.organizations;
+    const { organizations } = this.state;
 
     return projects.map((project) => {
       const { organizationId } = project;
