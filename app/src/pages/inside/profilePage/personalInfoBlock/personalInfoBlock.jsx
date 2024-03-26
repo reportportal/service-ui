@@ -23,11 +23,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP, UPSA } from 'common/constants/accountType';
+import { DEFAULT_USER_ID } from 'common/constants/accountRoles';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
@@ -71,12 +73,17 @@ const messages = defineMessages({
     id: 'PersonalInfoBlock.inProgress',
     defaultMessage: 'In progress',
   },
+  disabledChangePassword: {
+    id: 'PersonalInfoBlock.disabledChangePassword',
+    defaultMessage: "It's forbidden to change password for default user on Demo instance",
+  },
 });
 
 @connect(
   (state) => ({
     userId: userInfoSelector(state).userId,
     accountType: userInfoSelector(state).accountType,
+    isDemoInstance: isDemoInstanceSelector(state),
   }),
   {
     showNotification,
@@ -98,10 +105,12 @@ export class PersonalInfoBlock extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isDemoInstance: PropTypes.bool,
   };
   static defaultProps = {
     userId: '',
     accountType: '',
+    isDemoInstance: false,
   };
 
   state = {
@@ -179,8 +188,10 @@ export class PersonalInfoBlock extends Component {
   };
 
   render() {
-    const { intl, accountType, userId } = this.props;
+    const { intl, accountType, userId, isDemoInstance } = this.props;
     const { forceUpdateInProgress } = this.state;
+    const isDefaultUser = userId === DEFAULT_USER_ID;
+    const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerBody>
@@ -205,7 +216,14 @@ export class PersonalInfoBlock extends Component {
               )}
               {accountType === INTERNAL && (
                 <div className={cx('top-btn')}>
-                  <GhostButton onClick={this.onChangePassword}>
+                  <GhostButton
+                    onClick={this.onChangePassword}
+                    disabled={isChangePasswordDisabled}
+                    title={
+                      isChangePasswordDisabled &&
+                      intl.formatMessage(messages.disabledChangePassword)
+                    }
+                  >
                     {intl.formatMessage(messages.changePassword)}
                   </GhostButton>
                 </div>
