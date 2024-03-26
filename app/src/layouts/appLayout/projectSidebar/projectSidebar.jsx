@@ -52,7 +52,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const accountRole = useSelector(userAccountRoleSelector);
   const extensions = useSelector(uiExtensionSidebarComponentsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const [isOpenPopover, setIsOpenPopover] = useState(false);
+  const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
@@ -65,7 +65,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
-        message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
+        message: (
+          <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Project Dashboards'} />
+        ),
       },
       {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
@@ -75,12 +77,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
-      },
-      {
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-        link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
-        icon: FiltersIcon,
-        message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
       },
     ];
 
@@ -92,9 +88,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           payload: { projectSlug, filterId: ALL, organizationSlug },
         },
         icon: DebugIcon,
-        message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
+        message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug Mode'} />,
       });
     }
+
+    topItems.push({
+      onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
+      link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
+      icon: FiltersIcon,
+      message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+    });
 
     if (canSeeMembers(accountRole, projectRole)) {
       topItems.push({
@@ -104,7 +107,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           payload: { organizationSlug, projectSlug },
         },
         icon: MembersIcon,
-        message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
+        message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project Team'} />,
       });
     }
 
@@ -115,7 +118,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         payload: { organizationSlug, projectSlug },
       },
       icon: SettingsIcon,
-      message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
+      message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project Settings'} />,
     });
     extensions.forEach((extension) =>
       topItems.push({
@@ -155,14 +158,17 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { topSidebarItems, topSidebarControlItems } = getSidebarItems();
 
   const createMainBlock = (openNavbar) => (
-    <OrganizationsBlock openNavbar={openNavbar} openPopover={() => setIsOpenPopover(true)} />
+    <OrganizationsBlock
+      openNavbar={openNavbar}
+      openPopover={() => setIsOpenOrganizationPopover(true)}
+    />
   );
 
   const createMainControlBlock = (closeNavbar, setIsOpenNavbarPopover) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
-      isOpenPopover={isOpenPopover}
-      closePopover={() => setIsOpenPopover(false)}
+      isOpenPopover={isOpenOrganizationPopover}
+      closePopover={() => setIsOpenOrganizationPopover(false)}
       setIsOpenPopover={setIsOpenNavbarPopover}
     />
   );
