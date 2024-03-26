@@ -18,6 +18,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { loadingSelector, projectsSelector } from 'controllers/administrate/projects';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ProjectPanel } from './projectPanel';
@@ -50,19 +52,45 @@ export class ProjectsPanelView extends Component {
     onDelete: () => {},
   };
 
-  getPanelList = (projects) =>
-    projects.map((project) => (
-      <div className={cx('panel')} key={project.id}>
-        <ProjectPanel
-          project={project}
-          onMembersClick={this.props.onMembers}
-          onSettingsClick={this.props.onSettings}
-          onAssign={this.props.onAssign}
-          onUnassign={this.props.onUnassign}
-          onDelete={this.props.onDelete}
-        />
-      </div>
-    ));
+  constructor(props) {
+    super(props);
+    this.state = {
+      organizations: [],
+    };
+
+    fetch(URLS.organizationsList(), {
+      method: 'get',
+    }).then((response) => {
+      this.setState({ organizations: response?.content });
+    });
+  }
+
+  getPanelList = (projects) => {
+    const { organizations } = this.state.organizations;
+
+    return projects.map((project) => {
+      const { organizationId } = project;
+
+      const organizationSlug = organizations.find(({ id }) => id === Number(organizationId))?.slug;
+      const projectWithOrganizationSlug = {
+        ...project,
+        organizationSlug,
+      };
+
+      return (
+        <div className={cx('panel')} key={project.id}>
+          <ProjectPanel
+            project={projectWithOrganizationSlug}
+            onMembersClick={this.props.onMembers}
+            onSettingsClick={this.props.onSettings}
+            onAssign={this.props.onAssign}
+            onUnassign={this.props.onUnassign}
+            onDelete={this.props.onDelete}
+          />
+        </div>
+      );
+    });
+  };
 
   render() {
     const { projects, loading } = this.props;
