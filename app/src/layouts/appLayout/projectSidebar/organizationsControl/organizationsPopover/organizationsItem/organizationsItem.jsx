@@ -61,25 +61,27 @@ export const OrganizationsItem = ({
         </div>
       </div>
       {isCollapsed && (
-        <div className={cx('project-item')}>
+        <>
           {projects.map(({ projectName, projectSlug }) => (
-            <NavLink
-              to={{
-                type: PROJECT_PAGE,
-                payload: {
-                  projectSlug,
-                  organizationSlug,
-                },
-              }}
-              key={`${organizationSlug}-${projectSlug}`}
-              className={cx('project-item-link')}
-              activeClassName={cx('active')}
-              onClick={onClick}
-            >
-              <span title={projectName}>{projectName}</span>
-            </NavLink>
+            <div className={cx('project-item')}>
+              <NavLink
+                to={{
+                  type: PROJECT_PAGE,
+                  payload: {
+                    projectSlug,
+                    organizationSlug,
+                  },
+                }}
+                key={`${organizationSlug}-${projectSlug}`}
+                className={cx('project-item-link')}
+                activeClassName={cx('active')}
+                onClick={onClick}
+              >
+                <span title={projectName}>{projectName}</span>
+              </NavLink>
+            </div>
           ))}
-        </div>
+        </>
       )}
     </div>
   );

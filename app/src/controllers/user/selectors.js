@@ -50,7 +50,7 @@ export const availableProjectsSelector = createSelector(
     );
 
     return Object.keys(assignedOrganizations)
-      .sort()
+      .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
       .reduce((projects, assignedOrganization) => {
         const { organizationSlug, organizationId, organizationName } = assignedOrganizations[
           assignedOrganization
@@ -66,7 +66,7 @@ export const availableProjectsSelector = createSelector(
                 organizationSlug,
                 organizationName,
                 projects: organizationProjects.sort((a, b) =>
-                  a.projectName > b.projectName ? 1 : -1,
+                  a.projectName.toLowerCase() > b.projectName.toLowerCase() ? 1 : -1,
                 ),
               },
             ]

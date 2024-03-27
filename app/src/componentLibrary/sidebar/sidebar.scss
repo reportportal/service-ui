@@ -56,6 +56,38 @@
   height: 40px;
 }
 
+.hover {
+  path,
+  rect,
+  polygon {
+    fill: $COLOR--white-two;
+  }
+
+  & > div {
+    background-color: $COLOR--darkmode-gray-500;
+
+    a {
+      color: $COLOR--white-two;
+    }
+  }
+}
+
+.active {
+  path,
+  rect,
+  polygon {
+    fill: $COLOR--darkmode-topaz-pressed;
+  }
+
+  & > div {
+    background-color: $COLOR--darkmode-gray-500;
+
+    a {
+      color: $COLOR--darkmode-topaz-pressed;
+    }
+  }
+}
+
 .bottom-block {
   display: flex;
   flex-direction: column;

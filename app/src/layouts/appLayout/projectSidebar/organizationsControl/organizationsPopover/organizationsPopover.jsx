@@ -23,11 +23,13 @@ import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { useLayoutEffect, useState } from 'react';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
-const MARGIN_TOP_AND_MARGIN_BOTTOM = 195;
+const MARGIN_TOP_AND_MARGIN_BOTTOM = 172;
+const HEIGHT_POPOVER_OPTION = 36;
 
 const messages = defineMessages({
   allOrganizations: {
@@ -42,11 +44,34 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
   const { organizationSlug: currentOrganization, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   );
+  const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
+
+  const [scrollTop, setScrollTop] = useState(0);
 
   const onClose = () => {
     closeNavbar();
     closePopover();
   };
+
+  useLayoutEffect(() => {
+    availableProjects.forEach(({ organizationSlug, projects }, organizationItems) => {
+      const foundOrganization = currentOrganization === organizationSlug;
+
+      if (foundOrganization) {
+        projects.forEach((project, projectItems, organizationProjects) => {
+          if (project.projectSlug === projectSlug) {
+            const trackHeight =
+              (availableProjects.length + organizationProjects.length) * HEIGHT_POPOVER_OPTION;
+            const scrollTopHeight = trackHeight - maxHeightPopover;
+            const distanceFromTopActiveProject =
+              (organizationItems + projectItems + 2) * HEIGHT_POPOVER_OPTION;
+            const scrollTopShift = (distanceFromTopActiveProject / trackHeight) * scrollTopHeight;
+            setScrollTop(Math.trunc(scrollTopShift));
+          }
+        });
+      }
+    });
+  }, []);
 
   return (
     <div className={cx('organizations-popover')}>
@@ -70,9 +95,11 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
       <ScrollWrapper
         autoHide
         autoHeight
-        autoHeightMax={window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM}
+        autoHeightMax={maxHeightPopover}
         hideTracksWhenNotNeeded
         className={cx('scroll-wrapper')}
+        defaultScrollTop={scrollTop}
+        key={scrollTop}
       >
         {availableProjects.map(({ organizationName, organizationSlug, projects }) => (
           <OrganizationsItem

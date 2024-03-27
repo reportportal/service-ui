@@ -31,6 +31,11 @@ export const Navbar = ({
   bottomSidebarControlItems,
   footerControlBlock,
   setIsOpenPopover,
+  getClassName,
+  onEnterButton,
+  onLeaveButton,
+  onButtonDown,
+  onButtonUp,
 }) => (
   <div className={cx('navbar', { active })}>
     {logoControlIcon && (
@@ -43,11 +48,15 @@ export const Navbar = ({
       {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn')}
+          className={cx('navbar-btn', getClassName(key, true))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
+          onMouseEnter={() => onEnterButton(key)}
+          onMouseLeave={onLeaveButton}
+          onMouseDown={() => onButtonDown(key)}
+          onMouseUp={onButtonUp}
         >
           {sidebarBlockItem}
         </SidebarButton>
@@ -57,11 +66,15 @@ export const Navbar = ({
       {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn')}
+          className={cx('navbar-btn', getClassName(key, true))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
+          onMouseEnter={() => onEnterButton(key)}
+          onMouseLeave={onLeaveButton}
+          onMouseDown={() => onButtonDown(key)}
+          onMouseUp={onButtonUp}
         >
           {bottomSidebarItem}
         </SidebarButton>
@@ -80,6 +93,11 @@ Navbar.propTypes = {
   mainControlBlock: PropTypes.element,
   footerControlBlock: PropTypes.element,
   setIsOpenPopover: PropTypes.func,
+  getClassName: PropTypes.object.isRequired,
+  onEnterButton: PropTypes.func.isRequired,
+  onLeaveButton: PropTypes.func.isRequired,
+  onButtonDown: PropTypes.func.isRequired,
+  onButtonUp: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {

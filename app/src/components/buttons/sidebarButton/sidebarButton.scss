@@ -83,28 +83,6 @@
   font-family: $FONT-CONDBOLD;
   font-size: 11px;
 
-  &:hover {
-    path,
-    rect,
-    polygon {
-      fill: $COLOR--white-two;
-    }
-    .nav-link {
-      color: $COLOR--white-two;
-    }
-  }
-
-  &:active {
-    path,
-    rect,
-    polygon {
-      fill: $COLOR--darkmode-topaz-pressed;
-    }
-    span {
-      color: $COLOR--darkmode-topaz-pressed;
-    }
-  }
-
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 12px;
 

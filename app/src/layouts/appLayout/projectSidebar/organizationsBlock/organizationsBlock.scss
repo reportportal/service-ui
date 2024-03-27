@@ -31,17 +31,13 @@
   font-family: $FONT-ROBOTO-BOLD;
   border: none;
 
-  &:hover {
-    color: $COLOR--white-two;
-    background-color: $COLOR--darkmode-gray-350;
-  }
-
   &:focus-visible {
     outline: none;
     border: 2px solid $COLOR--topaz-focused;
   }
+}
 
-  &:active {
-    color: $COLOR--darkmode-topaz-pressed;
-  }
+.hover {
+  color: $COLOR--white-two;
+  background-color: $COLOR--darkmode-gray-350;
 }

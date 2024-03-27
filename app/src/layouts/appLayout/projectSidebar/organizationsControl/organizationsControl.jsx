@@ -35,13 +35,22 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsControl = ({ isPopoverOpen }) => {
+export const OrganizationsControl = ({
+  isPopoverOpen,
+  onEnterButton,
+  onLeaveButton,
+  isHoveredOrganization,
+}) => {
   const { formatMessage } = useIntl();
   const organizationName = useSelector(organizationNameSelector);
   const projectName = useSelector(projectNameSelector);
 
   return (
-    <div className={cx('organizations-control')}>
+    <div
+      className={cx('organizations-control', { hover: isHoveredOrganization })}
+      onMouseEnter={onEnterButton}
+      onMouseLeave={onLeaveButton}
+    >
       <div>
         <button className={cx('organization-btn')} tabIndex={-1}>
           <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
@@ -64,6 +73,9 @@ export const OrganizationsControl = ({ isPopoverOpen }) => {
 
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
+  onEnterButton: PropTypes.func.isRequired,
+  onLeaveButton: PropTypes.func.isRequired,
+  isHoveredOrganization: PropTypes.bool.isRequired,
 };
 
 export const OrganizationsControlWithPopover = withPopover({
