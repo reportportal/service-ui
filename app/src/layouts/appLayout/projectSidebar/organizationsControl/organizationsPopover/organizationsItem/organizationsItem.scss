@@ -29,6 +29,8 @@
 .header-item {
   background-color: $COLOR--darkmode-gray-475;
   padding: 0 8px;
+  border: none;
+  width: 100%;
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;

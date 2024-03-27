@@ -44,8 +44,8 @@ export const OrganizationsItem = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
-  const [isHoveredOpenButton, setIsHoveredShowOpenButton] = useState(false);
-  const [isFocusedOpenButton, setIsFocusedShowOpenButton] = useState(false);
+  const [isHoveredShowOpenButton, setIsHoveredShowOpenButton] = useState(false);
+  const [isFocusedShowOpenButton, setIsFocusedShowOpenButton] = useState(false);
 
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
@@ -70,10 +70,11 @@ export const OrganizationsItem = ({
 
   return (
     <div className={cx('organization-item')}>
-      <div
+      <button
         className={cx('header-item')}
         onMouseEnter={() => setIsHoveredShowOpenButton(true)}
         onMouseLeave={() => setIsHoveredShowOpenButton(false)}
+        tabIndex={-1}
       >
         <div className={cx('header-item-wrapper')}>
           <button
@@ -87,7 +88,7 @@ export const OrganizationsItem = ({
           </button>
           <button
             className={cx('organization-open', {
-              displayed: isFocusedOpenButton || isHoveredOpenButton,
+              displayed: isFocusedShowOpenButton || isHoveredShowOpenButton,
             })}
             onFocus={onShowOpenButton}
             onBlur={onCloseOpenButton}
@@ -96,7 +97,7 @@ export const OrganizationsItem = ({
             {Parser(OpenIcon)}
           </button>
         </div>
-      </div>
+      </button>
       {isCollapsed && (
         <div className={cx('project-item')}>
           {projects.map(({ projectName, projectSlug }) => (
