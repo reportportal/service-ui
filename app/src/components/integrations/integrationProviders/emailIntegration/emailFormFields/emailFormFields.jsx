@@ -212,13 +212,10 @@ export class EmailFormFields extends Component {
             label={formatMessage(messages.passwordLabel)}
             disabled={disabled}
             className={cx('fields')}
+            isRequired
           >
             <FieldErrorHint provideHint={false}>
-              <FieldText
-                defaultWidth={false}
-                type="password"
-                placeholder={formatMessage(messages.passwordLabel)}
-              />
+              <FieldText defaultWidth={false} type="password" />
             </FieldErrorHint>
           </FieldElement>
         )}

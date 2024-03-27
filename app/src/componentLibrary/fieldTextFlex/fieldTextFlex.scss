@@ -25,7 +25,6 @@
 .text-area {
   width: 100%;
   min-height: 72px;
-  padding: 9px 12px 7px;
   outline: none;
   border: 1px solid $COLOR--e-200;
   border-radius: 3px;
@@ -35,23 +34,6 @@
   line-height: 20px;
   color: $COLOR--almost-black;
   resize: vertical;
-
-  &:hover {
-    border-color: $COLOR--e-300;
-  }
-
-  &:focus:not(.error.touched) {
-    border: 1px solid $COLOR--topaz-hover-2;
-    box-shadow: 0 0 0 1px $COLOR--topaz-hover-2;
-  }
-
-  &.error.touched {
-    border: 1px solid $COLOR--red-failed-2;
-  }
-
-  &::placeholder {
-    color: $COLOR--e-300;
-  }
 }
 
 .label {
@@ -60,20 +42,89 @@
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   line-height: 20px;
-  color: $COLOR--almost-black;
 }
 
-.additional-content {
-  .error-text {
-    @include additional-text($COLOR--red-failed-2);
+.light {
+  &.text-area {
+    padding: 9px 12px 7px;
+    border: 1px solid $COLOR--e-200;
+    color: $COLOR--almost-black;
+
+    &.disabled {
+      pointer-events: none;
+      background-color: $COLOR--bg-100;
+      color: $COLOR--e-300;
+    }
+
+    &:hover {
+      border-color: $COLOR--e-300;
+    }
+
+    &:focus:not(.error.touched) {
+      border: 1px solid $COLOR--topaz-hover-2;
+      box-shadow: 0 0 0 1px $COLOR--topaz-hover-2;
+    }
+
+    &.error.touched {
+      border: 1px solid $COLOR--red-failed-2;
+    }
+
+    &::placeholder {
+      color: $COLOR--e-300;
+    }
   }
 
-  .help-text {
-    @include additional-text($COLOR--e-300);
+  &.label {
+    color: $COLOR--almost-black;
+  }
+
+  &.additional-content {
+    .error-text {
+      @include additional-text($COLOR--red-failed-2);
+    }
+
+    .help-text {
+      @include additional-text($COLOR--e-300);
+    }
   }
 }
 
-.disabled {
-  opacity: 0.3;
-  pointer-events: none;
+.dark {
+  &.text-area {
+    padding: 7px 12px;
+    border: 1px solid $COLOR--darkmode-gray-200;
+    color: $COLOR--bg-000;
+    background-color: $COLOR--darkmode-bg-solid-96;
+
+    &:hover {
+      border-color: $COLOR--darkmode-gray-150;
+    }
+
+    &:focus:not(.error.touched) {
+      border: 2px solid $COLOR--darkmode-topaz-focused;
+      box-shadow: none;
+    }
+
+    &.error.touched {
+      border: 1px solid $COLOR--red-failed-2;
+    }
+
+    &::placeholder {
+      color: $COLOR--darkmode-gray-200;
+    }
+  }
+
+  &.label {
+    color: $COLOR--darkmode-gray-100;
+  }
+
+  &.additional-content {
+    .error-text {
+      @include additional-text($COLOR--red-failed-2);
+    }
+
+    .help-text {
+      @include additional-text($COLOR--e-300);
+    }
+  }
 }

@@ -38,7 +38,6 @@ export const FieldNumber = ({
   max,
   title,
   error,
-  touched,
 }) => {
   const inputRef = useRef();
   const handleChange = (event) => {
@@ -91,51 +90,57 @@ export const FieldNumber = ({
   };
 
   return (
-    <div className={cx('container', { disabled })}>
-      {label && <span className={cx('label')}>{label}</span>}
-      <div
-        className={cx('input-container', {
-          filled: !!value || value === 0,
-          error,
-          disabled,
-          touched,
-        })}
-        title={title}
-      >
-        <span
-          className={cx('sign', { disabled })}
-          onClick={disabled ? null : handleDecrease}
-          data-automation-id={'minusIcon'}
+    <>
+      <div className={cx('container', { disabled })}>
+        {label && <span className={cx('label')}>{label}</span>}
+        <div
+          className={cx('input-container', {
+            filled: !!value || value === 0,
+            error,
+            disabled,
+          })}
+          title={title}
         >
-          {Parser(MinusIcon)}
-        </span>
-        <span className={cx('input-field', { disabled })} onClick={handleInputFieldClick}>
-          <input
-            ref={inputRef}
-            className={cx('input')}
-            type="number"
-            value={value}
-            placeholder={placeholderValue}
-            disabled={disabled}
-            min={min}
-            max={max}
-            onKeyDown={disabled ? null : handleKeyDown}
-            onChange={disabled ? null : handleChange}
-            onFocus={disabled ? null : onFocus}
-            onBlur={disabled ? null : onBlur}
-            style={{ width: inputWidth }}
-          />
-          {!!postfix && (value === 0 || !!value) && <span>{postfix.slice(0, 1)}</span>}
-        </span>
-        <span
-          className={cx('sign', { disabled })}
-          onClick={disabled ? null : handleIncrease}
-          data-automation-id={'plusIcon'}
-        >
-          {Parser(PlusIcon)}
-        </span>
+          <span
+            className={cx('sign', { disabled })}
+            onClick={disabled ? null : handleDecrease}
+            data-automation-id={'minusIcon'}
+          >
+            {Parser(MinusIcon)}
+          </span>
+          <span className={cx('input-field', { disabled })} onClick={handleInputFieldClick}>
+            <input
+              ref={inputRef}
+              className={cx('input')}
+              type="number"
+              value={value}
+              placeholder={placeholderValue}
+              disabled={disabled}
+              min={min}
+              max={max}
+              onKeyDown={disabled ? null : handleKeyDown}
+              onChange={disabled ? null : handleChange}
+              onFocus={disabled ? null : onFocus}
+              onBlur={disabled ? null : onBlur}
+              style={{ width: inputWidth }}
+            />
+            {!!postfix && (value === 0 || !!value) && <span>{postfix.slice(0, 1)}</span>}
+          </span>
+          <span
+            className={cx('sign', { disabled })}
+            onClick={disabled ? null : handleIncrease}
+            data-automation-id={'plusIcon'}
+          >
+            {Parser(PlusIcon)}
+          </span>
+        </div>
       </div>
-    </div>
+      {error && (
+        <div className={cx('additional-content')}>
+          <span className={cx('error-text')}>{error}</span>
+        </div>
+      )}
+    </>
   );
 };
 FieldNumber.propTypes = {
@@ -151,7 +156,6 @@ FieldNumber.propTypes = {
   max: PropTypes.number,
   title: PropTypes.string,
   error: PropTypes.string,
-  touched: PropTypes.bool,
 };
 FieldNumber.defaultProps = {
   value: '',
@@ -166,5 +170,4 @@ FieldNumber.defaultProps = {
   max: Number.MAX_SAFE_INTEGER,
   title: '',
   error: '',
-  touched: false,
 };

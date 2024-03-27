@@ -22,6 +22,8 @@ const cx = classNames.bind(styles);
 
 const HEIGHT = 72;
 const BORDER = 2;
+const LIGHT_VARIANT = 'light';
+const DARK_VARIANT = 'dark';
 
 export const FieldTextFlex = ({
   value,
@@ -38,6 +40,7 @@ export const FieldTextFlex = ({
   className,
   label,
   helpText,
+  variant,
 }) => {
   const resizeHeight = (e) => {
     e.target.style.height = `${HEIGHT}px`;
@@ -45,10 +48,10 @@ export const FieldTextFlex = ({
   };
   return (
     <>
-      {label && <span className={cx('label', { disabled })}>{label}</span>}
+      {label && <span className={cx('label', variant, { disabled })}>{label}</span>}
       <textarea
         ref={refFunction}
-        className={cx('text-area', className, {
+        className={cx('text-area', variant, className, {
           disabled,
           error,
           touched,
@@ -66,9 +69,9 @@ export const FieldTextFlex = ({
         {value}
       </textarea>
       {((error && touched) || helpText) && (
-        <div className={cx('additional-content', { disabled })}>
-          {error && touched && <span className={cx('error-text')}>{error}</span>}
-          {helpText && <span className={cx('help-text')}>{helpText}</span>}
+        <div className={cx('additional-content', variant, { disabled })}>
+          {error && touched && <span className={cx('error-text', variant)}>{error}</span>}
+          {helpText && <span className={cx('help-text', variant)}>{helpText}</span>}
         </div>
       )}
     </>
@@ -90,6 +93,7 @@ FieldTextFlex.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   helpText: PropTypes.string,
+  variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
 };
 
 FieldTextFlex.defaultProps = {
@@ -107,4 +111,5 @@ FieldTextFlex.defaultProps = {
   refFunction: () => {},
   label: '',
   helpText: '',
+  variant: LIGHT_VARIANT,
 };
