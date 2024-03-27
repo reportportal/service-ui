@@ -22,7 +22,7 @@ import { availableProjectsSelector } from 'controllers/user';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
-import { PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { ADMINISTRATE_PAGE } from 'controllers/pages/constants';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
@@ -54,10 +54,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
         <>
           <div className={cx('all-organizations')}>
             <Link
-              to={{
-                type: PROJECT_SETTINGS_PAGE,
-                payload: { organizationSlug: currentOrganization, projectSlug },
-              }}
+              to={{ type: ADMINISTRATE_PAGE }}
               className={cx('all-organizations-link')}
               onClick={onClose}
             >
