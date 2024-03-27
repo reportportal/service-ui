@@ -57,21 +57,25 @@
   border: 2px solid transparent;
   height: 36px;
   border-radius: 4px;
+  outline: none;
 
   svg {
     min-width: 16px;
     height: 16px;
   }
 
-  &:focus-visible {
-    outline: none;
-    border: 2px solid $COLOR--topaz-focused;
+  &:active {
+    border: 2px solid transparent;
   }
+}
+
+.focus {
+  border: 2px solid $COLOR--topaz-focused;
 }
 
 .collapse-projects {
   color: $COLOR--darkmode-gray-100;
-  min-width: 155px;
+  width: 100%;
 
   &:focus-visible {
     color: $COLOR--darkmode-gray-100;

@@ -44,54 +44,70 @@ export const OrganizationsItem = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
-  const [isHoveredShowOpenButton, setIsHoveredShowOpenButton] = useState(false);
+  const [isShowOpenButton, setIsShowOpenButton] = useState(false);
   const [isFocusedShowOpenButton, setIsFocusedShowOpenButton] = useState(false);
+  const [isFocusedCollapsedButton, setIsFocusedCollapsedButton] = useState(false);
 
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
   const onShowOpenButton = () => {
+    setIsShowOpenButton(true);
+  };
+
+  const onHideOpenButton = () => {
+    setIsShowOpenButton(false);
+  };
+
+  const onFocusOpenButton = () => {
     setIsFocusedShowOpenButton(true);
+    onShowOpenButton();
   };
 
-  const onCloseOpenButton = () => {
+  const onBlurOpenButton = () => {
     setIsFocusedShowOpenButton(false);
+    onHideOpenButton();
   };
 
-  const onCollapse = ({ target }) => {
+  const onFocusCollapseButton = () => {
+    setIsFocusedCollapsedButton(true);
+    onShowOpenButton();
+  };
+
+  const onBlurCollapseButton = () => {
+    setIsFocusedCollapsedButton(false);
+    onHideOpenButton();
+  };
+
+  const onClickCollapseButton = () => {
     setIsCollapsed(!isCollapsed);
-
-    const notFocusedBorderColor = 'rgba(0, 0, 0, 0)';
-    const { borderColor } = window.getComputedStyle(target.closest('button'));
-
-    if (notFocusedBorderColor === borderColor) {
-      setIsFocusedShowOpenButton(false);
-    }
+    setIsFocusedCollapsedButton(false);
   };
 
   return (
     <div className={cx('organization-item')}>
       <button
         className={cx('header-item')}
-        onMouseEnter={() => setIsHoveredShowOpenButton(true)}
-        onMouseLeave={() => setIsHoveredShowOpenButton(false)}
+        onMouseEnter={onShowOpenButton}
+        onMouseLeave={onHideOpenButton}
         tabIndex={-1}
       >
         <div className={cx('header-item-wrapper')}>
           <button
-            className={cx('collapse-projects')}
-            onClick={onCollapse}
-            onFocus={onShowOpenButton}
-            onBlur={onCloseOpenButton}
+            className={cx('collapse-projects', { focus: isFocusedCollapsedButton })}
+            onClick={onClickCollapseButton}
+            onFocus={onFocusCollapseButton}
+            onBlur={onBlurCollapseButton}
           >
             {Parser(ArrowIcon)}
             <div className={cx('organization-name')}>{organizationName}</div>
           </button>
           <button
             className={cx('organization-open', {
-              displayed: isFocusedShowOpenButton || isHoveredShowOpenButton,
+              displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
+              focus: isFocusedShowOpenButton,
             })}
-            onFocus={onShowOpenButton}
-            onBlur={onCloseOpenButton}
+            onFocus={onFocusOpenButton}
+            onBlur={onBlurOpenButton}
           >
             <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
             {Parser(OpenIcon)}
