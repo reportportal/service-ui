@@ -79,6 +79,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
             projects={projects}
             onClick={onClose}
             isOpen={currentOrganization === organizationSlug}
+            currentProject={projectSlug}
             key={`${organizationSlug}-${projectSlug}`}
           />
         ))}

@@ -90,41 +90,7 @@
   }
 }
 
-.project-item {
-  padding: 0 8px;
-
-  &:hover {
-    background-color: $COLOR--darkmode-gray-500;
-  }
-}
-
 .organizations-name {
   margin-left: 8px;
   @include truncate(185px);
-}
-
-.project-item-link {
-  @include truncate();
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  color: $COLOR--darkmode-gray-100;
-  text-decoration: none;
-  text-align: left;
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  padding: 8px 0 8px 32px;
-  border-radius: 4px;
-  height: 36px;
-  border: 2px solid transparent;
-
-  &:focus-visible {
-    outline: none;
-    border: 2px solid $COLOR--topaz-focused;
-  }
-}
-
-.active {
-  color: $COLOR--darkmode-topaz-text;
 }
