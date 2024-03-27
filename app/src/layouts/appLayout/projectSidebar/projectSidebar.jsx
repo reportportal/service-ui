@@ -176,7 +176,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     />
   );
 
-  const mainControlBlock = (closeNavbar, setIsOpenNavbarPopover) => (
+  const createMainControlBlock = (closeNavbar, setIsOpenNavbarPopover) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -191,7 +191,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   return (
     <AppSidebar
       createMainBlock={createMainBlock}
-      mainControlBlock={mainControlBlock}
+      createMainControlBlock={createMainControlBlock}
       topSidebarItems={topSidebarItems}
       topSidebarControlItems={topSidebarControlItems}
     />

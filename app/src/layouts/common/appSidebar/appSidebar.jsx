@@ -37,7 +37,7 @@ const messages = defineMessages({
 
 export const AppSidebar = ({
   createMainBlock,
-  mainControlBlock,
+  createMainControlBlock,
   topSidebarItems,
   bottomSidebarItems,
   topSidebarControlItems,
@@ -55,7 +55,7 @@ export const AppSidebar = ({
     />
   );
 
-  const footerControlBlock = (onCloseNavbar, setIsOpenPopover) => (
+  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover) => (
     <>
       <div className={cx('policy-block')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
@@ -78,13 +78,13 @@ export const AppSidebar = ({
       logoBlockIcon={LogoBlockIcon}
       logoControlIcon={LogoControlIcon}
       createMainBlock={createMainBlock}
-      mainControlBlock={mainControlBlock}
+      createMainControlBlock={createMainControlBlock}
       topSidebarItems={topSidebarItems}
       topSidebarControlItems={topSidebarControlItems}
       bottomSidebarItems={bottomSidebarItems}
       bottomSidebarControlItems={bottomSidebarControlItems}
+      createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
-      footerControlBlock={footerControlBlock}
     />
   );
 };
@@ -94,7 +94,7 @@ AppSidebar.propTypes = {
   bottomSidebarItems: PropTypes.array,
   topSidebarControlItems: PropTypes.array,
   bottomSidebarControlItems: PropTypes.array,
-  mainControlBlock: PropTypes.element,
+  createMainControlBlock: PropTypes.func,
   createMainBlock: PropTypes.func,
 };
 
@@ -103,6 +103,6 @@ AppSidebar.defaultProps = {
   bottomSidebarItems: [],
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
-  mainControlBlock: null,
+  createMainControlBlock: () => {},
   createMainBlock: () => {},
 };

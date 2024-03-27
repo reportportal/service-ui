@@ -26,10 +26,10 @@ export const Navbar = ({
   active,
   onCloseNavbar,
   logoControlIcon,
-  mainControlBlock,
+  createMainControlBlock,
   topSidebarControlItems,
   bottomSidebarControlItems,
-  footerControlBlock,
+  createFooterControlBlock,
   setIsOpenPopover,
   getClassName,
   setHoverType,
@@ -42,7 +42,9 @@ export const Navbar = ({
         <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
       </div>
     )}
-    <div className={cx('main-block')}>{mainControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+    <div className={cx('main-block')}>
+      {createMainControlBlock(onCloseNavbar, setIsOpenPopover)}
+    </div>
     <div className={cx('top-block')}>
       {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
         <SidebarButton
@@ -77,7 +79,9 @@ export const Navbar = ({
         </SidebarButton>
       ))}
     </div>
-    <div className={cx('bottom-block')}>{footerControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+    <div className={cx('bottom-block')}>
+      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover)}
+    </div>
   </div>
 );
 
@@ -87,8 +91,8 @@ Navbar.propTypes = {
   bottomSidebarControlItems: PropTypes.array,
   onCloseNavbar: PropTypes.func.isRequired,
   logoControlIcon: PropTypes.element,
-  mainControlBlock: PropTypes.element,
-  footerControlBlock: PropTypes.element,
+  createMainControlBlock: PropTypes.func,
+  createFooterControlBlock: PropTypes.func,
   setIsOpenPopover: PropTypes.func,
   getClassName: PropTypes.object.isRequired,
   setHoverType: PropTypes.func.isRequired,
@@ -100,7 +104,7 @@ Navbar.defaultProps = {
   active: false,
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
-  mainControlBlock: null,
-  footerControlBlock: null,
+  createMainControlBlock: () => {},
+  createFooterControlBlock: () => {},
   setIsOpenPopover: () => {},
 };
