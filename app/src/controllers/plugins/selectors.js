@@ -37,7 +37,7 @@ export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
 export const globalIntegrationsSelector = (state) =>
-  domainSelector(state).integrations.globalIntegrations || [];
+  domainSelector(state).integrations?.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 
