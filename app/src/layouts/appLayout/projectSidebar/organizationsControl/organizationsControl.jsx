@@ -46,10 +46,11 @@ export const OrganizationsControl = ({
   const projectName = useSelector(projectNameSelector);
 
   return (
-    <div
+    <button
       className={cx('organizations-control', { hover: isHoveredOrganization })}
       onMouseEnter={onEnterButton}
       onMouseLeave={onLeaveButton}
+      tabIndex={-1}
     >
       <div>
         <button className={cx('organization-btn')} tabIndex={-1}>
@@ -67,7 +68,7 @@ export const OrganizationsControl = ({
       >
         {Parser(OpenPopoverIcon)}
       </i>
-    </div>
+    </button>
   );
 };
 

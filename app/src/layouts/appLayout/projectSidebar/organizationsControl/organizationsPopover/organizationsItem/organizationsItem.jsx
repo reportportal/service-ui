@@ -63,7 +63,7 @@ export const OrganizationsItem = ({
       {isCollapsed && (
         <>
           {projects.map(({ projectName, projectSlug }) => (
-            <div className={cx('project-item')}>
+            <div className={cx('project-item')} key={`${organizationSlug}-${projectSlug}`}>
               <NavLink
                 to={{
                   type: PROJECT_PAGE,
@@ -72,7 +72,6 @@ export const OrganizationsItem = ({
                     organizationSlug,
                   },
                 }}
-                key={`${organizationSlug}-${projectSlug}`}
                 className={cx('project-item-link')}
                 activeClassName={cx('active')}
                 onClick={onClick}
