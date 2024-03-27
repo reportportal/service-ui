@@ -77,31 +77,25 @@ export const Sidebar = ({
     onCloseNavbar();
   };
 
-  const onEnterButton = (key) => {
+  const setHoverType = (key) => {
     setActionButtonKey(key);
     setActionButtonType(HOVER);
   };
 
-  const onLeaveButton = () => {
-    setActionButtonKey(null);
-    setActionButtonType(null);
-  };
-
-  const onButtonDown = (key) => {
+  const setActiveType = (key) => {
     setActionButtonKey(key);
     setActionButtonType(ACTIVE);
   };
 
-  const onButtonUp = () => {
+  const clearActionButton = () => {
     setActionButtonKey(null);
     setActionButtonType(null);
   };
 
-  const getClassName = (key, isNavbar = false) => {
+  const getClassName = (key) => {
     const isAction = actionButtonKey === key;
 
     return cx({
-      'sidebar-btn': !isNavbar,
       hover: isAction && actionButtonType === HOVER,
       active: isAction && actionButtonType === ACTIVE,
     });
@@ -119,11 +113,10 @@ export const Sidebar = ({
             <SidebarButton
               key={key}
               onClick={() => onButtonClick(onClick)}
-              className={getClassName(key)}
-              onMouseEnter={() => onEnterButton(key)}
-              onMouseLeave={onLeaveButton}
-              onMouseDown={() => onButtonDown(key)}
-              onMouseUp={onButtonUp}
+              className={cx('sidebar-btn', getClassName(key))}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
             >
               {topSidebarItem}
             </SidebarButton>
@@ -134,11 +127,10 @@ export const Sidebar = ({
             <SidebarButton
               key={key}
               onClick={() => onButtonClick(onClick)}
-              className={getClassName(key)}
-              onMouseEnter={() => onEnterButton(key)}
-              onMouseLeave={onLeaveButton}
-              onMouseDown={() => onButtonDown(key)}
-              onMouseUp={onButtonUp}
+              className={cx('sidebar-btn', getClassName(key))}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
             >
               {bottomSidebarItem}
             </SidebarButton>
@@ -151,10 +143,9 @@ export const Sidebar = ({
         onCloseNavbar={onCloseNavbar}
         setIsOpenPopover={setIsOpenNavbarPopover}
         getClassName={getClassName}
-        onEnterButton={onEnterButton}
-        onLeaveButton={onLeaveButton}
-        onButtonDown={onButtonDown}
-        onButtonUp={onButtonUp}
+        setHoverType={setHoverType}
+        clearActionButton={clearActionButton}
+        setActiveType={setActiveType}
         {...navbarProps}
       />
     </div>

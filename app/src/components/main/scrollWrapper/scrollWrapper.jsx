@@ -57,7 +57,6 @@ export class ScrollWrapper extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    defaultScrollTop: PropTypes.number,
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -82,7 +81,6 @@ export class ScrollWrapper extends Component {
     withFooter: false,
     resetRequired: false,
     onReset: () => {},
-    defaultScrollTop: 0,
   };
   state = {
     showButton: false,
@@ -96,7 +94,6 @@ export class ScrollWrapper extends Component {
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
-    this.scrollbars.scrollTop(this.props.defaultScrollTop);
   }
 
   componentDidUpdate() {

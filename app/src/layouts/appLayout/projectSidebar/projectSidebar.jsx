@@ -60,11 +60,11 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     trackEvent(eventInfo);
   };
 
-  const onEnterButton = () => {
+  const onHoverOrganization = () => {
     setIsHoveredOrganization(true);
   };
 
-  const onLeaveButton = () => {
+  const onClearOrganization = () => {
     setIsHoveredOrganization(false);
   };
 
@@ -170,8 +170,8 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     <OrganizationsBlock
       openNavbar={openNavbar}
       openPopover={() => setIsOpenOrganizationPopover(true)}
-      onEnterButton={onEnterButton}
-      onLeaveButton={onLeaveButton}
+      onHoverOrganization={onHoverOrganization}
+      onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
     />
   );
@@ -182,8 +182,8 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       isOpenPopover={isOpenOrganizationPopover}
       closePopover={() => setIsOpenOrganizationPopover(false)}
       setIsOpenPopover={setIsOpenNavbarPopover}
-      onEnterButton={onEnterButton}
-      onLeaveButton={onLeaveButton}
+      onHoverOrganization={onHoverOrganization}
+      onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
     />
   );

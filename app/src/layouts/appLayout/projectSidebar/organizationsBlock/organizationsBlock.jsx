@@ -25,8 +25,8 @@ const cx = classNames.bind(styles);
 export const OrganizationsBlock = ({
   openNavbar,
   openPopover,
-  onEnterButton,
-  onLeaveButton,
+  onHoverOrganization,
+  onClearOrganization,
   isHoveredOrganization,
 }) => {
   const organizationName = useSelector(organizationNameSelector);
@@ -41,8 +41,8 @@ export const OrganizationsBlock = ({
     <button
       className={cx('organization-block', { hover: isHoveredOrganization })}
       onClick={onOpenNavbar}
-      onMouseEnter={onEnterButton}
-      onMouseLeave={onLeaveButton}
+      onMouseEnter={onHoverOrganization}
+      onMouseLeave={onClearOrganization}
     >
       {title}
     </button>
@@ -52,7 +52,7 @@ export const OrganizationsBlock = ({
 OrganizationsBlock.propTypes = {
   openNavbar: PropTypes.func.isRequired,
   openPopover: PropTypes.func.isRequired,
-  onEnterButton: PropTypes.func.isRequired,
-  onLeaveButton: PropTypes.func.isRequired,
+  onHoverOrganization: PropTypes.func.isRequired,
+  onClearOrganization: PropTypes.func.isRequired,
   isHoveredOrganization: PropTypes.bool.isRequired,
 };

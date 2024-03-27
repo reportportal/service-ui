@@ -37,8 +37,8 @@ const messages = defineMessages({
 
 export const OrganizationsControl = ({
   isPopoverOpen,
-  onEnterButton,
-  onLeaveButton,
+  onHoverOrganization,
+  onClearOrganization,
   isHoveredOrganization,
 }) => {
   const { formatMessage } = useIntl();
@@ -48,8 +48,8 @@ export const OrganizationsControl = ({
   return (
     <button
       className={cx('organizations-control', { hover: isHoveredOrganization })}
-      onMouseEnter={onEnterButton}
-      onMouseLeave={onLeaveButton}
+      onMouseEnter={onHoverOrganization}
+      onMouseLeave={onClearOrganization}
       tabIndex={-1}
     >
       <div>
@@ -74,8 +74,8 @@ export const OrganizationsControl = ({
 
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
-  onEnterButton: PropTypes.func.isRequired,
-  onLeaveButton: PropTypes.func.isRequired,
+  onHoverOrganization: PropTypes.func.isRequired,
+  onClearOrganization: PropTypes.func.isRequired,
   isHoveredOrganization: PropTypes.bool.isRequired,
 };
 

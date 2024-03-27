@@ -26,7 +26,6 @@ export const SidebarButton = ({
   onMouseEnter,
   onMouseLeave,
   onMouseDown,
-  onButtonUp,
   children,
 }) => (
   <button
@@ -36,7 +35,6 @@ export const SidebarButton = ({
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
     onMouseDown={onMouseDown}
-    onMouseUp={onButtonUp}
   >
     {children}
   </button>
@@ -49,5 +47,4 @@ SidebarButton.propTypes = {
   onMouseEnter: PropTypes.func.isRequired,
   onMouseLeave: PropTypes.func.isRequired,
   onMouseDown: PropTypes.func.isRequired,
-  onButtonUp: PropTypes.func.isRequired,
 };

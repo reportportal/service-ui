@@ -32,10 +32,9 @@ export const Navbar = ({
   footerControlBlock,
   setIsOpenPopover,
   getClassName,
-  onEnterButton,
-  onLeaveButton,
-  onButtonDown,
-  onButtonUp,
+  setHoverType,
+  clearActionButton,
+  setActiveType,
 }) => (
   <div className={cx('navbar', { active })}>
     {logoControlIcon && (
@@ -48,15 +47,14 @@ export const Navbar = ({
       {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn', getClassName(key, true))}
+          className={cx('navbar-btn', getClassName(key))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
-          onMouseEnter={() => onEnterButton(key)}
-          onMouseLeave={onLeaveButton}
-          onMouseDown={() => onButtonDown(key)}
-          onMouseUp={onButtonUp}
+          onMouseEnter={() => setHoverType(key)}
+          onMouseLeave={clearActionButton}
+          onMouseDown={() => setActiveType(key)}
         >
           {sidebarBlockItem}
         </SidebarButton>
@@ -66,15 +64,14 @@ export const Navbar = ({
       {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn', getClassName(key, true))}
+          className={cx('navbar-btn', getClassName(key))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
-          onMouseEnter={() => onEnterButton(key)}
-          onMouseLeave={onLeaveButton}
-          onMouseDown={() => onButtonDown(key)}
-          onMouseUp={onButtonUp}
+          onMouseEnter={() => setHoverType(key)}
+          onMouseLeave={clearActionButton}
+          onMouseDown={() => setActiveType(key)}
         >
           {bottomSidebarItem}
         </SidebarButton>
@@ -94,10 +91,9 @@ Navbar.propTypes = {
   footerControlBlock: PropTypes.element,
   setIsOpenPopover: PropTypes.func,
   getClassName: PropTypes.object.isRequired,
-  onEnterButton: PropTypes.func.isRequired,
-  onLeaveButton: PropTypes.func.isRequired,
-  onButtonDown: PropTypes.func.isRequired,
-  onButtonUp: PropTypes.func.isRequired,
+  setHoverType: PropTypes.func.isRequired,
+  clearActionButton: PropTypes.func.isRequired,
+  setActiveType: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {
