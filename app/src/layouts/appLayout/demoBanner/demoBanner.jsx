@@ -120,14 +120,22 @@ export class DemoBanner extends Component {
       return formatMessage(messages.descriptionGithub);
     }
 
-    const href = normalizePathWithPrefix(this.getAuthPath());
+    const githubPath = this.getAuthPath();
 
     return (
       <Fragment>
         {formatMessage(messages.descriptionDefault)}
-        <a className={cx('github-login')} href={href} onClick={this.loginWithGitHub}>
-          {formatMessage(messages.githubAuthTitle)}
-        </a>
+        {githubPath ? (
+          <a
+            className={cx('github-login')}
+            href={normalizePathWithPrefix(this.getAuthPath())}
+            onClick={this.loginWithGitHub}
+          >
+            {formatMessage(messages.githubAuthTitle)}
+          </a>
+        ) : (
+          formatMessage(messages.githubAuthTitle)
+        )}
       </Fragment>
     );
   };
