@@ -45,6 +45,15 @@ export const AppSidebar = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
+  const [isHoveredUser, setIsHoveredUser] = useState(false);
+
+  const onHoverUser = () => {
+    setIsHoveredUser(true);
+  };
+
+  const onClearUser = () => {
+    setIsHoveredUser(false);
+  };
 
   const createFooterBlock = (openNavbar) => (
     <UserAvatar
@@ -52,6 +61,9 @@ export const AppSidebar = ({
         openNavbar();
         setIsOpenAvatarPopover(true);
       }}
+      onHoverUser={onHoverUser}
+      onClearUser={onClearUser}
+      isHoveredUser={isHoveredUser}
     />
   );
 
@@ -62,7 +74,7 @@ export const AppSidebar = ({
           {formatMessage(messages.privacyPolicy)}
         </a>
       </div>
-      <div className={cx('user-block')}>
+      <div className={cx('user-block', { hover: isHoveredUser })}>
         <UserControlWithPopover
           closeNavbar={onCloseNavbar}
           setIsOpenPopover={setIsOpenPopover}
