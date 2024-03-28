@@ -25,11 +25,16 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ onClick }) => {
+export const UserAvatar = ({ onClick, onHoverUser, onClearUser }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <button className={cx('avatar-block')} onClick={onClick}>
+    <button
+      className={cx('avatar-block')}
+      onClick={onClick}
+      onMouseEnter={onHoverUser}
+      onMouseLeave={onClearUser}
+    >
       <Image
         className={cx('avatar-img')}
         src={URLS.dataPhoto(photoTimeStamp, true)}
@@ -42,4 +47,6 @@ export const UserAvatar = ({ onClick }) => {
 
 UserAvatar.propTypes = {
   onClick: PropTypes.func.isRequired,
+  onHoverUser: PropTypes.func.isRequired,
+  onClearUser: PropTypes.func.isRequired,
 };
