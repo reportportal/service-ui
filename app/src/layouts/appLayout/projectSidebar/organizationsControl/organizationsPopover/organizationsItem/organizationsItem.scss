@@ -21,7 +21,7 @@
   max-width: $maxSize;
 }
 
-.organizations-item {
+.organization-item {
   background-color: $COLOR--darkmode-gray-475;
   cursor: pointer;
 }
@@ -29,6 +29,8 @@
 .header-item {
   background-color: $COLOR--darkmode-gray-475;
   padding: 0 8px;
+  border: none;
+  width: 100%;
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
@@ -55,21 +57,25 @@
   border: 2px solid transparent;
   height: 36px;
   border-radius: 4px;
+  outline: none;
 
   svg {
     min-width: 16px;
     height: 16px;
   }
 
-  &:focus-visible {
-    outline: none;
-    border: 2px solid $COLOR--topaz-focused;
+  &:active {
+    border: 2px solid transparent;
   }
+}
+
+.focus {
+  border: 2px solid $COLOR--topaz-focused;
 }
 
 .collapse-projects {
   color: $COLOR--darkmode-gray-100;
-  min-width: 155px;
+  width: 215px;
 
   &:focus-visible {
     color: $COLOR--darkmode-gray-100;
@@ -82,6 +88,7 @@
 }
 
 .organization-open {
+  opacity: 0;
   color: $COLOR--darkmode-topaz-text;
   min-width: 69px;
 
@@ -90,7 +97,21 @@
   }
 }
 
-.organizations-name {
+.displayed {
+  opacity: 1;
+}
+
+.project-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+  }
+}
+
+.organization-name {
   margin-left: 8px;
   @include truncate(185px);
 }

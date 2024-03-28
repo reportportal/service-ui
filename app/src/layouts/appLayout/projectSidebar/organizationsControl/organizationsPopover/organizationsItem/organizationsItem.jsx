@@ -44,22 +44,76 @@ export const OrganizationsItem = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
+  const [isShowOpenButton, setIsShowOpenButton] = useState(false);
+  const [isFocusedShowOpenButton, setIsFocusedShowOpenButton] = useState(false);
+  const [isFocusedCollapsedButton, setIsFocusedCollapsedButton] = useState(false);
+
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
 
+  const onShowOpenButton = () => {
+    setIsShowOpenButton(true);
+  };
+
+  const onHideOpenButton = () => {
+    setIsShowOpenButton(false);
+  };
+
+  const onFocusOpenButton = () => {
+    setIsFocusedShowOpenButton(true);
+    onShowOpenButton();
+  };
+
+  const onBlurOpenButton = () => {
+    setIsFocusedShowOpenButton(false);
+    onHideOpenButton();
+  };
+
+  const onFocusCollapseButton = () => {
+    setIsFocusedCollapsedButton(true);
+    onShowOpenButton();
+  };
+
+  const onBlurCollapseButton = () => {
+    setIsFocusedCollapsedButton(false);
+    onHideOpenButton();
+  };
+
+  const onClickCollapseButton = () => {
+    setIsCollapsed(!isCollapsed);
+    setIsFocusedCollapsedButton(false);
+  };
+
   return (
-    <div className={cx('organizations-item')}>
-      <div className={cx('header-item')}>
+    <div className={cx('organization-item')}>
+      <button
+        className={cx('header-item')}
+        onMouseEnter={onShowOpenButton}
+        onMouseLeave={onHideOpenButton}
+        tabIndex={-1}
+      >
         <div className={cx('header-item-wrapper')}>
-          <button className={cx('collapse-projects')} onClick={() => setIsCollapsed(!isCollapsed)}>
+          <button
+            className={cx('collapse-projects', { focus: isFocusedCollapsedButton })}
+            onClick={onClickCollapseButton}
+            onFocus={onFocusCollapseButton}
+            onBlur={onBlurCollapseButton}
+          >
             {Parser(ArrowIcon)}
-            <div className={cx('organizations-name')}>{organizationName}</div>
+            <div className={cx('organization-name')}>{organizationName}</div>
           </button>
-          <button className={cx('organization-open')}>
-            <div className={cx('organizations-open-text')}>{formatMessage(messages.open)}</div>
+          <button
+            className={cx('organization-open', {
+              displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
+              focus: isFocusedShowOpenButton,
+            })}
+            onFocus={onFocusOpenButton}
+            onBlur={onBlurOpenButton}
+          >
+            <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
             {Parser(OpenIcon)}
           </button>
         </div>
-      </div>
+      </button>
       {isCollapsed && (
         <>
           {projects.map(({ projectName, projectSlug }) => (
