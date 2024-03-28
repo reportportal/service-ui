@@ -56,7 +56,6 @@ ProjectItem.propTypes = {
   projectSlug: PropTypes.string.isRequired,
   organizationSlug: PropTypes.string.isRequired,
   projectName: PropTypes.string.isRequired,
-  key: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
 };
