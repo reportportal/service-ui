@@ -128,7 +128,7 @@ export class DemoBanner extends Component {
         {githubPath ? (
           <a
             className={cx('github-login')}
-            href={normalizePathWithPrefix(this.getAuthPath())}
+            href={normalizePathWithPrefix(githubPath)}
             onClick={this.loginWithGitHub}
           >
             {formatMessage(messages.githubAuthTitle)}
