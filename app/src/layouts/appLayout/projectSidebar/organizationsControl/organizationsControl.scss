@@ -22,8 +22,8 @@
 }
 
 .organizations-control {
-  width: 260px;
-  height: 56px;
+  width: 264px;
+  height: 60px;
   background-color: $COLOR--darkmode-gray-300;
   border-radius: 8px;
   cursor: pointer;
@@ -32,15 +32,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 2px solid transparent;
+  background-clip: padding-box;
+  border: 2px solid $COLOR--darkmode-gray-300;
   outline: none;
+}
 
-  &:hover {
-    background-color: $COLOR--darkmode-gray-350;
+.hover {
+  background-color: $COLOR--darkmode-gray-350;
+  border: 2px solid $COLOR--darkmode-gray-350;
 
-    .project-name {
-      color: $COLOR--white-two;
-    }
+  .project-name {
+    color: $COLOR--white-two;
   }
 }
 
@@ -90,7 +92,7 @@
 }
 
 .popover {
-  max-height: calc(100% - 118px);
+  max-height: calc(100% - 112px);
   margin-left: 4px;
   padding: 8px 0;
 
@@ -101,19 +103,17 @@
 
 .popover-control {
   margin-left: 8px;
-  border: 2px solid $COLOR--darkmode-gray-300;
-  background-color: $COLOR--darkmode-gray-300;
+  background-color: transparent;
   height: 60px;
   outline: none;
   border-radius: 8px;
-
-  &:hover {
-    border: 2px solid $COLOR--darkmode-gray-350;
-    background-color: $COLOR--darkmode-gray-350;
-  }
-
+  border: 0;
 
   &:focus-visible {
-    border: 2px solid $COLOR--topaz-focused;
+    box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+
+    .organizations-control {
+      border: 2px solid transparent;
+    }
   }
 }

@@ -32,6 +32,10 @@
     .user-details {
       color: $COLOR--white-two;
     }
+
+    path {
+      fill: $COLOR--white-two;
+    }
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -62,6 +66,7 @@
 .username-wrapper {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
   font-size: 13px;
   line-height: 20px;
   font-family: $FONT-ROBOTO-MEDIUM;
@@ -73,7 +78,7 @@
 }
 
 .username {
-  @include truncate(160px);
+  @include truncate();
 }
 
 .arrow-icon {

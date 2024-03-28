@@ -22,12 +22,12 @@ import { availableProjectsSelector } from 'controllers/user';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
-import { PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { ADMINISTRATE_PAGE } from 'controllers/pages/constants';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
-const MARGIN_TOP_AND_MARGIN_BOTTOM = 195;
+const MARGIN_TOP_AND_MARGIN_BOTTOM = 172;
 
 const messages = defineMessages({
   allOrganizations: {
@@ -42,6 +42,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
   const { organizationSlug: currentOrganization, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   );
+  const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
 
   const onClose = () => {
     closeNavbar();
@@ -54,10 +55,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
         <>
           <div className={cx('all-organizations')}>
             <Link
-              to={{
-                type: PROJECT_SETTINGS_PAGE,
-                payload: { organizationSlug: currentOrganization, projectSlug },
-              }}
+              to={{ type: ADMINISTRATE_PAGE }}
               className={cx('all-organizations-link')}
               onClick={onClose}
             >
@@ -70,7 +68,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
       <ScrollWrapper
         autoHide
         autoHeight
-        autoHeightMax={window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM}
+        autoHeightMax={maxHeightPopover}
         hideTracksWhenNotNeeded
         className={cx('scroll-wrapper')}
       >
@@ -81,6 +79,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
             projects={projects}
             onClick={onClose}
             isOpen={currentOrganization === organizationSlug}
+            currentProject={projectSlug}
             key={`${organizationSlug}-${projectSlug}`}
           />
         ))}

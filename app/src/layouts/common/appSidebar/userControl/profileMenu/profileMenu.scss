@@ -33,6 +33,10 @@
 
   &:hover:not(.active) {
     color: $COLOR--white-two;
+
+    path {
+      fill: $COLOR--white-two;
+    }
   }
   &.active {
     color: $COLOR--darkmode-topaz-text;

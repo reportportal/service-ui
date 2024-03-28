@@ -20,8 +20,22 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ className, onClick, children }) => (
-  <button className={cx('sidebar-button', className)} onClick={onClick} tabIndex={-1}>
+export const SidebarButton = ({
+  className,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  onMouseDown,
+  children,
+}) => (
+  <button
+    className={cx('sidebar-button', className)}
+    onClick={onClick}
+    tabIndex={-1}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+    onMouseDown={onMouseDown}
+  >
     {children}
   </button>
 );
@@ -30,4 +44,7 @@ SidebarButton.propTypes = {
   className: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired,
+  onMouseEnter: PropTypes.func.isRequired,
+  onMouseLeave: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
 };

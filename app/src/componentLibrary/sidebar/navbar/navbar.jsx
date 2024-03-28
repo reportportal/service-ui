@@ -26,11 +26,15 @@ export const Navbar = ({
   active,
   onCloseNavbar,
   logoControlIcon,
-  mainControlBlock,
+  createMainControlBlock,
   topSidebarControlItems,
   bottomSidebarControlItems,
-  footerControlBlock,
+  createFooterControlBlock,
   setIsOpenPopover,
+  getClassName,
+  setHoverType,
+  clearActionButton,
+  setActiveType,
 }) => (
   <div className={cx('navbar', { active })}>
     {logoControlIcon && (
@@ -38,16 +42,21 @@ export const Navbar = ({
         <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
       </div>
     )}
-    <div className={cx('main-block')}>{mainControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+    <div className={cx('main-block')}>
+      {createMainControlBlock(onCloseNavbar, setIsOpenPopover)}
+    </div>
     <div className={cx('top-block')}>
       {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn')}
+          className={cx('navbar-btn', getClassName(key))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
+          onMouseEnter={() => setHoverType(key)}
+          onMouseLeave={clearActionButton}
+          onMouseDown={() => setActiveType(key)}
         >
           {sidebarBlockItem}
         </SidebarButton>
@@ -57,17 +66,22 @@ export const Navbar = ({
       {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
         <SidebarButton
           key={key}
-          className={cx('navbar-btn')}
+          className={cx('navbar-btn', getClassName(key))}
           onClick={() => {
             onClick();
             onCloseNavbar();
           }}
+          onMouseEnter={() => setHoverType(key)}
+          onMouseLeave={clearActionButton}
+          onMouseDown={() => setActiveType(key)}
         >
           {bottomSidebarItem}
         </SidebarButton>
       ))}
     </div>
-    <div className={cx('bottom-block')}>{footerControlBlock(onCloseNavbar, setIsOpenPopover)}</div>
+    <div className={cx('bottom-block')}>
+      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover)}
+    </div>
   </div>
 );
 
@@ -77,16 +91,20 @@ Navbar.propTypes = {
   bottomSidebarControlItems: PropTypes.array,
   onCloseNavbar: PropTypes.func.isRequired,
   logoControlIcon: PropTypes.element,
-  mainControlBlock: PropTypes.element,
-  footerControlBlock: PropTypes.element,
+  createMainControlBlock: PropTypes.func,
+  createFooterControlBlock: PropTypes.func,
   setIsOpenPopover: PropTypes.func,
+  getClassName: PropTypes.object.isRequired,
+  setHoverType: PropTypes.func.isRequired,
+  clearActionButton: PropTypes.func.isRequired,
+  setActiveType: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {
   active: false,
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
-  mainControlBlock: null,
-  footerControlBlock: null,
+  createMainControlBlock: () => {},
+  createFooterControlBlock: () => {},
   setIsOpenPopover: () => {},
 };

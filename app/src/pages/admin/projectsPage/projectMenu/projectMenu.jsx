@@ -177,11 +177,11 @@ export class ProjectMenu extends Component {
   navigateToEventsMonitoring = () => {
     const {
       tracking: { trackEvent },
-      project: { projectName },
+      project: { organizationSlug, projectSlug },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CLICK_EVENT_MONITORING);
-    this.props.navigateToProjectSection(projectName, MONITORING);
+    this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MONITORING);
   };
 
   render() {

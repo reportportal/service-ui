@@ -25,6 +25,8 @@ import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 const DELAY_NAVBAR_APPEARANCE = 500;
+const HOVER = 'hover';
+const ACTIVE = 'active';
 
 export const Sidebar = ({
   logoBlockIcon,
@@ -36,6 +38,10 @@ export const Sidebar = ({
 }) => {
   const [isOpenNavbarPopover, setIsOpenNavbarPopover] = useState(false);
   const [isOpenNavbar, setIsOpenNavbar] = useState(false);
+
+  const [actionButtonKey, setActionButtonKey] = useState(null);
+  const [actionButtonType, setActionButtonType] = useState(null);
+
   const asideRef = useRef(null);
   let asideTimer;
 
@@ -65,6 +71,36 @@ export const Sidebar = ({
     setIsOpenNavbar(true);
   };
 
+  const onButtonClick = (onClick) => {
+    onClick();
+    clearTimeout(asideTimer);
+    onCloseNavbar();
+  };
+
+  const setHoverType = (key) => {
+    setActionButtonKey(key);
+    setActionButtonType(HOVER);
+  };
+
+  const setActiveType = (key) => {
+    setActionButtonKey(key);
+    setActionButtonType(ACTIVE);
+  };
+
+  const clearActionButton = () => {
+    setActionButtonKey(null);
+    setActionButtonType(null);
+  };
+
+  const getClassName = (key) => {
+    const isAction = actionButtonKey === key;
+
+    return cx({
+      hover: isAction && actionButtonType === HOVER,
+      active: isAction && actionButtonType === ACTIVE,
+    });
+  };
+
   return (
     <div className={cx('sidebar-container')} ref={asideRef}>
       <aside className={cx('sidebar')} onMouseEnter={onOpenSidebar} onMouseLeave={onCloseSidebar}>
@@ -76,12 +112,11 @@ export const Sidebar = ({
           {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
             <SidebarButton
               key={key}
-              onClick={() => {
-                onClick();
-                clearTimeout(asideTimer);
-                onCloseNavbar();
-              }}
-              className={cx('sidebar-btn')}
+              onClick={() => onButtonClick(onClick)}
+              className={cx('sidebar-btn', getClassName(key))}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
             >
               {topSidebarItem}
             </SidebarButton>
@@ -91,12 +126,11 @@ export const Sidebar = ({
           {bottomSidebarItems.map(({ key, bottomSidebarItem, onClick }) => (
             <SidebarButton
               key={key}
-              onClick={() => {
-                onClick();
-                clearTimeout(asideTimer);
-                onCloseNavbar();
-              }}
-              className={cx('sidebar-btn')}
+              onClick={() => onButtonClick(onClick)}
+              className={cx('sidebar-btn', getClassName(key))}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
             >
               {bottomSidebarItem}
             </SidebarButton>
@@ -108,6 +142,10 @@ export const Sidebar = ({
         active={isOpenNavbar}
         onCloseNavbar={onCloseNavbar}
         setIsOpenPopover={setIsOpenNavbarPopover}
+        getClassName={getClassName}
+        setHoverType={setHoverType}
+        clearActionButton={clearActionButton}
+        setActiveType={setActiveType}
         {...navbarProps}
       />
     </div>
