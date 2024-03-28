@@ -75,7 +75,9 @@
 
 .collapse-projects {
   color: $COLOR--darkmode-gray-100;
-  width: 215px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 0;
 
   &:focus-visible {
     color: $COLOR--darkmode-gray-100;
@@ -88,17 +90,29 @@
 }
 
 .organization-open {
-  opacity: 0;
   color: $COLOR--darkmode-topaz-text;
-  min-width: 69px;
+  max-width: 0;
+  font-size: 0;
+  padding: 0;
+  border-width: 0;
 
   svg {
     margin-left: 8px;
+    width: 0;
+    height: 0;
   }
 }
 
 .displayed {
-  opacity: 1;
+  max-width: 100%;
+  font-size: 13px;
+  padding: 8px;
+  border-width: 2px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .project-item {
@@ -113,5 +127,7 @@
 
 .organization-name {
   margin-left: 8px;
-  @include truncate(185px);
+  width: 100%;
+  text-align: start;
+  @include truncate();
 }
