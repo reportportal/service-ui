@@ -16,14 +16,13 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { NavLink } from 'components/main/navLink';
 import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
-import { PROJECT_PAGE } from 'controllers/pages/constants';
 import { useState } from 'react';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
+import { ProjectItem } from './projectItem';
 import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -41,6 +40,7 @@ export const OrganizationsItem = ({
   projects,
   isOpen,
   onClick,
+  currentProject,
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
@@ -61,25 +61,18 @@ export const OrganizationsItem = ({
         </div>
       </div>
       {isCollapsed && (
-        <div className={cx('project-item')}>
+        <>
           {projects.map(({ projectName, projectSlug }) => (
-            <NavLink
-              to={{
-                type: PROJECT_PAGE,
-                payload: {
-                  projectSlug,
-                  organizationSlug,
-                },
-              }}
+            <ProjectItem
               key={`${organizationSlug}-${projectSlug}`}
-              className={cx('project-item-link')}
-              activeClassName={cx('active')}
+              projectName={projectName}
+              projectSlug={projectSlug}
+              organizationSlug={organizationSlug}
               onClick={onClick}
-            >
-              <span title={projectName}>{projectName}</span>
-            </NavLink>
+              isActive={currentProject === projectSlug}
+            />
           ))}
-        </div>
+        </>
       )}
     </div>
   );
@@ -91,4 +84,5 @@ OrganizationsItem.propTypes = {
   projects: PropTypes.array.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+  currentProject: PropTypes.string.isRequired,
 };

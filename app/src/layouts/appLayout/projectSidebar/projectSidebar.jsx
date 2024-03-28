@@ -53,10 +53,19 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const extensions = useSelector(uiExtensionSidebarComponentsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
+  const [isHoveredOrganization, setIsHoveredOrganization] = useState(false);
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
     trackEvent(eventInfo);
+  };
+
+  const onHoverOrganization = () => {
+    setIsHoveredOrganization(true);
+  };
+
+  const onClearOrganization = () => {
+    setIsHoveredOrganization(false);
   };
 
   const getSidebarItems = () => {
@@ -161,6 +170,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     <OrganizationsBlock
       openNavbar={openNavbar}
       openPopover={() => setIsOpenOrganizationPopover(true)}
+      onHoverOrganization={onHoverOrganization}
+      onClearOrganization={onClearOrganization}
+      isHoveredOrganization={isHoveredOrganization}
     />
   );
 
@@ -170,6 +182,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       isOpenPopover={isOpenOrganizationPopover}
       closePopover={() => setIsOpenOrganizationPopover(false)}
       setIsOpenPopover={setIsOpenNavbarPopover}
+      onHoverOrganization={onHoverOrganization}
+      onClearOrganization={onClearOrganization}
+      isHoveredOrganization={isHoveredOrganization}
     />
   );
 

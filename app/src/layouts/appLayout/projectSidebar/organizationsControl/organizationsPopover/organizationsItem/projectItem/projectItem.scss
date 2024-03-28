@@ -14,54 +14,39 @@
  * limitations under the License.
  */
 
-.organizations-popover {
-  width: 300px;
-  background-color: $COLOR--darkmode-gray-475;
-}
-
-.all-organizations {
-  padding: 0px 8px;
+.project-item {
+  padding: 0 8px;
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
   }
-
-  a {
-    padding: 8px;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
-      border-radius: 4px;
-    }
-  }
 }
 
-.all-organizations-link {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
+.project-item-link {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   color: $COLOR--darkmode-gray-100;
   text-decoration: none;
   text-align: left;
   font-size: 13px;
   line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-}
+  font-family: $FONT-ROBOTO-REGULAR;
+  padding: 8px 0 8px 32px;
+  border-radius: 4px;
+  height: 36px;
+  border: 2px solid transparent;
 
-.scroll-wrapper {
-  > div:last-child {
-    width: 4px !important;
-    margin-right: 8px;
-
-    div {
-      background-color: $COLOR--darkmode-gray-200;
-    }
+  &:focus-visible {
+    outline: none;
+    border: 2px solid $COLOR--topaz-focused;
   }
 }
 
-.divider {
-  border-bottom: 1px solid $COLOR--almost-black;
-  margin: 0 16px 8px 16px;
+.active {
+  color: $COLOR--darkmode-topaz-text;
 }
