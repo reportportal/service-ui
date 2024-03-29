@@ -93,7 +93,9 @@ export const OrganizationsItem = ({
       >
         <div className={cx('header-item-wrapper')}>
           <button
-            className={cx('collapse-projects', { focus: isFocusedCollapsedButton })}
+            className={cx('collapse-projects', {
+              focus: isFocusedCollapsedButton,
+            })}
             onClick={onClickCollapseButton}
             onFocus={onFocusCollapseButton}
             onBlur={onBlurCollapseButton}
