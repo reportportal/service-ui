@@ -119,3 +119,17 @@
     background-color: $COLOR--darkmode-gray-500;
   }
 }
+
+.hover {
+  background-color: $COLOR--darkmode-gray-500;
+
+  button {
+    div {
+      color: $COLOR--white-two;
+    }
+
+    path {
+      fill: $COLOR--white-two;
+    }
+  }
+}
