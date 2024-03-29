@@ -7,7 +7,7 @@
 * [ ] Have you run the tests locally and added/updated them if needed?
 * [ ] Have you checked that app can be built (`npm run build`)?
 * [ ] Have you made sure that all the necessary pipelines has been successfully completed?
-* [ ] If the task requires translations to be updated, have you done this by running the 'manage:translations' script?
+* [ ] If the task requires translations to be updated, have you done this by running the `manage:translations` script?
 
 ## Visuals
 
