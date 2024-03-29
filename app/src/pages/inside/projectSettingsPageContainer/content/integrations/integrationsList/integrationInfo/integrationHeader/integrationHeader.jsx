@@ -110,9 +110,9 @@ export const IntegrationHeader = (props) => {
               <Button
                 onClick={onResetProjectIntegration}
                 variant="ghost"
-                dataAutomationId="resetToGlobalIntegrationsButton"
+                dataAutomationId="projectIntegrationReset"
               >
-                {formatMessage(messages.resetToGlobalIntegrationsButton)}
+                {formatMessage(messages.projectIntegrationReset)}
               </Button>
             )}
           </div>
