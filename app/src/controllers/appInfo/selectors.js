@@ -67,7 +67,7 @@ export const instanceTypeSelector = (state) =>
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
 export const areUserSuggestionsAllowedSelector = (state) =>
-  environmentSelector(state)[USER_SUGGESTIONS] === 'true';
+  (environmentSelector(state)[USER_SUGGESTIONS] || 'true') === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
