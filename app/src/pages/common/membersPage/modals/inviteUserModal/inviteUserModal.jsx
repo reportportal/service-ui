@@ -39,6 +39,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { showModalAction } from 'controllers/modal';
+import { userSuggestionsSelector } from 'controllers/appInfo';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -47,7 +48,6 @@ import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
 const LABEL_WIDTH = 105;
-const isUserSuggestions = process.env.RP_ENVIRONMENT_VARIABLE_USER_SUGGESTIONS;
 
 const messages = defineMessages({
   headerInviteUserModal: {
@@ -100,6 +100,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
       role: DEFAULT_PROJECT_ROLE,
       project: projectIdSelector(state),
     },
+    userSuggestions: userSuggestionsSelector(state),
   }),
   {
     showModalAction,
@@ -135,6 +136,7 @@ export class InviteUserModal extends Component {
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
+    userSuggestions: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -220,12 +222,12 @@ export class InviteUserModal extends Component {
   };
 
   inviteUserAndCloseModal = (closeModal) => async (data) => {
-    const { selectedProject } = this.props;
+    const { selectedProject, userSuggestions } = this.props;
     const userData = {
       ...data,
     };
 
-    if (!(isUserSuggestions || this.props.data.isProjectSelector)) {
+    if (!(userSuggestions || this.props.data.isProjectSelector)) {
       const foundUsers = await fetch(URLS.projectUserSearchUser(selectedProject)(data.email));
       const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
       if (foundUser) {
@@ -262,7 +264,7 @@ export class InviteUserModal extends Component {
     );
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, data } = this.props;
+    const { intl, handleSubmit, selectedProject, isAdmin, data, userSuggestions } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
@@ -285,7 +287,7 @@ export class InviteUserModal extends Component {
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
-          {isUserSuggestions || data.isProjectSelector ? (
+          {userSuggestions || data.isProjectSelector ? (
             <ModalField
               label={intl.formatMessage(messages.loginOrEmailLabel)}
               labelWidth={LABEL_WIDTH}
