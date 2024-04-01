@@ -227,7 +227,7 @@ export class InviteUserModal extends Component {
       ...data,
     };
 
-    if (!(userSuggestions || this.props.data.isProjectSelector)) {
+    if (!(this.props.data.isProjectSelector || !userSuggestions)) {
       const foundUsers = await fetch(URLS.projectUserSearchUser(selectedProject)(data.email));
       const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
       if (foundUser) {
@@ -287,7 +287,7 @@ export class InviteUserModal extends Component {
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
-          {userSuggestions || data.isProjectSelector ? (
+          {this.props.data.isProjectSelector || !userSuggestions ? (
             <ModalField
               label={intl.formatMessage(messages.loginOrEmailLabel)}
               labelWidth={LABEL_WIDTH}
