@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { Scrollbars } from 'react-custom-scrollbars-2';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
