@@ -45,40 +45,44 @@ export const Navbar = ({
     <div className={cx('main-block')}>
       {createMainControlBlock(onCloseNavbar, setIsOpenPopover)}
     </div>
-    <div className={cx('top-block')}>
-      {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
-        <SidebarButton
-          key={key}
-          className={cx('navbar-btn', getClassName(key))}
-          onClick={() => {
-            onClick();
-            onCloseNavbar();
-          }}
-          onMouseEnter={() => setHoverType(key)}
-          onMouseLeave={clearActionButton}
-          onMouseDown={() => setActiveType(key)}
-        >
-          {sidebarBlockItem}
-        </SidebarButton>
-      ))}
-    </div>
-    <div className={cx('bottom-block')}>
-      {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
-        <SidebarButton
-          key={key}
-          className={cx('navbar-btn', getClassName(key))}
-          onClick={() => {
-            onClick();
-            onCloseNavbar();
-          }}
-          onMouseEnter={() => setHoverType(key)}
-          onMouseLeave={clearActionButton}
-          onMouseDown={() => setActiveType(key)}
-        >
-          {bottomSidebarItem}
-        </SidebarButton>
-      ))}
-    </div>
+    {topSidebarControlItems.length > 0 && (
+      <div className={cx('top-block')}>
+        {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
+          <SidebarButton
+            key={key}
+            className={cx('navbar-btn', getClassName(key))}
+            onClick={() => {
+              onClick();
+              onCloseNavbar();
+            }}
+            onMouseEnter={() => setHoverType(key)}
+            onMouseLeave={clearActionButton}
+            onMouseDown={() => setActiveType(key)}
+          >
+            {sidebarBlockItem}
+          </SidebarButton>
+        ))}
+      </div>
+    )}
+    {bottomSidebarControlItems.length > 0 && (
+      <div className={cx('bottom-block')}>
+        {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
+          <SidebarButton
+            key={key}
+            className={cx('navbar-btn', getClassName(key))}
+            onClick={() => {
+              onClick();
+              onCloseNavbar();
+            }}
+            onMouseEnter={() => setHoverType(key)}
+            onMouseLeave={clearActionButton}
+            onMouseDown={() => setActiveType(key)}
+          >
+            {bottomSidebarItem}
+          </SidebarButton>
+        ))}
+      </div>
+    )}
     <div className={cx('bottom-block')}>
       {createFooterControlBlock(onCloseNavbar, setIsOpenPopover)}
     </div>
