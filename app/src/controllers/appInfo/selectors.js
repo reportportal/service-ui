@@ -29,6 +29,7 @@ import {
   INSTANCE_TYPE,
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
+  USER_SUGGESTIONS,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -65,6 +66,8 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
+export const areUserSuggestionsAllowedSelector = (state) =>
+  environmentSelector(state)[USER_SUGGESTIONS] === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
