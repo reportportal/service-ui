@@ -220,16 +220,16 @@ export class InviteUserModal extends Component {
   };
 
   inviteUserAndCloseModal = (closeModal) => async (data) => {
-    const { selectedProject, isAdmin } = this.props;
+    const { selectedProject } = this.props;
     const userData = {
       ...data,
     };
 
-    if (!(isUserSuggestions || this.props.data.isProjectSelector || isAdmin)) {
+    if (!(isUserSuggestions || this.props.data.isProjectSelector)) {
       const foundUsers = await fetch(URLS.projectUserSearchUser(selectedProject)(data.email));
       const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
       if (foundUser) {
-        userData.user = makeOptions(data.project, !isAdmin)({ content: [foundUser] })[0];
+        userData.user = makeOptions(data.project, false)({ content: [foundUser] })[0];
       } else {
         userData.user = {
           userLogin: data.email,
