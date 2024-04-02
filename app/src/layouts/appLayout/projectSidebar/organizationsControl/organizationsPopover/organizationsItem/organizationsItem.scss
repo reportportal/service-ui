@@ -80,11 +80,11 @@
   width: 0;
 
   &:focus-visible {
-    color: $COLOR--darkmode-gray-100;
+    color: $COLOR--white-two;
   }
 
   &:hover {
-    color: $COLOR--darkmode-topaz-text;
+    color: $COLOR--white-two;
     background-color: $COLOR--darkmode-gray-500;
   }
 }
