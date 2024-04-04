@@ -108,35 +108,39 @@ export const Sidebar = ({
           <i>{Parser(logoBlockIcon)}</i>
         </div>
         <div className={cx('main-block')}>{createMainBlock(onOpenNavbar)}</div>
-        <div className={cx('top-block')}>
-          {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
-            <SidebarButton
-              key={key}
-              onClick={() => onButtonClick(onClick)}
-              className={cx('sidebar-btn', getClassName(key))}
-              onMouseEnter={() => setHoverType(key)}
-              onMouseLeave={clearActionButton}
-              onMouseDown={() => setActiveType(key)}
-            >
-              {topSidebarItem}
-            </SidebarButton>
-          ))}
-        </div>
-        <div className={cx('bottom-block')}>
-          {bottomSidebarItems.map(({ key, bottomSidebarItem, onClick }) => (
-            <SidebarButton
-              key={key}
-              onClick={() => onButtonClick(onClick)}
-              className={cx('sidebar-btn', getClassName(key))}
-              onMouseEnter={() => setHoverType(key)}
-              onMouseLeave={clearActionButton}
-              onMouseDown={() => setActiveType(key)}
-            >
-              {bottomSidebarItem}
-            </SidebarButton>
-          ))}
-          <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
-        </div>
+        {topSidebarItems.length > 0 && (
+          <div className={cx('top-block')}>
+            {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
+              <SidebarButton
+                key={key}
+                onClick={() => onButtonClick(onClick)}
+                className={cx('sidebar-btn', getClassName(key))}
+                onMouseEnter={() => setHoverType(key)}
+                onMouseLeave={clearActionButton}
+                onMouseDown={() => setActiveType(key)}
+              >
+                {topSidebarItem}
+              </SidebarButton>
+            ))}
+          </div>
+        )}
+        {bottomSidebarItems.length > 0 && (
+          <div className={cx('bottom-block')}>
+            {bottomSidebarItems.map(({ key, bottomSidebarItem, onClick }) => (
+              <SidebarButton
+                key={key}
+                onClick={() => onButtonClick(onClick)}
+                className={cx('sidebar-btn', getClassName(key))}
+                onMouseEnter={() => setHoverType(key)}
+                onMouseLeave={clearActionButton}
+                onMouseDown={() => setActiveType(key)}
+              >
+                {bottomSidebarItem}
+              </SidebarButton>
+            ))}
+          </div>
+        )}
+        <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
       </aside>
       <Navbar
         active={isOpenNavbar}
