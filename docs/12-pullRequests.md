@@ -21,7 +21,7 @@ Main code reviewer is UI Team Leader. His code review is mandatory for each PR. 
 Commits and PRs naming format - `JIRA task id || Short task description` (for example "EPMRPP-123 || Awesome functionality implementation.")
 All existing PRs you can find [here](https://github.com/reportportal/service-ui/pulls).
 
-Critical amount of PRs is 10. It's means that Code Review task gets a highest priority for Team Leader.
+Critical amount of PRs is 5. It's means that Code Review task gets a highest priority for Team Leader.
 
 > It's recommended to define equal names for PR and its main commit.
 
