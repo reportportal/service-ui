@@ -57,7 +57,11 @@ export const availableProjectsSelector = createSelector(
         ];
         const organizationProjects = assignedProjectMap
           .filter((assignedProject) => assignedProject.organizationId === organizationId)
-          .map(({ projectName, projectSlug }) => ({ projectName, projectSlug }));
+          .map(({ projectName, projectSlug, projectKey }) => ({
+            projectName,
+            projectSlug,
+            projectKey,
+          }));
 
         return organizationProjects.length > 0
           ? [

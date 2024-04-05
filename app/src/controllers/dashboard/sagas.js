@@ -20,7 +20,7 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { userIdSelector } from 'controllers/user';
+import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
@@ -58,7 +58,7 @@ import {
 } from './actionCreators';
 
 function* fetchDashboards({ payload: params }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
 
   yield put(
