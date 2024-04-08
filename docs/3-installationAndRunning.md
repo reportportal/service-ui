@@ -2,7 +2,7 @@
 
 ## Starting dev server
 
-For development, you need a [node.js](https://nodejs.org). The recommended version is 12 or higher.
+For development, you need a [node.js](https://nodejs.org). The recommended version is 20 or higher.
 
 1.  open console from the project root
 1.  run the command `cd app`
@@ -33,6 +33,6 @@ For development, you need a [node.js](https://nodejs.org). The recommended versi
 
 `npm run test:watch` - run tests when changing files
 
-`npm run test:coverage ` - run tests and check code coverage
+`npm run test:coverage` - run tests and check code coverage
 
 `npm run manage:translations` - checking the relevance of localization
