@@ -118,11 +118,12 @@ export const OrganizationsItem = ({
       </button>
       {isCollapsed && (
         <>
-          {projects.map(({ projectName, projectSlug }) => (
+          {projects.map(({ projectName, projectSlug, projectKey }) => (
             <ProjectItem
-              key={`${organizationSlug}-${projectSlug}`}
+              key={projectKey}
               projectName={projectName}
               projectSlug={projectSlug}
+              projectKey={projectKey}
               organizationSlug={organizationSlug}
               onClick={onClick}
               isActive={currentProject === projectSlug}

@@ -16,21 +16,36 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'components/main/navLink';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
+import { setActiveProjectKeyAction } from 'controllers/user';
 import { useLayoutEffect, useRef } from 'react';
 import styles from './projectItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectItem = ({ organizationSlug, projectSlug, projectName, onClick, isActive }) => {
+export const ProjectItem = ({
+  organizationSlug,
+  projectSlug,
+  projectKey,
+  projectName,
+  onClick,
+  isActive,
+}) => {
   const projectItemRef = useRef(null);
+  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     if (isActive) {
       projectItemRef.current.scrollIntoView({ block: 'end' });
     }
   }, [isActive]);
+
+  const onClickHandler = () => {
+    dispatch(setActiveProjectKeyAction(projectKey));
+    onClick();
+  };
 
   return (
     <div ref={projectItemRef} className={cx('project-item')}>
@@ -44,7 +59,7 @@ export const ProjectItem = ({ organizationSlug, projectSlug, projectName, onClic
         }}
         className={cx('project-item-link')}
         activeClassName={cx('active')}
-        onClick={onClick}
+        onClick={onClickHandler}
       >
         <span title={projectName}>{projectName}</span>
       </NavLink>
@@ -55,6 +70,7 @@ export const ProjectItem = ({ organizationSlug, projectSlug, projectName, onClic
 ProjectItem.propTypes = {
   projectSlug: PropTypes.string.isRequired,
   organizationSlug: PropTypes.string.isRequired,
+  projectKey: PropTypes.string.isRequired,
   projectName: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
