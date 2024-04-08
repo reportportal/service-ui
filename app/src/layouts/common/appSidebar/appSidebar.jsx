@@ -56,25 +56,28 @@ export const AppSidebar = ({
   };
 
   const createFooterBlock = (openNavbar) => (
-    <UserAvatar
-      onClick={() => {
-        openNavbar();
-        setIsOpenAvatarPopover(true);
-      }}
-      onHoverUser={onHoverUser}
-      onClearUser={onClearUser}
-      isHoveredUser={isHoveredUser}
-    />
+    <>
+      <div className={cx('policy-block')} />
+      <UserAvatar
+        onClick={() => {
+          openNavbar();
+          setIsOpenAvatarPopover(true);
+        }}
+        onHoverUser={onHoverUser}
+        onClearUser={onClearUser}
+        isHoveredUser={isHoveredUser}
+      />
+    </>
   );
 
   const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover) => (
     <>
-      <div className={cx('policy-block')}>
+      <div className={cx('policy-control')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
           {formatMessage(messages.privacyPolicy)}
         </a>
       </div>
-      <div className={cx('user-block', { hover: isHoveredUser })}>
+      <div className={cx('user-control', { hover: isHoveredUser })}>
         <UserControlWithPopover
           closeNavbar={onCloseNavbar}
           setIsOpenPopover={setIsOpenPopover}

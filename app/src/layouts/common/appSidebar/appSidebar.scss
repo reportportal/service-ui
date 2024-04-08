@@ -75,6 +75,10 @@
 }
 
 .policy-block {
+  height: 36px;
+}
+
+.policy-control {
   font-size: 11px;
   line-height: 16px;
   width: 100%;
@@ -109,7 +113,7 @@
   }
 }
 
-.user-block {
+.user-control {
   width: 100%;
   box-sizing: border-box;
   padding: 0 8px;
