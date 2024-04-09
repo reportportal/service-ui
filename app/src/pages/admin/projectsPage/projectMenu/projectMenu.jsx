@@ -30,6 +30,7 @@ import {
   deleteProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
+import { setActiveProjectInfoKeyAction } from 'controllers/project';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -48,6 +49,7 @@ import { messages } from '../messages';
     deleteProject: deleteProjectAction,
     navigateToProjectSection: navigateToProjectSectionAction,
     navigateToProjectSettings: navigateToProjectSettingsAction,
+    setActiveProjectInfoKey: setActiveProjectInfoKeyAction,
   },
 )
 @injectIntl
@@ -60,6 +62,7 @@ export class ProjectMenu extends Component {
     userId: PropTypes.string.isRequired,
     navigateToProjectSection: PropTypes.func.isRequired,
     navigateToProjectSettings: PropTypes.func.isRequired,
+    setActiveProjectInfoKey: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
@@ -157,10 +160,11 @@ export class ProjectMenu extends Component {
   navigateToMembers = () => {
     const {
       tracking: { trackEvent },
-      project: { organizationSlug, projectSlug },
+      project: { organizationSlug, projectSlug, projectKey, projectName },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
+    this.props.setActiveProjectInfoKey({ projectKey, projectName });
     this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MEMBERS);
   };
 
@@ -177,10 +181,11 @@ export class ProjectMenu extends Component {
   navigateToEventsMonitoring = () => {
     const {
       tracking: { trackEvent },
-      project: { organizationSlug, projectSlug },
+      project: { organizationSlug, projectSlug, projectKey, projectName },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CLICK_EVENT_MONITORING);
+    this.props.setActiveProjectInfoKey({ projectKey, projectName });
     this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MONITORING);
   };
 

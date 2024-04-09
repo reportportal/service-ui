@@ -58,6 +58,7 @@ export const UPDATE_PROJECT_NOTIFICATION_SUCCESS = 'updateProjectNotificationSuc
 export const DELETE_PROJECT_NOTIFICATION = 'deleteProjectNotification';
 export const DELETE_PROJECT_NOTIFICATION_SUCCESS = 'deleteProjectNotificationSuccess';
 export const SET_PROJECT_NOTIFICATION_LOADING = 'setProjectNotificationLoading';
+export const SET_ACTIVE_PROJECT_INFO_KEY = 'setActiveProjectInfoKey';
 
 export const NAMESPACE = 'project';
 
