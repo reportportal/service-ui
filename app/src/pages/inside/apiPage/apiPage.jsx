@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import { URLS, DEFAULT_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
-import { tokenSelector } from 'controllers/auth';
+import { tokenSelector, tokenTypeSelector, tokenValueSelector } from 'controllers/auth';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import track from 'react-tracking';
@@ -45,14 +45,18 @@ const OPTION_BLOCK_TAG_OPEN = '.opblock.is-open';
 const OPTION_BLOCK_SUMMARY = '.opblock-summary';
 
 @connect((state) => ({
-  token: tokenSelector(state),
+  tokenString: tokenSelector(state),
+  tokenType: tokenTypeSelector(state),
+  tokenValue: tokenValueSelector(state),
 }))
 @injectIntl
 @track()
 export class ApiPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    token: PropTypes.string.isRequired,
+    tokenString: PropTypes.string.isRequired,
+    tokenType: PropTypes.string.isRequired,
+    tokenValue: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -61,6 +65,10 @@ export class ApiPage extends Component {
 
   state = {
     apiType: DEFAULT_API_URL_PREFIX,
+  };
+
+  onSwaggerRendering = (system) => {
+    system.preauthorizeApiKey(this.props.tokenType, this.props.tokenValue);
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.apiPageTitle) }];
@@ -78,7 +86,9 @@ export class ApiPage extends Component {
   };
 
   setAuth = (request) => {
-    request.headers.Authorization = this.props.token;
+    if (!request.headers.Authorization) {
+      request.headers.Authorization = this.props.tokenString;
+    }
     return request;
   };
 
@@ -178,6 +188,7 @@ export class ApiPage extends Component {
                   'head',
                   'options',
                 ]}
+                onComplete={this.onSwaggerRendering}
               />
             </div>
           </div>
