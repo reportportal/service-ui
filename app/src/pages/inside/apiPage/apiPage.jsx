@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import { URLS, DEFAULT_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
-import { tokenSelector, tokenTypeSelector, tokenValueSelector } from 'controllers/auth';
+import { tokenTypeSelector, tokenValueSelector } from 'controllers/auth';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import track from 'react-tracking';
@@ -43,9 +43,16 @@ const OPTION_BLOCK_TAG_SECTION_OPEN = '.opblock-tag-section.is-open';
 const OPTION_BLOCK_TAG = '.opblock-tag';
 const OPTION_BLOCK_TAG_OPEN = '.opblock.is-open';
 const OPTION_BLOCK_SUMMARY = '.opblock-summary';
+const TOKEN_TYPE = {
+  BEARER: 'bearer',
+  APIKEY: 'apikey', // TODO check this value after apikey authorisation implementation
+};
+const SECURITY_SCHEMES_KEYS_NAME = {
+  BEARER: 'bearerAuth',
+  APIKEY: 'api_key',
+};
 
 @connect((state) => ({
-  tokenString: tokenSelector(state),
   tokenType: tokenTypeSelector(state),
   tokenValue: tokenValueSelector(state),
 }))
@@ -54,7 +61,6 @@ const OPTION_BLOCK_SUMMARY = '.opblock-summary';
 export class ApiPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    tokenString: PropTypes.string.isRequired,
     tokenType: PropTypes.string.isRequired,
     tokenValue: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
@@ -68,7 +74,11 @@ export class ApiPage extends Component {
   };
 
   onSwaggerRendering = (system) => {
-    system.preauthorizeApiKey(this.props.tokenType, this.props.tokenValue);
+    if (this.props.tokenType === TOKEN_TYPE.BEARER) {
+      system.preauthorizeApiKey(SECURITY_SCHEMES_KEYS_NAME.BEARER, this.props.tokenValue);
+    } else if (this.props.tokenType === TOKEN_TYPE.APIKEY) {
+      system.preauthorizeApiKey(SECURITY_SCHEMES_KEYS_NAME.APIKEY, this.props.tokenValue);
+    }
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.apiPageTitle) }];
@@ -87,7 +97,7 @@ export class ApiPage extends Component {
 
   setAuth = (request) => {
     if (!request.headers.Authorization) {
-      request.headers.Authorization = this.props.tokenString;
+      request.headers.Authorization = `${this.props.tokenType} ${this.props.tokenValue}`;
     }
     return request;
   };
