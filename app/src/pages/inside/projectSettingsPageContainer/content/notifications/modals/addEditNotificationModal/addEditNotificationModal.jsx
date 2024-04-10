@@ -333,6 +333,7 @@ const AddEditNotificationModal = ({
           <FieldErrorHint provideHint={false} dataAutomationId={WEBHOOK_URL_KEY + FIELD}>
             <FieldText
               label={formatMessage(messages.webhookURL)}
+              defaultWidth={false}
               placeholder={'https://...'}
               isRequired
             />

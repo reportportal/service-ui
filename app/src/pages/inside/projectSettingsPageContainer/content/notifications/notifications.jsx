@@ -297,7 +297,7 @@ export const Notifications = () => {
                   </Button>
                 </>
               ) : (
-                <EmptyRuleState ruleName={item.name} onCreateClick={handleRuleItemClick} />
+                <EmptyRuleState ruleName={item.name} onCreateClick={onAdd} />
               )}
             </div>
           </Layout>
