@@ -33,11 +33,9 @@ import { URLS } from 'common/urls';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
-import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
   FieldElement,
@@ -50,12 +48,11 @@ import {
   ATTRIBUTES_OPERATORS,
   ATTRIBUTES_OPERATOR_FIELD_KEY,
   ENABLED_FIELD_KEY,
-  INFORM_OWNER_FIELD_KEY,
   LAUNCH_CASES,
   LAUNCH_NAMES_FIELD_KEY,
-  RECIPIENTS_FIELD_KEY,
   RULE_NAME_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  WEBHOOK_URL_KEY,
 } from '../../constants';
 import styles from './addEditNotificationModal.scss';
 
@@ -86,9 +83,9 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.active',
     defaultMessage: 'Active Rule',
   },
-  recipientsLabel: {
-    id: 'AddEditNotificationCaseModal.recipientsLabel',
-    defaultMessage: 'Recipients',
+  webhookURL: {
+    id: 'AddEditNotificationCaseModal.webhookURL',
+    defaultMessage: 'Webhook URL',
   },
   nameLabel: {
     id: 'AddEditNotificationModal.nameLabel',
@@ -332,25 +329,15 @@ const AddEditNotificationModal = ({
             <FieldText label={formatMessage(messages.nameLabel)} defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldProvider>
-        <FieldElement
-          name={RECIPIENTS_FIELD_KEY}
-          className={cx('autocomplete')}
-          type="text"
-          label={formatMessage(messages.recipientsLabel)}
-          dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
-        >
-          <FieldErrorHint provideHint={false}>
-            <RecipientsContainer />
+        <FieldProvider name={WEBHOOK_URL_KEY} type="text">
+          <FieldErrorHint provideHint={false} dataAutomationId={WEBHOOK_URL_KEY + FIELD}>
+            <FieldText
+              label={formatMessage(messages.webhookURL)}
+              placeholder={'https://...'}
+              isRequired
+            />
           </FieldErrorHint>
-        </FieldElement>
-        <FieldElement
-          name={INFORM_OWNER_FIELD_KEY}
-          type="text"
-          className={cx('checkbox')}
-          dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
-        >
-          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
-        </FieldElement>
+        </FieldProvider>
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
