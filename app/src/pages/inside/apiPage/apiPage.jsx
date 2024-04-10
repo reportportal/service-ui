@@ -43,14 +43,7 @@ const OPTION_BLOCK_TAG_SECTION_OPEN = '.opblock-tag-section.is-open';
 const OPTION_BLOCK_TAG = '.opblock-tag';
 const OPTION_BLOCK_TAG_OPEN = '.opblock.is-open';
 const OPTION_BLOCK_SUMMARY = '.opblock-summary';
-const TOKEN_TYPE = {
-  BEARER: 'bearer',
-  APIKEY: 'apikey', // TODO check this value after apikey authorisation implementation
-};
-const SECURITY_SCHEMES_KEYS_NAME = {
-  BEARER: 'bearerAuth',
-  APIKEY: 'api_key',
-};
+const SECURITY_SCHEMES_BEARER_NAME = 'bearerAuth';
 
 @connect((state) => ({
   tokenType: tokenTypeSelector(state),
@@ -74,11 +67,7 @@ export class ApiPage extends Component {
   };
 
   onSwaggerRendering = (system) => {
-    if (this.props.tokenType === TOKEN_TYPE.BEARER) {
-      system.preauthorizeApiKey(SECURITY_SCHEMES_KEYS_NAME.BEARER, this.props.tokenValue);
-    } else if (this.props.tokenType === TOKEN_TYPE.APIKEY) {
-      system.preauthorizeApiKey(SECURITY_SCHEMES_KEYS_NAME.APIKEY, this.props.tokenValue);
-    }
+    system.preauthorizeApiKey(SECURITY_SCHEMES_BEARER_NAME, this.props.tokenValue);
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.apiPageTitle) }];
