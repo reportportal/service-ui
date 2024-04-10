@@ -31,10 +31,7 @@ import {
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Button } from 'componentLibrary/button';
-import { Checkbox } from 'componentLibrary/checkbox';
-import { withTooltip } from 'componentLibrary/tooltip';
 import {
   fetchProjectNotificationsAction,
   updateNotificationStateAction,
@@ -42,10 +39,13 @@ import {
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
+import plusIcon from 'common/img/plus-button-inline.svg';
+import { notificationPluginsSelector } from 'controllers/plugins/selectors';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { docsReferences, createExternalLink } from 'common/utils';
+import { Toggle } from 'componentLibrary/toggle';
+
 import {
   RuleList,
   FieldElement,
@@ -61,6 +61,8 @@ import styles from './notifications.scss';
 import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
+import { EmptyRuleState } from './emptyRuleState';
+import { Footer } from './footer';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
@@ -70,11 +72,8 @@ TooltipComponent.propTypes = {
   tooltip: PropTypes.string.isRequired,
 };
 
-const ButtonWithTooltip = withTooltip({
-  ContentComponent: TooltipComponent,
-})(Button);
-
-export const Notifications = ({ setHeaderTitleNode }) => {
+export const Notifications = () => {
+  const allNotificationPlugins = useSelector(notificationPluginsSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -183,31 +182,6 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     );
   };
 
-  useEffect(() => {
-    if (notifications.length > 0) {
-      setHeaderTitleNode(
-        <span className={cx('button')}>
-          {isAbleToEdit() ? (
-            <Button onClick={onAdd} dataAutomationId="createNotificationRuleButton">
-              {formatMessage(messages.create)}
-            </Button>
-          ) : (
-            <ButtonWithTooltip
-              disabled
-              mobileDisabled
-              tooltip={formatMessage(messages.notConfiguredNotificationTooltip)}
-              dataAutomationId="createNotificationRuleButton"
-            >
-              {formatMessage(messages.create)}
-            </ButtonWithTooltip>
-          )}
-        </span>,
-      );
-    }
-
-    return () => setHeaderTitleNode(null);
-  }, [notifications]);
-
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
 
@@ -244,69 +218,93 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     }
   };
 
-  const handleDocumentationClick = () => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.clickDocumentationLink('no_notifications'));
-  };
-
   if (loading) {
     return <SpinningPreloader />;
   }
+  // separate notifications by types
+  const notificationRulesByTypes = Object.groupBy(notifications, (rule) => rule.type);
 
   return (
-    <>
-      {notifications.length ? (
-        <SettingsPageContent>
-          <Layout
-            description={
-              <FormattedDescription
-                content={formatMessage(messages.tabDescription, {
-                  a: (data) => createExternalLink(data, docsReferences.notificationsDocs),
-                })}
-                event={PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.clickDocumentationLink()}
-              />
-            }
-          >
+    <SettingsPageContent>
+      <Layout
+        description={<FormattedDescription content={formatMessage(messages.tabDescription)} />}
+      >
+        <FieldElement
+          withoutProvider
+          description={formatMessage(messages.toggleNote)}
+          dataAutomationId="notificationsEnabledCheckbox"
+        >
+          <div className={cx('toggle')}>
+            <Toggle
+              disabled={isReadOnly}
+              value={enabled}
+              onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+              dataAutomationId="enabledToggle"
+            >
+              <span className={cx('name-wrapper')}>
+                <i className={cx('name')}> {formatMessage(messages.allNotifications)}</i>
+              </span>
+            </Toggle>
+          </div>
+        </FieldElement>
+      </Layout>
+      {/* render extension: including name, description and subRules */}
+      {allNotificationPlugins.map((item, id) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div className={cx('rule-section')} key={`rule-section-${id}`}>
+          <Layout description={''}>
             <FieldElement
               withoutProvider
-              description={formatMessage(messages.toggleNote)}
-              dataAutomationId="notificationsEnabledCheckbox"
+              description={formatMessage(messages.typeDescription, { type: item.name })}
             >
-              <Checkbox
-                disabled={isReadOnly}
-                value={enabled}
-                onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
-              >
-                {formatMessage(messages.toggleLabel)}
-              </Checkbox>
+              <div className={cx('toggle')}>
+                <Toggle
+                  disabled={isReadOnly}
+                  value={enabled}
+                  onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+                  dataAutomationId="enabledToggle"
+                >
+                  <span className={cx('name-wrapper')}>
+                    <i className={cx('types-name')}> {item.name}</i>
+                  </span>
+                </Toggle>
+              </div>
             </FieldElement>
+            <div className={cx('notifications-container')}>
+              {/* notification rules for each extension */}
+              {notificationRulesByTypes[item.name]?.length > 0 ? (
+                <>
+                  {/* Add disabled/noneIntegration case */}
+                  <RuleList
+                    disabled={isReadOnly}
+                    data={notificationRulesByTypes[item.name].map((rule) => ({
+                      name: rule.ruleName,
+                      ...rule,
+                    }))}
+                    actions={actions}
+                    onToggle={onToggleHandler}
+                    ruleItemContent={NotificationRuleContent}
+                    handleRuleItemClick={handleRuleItemClick}
+                    dataAutomationId="notificationsRulesList"
+                  />
+                  <Button
+                    customClassName={cx('add-rule')}
+                    onClick={onAdd}
+                    variant={'text'}
+                    startIcon={plusIcon}
+                  >
+                    {formatMessage(messages.addRule)}
+                  </Button>
+                </>
+              ) : (
+                <EmptyRuleState ruleName={item.name} onCreateClick={handleRuleItemClick} />
+              )}
+            </div>
           </Layout>
-          <div className={cx('notifications-container')}>
-            <RuleList
-              disabled={isReadOnly}
-              data={notifications.map((item) => ({ name: item.ruleName, ...item }))}
-              actions={actions}
-              onToggle={onToggleHandler}
-              ruleItemContent={NotificationRuleContent}
-              handleRuleItemClick={handleRuleItemClick}
-              dataAutomationId="notificationsRulesList"
-            />
-          </div>
-        </SettingsPageContent>
-      ) : (
-        <EmptyStatePage
-          title={formatMessage(messages.noItemsMessage)}
-          description={formatMessage(messages.notificationsInfo)}
-          buttonName={formatMessage(messages.create)}
-          buttonTooltip={isReadOnly && formatMessage(messages.notConfiguredNotificationTooltip)}
-          buttonDataAutomationId="createNotificationRuleButton"
-          documentationLink={docsReferences.emptyStateNotificationsDocs}
-          disableButton={isReadOnly}
-          handleButton={onAdd}
-          handleDocumentationClick={handleDocumentationClick}
-          imageType="bell"
-        />
-      )}
-    </>
+        </div>
+      ))}
+      <Footer />
+    </SettingsPageContent>
   );
 };
 Notifications.propTypes = {
