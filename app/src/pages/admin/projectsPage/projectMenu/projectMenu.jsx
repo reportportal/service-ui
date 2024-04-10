@@ -30,10 +30,13 @@ import {
   deleteProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
+import { fetchProjectSuccessAction } from 'controllers/project';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { navigateToProjectSettingsAction } from 'controllers/administrate/projects/actionCreators';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { messages } from '../messages';
 
 @connect(
@@ -48,6 +51,7 @@ import { messages } from '../messages';
     deleteProject: deleteProjectAction,
     navigateToProjectSection: navigateToProjectSectionAction,
     navigateToProjectSettings: navigateToProjectSettingsAction,
+    fetchProjectSuccess: fetchProjectSuccessAction,
   },
 )
 @injectIntl
@@ -60,6 +64,7 @@ export class ProjectMenu extends Component {
     userId: PropTypes.string.isRequired,
     navigateToProjectSection: PropTypes.func.isRequired,
     navigateToProjectSettings: PropTypes.func.isRequired,
+    fetchProjectSuccess: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
@@ -154,14 +159,21 @@ export class ProjectMenu extends Component {
     ];
   };
 
+  navigateWithFetchProject = (projectKey, payload, path) => {
+    fetch(URLS.projectByName(projectKey)).then((project) => {
+      this.props.fetchProjectSuccess(project);
+      this.props.navigateToProjectSection(payload, path);
+    });
+  };
+
   navigateToMembers = () => {
     const {
       tracking: { trackEvent },
-      project: { organizationSlug, projectSlug },
+      project: { organizationSlug, projectSlug, projectKey },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
-    this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MEMBERS);
+    this.navigateWithFetchProject(projectKey, { organizationSlug, projectSlug }, MEMBERS);
   };
 
   navigateToSettings = () => {
@@ -177,11 +189,11 @@ export class ProjectMenu extends Component {
   navigateToEventsMonitoring = () => {
     const {
       tracking: { trackEvent },
-      project: { organizationSlug, projectSlug },
+      project: { organizationSlug, projectSlug, projectKey },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CLICK_EVENT_MONITORING);
-    this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MONITORING);
+    this.navigateWithFetchProject(projectKey, { organizationSlug, projectSlug }, MONITORING);
   };
 
   render() {

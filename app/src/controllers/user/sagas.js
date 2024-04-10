@@ -20,6 +20,7 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_PROJECT,
@@ -127,9 +128,10 @@ function* fetchUserWorker() {
     yield put(fetchUserErrorAction());
     return;
   }
+  const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
   const userSettings = getStorageItem(`${userId}_settings`) || {};
-  const { activeProject: savedActiveProject } = userSettings ?? {};
+  const savedActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
   const { organizationSlug: savedOrganizationSlug, projectSlug: savedProjectSlug } =
     savedActiveProject || {};
 
