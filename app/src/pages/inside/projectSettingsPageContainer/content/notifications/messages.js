@@ -98,6 +98,10 @@ export const messages = defineMessages({
     id: 'AddNewCaseButton.addNewRuleButton',
     defaultMessage: 'Create Rule',
   },
+  addRule: {
+    id: 'AddNewCaseButton.addRule',
+    defaultMessage: 'Add Rule',
+  },
   notConfiguredNotificationTooltip: {
     id: 'ButtonTooltip.notConfiguredNotificationTooltip',
     defaultMessage: `Email Server is not configured. Please contact Instance Administrator.`,
@@ -108,7 +112,7 @@ export const messages = defineMessages({
   },
   toggleNote: {
     id: 'NotificationsEnableForm.toggleNotificationsNote',
-    defaultMessage: 'Send email notifications on launch finish',
+    defaultMessage: 'Toggle to enable or disable all notifications for the application.',
   },
   title: {
     id: 'NotificationsEnableForm.title',
@@ -117,6 +121,31 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'NotificationsEnableForm.tabDescription',
     defaultMessage:
-      'Create Email Notification rules and enable Auto Email Notifications to receive emails on a launch finish event. More information about E-mail Notifications you can read in <a>Documentation</a>',
+      'Manage your launch related notifications for different communication channels: Email, Slack, Teams, etc. ',
+  },
+  allNotifications: {
+    id: 'NotificationsEnableForm.allNotifications',
+    defaultMessage: 'All notifications',
+  },
+  typeDescription: {
+    id: 'NotificationsEnableForm.typeDescription',
+    defaultMessage:
+      'Select {type} recipients list for every rule to send launch related notifications ',
+  },
+  discoverPlugins: {
+    id: 'NotificationsEnableForm.discoverPlugins',
+    defaultMessage: 'Discover plugins',
+  },
+  discoverPluginsDescription: {
+    id: 'NotificationsEnableForm.discoverPluginsDescription',
+    defaultMessage: 'Learn more about available plugins to extend notifying functionality',
+  },
+  integrationSettings: {
+    id: 'NotificationsEnableForm.integrationSettings',
+    defaultMessage: 'Integration settings',
+  },
+  integrationSettingsDescription: {
+    id: 'NotificationsEnableForm.integrationSettingsDescription',
+    defaultMessage: 'Configure the connection of plugins with servers',
   },
 });
