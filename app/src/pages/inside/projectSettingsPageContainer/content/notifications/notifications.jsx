@@ -230,6 +230,7 @@ export const Notifications = () => {
         description={<FormattedDescription content={formatMessage(messages.tabDescription)} />}
       >
         <FieldElement
+          className={cx('fieldElement')}
           withoutProvider
           description={formatMessage(messages.toggleNote)}
           dataAutomationId="notificationsEnabledCheckbox"
@@ -254,6 +255,7 @@ export const Notifications = () => {
         <div className={cx('rule-section')} key={`rule-section-${id}`}>
           <Layout description={''}>
             <FieldElement
+              className={cx('fieldElement')}
               withoutProvider
               description={formatMessage(messages.typeDescription, { type: item.name })}
             >

@@ -40,14 +40,14 @@
   text-overflow: ellipsis;
 }
 
-FieldElement {
+.fieldElement {
   display: flex;
   flex-direction: column;
   gap: 4px;
   height: 44px;
 }
 
-Toggle {
+.toggle {
   gap: 8px;
   height: 24px;
 }
