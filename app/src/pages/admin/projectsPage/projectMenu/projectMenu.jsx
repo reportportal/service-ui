@@ -159,6 +159,13 @@ export class ProjectMenu extends Component {
     ];
   };
 
+  navigateWithFetchProject = (projectKey, payload, path) => {
+    fetch(URLS.projectByName(projectKey)).then((project) => {
+      this.props.fetchProjectSuccess(project);
+      this.props.navigateToProjectSection(payload, path);
+    });
+  };
+
   navigateToMembers = () => {
     const {
       tracking: { trackEvent },
@@ -166,10 +173,7 @@ export class ProjectMenu extends Component {
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
-    fetch(URLS.projectByName(projectKey)).then((project) => {
-      this.props.fetchProjectSuccess(project);
-      this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MEMBERS);
-    });
+    this.navigateWithFetchProject(projectKey, { organizationSlug, projectSlug }, MEMBERS);
   };
 
   navigateToSettings = () => {
@@ -189,10 +193,7 @@ export class ProjectMenu extends Component {
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CLICK_EVENT_MONITORING);
-    fetch(URLS.projectByName(projectKey)).then((project) => {
-      this.props.fetchProjectSuccess(project);
-      this.props.navigateToProjectSection({ organizationSlug, projectSlug }, MONITORING);
-    });
+    this.navigateWithFetchProject(projectKey, { organizationSlug, projectSlug }, MONITORING);
   };
 
   render() {
