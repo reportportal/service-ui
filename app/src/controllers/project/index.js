@@ -43,7 +43,7 @@ export {
   addProjectNotificationAction,
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
-  setActiveProjectInfoKeyAction,
+  fetchProjectSuccessAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

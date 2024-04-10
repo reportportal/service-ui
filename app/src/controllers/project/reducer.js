@@ -35,7 +35,6 @@ import {
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
-  SET_ACTIVE_PROJECT_INFO_KEY,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
 } from './constants';
 
@@ -124,11 +123,6 @@ export const projectInfoReducer = (
           ...state.configuration,
           patterns: state.configuration.patterns.filter((pattern) => pattern.id !== payload.id),
         },
-      };
-    case SET_ACTIVE_PROJECT_INFO_KEY:
-      return {
-        ...state,
-        ...payload,
       };
     default:
       return state;
