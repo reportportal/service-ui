@@ -1,0 +1,61 @@
+.help-panel-container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding-top: 24px;
+  min-height: 84px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+
+  .info-item {
+    display: flex;
+    gap: 16px;
+    width: 300px;
+
+    .main-item-icon {
+      width: 32px;
+      height: 32px;
+      background-color: $COLOR--bg-000;
+      border-radius: 8px;
+      box-shadow: 0px 1px 3px 0px $COLOR--item-shadow-hover;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .item-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 240px;
+
+      .item-title {
+        font-size: 13px;
+        line-height: 20px;
+        font-family: $FONT-ROBOTO-MEDIUM;
+        color: $COLOR--topaz-2;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 22px;
+      }
+
+      p {
+        font-size: 11px;
+        line-height: 16px;
+        font-family: $FONT-ROBOTO-REGULAR;
+        color: $COLOR--e-300;
+      }
+    }
+  }
+}
+
+.icon > svg,
+.icon {
+  width: 16px;
+  height: 16px;
+}
+.icon > svg > * {
+  fill: $COLOR--e-300;
+}
