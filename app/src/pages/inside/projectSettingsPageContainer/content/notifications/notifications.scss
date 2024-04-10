@@ -19,7 +19,7 @@
   width: 100%;
   max-width: initial;
 
-  & [class*='ruleItem'] {
+  & .contentItems>div {
     max-width: initial;
   }
 }
