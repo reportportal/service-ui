@@ -151,7 +151,7 @@ export class ModalLayout extends Component {
   closeModalWithOk = () => {
     const { closeConfirmation } = this.props;
     if (closeConfirmation?.confirmSubmit) {
-      this.closeModalWithConfirmation();
+      this.closeModal();
     } else {
       this.setState({ shown: false });
     }
