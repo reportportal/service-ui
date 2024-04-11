@@ -23,24 +23,18 @@ import styles from './organizationsBlock.scss';
 const cx = classNames.bind(styles);
 
 export const OrganizationsBlock = ({
-  openNavbar,
-  openPopover,
   onHoverOrganization,
   onClearOrganization,
   isHoveredOrganization,
+  onClick,
 }) => {
   const organizationName = useSelector(organizationNameSelector);
   const title = `${organizationName[0]}${organizationName[organizationName.length - 1]}`;
 
-  const onOpenNavbar = () => {
-    openPopover();
-    openNavbar();
-  };
-
   return (
     <button
       className={cx('organization-block', { hover: isHoveredOrganization })}
-      onClick={onOpenNavbar}
+      onClick={onClick}
       onMouseEnter={onHoverOrganization}
       onMouseLeave={onClearOrganization}
     >
@@ -50,9 +44,8 @@ export const OrganizationsBlock = ({
 };
 
 OrganizationsBlock.propTypes = {
-  openNavbar: PropTypes.func.isRequired,
-  openPopover: PropTypes.func.isRequired,
   onHoverOrganization: PropTypes.func.isRequired,
   onClearOrganization: PropTypes.func.isRequired,
   isHoveredOrganization: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };

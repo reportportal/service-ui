@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { useOnClickOutside } from 'common/hooks';
 import { Navbar } from './navbar';
 import { SidebarButton } from './sidebarButton';
 import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
-const DELAY_NAVBAR_APPEARANCE = 500;
 const HOVER = 'hover';
 const ACTIVE = 'active';
 
@@ -41,26 +39,21 @@ export const Sidebar = ({
 
   const [actionButtonKey, setActionButtonKey] = useState(null);
   const [actionButtonType, setActionButtonType] = useState(null);
-
-  const asideRef = useRef(null);
-  let asideTimer;
-
-  const handleClickOutside = () => {
-    if (isOpenNavbar && !isOpenNavbarPopover) {
-      setIsOpenNavbar(false);
-    }
-  };
-
-  useOnClickOutside(asideRef, handleClickOutside);
+  const [isImmediatelyOpenSidebar, setIsImmediatelyOpenSidebar] = useState(false);
 
   const onOpenSidebar = () => {
-    asideTimer = setTimeout(() => {
-      setIsOpenNavbar(true);
-    }, DELAY_NAVBAR_APPEARANCE);
+    setIsOpenNavbar(true);
   };
 
   const onCloseSidebar = () => {
-    clearTimeout(asideTimer);
+    if (!isOpenNavbarPopover) {
+      setIsOpenNavbar(false);
+      setIsImmediatelyOpenSidebar(false);
+    }
+  };
+
+  const onImmediatelyOpenSidebar = () => {
+    setIsImmediatelyOpenSidebar(true);
   };
 
   const onCloseNavbar = () => {
@@ -73,7 +66,6 @@ export const Sidebar = ({
 
   const onButtonClick = (onClick) => {
     onClick();
-    clearTimeout(asideTimer);
     onCloseNavbar();
   };
 
@@ -102,12 +94,18 @@ export const Sidebar = ({
   };
 
   return (
-    <div className={cx('sidebar-container')} ref={asideRef}>
-      <aside className={cx('sidebar')} onMouseEnter={onOpenSidebar} onMouseLeave={onCloseSidebar}>
+    <div
+      className={cx('sidebar-container')}
+      onMouseEnter={onOpenSidebar}
+      onMouseLeave={onCloseSidebar}
+    >
+      <aside className={cx('sidebar')}>
         <div className={cx('logo')}>
           <i>{Parser(logoBlockIcon)}</i>
         </div>
-        <div className={cx('main-block')}>{createMainBlock(onOpenNavbar)}</div>
+        <div className={cx('main-block')}>
+          {createMainBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
+        </div>
         {topSidebarItems.length > 0 && (
           <div className={cx('top-block')}>
             {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
@@ -140,7 +138,9 @@ export const Sidebar = ({
             ))}
           </div>
         )}
-        <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
+        <div className={cx('footer-block')}>
+          {createFooterBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
+        </div>
       </aside>
       <Navbar
         active={isOpenNavbar}
@@ -150,6 +150,7 @@ export const Sidebar = ({
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
         setActiveType={setActiveType}
+        isImmediatelyOpenSidebar={isImmediatelyOpenSidebar}
         {...navbarProps}
       />
     </div>
