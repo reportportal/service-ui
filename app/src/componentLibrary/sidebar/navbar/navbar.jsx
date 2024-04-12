@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { useEffect } from 'react';
 import { SidebarButton } from '../sidebarButton';
 import styles from './navbar.scss';
 
@@ -35,67 +36,76 @@ export const Navbar = ({
   setHoverType,
   clearActionButton,
   setActiveType,
+  setIsImmediatelyOpenSidebar,
   isImmediatelyOpenSidebar,
-}) => (
-  <div
-    className={cx('navbar', {
-      active,
-      quickly: active === false,
-      immediately: isImmediatelyOpenSidebar,
-    })}
-  >
-    {logoControlIcon && (
-      <div className={cx('logo-wrapper')}>
-        <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
-      </div>
-    )}
-    <div className={cx('main-block')}>
-      {createMainControlBlock(onCloseNavbar, setIsOpenPopover)}
-    </div>
-    {topSidebarControlItems.length > 0 && (
-      <div className={cx('top-block')}>
-        {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
-          <SidebarButton
-            key={key}
-            className={cx('navbar-btn', getClassName(key))}
-            onClick={() => {
-              onClick();
-              onCloseNavbar();
-            }}
-            onMouseEnter={() => setHoverType(key)}
-            onMouseLeave={clearActionButton}
-            onMouseDown={() => setActiveType(key)}
-          >
-            {sidebarBlockItem}
-          </SidebarButton>
-        ))}
-      </div>
-    )}
-    {bottomSidebarControlItems.length > 0 && (
-      <div className={cx('bottom-block')}>
-        {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
-          <SidebarButton
-            key={key}
-            className={cx('navbar-btn', getClassName(key))}
-            onClick={() => {
-              onClick();
-              onCloseNavbar();
-            }}
-            onMouseEnter={() => setHoverType(key)}
-            onMouseLeave={clearActionButton}
-            onMouseDown={() => setActiveType(key)}
-          >
-            {bottomSidebarItem}
-          </SidebarButton>
-        ))}
-      </div>
-    )}
-    <div className={cx('bottom-block')}>
-      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover)}
-    </div>
-  </div>
-);
+  sidebarRef,
+}) => {
+  useEffect(() => {
+    if (isImmediatelyOpenSidebar) {
+      setIsImmediatelyOpenSidebar(false);
+    }
+  }, [isImmediatelyOpenSidebar, setIsImmediatelyOpenSidebar]);
 
+  return (
+    <div
+      className={cx('navbar', {
+        active,
+        quickly: active === false,
+        immediately: isImmediatelyOpenSidebar,
+      })}
+    >
+      {logoControlIcon && (
+        <div className={cx('logo-wrapper')}>
+          <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
+        </div>
+      )}
+      <div className={cx('main-block')}>
+        {createMainControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
+      </div>
+      {topSidebarControlItems.length > 0 && (
+        <div className={cx('top-block')}>
+          {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
+            <SidebarButton
+              key={key}
+              className={cx('navbar-btn', getClassName(key))}
+              onClick={() => {
+                onClick();
+                onCloseNavbar();
+              }}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
+            >
+              {sidebarBlockItem}
+            </SidebarButton>
+          ))}
+        </div>
+      )}
+      {bottomSidebarControlItems.length > 0 && (
+        <div className={cx('bottom-block')}>
+          {bottomSidebarControlItems.map(({ bottomSidebarItem, key, onClick }) => (
+            <SidebarButton
+              key={key}
+              className={cx('navbar-btn', getClassName(key))}
+              onClick={() => {
+                onClick();
+                onCloseNavbar();
+              }}
+              onMouseEnter={() => setHoverType(key)}
+              onMouseLeave={clearActionButton}
+              onMouseDown={() => setActiveType(key)}
+            >
+              {bottomSidebarItem}
+            </SidebarButton>
+          ))}
+        </div>
+      )}
+      <div className={cx('bottom-block')}>
+        {createFooterControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
+      </div>
+    </div>
+  );
+};
 Navbar.propTypes = {
   active: PropTypes.bool,
   topSidebarControlItems: PropTypes.array,
@@ -110,6 +120,8 @@ Navbar.propTypes = {
   clearActionButton: PropTypes.func.isRequired,
   setActiveType: PropTypes.func.isRequired,
   isImmediatelyOpenSidebar: PropTypes.bool,
+  setIsImmediatelyOpenSidebar: PropTypes.func.isRequired,
+  sidebarRef: PropTypes.element.isRequired,
 };
 
 Navbar.defaultProps = {

@@ -54,6 +54,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
   const [isHoveredOrganization, setIsHoveredOrganization] = useState(false);
+  const [isTogglePopover, setIsTogglePopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
@@ -173,13 +174,18 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       isHoveredOrganization={isHoveredOrganization}
       onClick={() => {
         openNavbar();
-        setIsOpenOrganizationPopover(true);
         onImmediatelyOpenSidebar();
+        if (isTogglePopover) {
+          setIsTogglePopover(false);
+        } else {
+          setIsOpenOrganizationPopover(true);
+          setIsTogglePopover(true);
+        }
       }}
     />
   );
 
-  const createMainControlBlock = (closeNavbar, setIsOpenPopover) => (
+  const createMainControlBlock = (closeNavbar, setIsOpenPopover, sidebarRef) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -188,6 +194,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       onHoverOrganization={onHoverOrganization}
       onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
+      wrapperParentRef={sidebarRef}
+      isTogglePopover={isTogglePopover}
+      setIsTogglePopover={setIsTogglePopover}
     />
   );
 

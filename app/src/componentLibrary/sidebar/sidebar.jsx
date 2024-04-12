@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -41,6 +41,8 @@ export const Sidebar = ({
   const [actionButtonType, setActionButtonType] = useState(null);
   const [isImmediatelyOpenSidebar, setIsImmediatelyOpenSidebar] = useState(false);
 
+  const sidebarRef = useRef(null);
+
   const onOpenSidebar = () => {
     setIsOpenNavbar(true);
   };
@@ -56,17 +58,13 @@ export const Sidebar = ({
     setIsImmediatelyOpenSidebar(true);
   };
 
-  const onCloseNavbar = () => {
+  const closeSidebarClickingOutside = () => {
     setIsOpenNavbar(false);
-  };
-
-  const onOpenNavbar = () => {
-    setIsOpenNavbar(true);
   };
 
   const onButtonClick = (onClick) => {
     onClick();
-    onCloseNavbar();
+    onCloseSidebar();
   };
 
   const setHoverType = (key) => {
@@ -95,6 +93,7 @@ export const Sidebar = ({
 
   return (
     <div
+      ref={sidebarRef}
       className={cx('sidebar-container')}
       onMouseEnter={onOpenSidebar}
       onMouseLeave={onCloseSidebar}
@@ -104,7 +103,7 @@ export const Sidebar = ({
           <i>{Parser(logoBlockIcon)}</i>
         </div>
         <div className={cx('main-block')}>
-          {createMainBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
+          {createMainBlock(onOpenSidebar, onImmediatelyOpenSidebar)}
         </div>
         {topSidebarItems.length > 0 && (
           <div className={cx('top-block')}>
@@ -139,18 +138,20 @@ export const Sidebar = ({
           </div>
         )}
         <div className={cx('footer-block')}>
-          {createFooterBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
+          {createFooterBlock(onOpenSidebar, onImmediatelyOpenSidebar)}
         </div>
       </aside>
       <Navbar
         active={isOpenNavbar}
-        onCloseNavbar={onCloseNavbar}
+        onCloseNavbar={closeSidebarClickingOutside}
         setIsOpenPopover={setIsOpenNavbarPopover}
         getClassName={getClassName}
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
         setActiveType={setActiveType}
         isImmediatelyOpenSidebar={isImmediatelyOpenSidebar}
+        setIsImmediatelyOpenSidebar={setIsImmediatelyOpenSidebar}
+        sidebarRef={sidebarRef}
         {...navbarProps}
       />
     </div>

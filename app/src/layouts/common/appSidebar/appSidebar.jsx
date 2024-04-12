@@ -46,6 +46,7 @@ export const AppSidebar = ({
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
   const [isHoveredUser, setIsHoveredUser] = useState(false);
+  const [isTogglePopover, setIsTogglePopover] = useState(false);
 
   const onHoverUser = () => {
     setIsHoveredUser(true);
@@ -61,8 +62,13 @@ export const AppSidebar = ({
       <UserAvatar
         onClick={() => {
           openNavbar();
-          setIsOpenAvatarPopover(true);
           onImmediatelyOpenSidebar();
+          if (isTogglePopover) {
+            setIsTogglePopover(false);
+          } else {
+            setIsOpenAvatarPopover(true);
+            setIsTogglePopover(true);
+          }
         }}
         onHoverUser={onHoverUser}
         onClearUser={onClearUser}
@@ -71,7 +77,7 @@ export const AppSidebar = ({
     </>
   );
 
-  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover) => (
+  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover, sidebarRef) => (
     <>
       <div className={cx('policy-control')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
@@ -84,6 +90,9 @@ export const AppSidebar = ({
           setIsOpenPopover={setIsOpenPopover}
           isOpenPopover={isOpenAvatarPopover}
           closePopover={() => setIsOpenAvatarPopover(false)}
+          wrapperParentRef={sidebarRef}
+          isTogglePopover={isTogglePopover}
+          setIsTogglePopover={setIsTogglePopover}
         />
       </div>
     </>
