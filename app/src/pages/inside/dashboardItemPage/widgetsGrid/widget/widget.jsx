@@ -346,6 +346,7 @@ export class SimpleWidget extends Component {
       const {
         widget: { id },
       } = this.state;
+
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
         provideEcGA({
