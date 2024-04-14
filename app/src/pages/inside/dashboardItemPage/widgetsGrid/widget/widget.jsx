@@ -342,9 +342,9 @@ export class SimpleWidget extends Component {
 
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     const onConfirm = () => {
-      const { widgetId, activeDashboardId } = this.props;
+      const { widgetId, activeDashboardId, widgetType } = this.props;
       const {
-        widget: { id, widgetType },
+        widget: { id },
       } = this.state;
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
