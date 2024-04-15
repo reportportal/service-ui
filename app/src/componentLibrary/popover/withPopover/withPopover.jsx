@@ -51,9 +51,8 @@ export const withPopover = ({
   const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
 
   return (
-    <>
+    <div ref={parentRef}>
       <button
-        ref={parentRef}
         className={cx('with-popover', popoverWrapperClassName)}
         onClick={onClickHandle}
         tabIndex={tabIndex ?? -1}
@@ -65,6 +64,6 @@ export const withPopover = ({
           <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
-    </>
+    </div>
   );
 };
