@@ -31,7 +31,6 @@ export const withPopover = ({
 }) => (WrappedComponent) => ({
   isOpenPopover,
   togglePopover,
-  isTogglePopover,
   setIsOpenPopover,
   closeNavbar,
   wrapperParentRef,
@@ -53,7 +52,7 @@ export const withPopover = ({
   };
 
   const onClickHandle = () => {
-    if (isTogglePopover) {
+    if (togglePopover) {
       togglePopover((prev) => !prev);
     } else {
       setOpened(true);

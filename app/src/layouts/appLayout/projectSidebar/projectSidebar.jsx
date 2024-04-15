@@ -188,7 +188,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
       wrapperParentRef={sidebarRef}
-      isTogglePopover
     />
   );
 

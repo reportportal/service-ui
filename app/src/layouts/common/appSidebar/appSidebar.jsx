@@ -84,7 +84,6 @@ export const AppSidebar = ({
           isOpenPopover={isOpenAvatarPopover}
           togglePopover={setIsOpenAvatarPopover}
           wrapperParentRef={sidebarRef}
-          isTogglePopover
         />
       </div>
     </>
