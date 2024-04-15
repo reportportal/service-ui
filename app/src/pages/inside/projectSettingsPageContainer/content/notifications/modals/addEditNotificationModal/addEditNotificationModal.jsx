@@ -405,6 +405,7 @@ const AddEditNotificationModal = ({
 };
 AddEditNotificationModal.propTypes = {
   data: PropTypes.shape({
+    type: PropTypes.string,
     notification: PropTypes.object,
     notifications: PropTypes.array,
     onSave: PropTypes.func,
