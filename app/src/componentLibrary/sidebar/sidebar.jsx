@@ -33,7 +33,7 @@ export const Sidebar = ({
   topSidebarItems,
   bottomSidebarItems,
   createFooterBlock,
-  isOpenPopover,
+  shouldBeCollapsedOnLeave,
   ...navbarProps
 }) => {
   const [isOpenNavbar, setIsOpenNavbar] = useState(false);
@@ -43,9 +43,13 @@ export const Sidebar = ({
 
   const sidebarRef = useRef(null);
 
+  const onCloseNavbar = () => {
+    setIsOpenNavbar(false);
+  };
+
   const handleClickOutside = useCallback(() => {
     if (isOpenNavbar) {
-      setIsOpenNavbar(false);
+      onCloseNavbar();
     }
   }, [isOpenNavbar]);
 
@@ -55,14 +59,10 @@ export const Sidebar = ({
     setIsOpenNavbar(true);
   };
 
-  const onCloseSidebar = () => {
-    if (!isOpenPopover) {
-      setIsOpenNavbar(false);
+  const onLeaveNavbar = () => {
+    if (!shouldBeCollapsedOnLeave) {
+      onCloseNavbar();
     }
-  };
-
-  const onCloseNavbar = () => {
-    setIsOpenNavbar(false);
   };
 
   const onButtonClick = (onClick) => {
@@ -99,7 +99,7 @@ export const Sidebar = ({
       ref={sidebarRef}
       className={cx('sidebar-container')}
       onMouseEnter={onOpenNavbar}
-      onMouseLeave={onCloseSidebar}
+      onMouseLeave={onLeaveNavbar}
     >
       <aside className={cx('sidebar')}>
         <div className={cx('logo')}>
@@ -159,7 +159,7 @@ Sidebar.propTypes = {
   logoBlockIcon: PropTypes.element,
   createMainBlock: PropTypes.element,
   createFooterBlock: PropTypes.func,
-  isOpenPopover: PropTypes.bool,
+  shouldBeCollapsedOnLeave: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
@@ -167,6 +167,6 @@ Sidebar.defaultProps = {
   createMainBlock: null,
   topSidebarItems: [],
   bottomSidebarItems: [],
-  isOpenPopover: false,
+  shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
 };

@@ -42,7 +42,7 @@ export const Popover = ({
   const [left, setLeft] = useState(0);
   const isNotDefaultTopPosition = !topPosition;
 
-  useOnClickOutside(popoverRef, onClose);
+  useOnClickOutside(parentRef, onClose);
 
   useLayoutEffect(() => {
     const { current: parent } = parentRef;

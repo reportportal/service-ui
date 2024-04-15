@@ -100,7 +100,7 @@ export const AppSidebar = ({
       bottomSidebarControlItems={bottomSidebarControlItems}
       createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
-      isOpenPopover={isOpenAvatarPopover || isOpenOrganizationPopover}
+      shouldBeCollapsedOnLeave={isOpenAvatarPopover || isOpenOrganizationPopover}
     />
   );
 };

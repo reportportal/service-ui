@@ -93,7 +93,7 @@
 
 .popover {
   max-height: calc(100% - 112px);
-  margin-left: 4px;
+  margin-left: -4px;
   padding: 8px 0;
 
   &::after {
