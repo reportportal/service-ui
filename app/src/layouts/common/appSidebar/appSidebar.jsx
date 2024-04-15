@@ -42,6 +42,7 @@ export const AppSidebar = ({
   bottomSidebarItems,
   topSidebarControlItems,
   bottomSidebarControlItems,
+  isOpenOrganizationPopover,
 }) => {
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
@@ -61,7 +62,7 @@ export const AppSidebar = ({
       <UserAvatar
         onClick={() => {
           openNavbar();
-          setIsOpenAvatarPopover(true);
+          setIsOpenAvatarPopover(!isOpenAvatarPopover);
         }}
         onHoverUser={onHoverUser}
         onClearUser={onClearUser}
@@ -70,7 +71,7 @@ export const AppSidebar = ({
     </>
   );
 
-  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover) => (
+  const createFooterControlBlock = (onCloseNavbar) => (
     <>
       <div className={cx('policy-control')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
@@ -80,9 +81,8 @@ export const AppSidebar = ({
       <div className={cx('user-control', { hover: isHoveredUser })}>
         <UserControlWithPopover
           closeNavbar={onCloseNavbar}
-          setIsOpenPopover={setIsOpenPopover}
           isOpenPopover={isOpenAvatarPopover}
-          closePopover={() => setIsOpenAvatarPopover(false)}
+          togglePopover={setIsOpenAvatarPopover}
         />
       </div>
     </>
@@ -100,6 +100,7 @@ export const AppSidebar = ({
       bottomSidebarControlItems={bottomSidebarControlItems}
       createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
+      shouldBeCollapsedOnLeave={!(isOpenAvatarPopover || isOpenOrganizationPopover)}
     />
   );
 };
@@ -111,6 +112,7 @@ AppSidebar.propTypes = {
   bottomSidebarControlItems: PropTypes.array,
   createMainControlBlock: PropTypes.func,
   createMainBlock: PropTypes.func,
+  isOpenOrganizationPopover: PropTypes.bool,
 };
 
 AppSidebar.defaultProps = {
@@ -118,6 +120,7 @@ AppSidebar.defaultProps = {
   bottomSidebarItems: [],
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
+  isOpenOrganizationPopover: false,
   createMainControlBlock: () => {},
   createMainBlock: () => {},
 };

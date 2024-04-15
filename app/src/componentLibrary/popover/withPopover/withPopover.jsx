@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react/prop-types */
+
+import React, { useRef, useState, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
@@ -26,44 +28,42 @@ export const withPopover = ({
   popoverWrapperClassName,
   tabIndex,
   ...popoverConfig
-}) => (
-  WrappedComponent,
-  // eslint-disable-next-line react/prop-types
-) => ({ isOpenPopover, closePopover, setIsOpenPopover, ...props }) => {
+}) => (WrappedComponent) => ({ isOpenPopover, togglePopover, ...props }) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
-  useEffect(() => {
-    if (isOpenPopover) {
-      setOpened(true);
-      setIsOpenPopover?.(true);
+  const onClose = useCallback(() => {
+    if (togglePopover) {
+      togglePopover(false);
+    } else {
+      setOpened(false);
     }
-  }, [isOpenPopover, setIsOpenPopover]);
+  }, [togglePopover, setOpened]);
 
-  const onClose = () => {
-    closePopover?.();
-    setIsOpenPopover?.(false);
-    setOpened(false);
+  const onClickHandle = () => {
+    if (togglePopover) {
+      togglePopover(!isOpenPopover);
+    } else {
+      setOpened(true);
+    }
   };
 
+  const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
+
   return (
-    <>
+    <div className={cx('with-popover-wrapper')} ref={parentRef}>
       <button
-        ref={parentRef}
         className={cx('with-popover', popoverWrapperClassName)}
-        onClick={() => {
-          setOpened(true);
-          setIsOpenPopover?.(true);
-        }}
+        onClick={onClickHandle}
         tabIndex={tabIndex ?? -1}
       >
-        <WrappedComponent isPopoverOpen={isOpened} {...props} />
+        <WrappedComponent isPopoverOpen={isPopoverOpened} {...props} />
       </button>
-      {isOpened && (
+      {isPopoverOpened && (
         <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
           <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
-    </>
+    </div>
   );
 };

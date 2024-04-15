@@ -173,17 +173,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       isHoveredOrganization={isHoveredOrganization}
       onClick={() => {
         openNavbar();
-        setIsOpenOrganizationPopover(true);
+        setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
     />
   );
 
-  const createMainControlBlock = (closeNavbar, setIsOpenPopover) => (
+  const createMainControlBlock = (closeNavbar) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
       isOpenPopover={isOpenOrganizationPopover}
-      closePopover={() => setIsOpenOrganizationPopover(false)}
-      setIsOpenPopover={setIsOpenPopover}
+      togglePopover={setIsOpenOrganizationPopover}
       onHoverOrganization={onHoverOrganization}
       onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
@@ -196,6 +195,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       createMainControlBlock={createMainControlBlock}
       topSidebarItems={topSidebarItems}
       topSidebarControlItems={topSidebarControlItems}
+      isOpenOrganizationPopover={isOpenOrganizationPopover}
     />
   );
 };

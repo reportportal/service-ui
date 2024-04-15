@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import { useOnClickOutside } from 'common/hooks';
 import { Navbar } from './navbar';
 import { SidebarButton } from './sidebarButton';
 import styles from './sidebar.scss';
@@ -32,26 +33,36 @@ export const Sidebar = ({
   topSidebarItems,
   bottomSidebarItems,
   createFooterBlock,
+  shouldBeCollapsedOnLeave,
   ...navbarProps
 }) => {
-  const [isOpenNavbarPopover, setIsOpenNavbarPopover] = useState(false);
   const [isOpenNavbar, setIsOpenNavbar] = useState(false);
 
   const [actionButtonKey, setActionButtonKey] = useState(null);
   const [actionButtonType, setActionButtonType] = useState(null);
 
+  const sidebarRef = useRef(null);
+
+  const onCloseNavbar = () => {
+    setIsOpenNavbar(false);
+  };
+
+  const handleClickOutside = useCallback(() => {
+    if (isOpenNavbar) {
+      onCloseNavbar();
+    }
+  }, [isOpenNavbar]);
+
+  useOnClickOutside(sidebarRef, handleClickOutside);
+
   const onOpenNavbar = () => {
     setIsOpenNavbar(true);
   };
 
-  const onCloseSidebar = () => {
-    if (!isOpenNavbarPopover) {
-      setIsOpenNavbar(false);
+  const onLeaveNavbar = () => {
+    if (shouldBeCollapsedOnLeave) {
+      onCloseNavbar();
     }
-  };
-
-  const onCloseNavbar = () => {
-    setIsOpenNavbar(false);
   };
 
   const onButtonClick = (onClick) => {
@@ -85,9 +96,10 @@ export const Sidebar = ({
 
   return (
     <div
+      ref={sidebarRef}
       className={cx('sidebar-container')}
       onMouseEnter={onOpenNavbar}
-      onMouseLeave={onCloseSidebar}
+      onMouseLeave={onLeaveNavbar}
     >
       <aside className={cx('sidebar')}>
         <div className={cx('logo')}>
@@ -131,7 +143,6 @@ export const Sidebar = ({
       <Navbar
         active={isOpenNavbar}
         onCloseNavbar={onCloseNavbar}
-        setIsOpenPopover={setIsOpenNavbarPopover}
         getClassName={getClassName}
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
@@ -148,6 +159,7 @@ Sidebar.propTypes = {
   logoBlockIcon: PropTypes.element,
   createMainBlock: PropTypes.element,
   createFooterBlock: PropTypes.func,
+  shouldBeCollapsedOnLeave: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
@@ -155,5 +167,6 @@ Sidebar.defaultProps = {
   createMainBlock: null,
   topSidebarItems: [],
   bottomSidebarItems: [],
+  shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
 };
