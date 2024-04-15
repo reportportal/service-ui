@@ -1027,7 +1027,6 @@
   "IntegrationsDescription.projectIntegrationResetDescription": "Ви впевнені, що хочете скинути налаштування до Глобальних Інтеграцій? Всі ваші проектні інтеграції будуть видалені без можливості відновлення.",
   "IntegrationsDescription.projectIntegrationText": "Інтеграції проекту створюються для кожного проекту",
   "IntegrationsDescription.projectIntegrationTitle": "Інтеграція проекту",
-  "IntegrationsDescription.resetToGlobalIntegrationsButton": "Скидання до глобальних інтеграцій",
   "IntegrationsDescription.settings": "Налаштування",
   "IntegrationsList.authorization": "Авторизація",
   "IntegrationsList.bts": "Системи відстеження помилок",

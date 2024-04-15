@@ -30,10 +30,6 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.noGlobalIntegrationsButtonAdd',
     defaultMessage: 'Add Project Integration',
   },
-  resetToGlobalIntegrationsButton: {
-    id: 'IntegrationsDescription.resetToGlobalIntegrationsButton',
-    defaultMessage: 'Reset to Global Integrations',
-  },
   backToIntegrations: {
     id: 'IntegrationsDescription.backToIntegrations',
     defaultMessage: 'Back to Integrations',
@@ -62,7 +58,7 @@ export const messages = defineMessages({
   },
   projectIntegrationReset: {
     id: 'IntegrationsDescription.projectIntegrationReset',
-    defaultMessage: 'Reset to Global Integration',
+    defaultMessage: 'Reset to Global Integrations',
   },
   projectIntegrationResetDescription: {
     id: 'IntegrationsDescription.projectIntegrationResetDescription',
