@@ -60,7 +60,7 @@ export const Sidebar = ({
   };
 
   const onLeaveNavbar = () => {
-    if (!shouldBeCollapsedOnLeave) {
+    if (shouldBeCollapsedOnLeave) {
       onCloseNavbar();
     }
   };
