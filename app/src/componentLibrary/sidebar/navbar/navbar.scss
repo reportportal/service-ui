@@ -30,14 +30,14 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  &:not(.active) {
+    transition-delay: 0s;
+  }
 }
 
 .active {
   transform: translateX(0);
-}
-
-.quickly {
-  transition-delay: 0s;
 }
 
 .logo-wrapper {

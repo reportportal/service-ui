@@ -36,12 +36,7 @@ export const Navbar = ({
   clearActionButton,
   setActiveType,
 }) => (
-  <div
-    className={cx('navbar', {
-      active,
-      quickly: active === false,
-    })}
-  >
+  <div className={cx('navbar', { active })}>
     {logoControlIcon && (
       <div className={cx('logo-wrapper')}>
         <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
