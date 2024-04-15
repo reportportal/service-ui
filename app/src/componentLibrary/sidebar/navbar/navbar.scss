@@ -30,6 +30,10 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  &:not(.active) {
+    transition-delay: 0s;
+  }
 }
 
 .active {
