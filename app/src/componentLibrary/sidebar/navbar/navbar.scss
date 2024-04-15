@@ -26,9 +26,14 @@
   background-color: $COLOR--darkmode-gray-450;
   transform: translateX(-100%);
   transition: transform 0.3s ease-out;
+  transition-delay: 0.5s;
   display: flex;
   flex-direction: column;
   gap: 32px;
+
+  &:not(.active) {
+    transition-delay: 0s;
+  }
 }
 
 .active {

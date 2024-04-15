@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { useOnClickOutside } from 'common/hooks';
 import { Navbar } from './navbar';
 import { SidebarButton } from './sidebarButton';
 import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
-const DELAY_NAVBAR_APPEARANCE = 500;
 const HOVER = 'hover';
 const ACTIVE = 'active';
 
@@ -42,38 +40,22 @@ export const Sidebar = ({
   const [actionButtonKey, setActionButtonKey] = useState(null);
   const [actionButtonType, setActionButtonType] = useState(null);
 
-  const asideRef = useRef(null);
-  let asideTimer;
-
-  const handleClickOutside = () => {
-    if (isOpenNavbar && !isOpenNavbarPopover) {
-      setIsOpenNavbar(false);
-    }
-  };
-
-  useOnClickOutside(asideRef, handleClickOutside);
-
-  const onOpenSidebar = () => {
-    asideTimer = setTimeout(() => {
-      setIsOpenNavbar(true);
-    }, DELAY_NAVBAR_APPEARANCE);
+  const onOpenNavbar = () => {
+    setIsOpenNavbar(true);
   };
 
   const onCloseSidebar = () => {
-    clearTimeout(asideTimer);
+    if (!isOpenNavbarPopover) {
+      setIsOpenNavbar(false);
+    }
   };
 
   const onCloseNavbar = () => {
     setIsOpenNavbar(false);
   };
 
-  const onOpenNavbar = () => {
-    setIsOpenNavbar(true);
-  };
-
   const onButtonClick = (onClick) => {
     onClick();
-    clearTimeout(asideTimer);
     onCloseNavbar();
   };
 
@@ -102,8 +84,12 @@ export const Sidebar = ({
   };
 
   return (
-    <div className={cx('sidebar-container')} ref={asideRef}>
-      <aside className={cx('sidebar')} onMouseEnter={onOpenSidebar} onMouseLeave={onCloseSidebar}>
+    <div
+      className={cx('sidebar-container')}
+      onMouseEnter={onOpenNavbar}
+      onMouseLeave={onCloseSidebar}
+    >
+      <aside className={cx('sidebar')}>
         <div className={cx('logo')}>
           <i>{Parser(logoBlockIcon)}</i>
         </div>
