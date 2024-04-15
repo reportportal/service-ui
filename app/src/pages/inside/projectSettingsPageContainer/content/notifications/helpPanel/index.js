@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,4 @@
  * limitations under the License.
  */
 
-import { OWNER } from 'common/constants/permissions';
-
-export const convertNotificationCaseForSubmission = (obj) => {
-  const {
-    id,
-    ruleName,
-    informOwner,
-    recipients,
-    sendCase,
-    launchNames = [],
-    attributes = [],
-    enabled = true,
-    attributesOperator,
-    type,
-  } = obj;
-  return {
-    id,
-    ruleName,
-    recipients: informOwner ? [...recipients, OWNER] : recipients,
-    sendCase,
-    launchNames,
-    attributes,
-    enabled,
-    attributesOperator,
-    type,
-  };
-};
+export { HelpPanel } from './helpPanel';

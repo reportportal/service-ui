@@ -23,13 +23,13 @@ import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import settingsIcon from 'common/img/settings-icon-inline.svg';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 
-import { HelpPanel } from 'components/panels/helpPanel';
+import { HelpPanel } from '../helpPanel';
 import styles from './footer.scss';
 import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-export const Footer = () => {
+export const NotificationsFooter = () => {
   const { formatMessage } = useIntl();
 
   const footerItems = [

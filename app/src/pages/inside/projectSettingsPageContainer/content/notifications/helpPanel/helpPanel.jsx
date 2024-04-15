@@ -25,24 +25,20 @@ const cx = classNames.bind(styles);
 export const HelpPanel = ({ items }) => {
   return (
     <div className={cx('help-panel-container')}>
-      {items &&
-        // eslint-disable-next-line react/prop-types
-        items.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={`info-item-${index}`} className={cx('info-item')}>
-            <span className={cx('main-item-icon')}>
-              <i className={cx('icon')}>{Parser(item.mainIcon)}</i>
-            </span>
-
-            <div className={cx('item-content-wrapper')}>
-              <a href={item.link} className={cx('item-title')} target={'_blank'}>
-                <span>{item.title}</span>
-                <i className={cx('icon')}>{Parser(item.openIcon)}</i>
-              </a>
-              <p>{item.description}</p>
-            </div>
+      {items?.map((item) => (
+        <div key={`info-item-${item.title}`} className={cx('info-item')}>
+          <span className={cx('main-item-icon')}>
+            <i className={cx('icon')}>{Parser(item.mainIcon)}</i>
+          </span>
+          <div className={cx('item-content-wrapper')}>
+            <a href={item.link} className={cx('item-title')} target={'_blank'}>
+              <span>{item.title}</span>
+              <i className={cx('icon')}>{Parser(item.openIcon)}</i>
+            </a>
+            <p>{item.description}</p>
           </div>
-        ))}
+        </div>
+      ))}
     </div>
   );
 };

@@ -88,7 +88,7 @@ export const messages = defineMessages({
   },
   noItemsMessage: {
     id: 'NoCasesBlock.noItemsMessage',
-    defaultMessage: 'No Email Notification Rules',
+    defaultMessage: 'No {ruleName} notification rules yet',
   },
   notificationsInfo: {
     id: 'NoCasesBlock.notificationsInfo',
@@ -147,5 +147,13 @@ export const messages = defineMessages({
   integrationSettingsDescription: {
     id: 'NotificationsEnableForm.integrationSettingsDescription',
     defaultMessage: 'Configure the connection of plugins with servers',
+  },
+  disabledPlugin: {
+    id: 'NotificationsEnableForm.disabledPlugin',
+    defaultMessage: 'server is disabled',
+  },
+  disabledContactInfo: {
+    id: 'NotificationsEnableForm.disabledContactInfo',
+    defaultMessage: 'Please contact your instance administrator for assistance in setting it up.',
   },
 });

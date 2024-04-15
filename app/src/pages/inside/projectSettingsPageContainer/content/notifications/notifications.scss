@@ -55,19 +55,3 @@
 .types-name {
   text-transform: capitalize;
 }
-
-.add-rule {
-  width: 141px;
-  height: 36px;
-  padding: 7px 0px 7px 64px;
-  margin-top: 6px;
-
-  & svg > * {
-    transform: scale(1.5) translate(-10%, -10%);
-  }
-}
-
-.rule-section > div {
-  width: 100%;
-  max-width: initial;
-}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import plusIcon from 'common/img/plus-button-inline.svg';
 import { Button } from 'componentLibrary/button';
+import PropTypes from 'prop-types';
 import styles from './emptyRuleState.scss';
 import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-// eslint-disable-next-line react/prop-types
 export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
   const { formatMessage } = useIntl();
   return (
-    <div className={cx('container')}>
-      <span className={cx('label')}>No {ruleName} notification rules yet</span>
+    <div className={cx('empty-rule-state')}>
+      <span className={cx('label')}>{formatMessage(messages.noItemsMessage, { ruleName })}</span>
       <Button
         onClick={onCreateClick}
         variant={'text'}
@@ -40,4 +40,9 @@ export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
       </Button>
     </div>
   );
+};
+
+EmptyRuleState.propTypes = {
+  ruleName: PropTypes.string.isRequired,
+  onCreateClick: PropTypes.func.isRequired,
 };

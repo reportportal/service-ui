@@ -1,5 +1,5 @@
 /*!
- * Copyright 2022 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
 
 .content {
   margin-top: 32px;
-  gap: 16px;
-  display: flex;
-  flex-direction: column;
+}
+
+.autocomplete {
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.launches {
+  margin-bottom: 16px;
 }
 
 .checkbox {
-  margin-bottom: 0;
+  margin-bottom: 16px;
   margin-top: 8px;
 }
 
 .input {
-  margin-bottom: 0;
-}
-
-.launches {
-  margin-bottom: 0;
+  margin-bottom: 16px;
 }
 
 .toggle {
@@ -49,7 +51,7 @@
 }
 
 .attributes-list-wrapper {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   .attributes-list {
     margin-top: 8px;
   }

@@ -1,0 +1,55 @@
+.rule-section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  height: 44px;
+  margin-bottom: 24px;
+
+  .disabled-plugin {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 12px;
+    line-height: 20px;
+    color: $COLOR--almost-black;
+    margin-top: 4px;
+    display: flex;
+    gap: 8px;
+
+    p {
+      margin-top: 4px;
+    }
+
+    & .icon > svg {
+      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.add-rule {
+  width: 141px;
+  height: 36px;
+  padding: 7px 0px 7px 64px;
+  margin-top: 6px;
+
+  & svg > * {
+    transform: scale(1.5) translate(-10%, -10%);
+  }
+}
+
+.rule-section > div {
+  width: 100%;
+  max-width: initial;
+}
+
+.capitalized {
+  text-transform: capitalize;
+}
+
+
+.info-tooltip {
+  font-size: 11px;
+  gap: 8px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  line-height: 16px;
+}
