@@ -147,7 +147,6 @@ export const Sidebar = ({
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
         setActiveType={setActiveType}
-        sidebarRef={sidebarRef}
         {...navbarProps}
       />
     </div>
