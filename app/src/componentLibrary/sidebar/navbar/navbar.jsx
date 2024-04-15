@@ -30,12 +30,10 @@ export const Navbar = ({
   topSidebarControlItems,
   bottomSidebarControlItems,
   createFooterControlBlock,
-  setIsOpenPopover,
   getClassName,
   setHoverType,
   clearActionButton,
   setActiveType,
-  sidebarRef,
 }) => (
   <div
     className={cx('navbar', {
@@ -48,9 +46,7 @@ export const Navbar = ({
         <i className={cx('logo')}>{Parser(logoControlIcon)}</i>
       </div>
     )}
-    <div className={cx('main-block')}>
-      {createMainControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
-    </div>
+    <div className={cx('main-block')}>{createMainControlBlock(onCloseNavbar)}</div>
     {topSidebarControlItems.length > 0 && (
       <div className={cx('top-block')}>
         {topSidebarControlItems.map(({ sidebarBlockItem, key, onClick }) => (
@@ -89,9 +85,7 @@ export const Navbar = ({
         ))}
       </div>
     )}
-    <div className={cx('bottom-block')}>
-      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
-    </div>
+    <div className={cx('bottom-block')}>{createFooterControlBlock(onCloseNavbar)}</div>
   </div>
 );
 
@@ -103,12 +97,10 @@ Navbar.propTypes = {
   logoControlIcon: PropTypes.element,
   createMainControlBlock: PropTypes.func,
   createFooterControlBlock: PropTypes.func,
-  setIsOpenPopover: PropTypes.func,
   getClassName: PropTypes.object.isRequired,
   setHoverType: PropTypes.func.isRequired,
   clearActionButton: PropTypes.func.isRequired,
   setActiveType: PropTypes.func.isRequired,
-  sidebarRef: PropTypes.shape({ current: PropTypes.object }),
 };
 
 Navbar.defaultProps = {
@@ -117,6 +109,4 @@ Navbar.defaultProps = {
   bottomSidebarControlItems: [],
   createMainControlBlock: () => {},
   createFooterControlBlock: () => {},
-  setIsOpenPopover: () => {},
-  sidebarRef: null,
 };

@@ -178,16 +178,14 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     />
   );
 
-  const createMainControlBlock = (closeNavbar, setIsOpenPopover, sidebarRef) => (
+  const createMainControlBlock = (closeNavbar) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
       isOpenPopover={isOpenOrganizationPopover}
       togglePopover={setIsOpenOrganizationPopover}
-      setIsOpenPopover={setIsOpenPopover}
       onHoverOrganization={onHoverOrganization}
       onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
-      wrapperParentRef={sidebarRef}
     />
   );
 
@@ -197,6 +195,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       createMainControlBlock={createMainControlBlock}
       topSidebarItems={topSidebarItems}
       topSidebarControlItems={topSidebarControlItems}
+      isOpenOrganizationPopover={isOpenOrganizationPopover}
     />
   );
 };

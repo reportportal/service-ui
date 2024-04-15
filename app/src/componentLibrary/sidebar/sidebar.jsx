@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import { useOnClickOutside } from 'common/hooks';
 import { Navbar } from './navbar';
 import { SidebarButton } from './sidebarButton';
 import styles from './sidebar.scss';
@@ -32,9 +33,9 @@ export const Sidebar = ({
   topSidebarItems,
   bottomSidebarItems,
   createFooterBlock,
+  isOpenPopover,
   ...navbarProps
 }) => {
-  const [isOpenNavbarPopover, setIsOpenNavbarPopover] = useState(false);
   const [isOpenNavbar, setIsOpenNavbar] = useState(false);
 
   const [actionButtonKey, setActionButtonKey] = useState(null);
@@ -42,12 +43,20 @@ export const Sidebar = ({
 
   const sidebarRef = useRef(null);
 
+  const handleClickOutside = useCallback(() => {
+    if (isOpenNavbar) {
+      setIsOpenNavbar(false);
+    }
+  }, [isOpenNavbar]);
+
+  useOnClickOutside(sidebarRef, handleClickOutside);
+
   const onOpenNavbar = () => {
     setIsOpenNavbar(true);
   };
 
   const onCloseSidebar = () => {
-    if (!isOpenNavbarPopover) {
+    if (!isOpenPopover) {
       setIsOpenNavbar(false);
     }
   };
@@ -134,7 +143,6 @@ export const Sidebar = ({
       <Navbar
         active={isOpenNavbar}
         onCloseNavbar={onCloseNavbar}
-        setIsOpenPopover={setIsOpenNavbarPopover}
         getClassName={getClassName}
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
@@ -152,6 +160,7 @@ Sidebar.propTypes = {
   logoBlockIcon: PropTypes.element,
   createMainBlock: PropTypes.element,
   createFooterBlock: PropTypes.func,
+  isOpenPopover: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
@@ -159,5 +168,6 @@ Sidebar.defaultProps = {
   createMainBlock: null,
   topSidebarItems: [],
   bottomSidebarItems: [],
+  isOpenPopover: false,
   createFooterBlock: () => {},
 };

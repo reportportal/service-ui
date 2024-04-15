@@ -42,6 +42,7 @@ export const AppSidebar = ({
   bottomSidebarItems,
   topSidebarControlItems,
   bottomSidebarControlItems,
+  isOpenOrganizationPopover,
 }) => {
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
@@ -70,7 +71,7 @@ export const AppSidebar = ({
     </>
   );
 
-  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover, sidebarRef) => (
+  const createFooterControlBlock = (onCloseNavbar) => (
     <>
       <div className={cx('policy-control')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
@@ -80,10 +81,8 @@ export const AppSidebar = ({
       <div className={cx('user-control', { hover: isHoveredUser })}>
         <UserControlWithPopover
           closeNavbar={onCloseNavbar}
-          setIsOpenPopover={setIsOpenPopover}
           isOpenPopover={isOpenAvatarPopover}
           togglePopover={setIsOpenAvatarPopover}
-          wrapperParentRef={sidebarRef}
         />
       </div>
     </>
@@ -101,6 +100,7 @@ export const AppSidebar = ({
       bottomSidebarControlItems={bottomSidebarControlItems}
       createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
+      isOpenPopover={isOpenAvatarPopover || isOpenOrganizationPopover}
     />
   );
 };
@@ -112,6 +112,7 @@ AppSidebar.propTypes = {
   bottomSidebarControlItems: PropTypes.array,
   createMainControlBlock: PropTypes.func,
   createMainBlock: PropTypes.func,
+  isOpenOrganizationPopover: PropTypes.bool,
 };
 
 AppSidebar.defaultProps = {
@@ -119,6 +120,7 @@ AppSidebar.defaultProps = {
   bottomSidebarItems: [],
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
+  isOpenOrganizationPopover: false,
   createMainControlBlock: () => {},
   createMainBlock: () => {},
 };

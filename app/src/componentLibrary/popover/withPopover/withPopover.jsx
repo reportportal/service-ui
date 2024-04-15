@@ -16,7 +16,7 @@
 
 /* eslint-disable react/prop-types */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
@@ -28,28 +28,14 @@ export const withPopover = ({
   popoverWrapperClassName,
   tabIndex,
   ...popoverConfig
-}) => (WrappedComponent) => ({
-  isOpenPopover,
-  togglePopover,
-  setIsOpenPopover,
-  closeNavbar,
-  wrapperParentRef,
-  ...props
-}) => {
+}) => (WrappedComponent) => ({ isOpenPopover, togglePopover, ...props }) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
-  useEffect(() => {
-    if (isOpenPopover) {
-      setIsOpenPopover?.(true);
-    }
-  }, [isOpenPopover, setIsOpenPopover]);
-
-  const onClose = () => {
-    setTimeout(() => togglePopover(false), 0);
+  const onClose = useCallback(() => {
+    togglePopover?.(false);
     setOpened(false);
-    setIsOpenPopover?.(false);
-  };
+  }, [togglePopover, setOpened]);
 
   const onClickHandle = () => {
     if (togglePopover) {
@@ -57,13 +43,9 @@ export const withPopover = ({
     } else {
       setOpened(true);
     }
-    setIsOpenPopover?.(true);
   };
 
-  const onCloseWrapperParentRef = () => {
-    closeNavbar();
-    onClose();
-  };
+  const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
 
   return (
     <>
@@ -73,17 +55,11 @@ export const withPopover = ({
         onClick={onClickHandle}
         tabIndex={tabIndex ?? -1}
       >
-        <WrappedComponent isPopoverOpen={isOpened || isOpenPopover} {...props} />
+        <WrappedComponent isPopoverOpen={isPopoverOpened} {...props} />
       </button>
-      {(isOpened || isOpenPopover) && (
-        <Popover
-          onClose={onClose}
-          parentRef={parentRef}
-          onCloseWrapperParentRef={onCloseWrapperParentRef}
-          wrapperParentRef={wrapperParentRef}
-          {...popoverConfig}
-        >
-          <ContentComponent closePopover={onClose} closeNavbar={closeNavbar} {...props} />
+      {isPopoverOpened && (
+        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
+          <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
     </>

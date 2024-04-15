@@ -36,15 +36,13 @@ export const Popover = ({
   popoverClassName,
   arrowVerticalPosition,
   topPosition,
-  wrapperParentRef,
-  onCloseWrapperParentRef,
 }) => {
   const popoverRef = useRef();
   const [top, setTop] = useState(topPosition);
   const [left, setLeft] = useState(0);
   const isNotDefaultTopPosition = !topPosition;
 
-  useOnClickOutside(popoverRef, onClose, wrapperParentRef, onCloseWrapperParentRef);
+  useOnClickOutside(popoverRef, onClose);
 
   useLayoutEffect(() => {
     const { current: parent } = parentRef;
@@ -141,8 +139,6 @@ Popover.propTypes = {
     null,
   ]),
   topPosition: PropTypes.number,
-  wrapperParentRef: PropTypes.shape({ current: PropTypes.object }),
-  onCloseWrapperParentRef: PropTypes.func,
 };
 
 Popover.defaultProps = {
@@ -157,6 +153,4 @@ Popover.defaultProps = {
   variant: 'light',
   arrowVerticalPosition: null,
   topPosition: 0,
-  wrapperParentRef: null,
-  onCloseWrapperParentRef: () => {},
 };
