@@ -33,8 +33,11 @@ export const withPopover = ({
   const [isOpened, setOpened] = useState(false);
 
   const onClose = useCallback(() => {
-    togglePopover?.(false);
-    setOpened(false);
+    if (togglePopover) {
+      togglePopover(false);
+    } else {
+      setOpened(false);
+    }
   }, [togglePopover, setOpened]);
 
   const onClickHandle = () => {
