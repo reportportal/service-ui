@@ -61,7 +61,7 @@ export const AppSidebar = ({
       <UserAvatar
         onClick={() => {
           openNavbar();
-          setIsOpenAvatarPopover(true);
+          setIsOpenAvatarPopover(!isOpenAvatarPopover);
         }}
         onHoverUser={onHoverUser}
         onClearUser={onClearUser}
@@ -82,8 +82,9 @@ export const AppSidebar = ({
           closeNavbar={onCloseNavbar}
           setIsOpenPopover={setIsOpenPopover}
           isOpenPopover={isOpenAvatarPopover}
-          closePopover={() => setIsOpenAvatarPopover(false)}
+          togglePopover={setIsOpenAvatarPopover}
           wrapperParentRef={sidebarRef}
+          isTogglePopover
         />
       </div>
     </>

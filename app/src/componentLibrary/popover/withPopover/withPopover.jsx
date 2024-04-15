@@ -30,7 +30,8 @@ export const withPopover = ({
   ...popoverConfig
 }) => (WrappedComponent) => ({
   isOpenPopover,
-  closePopover,
+  togglePopover,
+  isTogglePopover,
   setIsOpenPopover,
   closeNavbar,
   wrapperParentRef,
@@ -41,15 +42,23 @@ export const withPopover = ({
 
   useEffect(() => {
     if (isOpenPopover) {
-      setOpened(true);
       setIsOpenPopover?.(true);
     }
   }, [isOpenPopover, setIsOpenPopover]);
 
   const onClose = () => {
-    closePopover?.();
-    setIsOpenPopover?.(false);
+    setTimeout(() => togglePopover(false), 0);
     setOpened(false);
+    setIsOpenPopover?.(false);
+  };
+
+  const onClickHandle = () => {
+    if (isTogglePopover) {
+      togglePopover((prev) => !prev);
+    } else {
+      setOpened(true);
+    }
+    setIsOpenPopover?.(true);
   };
 
   const onCloseWrapperParentRef = () => {
@@ -62,15 +71,12 @@ export const withPopover = ({
       <button
         ref={parentRef}
         className={cx('with-popover', popoverWrapperClassName)}
-        onClick={() => {
-          setOpened(true);
-          setIsOpenPopover?.(true);
-        }}
+        onClick={onClickHandle}
         tabIndex={tabIndex ?? -1}
       >
-        <WrappedComponent isPopoverOpen={isOpened} {...props} />
+        <WrappedComponent isPopoverOpen={isOpened || isOpenPopover} {...props} />
       </button>
-      {isOpened && (
+      {(isOpened || isOpenPopover) && (
         <Popover
           onClose={onClose}
           parentRef={parentRef}
