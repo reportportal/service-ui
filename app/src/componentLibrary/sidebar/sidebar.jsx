@@ -39,29 +39,19 @@ export const Sidebar = ({
 
   const [actionButtonKey, setActionButtonKey] = useState(null);
   const [actionButtonType, setActionButtonType] = useState(null);
-  const [isImmediatelyOpenSidebar, setIsImmediatelyOpenSidebar] = useState(false);
 
-  const onOpenSidebar = () => {
+  const onOpenNavbar = () => {
     setIsOpenNavbar(true);
   };
 
   const onCloseSidebar = () => {
     if (!isOpenNavbarPopover) {
       setIsOpenNavbar(false);
-      setIsImmediatelyOpenSidebar(false);
     }
-  };
-
-  const onImmediatelyOpenSidebar = () => {
-    setIsImmediatelyOpenSidebar(true);
   };
 
   const onCloseNavbar = () => {
     setIsOpenNavbar(false);
-  };
-
-  const onOpenNavbar = () => {
-    setIsOpenNavbar(true);
   };
 
   const onButtonClick = (onClick) => {
@@ -96,16 +86,14 @@ export const Sidebar = ({
   return (
     <div
       className={cx('sidebar-container')}
-      onMouseEnter={onOpenSidebar}
+      onMouseEnter={onOpenNavbar}
       onMouseLeave={onCloseSidebar}
     >
       <aside className={cx('sidebar')}>
         <div className={cx('logo')}>
           <i>{Parser(logoBlockIcon)}</i>
         </div>
-        <div className={cx('main-block')}>
-          {createMainBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
-        </div>
+        <div className={cx('main-block')}>{createMainBlock(onOpenNavbar)}</div>
         {topSidebarItems.length > 0 && (
           <div className={cx('top-block')}>
             {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
@@ -138,9 +126,7 @@ export const Sidebar = ({
             ))}
           </div>
         )}
-        <div className={cx('footer-block')}>
-          {createFooterBlock(onOpenNavbar, onImmediatelyOpenSidebar)}
-        </div>
+        <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
       </aside>
       <Navbar
         active={isOpenNavbar}
@@ -150,7 +136,6 @@ export const Sidebar = ({
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
         setActiveType={setActiveType}
-        isImmediatelyOpenSidebar={isImmediatelyOpenSidebar}
         {...navbarProps}
       />
     </div>

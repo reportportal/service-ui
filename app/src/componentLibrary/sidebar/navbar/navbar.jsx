@@ -35,13 +35,11 @@ export const Navbar = ({
   setHoverType,
   clearActionButton,
   setActiveType,
-  isImmediatelyOpenSidebar,
 }) => (
   <div
     className={cx('navbar', {
       active,
       quickly: active === false,
-      immediately: isImmediatelyOpenSidebar,
     })}
   >
     {logoControlIcon && (
@@ -109,12 +107,10 @@ Navbar.propTypes = {
   setHoverType: PropTypes.func.isRequired,
   clearActionButton: PropTypes.func.isRequired,
   setActiveType: PropTypes.func.isRequired,
-  isImmediatelyOpenSidebar: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
   active: false,
-  isImmediatelyOpenSidebar: false,
   topSidebarControlItems: [],
   bottomSidebarControlItems: [],
   createMainControlBlock: () => {},

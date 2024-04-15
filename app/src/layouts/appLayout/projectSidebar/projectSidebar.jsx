@@ -166,7 +166,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
 
   const { topSidebarItems, topSidebarControlItems } = getSidebarItems();
 
-  const createMainBlock = (openNavbar, onImmediatelyOpenSidebar) => (
+  const createMainBlock = (openNavbar) => (
     <OrganizationsBlock
       onHoverOrganization={onHoverOrganization}
       onClearOrganization={onClearOrganization}
@@ -174,7 +174,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       onClick={() => {
         openNavbar();
         setIsOpenOrganizationPopover(true);
-        onImmediatelyOpenSidebar();
       }}
     />
   );

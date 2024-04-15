@@ -55,14 +55,13 @@ export const AppSidebar = ({
     setIsHoveredUser(false);
   };
 
-  const createFooterBlock = (openNavbar, onImmediatelyOpenSidebar) => (
+  const createFooterBlock = (openNavbar) => (
     <>
       <div className={cx('policy-block')} />
       <UserAvatar
         onClick={() => {
           openNavbar();
           setIsOpenAvatarPopover(true);
-          onImmediatelyOpenSidebar();
         }}
         onHoverUser={onHoverUser}
         onClearUser={onClearUser}
