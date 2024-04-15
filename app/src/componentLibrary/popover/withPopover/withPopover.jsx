@@ -51,7 +51,7 @@ export const withPopover = ({
   const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
 
   return (
-    <div ref={parentRef}>
+    <div className={cx('with-popover-wrapper')} ref={parentRef}>
       <button
         className={cx('with-popover', popoverWrapperClassName)}
         onClick={onClickHandle}
