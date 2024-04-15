@@ -178,7 +178,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     />
   );
 
-  const createMainControlBlock = (closeNavbar, setIsOpenPopover) => (
+  const createMainControlBlock = (closeNavbar, setIsOpenPopover, sidebarRef) => (
     <OrganizationsControlWithPopover
       closeNavbar={closeNavbar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -187,6 +187,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       onHoverOrganization={onHoverOrganization}
       onClearOrganization={onClearOrganization}
       isHoveredOrganization={isHoveredOrganization}
+      wrapperParentRef={sidebarRef}
     />
   );
 

@@ -16,13 +16,23 @@
 
 import { useEffect } from 'react';
 
-export const useOnClickOutside = (ref, handler) => {
+export const useOnClickOutside = (ref, handler, wrapperParentRef, handlerWrapperParentRef) => {
   useEffect(() => {
     if (!handler) {
       return undefined;
     }
 
     const listener = (event) => {
+      if (ref?.current?.contains(event.target)) {
+        return;
+      }
+
+      if (wrapperParentRef?.current.contains(event.target)) {
+        handler(event);
+      } else if (wrapperParentRef) {
+        handlerWrapperParentRef(event);
+      }
+
       if (!ref?.current?.contains(event.target)) {
         handler(event);
       }
@@ -33,5 +43,5 @@ export const useOnClickOutside = (ref, handler) => {
     return () => {
       document.removeEventListener('pointerup', listener);
     };
-  }, [ref, handler]);
+  }, [ref, handler, wrapperParentRef, handlerWrapperParentRef]);
 };

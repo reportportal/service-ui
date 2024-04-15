@@ -70,7 +70,7 @@ export const AppSidebar = ({
     </>
   );
 
-  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover) => (
+  const createFooterControlBlock = (onCloseNavbar, setIsOpenPopover, sidebarRef) => (
     <>
       <div className={cx('policy-control')}>
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
@@ -83,6 +83,7 @@ export const AppSidebar = ({
           setIsOpenPopover={setIsOpenPopover}
           isOpenPopover={isOpenAvatarPopover}
           closePopover={() => setIsOpenAvatarPopover(false)}
+          wrapperParentRef={sidebarRef}
         />
       </div>
     </>

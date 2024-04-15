@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -39,6 +39,8 @@ export const Sidebar = ({
 
   const [actionButtonKey, setActionButtonKey] = useState(null);
   const [actionButtonType, setActionButtonType] = useState(null);
+
+  const sidebarRef = useRef(null);
 
   const onOpenNavbar = () => {
     setIsOpenNavbar(true);
@@ -85,6 +87,7 @@ export const Sidebar = ({
 
   return (
     <div
+      ref={sidebarRef}
       className={cx('sidebar-container')}
       onMouseEnter={onOpenNavbar}
       onMouseLeave={onCloseSidebar}
@@ -136,6 +139,7 @@ export const Sidebar = ({
         setHoverType={setHoverType}
         clearActionButton={clearActionButton}
         setActiveType={setActiveType}
+        sidebarRef={sidebarRef}
         {...navbarProps}
       />
     </div>

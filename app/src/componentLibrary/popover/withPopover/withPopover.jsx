@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable react/prop-types */
+
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Popover } from '../popover';
@@ -26,10 +28,14 @@ export const withPopover = ({
   popoverWrapperClassName,
   tabIndex,
   ...popoverConfig
-}) => (
-  WrappedComponent,
-  // eslint-disable-next-line react/prop-types
-) => ({ isOpenPopover, closePopover, setIsOpenPopover, ...props }) => {
+}) => (WrappedComponent) => ({
+  isOpenPopover,
+  closePopover,
+  setIsOpenPopover,
+  closeNavbar,
+  wrapperParentRef,
+  ...props
+}) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
@@ -46,6 +52,11 @@ export const withPopover = ({
     setOpened(false);
   };
 
+  const onCloseWrapperParentRef = () => {
+    closeNavbar();
+    onClose();
+  };
+
   return (
     <>
       <button
@@ -60,8 +71,14 @@ export const withPopover = ({
         <WrappedComponent isPopoverOpen={isOpened} {...props} />
       </button>
       {isOpened && (
-        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
-          <ContentComponent closePopover={onClose} {...props} />
+        <Popover
+          onClose={onClose}
+          parentRef={parentRef}
+          onCloseWrapperParentRef={onCloseWrapperParentRef}
+          wrapperParentRef={wrapperParentRef}
+          {...popoverConfig}
+        >
+          <ContentComponent closePopover={onClose} closeNavbar={closeNavbar} {...props} />
         </Popover>
       )}
     </>

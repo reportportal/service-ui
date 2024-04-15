@@ -35,6 +35,7 @@ export const Navbar = ({
   setHoverType,
   clearActionButton,
   setActiveType,
+  sidebarRef,
 }) => (
   <div
     className={cx('navbar', {
@@ -48,7 +49,7 @@ export const Navbar = ({
       </div>
     )}
     <div className={cx('main-block')}>
-      {createMainControlBlock(onCloseNavbar, setIsOpenPopover)}
+      {createMainControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
     </div>
     {topSidebarControlItems.length > 0 && (
       <div className={cx('top-block')}>
@@ -89,7 +90,7 @@ export const Navbar = ({
       </div>
     )}
     <div className={cx('bottom-block')}>
-      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover)}
+      {createFooterControlBlock(onCloseNavbar, setIsOpenPopover, sidebarRef)}
     </div>
   </div>
 );
@@ -107,6 +108,7 @@ Navbar.propTypes = {
   setHoverType: PropTypes.func.isRequired,
   clearActionButton: PropTypes.func.isRequired,
   setActiveType: PropTypes.func.isRequired,
+  sidebarRef: PropTypes.shape({ current: PropTypes.object }),
 };
 
 Navbar.defaultProps = {
@@ -116,4 +118,5 @@ Navbar.defaultProps = {
   createMainControlBlock: () => {},
   createFooterControlBlock: () => {},
   setIsOpenPopover: () => {},
+  sidebarRef: null,
 };
