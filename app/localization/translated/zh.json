@@ -1027,7 +1027,6 @@
   "IntegrationsDescription.projectIntegrationResetDescription": "您确定要重置为全球集成吗？您的所有项目集成都将被永久删除。",
   "IntegrationsDescription.projectIntegrationText": "项目集成已基于项目创建",
   "IntegrationsDescription.projectIntegrationTitle": "项目集成",
-  "IntegrationsDescription.resetToGlobalIntegrationsButton": "重置为全局集成",
   "IntegrationsDescription.settings": "设置",
   "IntegrationsList.authorization": "授权",
   "IntegrationsList.bts": "缺陷跟踪系统",
