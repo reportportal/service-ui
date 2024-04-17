@@ -156,4 +156,12 @@ export const messages = defineMessages({
     id: 'NotificationsEnableForm.disabledContactInfo',
     defaultMessage: 'Please contact your instance administrator for assistance in setting it up.',
   },
+  notConfiguredIntegration: {
+    id: 'NotificationsEnableForm.notConfiguredIntegration',
+    defaultMessage: 'Integration not configured yet',
+  },
+  configureIntegration: {
+    id: 'NotificationsEnableForm.configureIntegration',
+    defaultMessage: 'Configure Integration',
+  },
 });

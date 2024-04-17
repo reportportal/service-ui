@@ -18,6 +18,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
+import { LinkComponent } from '../LinkComponent';
 import styles from './helpPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -25,16 +26,15 @@ const cx = classNames.bind(styles);
 export const HelpPanel = ({ items }) => {
   return (
     <div className={cx('help-panel-container')}>
-      {items?.map((item) => (
+      {items.map((item) => (
         <div key={`info-item-${item.title}`} className={cx('info-item')}>
           <span className={cx('main-item-icon')}>
             <i className={cx('icon')}>{Parser(item.mainIcon)}</i>
           </span>
           <div className={cx('item-content-wrapper')}>
-            <a href={item.link} className={cx('item-title')} target={'_blank'}>
-              <span>{item.title}</span>
-              <i className={cx('icon')}>{Parser(item.openIcon)}</i>
-            </a>
+            <LinkComponent to={item.link} icon={item.openIcon}>
+              <span className={cx('item-title')}>{item.title}</span>
+            </LinkComponent>
             <p>{item.description}</p>
           </div>
         </div>

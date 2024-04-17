@@ -17,7 +17,7 @@
 import { Layout } from 'pages/inside/projectSettingsPageContainer/content/layout';
 import { Toggle } from 'componentLibrary/toggle';
 import { Button } from 'componentLibrary/button';
-import plusIcon from 'common/img/plus-button-inline.svg';
+import addIcon from 'common/img/add-inline.svg';
 import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -38,11 +38,19 @@ import { canUpdateSettings } from 'common/utils/permissions';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import {
+  activeProjectRoleSelector,
+  activeProjectSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 import { DEFAULT_CASE_CONFIG } from '../constants';
 import { convertNotificationCaseForSubmission } from '../utils';
 import {
@@ -69,6 +77,7 @@ const RuleItemDisabledTooltip = withTooltip({
     dark: true,
   },
 })(({ children }) => children);
+
 export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -76,11 +85,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
   const dispatch = useDispatch();
   const enabled = useSelector(projectNotificationsStateSelector);
   const projectRole = useSelector(activeProjectRoleSelector);
+  const activeProject = useSelector(activeProjectSelector);
   const userRole = useSelector(userAccountRoleSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
 
-  const isAbleToEdit = () =>
-    canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
+  const isAvailable = () => canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
@@ -96,7 +105,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
     );
   };
 
-  const isReadOnly = !isAbleToEdit();
+  const isReadOnly = !isAvailable();
 
   const handleRuleItemClick = (isShown) => {
     if (isShown) {
@@ -105,7 +114,6 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
   };
 
   const confirmAdd = (newNotification) => {
-    console.log(newNotification);
     const notification = convertNotificationCaseForSubmission(newNotification);
     dispatch(addProjectNotificationAction(notification));
   };
@@ -210,7 +218,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
 
   return (
     <div className={cx('rule-section')}>
-      <Layout description={''}>
+      <Layout description={''} className={cx('rule-section-layout')}>
         <div className={cx('rule-section-header')}>
           <FieldElement
             className={cx('fieldElement')}
@@ -220,20 +228,21 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
             <div className={cx('toggle')}>
               <Toggle
                 disabled={isReadOnly}
-                value // poxel
+                value
                 onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
                 dataAutomationId="enabledToggle"
               >
                 <span className={cx('name-wrapper')}>
-                  <i className={cx('capitalized')}> {pluginName}</i>
+                  <i className={cx('capitalized')}>{pluginName}</i>
                 </span>
               </Toggle>
             </div>
           </FieldElement>
-          {!enabled ? (
+
+          {!isAvailable() ? (
             <div className={cx('disabled-plugin')}>
               <p>
-                <span className={cx('capitalized')}>{pluginName} </span>
+                <span className={cx('capitalized')}>{pluginName}</span>{' '}
                 {formatMessage(messages.disabledPlugin, { pluginName })}
               </p>
               <RuleItemDisabledTooltip
@@ -244,14 +253,32 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
               </RuleItemDisabledTooltip>
             </div>
           ) : (
-            ''
+            pluginName === 'email' &&
+            !isEmailIntegrationAvailable && (
+              <div className={cx('integrate-configurations')}>
+                <p>{formatMessage(messages.notConfiguredIntegration)}</p>
+                <LinkComponent
+                  to={{
+                    type: PROJECT_SETTINGS_TAB_PAGE,
+                    payload: {
+                      projectId: activeProject,
+                      settingsTab: INTEGRATIONS,
+                      subTab: 'email',
+                    },
+                  }}
+                  icon={arrowRightIcon}
+                >
+                  {formatMessage(messages.configureIntegration)}
+                </LinkComponent>
+              </div>
+            )
           )}
         </div>
 
-        {enabled && (
+        {enabled && isAvailable() && (
           <div className={cx('notifications-container')}>
             {typedRules?.length > 0 ? (
-              <div className={cx('contentItems')}>
+              <div className={cx('content-items')}>
                 <RuleList
                   disabled={isReadOnly}
                   data={typedRules.map((rule) => ({
@@ -263,12 +290,13 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
                   ruleItemContent={NotificationRuleContent}
                   handleRuleItemClick={handleRuleItemClick}
                   dataAutomationId="notificationsRulesList"
+                  customClassName={cx('rule-group-list')}
                 />
                 <Button
                   customClassName={cx('add-rule')}
                   onClick={onAdd}
                   variant={'text'}
-                  startIcon={plusIcon}
+                  startIcon={addIcon}
                 >
                   {formatMessage(messages.addRule)}
                 </Button>
@@ -287,16 +315,16 @@ const ruleShape = PropTypes.shape({
   ruleName: PropTypes.string.isRequired,
   recipients: PropTypes.array.isRequired,
   sendCase: PropTypes.string.isRequired,
-  launchNames: PropTypes.array.isRequired,
-  attributes: PropTypes.array.isRequired,
+  launchNames: PropTypes.array,
+  attributes: PropTypes.array,
   enabled: PropTypes.bool.isRequired,
-  attributesOperator: PropTypes.string.isRequired,
-  informOwner: PropTypes.bool.isRequired,
+  attributesOperator: PropTypes.string,
+  informOwner: PropTypes.bool,
   type: PropTypes.string.isRequired,
 });
 
 RuleGroup.propTypes = {
   pluginName: PropTypes.string.isRequired,
-  typedRules: PropTypes.arrayOf(ruleShape).isRequired,
+  typedRules: PropTypes.arrayOf(ruleShape),
   notifications: PropTypes.arrayOf(ruleShape).isRequired,
 };

@@ -41,3 +41,7 @@ export const convertNotificationCaseForSubmission = (obj) => {
     type,
   };
 };
+
+export const isInternalLink = (to) => {
+  return typeof to === 'object' && to.type;
+};

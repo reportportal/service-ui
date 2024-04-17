@@ -23,14 +23,19 @@ import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import settingsIcon from 'common/img/settings-icon-inline.svg';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 
-import { HelpPanel } from '../helpPanel';
-import styles from './footer.scss';
+import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { useSelector } from 'react-redux';
+import { activeProjectSelector } from 'controllers/user';
 import { messages } from '../messages';
+import styles from './footer.scss';
+import { HelpPanel } from '../helpPanel';
 
 const cx = classNames.bind(styles);
 
 export const NotificationsFooter = () => {
   const { formatMessage } = useIntl();
+  const activeProject = useSelector(activeProjectSelector);
 
   const footerItems = [
     {
@@ -43,7 +48,13 @@ export const NotificationsFooter = () => {
     {
       title: formatMessage(messages.integrationSettings),
       mainIcon: settingsIcon,
-      link: 'settings/integrations?subPage=email', // changes needed
+      link: {
+        type: PROJECT_SETTINGS_TAB_PAGE,
+        payload: {
+          projectId: activeProject,
+          settingsTab: INTEGRATIONS,
+        },
+      },
       description: formatMessage(messages.integrationSettingsDescription),
       openIcon: arrowRightIcon,
     },
