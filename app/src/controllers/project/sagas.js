@@ -181,12 +181,15 @@ function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
-function* updateNotificationState(enabled) {
+function* updateNotificationState({
+  notificationState: enabled,
+  pluginName: attributeKey = NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
+}) {
   const projectId = yield select(projectIdSelector);
   const updatedConfig = {
     configuration: {
       attributes: {
-        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
+        [attributeKey]: enabled.toString(),
       },
     },
   };

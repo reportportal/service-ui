@@ -31,11 +31,9 @@ import { useTracking } from 'react-tracking';
 import {
   addProjectNotificationAction,
   deleteProjectNotificationAction,
-  projectNotificationsStateSelector,
   updateProjectNotificationAction,
 } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { updateNotificationStateAction } from 'controllers/project/actionCreators';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import {
@@ -51,6 +49,9 @@ import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
+import { updateNotificationStateAction } from 'controllers/project/actionCreators';
+import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';
+import { projectPluginNotificationsStateSelector } from 'controllers/project/selectors';
 import { DEFAULT_CASE_CONFIG } from '../constants';
 import { convertNotificationCaseForSubmission } from '../utils';
 import {
@@ -83,18 +84,16 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
   const { formatMessage } = useIntl();
 
   const dispatch = useDispatch();
-  const enabled = useSelector(projectNotificationsStateSelector);
   const projectRole = useSelector(activeProjectRoleSelector);
   const activeProject = useSelector(activeProjectSelector);
   const userRole = useSelector(userAccountRoleSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+  const isPluginNotificationsEnabled = useSelector(
+    projectPluginNotificationsStateSelector(pluginName),
+  );
 
-  const isAvailable = () => canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
+  const isAvailable = () => isEmailIntegrationAvailable && canUpdateSettings(userRole, projectRole);
 
-  const toggleNotificationsEnabled = (isEnabled) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
-    dispatch(updateNotificationStateAction(isEnabled));
-  };
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
 
@@ -113,6 +112,14 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
     }
   };
 
+  const togglePlugin = (isEnabled) => {
+    dispatch(
+      updateNotificationStateAction(
+        isEnabled,
+        NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginName),
+      ),
+    );
+  };
   const confirmAdd = (newNotification) => {
     const notification = convertNotificationCaseForSubmission(newNotification);
     dispatch(addProjectNotificationAction(notification));
@@ -228,8 +235,8 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
             <div className={cx('toggle')}>
               <Toggle
                 disabled={isReadOnly}
-                value
-                onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+                value={isPluginNotificationsEnabled}
+                onChange={(e) => togglePlugin(e.target.checked)}
                 dataAutomationId="enabledToggle"
               >
                 <span className={cx('name-wrapper')}>
@@ -275,37 +282,35 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
           )}
         </div>
 
-        {enabled && isAvailable() && (
-          <div className={cx('notifications-container')}>
-            {typedRules?.length > 0 ? (
-              <div className={cx('content-items')}>
-                <RuleList
-                  disabled={isReadOnly}
-                  data={typedRules.map((rule) => ({
-                    name: rule.ruleName,
-                    ...rule,
-                  }))}
-                  actions={actions}
-                  onToggle={onToggleHandler}
-                  ruleItemContent={NotificationRuleContent}
-                  handleRuleItemClick={handleRuleItemClick}
-                  dataAutomationId="notificationsRulesList"
-                  customClassName={cx('rule-group-list')}
-                />
-                <Button
-                  customClassName={cx('add-rule')}
-                  onClick={onAdd}
-                  variant={'text'}
-                  startIcon={addIcon}
-                >
-                  {formatMessage(messages.addRule)}
-                </Button>
-              </div>
-            ) : (
-              <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
-            )}
-          </div>
-        )}
+        <div className={cx('notifications-container')}>
+          {typedRules?.length > 0 ? (
+            <div className={cx('content-items')}>
+              <RuleList
+                disabled={isReadOnly}
+                data={typedRules.map((rule) => ({
+                  name: rule.ruleName,
+                  ...rule,
+                }))}
+                actions={actions}
+                onToggle={onToggleHandler}
+                ruleItemContent={NotificationRuleContent}
+                handleRuleItemClick={handleRuleItemClick}
+                dataAutomationId="notificationsRulesList"
+                className={cx('rule-group-list')}
+              />
+              <Button
+                customClassName={cx('add-rule')}
+                onClick={onAdd}
+                variant={'text'}
+                startIcon={addIcon}
+              >
+                {formatMessage(messages.addRule)}
+              </Button>
+            </div>
+          ) : (
+            <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
+          )}
+        </div>
       </Layout>
     </div>
   );

@@ -33,7 +33,7 @@ export const RuleItem = ({
   onClick,
   onRuleNameClick,
   isPreview,
-  customClassName,
+  className,
 }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
@@ -59,7 +59,7 @@ export const RuleItem = ({
 
   return (
     <div
-      className={cx('container', { 'preview-container': isPreview }, customClassName)}
+      className={cx('container', { 'preview-container': isPreview }, className)}
       data-automation-id="listItem"
     >
       {!isPreview && (
@@ -117,6 +117,6 @@ export const RuleItem = ({
 RuleItem.propTypes = {
   ...ruleItemPropTypes,
   isPreview: PropTypes.bool,
-  customClassName: PropTypes.string,
+  className: PropTypes.string,
 };
-RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false, customClassName: '' };
+RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false, className: '' };

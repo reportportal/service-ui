@@ -27,6 +27,7 @@ import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
+import { docsReferences } from 'common/utils';
 import { messages } from '../messages';
 import styles from './footer.scss';
 import { HelpPanel } from '../helpPanel';
@@ -41,7 +42,7 @@ export const NotificationsFooter = () => {
     {
       title: formatMessage(messages.discoverPlugins),
       mainIcon: discoverPluginsIcon,
-      link: 'https://reportportal.io/docs/category/plugins',
+      link: docsReferences.pluginsDocs,
       description: formatMessage(messages.discoverPluginsDescription),
       openIcon: openInNewTabIcon,
     },

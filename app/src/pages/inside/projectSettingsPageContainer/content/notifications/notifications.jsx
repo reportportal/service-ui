@@ -58,7 +58,7 @@ export const Notifications = () => {
 
   const projectRole = useSelector(activeProjectRoleSelector);
   const userRole = useSelector(userAccountRoleSelector);
-  const enabled = useSelector(projectNotificationsStateSelector);
+  const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const loading = useSelector(projectNotificationsLoadingSelector);
   const isReadOnly = !canUpdateSettings(userRole, projectRole);
@@ -67,9 +67,6 @@ export const Notifications = () => {
     dispatch(fetchProjectNotificationsAction());
   }, []);
 
-  if (loading) {
-    return <SpinningPreloader />;
-  }
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
     dispatch(updateNotificationStateAction(isEnabled));
@@ -77,7 +74,9 @@ export const Notifications = () => {
   // separate notifications by types
   const notificationRulesByTypes = Object.groupBy(notifications, (rule) => rule.type);
 
-  return (
+  return loading ? (
+    <SpinningPreloader />
+  ) : (
     <SettingsPageContent>
       <Layout
         description={<FormattedDescription content={formatMessage(messages.tabDescription)} />}
@@ -91,12 +90,10 @@ export const Notifications = () => {
           <div className={cx('toggle')}>
             <Toggle
               disabled={isReadOnly}
-              value={enabled}
+              value={isAllNotificationsEnabled}
               onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
             >
-              <span className={cx('name-wrapper')}>
-                <i className={cx('name')}> {formatMessage(messages.allNotifications)}</i>
-              </span>
+              <span className={cx('name-wrapper')}>{formatMessage(messages.allNotifications)}</span>
             </Toggle>
           </div>
         </FieldElement>

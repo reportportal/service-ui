@@ -24,10 +24,9 @@ import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
-export const LinkComponent = ({ to, children, icon, ...restProps }) => {
-  const className = restProps.className || 'link-item-wrapper';
+export const LinkComponent = ({ to, children, icon, className }) => {
   return isInternalLink(to) ? (
-    <Link to={to} className={cx(className)}>
+    <Link to={to} className={cx(className)} target={'_blank'}>
       {children}
       {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
     </Link>
@@ -43,12 +42,15 @@ LinkComponent.propTypes = {
   to: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-      search: PropTypes.string,
-      hash: PropTypes.string,
-      state: PropTypes.object,
+      type: PropTypes.string,
+      payload: PropTypes.object,
     }),
   ]).isRequired,
   children: PropTypes.node.isRequired,
   icon: PropTypes.string,
+  className: PropTypes.string,
+};
+
+LinkComponent.defaultProps = {
+  className: 'link-item-wrapper',
 };
