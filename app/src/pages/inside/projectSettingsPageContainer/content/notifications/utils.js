@@ -27,6 +27,7 @@ export const convertNotificationCaseForSubmission = (obj) => {
     attributes = [],
     enabled = true,
     attributesOperator,
+    type,
   } = obj;
   return {
     id,
@@ -37,5 +38,10 @@ export const convertNotificationCaseForSubmission = (obj) => {
     attributes,
     enabled,
     attributesOperator,
+    type,
   };
+};
+
+export const isInternalLink = (to) => {
+  return typeof to === 'object' && to.type;
 };
