@@ -33,7 +33,7 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectId) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId)(input);
-const makeOptions = (projectId, isAdmin) => ({ content: options }) =>
+export const makeOptions = (projectId, isAdmin) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',
     userLogin: isAdmin ? option.userId : option.login,

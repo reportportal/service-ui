@@ -37,15 +37,18 @@ import {
 import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { Input } from 'components/inputs/input';
 import { showModalAction } from 'controllers/modal';
+import { areUserSuggestionsAllowedSelector } from 'controllers/appInfo';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { InputUserSearch } from 'components/inputs/inputUserSearch';
+import { InputUserSearch, makeOptions } from 'components/inputs/inputUserSearch';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
 const LABEL_WIDTH = 105;
+
 const messages = defineMessages({
   headerInviteUserModal: {
     id: 'InviteUserModal.headerInviteUserModal',
@@ -55,9 +58,13 @@ const messages = defineMessages({
     id: 'InviteUserModal.description',
     defaultMessage: 'Invite user to the project',
   },
+  loginOrEmailLabel: {
+    id: 'InviteUserModal.loginOrEmailLabel',
+    defaultMessage: 'Login or email',
+  },
   emailLabel: {
     id: 'InviteUserModal.emailLabel',
-    defaultMessage: 'Login or email',
+    defaultMessage: 'Email',
   },
   role: {
     id: 'InviteUserModal.role',
@@ -93,6 +100,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
       role: DEFAULT_PROJECT_ROLE,
       project: projectIdSelector(state),
     },
+    areUserSuggestionsAllowed: areUserSuggestionsAllowedSelector(state),
   }),
   {
     showModalAction,
@@ -104,9 +112,10 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 )
 @reduxForm({
   form: 'inviteUserForm',
-  validate: ({ user, project }) => ({
+  validate: ({ user, project, email }) => ({
     user: commonValidators.requiredField(user),
     project: commonValidators.requiredField(project),
+    email: commonValidators.email(email),
   }),
   enableReinitialize: true,
 })
@@ -127,6 +136,7 @@ export class InviteUserModal extends Component {
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
+    areUserSuggestionsAllowed: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -211,20 +221,41 @@ export class InviteUserModal extends Component {
       });
   };
 
-  inviteUserAndCloseModal = (closeModal) => (data) => {
-    this.inviteUser(data).then((res) => {
-      if (res && res.errorOccurred) {
-        return;
-      }
-      if (data.user.externalUser) {
-        this.props.showModalAction({
-          id: 'externalUserInvitationModal',
-          data: { email: res.email, link: res.backLink },
-        });
+  inviteUserAndCloseModal = (closeModal) => async (data) => {
+    const {
+      selectedProject,
+      areUserSuggestionsAllowed,
+      data: { isProjectSelector },
+    } = this.props;
+    const userData = {
+      ...data,
+    };
+
+    if (!(isProjectSelector || areUserSuggestionsAllowed)) {
+      const foundUsers = await fetch(URLS.projectUserSearchUser(selectedProject)(data.email));
+      const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
+      if (foundUser) {
+        userData.user = makeOptions(data.project, false)({ content: [foundUser] })[0];
       } else {
-        closeModal();
+        userData.user = {
+          userLogin: data.email,
+          externalUser: true,
+        };
       }
-    });
+    }
+
+    const res = await this.inviteUser(userData);
+    if (res?.errorOccurred) {
+      return;
+    }
+    if (userData.user.externalUser) {
+      this.props.showModalAction({
+        id: 'externalUserInvitationModal',
+        data: { email: res.email, link: res.backLink },
+      });
+    } else {
+      closeModal();
+    }
   };
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
 
@@ -237,7 +268,14 @@ export class InviteUserModal extends Component {
     );
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, data } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      selectedProject,
+      isAdmin,
+      data: { isProjectSelector },
+      areUserSuggestionsAllowed,
+    } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
@@ -260,18 +298,31 @@ export class InviteUserModal extends Component {
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
-          <ModalField label={intl.formatMessage(messages.emailLabel)} labelWidth={LABEL_WIDTH}>
-            <FieldProvider name="user" format={this.formatUser}>
-              <FieldErrorHint>
-                <InputUserSearch
-                  projectId={selectedProject}
-                  isAdmin={isAdmin}
-                  placeholder={intl.formatMessage(messages.inputPlaceholder)}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
-          </ModalField>
-          {data.isProjectSelector && (
+          {isProjectSelector || areUserSuggestionsAllowed ? (
+            <ModalField
+              label={intl.formatMessage(messages.loginOrEmailLabel)}
+              labelWidth={LABEL_WIDTH}
+            >
+              <FieldProvider name="user" format={this.formatUser}>
+                <FieldErrorHint>
+                  <InputUserSearch
+                    projectId={selectedProject}
+                    isAdmin={isAdmin}
+                    placeholder={intl.formatMessage(messages.inputPlaceholder)}
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
+            </ModalField>
+          ) : (
+            <ModalField label={intl.formatMessage(messages.emailLabel)} labelWidth={LABEL_WIDTH}>
+              <FieldProvider name="email" type="email">
+                <FieldErrorHint>
+                  <Input maxLength={'128'} placeholder={intl.formatMessage(messages.emailLabel)} />
+                </FieldErrorHint>
+              </FieldProvider>
+            </ModalField>
+          )}
+          {isProjectSelector && (
             <ModalField label="Project" name="project" labelWidth={LABEL_WIDTH}>
               <FieldProvider name="project" dumbOnBlur>
                 <AsyncAutocomplete

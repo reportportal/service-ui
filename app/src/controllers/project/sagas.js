@@ -75,7 +75,7 @@ import {
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
 } from './actionCreators';
-import { patternsSelector } from './selectors';
+import { patternsSelector, projectNotificationsSelector } from './selectors';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -181,6 +181,23 @@ function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
+function* updateNotificationState(enabled) {
+  const projectId = yield select(projectIdSelector);
+  const updatedConfig = {
+    configuration: {
+      attributes: {
+        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
+      },
+    },
+  };
+
+  yield call(fetch, URLS.project(projectId), {
+    method: 'put',
+    data: updatedConfig,
+  });
+  yield put(updateConfigurationAttributesAction(updatedConfig));
+}
+
 function* addProjectNotification({ payload: notification }) {
   try {
     const projectId = yield select(projectIdSelector);
@@ -189,6 +206,11 @@ function* addProjectNotification({ payload: notification }) {
       method: 'post',
       data: notification,
     });
+
+    const notifications = yield select(projectNotificationsSelector);
+    if (!notifications.length) {
+      yield call(updateNotificationState, true);
+    }
 
     yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
     yield put(
@@ -260,23 +282,6 @@ function* deleteProjectNotification({ payload: id }) {
 
 function* watchDeleteProjectNotification() {
   yield takeEvery(DELETE_PROJECT_NOTIFICATION, deleteProjectNotification);
-}
-
-function* updateNotificationState(enabled) {
-  const projectId = yield select(projectIdSelector);
-  const updatedConfig = {
-    configuration: {
-      attributes: {
-        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
-      },
-    },
-  };
-
-  yield call(fetch, URLS.project(projectId), {
-    method: 'put',
-    data: updatedConfig,
-  });
-  yield put(updateConfigurationAttributesAction(updatedConfig));
 }
 
 function* updateNotificationStateWithNotification({ payload: enabled }) {
