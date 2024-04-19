@@ -202,7 +202,6 @@ function* updateNotificationState({
 }
 
 function* addProjectNotification({ payload: notification }) {
-  yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
 
@@ -226,8 +225,6 @@ function* addProjectNotification({ payload: notification }) {
     yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
   }
 }
 
