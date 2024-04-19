@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,4 @@
  * limitations under the License.
  */
 
-.button {
-  margin-left: auto;
-}
-
-.name-wrapper {
-  flex: 1;
-  width: 0;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 15px;
-  line-height: 24px;
-  color: $COLOR--almost-black;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.fieldElement {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  height: 44px;
-}
-
-.toggle {
-  gap: 8px;
-  height: 24px;
-}
-
-.types-name {
-  text-transform: capitalize;
-}
+export { HelpPanel } from './helpPanel';
