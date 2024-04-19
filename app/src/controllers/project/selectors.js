@@ -146,8 +146,7 @@ export const projectNotificationsStateSelector = (state) =>
 export const projectPluginNotificationsStateSelector = (pluginName) =>
   createSelector(
     projectAttributesSelector,
-    (attributes) =>
-      !!(attributes[NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginName)] === 'true'),
+    (attributes) => attributes[NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginName)] === 'true',
   );
 
 export const projectNotificationsLoadingSelector = (state) =>
