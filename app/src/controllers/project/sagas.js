@@ -202,6 +202,7 @@ function* updateNotificationState({
 }
 
 function* addProjectNotification({ payload: notification }) {
+  yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
 
@@ -212,7 +213,7 @@ function* addProjectNotification({ payload: notification }) {
 
     const notifications = yield select(projectNotificationsSelector);
     if (!notifications.length) {
-      yield call(updateNotificationState, true);
+      yield call(updateNotificationState, { notificationState: true });
     }
 
     yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
@@ -225,6 +226,8 @@ function* addProjectNotification({ payload: notification }) {
     yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
   }
 }
 

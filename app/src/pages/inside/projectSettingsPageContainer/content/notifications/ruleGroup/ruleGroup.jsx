@@ -52,6 +52,7 @@ import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
 import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';
 import { projectPluginNotificationsStateSelector } from 'controllers/project/selectors';
+import { EMAIL } from 'common/constants/pluginNames';
 import { DEFAULT_CASE_CONFIG } from '../constants';
 import { convertNotificationCaseForSubmission } from '../utils';
 import {
@@ -112,7 +113,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
     }
   };
 
-  const togglePlugin = (isEnabled) => {
+  const togglePluginNotificationsEnabled = (isEnabled) => {
     dispatch(
       updateNotificationStateAction(
         isEnabled,
@@ -236,7 +237,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
               <Toggle
                 disabled={isReadOnly}
                 value={isPluginNotificationsEnabled}
-                onChange={(e) => togglePlugin(e.target.checked)}
+                onChange={(e) => togglePluginNotificationsEnabled(e.target.checked)}
                 dataAutomationId="enabledToggle"
               >
                 <span className={cx('name-wrapper')}>
@@ -260,7 +261,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
               </RuleItemDisabledTooltip>
             </div>
           ) : (
-            pluginName === 'email' &&
+            pluginName === EMAIL &&
             !isEmailIntegrationAvailable && (
               <div className={cx('integrate-configurations')}>
                 <p>{formatMessage(messages.notConfiguredIntegration)}</p>

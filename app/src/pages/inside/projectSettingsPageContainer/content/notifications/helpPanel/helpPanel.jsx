@@ -49,7 +49,13 @@ HelpPanel.propTypes = {
       title: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
       openIcon: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
+      link: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          type: PropTypes.string,
+          payload: PropTypes.object,
+        }),
+      ]).isRequired,
     }),
-  ).isRequired,
+  ),
 };
