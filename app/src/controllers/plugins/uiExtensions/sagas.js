@@ -15,14 +15,14 @@ import {
 export function* fetchExtensionsMetadata(action) {
   const isPublicPluginNamespace = action && action.meta.namespace === PUBLIC_PLUGINS;
   const plugins = yield select(isPublicPluginNamespace ? publicPluginsSelector : pluginsSelector);
-  const uiExtensionPlugins = plugins.filter(
+  const uiExtensionPlugins = plugins?.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details?.binaryData?.[METADATA_FILE_KEY] &&
       plugin.details.binaryData[MAIN_FILE_KEY],
   );
 
-  if (!uiExtensionPlugins.length) {
+  if (!uiExtensionPlugins?.length) {
     return;
   }
 
@@ -62,7 +62,7 @@ export function* fetchUiExtensions() {
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
   // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
   const globalIntegrations = yield select(globalIntegrationsSelector);
-  if (!globalIntegrations.length) {
+  if (!globalIntegrations?.length) {
     return;
   }
 

@@ -16,6 +16,7 @@
 
 export const USER = 'USER';
 export const ADMINISTRATOR = 'ADMINISTRATOR';
+export const DEFAULT_USER_ID = 'default';
 export const ACCOUNT_ROLES_MAP = [
   { value: USER, label: USER },
   { value: ADMINISTRATOR, label: ADMINISTRATOR },
