@@ -1,0 +1,13 @@
+name: Add GitHub release version to Jira issues
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  call-jira-sync:
+    name: Call Jira versions update
+    uses: reportportal/.github/.github/workflows/update-jira-versions.yaml@main
+    with:
+      jira-server: ${{ vars.JIRA_SERVER }}
+    secrets: inherit
