@@ -259,13 +259,7 @@ export class InviteUserModal extends Component {
   };
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
 
-  filterProject = (value) =>
-    !(
-      value &&
-      this.props.selectedUser &&
-      this.props.selectedUser.assignedProjects &&
-      this.props.selectedUser.assignedProjects[value]
-    );
+  filterProject = (value) => !(value && this.props.selectedUser?.assignedProjects?.[value]);
 
   render() {
     const {
