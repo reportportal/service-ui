@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { InputUserSearch } from './inputUserSearch';
+export { InputUserSearch, makeOptions } from './inputUserSearch';

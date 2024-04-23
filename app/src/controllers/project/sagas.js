@@ -181,20 +181,17 @@ function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
-function* updateNotificationState({
-  notificationState: enabled,
-  pluginName: attributeKey = NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
-}) {
+function* updateNotificationState(enabled) {
   const projectId = yield select(projectIdSelector);
   const updatedConfig = {
     configuration: {
       attributes: {
-        [attributeKey]: enabled.toString(),
+        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
       },
     },
   };
 
-  yield call(fetch, URLS.projectByName(projectId), {
+  yield call(fetch, URLS.project(projectId), {
     method: 'put',
     data: updatedConfig,
   });
@@ -212,7 +209,7 @@ function* addProjectNotification({ payload: notification }) {
 
     const notifications = yield select(projectNotificationsSelector);
     if (!notifications.length) {
-      yield call(updateNotificationState, { notificationState: true });
+      yield call(updateNotificationState, true);
     }
 
     yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));

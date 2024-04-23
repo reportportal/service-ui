@@ -41,7 +41,7 @@ export const notificationPluginsSelector = createSelector(pluginsSelector, (plug
 });
 
 export const globalIntegrationsSelector = (state) =>
-  domainSelector(state).integrations.globalIntegrations || [];
+  domainSelector(state).integrations?.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 

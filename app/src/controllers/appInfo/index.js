@@ -27,6 +27,7 @@ export {
   isOldHistorySelector,
   flushDataInSelector,
   isDemoInstanceSelector,
+  areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';
