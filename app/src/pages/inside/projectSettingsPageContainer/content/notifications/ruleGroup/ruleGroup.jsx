@@ -299,17 +299,19 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
                 dataAutomationId="notificationsRulesList"
                 className={cx('rule-group-list')}
               />
-              <Button
-                customClassName={cx('add-rule')}
-                onClick={onAdd}
-                variant={'text'}
-                startIcon={addIcon}
-              >
-                {formatMessage(messages.addRule)}
-              </Button>
+              {isAvailable && (
+                <Button
+                  customClassName={cx('add-rule')}
+                  onClick={onAdd}
+                  variant={'text'}
+                  startIcon={addIcon}
+                >
+                  {formatMessage(messages.addRule)}
+                </Button>
+              )}
             </div>
           ) : (
-            <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
+            isAvailable && <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
           )}
         </div>
       </Layout>
