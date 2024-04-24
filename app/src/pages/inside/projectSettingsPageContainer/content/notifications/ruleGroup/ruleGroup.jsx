@@ -80,7 +80,7 @@ const RuleItemDisabledTooltip = withTooltip({
   },
 })(({ children }) => children);
 
-export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
+export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabled }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
@@ -93,7 +93,8 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
     projectPluginNotificationsStateSelector(pluginName),
   );
 
-  const isAvailable = () => isEmailIntegrationAvailable && canUpdateSettings(userRole, projectRole);
+  const isAvailable = canUpdateSettings(userRole, projectRole);
+  const isReadOnly = !isAvailable || !isPluginEnabled;
 
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
@@ -104,8 +105,6 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
       ),
     );
   };
-
-  const isReadOnly = !isAvailable();
 
   const handleRuleItemClick = (isShown) => {
     if (isShown) {
@@ -165,6 +164,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
+          type: pluginName,
           actionType: MODAL_ACTION_TYPE_EDIT,
           onSave: confirmEdit,
           notification,
@@ -246,41 +246,41 @@ export const RuleGroup = ({ pluginName, typedRules, notifications }) => {
               </Toggle>
             </div>
           </FieldElement>
-
-          {!isAvailable() ? (
-            <div className={cx('disabled-plugin')}>
-              <p>
-                <span className={cx('capitalized')}>{pluginName}</span>{' '}
-                {formatMessage(messages.disabledPlugin, { pluginName })}
-              </p>
-              <RuleItemDisabledTooltip
-                className={cx('info-tooltip')}
-                tooltipContent={formatMessage(messages.disabledContactInfo)}
-              >
-                <i className={cx('icon', 'about-icon')}>{Parser(AboutIcon)}</i>
-              </RuleItemDisabledTooltip>
-            </div>
-          ) : (
-            pluginName === EMAIL &&
-            !isEmailIntegrationAvailable && (
-              <div className={cx('integrate-configurations')}>
-                <p>{formatMessage(messages.notConfiguredIntegration)}</p>
-                <LinkComponent
-                  to={{
-                    type: PROJECT_SETTINGS_TAB_PAGE,
-                    payload: {
-                      projectId: activeProject,
-                      settingsTab: INTEGRATIONS,
-                      subTab: 'email',
-                    },
-                  }}
-                  icon={arrowRightIcon}
+          {isAvailable &&
+            (!isPluginEnabled ? (
+              <div className={cx('disabled-plugin')}>
+                <p>
+                  <span className={cx('capitalized')}>{pluginName}</span>{' '}
+                  {formatMessage(messages.disabledPlugin, { pluginName })}
+                </p>
+                <RuleItemDisabledTooltip
+                  className={cx('info-tooltip')}
+                  tooltipContent={formatMessage(messages.disabledContactInfo)}
                 >
-                  {formatMessage(messages.configureIntegration)}
-                </LinkComponent>
+                  <i className={cx('icon', 'about-icon')}>{Parser(AboutIcon)}</i>
+                </RuleItemDisabledTooltip>
               </div>
-            )
-          )}
+            ) : (
+              pluginName === EMAIL &&
+              !isEmailIntegrationAvailable && (
+                <div className={cx('integrate-configurations')}>
+                  <p>{formatMessage(messages.notConfiguredIntegration)}</p>
+                  <LinkComponent
+                    to={{
+                      type: PROJECT_SETTINGS_TAB_PAGE,
+                      payload: {
+                        projectId: activeProject,
+                        settingsTab: INTEGRATIONS,
+                        subTab: 'email',
+                      },
+                    }}
+                    icon={arrowRightIcon}
+                  >
+                    {formatMessage(messages.configureIntegration)}
+                  </LinkComponent>
+                </div>
+              )
+            ))}
         </div>
 
         <div className={cx('notifications-container')}>
@@ -333,4 +333,5 @@ RuleGroup.propTypes = {
   pluginName: PropTypes.string.isRequired,
   typedRules: PropTypes.arrayOf(ruleShape),
   notifications: PropTypes.arrayOf(ruleShape).isRequired,
+  isPluginEnabled: PropTypes.bool.isRequired,
 };
