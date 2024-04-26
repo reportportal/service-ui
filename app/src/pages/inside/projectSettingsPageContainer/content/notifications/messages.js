@@ -158,7 +158,7 @@ export const messages = defineMessages({
   },
   notConfiguredIntegration: {
     id: 'NotificationsEnableForm.notConfiguredIntegration',
-    defaultMessage: 'Integration not configured yet',
+    defaultMessage: 'Integration is not configured yet',
   },
   configureIntegration: {
     id: 'NotificationsEnableForm.configureIntegration',
