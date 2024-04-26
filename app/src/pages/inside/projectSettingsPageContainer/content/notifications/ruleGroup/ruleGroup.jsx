@@ -93,8 +93,8 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
     projectPluginNotificationsStateSelector(pluginName),
   );
 
-  const isAvailable = canUpdateSettings(userRole, projectRole);
-  const isReadOnly = !isAvailable || !isPluginEnabled;
+  const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
+  const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
 
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
@@ -246,7 +246,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
               </Toggle>
             </div>
           </FieldElement>
-          {isAvailable &&
+          {isUpdateSettingAvailable &&
             (!isPluginEnabled ? (
               <div className={cx('disabled-plugin')}>
                 <p>
@@ -299,7 +299,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
                 dataAutomationId="notificationsRulesList"
                 className={cx('rule-group-list')}
               />
-              {isAvailable && (
+              {isUpdateSettingAvailable && (
                 <Button
                   customClassName={cx('add-rule')}
                   onClick={onAdd}
@@ -311,7 +311,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
               )}
             </div>
           ) : (
-            isAvailable && <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
+            isUpdateSettingAvailable && <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
           )}
         </div>
       </Layout>
