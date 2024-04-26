@@ -96,7 +96,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
   const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
   const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
   const isActivationRequired =
-    isUpdateSettingAvailable || (!isUpdateSettingAvailable && typedRules.length > 0);
+    isUpdateSettingAvailable || (!isUpdateSettingAvailable && typedRules?.length > 0);
   const isDisabledTooltipActivationRequired = !pluginName && isActivationRequired;
   const isEmailIntegrationRequired =
     pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
