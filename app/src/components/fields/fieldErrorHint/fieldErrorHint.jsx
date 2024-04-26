@@ -149,7 +149,7 @@ const messages = defineMessages({
   },
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
-    defaultMessage: 'This field is required',
+    defaultMessage: 'Field is required',
   },
   shortRequiredFieldHint: {
     id: 'Common.shortRequiredFieldHint',
@@ -186,7 +186,7 @@ const messages = defineMessages({
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',
-    defaultMessage: 'Integration name should have size from 1 to 55',
+    defaultMessage: 'Integration name should have a size from 1 to 55 characters',
   },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',
@@ -195,6 +195,10 @@ const messages = defineMessages({
   btsProjectKeyHint: {
     id: 'BtsCommonMessages.btsProjectKeyHint',
     defaultMessage: 'Project key should have size from 1 to 55',
+  },
+  btsBoardIdHint: {
+    id: 'BtsCommonMessages.btsBoardIdHint',
+    defaultMessage: 'Board ID should have size from 1 to 55 characters',
   },
   btsProjectIdHint: {
     id: 'BtsCommonMessages.btsProjectIdHint',

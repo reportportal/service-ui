@@ -203,6 +203,7 @@
   "Breadcrumbs.lostLaunch": "Початковий запуск втрачено",
   "Breadcrumbs.restorePath": "Відновити шлях",
   "BtsCommonMessages.authTypeLabel": "Тип авторизації",
+  "BtsCommonMessages.btsBoardIdHint": "Ідентифікатор панелі повинен мати розмір від 1 до 55 символів",
   "BtsCommonMessages.btsIntegrationNameHint": "Розмір імені Інтеграції повинен бути від 1 до 55",
   "BtsCommonMessages.btsPasswordHint": "Пароль має бути довжиною від 1 до 55",
   "BtsCommonMessages.btsProjectIdHint": "ID проекту має бути довжиною від 1 до 55",
