@@ -419,22 +419,24 @@ export class BtsPropertiesForIssueForm extends Component {
           <Fragment>
             {!disabled && (
               <Fragment>
-                <FieldElement
-                  label="Issue Type"
-                  disabled={loading}
-                  withoutProvider
-                  description={intl.formatMessage(messages.availableIssueTypesHeader)}
-                  dataAutomationId="issueTypeField"
-                >
-                  <FieldErrorHint provideHint={false}>
-                    <Dropdown
-                      value={this.state.issueType}
-                      onChange={this.handleIssueTypeChange}
-                      options={this.issueTypeDropdownOptions}
-                      defaultWidth={false}
-                    />
-                  </FieldErrorHint>
-                </FieldElement>
+                {this.issueTypeDropdownOptions?.length > 0 && (
+                  <FieldElement
+                    label="Issue Type"
+                    disabled={loading}
+                    withoutProvider
+                    description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                    dataAutomationId="issueTypeField"
+                  >
+                    <FieldErrorHint provideHint={false}>
+                      <Dropdown
+                        value={this.state.issueType}
+                        onChange={this.handleIssueTypeChange}
+                        options={this.issueTypeDropdownOptions}
+                        defaultWidth={false}
+                      />
+                    </FieldErrorHint>
+                  </FieldElement>
+                )}
                 <div className={cx('default-property-block')}>
                   <h4 className={cx('default-properties-title')}>
                     {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
