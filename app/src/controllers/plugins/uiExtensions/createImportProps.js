@@ -77,6 +77,7 @@ import {
   btsIntegrationName,
   email,
   btsProjectId,
+  btsBoardId,
 } from 'common/utils/validation/commonValidators';
 import {
   composeValidators,
@@ -389,6 +390,7 @@ export const createImportProps = (pluginName) => ({
     btsUrl,
     btsProjectKey,
     btsProjectId,
+    btsBoardId,
     btsIntegrationName,
     helpers: { composeValidators, bindMessageToValidator },
     email,

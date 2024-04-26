@@ -203,6 +203,7 @@
   "Breadcrumbs.lostLaunch": "原始测试任务丢失",
   "Breadcrumbs.restorePath": "恢复路径",
   "BtsCommonMessages.authTypeLabel": "认证类型",
+  "BtsCommonMessages.btsBoardIdHint": "Board ID should have size from 1 to 55 characters",
   "BtsCommonMessages.btsIntegrationNameHint": "集成名称的长度应为1到55个字符",
   "BtsCommonMessages.btsPasswordHint": "Password should have size from 1 to 55",
   "BtsCommonMessages.btsProjectIdHint": "项目ID的长度取值范围是1~55个字符",

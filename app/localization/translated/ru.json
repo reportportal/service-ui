@@ -203,6 +203,7 @@
   "Breadcrumbs.lostLaunch": "Исходный запуск утерян",
   "Breadcrumbs.restorePath": "Восстановить путь",
   "BtsCommonMessages.authTypeLabel": "Тип авторизации",
+  "BtsCommonMessages.btsBoardIdHint": "Идентификатор панели должен иметь размер от 1 до 55 символов",
   "BtsCommonMessages.btsIntegrationNameHint": "Размер имени Интеграции должен быть от 1 до 55",
   "BtsCommonMessages.btsPasswordHint": "Пароль должен быть длиной от 1 до 55",
   "BtsCommonMessages.btsProjectIdHint": "ID проекта должен быть длиной от 1 до 55",
@@ -1041,7 +1042,6 @@
   "InviteUserModal.inviteExternalMember": "Приглашение участника было успешно зарегистрировано. Подтверждающая информация будет отправлена на предоставленный электронный адрес. Срок действия: 1 день.",
   "InviteUserModal.loginOrEmailLabel": "Логин или электронная почта",
   "InviteUserModal.memberWasInvited": "Участник '<b>{name}</b>' назначен на проект",
-
   "InviteUserModal.role": "Проектная роль",
   "IssueInfoTooltip.issueNotFoundDescription": "Ошибка не существует или нет соединения с СОД-интеграцией",
   "IssueInfoTooltip.issueNotFoundTitle": "Ошибок не обнаружено",

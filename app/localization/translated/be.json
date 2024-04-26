@@ -203,6 +203,7 @@
   "Breadcrumbs.lostLaunch": "Першапачатковы запуск згублены",
   "Breadcrumbs.restorePath": "Аднавіць шлях",
   "BtsCommonMessages.authTypeLabel": "Тып аўтарызацыі",
+  "BtsCommonMessages.btsBoardIdHint": "Ідэнтыфікатар панэлі павінен мець памер ад 1 да 55 знакаў",
   "BtsCommonMessages.btsIntegrationNameHint": "Памер імя Інтэграцыі павінен быць ад 1 да 55",
   "BtsCommonMessages.btsPasswordHint": "Пароль павінен быць памерам ад 1 да 55",
   "BtsCommonMessages.btsProjectIdHint": "ID праекта павінен быць памерам ад 1 да 55",
@@ -1041,7 +1042,6 @@
   "InviteUserModal.inviteExternalMember": "Запрашэнне ўдзельніка было паспяхова зарэгістравана. Якая пацвярджае інфармацыя будзе адпраўлена на прадстаўлены электронны адрас. Тэрмін дзеяння: 1 дзень.",
   "InviteUserModal.loginOrEmailLabel": "Лагін або электронная пошта",
   "InviteUserModal.memberWasInvited": "Удзельнік '<b>{name}</b>' прызначаны на праект",
-
   "InviteUserModal.role": "Праектная ролю",
   "IssueInfoTooltip.issueNotFoundDescription": "Памылка не існуе ці няма злучэння з САХ-інтэграцыяй",
   "IssueInfoTooltip.issueNotFoundTitle": "Памылка не знойдзена",
