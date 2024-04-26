@@ -95,6 +95,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
 
   const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
   const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
+  const isActivationRequired =
+    isUpdateSettingAvailable || (!isUpdateSettingAvailable && typedRules.length > 0);
+  const isDisabledTooltipActivationRequired = !pluginName && isActivationRequired;
+  const isEmailIntegrationRequired =
+    pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
 
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
@@ -246,25 +251,24 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
               </Toggle>
             </div>
           </FieldElement>
-          {isUpdateSettingAvailable &&
-            (!isPluginEnabled ? (
-              <div className={cx('disabled-plugin')}>
-                <p>
-                  <span className={cx('capitalized')}>{pluginName}</span>{' '}
-                  {formatMessage(messages.disabledPlugin, { pluginName })}
-                </p>
-                <RuleItemDisabledTooltip
-                  className={cx('info-tooltip')}
-                  tooltipContent={formatMessage(messages.disabledContactInfo)}
-                >
-                  <i className={cx('icon', 'about-icon')}>{Parser(AboutIcon)}</i>
-                </RuleItemDisabledTooltip>
-              </div>
-            ) : (
-              pluginName === EMAIL &&
-              !isEmailIntegrationAvailable && (
-                <div className={cx('integrate-configurations')}>
-                  <p>{formatMessage(messages.notConfiguredIntegration)}</p>
+          {isDisabledTooltipActivationRequired ? (
+            <div className={cx('disabled-plugin')}>
+              <p>
+                <span className={cx('capitalized')}>{pluginName}</span>{' '}
+                {formatMessage(messages.disabledPlugin, { pluginName })}
+              </p>
+              <RuleItemDisabledTooltip
+                className={cx('info-tooltip')}
+                tooltipContent={formatMessage(messages.disabledContactInfo)}
+              >
+                <i className={cx('icon', 'about-icon')}>{Parser(AboutIcon)}</i>
+              </RuleItemDisabledTooltip>
+            </div>
+          ) : (
+            isEmailIntegrationRequired && (
+              <div className={cx('integrate-configurations')}>
+                <p>{formatMessage(messages.notConfiguredIntegration)}</p>
+                {isUpdateSettingAvailable && (
                   <LinkComponent
                     to={{
                       type: PROJECT_SETTINGS_TAB_PAGE,
@@ -278,9 +282,10 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
                   >
                     {formatMessage(messages.configureIntegration)}
                   </LinkComponent>
-                </div>
-              )
-            ))}
+                )}
+              </div>
+            )
+          )}
         </div>
 
         <div className={cx('notifications-container')}>
