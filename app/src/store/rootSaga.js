@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import { dashboardSagas } from 'controllers/dashboard';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
+import { monitoringSagas } from 'controllers/monitoring';
 import { testItemsSagas } from 'controllers/testItem';
 import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
@@ -47,6 +48,7 @@ const sagas = [
   filterSagas,
   testSagas,
   membersSagas,
+  monitoringSagas,
   testItemsSagas,
   logSagas,
   historySagas,

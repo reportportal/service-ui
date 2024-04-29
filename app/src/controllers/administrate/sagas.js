@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@ import { MONITORING, MEMBERS } from 'common/constants/projectSections';
 import { projectSectionSelector } from 'controllers/pages';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
 import { fetchMembersAction } from 'controllers/members';
-import { eventsSagas, fetchEventsAction } from './events';
+import { fetchMonitoringAction } from 'controllers/monitoring/actionCreators';
+import { eventsSagas } from './events';
 import { allUsersSagas } from './allUsers';
 import { projectsSagas } from './projects';
 import { FETCH_PROJECT_DATA } from './constants';
 
 const pageDataActions = {
-  [MONITORING]: fetchEventsAction,
+  [MONITORING]: fetchMonitoringAction,
   [MEMBERS]: fetchMembersAction,
 };
 function* fetchProjectData() {
