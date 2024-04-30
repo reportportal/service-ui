@@ -22,7 +22,7 @@ import {
   pluginsLoadingSelector,
   availablePluginsSelector,
 } from 'controllers/plugins';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import {
   updatePagePropertiesAction,
   PROJECT_SETTINGS_TAB_PAGE,
@@ -64,7 +64,7 @@ export const Integrations = () => {
   }, [query, plugins]);
 
   if (loading) {
-    return <BubblesPreloader customClassName={cx('preloader')} />;
+    return <BubblesLoader className={cx('preloader')} />;
   }
   const onItemClick = (pluginData) => {
     dispatch(

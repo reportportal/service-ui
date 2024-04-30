@@ -35,7 +35,7 @@ import {
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { redirect } from 'redux-first-router';
 import { INTEGRATION_FORM } from './integrationForm/constants';
@@ -130,7 +130,7 @@ export const IntegrationSettings = (props) => {
   return (
     <div className={cx('integration-settings')}>
       {loading ? (
-        <BubblesPreloader customClassName={cx('center')} />
+        <BubblesLoader className={cx('center')} />
       ) : (
         <>
           <ConnectionSection

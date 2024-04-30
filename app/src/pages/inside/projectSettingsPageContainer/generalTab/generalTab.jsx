@@ -41,7 +41,7 @@ import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
@@ -431,7 +431,7 @@ export class GeneralTab extends Component {
             </Button>
             {processingData && (
               <div className={cx('preloader-block')}>
-                <BubblesPreloader customClassName={cx('preloader')} />
+                <BubblesLoader className={cx('preloader')} />
                 <span className={cx('preloader-text')}>
                   {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
                 </span>

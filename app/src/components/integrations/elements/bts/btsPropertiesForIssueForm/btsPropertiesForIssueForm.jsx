@@ -21,7 +21,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { projectIdSelector } from 'controllers/pages';
 import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -414,7 +414,7 @@ export class BtsPropertiesForIssueForm extends Component {
     return (
       <div className={cx('bts-properties-for-issue-form')}>
         {loading && !this.state.issueType ? (
-          <BubblesPreloader customClassName={cx('center')} />
+          <BubblesLoader className={cx('center')} />
         ) : (
           <Fragment>
             {!disabled && (
@@ -451,7 +451,7 @@ export class BtsPropertiesForIssueForm extends Component {
               </Fragment>
             )}
             {loading ? (
-              <BubblesPreloader customClassName={cx('center')} />
+              <BubblesLoader className={cx('center')} />
             ) : (
               <Fragment>
                 <DynamicFieldsSection
