@@ -25,7 +25,6 @@ import { dashboardSagas } from 'controllers/dashboard';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
-import { monitoringSagas } from 'controllers/monitoring';
 import { testItemsSagas } from 'controllers/testItem';
 import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
@@ -48,7 +47,6 @@ const sagas = [
   filterSagas,
   testSagas,
   membersSagas,
-  monitoringSagas,
   testItemsSagas,
   logSagas,
   historySagas,

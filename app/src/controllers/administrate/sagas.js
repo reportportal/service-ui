@@ -19,14 +19,13 @@ import { MONITORING, MEMBERS } from 'common/constants/projectSections';
 import { projectSectionSelector } from 'controllers/pages';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchMonitoringAction } from 'controllers/monitoring/actionCreators';
-import { eventsSagas } from './events';
+import { eventsSagas, fetchEventsAction } from './events';
 import { allUsersSagas } from './allUsers';
 import { projectsSagas } from './projects';
 import { FETCH_PROJECT_DATA } from './constants';
 
 const pageDataActions = {
-  [MONITORING]: fetchMonitoringAction,
+  [MONITORING]: fetchEventsAction(),
   [MEMBERS]: fetchMembersAction,
 };
 function* fetchProjectData() {
