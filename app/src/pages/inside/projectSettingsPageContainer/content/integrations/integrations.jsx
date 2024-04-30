@@ -17,12 +17,12 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import {
   availableGroupedPluginsSelector,
   pluginsLoadingSelector,
   availablePluginsSelector,
 } from 'controllers/plugins';
-import { BubblesLoader } from '@reportportal/ui-kit';
 import {
   updatePagePropertiesAction,
   PROJECT_SETTINGS_TAB_PAGE,

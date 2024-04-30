@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ErrorBoundary } from 'components/containers/errorBoundary';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { ErrorBoundary } from 'components/containers/errorBoundary';
 import { createImportProps } from 'controllers/plugins/uiExtensions/createImportProps';
 import { ExtensionError } from './extensionError';
 import { extensionType } from './extensionTypes';

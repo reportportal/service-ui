@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
@@ -35,7 +36,6 @@ import {
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { BubblesLoader } from '@reportportal/ui-kit';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { redirect } from 'redux-first-router';
 import { INTEGRATION_FORM } from './integrationForm/constants';
