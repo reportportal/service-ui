@@ -25,7 +25,7 @@ import { projectsSagas } from './projects';
 import { FETCH_PROJECT_DATA } from './constants';
 
 const pageDataActions = {
-  [MONITORING]: fetchEventsAction(),
+  [MONITORING]: fetchEventsAction,
   [MEMBERS]: fetchMembersAction,
 };
 function* fetchProjectData() {
