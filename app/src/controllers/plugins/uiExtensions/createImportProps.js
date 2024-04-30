@@ -30,6 +30,7 @@ import {
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -106,7 +107,6 @@ import {
 } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
@@ -296,7 +296,7 @@ export const createImportProps = (pluginName) => ({
     AttributeListFormField,
     Breadcrumbs,
     PlainTable,
-    BubblesPreloader,
+    BubblesLoader,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {

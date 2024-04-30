@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import {
@@ -111,7 +111,7 @@ export const MakeDecisionTabs = ({
             {loadingMLSuggest && (
               <div className={cx('central-block-default')}>
                 <div className={cx('preloader')}>
-                  <BubblesPreloader />
+                  <BubblesLoader />
                 </div>
                 <p className={cx('suggest-text')}>{formatMessage(messages.analyzingSuggestions)}</p>
               </div>

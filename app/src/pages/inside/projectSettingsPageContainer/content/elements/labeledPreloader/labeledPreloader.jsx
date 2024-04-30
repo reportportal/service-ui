@@ -17,14 +17,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import styles from './labeledPreloader.scss';
 
 const cx = classNames.bind(styles);
 
 export const LabeledPreloader = ({ text }) => (
   <span>
-    <BubblesPreloader customClassName={cx('preloader')} />
+    <BubblesLoader className={cx('preloader')} />
     <span className={cx('preloader-text')}>{text}</span>
   </span>
 );

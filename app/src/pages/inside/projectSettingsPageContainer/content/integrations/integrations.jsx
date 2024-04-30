@@ -17,12 +17,12 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import {
   availableGroupedPluginsSelector,
   pluginsLoadingSelector,
   availablePluginsSelector,
 } from 'controllers/plugins';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import {
   updatePagePropertiesAction,
   PROJECT_SETTINGS_TAB_PAGE,
@@ -64,7 +64,7 @@ export const Integrations = () => {
   }, [query, plugins]);
 
   if (loading) {
-    return <BubblesPreloader customClassName={cx('preloader')} />;
+    return <BubblesLoader className={cx('preloader')} />;
   }
   const onItemClick = (pluginData) => {
     dispatch(

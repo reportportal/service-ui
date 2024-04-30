@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { track } from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
@@ -28,7 +29,6 @@ import { loadingSelector } from 'controllers/uniqueErrors';
 import { fetchParentLaunchSuccessAction } from 'controllers/testItem/actionCreators';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { RP_CLUSTER_LAST_RUN } from '../constants';
 import { messages } from '../messages';
 import styles from './emptyUniqueErrors.scss';
@@ -92,7 +92,7 @@ export class EmptyUniqueErrors extends Component {
       return (
         <>
           <div className={cx('empty-unique-errors-loader')}>
-            <BubblesPreloader />
+            <BubblesLoader />
           </div>
           <p className={cx('empty-unique-errors-text')}>
             {formatMessage(messages.inProgressAnalysisText)}
