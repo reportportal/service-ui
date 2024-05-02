@@ -29,11 +29,7 @@ import { commonValidators } from 'common/utils/validation';
 import { projectIdSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import {
-  showNotification,
-  showDefaultErrorNotification,
-  NOTIFICATION_TYPES,
-} from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -107,7 +103,6 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
-    showDefaultErrorNotification,
   },
 )
 @reduxForm({
@@ -131,7 +126,6 @@ export class InviteUserModal extends Component {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
     selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
@@ -186,7 +180,10 @@ export class InviteUserModal extends Component {
           return data;
         })
         .catch((err) => {
-          this.props.showDefaultErrorNotification(err);
+          this.props.showNotification({
+            message: err.message,
+            type: NOTIFICATION_TYPES.ERROR,
+          });
           this.props.hideScreenLockAction();
           return {
             errorOccurred: true,
@@ -213,7 +210,10 @@ export class InviteUserModal extends Component {
         onInvite();
       })
       .catch((err) => {
-        this.props.showDefaultErrorNotification(err);
+        this.props.showNotification({
+          message: err.message,
+          type: NOTIFICATION_TYPES.ERROR,
+        });
         return {
           errorOccurred: true,
           ...err,
