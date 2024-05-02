@@ -75,7 +75,7 @@ import {
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
 } from './actionCreators';
-import { patternsSelector, projectNotificationsSelector } from './selectors';
+import { patternsSelector } from './selectors';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -209,11 +209,6 @@ function* addProjectNotification({ payload: notification }) {
       method: 'post',
       data: notification,
     });
-
-    const notifications = yield select(projectNotificationsSelector);
-    if (!notifications.length) {
-      yield call(updateNotificationState, { notificationState: true });
-    }
 
     yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
     yield put(
