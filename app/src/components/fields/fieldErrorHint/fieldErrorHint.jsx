@@ -131,6 +131,10 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.recipientsHint',
     defaultMessage: 'Please enter existent user name on your project or valid email',
   },
+  webhookURLHint: {
+    id: 'AddEditNotificationCaseModal.webhookURLHint',
+    defaultMessage: 'Field is required. Please enter valid Webhook URL',
+  },
   ruleNameHint: {
     id: 'AddEditNotificationModal.ruleNameHint',
     defaultMessage: "Field is required. Rule name should have size from '1' to '55' characters",

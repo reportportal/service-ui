@@ -155,7 +155,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
           actionType: MODAL_ACTION_TYPE_ADD,
           onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
-          notifications,
+          notifications: typedRules,
         },
       }),
     );
@@ -171,7 +171,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
           type: pluginName,
           actionType: MODAL_ACTION_TYPE_EDIT,
           onSave: confirmEdit,
-          notification,
+          notification: { ...notification, ...notification?.ruleDetails },
           notifications,
         },
       }),
@@ -193,11 +193,12 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
   const onCopy = (notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
 
-    const { id, ...newNotification } = notification;
+    const { id, ...newNotification } = { ...notification, ...notification?.ruleDetails };
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
+          type: pluginName,
           actionType: MODAL_ACTION_TYPE_COPY,
           onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: {
@@ -295,6 +296,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
                 data={typedRules.map((rule) => ({
                   name: rule.ruleName,
                   ...rule,
+                  ...rule.ruleDetails,
                 }))}
                 actions={actions}
                 onToggle={onToggleHandler}

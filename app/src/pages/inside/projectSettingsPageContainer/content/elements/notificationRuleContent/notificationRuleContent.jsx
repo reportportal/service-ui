@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
+import { EMAIL } from 'common/constants/pluginNames';
 import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
@@ -29,6 +30,10 @@ const messages = defineMessages({
   recipientsLabel: {
     id: 'AddEditNotificationCaseModal.recipientsLabel',
     defaultMessage: 'Recipients',
+  },
+  webhookURLLabel: {
+    id: 'AddEditNotificationCaseModal.webhookURLLabel',
+    defaultMessage: 'Webhook URL',
   },
   launchOwner: {
     id: 'NotificationRule.launchOwner',
@@ -81,7 +86,16 @@ const messages = defineMessages({
 });
 
 export const NotificationRuleContent = ({
-  item: { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase },
+  item: {
+    type,
+    informOwner,
+    recipients,
+    attributes,
+    attributesOperator,
+    launchNames,
+    sendCase,
+    webhookURL,
+  },
 }) => {
   const { formatMessage } = useIntl();
 
@@ -110,6 +124,21 @@ export const NotificationRuleContent = ({
     }
   };
 
+  const DynamicFieldSection = () =>
+    type === EMAIL ? (
+      <>
+        <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
+        <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+      </>
+    ) : (
+      webhookURL && (
+        <>
+          <span className={cx('field')}>{formatMessage(messages.webhookURLLabel)}</span>
+          <span className={cx('value')}>{webhookURL}</span>
+        </>
+      )
+    );
+
   return (
     <div className={cx('info')}>
       {launchNames.length > 0 && (
@@ -120,8 +149,7 @@ export const NotificationRuleContent = ({
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
       <span className={cx('value')}>{inCaseOptions[sendCase]}</span>
-      <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-      <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+      <DynamicFieldSection />
       {attributes.length > 0 && (
         <>
           <span className={cx('field', 'attributes-text')}>{getAttributesFieldText()}</span>
@@ -140,6 +168,8 @@ NotificationRuleContent.propTypes = {
     recipients: PropTypes.array,
     attributes: PropTypes.array,
     informOwner: PropTypes.bool,
+    type: PropTypes.string,
+    webhookURL: PropTypes.string,
     attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
 };

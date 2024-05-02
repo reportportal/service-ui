@@ -37,6 +37,7 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
+import { EMAIL } from 'common/constants/pluginNames';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -56,6 +57,7 @@ import {
   RECIPIENTS_FIELD_KEY,
   RULE_NAME_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  WEBHOOK_URL_FIELD_KEY,
 } from '../../constants';
 import styles from './addEditNotificationModal.scss';
 
@@ -101,6 +103,10 @@ const messages = defineMessages({
   launchOwnerLabel: {
     id: 'AddEditNotificationCaseModal.launchOwnerLabel',
     defaultMessage: 'Launch owner (who launched - that receives)',
+  },
+  webhookURL: {
+    id: 'AddEditNotificationCaseModal.webhookURL',
+    defaultMessage: 'Webhook URL',
   },
   inCaseLabel: {
     id: 'AddEditNotificationCaseModal.inCaseLabel',
@@ -333,25 +339,42 @@ const AddEditNotificationModal = ({
             <FieldText label={formatMessage(messages.nameLabel)} defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldProvider>
-        <FieldElement
-          name={RECIPIENTS_FIELD_KEY}
-          className={cx('autocomplete')}
-          type="text"
-          label={formatMessage(messages.recipientsLabel)}
-          dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
-        >
-          <FieldErrorHint provideHint={false}>
-            <RecipientsContainer />
-          </FieldErrorHint>
-        </FieldElement>
-        <FieldElement
-          name={INFORM_OWNER_FIELD_KEY}
-          type="text"
-          className={cx('checkbox')}
-          dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
-        >
-          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
-        </FieldElement>
+
+        {data.type === EMAIL ? (
+          <>
+            <FieldElement
+              name={RECIPIENTS_FIELD_KEY}
+              className={cx('autocomplete')}
+              type="text"
+              label={formatMessage(messages.recipientsLabel)}
+              dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
+            >
+              <FieldErrorHint provideHint={false}>
+                <RecipientsContainer />
+              </FieldErrorHint>
+            </FieldElement>
+            <FieldElement
+              name={INFORM_OWNER_FIELD_KEY}
+              type="text"
+              className={cx('checkbox')}
+              dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
+            >
+              <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
+            </FieldElement>
+          </>
+        ) : (
+          <FieldElement name={WEBHOOK_URL_FIELD_KEY} className={cx('webhook')} type="text">
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.webhookURL)}
+                placeholder={'https://...'}
+                isRequired
+                defaultWidth={false}
+              />
+            </FieldErrorHint>
+          </FieldElement>
+        )}
+
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
@@ -425,27 +448,40 @@ AddEditNotificationModal.defaultProps = {
   data: {},
   dirty: false,
 };
+const getDynamicFieldValidation = (type, recipients, informOwner, webhookURL) => {
+  if (type === EMAIL) {
+    return {
+      recipients: bindMessageToValidator(
+        validate.createNotificationRecipientsValidator(informOwner),
+        'recipientsHint',
+      )(recipients),
+    };
+  } else {
+    return {
+      webhookURL: bindMessageToValidator(validate.url, 'webhookURLHint')(webhookURL),
+    };
+  }
+};
 
 export default withModal('addEditNotificationModal')(
   reduxForm({
     form: NOTIFICATION_FORM,
     validate: (
-      { ruleName, recipients, informOwner, launchNames, attributes },
-      { data: { notification, notifications } },
-    ) => ({
-      ruleName: commonValidators.createRuleNameValidator(
-        notifications.map((item) => ({ name: item.ruleName, ...item })),
-        notification?.id,
-      )(ruleName),
-      recipients: bindMessageToValidator(
-        validate.createNotificationRecipientsValidator(informOwner),
-        'recipientsHint',
-      )(recipients),
-      attributes: !validate.attributesArray(attributes),
-      launchNames: bindMessageToValidator(
-        validate.notificationLaunchNames,
-        'launchesHint',
-      )(launchNames),
-    }),
+      { ruleName, recipients, informOwner, launchNames, attributes, webhookURL },
+      { data: { notification, notifications = [], type } },
+    ) => {
+      return {
+        ...getDynamicFieldValidation(type, recipients, informOwner, webhookURL),
+        ruleName: commonValidators.createRuleNameValidator(
+          notifications.map((item) => ({ name: item.ruleName, ...item })),
+          notification?.id,
+        )(ruleName),
+        attributes: !validate.attributesArray(attributes),
+        launchNames: bindMessageToValidator(
+          validate.notificationLaunchNames,
+          'launchesHint',
+        )(launchNames),
+      };
+    },
   })(AddEditNotificationModal),
 );
