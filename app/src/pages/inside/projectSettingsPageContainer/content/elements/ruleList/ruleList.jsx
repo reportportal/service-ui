@@ -32,6 +32,7 @@ const PlainRuleList = ({
   ruleItemContent,
   handleRuleItemClick,
   onRuleNameClick,
+  className,
 }) => {
   const Content = ruleItemContent;
   return (
@@ -46,6 +47,7 @@ const PlainRuleList = ({
           content={ruleItemContent && <Content item={item} />}
           onClick={handleRuleItemClick}
           onRuleNameClick={onRuleNameClick}
+          className={className}
         />
       ))}
     </Fragment>

@@ -22,16 +22,20 @@ import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
 
-export const Layout = ({ description, children }) => {
+export const Layout = ({ description, children, className }) => {
   return (
     <>
       <TabDescription>{description}</TabDescription>
       <Divider />
-      <div className={cx('children')}>{children}</div>
+      <div className={cx(className)}>{children}</div>
     </>
   );
 };
 Layout.propTypes = {
   description: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+};
+Layout.defaultProps = {
+  className: 'children',
 };

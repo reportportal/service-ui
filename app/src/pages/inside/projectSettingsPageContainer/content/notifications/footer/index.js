@@ -1,0 +1,1 @@
+export { NotificationsFooter } from './footer';

@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { PlainTableHeader } from './plainTableHeader';
 import { columnPropTypes } from './propTypes';
 import { PlainTableBody } from './plainTableBody';
@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 
 export const PlainTable = ({ columns, data, actions, isLoading }) =>
   isLoading ? (
-    <BubblesPreloader />
+    <BubblesLoader />
   ) : (
     <div className={cx('table-container')}>
       <PlainTableHeader columns={columns} hasActions={Boolean(actions.length)} />

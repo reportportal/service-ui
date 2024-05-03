@@ -73,7 +73,7 @@ import {
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
 } from './actionCreators';
-import { patternsSelector, projectNotificationsSelector, projectKeySelector } from './selectors';
+import { patternsSelector, projectKeySelector } from './selectors';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -179,12 +179,15 @@ function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
-function* updateNotificationState(enabled) {
+function* updateNotificationState({
+  notificationState: enabled,
+  pluginName: attributeKey = NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
+}) {
   const projectKey = yield select(projectKeySelector);
   const updatedConfig = {
     configuration: {
       attributes: {
-        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
+        [attributeKey]: enabled.toString(),
       },
     },
   };
@@ -204,11 +207,6 @@ function* addProjectNotification({ payload: notification }) {
       method: 'post',
       data: notification,
     });
-
-    const notifications = yield select(projectNotificationsSelector);
-    if (!notifications.length) {
-      yield call(updateNotificationState, true);
-    }
 
     yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
     yield put(

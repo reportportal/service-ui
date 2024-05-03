@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { ErrorBoundary } from 'components/containers/errorBoundary';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { createImportProps } from 'controllers/plugins/uiExtensions/createImportProps';
 import { ExtensionError } from './extensionError';
 import { extensionType } from './extensionTypes';
@@ -22,7 +22,7 @@ function ExtensionLoader({ extension, withPreloader, ...componentProps }) {
   const extensionImportProps = createImportProps(pluginName);
 
   return (
-    <React.Suspense fallback={withPreloader ? <BubblesPreloader /> : null}>
+    <React.Suspense fallback={withPreloader ? <BubblesLoader /> : null}>
       {Component ? <Component {...extensionImportProps} {...componentProps} /> : null}
     </React.Suspense>
   );

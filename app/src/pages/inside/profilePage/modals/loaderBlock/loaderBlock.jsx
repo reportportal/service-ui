@@ -16,7 +16,7 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import styles from './loaderBlock.scss';
 
@@ -26,7 +26,7 @@ export const LoaderBlock = ({ text, className }) => {
   return (
     <div className={cx('loader-block', className)}>
       <div className={cx('loader')}>
-        <BubblesPreloader />
+        <BubblesLoader />
       </div>
       <div className={cx('loader-text')}>{text}</div>
     </div>

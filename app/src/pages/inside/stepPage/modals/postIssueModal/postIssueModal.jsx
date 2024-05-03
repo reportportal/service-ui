@@ -320,9 +320,13 @@ export class PostIssueModal extends Component {
     const { pluginName, integrationId } = this.state;
     const {
       integrationParameters: { project: btsProject, url: btsUrl },
-      integrationType: { details },
+      integrationType: {
+        details: { allowedCommands },
+      },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-    const isCommandAvailable = details?.allowedCommands?.indexOf(COMMAND_POST_ISSUE) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1
+      : false;
     const requestParams = { data, method: 'POST' };
     let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
 

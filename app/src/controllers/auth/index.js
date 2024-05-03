@@ -26,6 +26,8 @@ export { authReducer } from './reducer';
 export {
   isAuthorizedSelector,
   tokenSelector,
+  tokenTypeSelector,
+  tokenValueSelector,
   lastFailedLoginTimeSelector,
   badCredentialsSelector,
 } from './selectors';

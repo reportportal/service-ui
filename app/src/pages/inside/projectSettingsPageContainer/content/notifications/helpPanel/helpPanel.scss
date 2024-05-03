@@ -1,0 +1,65 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.help-panel-container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding-top: 24px;
+  min-height: 84px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+
+  .info-item {
+    display: flex;
+    gap: 16px;
+    width: 300px;
+
+    .main-item-icon {
+      width: 32px;
+      height: 32px;
+      background-color: $COLOR--bg-000;
+      border-radius: 8px;
+      box-shadow: 0px 1px 3px 0px $COLOR--item-shadow-hover;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .item-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 240px;
+
+      p {
+        font-size: 11px;
+        line-height: 16px;
+        font-family: $FONT-ROBOTO-REGULAR;
+        color: $COLOR--e-300;
+      }
+    }
+  }
+}
+
+.icon > svg,
+.icon {
+  width: 16px;
+  height: 16px;
+}
+.icon > svg > * {
+  fill: $COLOR--e-300;
+}
