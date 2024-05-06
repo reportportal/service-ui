@@ -17,8 +17,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from './propTypes';
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
@@ -71,7 +71,7 @@ export class AutocompleteOptions extends Component {
       return (
         <>
           <AutocompletePrompt variant={variant}>
-            <BubblesPreloader />
+            <BubblesLoader />
           </AutocompletePrompt>
           {!createWithoutConfirmation && this.renderNewItem(options)}
         </>

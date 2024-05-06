@@ -14,10 +14,34 @@
  * limitations under the License.
  */
 
-.notifications-container {
-  margin-top: 44px;
-}
-
 .button {
   margin-left: auto;
+}
+
+.name-wrapper {
+  flex: 1;
+  width: 0;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+  color: $COLOR--almost-black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fieldElement {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 44px;
+}
+
+.toggle {
+  gap: 8px;
+  height: 24px;
+}
+
+.types-name {
+  text-transform: capitalize;
 }

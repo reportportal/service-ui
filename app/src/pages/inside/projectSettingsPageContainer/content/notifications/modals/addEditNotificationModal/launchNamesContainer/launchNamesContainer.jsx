@@ -36,7 +36,8 @@ const messages = defineMessages({
   },
   launchNamesNote: {
     id: 'AddEditNotificationCaseModal.launchNamesNote',
-    defaultMessage: 'Send notifications on the finish of selected launches',
+    defaultMessage:
+      'Send notifications on the finish of all launches (empty field) or selected launches.',
   },
   launchNamesMessageCaption: {
     id: 'AddEditNotificationCaseModal.launchNamesMessageCaption',

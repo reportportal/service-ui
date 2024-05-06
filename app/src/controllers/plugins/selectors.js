@@ -15,7 +15,7 @@
  */
 
 import { createSelector } from 'reselect';
-import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { BTS_GROUP_TYPE, NOTIFICATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { EMAIL } from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
@@ -36,8 +36,12 @@ export const publicPluginsSelector = (state) => {
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
+export const notificationPluginsSelector = createSelector(pluginsSelector, (plugins) => {
+  return plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE);
+});
+
 export const globalIntegrationsSelector = (state) =>
-  domainSelector(state).integrations.globalIntegrations || [];
+  domainSelector(state).integrations?.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 

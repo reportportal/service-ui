@@ -20,8 +20,8 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
@@ -406,27 +406,29 @@ export class BtsPropertiesForIssueForm extends Component {
     return (
       <div className={cx('bts-properties-for-issue-form')}>
         {loading && !this.state.issueType ? (
-          <BubblesPreloader customClassName={cx('center')} />
+          <BubblesLoader className={cx('center')} />
         ) : (
           <Fragment>
             {!disabled && (
               <Fragment>
-                <FieldElement
-                  label="Issue Type"
-                  disabled={loading}
-                  withoutProvider
-                  description={intl.formatMessage(messages.availableIssueTypesHeader)}
-                  dataAutomationId="issueTypeField"
-                >
-                  <FieldErrorHint provideHint={false}>
-                    <Dropdown
-                      value={this.state.issueType}
-                      onChange={this.handleIssueTypeChange}
-                      options={this.issueTypeDropdownOptions}
-                      defaultWidth={false}
-                    />
-                  </FieldErrorHint>
-                </FieldElement>
+                {this.issueTypeDropdownOptions?.length > 0 && (
+                  <FieldElement
+                    label="Issue Type"
+                    disabled={loading}
+                    withoutProvider
+                    description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                    dataAutomationId="issueTypeField"
+                  >
+                    <FieldErrorHint provideHint={false}>
+                      <Dropdown
+                        value={this.state.issueType}
+                        onChange={this.handleIssueTypeChange}
+                        options={this.issueTypeDropdownOptions}
+                        defaultWidth={false}
+                      />
+                    </FieldErrorHint>
+                  </FieldElement>
+                )}
                 <div className={cx('default-property-block')}>
                   <h4 className={cx('default-properties-title')}>
                     {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
@@ -441,7 +443,7 @@ export class BtsPropertiesForIssueForm extends Component {
               </Fragment>
             )}
             {loading ? (
-              <BubblesPreloader customClassName={cx('center')} />
+              <BubblesLoader className={cx('center')} />
             ) : (
               <Fragment>
                 <DynamicFieldsSection

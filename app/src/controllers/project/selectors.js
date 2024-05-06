@@ -25,6 +25,7 @@ import {
   PA_ATTRIBUTE_ENABLED_KEY,
   AA_ATTRIBUTE_ENABLED_KEY,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
+  NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY,
 } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -159,6 +160,12 @@ export const projectNotificationsEnabledSelector = (state) =>
 
 export const projectNotificationsStateSelector = (state) =>
   !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
+
+export const projectPluginNotificationsStateSelector = (pluginName) =>
+  createSelector(
+    projectAttributesSelector,
+    (attributes) => attributes[NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginName)] === 'true',
+  );
 
 export const projectNotificationsLoadingSelector = (state) =>
   projectNotificationSelector(state).loading || false;

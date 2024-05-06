@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -252,6 +252,7 @@ const AddEditNotificationModal = ({
 
     const newFormValues = {
       ...formFieldValues,
+      type: data.type,
       attributes: !isEditorShown ? [] : formFieldValues.attributes,
     };
 
@@ -404,6 +405,7 @@ const AddEditNotificationModal = ({
 };
 AddEditNotificationModal.propTypes = {
   data: PropTypes.shape({
+    type: PropTypes.string,
     notification: PropTypes.object,
     notifications: PropTypes.array,
     onSave: PropTypes.func,

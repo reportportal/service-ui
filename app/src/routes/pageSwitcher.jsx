@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { ThemeProvider } from '@reportportal/ui-kit';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
 import { pageSelector, isInitialDispatchDoneSelector } from 'controllers/pages';
@@ -64,17 +65,19 @@ export default class PageSwitcher extends React.Component {
 
     return (
       <div className={styles.pageSwitcher}>
-        <Layout rawContent={rawContent}>
-          {mode === 'development' && <LocalizationSwitcher />}
-          <PageErrorBoundary key={page}>
-            <DndProvider backend={HTML5Backend}>
-              <PageComponent />
-            </DndProvider>
-          </PageErrorBoundary>
-        </Layout>
-        <ModalContainer />
-        <NotificationContainer />
-        <ScreenLock />
+        <ThemeProvider>
+          <Layout rawContent={rawContent}>
+            {mode === 'development' && <LocalizationSwitcher />}
+            <PageErrorBoundary key={page}>
+              <DndProvider backend={HTML5Backend}>
+                <PageComponent />
+              </DndProvider>
+            </PageErrorBoundary>
+          </Layout>
+          <ModalContainer />
+          <NotificationContainer />
+          <ScreenLock />
+        </ThemeProvider>
       </div>
     );
   }
