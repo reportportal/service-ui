@@ -113,17 +113,6 @@
   }
 }
 
-.user-control {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 8px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $COLOR--darkmode-gray-500;
-  }
-}
-
 .hover {
   background-color: $COLOR--darkmode-gray-500;
 
@@ -135,5 +124,16 @@
     path {
       fill: $COLOR--white-two;
     }
+  }
+}
+
+.user-control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
+  cursor: pointer;
+
+  &:hover {
+    @extend .hover;
   }
 }

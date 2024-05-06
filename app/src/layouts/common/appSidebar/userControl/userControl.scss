@@ -27,17 +27,6 @@
   color: $COLOR--darkmode-gray-100;
   width: 100%;
 
-  &:hover {
-    background-color: $COLOR--darkmode-gray-500;
-    .user-details {
-      color: $COLOR--white-two;
-    }
-
-    path {
-      fill: $COLOR--white-two;
-    }
-  }
-
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
@@ -103,9 +92,11 @@
 
 .popover-control {
   height: 48px;
-  width: 100%;
+  width: 264px;
   padding: 0 6px;
   border: 2px solid transparent;
+  display: flex;
+  align-items: center;
 
   &:focus-visible {
     outline: none;
