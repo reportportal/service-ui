@@ -80,7 +80,7 @@ const RuleItemDisabledTooltip = withTooltip({
   },
 })(({ children }) => children);
 
-export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabled }) => {
+export const RuleGroup = ({ pluginName, typedRules, isPluginEnabled, ruleFields }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
@@ -152,10 +152,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
         id: 'addEditNotificationModal',
         data: {
           type: pluginName,
+          ruleFields,
           actionType: MODAL_ACTION_TYPE_ADD,
           onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
-          notifications,
+          notifications: typedRules,
         },
       }),
     );
@@ -169,10 +170,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
         id: 'addEditNotificationModal',
         data: {
           type: pluginName,
+          ruleFields,
           actionType: MODAL_ACTION_TYPE_EDIT,
           onSave: confirmEdit,
-          notification,
-          notifications,
+          notification: { ...notification, ...notification?.ruleDetails },
+          notifications: typedRules,
         },
       }),
     );
@@ -193,18 +195,19 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
   const onCopy = (notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
 
-    const { id, ...newNotification } = notification;
+    const { id, ...newNotification } = { ...notification, ...notification?.ruleDetails };
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
           actionType: MODAL_ACTION_TYPE_COPY,
+          ruleFields,
           onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: {
             ...newNotification,
             ruleName: notification.ruleName + COPY_POSTFIX,
           },
-          notifications,
+          notifications: typedRules,
         },
       }),
     );
@@ -295,6 +298,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
                 data={typedRules.map((rule) => ({
                   name: rule.ruleName,
                   ...rule,
+                  ruleFields,
                 }))}
                 actions={actions}
                 onToggle={onToggleHandler}
@@ -340,6 +344,11 @@ const ruleShape = PropTypes.shape({
 RuleGroup.propTypes = {
   pluginName: PropTypes.string.isRequired,
   typedRules: PropTypes.arrayOf(ruleShape),
-  notifications: PropTypes.arrayOf(ruleShape).isRequired,
+  ruleFields: PropTypes.array,
   isPluginEnabled: PropTypes.bool.isRequired,
+};
+
+RuleGroup.defaultProps = {
+  typedRules: [],
+  ruleFields: [],
 };

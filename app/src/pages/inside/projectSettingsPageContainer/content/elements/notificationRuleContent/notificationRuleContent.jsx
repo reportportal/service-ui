@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
+import { EMAIL } from 'common/constants/pluginNames';
 import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
@@ -81,7 +82,17 @@ const messages = defineMessages({
 });
 
 export const NotificationRuleContent = ({
-  item: { informOwner, recipients, attributes, attributesOperator, launchNames, sendCase },
+  item: {
+    type,
+    informOwner,
+    recipients,
+    attributes,
+    attributesOperator,
+    launchNames,
+    sendCase,
+    ruleDetails,
+    ruleFields,
+  },
 }) => {
   const { formatMessage } = useIntl();
 
@@ -109,6 +120,31 @@ export const NotificationRuleContent = ({
       return formatMessage(messages.attributesLabel);
     }
   };
+  const DynamicFieldSection = () => {
+    if (type === EMAIL)
+      return (
+        <>
+          <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
+          <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+        </>
+      );
+    else {
+      return (
+        ruleDetails &&
+        ruleFields.reduce((acc, field) => {
+          if (ruleDetails[field.name]) {
+            acc.push(
+              <Fragment key={field.name}>
+                <span className={cx('field')}>{field.label}</span>
+                <span className={cx('value')}>{ruleDetails[field.name]}</span>
+              </Fragment>,
+            );
+          }
+          return acc;
+        }, [])
+      );
+    }
+  };
 
   return (
     <div className={cx('info')}>
@@ -120,8 +156,7 @@ export const NotificationRuleContent = ({
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
       <span className={cx('value')}>{inCaseOptions[sendCase]}</span>
-      <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-      <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
+      <DynamicFieldSection />
       {attributes.length > 0 && (
         <>
           <span className={cx('field', 'attributes-text')}>{getAttributesFieldText()}</span>
@@ -135,11 +170,14 @@ export const NotificationRuleContent = ({
 };
 NotificationRuleContent.propTypes = {
   item: PropTypes.shape({
+    type: PropTypes.string.isRequired,
     launchNames: PropTypes.array,
     sendCase: PropTypes.string,
     recipients: PropTypes.array,
     attributes: PropTypes.array,
     informOwner: PropTypes.bool,
+    ruleDetails: PropTypes.object,
+    ruleFields: PropTypes.array,
     attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
 };
