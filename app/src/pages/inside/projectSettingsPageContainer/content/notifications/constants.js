@@ -24,6 +24,8 @@ export const LAUNCH_NAMES_FIELD_KEY = 'launchNames';
 export const ATTRIBUTES_FIELD_KEY = 'attributes';
 export const ENABLED_FIELD_KEY = 'enabled';
 export const ATTRIBUTES_OPERATOR_FIELD_KEY = 'attributesOperator';
+export const FIELD_TYPE_TEXT = 'text';
+export const FIELD_TYPE_MULTILINE_TEXT = 'multilineText';
 
 export const LAUNCH_CASES = {
   ALWAYS: 'always',

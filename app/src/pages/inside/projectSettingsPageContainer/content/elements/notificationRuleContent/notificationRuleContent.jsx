@@ -20,7 +20,12 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import { EMAIL } from 'common/constants/pluginNames';
-import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
+import {
+  ATTRIBUTES_OPERATORS,
+  FIELD_TYPE_MULTILINE_TEXT,
+  FIELD_TYPE_TEXT,
+  LAUNCH_CASES,
+} from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
@@ -120,7 +125,7 @@ export const NotificationRuleContent = ({
       return formatMessage(messages.attributesLabel);
     }
   };
-  const DynamicFieldSection = () => {
+  const renderDynamicFields = () => {
     if (type === EMAIL)
       return (
         <>
@@ -156,7 +161,7 @@ export const NotificationRuleContent = ({
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
       <span className={cx('value')}>{inCaseOptions[sendCase]}</span>
-      <DynamicFieldSection />
+      {renderDynamicFields()}
       {attributes.length > 0 && (
         <>
           <span className={cx('field', 'attributes-text')}>{getAttributesFieldText()}</span>
@@ -168,6 +173,18 @@ export const NotificationRuleContent = ({
     </div>
   );
 };
+const ruleField = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  description: PropTypes.string,
+  type: PropTypes.oneOf([FIELD_TYPE_TEXT, FIELD_TYPE_MULTILINE_TEXT]),
+  required: PropTypes.boolean,
+  placeholder: PropTypes.string,
+  validation: PropTypes.shape({
+    type: PropTypes.string,
+    message: PropTypes.string,
+  }),
+});
 NotificationRuleContent.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.string.isRequired,
@@ -177,7 +194,7 @@ NotificationRuleContent.propTypes = {
     attributes: PropTypes.array,
     informOwner: PropTypes.bool,
     ruleDetails: PropTypes.object,
-    ruleFields: PropTypes.array,
+    ruleFields: PropTypes.arrayOf(ruleField),
     attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
 };

@@ -38,6 +38,7 @@ import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSe
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
+import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -57,6 +58,8 @@ import {
   RECIPIENTS_FIELD_KEY,
   RULE_NAME_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  FIELD_TYPE_TEXT,
+  FIELD_TYPE_MULTILINE_TEXT,
 } from '../../constants';
 import styles from './addEditNotificationModal.scss';
 
@@ -197,6 +200,10 @@ const NOTIFICATION_FORM = 'notificationForm';
 
 const attributesValueSelector = formValueSelector(NOTIFICATION_FORM);
 
+const fieldByType = {
+  [FIELD_TYPE_TEXT]: FieldText,
+  [FIELD_TYPE_MULTILINE_TEXT]: FieldTextFlex,
+};
 const AddEditNotificationModal = ({
   data,
   data: { onSave },
@@ -357,24 +364,27 @@ const AddEditNotificationModal = ({
             </FieldElement>
           </>
         ) : (
-          data.ruleFields.map((field) => (
-            <FieldElement
-              name={field.name}
-              key={field.name}
-              type={field.type}
-              className={cx('dynamicField')}
-              description={field.description}
-            >
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={field.label}
-                  placeholder={field.placeholder}
-                  defaultWidth={false}
-                  isRequired={field.required}
-                />
-              </FieldErrorHint>
-            </FieldElement>
-          ))
+          data.ruleFields.map((field) => {
+            const TypedComponent = fieldByType[field.type];
+            return (
+              <FieldElement
+                name={field.name}
+                key={field.name}
+                type={field.type}
+                className={cx('dynamicField')}
+                description={field.description}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <TypedComponent
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    defaultWidth={false}
+                    isRequired={field.required}
+                  />
+                </FieldErrorHint>
+              </FieldElement>
+            );
+          })
         )}
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
@@ -438,11 +448,11 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
     };
   } else {
     return ruleFields.reduce((acc, field) => {
-      const { type: validationType, message } = field.validation || {};
-      if (field.required) {
+      const { type: validationType, errorMessage } = field.validation || {};
+      if (validate[validationType]) {
         acc[field.name] = bindMessageToValidator(
           validate[validationType],
-          message,
+          errorMessage,
         )(inputValues[field.name]);
       }
       return acc;
