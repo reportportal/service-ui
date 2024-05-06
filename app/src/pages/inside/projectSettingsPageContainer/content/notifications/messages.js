@@ -121,7 +121,7 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'NotificationsEnableForm.tabDescription',
     defaultMessage:
-      'Manage your launch related notifications for different communication channels: Email, Slack, Teams, etc. ',
+      'Manage your launch related notifications for different communication channels: Email, Slack, etc. ',
   },
   allNotifications: {
     id: 'NotificationsEnableForm.allNotifications',

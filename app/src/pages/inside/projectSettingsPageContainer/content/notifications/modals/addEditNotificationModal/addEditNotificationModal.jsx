@@ -37,6 +37,9 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
+import { EMAIL } from 'common/constants/pluginNames';
+import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
+import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -56,6 +59,8 @@ import {
   RECIPIENTS_FIELD_KEY,
   RULE_NAME_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  FIELD_TYPE_TEXT,
+  FIELD_TYPE_MULTILINE_TEXT,
 } from '../../constants';
 import styles from './addEditNotificationModal.scss';
 
@@ -196,6 +201,10 @@ const NOTIFICATION_FORM = 'notificationForm';
 
 const attributesValueSelector = formValueSelector(NOTIFICATION_FORM);
 
+const fieldByType = {
+  [FIELD_TYPE_TEXT]: FieldText,
+  [FIELD_TYPE_MULTILINE_TEXT]: FieldTextFlex,
+};
 const AddEditNotificationModal = ({
   data,
   data: { onSave },
@@ -333,25 +342,51 @@ const AddEditNotificationModal = ({
             <FieldText label={formatMessage(messages.nameLabel)} defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldProvider>
-        <FieldElement
-          name={RECIPIENTS_FIELD_KEY}
-          className={cx('autocomplete')}
-          type="text"
-          label={formatMessage(messages.recipientsLabel)}
-          dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
-        >
-          <FieldErrorHint provideHint={false}>
-            <RecipientsContainer />
-          </FieldErrorHint>
-        </FieldElement>
-        <FieldElement
-          name={INFORM_OWNER_FIELD_KEY}
-          type="text"
-          className={cx('checkbox')}
-          dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
-        >
-          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
-        </FieldElement>
+        {data.type === EMAIL ? (
+          <>
+            <FieldElement
+              name={RECIPIENTS_FIELD_KEY}
+              className={cx('autocomplete')}
+              type="text"
+              label={formatMessage(messages.recipientsLabel)}
+              dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
+            >
+              <FieldErrorHint provideHint={false}>
+                <RecipientsContainer />
+              </FieldErrorHint>
+            </FieldElement>
+            <FieldElement
+              name={INFORM_OWNER_FIELD_KEY}
+              type="text"
+              className={cx('checkbox')}
+              dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
+            >
+              <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
+            </FieldElement>
+          </>
+        ) : (
+          data.ruleFields.map((field) => {
+            const TypedComponent = fieldByType[field.type];
+            return (
+              <FieldElement
+                name={field.name}
+                key={field.name}
+                type={field.type}
+                className={cx('dynamicField')}
+                description={field.description}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <TypedComponent
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    defaultWidth={false}
+                    isRequired={field.required}
+                  />
+                </FieldErrorHint>
+              </FieldElement>
+            );
+          })
+        )}
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
@@ -403,6 +438,29 @@ const AddEditNotificationModal = ({
     </ModalLayout>
   );
 };
+
+const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
+  if (type === EMAIL) {
+    return {
+      recipients: bindMessageToValidator(
+        validate.createNotificationRecipientsValidator(inputValues.informOwner),
+        'recipientsHint',
+      )(inputValues.recipients),
+    };
+  } else {
+    return ruleFields.reduce((acc, field) => {
+      const { type: validationType, errorMessage } = field.validation || {};
+      if (validate[validationType]) {
+        acc[field.name] = bindMessageToValidator(
+          validate[validationType],
+          errorMessage,
+        )(inputValues[field.name]);
+      }
+      return acc;
+    }, {});
+  }
+};
+
 AddEditNotificationModal.propTypes = {
   data: PropTypes.shape({
     type: PropTypes.string,
@@ -410,6 +468,7 @@ AddEditNotificationModal.propTypes = {
     notifications: PropTypes.array,
     onSave: PropTypes.func,
     eventsInfo: PropTypes.object,
+    ruleFields: PropTypes.arrayOf(ruleField),
     actionType: PropTypes.oneOf([
       MODAL_ACTION_TYPE_ADD,
       MODAL_ACTION_TYPE_EDIT,
@@ -429,23 +488,19 @@ AddEditNotificationModal.defaultProps = {
 export default withModal('addEditNotificationModal')(
   reduxForm({
     form: NOTIFICATION_FORM,
-    validate: (
-      { ruleName, recipients, informOwner, launchNames, attributes },
-      { data: { notification, notifications } },
-    ) => ({
-      ruleName: commonValidators.createRuleNameValidator(
-        notifications.map((item) => ({ name: item.ruleName, ...item })),
-        notification?.id,
-      )(ruleName),
-      recipients: bindMessageToValidator(
-        validate.createNotificationRecipientsValidator(informOwner),
-        'recipientsHint',
-      )(recipients),
-      attributes: !validate.attributesArray(attributes),
-      launchNames: bindMessageToValidator(
-        validate.notificationLaunchNames,
-        'launchesHint',
-      )(launchNames),
-    }),
+    validate: (inputValues, { data: { type, notification, notifications, ruleFields } }) => {
+      return {
+        ruleName: commonValidators.createRuleNameValidator(
+          notifications.map((item) => ({ name: item.ruleName, ...item })),
+          notification?.id,
+        )(inputValues.ruleName),
+        ...getDynamicFieldValidation(type, inputValues, ruleFields),
+        attributes: !validate.attributesArray(inputValues.attributes),
+        launchNames: bindMessageToValidator(
+          validate.notificationLaunchNames,
+          'launchesHint',
+        )(inputValues.launchNames),
+      };
+    },
   })(AddEditNotificationModal),
 );

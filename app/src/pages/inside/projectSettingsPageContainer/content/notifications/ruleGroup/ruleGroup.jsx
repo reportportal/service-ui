@@ -53,8 +53,9 @@ import { updateNotificationStateAction } from 'controllers/project/actionCreator
 import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';
 import { projectPluginNotificationsStateSelector } from 'controllers/project/selectors';
 import { EMAIL } from 'common/constants/pluginNames';
+import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { DEFAULT_CASE_CONFIG } from '../constants';
-import { convertNotificationCaseForSubmission } from '../utils';
+import { convertNotificationCaseForSubmission, flatRule } from '../utils';
 import {
   FieldElement,
   MODAL_ACTION_TYPE_ADD,
@@ -80,7 +81,7 @@ const RuleItemDisabledTooltip = withTooltip({
   },
 })(({ children }) => children);
 
-export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabled }) => {
+export const RuleGroup = ({ pluginName, rules, isPluginEnabled, ruleFields }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
@@ -95,7 +96,7 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
 
   const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
   const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
-  const isActivationRequired = isUpdateSettingAvailable || typedRules?.length > 0;
+  const isActivationRequired = isUpdateSettingAvailable || rules?.length > 0;
   const isDisabledTooltipActivationRequired = !isPluginEnabled && isActivationRequired;
   const isEmailIntegrationRequired =
     pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
@@ -152,10 +153,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
         id: 'addEditNotificationModal',
         data: {
           type: pluginName,
+          ruleFields,
           actionType: MODAL_ACTION_TYPE_ADD,
           onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
-          notifications,
+          notifications: rules,
         },
       }),
     );
@@ -169,10 +171,11 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
         id: 'addEditNotificationModal',
         data: {
           type: pluginName,
+          ruleFields,
           actionType: MODAL_ACTION_TYPE_EDIT,
           onSave: confirmEdit,
-          notification,
-          notifications,
+          notification: flatRule(notification),
+          notifications: rules,
         },
       }),
     );
@@ -193,18 +196,19 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
   const onCopy = (notification) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
 
-    const { id, ...newNotification } = notification;
+    const { id, ...newNotification } = flatRule(notification);
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
           actionType: MODAL_ACTION_TYPE_COPY,
+          ruleFields,
           onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: {
             ...newNotification,
             ruleName: notification.ruleName + COPY_POSTFIX,
           },
-          notifications,
+          notifications: rules,
         },
       }),
     );
@@ -288,13 +292,14 @@ export const RuleGroup = ({ pluginName, typedRules, notifications, isPluginEnabl
         </div>
 
         <div className={cx('notifications-container')}>
-          {typedRules?.length > 0 ? (
+          {rules?.length > 0 ? (
             <div className={cx('content-items')}>
               <RuleList
                 disabled={isReadOnly}
-                data={typedRules.map((rule) => ({
+                data={rules.map((rule) => ({
                   name: rule.ruleName,
                   ...rule,
+                  ruleFields,
                 }))}
                 actions={actions}
                 onToggle={onToggleHandler}
@@ -339,7 +344,12 @@ const ruleShape = PropTypes.shape({
 
 RuleGroup.propTypes = {
   pluginName: PropTypes.string.isRequired,
-  typedRules: PropTypes.arrayOf(ruleShape),
-  notifications: PropTypes.arrayOf(ruleShape).isRequired,
+  rules: PropTypes.arrayOf(ruleShape),
+  ruleFields: PropTypes.arrayOf(ruleField),
   isPluginEnabled: PropTypes.bool.isRequired,
+};
+
+RuleGroup.defaultProps = {
+  rules: [],
+  ruleFields: [],
 };

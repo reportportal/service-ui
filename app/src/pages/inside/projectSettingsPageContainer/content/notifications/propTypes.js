@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,50 +14,21 @@
  * limitations under the License.
  */
 
-.content {
-  margin-top: 32px;
-}
+import PropTypes from 'prop-types';
+import {
+  FIELD_TYPE_MULTILINE_TEXT,
+  FIELD_TYPE_TEXT,
+} from 'pages/inside/projectSettingsPageContainer/content/notifications/constants';
 
-.autocomplete {
-  margin-top: 16px;
-  margin-bottom: 4px;
-}
-
-.launches {
-  margin-bottom: 16px;
-}
-
-.checkbox {
-  margin-bottom: 16px;
-  margin-top: 8px;
-}
-
-.input {
-  margin-bottom: 16px;
-}
-
-.toggle {
-  margin-top: 8px;
-  white-space: nowrap;
-}
-
-.form-input {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.form-label {
-  min-width: 170px;
-}
-
-.attributes-list-wrapper {
-  margin-bottom: 18px;
-  .attributes-list {
-    margin-top: 8px;
-  }
-}
-
-.dynamicField{
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
+export const ruleField = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  description: PropTypes.string,
+  type: PropTypes.oneOf([FIELD_TYPE_TEXT, FIELD_TYPE_MULTILINE_TEXT]),
+  required: PropTypes.bool,
+  placeholder: PropTypes.string,
+  validation: PropTypes.shape({
+    type: PropTypes.string,
+    errorMessage: PropTypes.string,
+  }),
+});
