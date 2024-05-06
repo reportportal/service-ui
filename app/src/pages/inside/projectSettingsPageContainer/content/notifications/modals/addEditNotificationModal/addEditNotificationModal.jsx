@@ -39,6 +39,7 @@ import { AttributeListFormField } from 'components/containers/AttributeListFormF
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
+import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -467,7 +468,7 @@ AddEditNotificationModal.propTypes = {
     notifications: PropTypes.array,
     onSave: PropTypes.func,
     eventsInfo: PropTypes.object,
-    ruleFields: PropTypes.array,
+    ruleFields: PropTypes.arrayOf(ruleField),
     actionType: PropTypes.oneOf([
       MODAL_ACTION_TYPE_ADD,
       MODAL_ACTION_TYPE_EDIT,

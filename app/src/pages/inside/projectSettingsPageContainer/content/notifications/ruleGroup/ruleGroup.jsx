@@ -53,7 +53,8 @@ import { updateNotificationStateAction } from 'controllers/project/actionCreator
 import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';
 import { projectPluginNotificationsStateSelector } from 'controllers/project/selectors';
 import { EMAIL } from 'common/constants/pluginNames';
-import { DEFAULT_CASE_CONFIG, FIELD_TYPE_MULTILINE_TEXT, FIELD_TYPE_TEXT } from '../constants';
+import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
+import { DEFAULT_CASE_CONFIG } from '../constants';
 import { convertNotificationCaseForSubmission, flatRule } from '../utils';
 import {
   FieldElement,
@@ -339,19 +340,6 @@ const ruleShape = PropTypes.shape({
   attributesOperator: PropTypes.string,
   informOwner: PropTypes.bool,
   type: PropTypes.string.isRequired,
-});
-
-const ruleField = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  description: PropTypes.string,
-  type: PropTypes.oneOf([FIELD_TYPE_TEXT, FIELD_TYPE_MULTILINE_TEXT]),
-  required: PropTypes.boolean,
-  placeholder: PropTypes.string,
-  validation: PropTypes.shape({
-    type: PropTypes.string,
-    message: PropTypes.string,
-  }),
 });
 
 RuleGroup.propTypes = {
