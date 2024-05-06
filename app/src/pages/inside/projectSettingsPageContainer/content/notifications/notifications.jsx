@@ -100,11 +100,11 @@ export const Notifications = () => {
       </Layout>
       {allNotificationPlugins.map((item) => (
         <RuleGroup
+          ruleFields={item.ruleFields}
           key={`rule-section-${item.name}`}
           pluginName={item.name}
           isPluginEnabled={item.enabled}
-          typedRules={notificationRulesByTypes[item.name]}
-          notifications={notifications}
+          typedRules={notificationRulesByTypes[item.name] || []}
         />
       ))}
       <NotificationsFooter />

@@ -15,6 +15,7 @@
  */
 
 import { OWNER } from 'common/constants/permissions';
+import { EMAIL } from 'common/constants/pluginNames';
 
 export const convertNotificationCaseForSubmission = (obj) => {
   const {
@@ -28,11 +29,16 @@ export const convertNotificationCaseForSubmission = (obj) => {
     enabled = true,
     attributesOperator,
     type,
+    ...ruleDetails
   } = obj;
+  const dynamicField =
+    type === EMAIL
+      ? { recipients: informOwner ? [...recipients, OWNER] : recipients }
+      : { ruleDetails };
   return {
     id,
     ruleName,
-    recipients: informOwner ? [...recipients, OWNER] : recipients,
+    ...dynamicField,
     sendCase,
     launchNames,
     attributes,
