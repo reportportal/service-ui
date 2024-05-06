@@ -20,12 +20,8 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import { EMAIL } from 'common/constants/pluginNames';
-import {
-  ATTRIBUTES_OPERATORS,
-  FIELD_TYPE_MULTILINE_TEXT,
-  FIELD_TYPE_TEXT,
-  LAUNCH_CASES,
-} from '../../notifications/constants';
+import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
+import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
@@ -173,18 +169,7 @@ export const NotificationRuleContent = ({
     </div>
   );
 };
-const ruleField = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  description: PropTypes.string,
-  type: PropTypes.oneOf([FIELD_TYPE_TEXT, FIELD_TYPE_MULTILINE_TEXT]),
-  required: PropTypes.boolean,
-  placeholder: PropTypes.string,
-  validation: PropTypes.shape({
-    type: PropTypes.string,
-    message: PropTypes.string,
-  }),
-});
+
 NotificationRuleContent.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.string.isRequired,
