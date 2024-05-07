@@ -201,6 +201,7 @@ export const RuleGroup = ({ pluginName, rules, ruleDescription, isPluginEnabled,
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
+          type: pluginName,
           actionType: MODAL_ACTION_TYPE_COPY,
           ruleFields,
           onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
