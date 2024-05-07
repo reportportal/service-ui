@@ -81,7 +81,7 @@ const RuleItemDisabledTooltip = withTooltip({
   },
 })(({ children }) => children);
 
-export const RuleGroup = ({ pluginName, rules, isPluginEnabled, ruleFields }) => {
+export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled, ruleFields }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
@@ -239,7 +239,11 @@ export const RuleGroup = ({ pluginName, rules, isPluginEnabled, ruleFields }) =>
           <FieldElement
             className={cx('fieldElement')}
             withoutProvider
-            description={formatMessage(messages.typeDescription, { type: pluginName })}
+            description={
+              pluginName === EMAIL
+                ? formatMessage(messages.typeDescription, { type: EMAIL })
+                : ruleDescription
+            }
           >
             <div className={cx('toggle')}>
               <Toggle
@@ -343,6 +347,7 @@ const ruleShape = PropTypes.shape({
 });
 
 RuleGroup.propTypes = {
+  ruleDescription: PropTypes.string,
   pluginName: PropTypes.string.isRequired,
   rules: PropTypes.arrayOf(ruleShape),
   ruleFields: PropTypes.arrayOf(ruleField),
