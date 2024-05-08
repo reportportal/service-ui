@@ -28,9 +28,13 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
+import { withTooltip } from 'componentLibrary/tooltip';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
+import { createExternalLink, docsReferences } from 'common/utils';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
 
@@ -45,6 +49,25 @@ const messages = defineMessages({
     defaultMessage: ' Select several items to processing',
   },
 });
+
+const DisabledImportButton = () => (
+  <GhostButton disabled icon={ImportIcon} transparentBackground>
+    <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+  </GhostButton>
+);
+
+const DisabledImportButtonTooltip = ({ tooltip }) => <span>{tooltip}</span>;
+DisabledImportButtonTooltip.propTypes = {
+  tooltip: PropTypes.string.isRequired,
+};
+
+// fixme may be use popup instead tooltip? and convert string to html
+const DisabledImportButtonWithTooltip = withTooltip({
+  ContentComponent: DisabledImportButtonTooltip,
+  side: 'bottom',
+  noArrow: false,
+  tooltipWrapperClassName: cx('tooltip-wrapper'),
+})(DisabledImportButton);
 
 @connect(
   (state) => ({
@@ -87,6 +110,7 @@ export class ActionPanel extends Component {
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onAddNewWidget: PropTypes.func,
     finishedLaunchesCount: PropTypes.number,
+    importPlugins: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -233,8 +257,11 @@ export class ActionPanel extends Component {
       restorePath,
       onAddNewWidget,
       finishedLaunchesCount,
+      importPlugins,
     } = this.props;
     const actionDescriptors = this.createActionDescriptors();
+    const isImportPluginEnabled = importPlugins.length > 0;
+    const importPluginDisabledMessage = PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[IMPORT_GROUP_TYPE];
 
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
@@ -253,9 +280,18 @@ export class ActionPanel extends Component {
         <div className={cx('action-buttons')}>
           {this.isShowImportButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton icon={ImportIcon} onClick={onImportLaunch} transparentBackground>
-                <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
-              </GhostButton>
+              {isImportPluginEnabled ? (
+                <GhostButton icon={ImportIcon} onClick={onImportLaunch} transparentBackground>
+                  <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+                </GhostButton>
+              ) : (
+                <DisabledImportButtonWithTooltip
+                  tooltip={intl.formatMessage(importPluginDisabledMessage, {
+                    name: 'Import',
+                    a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
+                  })}
+                />
+              )}
             </div>
           )}
           {this.isShowWidgetButton() && (

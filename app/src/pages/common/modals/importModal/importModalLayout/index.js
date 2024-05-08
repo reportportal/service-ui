@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-.link-item-wrapper {
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  color: $COLOR--topaz-2;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 22px;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-
-  svg * {
-    fill: $COLOR--e-300;
-  }
-}
+export { ImportModalLayout } from './importModalLayout';

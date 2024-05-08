@@ -15,7 +15,11 @@
  */
 
 import { createSelector } from 'reselect';
-import { BTS_GROUP_TYPE, NOTIFICATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import {
+  BTS_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
+  NOTIFICATION_GROUP_TYPE,
+} from 'common/constants/pluginsGroupTypes';
 import { EMAIL } from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
@@ -70,6 +74,10 @@ export const isBtsPluginsExistSelector = createSelector(pluginsSelector, (plugin
 
 export const enabledBtsPluginsSelector = createSelector(pluginsSelector, (plugins) =>
   plugins.filter((item) => item.groupType === BTS_GROUP_TYPE && item.enabled),
+);
+
+export const enabledImportPluginsSelector = createSelector(pluginsSelector, (plugins) =>
+  plugins.filter((plugin) => plugin.groupType === IMPORT_GROUP_TYPE && plugin.enabled),
 );
 
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>

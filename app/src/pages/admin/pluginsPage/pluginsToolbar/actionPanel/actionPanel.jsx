@@ -26,7 +26,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
-import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
+import DOMPurify from 'dompurify';
 import styles from './actionPanel.scss';
 
 export const UPLOAD = 'upload';
@@ -90,13 +90,15 @@ export class ActionPanel extends Component {
     tracking.trackEvent(PLUGINS_PAGE_EVENTS.CLICK_UPLOAD_BTN);
 
     this.props.showModalAction({
-      id: 'importModal',
+      id: 'importPluginModal',
       data: {
-        type: MODAL_TYPE_UPLOAD_PLUGIN,
         onImport: this.props.fetchPluginsAction,
         title: formatMessage(messages.modalTitle),
         importButton: formatMessage(messages.uploadButton),
-        tip: formatMessage(messages.uploadTip),
+        tip: formatMessage(messages.uploadTip, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+          span: (data) => DOMPurify.sanitize(`<span>${data}</span>`),
+        }),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
         singleImport: true,

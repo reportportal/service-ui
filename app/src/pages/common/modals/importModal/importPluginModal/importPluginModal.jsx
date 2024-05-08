@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-.link-item-wrapper {
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  color: $COLOR--topaz-2;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 22px;
-}
+import React from 'react';
+import { withModal } from 'controllers/modal';
+import PropTypes from 'prop-types';
+import { ImportModalLayout } from '../importModalLayout/importModalLayout';
 
-.icon {
-  width: 16px;
-  height: 16px;
+const MAX_FILE_SIZES = 134217728;
+const ACCEPT_FILE_MIME_TYPES = ['.jar'];
 
-  svg * {
-    fill: $COLOR--e-300;
-  }
-}
+export const ImportPluginModal = ({ data }) => (
+  <ImportModalLayout
+    data={data}
+    maxFileSize={MAX_FILE_SIZES}
+    acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
+  />
+);
+ImportPluginModal.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+export default withModal('importPluginModal')(ImportPluginModal);

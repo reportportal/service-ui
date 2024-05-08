@@ -33,7 +33,6 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { projectConfigSelector } from 'controllers/project';
@@ -72,6 +71,7 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
+import { enabledImportPluginsSelector } from 'controllers/plugins';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -174,6 +174,7 @@ const messages = defineMessages({
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
+    importPlugins: enabledImportPluginsSelector(state),
   }),
   {
     showModalAction,
@@ -243,6 +244,7 @@ export class LaunchesPage extends Component {
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
     isDemoInstance: PropTypes.bool,
+    importPlugins: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   static defaultProps = {
@@ -642,17 +644,20 @@ export class LaunchesPage extends Component {
     const {
       intl: { formatMessage },
       activeProject,
+      importPlugins,
     } = this.props;
 
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
-      id: 'importModal',
+      id: 'importLaunchModal',
       data: {
-        type: MODAL_TYPE_IMPORT_LAUNCH,
         onImport: this.props.fetchLaunchesAction,
         title: formatMessage(messages.modalTitle),
         importButton: formatMessage(messages.importButton),
-        tip: formatMessage(messages.importTip),
+        tip: formatMessage(messages.importTip, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+          span: (data) => DOMPurify.sanitize(`<span>${data}</span>`),
+        }),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         noteMessage: formatMessage(messages.noteMessage),
         importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
@@ -662,6 +667,7 @@ export class LaunchesPage extends Component {
           cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
           closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
         },
+        importPlugins,
       },
     });
   };
@@ -762,6 +768,7 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       isDemoInstance,
+      importPlugins,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -814,6 +821,7 @@ export class LaunchesPage extends Component {
                 activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
+                importPlugins={importPlugins}
               />
               {debugMode && (
                 <RefineFiltersPanel

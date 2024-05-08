@@ -16,28 +16,16 @@
 
 import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
-import classNames from 'classnames/bind';
-import Dropzone from 'react-dropzone';
-import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { uniqueId, fetch } from 'common/utils';
-import DropZoneIcon from 'common/img/shape-inline.svg';
-import { ImportFileIcon } from './importFileIcon';
-import styles from './importModal.scss';
-import { ACCEPT_FILE_MIME_TYPES, MAX_FILE_SIZES } from './constants';
-
-const cx = classNames.bind(styles);
+import { fetch } from 'common/utils';
+import { DropzoneField } from 'pages/common/modals/importModal/dropzoneField/dropzoneField';
 
 const messages = defineMessages({
-  note: {
-    id: 'ImportModal.note',
-    defaultMessage: 'Note:',
-  },
   importConfirmation: {
     id: 'ImportModal.importConfirmation',
     defaultMessage: 'Confirm cancel',
@@ -54,7 +42,7 @@ const messages = defineMessages({
   showNotification,
 })
 @track()
-export class ImportModal extends Component {
+export class ImportModalLayout extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
@@ -63,48 +51,20 @@ export class ImportModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    dropzoneCountNumber: PropTypes.number,
+    children: PropTypes.node,
+    maxFileSize: PropTypes.number.isRequired,
+    acceptFileMimeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   static defaultProps = {
     data: { eventsInfo: { uploadButton: () => {}, cancelBtn: {}, closeIcon: {} } },
+    dropzoneCountNumber: 0,
+    children: [null],
   };
 
   state = {
     files: [],
-  };
-
-  onDrop = (acceptedFiles, rejectedFiles) => {
-    const { files: stateFiles } = this.state;
-    const accepted = acceptedFiles.map(this.onDropAcceptedFileHandler);
-    const rejected = rejectedFiles.map(this.onDropRejectedFileHandler);
-
-    this.setState({
-      files: [...stateFiles, ...accepted, ...rejected],
-    });
-  };
-
-  onDropAcceptedFileHandler = (file) => ({
-    file,
-    valid: true,
-    id: uniqueId(),
-    isLoading: false,
-    uploaded: false,
-    uploadingProgress: 0,
-  });
-
-  onDropRejectedFileHandler = (file) => ({
-    file,
-    valid: false,
-    id: uniqueId(),
-    rejectMessage: this.addFileRejectMessage(file),
-  });
-
-  onDelete = (id) => {
-    const { files } = this.state;
-
-    this.setState({
-      files: files.filter((item) => item.id !== id),
-    });
   };
 
   getOkButtonConfig = (isLoading, uploadFinished) => {
@@ -159,42 +119,7 @@ export class ImportModal extends Component {
     this.isUploadInProgress() ||
     (this.props.data.singleImport && this.state.files.length > 0);
 
-  validateFile = (file) => {
-    const { type } = this.props.data;
-
-    return {
-      incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES[type].includes(file.type),
-      incorrectFileSize: file.size > MAX_FILE_SIZES[type],
-    };
-  };
-
   getFilesNames = (files) => files.map(({ file: { name } }) => name).join('#');
-
-  formValidationMessage = (validationProperties) => {
-    const {
-      intl,
-      data: { incorrectFileSize },
-    } = this.props;
-    const validationMessages = {
-      incorrectFileFormat: intl.formatMessage(messages.incorrectFileFormat),
-      incorrectFileSize,
-    };
-    const validationMessage = [];
-
-    Object.keys(validationProperties).forEach((message) => {
-      if (validationProperties[message]) {
-        validationMessage.push(validationMessages[message]);
-      }
-    });
-
-    return validationMessage.join('. ').trim();
-  };
-
-  addFileRejectMessage = (file) => {
-    const validationProperties = this.validateFile(file);
-
-    return this.formValidationMessage(validationProperties);
-  };
 
   uploadFilesOnOkClick = () => {
     const data = this.prepareDataForServerUploading();
@@ -329,14 +254,16 @@ export class ImportModal extends Component {
   render() {
     const {
       intl,
-      data: { type, title, tip, noteMessage, eventsInfo, singleImport },
+      data: { title, eventsInfo, tip, incorrectFileSize, singleImport },
+      children,
+      dropzoneCountNumber,
+      maxFileSize,
+      acceptFileMimeTypes,
     } = this.props;
 
-    const { files } = this.state;
     const validFiles = this.getValidFiles();
     const loading = this.isUploadInProgress();
     const uploadFinished = this.isUploadFinished();
-    const acceptFile = ACCEPT_FILE_MIME_TYPES[type].join(',');
 
     return (
       <ModalLayout
@@ -354,35 +281,28 @@ export class ImportModal extends Component {
         )}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
-        <Dropzone
-          className={cx('dropzone-wrapper')}
-          activeClassName={cx('dropzone-wrapper-active')}
-          accept={acceptFile}
-          onDrop={this.onDrop}
-          multiple={!singleImport}
-          maxSize={MAX_FILE_SIZES[type]}
-          disabled={this.isDropZoneDisabled()}
-        >
-          {files.length === 0 && (
-            <div className={cx('dropzone')}>
-              <div className={cx('icon')}>{Parser(DropZoneIcon)}</div>
-              <p className={cx('message')}>{Parser(tip)}</p>
-            </div>
-          )}
-          {files.length > 0 && (
-            <div className={cx('files-list')}>
-              {files.map((item) => (
-                <ImportFileIcon {...item} onDelete={this.onDelete} key={item.id} />
-              ))}
-            </div>
-          )}
-        </Dropzone>
-        {noteMessage && (
-          <Fragment>
-            <p className={cx('note-label')}>{intl.formatMessage(messages.note)}</p>
-            <p className={cx('note-message')}>{Parser(noteMessage)}</p>
-          </Fragment>
-        )}
+        {children &&
+          children.map((child, index) => {
+            return index === dropzoneCountNumber ? (
+              // eslint-disable-next-line react/no-array-index-key
+              <Fragment key={index}>
+                <DropzoneField
+                  disabled={this.isDropZoneDisabled()}
+                  incorrectFileSize={incorrectFileSize}
+                  tip={tip}
+                  singleImport={singleImport}
+                  incorrectFileFormatMessage={messages.incorrectFileFormat}
+                  files={this.state.files}
+                  setFiles={(f) => this.setState({ files: f })}
+                  maxFileSize={maxFileSize}
+                  acceptFileMimeTypes={acceptFileMimeTypes}
+                />
+                {child && child}
+              </Fragment>
+            ) : (
+              child && child
+            );
+          })}
       </ModalLayout>
     );
   }

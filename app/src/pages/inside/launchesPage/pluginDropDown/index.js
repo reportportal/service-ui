@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-export const MODAL_TYPE_IMPORT_LAUNCH = 'import';
-export const MODAL_TYPE_UPLOAD_PLUGIN = 'upload';
-
-export const ACCEPT_FILE_MIME_TYPES = {
-  [MODAL_TYPE_IMPORT_LAUNCH]: [
-    'application/zip',
-    'application/x-zip-compressed',
-    'application/zip-compressed',
-    'application/xml',
-    'text/xml',
-  ],
-  [MODAL_TYPE_UPLOAD_PLUGIN]: ['.jar'],
-};
-
-export const MAX_FILE_SIZES = {
-  [MODAL_TYPE_IMPORT_LAUNCH]: 33554432,
-  [MODAL_TYPE_UPLOAD_PLUGIN]: 134217728,
-};
+export { PluginDropDown } from './pluginDropDown';
