@@ -22,7 +22,7 @@ import { fetchOrganizationsSuccessAction } from './actionCreators';
 
 function* fetchOrganizations() {
   try {
-    const organizations = yield call(fetch, URLS.organizationsList());
+    const organizations = yield call(fetch, URLS.organizationList());
     yield put(fetchOrganizationsSuccessAction(organizations?.content || []));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));

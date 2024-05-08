@@ -48,7 +48,6 @@ import {
   activeProjectKeySelector,
 } from 'controllers/user';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { FETCH_ORGANIZATIONS_SUCCESS, fetchOrganizationsAction } from 'controllers/organizations';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -117,9 +116,7 @@ function* loginSuccessHandler({ payload }) {
   yield put(fetchUserAction());
   yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT_KEY)]);
   const projectKey = yield select(activeProjectKeySelector);
-  yield put(fetchOrganizationsAction());
   yield put(fetchProjectAction(projectKey));
-  yield all([take(FETCH_PROJECT_SUCCESS), take(FETCH_ORGANIZATIONS_SUCCESS)]);
   yield take(FETCH_PROJECT_SUCCESS);
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());

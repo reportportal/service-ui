@@ -127,8 +127,8 @@ export const URLS = {
   apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
-  organizationsList: (name) => `${urlBase}organizations${getQueryParams({ name })}`,
-  organizationsById: (organizationId) => `${urlBase}organizations/${organizationId}`,
+  organizationList: (name) => `${urlBase}organizations${getQueryParams({ name })}`,
+  organizationById: (organizationId) => `${urlBase}organizations/${organizationId}`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,

@@ -25,7 +25,6 @@ import {
   authSuccessAction,
 } from 'controllers/auth';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { FETCH_ORGANIZATIONS_SUCCESS, fetchOrganizationsAction } from 'controllers/organizations';
 import {
   fetchGlobalIntegrationsAction,
   fetchPluginsAction,
@@ -43,9 +42,8 @@ function* fetchInitialData() {
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
     const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
-    yield put(fetchOrganizationsAction());
     yield put(fetchProjectAction(activeProjectKey));
-    yield all([take(FETCH_PROJECT_SUCCESS), take(FETCH_ORGANIZATIONS_SUCCESS)]);
+    yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
     yield put(authSuccessAction());

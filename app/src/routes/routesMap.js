@@ -82,6 +82,7 @@ import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCre
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
+import { fetchOrganizationsAction } from 'controllers/organizations';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
@@ -127,6 +128,7 @@ const routesMap = {
     path: '/administrate/projects',
     thunk: (dispatch) => {
       dispatch(fetchProjectsAction());
+      dispatch(fetchOrganizationsAction());
       dispatch(startSetViewMode());
     },
   },
