@@ -281,28 +281,27 @@ export class ImportModalLayout extends Component {
         )}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
-        {children &&
-          children.map((child, index) => {
-            return index === dropzoneCountNumber ? (
-              // eslint-disable-next-line react/no-array-index-key
-              <Fragment key={index}>
-                <DropzoneField
-                  disabled={this.isDropZoneDisabled()}
-                  incorrectFileSize={incorrectFileSize}
-                  tip={tip}
-                  singleImport={singleImport}
-                  incorrectFileFormatMessage={messages.incorrectFileFormat}
-                  files={this.state.files}
-                  setFiles={(f) => this.setState({ files: f })}
-                  maxFileSize={maxFileSize}
-                  acceptFileMimeTypes={acceptFileMimeTypes}
-                />
-                {child && child}
-              </Fragment>
-            ) : (
-              child && child
-            );
-          })}
+        {children.map((child, index) => {
+          return index === dropzoneCountNumber ? (
+            // eslint-disable-next-line react/no-array-index-key
+            <Fragment key={index}>
+              <DropzoneField
+                disabled={this.isDropZoneDisabled()}
+                incorrectFileSize={incorrectFileSize}
+                tip={tip}
+                singleImport={singleImport}
+                incorrectFileFormatMessage={messages.incorrectFileFormat}
+                files={this.state.files}
+                setFiles={(f) => this.setState({ files: f })}
+                maxFileSize={maxFileSize}
+                acceptFileMimeTypes={acceptFileMimeTypes}
+              />
+              {child}
+            </Fragment>
+          ) : (
+            child
+          );
+        })}
       </ModalLayout>
     );
   }
