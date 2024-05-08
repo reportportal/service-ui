@@ -17,6 +17,14 @@
 import { OWNER } from 'common/constants/permissions';
 import { EMAIL } from 'common/constants/pluginNames';
 
+function getUpdatedProperties(base, updated) {
+  return Object.keys(base).reduce((acc, key) => {
+    if (updated[key] && base[key] !== updated[key]) {
+      acc[key] = updated[key];
+    }
+    return acc;
+  }, base);
+}
 export const convertNotificationCaseForSubmission = (obj) => {
   const {
     id,
@@ -29,12 +37,17 @@ export const convertNotificationCaseForSubmission = (obj) => {
     enabled = true,
     attributesOperator,
     type,
-    ...ruleDetails
+    ruleDetails,
+    ...addedRuleDetails
   } = obj;
   const dynamicField =
     type === EMAIL
       ? { recipients: informOwner ? [...recipients, OWNER] : recipients }
-      : { ruleDetails };
+      : {
+          ruleDetails: ruleDetails
+            ? getUpdatedProperties(ruleDetails, addedRuleDetails)
+            : addedRuleDetails,
+        };
   return {
     id,
     ruleName,
