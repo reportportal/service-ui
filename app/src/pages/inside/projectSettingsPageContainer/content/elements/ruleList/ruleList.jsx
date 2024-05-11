@@ -33,6 +33,7 @@ const PlainRuleList = ({
   handleRuleItemClick,
   onRuleNameClick,
   className,
+  ruleItemContentProps,
 }) => {
   const Content = ruleItemContent;
   return (
@@ -44,7 +45,9 @@ const PlainRuleList = ({
           actions={actions}
           onToggle={onToggle}
           disabled={disabled}
-          content={ruleItemContent && <Content item={item} />}
+          content={
+            ruleItemContent && <Content item={item} ruleItemContentProps={ruleItemContentProps} />
+          }
           onClick={handleRuleItemClick}
           onRuleNameClick={onRuleNameClick}
           className={className}

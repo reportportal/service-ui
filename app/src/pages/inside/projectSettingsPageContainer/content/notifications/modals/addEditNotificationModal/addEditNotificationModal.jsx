@@ -61,6 +61,7 @@ import {
   SEND_CASE_FIELD_KEY,
   FIELD_TYPE_TEXT,
   FIELD_TYPE_MULTILINE_TEXT,
+  RULE_DETAILS_FIELD_KEY,
 } from '../../constants';
 import styles from './addEditNotificationModal.scss';
 
@@ -369,7 +370,7 @@ const AddEditNotificationModal = ({
             const TypedComponent = fieldByType[field.type];
             return (
               <FieldElement
-                name={field.name}
+                name={`${RULE_DETAILS_FIELD_KEY}.${field.name}`}
                 key={field.name}
                 type={field.type}
                 className={cx('dynamicField')}
