@@ -93,7 +93,7 @@ export const NotificationRuleContent = ({
     sendCase,
     ruleDetails,
   },
-  ruleItemContentProps,
+  ruleFields,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -132,7 +132,7 @@ export const NotificationRuleContent = ({
     else {
       return (
         ruleDetails &&
-        ruleItemContentProps.reduce((acc, field) => {
+        ruleFields?.reduce((acc, field) => {
           if (ruleDetails[field.name]) {
             acc.push(
               <Fragment key={field.name}>
@@ -181,5 +181,5 @@ NotificationRuleContent.propTypes = {
     ruleDetails: PropTypes.object,
     attributesOperator: PropTypes.oneOf([ATTRIBUTES_OPERATORS.AND, ATTRIBUTES_OPERATORS.OR]),
   }).isRequired,
-  ruleItemContentProps: PropTypes.arrayOf(ruleField),
+  ruleFields: PropTypes.arrayOf(ruleField),
 };
