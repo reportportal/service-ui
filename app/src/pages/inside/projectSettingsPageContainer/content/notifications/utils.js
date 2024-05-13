@@ -29,7 +29,7 @@ export const convertNotificationCaseForSubmission = (obj) => {
     enabled = true,
     attributesOperator,
     type,
-    ...ruleDetails
+    ruleDetails,
   } = obj;
   const dynamicField =
     type === EMAIL

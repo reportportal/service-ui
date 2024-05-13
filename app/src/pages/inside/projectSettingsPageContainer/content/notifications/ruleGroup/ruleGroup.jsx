@@ -304,11 +304,11 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 data={rules.map((rule) => ({
                   name: rule.ruleName,
                   ...rule,
-                  ruleFields,
                 }))}
                 actions={actions}
                 onToggle={onToggleHandler}
                 ruleItemContent={NotificationRuleContent}
+                ruleItemContentProps={{ ruleFields }}
                 handleRuleItemClick={handleRuleItemClick}
                 dataAutomationId="notificationsRulesList"
                 className={cx('rule-group-list')}
