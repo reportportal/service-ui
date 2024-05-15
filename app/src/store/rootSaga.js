@@ -30,6 +30,7 @@ import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
 import { administrateSagas } from 'controllers/administrate';
 import { userSagas } from 'controllers/user';
+import { organizationsSagas } from 'controllers/organizations';
 import { projectSagas } from 'controllers/project';
 import { initialDataSagas } from 'controllers/initialData';
 import { pageSagas } from 'controllers/pages';
@@ -52,6 +53,7 @@ const sagas = [
   historySagas,
   administrateSagas,
   userSagas,
+  organizationsSagas,
   projectSagas,
   initialDataSagas,
   pageSagas,

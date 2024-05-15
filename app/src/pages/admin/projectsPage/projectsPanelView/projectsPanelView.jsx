@@ -18,9 +18,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import { loadingSelector, projectsSelector } from 'controllers/administrate/projects';
+import { organizationsListSelector } from 'controllers/organizations';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ProjectPanel } from './projectPanel';
 import styles from './projectsPanelView.scss';
@@ -28,11 +27,13 @@ import styles from './projectsPanelView.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
+  organizations: organizationsListSelector(state),
   projects: projectsSelector(state),
   loading: loadingSelector(state),
 }))
 export class ProjectsPanelView extends Component {
   static propTypes = {
+    organizations: PropTypes.array,
     projects: PropTypes.array,
     loading: PropTypes.bool,
     onMembers: PropTypes.func,
@@ -43,6 +44,7 @@ export class ProjectsPanelView extends Component {
   };
 
   static defaultProps = {
+    organizations: [],
     projects: [],
     loading: false,
     onMembers: () => {},
@@ -52,21 +54,8 @@ export class ProjectsPanelView extends Component {
     onDelete: () => {},
   };
 
-  // TODO: The request for organizations is made together with the request for all projects.
-  // Create a store for organizations and drop a selector here that returns organizations.
-  constructor(props) {
-    super(props);
-    this.state = {
-      organizations: [],
-    };
-
-    fetch(URLS.organizationsList()).then((response) => {
-      this.setState({ organizations: response?.content || [] });
-    });
-  }
-
   getPanelList = (projects) => {
-    const { organizations } = this.state;
+    const { organizations } = this.props;
 
     return projects.map((project) => {
       const { organizationId } = project;

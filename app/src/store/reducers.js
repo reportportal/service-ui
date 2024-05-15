@@ -37,6 +37,7 @@ import { administrateReducer } from 'controllers/administrate';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
+import { organizationsReducer } from 'controllers/organizations';
 
 export default {
   appInfo: appInfoReducer,
@@ -45,6 +46,7 @@ export default {
   form: formReducer,
   modal: modalReducer,
   user: userReducer,
+  organizations: organizationsReducer,
   project: projectReducer,
   notifications: notificationReducer,
   screenLock: screenLockReducer,
