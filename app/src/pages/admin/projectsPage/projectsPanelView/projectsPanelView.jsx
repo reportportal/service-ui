@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { loadingSelector, projectsSelector } from 'controllers/administrate/projects';
-import { organizationsInfoSelector } from 'controllers/organizations';
+import { organizationsListSelector } from 'controllers/organizations';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ProjectPanel } from './projectPanel';
 import styles from './projectsPanelView.scss';
@@ -27,7 +27,7 @@ import styles from './projectsPanelView.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  organizations: organizationsInfoSelector(state),
+  organizations: organizationsListSelector(state),
   projects: projectsSelector(state),
   loading: loadingSelector(state),
 }))

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-export const ORGANIZATIONS_INITIAL_STATE = {};
+export const NAMESPACE = 'organizations';
 
 export const FETCH_ORGANIZATIONS = 'fetchOrganizations';
-export const FETCH_ORGANIZATIONS_SUCCESS = 'fetchOrganizationsSuccess';

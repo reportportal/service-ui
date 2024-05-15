@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FETCH_ORGANIZATIONS_SUCCESS } from './constants';
+import { FETCH_ORGANIZATIONS } from './constants';
 
 export const fetchOrganizationsAction = () => ({
   type: FETCH_ORGANIZATIONS,
-});
-
-export const fetchOrganizationsSuccessAction = (organizations) => ({
-  type: FETCH_ORGANIZATIONS_SUCCESS,
-  payload: organizations,
 });

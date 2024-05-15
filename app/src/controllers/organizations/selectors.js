@@ -16,6 +16,6 @@
 
 const organizationsSelector = (state) => state.organizations || {};
 
-export const organizationsInfoSelector = (state) => organizationsSelector(state).info || {};
+export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
 
-export const organizationsInfoLoadingSelector = (state) => organizationsSelector(state).infoLoading;
+export const organizationsListLoadingSelector = (state) => organizationsSelector(state).listLoading;

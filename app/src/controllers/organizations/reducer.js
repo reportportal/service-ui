@@ -15,37 +15,11 @@
  */
 
 import { combineReducers } from 'redux';
-import {} from 'controllers/filter/constants';
-import {
-  ORGANIZATIONS_INITIAL_STATE,
-  FETCH_ORGANIZATIONS_SUCCESS,
-  FETCH_ORGANIZATIONS,
-} from './constants';
-
-export const organizationsInfoReducer = (
-  state = ORGANIZATIONS_INITIAL_STATE,
-  { type = '', payload = {} },
-) => {
-  switch (type) {
-    case FETCH_ORGANIZATIONS_SUCCESS:
-      return { ...state, ...payload };
-    default:
-      return state;
-  }
-};
-
-export const organizationsLoadingReducer = (state = false, { type = '' }) => {
-  switch (type) {
-    case FETCH_ORGANIZATIONS:
-      return true;
-    case FETCH_ORGANIZATIONS_SUCCESS:
-      return false;
-    default:
-      return state;
-  }
-};
+import { fetchReducer } from 'controllers/fetch';
+import { loadingReducer } from 'controllers/loading';
+import { NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
-  info: organizationsInfoReducer,
-  infoLoading: organizationsLoadingReducer,
+  list: fetchReducer(NAMESPACE, { contentPath: 'content' }),
+  listLoading: loadingReducer(NAMESPACE),
 });

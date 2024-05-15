@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, call } from 'redux-saga/effects';
+import { takeEvery, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { FETCH_ORGANIZATIONS } from './constants';
-import { fetchOrganizationsSuccessAction } from './actionCreators';
+import { fetchDataAction } from 'controllers/fetch';
+import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {
   try {
-    const organizations = yield call(fetch, URLS.organizationList());
-    yield put(fetchOrganizationsSuccessAction(organizations?.content || []));
+    yield put(fetchDataAction(NAMESPACE)(URLS.organizationList()));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
