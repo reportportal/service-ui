@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import Dropzone from 'react-dropzone';
@@ -27,12 +27,18 @@ import styles from './dropzoneField.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  incorrectFileFormat: {
+    id: 'ImportModal.incorrectFileFormat',
+    defaultMessage: 'Incorrect file format',
+  },
+});
+
 export const DropzoneField = ({
   disabled,
   incorrectFileSize,
   tip,
   singleImport,
-  incorrectFileFormatMessage,
   files,
   setFiles,
   maxFileSize,
@@ -53,7 +59,7 @@ export const DropzoneField = ({
 
   const formValidationMessage = (validationProperties) => {
     const validationMessages = {
-      incorrectFileFormat: formatMessage(incorrectFileFormatMessage),
+      incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
       incorrectFileSize,
     };
     const validationMessage = [];
@@ -127,7 +133,6 @@ DropzoneField.propTypes = {
   incorrectFileSize: PropTypes.string,
   tip: PropTypes.string,
   singleImport: PropTypes.bool,
-  incorrectFileFormatMessage: PropTypes.object,
   files: PropTypes.array,
   setFiles: PropTypes.func,
   maxFileSize: PropTypes.number.isRequired,
@@ -138,7 +143,6 @@ DropzoneField.defaultProps = {
   incorrectFileSize: '',
   tip: '',
   singleImport: true,
-  incorrectFileFormatMessage: {},
   files: [],
   setFiles: () => {},
 };

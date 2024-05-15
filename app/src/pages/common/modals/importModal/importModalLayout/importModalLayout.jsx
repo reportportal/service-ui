@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { ModalLayout } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
@@ -30,13 +30,8 @@ const messages = defineMessages({
     id: 'ImportModal.importConfirmation',
     defaultMessage: 'Confirm cancel',
   },
-  incorrectFileFormat: {
-    id: 'ImportModal.incorrectFileFormat',
-    defaultMessage: 'Incorrect file format',
-  },
 });
 
-@withModal('importModal')
 @injectIntl
 @connect(null, {
   showNotification,
@@ -290,7 +285,6 @@ export class ImportModalLayout extends Component {
                 incorrectFileSize={incorrectFileSize}
                 tip={tip}
                 singleImport={singleImport}
-                incorrectFileFormatMessage={messages.incorrectFileFormat}
                 files={this.state.files}
                 setFiles={(f) => this.setState({ files: f })}
                 maxFileSize={maxFileSize}

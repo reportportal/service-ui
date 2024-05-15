@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'controllers/modal';
 import PropTypes from 'prop-types';
-import { PluginDropDown } from 'pages/inside/launchesPage/pluginDropDown';
+import { ImportPluginSelector } from 'pages/inside/launchesPage/pluginDropDown';
 import { ImportModalLayout } from '../importModalLayout/importModalLayout';
 import styles from './importLaunchModal.scss';
 
@@ -57,7 +57,7 @@ export const ImportLaunchModal = ({ data }) => {
       maxFileSize={MAX_FILE_SIZES}
       acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
     >
-      <PluginDropDown
+      <ImportPluginSelector
         setSelectedPluginData={setSelectedPluginData}
         importPlugins={data.importPlugins}
       />

@@ -3,18 +3,18 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'componentLibrary/dropdown';
-import styles from './pluginDropDown.scss';
+import styles from './importPluginSelector.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   reportType: {
-    id: 'PluginDropDown.ReportType',
+    id: 'ImportPluginSelector.ReportType',
     defaultMessage: 'Report type:',
   },
 });
 
-export const PluginDropDown = ({ setSelectedPluginData, importPlugins }) => {
+export const ImportPluginSelector = ({ setSelectedPluginData, importPlugins }) => {
   const { formatMessage } = useIntl();
 
   const [selectedPlugin, setSelectedPlugin] = useState({
@@ -33,18 +33,18 @@ export const PluginDropDown = ({ setSelectedPluginData, importPlugins }) => {
         label: pluginName,
         value: pluginName,
       });
-      setSelectedPluginData(importPlugins.filter((p) => p.name !== pluginName)?.[0]);
+      setSelectedPluginData(importPlugins.find((p) => p.name !== pluginName));
     }
   };
 
   return (
-    <div className={cx('plugin-dropdown')}>
+    <div className={cx('import-plugin-selector')}>
       <span className={cx('field-name')}>{formatMessage(messages.reportType)}</span>
       <Dropdown value={selectedPlugin} options={pluginNamesOptions} onChange={onChangePluginName} />
     </div>
   );
 };
-PluginDropDown.propTypes = {
+ImportPluginSelector.propTypes = {
   setSelectedPluginData: PropTypes.func.isRequired,
   importPlugins: PropTypes.array.isRequired,
 };

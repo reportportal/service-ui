@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export DropzoneField from './dropzoneField';
+export { DropzoneField } from './dropzoneField';

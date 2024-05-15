@@ -768,7 +768,6 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       isDemoInstance,
-      importPlugins,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -821,7 +820,6 @@ export class LaunchesPage extends Component {
                 activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
-                importPlugins={importPlugins}
               />
               {debugMode && (
                 <RefineFiltersPanel

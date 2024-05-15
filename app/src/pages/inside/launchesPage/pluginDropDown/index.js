@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { PluginDropDown } from './pluginDropDown';
+export { ImportPluginSelector } from './importPluginSelector';
