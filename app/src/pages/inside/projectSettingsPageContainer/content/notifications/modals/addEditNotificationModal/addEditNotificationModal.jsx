@@ -449,16 +449,20 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
       )(inputValues.recipients),
     };
   } else {
-    return ruleFields.reduce((acc, field) => {
-      const { type: validationType, errorMessage } = field.validation || {};
-      if (validate[validationType]) {
-        acc[field.name] = bindMessageToValidator(
-          validate[validationType],
-          errorMessage,
-        )(inputValues[field.name]);
-      }
-      return acc;
-    }, {});
+    const inputDetails = inputValues[RULE_DETAILS_FIELD_KEY];
+    return ruleFields.reduce(
+      (acc, field) => {
+        const { type: validationType, errorMessage } = field.validation || {};
+        if (validate[validationType]) {
+          acc[RULE_DETAILS_FIELD_KEY][field.name] = bindMessageToValidator(
+            validate[validationType],
+            errorMessage,
+          )(inputDetails?.[field.name]);
+        }
+        return acc;
+      },
+      { [RULE_DETAILS_FIELD_KEY]: {} },
+    );
   }
 };
 
