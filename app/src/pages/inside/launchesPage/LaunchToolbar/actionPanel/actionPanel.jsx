@@ -30,8 +30,8 @@ import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { isImportPluginsAvailableSelector } from 'controllers/plugins';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
-import { withTooltip } from 'componentLibrary/tooltip';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
@@ -58,12 +58,11 @@ const DisabledImportButton = () => (
   </GhostButton>
 );
 
-// fixme may be use popup instead tooltip?
-const DisabledImportButtonWithTooltip = withTooltip({
-  ContentComponent: TextTooltip,
-  side: 'bottom',
-  noArrow: false,
-  tooltipWrapperClassName: cx('tooltip-wrapper'),
+const DisabledImportButtonWithTooltip = withHoverableTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    placement: 'bottom',
+  },
 })(DisabledImportButton);
 
 @connect(
@@ -287,6 +286,7 @@ export class ActionPanel extends Component {
                     name: 'Import',
                     a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
                   })}
+                  className={cx('no-import-message')}
                 />
               )}
             </div>
