@@ -16,6 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
 import { ErrorBoundary } from 'components/containers/errorBoundary';
 import { ExtensionError } from './extensionError';
 import { extensionType } from './extensionTypes';
@@ -23,7 +24,7 @@ import { FederatedExtensionLoader } from './federatedExtensionLoader';
 import { StandaloneExtensionLoader } from './standaloneExtensionLoader';
 
 function ExtensionLoader({ extension, withPreloader, ...componentProps }) {
-  return extension.pluginType === 'remote' ? (
+  return extension.pluginType === PLUGIN_TYPE_REMOTE ? (
     <StandaloneExtensionLoader extension={extension} />
   ) : (
     <FederatedExtensionLoader
