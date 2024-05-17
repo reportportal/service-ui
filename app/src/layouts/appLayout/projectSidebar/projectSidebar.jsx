@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,12 @@ import {
   PROJECT_FILTERS_PAGE,
   PROJECT_MEMBERS_PAGE,
   PROJECT_SETTINGS_PAGE,
+  PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages/constants';
-import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
+import {
+  uiExtensionSidebarComponentsSelector,
+  uiExtensionProjectPagesSelector,
+} from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
@@ -50,7 +54,8 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const projectRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
-  const extensions = useSelector(uiExtensionSidebarComponentsSelector);
+  const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
+  const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
   const [isHoveredOrganization, setIsHoveredOrganization] = useState(false);
@@ -129,7 +134,20 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project Settings'} />,
     });
-    extensions.forEach((extension) =>
+    projectPageExtensions.forEach(({ icon, internalRoute }) => {
+      if (icon) {
+        topItems.push({
+          onClick: onClickNavBtn,
+          link: {
+            type: PROJECT_PLUGIN_PAGE,
+            payload: { organizationSlug, projectSlug, pluginPage: internalRoute },
+          },
+          icon: icon.svg,
+          message: icon.title,
+        });
+      }
+    });
+    sidebarExtensions.forEach((extension) =>
       topItems.push({
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,

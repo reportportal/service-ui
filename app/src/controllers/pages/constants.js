@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,9 @@ export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
 export const HOME_PAGE = 'HOME_PAGE';
 export const ACCOUNT_REMOVED_PAGE = 'ACCOUNT_REMOVED_PAGE';
 
+// extensions
+export const PROJECT_PLUGIN_PAGE = 'PROJECT_PLUGIN_PAGE';
+
 export const pageNames = {
   [NOT_FOUND]: NOT_FOUND,
   ADMINISTRATE_PAGE,
@@ -95,6 +98,7 @@ export const pageNames = {
   PROJECT_USERDEBUG_LOG_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  PROJECT_PLUGIN_PAGE,
 };
 
 export const adminPageNames = {

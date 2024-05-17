@@ -56,6 +56,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
+  PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -288,6 +289,7 @@ const routesMap = {
     },
   },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage/:pluginRoute*',
+  [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

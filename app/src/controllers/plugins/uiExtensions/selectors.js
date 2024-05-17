@@ -1,8 +1,23 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { createSelector } from 'reselect';
 import {
   EXTENSION_TYPE_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
-  EXTENSION_TYPE_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
@@ -18,6 +33,8 @@ import {
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
+  EXTENSION_TYPE_PROJECT_PAGE,
+  PLUGIN_TYPE_REMOTE,
 } from './constants';
 import {
   domainSelector,
@@ -43,8 +60,12 @@ const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPlugin
         .filter(([name]) => pluginNames.includes(name))
         .map(([, extensions]) => extensions);
 
+      // TODO: update 'pluginType' usage once the backend will be ready
       const newExtensions = extensionsMetadata
-        .filter(({ pluginName }) => pluginNames.includes(pluginName))
+        .filter(
+          ({ pluginName, pluginType }) =>
+            pluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
+        )
         .map(({ extensions, ...commonMetadata }) =>
           extensions.map((ext) => ({ ...ext, ...commonMetadata })),
         );
@@ -62,7 +83,6 @@ export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
 export const uiExtensionAdminPagesSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_ADMIN_PAGE,
 );
-export const uiExtensionPagesSelector = createExtensionSelectorByType(EXTENSION_TYPE_PAGE);
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
 );
@@ -98,6 +118,9 @@ export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
 export const uiExtensionRegistrationPageSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_REGISTRATION_PAGE,
   enabledPublicPluginNamesSelector,
+);
+export const uiExtensionProjectPagesSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_PROJECT_PAGE,
 );
 
 export const makeDecisionDefectCommentAddonSelector = createExtensionSelectorByType(

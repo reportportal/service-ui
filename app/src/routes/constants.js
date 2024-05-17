@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,15 @@ import {
   PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  PROJECT_PLUGIN_PAGE,
   UNIQUE_ERRORS_PAGE,
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
-import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
+import { AdminUiExtensionPageLayout } from 'layouts/adminLayout/adminUiExtensionPageLayout';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
+import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -118,7 +120,12 @@ export const pageRendering = {
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
     component: AdminUiExtensionPage,
-    layout: UIExtensionPageLayout,
+    layout: AdminUiExtensionPageLayout,
     access: ADMIN_ACCESS,
+  },
+  [PROJECT_PLUGIN_PAGE]: {
+    component: ProjectUiExtensionPage,
+    layout: AppLayout,
+    rawContent: true,
   },
 };

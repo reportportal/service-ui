@@ -1,5 +1,4 @@
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
-export const EXTENSION_TYPE_PAGE = 'uiExtension:page';
 export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
 export const EXTENSION_TYPE_MODAL = 'uiExtension:modal';
@@ -21,6 +20,7 @@ export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
   'uiExtension:makeDecisionDefectTypeAddon';
 export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAddon';
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
+export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
 export const COMMAND_GET_FILE = 'getFile';
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
@@ -39,3 +39,5 @@ export const MAIN_FILE_KEY = 'main';
 
 export const FETCH_EXTENSIONS_METADATA_SUCCESS = 'fetchExtensionsMetadataSuccess';
 export const UPDATE_EXTENSION_METADATA = 'updateExtensionMetadata';
+
+export const PLUGIN_TYPE_REMOTE = 'remote';
