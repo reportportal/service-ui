@@ -35,8 +35,8 @@ export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
 
   dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
-  dataUserPhoto: (projectKey, id, loadThumbnail) =>
-    `${urlBase}data/${projectKey}/userphoto${getQueryParams({ id, loadThumbnail })}`,
+  dataUserPhoto: (projectKey, login, loadThumbnail) =>
+    `${urlBase}data/${projectKey}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
   dashboards: (projectKey) =>
@@ -137,8 +137,8 @@ export const URLS = {
   projectDefectType: (projectKey) => `${urlBase}${projectKey}/settings/sub-type`,
   projectDeleteDefectType: (projectKey, id) => `${urlBase}${projectKey}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
-  projectPreferences: (projectKey, userId, filterId = '') =>
-    `${urlBase}project/${projectKey}/preference/${userId}/${filterId}`,
+  projectPreferences: (projectKey, filterId = '') =>
+    `${urlBase}project/${projectKey}/preference/${filterId}`,
   projectUsers: (projectKey) => `${urlBase}project/${projectKey}/users`,
   projectUserSearchUser: (projectKey) => (searchTerm) =>
     `${urlBase}project/${projectKey}/usernames/search${getQueryParams({

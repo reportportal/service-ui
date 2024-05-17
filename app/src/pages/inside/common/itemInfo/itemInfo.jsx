@@ -30,6 +30,7 @@ import {
 } from 'controllers/plugins';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -37,6 +38,7 @@ import { getSauceLabsConfig } from 'components/integrations/integrationProviders
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
+import StarIcon from 'common/img/star-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
@@ -195,6 +197,12 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
+          {value.retentionPolicy === RETENTION_POLICY.IMPORTANT && (
+            <span className={cx('retention-policy')}>
+              <div className={cx('star-icon')}>{Parser(StarIcon)}</div>
+              Important
+            </span>
+          )}
           {value.status !== IN_PROGRESS &&
             customProps.withExtensions &&
             extensions.map((extension) => (

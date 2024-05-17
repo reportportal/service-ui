@@ -1486,7 +1486,7 @@
   "NotificationsEnableForm.integrationSettings": "Налаштування інтеграції",
   "NotificationsEnableForm.integrationSettingsDescription": "Налаштувати підключення плагінів до серверів",
   "NotificationsEnableForm.notConfiguredIntegration": "Інтеграцію ще не налаштовано",
-  "NotificationsEnableForm.tabDescription": "Керуйте повідомленнями, пов'язаними із запуском, для різних каналів зв'язку: Email, Slack, Teams і т.д.",
+  "NotificationsEnableForm.tabDescription": "Керуйте повідомленнями, пов'язаними із запуском, для різних каналів зв'язку: Email, Slack, і т.д.",
   "NotificationsEnableForm.title": "Немає інтеграції з електронною поштою сервером",
   "NotificationsEnableForm.toggleNotificationsLabel": "Автоматичне сповіщення електронною поштою",
   "NotificationsEnableForm.toggleNotificationsNote": "Надсилайте сповіщення електронною поштою про завершення запуску",

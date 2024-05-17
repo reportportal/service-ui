@@ -24,7 +24,6 @@ import {
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
-import { userIdSelector } from 'controllers/user';
 import { setProjectIntegrationsAction } from 'controllers/plugins';
 import {
   addFilterAction,
@@ -430,8 +429,7 @@ function* watchFetchProject() {
 }
 
 function* fetchProjectPreferences({ payload: projectKey }) {
-  const userId = yield select(userIdSelector);
-  const preferences = yield call(fetch, URLS.projectPreferences(projectKey, userId));
+  const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
   yield put(fetchProjectPreferencesSuccessAction(preferences));
   yield put(fetchUserFiltersSuccessAction(preferences.filters));
 }
@@ -473,8 +471,7 @@ function* watchShowFilterOnLaunches() {
 function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
   const projectKey = yield select(projectKeySelector);
-  const userId = yield select(userIdSelector);
-  yield call(fetch, URLS.projectPreferences(projectKey, userId, filterId), { method });
+  yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
 }
 
 function* watchUpdateProjectFilterPreferences() {
