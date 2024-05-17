@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -6,6 +6,7 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import styles from './importPluginSelector.scss';
 
 const cx = classNames.bind(styles);
+const DEFAULT_PLUGIN_NAME = 'JUnit';
 
 const messages = defineMessages({
   reportType: {
@@ -17,10 +18,20 @@ const messages = defineMessages({
 export const ImportPluginSelector = ({ setSelectedPluginData, importPlugins }) => {
   const { formatMessage } = useIntl();
 
-  const [selectedPlugin, setSelectedPlugin] = useState({
-    label: importPlugins?.[0]?.name,
-    value: importPlugins?.[0]?.name,
-  });
+  const [selectedPluginName, setSelectedPluginName] = useState(DEFAULT_PLUGIN_NAME);
+
+  const selectPlugin = (name) => {
+    setSelectedPluginName(name);
+    setSelectedPluginData(importPlugins.find((plugin) => plugin.name === name));
+  };
+
+  useEffect(() => {
+    if (importPlugins.some((plugin) => plugin.name === DEFAULT_PLUGIN_NAME)) {
+      selectPlugin(DEFAULT_PLUGIN_NAME);
+    } else {
+      selectPlugin(importPlugins?.[0]?.name);
+    }
+  }, []);
 
   const pluginNamesOptions = importPlugins.map((plugin) => ({
     label: plugin.name,
@@ -28,19 +39,21 @@ export const ImportPluginSelector = ({ setSelectedPluginData, importPlugins }) =
   }));
 
   const onChangePluginName = (pluginName) => {
-    if (pluginName !== selectedPlugin.name) {
-      setSelectedPlugin({
-        label: pluginName,
-        value: pluginName,
-      });
-      setSelectedPluginData(importPlugins.find((p) => p.name !== pluginName));
+    if (pluginName !== selectedPluginName) {
+      setSelectedPluginName(pluginName);
+      setSelectedPluginData(importPlugins.find((plugin) => plugin.name === pluginName));
     }
+  };
+
+  const dropdownValue = {
+    label: selectedPluginName,
+    value: selectedPluginName,
   };
 
   return (
     <div className={cx('import-plugin-selector')}>
       <span className={cx('field-name')}>{formatMessage(messages.reportType)}</span>
-      <Dropdown value={selectedPlugin} options={pluginNamesOptions} onChange={onChangePluginName} />
+      <Dropdown value={dropdownValue} options={pluginNamesOptions} onChange={onChangePluginName} />
     </div>
   );
 };

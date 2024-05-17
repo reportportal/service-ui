@@ -33,29 +33,16 @@ const messages = defineMessages({
   },
 });
 
-// todo get it from selectedPluginData.details
-const MAX_FILE_SIZES = 33554432;
-const ACCEPT_FILE_MIME_TYPES = [
-  'application/zip',
-  'application/x-zip-compressed',
-  'application/zip-compressed',
-  'application/xml',
-  'text/xml',
-];
-
 export const ImportLaunchModal = ({ data }) => {
   const { formatMessage } = useIntl();
   const [selectedPluginData, setSelectedPluginData] = useState();
-
-  // todo use selectedPluginData for get supported format and max size
-  console.log(selectedPluginData);
 
   return (
     <ImportModalLayout
       data={data}
       dropzoneCountNumber={1}
-      maxFileSize={MAX_FILE_SIZES}
-      acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
+      maxFileSize={selectedPluginData?.details?.MAX_FILE_SIZES}
+      acceptFileMimeTypes={selectedPluginData?.details?.ACCEPT_FILE_MIME_TYPES || []}
     >
       <ImportPluginSelector
         setSelectedPluginData={setSelectedPluginData}

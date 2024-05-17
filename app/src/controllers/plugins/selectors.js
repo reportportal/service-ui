@@ -80,6 +80,11 @@ export const enabledImportPluginsSelector = createSelector(pluginsSelector, (plu
   plugins.filter((plugin) => plugin.groupType === IMPORT_GROUP_TYPE && plugin.enabled),
 );
 
+export const isImportPluginsAvailableSelector = createSelector(
+  enabledImportPluginsSelector,
+  (plugins) => plugins?.length > 0,
+);
+
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
   createSelector(integrationsSelector, (integrations) =>
     filterIntegrationsByName(integrations, integrationName),
