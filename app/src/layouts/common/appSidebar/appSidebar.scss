@@ -88,6 +88,7 @@
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
+
     a {
       color: $COLOR--white-two;
     }
@@ -127,7 +128,7 @@
   }
 }
 
-.user-control {
+.user-control, .service-control {
   width: 100%;
   box-sizing: border-box;
   padding: 0 8px;
@@ -135,5 +136,32 @@
 
   &:hover {
     @extend .hover;
+  }
+}
+
+.service-block {
+  position: relative;
+  width: 40px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &.active-tooltip::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: $COLOR--system-notification-marker;
+    border-radius: 50%;
+    border: 2px solid #222222;
+    right: 20%;
+    top: 20%;
   }
 }

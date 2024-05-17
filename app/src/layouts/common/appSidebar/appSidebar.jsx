@@ -20,6 +20,12 @@ import classNames from 'classnames/bind';
 import { referenceDictionary } from 'common/utils';
 import { useIntl, defineMessages } from 'react-intl';
 import { Sidebar } from 'componentLibrary/sidebar';
+import { ServiceWithPopover } from 'layouts/common/appSidebar/helpAndService';
+import LogoHelp from 'common/img/help-inline.svg';
+import { useSelector } from 'react-redux';
+import { userIdSelector } from 'controllers/user';
+import { getFAQOpenStatus } from 'controllers/log/storageUtils';
+import Parser from 'html-react-parser';
 import LogoBlockIcon from './img/logo-icon-inline.svg';
 import LogoControlIcon from './img/logo-text-icon-inline.svg';
 import { UserAvatar } from './userAvatar';
@@ -44,9 +50,14 @@ export const AppSidebar = ({
   bottomSidebarControlItems,
   isOpenOrganizationPopover,
 }) => {
+  const userId = useSelector(userIdSelector);
+  const [isFAQOpened, setIsFAQOpened] = useState(!!getFAQOpenStatus(userId));
+
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
+  const [isOpenSupportPopover, setIsOpenSupportPopover] = useState(false);
   const [isHoveredUser, setIsHoveredUser] = useState(false);
+  const [isHoveredService, setIsHoveredService] = useState(false);
 
   const onHoverUser = () => {
     setIsHoveredUser(true);
@@ -55,10 +66,28 @@ export const AppSidebar = ({
   const onClearUser = () => {
     setIsHoveredUser(false);
   };
+  const onHoverService = () => {
+    setIsHoveredService(true);
+  };
+
+  const onClearService = () => {
+    setIsHoveredService(false);
+  };
 
   const createFooterBlock = (openNavbar) => (
     <>
       <div className={cx('policy-block')} />
+      <div
+        className={cx('service-block', { 'active-tooltip': !isFAQOpened })}
+        onClick={() => {
+          openNavbar();
+          setIsOpenSupportPopover(!isOpenSupportPopover);
+        }}
+        onMouseEnter={onHoverService}
+        onMouseLeave={onClearService}
+      >
+        <i>{Parser(LogoHelp)}</i>
+      </div>
       <UserAvatar
         onClick={() => {
           openNavbar();
@@ -77,6 +106,15 @@ export const AppSidebar = ({
         <a href={referenceDictionary.rpEpamPolicy} target="_blank">
           {formatMessage(messages.privacyPolicy)}
         </a>
+      </div>
+      <div className={cx('service-control', { hover: isHoveredService })}>
+        <ServiceWithPopover
+          closeNavbar={onCloseNavbar}
+          isOpenPopover={isOpenSupportPopover}
+          togglePopover={setIsOpenSupportPopover}
+          isFAQOpened={isFAQOpened}
+          onFAQOpen={setIsFAQOpened}
+        />
       </div>
       <div className={cx('user-control', { hover: isHoveredUser })}>
         <UserControlWithPopover
@@ -100,7 +138,9 @@ export const AppSidebar = ({
       bottomSidebarControlItems={bottomSidebarControlItems}
       createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
-      shouldBeCollapsedOnLeave={!(isOpenAvatarPopover || isOpenOrganizationPopover)}
+      shouldBeCollapsedOnLeave={
+        !(isOpenAvatarPopover || isOpenOrganizationPopover || isOpenSupportPopover)
+      }
     />
   );
 };

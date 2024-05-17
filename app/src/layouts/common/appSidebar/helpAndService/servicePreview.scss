@@ -1,0 +1,93 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin truncate($maxSize: 100%) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxSize;
+}
+
+.service-preview {
+  position: relative;
+  display: block;
+  color: $COLOR--darkmode-gray-100;
+  width: 100%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+    line-height: 20px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+}
+
+.title {
+  @include truncate();
+}
+
+.arrow-icon {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.popover {
+  padding: 8px 0px;
+  margin-left: 4px;
+  transform: translateY(-100%);
+}
+
+.popover-control {
+  height: 48px;
+  width: 264px;
+  padding: 0 6px;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+
+  &:focus-visible {
+    outline: none;
+    border: 2px solid $COLOR--topaz-focused;
+    border-radius: 4px;
+  }
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .tooltip {
+    width: 8px;
+    height: 8px;
+    background-color: $COLOR--system-notification-marker;
+    border-radius: 50%;
+  }
+}
