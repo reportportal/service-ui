@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 .menu-item {
   white-space: nowrap;
   background-color: $COLOR--darkmode-gray-475;
@@ -29,7 +28,7 @@
   align-items: center;
   padding: 8px 16px;
 
-  &.rights{
+  &.rights {
     font-family: $FONT-ROBOTO-REGULAR;
     color: $COLOR--darkmode-gray-150;
     cursor: default;
@@ -38,7 +37,6 @@
   &:hover:not(.active):not(.rights) {
     color: $COLOR--white-two;
     background-color: $COLOR--darkmode-gray-500;
-
 
     path {
       fill: $COLOR--white-two;
@@ -59,7 +57,7 @@
   height: 1px;
   width: 100%;
   background-color: $COLOR--almost-black;
-  margin:16px 0;
+  margin: 16px 0;
 }
 
 .hover {

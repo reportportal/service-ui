@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@mixin truncate ($maxSize: 100%) {
+@mixin truncate($maxSize: 100%) {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -59,10 +59,10 @@
   height: 1px;
   width: 100%;
   background-color: $COLOR--almost-black;
-  margin:16px 0;
+  margin: 16px 0;
 }
 
-.assistance{
+.assistance {
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
@@ -97,6 +97,4 @@
     background-color: $COLOR--system-notification-marker;
     border-radius: 50%;
   }
-
 }
-

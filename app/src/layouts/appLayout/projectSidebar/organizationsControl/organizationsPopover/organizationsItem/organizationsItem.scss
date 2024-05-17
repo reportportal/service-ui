@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@mixin truncate ($maxSize: 100%) {
+@mixin truncate($maxSize: 100%) {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

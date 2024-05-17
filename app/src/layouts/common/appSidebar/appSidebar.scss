@@ -128,7 +128,8 @@
   }
 }
 
-.user-control, .service-control {
+.user-control,
+.service-control {
   width: 100%;
   box-sizing: border-box;
   padding: 0 8px;
@@ -160,7 +161,7 @@
     height: 8px;
     background-color: $COLOR--system-notification-marker;
     border-radius: 50%;
-    border: 2px solid #222222;
+    border: 2px solid $COLOR--darkmode-gray-500;
     right: 20%;
     top: 20%;
   }
