@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,15 @@ import {
   PROJECT_MEMBERS_PAGE,
   PROJECT_SETTINGS_PAGE,
   USER_PROFILE_PAGE,
+  PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages/constants';
-import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import {
+  uiExtensionSidebarComponentsSelector,
+  uiExtensionProjectPagesSelector,
+} from 'controllers/plugins/uiExtensions';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
@@ -57,7 +61,8 @@ import { ProjectSelector } from '../../common/projectSelector';
   availableProjects: availableProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
-  extensions: uiExtensionSidebarComponentsSelector(state),
+  sidebarExtensions: uiExtensionSidebarComponentsSelector(state),
+  projectPageExtensions: uiExtensionProjectPagesSelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
@@ -70,12 +75,14 @@ export class AppSidebar extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     availableProjects: PropTypes.object,
-    extensions: PropTypes.arrayOf(extensionType),
+    sidebarExtensions: PropTypes.arrayOf(extensionType),
+    projectPageExtensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
     availableProjects: {},
-    extensions: [],
+    sidebarExtensions: [],
+    projectPageExtensions: [],
     onClickNavBtn: () => {},
   };
 
@@ -85,7 +92,14 @@ export class AppSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
-    const { projectRole, accountRole, activeProject, onClickNavBtn, extensions } = this.props;
+    const {
+      projectRole,
+      accountRole,
+      activeProject,
+      onClickNavBtn,
+      sidebarExtensions,
+      projectPageExtensions,
+    } = this.props;
 
     const topItems = [
       {
@@ -144,7 +158,20 @@ export class AppSidebar extends Component {
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
     });
-    extensions.forEach((extension) =>
+    projectPageExtensions.forEach(({ icon, internalRoute }) => {
+      if (icon) {
+        topItems.push({
+          onClick: onClickNavBtn,
+          link: {
+            type: PROJECT_PLUGIN_PAGE,
+            payload: { projectId: activeProject, pluginPage: internalRoute },
+          },
+          icon: icon.svg,
+          message: icon.title,
+        });
+      }
+    });
+    sidebarExtensions.forEach((extension) =>
       topItems.push({
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,

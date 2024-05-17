@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@ import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
 import { AdminSidebar } from '../adminSidebar';
 
-export const UIExtensionPageLayout = ({ children }) => (
-  <Layout isAdminExtensionPage Sidebar={AdminSidebar}>
+export const AdminUiExtensionPageLayout = ({ children }) => (
+  <Layout isExtensionPage Sidebar={AdminSidebar}>
     {children}
   </Layout>
 );
-UIExtensionPageLayout.propTypes = {
+AdminUiExtensionPageLayout.propTypes = {
   children: PropTypes.node,
 };
-UIExtensionPageLayout.defaultProps = {
+AdminUiExtensionPageLayout.defaultProps = {
   children: null,
 };
