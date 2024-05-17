@@ -147,8 +147,8 @@ export const projectNotificationsSelector = createSelector(
   ({ notifications = [] }) =>
     notifications.map((notification) => ({
       ...notification,
-      informOwner: notification.recipients.includes(OWNER),
-      recipients: notification.recipients.filter((item) => item !== OWNER),
+      informOwner: notification.recipients?.includes(OWNER),
+      recipients: notification.recipients?.filter((item) => item !== OWNER),
     })),
 );
 

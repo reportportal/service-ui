@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,20 @@
  */
 
 import PropTypes from 'prop-types';
-import { Layout } from 'layouts/common/layout';
-import { AdminSidebar } from '../adminSidebar';
+import {
+  FIELD_TYPE_MULTILINE_TEXT,
+  FIELD_TYPE_TEXT,
+} from 'pages/inside/projectSettingsPageContainer/content/notifications/constants';
 
-export const UIExtensionPageLayout = ({ children }) => (
-  <Layout isAdminExtensionPage Sidebar={AdminSidebar}>
-    {children}
-  </Layout>
-);
-UIExtensionPageLayout.propTypes = {
-  children: PropTypes.node,
-};
-UIExtensionPageLayout.defaultProps = {
-  children: null,
-};
+export const ruleField = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  description: PropTypes.string,
+  type: PropTypes.oneOf([FIELD_TYPE_TEXT, FIELD_TYPE_MULTILINE_TEXT]),
+  required: PropTypes.bool,
+  placeholder: PropTypes.string,
+  validation: PropTypes.shape({
+    type: PropTypes.string,
+    errorMessage: PropTypes.string,
+  }),
+});

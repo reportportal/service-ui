@@ -1486,7 +1486,7 @@
   "NotificationsEnableForm.integrationSettings": "集成设置",
   "NotificationsEnableForm.integrationSettingsDescription": "配置插件与服务器的连接",
   "NotificationsEnableForm.notConfiguredIntegration": "尚未配置集成",
-  "NotificationsEnableForm.tabDescription": "跨多个通信渠道管理与启动相关的通知：Email、Slack、Teams 等。",
+  "NotificationsEnableForm.tabDescription": "跨多个通信渠道管理与启动相关的通知：Email、Slack, 等。",
   "NotificationsEnableForm.title": "未与电子邮件集成",
   "NotificationsEnableForm.toggleNotificationsLabel": "电子邮件通知",
   "NotificationsEnableForm.toggleNotificationsNote": "在启测试任务成时发送电子邮件通知",

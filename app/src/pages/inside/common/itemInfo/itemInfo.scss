@@ -165,6 +165,22 @@
   }
 }
 
+.retention-policy {
+  height: 18px;
+  padding-right: 20px;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}
+
+.star-icon {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  padding-right: 4px;
+  vertical-align: text-bottom;
+}
+
 .retry-icon {
   display: inline-block;
   height: 15px;
