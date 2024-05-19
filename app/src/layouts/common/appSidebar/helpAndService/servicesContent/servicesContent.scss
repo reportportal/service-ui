@@ -73,3 +73,12 @@
     }
   }
 }
+
+.FAQ-control{
+  background-color: transparent;
+  border: none;
+
+  &.hover{
+    background-color: $COLOR--darkmode-gray-500;
+  }
+}

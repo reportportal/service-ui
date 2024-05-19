@@ -69,13 +69,33 @@ export const FAQContent = ({ onFAQOpen, closeNavbar, closePopover }) => {
     },
   ];
   const openModal = () => {
+    closePopover();
+    closeNavbar();
     dispatch(
       showModalAction({
-        id: 'RequestSupportModal',
+        id: 'requestSupportModal',
       }),
     );
   };
 
+  const furtherAssistanceValues = {
+    support: (
+      <LinkItem
+        link={referenceDictionary.rpEmail}
+        content={formatMessage(messages.supportTeam)}
+        icon={OpenIcon}
+        className={cx('inline-ref')}
+      />
+    ),
+    channel: (
+      <LinkItem
+        link={referenceDictionary.rpSlack}
+        content={formatMessage(messages.slackChannel)}
+        className={cx('inline-ref')}
+        icon={OpenIcon}
+      />
+    ),
+  };
   return (
     <>
       {FAQContentItems.map((contentItem) => {
@@ -94,31 +114,17 @@ export const FAQContent = ({ onFAQOpen, closeNavbar, closePopover }) => {
       })}
       <p className={cx('assistance')}>
         {formatMessage(messages.furtherAssistance, {
-          support: (data) => (
-            <LinkItem
-              link={referenceDictionary.rpEmail}
-              content={data}
-              icon={OpenIcon}
-              className={cx('inline-ref')}
-            />
-          ),
-          channel: (data) => (
-            <LinkItem
-              link={referenceDictionary.rpSlack}
-              content={data}
-              className={cx('inline-ref')}
-              icon={OpenIcon}
-            />
-          ),
+          support: () => furtherAssistanceValues.support,
+          channel: () => furtherAssistanceValues.channel,
         })}
       </p>
       <div className={cx('divider')} />
-      <span className={cx('menu-item')} onClick={openModal}>
+      <button className={cx('menu-item')} onClick={openModal}>
         <FormattedMessage
           id={'Sidebar.services.requestService'}
           defaultMessage={'Request professional service'}
         />
-      </span>
+      </button>
     </>
   );
 };

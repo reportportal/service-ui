@@ -77,7 +77,7 @@ export const AppSidebar = ({
   const createFooterBlock = (openNavbar) => (
     <>
       <div className={cx('policy-block')} />
-      <div
+      <button
         className={cx('service-block', { 'active-tooltip': !isFAQOpened })}
         onClick={() => {
           openNavbar();
@@ -87,7 +87,7 @@ export const AppSidebar = ({
         onMouseLeave={onClearService}
       >
         <i>{Parser(LogoHelp)}</i>
-      </div>
+      </button>
       <UserAvatar
         onClick={() => {
           openNavbar();

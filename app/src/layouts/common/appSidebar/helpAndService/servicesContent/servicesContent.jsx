@@ -70,7 +70,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFAQOpened, onFAQO
   const currentYear = new Date().getFullYear();
   return (
     <>
-      <div
+      <button
         className={cx('FAQ-control', { hover: isHovered })}
         onMouseLeave={onClearHover}
         onMouseEnter={onSetHover}
@@ -81,7 +81,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFAQOpened, onFAQO
           isFAQOpened={isFAQOpened}
           onFAQOpen={onFAQOpen}
         />
-      </div>
+      </button>
 
       {ServiceContentItems.map((contentItem) => {
         return (

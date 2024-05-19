@@ -15,3 +15,4 @@
  */
 
 export { FAQContent } from './FAQContent';
+export { RequestSupportModal } from '../../supportBlock/modal';

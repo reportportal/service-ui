@@ -48,7 +48,15 @@ export const messages = defineMessages({
   furtherAssistance: {
     id: 'Service.FAQcontent.furtherAssistance',
     defaultMessage:
-      "For any further queries or assistance, don't hesitate to reach out to our <support>support Team</support> or post your question in our <channel>Slack channel</channel>",
+      "For any further queries or assistance, don't hesitate to reach out to our <support>support team</support> or post your question in our <channel>Slack channel</channel>",
+  },
+  supportTeam: {
+    id: 'Service.FAQcontent.supportTeam',
+    defaultMessage: 'support team',
+  },
+  slackChannel: {
+    id: 'Service.FAQcontent.slackChannel',
+    defaultMessage: 'Slack channel',
   },
   helpAndServiceVersions: {
     id: 'Service.helpAndServiceVersions',

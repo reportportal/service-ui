@@ -40,8 +40,7 @@
 }
 
 .popover {
-  padding: 8px 16px;
-  margin-left: 4px;
+  padding: 8px 0;
   width: 300px;
   max-width: 300px;
 }
@@ -52,7 +51,7 @@
   border: 2px solid transparent;
   display: flex;
   align-items: center;
-  padding-left: 16px;
+  padding-left: 8px;
 }
 
 .arrow-icon {
