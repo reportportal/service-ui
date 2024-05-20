@@ -71,7 +71,6 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
-import { enabledImportPluginsSelector } from 'controllers/plugins';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -132,32 +131,6 @@ const messages = defineMessages({
     id: 'LaunchesPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
   },
-  modalTitle: {
-    id: 'LaunchesPage.modalTitle',
-    defaultMessage: 'Import Launch',
-  },
-  importButton: {
-    id: 'LaunchesPage.importButton',
-    defaultMessage: 'Import',
-  },
-  importTip: {
-    id: 'LaunchesPage.tip',
-    defaultMessage:
-      'Drop <b>.xml</b> or <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
-  },
-  noteMessage: {
-    id: 'LaunchesPage.noteMessage',
-    defaultMessage:
-      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
-  },
-  importConfirmationWarning: {
-    id: 'LaunchesPage.importConfirmationWarning',
-    defaultMessage: 'Are you sure you want to interrupt import launches?',
-  },
-  incorrectFileSize: {
-    id: 'LaunchesPage.incorrectFileSize',
-    defaultMessage: 'File size is more than 32 Mb',
-  },
 });
 
 @connect(
@@ -174,7 +147,6 @@ const messages = defineMessages({
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
-    importPlugins: enabledImportPluginsSelector(state),
   }),
   {
     showModalAction,
@@ -244,7 +216,6 @@ export class LaunchesPage extends Component {
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
     isDemoInstance: PropTypes.bool,
-    importPlugins: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   static defaultProps = {
@@ -641,33 +612,11 @@ export class LaunchesPage extends Component {
   };
 
   openImportModal = () => {
-    const {
-      intl: { formatMessage },
-      activeProject,
-      importPlugins,
-    } = this.props;
-
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
       id: 'importLaunchModal',
       data: {
         onImport: this.props.fetchLaunchesAction,
-        title: formatMessage(messages.modalTitle),
-        importButton: formatMessage(messages.importButton),
-        tip: formatMessage(messages.importTip, {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          span: (data) => DOMPurify.sanitize(`<span>${data}</span>`),
-        }),
-        incorrectFileSize: formatMessage(messages.incorrectFileSize),
-        noteMessage: formatMessage(messages.noteMessage),
-        importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
-        url: URLS.launchImport(activeProject),
-        eventsInfo: {
-          okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
-        },
-        importPlugins,
       },
     });
   };
