@@ -90,7 +90,7 @@ export class ActionPanel extends Component {
     tracking.trackEvent(PLUGINS_PAGE_EVENTS.CLICK_UPLOAD_BTN);
 
     this.props.showModalAction({
-      id: 'importPluginModal',
+      id: 'uploadPluginModal',
       data: {
         onImport: this.props.fetchPluginsAction,
         title: formatMessage(messages.modalTitle),

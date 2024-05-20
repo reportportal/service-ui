@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ImportPluginModal } from './importPluginModal';
+export { UploadPluginModal } from './uploadPluginModal';

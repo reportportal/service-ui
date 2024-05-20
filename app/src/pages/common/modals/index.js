@@ -15,5 +15,3 @@
  */
 
 export { ConfirmationModal } from './confirmationModal';
-export { ImportLaunchModal } from './importModal/importLaunchModal';
-export { ImportPluginModal } from './importModal/importPluginModal';

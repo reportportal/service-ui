@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
-import { ImportFileIcon } from 'pages/common/modals/importModal/importFileIcon';
+import { ImportFileIcon } from 'pages/common/uploadFileControls/importFileIcon';
 import { uniqueId } from 'common/utils';
 import DropZoneIcon from 'common/img/shape-inline.svg';
 import styles from './dropzoneField.scss';

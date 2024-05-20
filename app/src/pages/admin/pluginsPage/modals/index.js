@@ -14,22 +14,4 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { withModal } from 'controllers/modal';
-import PropTypes from 'prop-types';
-import { ImportModalLayout } from '../importModalLayout/importModalLayout';
-
-const MAX_FILE_SIZES = 134217728;
-const ACCEPT_FILE_MIME_TYPES = ['.jar'];
-
-export const ImportPluginModal = ({ data }) => (
-  <ImportModalLayout
-    data={data}
-    maxFileSize={MAX_FILE_SIZES}
-    acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
-  />
-);
-ImportPluginModal.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-export default withModal('importPluginModal')(ImportPluginModal);
+export { UploadPluginModal } from './uploadPluginModal';
