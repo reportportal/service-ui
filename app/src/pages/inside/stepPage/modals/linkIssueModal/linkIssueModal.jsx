@@ -271,7 +271,6 @@ export class LinkIssueModal extends Component {
             change={change}
             component={LinkIssueFields}
             addEventInfo={eventsInfo.addNewIssue}
-            withAutocomplete
           />
         </form>
       </DarkModalLayout>
