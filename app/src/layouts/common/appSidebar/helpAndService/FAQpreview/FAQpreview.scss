@@ -43,6 +43,7 @@
   padding: 8px 0;
   width: 300px;
   max-width: 300px;
+  margin-left: 1px;
 }
 
 .popover-control {
@@ -51,10 +52,23 @@
   border: 2px solid transparent;
   display: flex;
   align-items: center;
-  padding-left: 8px;
+  padding: 0 8px;
 }
 
 .arrow-icon {
   display: flex;
   align-items: center;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .tooltip {
+    width: 8px;
+    height: 8px;
+    background-color: $COLOR--system-notification-marker;
+    border-radius: 50%;
+  }
 }

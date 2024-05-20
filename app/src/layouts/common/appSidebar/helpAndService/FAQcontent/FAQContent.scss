@@ -87,16 +87,3 @@
     }
   }
 }
-
-.icon-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .tooltip {
-    width: 8px;
-    height: 8px;
-    background-color: $COLOR--system-notification-marker;
-    border-radius: 50%;
-  }
-}
