@@ -42,6 +42,7 @@
       fill: $COLOR--white-two;
     }
   }
+
   &.active {
     color: $COLOR--darkmode-topaz-text;
   }
@@ -73,11 +74,11 @@
   }
 }
 
-.FAQ-control{
+.FAQ-control {
   background-color: transparent;
   border: none;
 
-  &.hover{
+  &.hover {
     background-color: $COLOR--darkmode-gray-500;
   }
 }
