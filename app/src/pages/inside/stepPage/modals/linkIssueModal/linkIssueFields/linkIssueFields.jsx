@@ -70,9 +70,10 @@ export class LinkIssueFields extends Component {
   };
 
   updateIssueId = (e, value, oldValue, name) => {
+    const decodedValue = decodeURIComponent(value);
     const issueIndex = /\d+/.exec(name)[0];
     if (value.indexOf('/') !== -1 && !this.props.fields.get(issueIndex).issueId) {
-      let issueIdAutoValue = value.split('/');
+      let issueIdAutoValue = decodedValue.split('/');
       issueIdAutoValue = issueIdAutoValue[issueIdAutoValue.length - 1];
       this.props.change(`issues[${issueIndex}].issueId`, issueIdAutoValue);
     }
