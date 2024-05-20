@@ -74,7 +74,7 @@ export const ImportFileIcon = ({
           )}
         </div>
         {!(uploaded || isLoading) && (
-          <div className={cx('file-delete')} onClick={deleteHandler}>
+          <div className={cx('file-delete')} onClick={deleteHandler} onKeyDown={deleteHandler}>
             {Parser(DeleteIcon)}
           </div>
         )}
