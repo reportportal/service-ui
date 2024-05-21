@@ -31,7 +31,7 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: isTimeline ? date : `${name} #${number}`,
-    startTime: isTimeline ? null : Number(startTime),
+    startTime: isTimeline ? null : new Date(startTime).getTime(),
     itemCases: `${Number(value).toFixed(2)}%`,
     color: color(id),
     issueStatNameProps: { itemName: messages[id] ? formatMessage(messages[id]) : id },

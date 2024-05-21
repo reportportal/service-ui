@@ -147,6 +147,9 @@ export class ItemInfo extends Component {
       hideDescription,
     } = this.props;
 
+    const startTime = new Date(value.startTime).getTime();
+    const endTime = new Date(value.endTime).getTime();
+
     const autoAnalysisLabel = value.analysing?.find(
       (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
     );
@@ -213,23 +216,21 @@ export class ItemInfo extends Component {
                 withPreloader
               />
             ))}
-          {value.startTime && (
+          {!!startTime && (
             <span className={cx('duration-block')}>
               <DurationBlock
                 type={value.type}
                 status={value.status}
                 itemNumber={value.number}
                 timing={{
-                  start: value.startTime,
-                  end: value.endTime,
+                  start: startTime,
+                  end: endTime,
                   approxTime: value.approximateDuration,
                 }}
               />
             </span>
           )}
-          {value.startTime && (
-            <div className={cx('mobile-start-time')}>{fromNowFormat(value.startTime)}</div>
-          )}
+          {!!startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}
           {value.hasRetries && (
             <div className={cx('retry-icon')} title={intl.formatMessage(messages.retryTooltip)}>
               {Parser(RetryIcon)}
