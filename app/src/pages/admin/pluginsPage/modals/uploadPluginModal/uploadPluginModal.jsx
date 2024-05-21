@@ -66,10 +66,6 @@ export const UploadPluginModal = ({ data }) => {
       data={data}
       title={formatMessage(messages.modalTitle)}
       importButton={formatMessage(messages.uploadButton)}
-      tip={formatMessage(messages.uploadTip, {
-        b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
-        span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),
-      })}
       url={url}
       singleImport
       eventsInfo={{
@@ -77,7 +73,6 @@ export const UploadPluginModal = ({ data }) => {
         cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
         closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UPLOAD_MODAL,
       }}
-      incorrectFileSize={formatMessage(messages.incorrectFileSize)}
       maxFileSize={MAX_FILE_SIZES}
       acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
       files={files}
@@ -89,6 +84,11 @@ export const UploadPluginModal = ({ data }) => {
         setFiles={setFiles}
         maxFileSize={MAX_FILE_SIZES}
         acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
+        incorrectFileSize={formatMessage(messages.incorrectFileSize)}
+        tip={formatMessage(messages.uploadTip, {
+          b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
+          span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),
+        })}
       />
     </ImportModalLayout>
   );

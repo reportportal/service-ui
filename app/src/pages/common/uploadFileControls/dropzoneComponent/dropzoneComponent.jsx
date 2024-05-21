@@ -22,15 +22,23 @@ import {
 } from 'pages/common/uploadFileControls/importModalLayout/utils';
 import { DropzoneField } from './dropzoneField';
 
-export const DropzoneComponent = ({ data, files, setFiles, maxFileSize, acceptFileMimeTypes }) => {
+export const DropzoneComponent = ({
+  data,
+  files,
+  setFiles,
+  maxFileSize,
+  acceptFileMimeTypes,
+  incorrectFileSize,
+  tip,
+}) => {
   const isDropZoneDisabled = () =>
     isUploadFinished() || isUploadInProgress() || (data.singleImport && files.length > 0);
 
   return (
     <DropzoneField
       disabled={isDropZoneDisabled()}
-      incorrectFileSize={data.incorrectFileSize}
-      tip={data.tip}
+      incorrectFileSize={incorrectFileSize}
+      tip={tip}
       singleImport={data.singleImport}
       files={files}
       setFiles={setFiles}
@@ -45,6 +53,8 @@ DropzoneComponent.propTypes = {
   setFiles: PropTypes.func.isRequired,
   maxFileSize: PropTypes.number,
   acceptFileMimeTypes: PropTypes.arrayOf(PropTypes.string),
+  incorrectFileSize: PropTypes.string.isRequired,
+  tip: PropTypes.string.isRequired,
 };
 DropzoneComponent.defaultProps = {
   maxFileSize: 0,

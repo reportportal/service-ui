@@ -35,7 +35,17 @@ const messages = defineMessages({
   },
 });
 
-const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
+const ImportModalLayoutComponent = ({
+  data,
+  url,
+  files,
+  setFiles,
+  title,
+  importConfirmationWarning,
+  importButton,
+  eventsInfo,
+  children,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -44,8 +54,7 @@ const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
   const addCancelRequest = (cancelRequest) => cancelRequests.push(cancelRequest);
 
   const getOkButtonConfig = (isLoading, uploadFinished) => {
-    const text =
-      isLoading || uploadFinished ? formatMessage(COMMON_LOCALE_KEYS.OK) : data.importButton;
+    const text = isLoading || uploadFinished ? formatMessage(COMMON_LOCALE_KEYS.OK) : importButton;
 
     return {
       text,
@@ -54,8 +63,17 @@ const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
         if (uploadFinished) {
           closeModal();
         } else {
-          trackEvent(data.eventsInfo?.okBtn);
-          uploadFiles(data, files, setFiles, addCancelRequest, dispatch, trackEvent);
+          trackEvent(eventsInfo.okBtn);
+          uploadFiles(
+            data,
+            url,
+            files,
+            setFiles,
+            addCancelRequest,
+            eventsInfo,
+            dispatch,
+            trackEvent,
+          );
         }
       },
     };
@@ -69,7 +87,7 @@ const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
 
   const getCloseConfirmationConfig = (isValidFilesExists, loading, uploadFinished) => {
     const confirmationWarning = loading
-      ? data.importConfirmationWarning
+      ? importConfirmationWarning
       : formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING);
 
     if (!isValidFilesExists || uploadFinished) {
@@ -89,15 +107,15 @@ const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
 
   return (
     <ModalLayout
-      title={data.title}
+      title={title}
       okButton={getOkButtonConfig(loading, uploadFinished)}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        eventInfo: data.eventsInfo?.cancelBtn,
+        eventInfo: eventsInfo.cancelBtn,
         disabled: uploadFinished,
       }}
       closeConfirmation={getCloseConfirmationConfig(validFiles.length, loading, uploadFinished)}
-      closeIconEventInfo={data.eventsInfo?.closeIcon}
+      closeIconEventInfo={eventsInfo.closeIcon}
     >
       {children}
     </ModalLayout>
@@ -105,6 +123,7 @@ const ImportModalLayoutComponent = ({ data, files, setFiles, children }) => {
 };
 ImportModalLayoutComponent.propTypes = {
   data: PropTypes.object,
+  url: PropTypes.string.isRequired,
   tracking: PropTypes.shape({
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
@@ -112,10 +131,16 @@ ImportModalLayoutComponent.propTypes = {
   children: PropTypes.node,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFiles: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  importConfirmationWarning: PropTypes.string,
+  importButton: PropTypes.string.isRequired,
+  eventsInfo: PropTypes.object,
 };
 ImportModalLayoutComponent.defaultProps = {
-  data: { eventsInfo: { uploadButton: () => {}, cancelBtn: {}, closeIcon: {} } },
+  data: {},
   dropzoneCountNumber: 0,
   children: [null],
+  importConfirmationWarning: '',
+  eventsInfo: { uploadButton: () => {}, cancelBtn: {}, closeIcon: {} },
 };
 export const ImportModalLayout = track()(ImportModalLayoutComponent);

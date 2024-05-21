@@ -16,7 +16,6 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import DOMPurify from 'dompurify';
@@ -80,18 +79,12 @@ export const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
       setFiles={setFiles}
       title={formatMessage(messages.modalTitle)}
       importButton={formatMessage(messages.importButton)}
-      tip={formatMessage(messages.importTip, {
-        b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
-        span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),
-      })}
       url={url}
       eventsInfo={{
         okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
         cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
         closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
       }}
-      incorrectFileSize={formatMessage(messages.incorrectFileSize)}
-      noteMessage={formatMessage(messages.noteMessage)}
       importConfirmationWarning={formatMessage(messages.importConfirmationWarning)}
     >
       <ImportPluginSelector
@@ -104,9 +97,14 @@ export const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
         setFiles={setFiles}
         maxFileSize={selectedPluginData?.details?.MAX_FILE_SIZES}
         acceptFileMimeTypes={selectedPluginData?.details?.ACCEPT_FILE_MIME_TYPES || []}
+        incorrectFileSize={formatMessage(messages.incorrectFileSize)}
+        tip={formatMessage(messages.importTip, {
+          b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
+          span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),
+        })}
       />
       <p className={cx('note-label')}>{formatMessage(messages.note)}</p>
-      <p className={cx('note-message')}>{Parser(data.noteMessage)}</p>
+      <p className={cx('note-message')}>{formatMessage(messages.noteMessage)}</p>
     </ImportModalLayout>
   );
 };

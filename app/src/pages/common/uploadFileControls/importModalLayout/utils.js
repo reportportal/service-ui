@@ -71,12 +71,21 @@ export const isUploadFinished = (files) => {
   return validFiles?.length ? validFiles.every(({ uploaded }) => uploaded) : false;
 };
 
-export const uploadFiles = (data, files, setFiles, addCancelRequest, dispatch, trackEvent) => {
+export const uploadFiles = (
+  data,
+  url,
+  files,
+  setFiles,
+  addCancelRequest,
+  eventsInfo,
+  dispatch,
+  trackEvent,
+) => {
   const getFilesNames = () => files.map(({ file: { name } }) => name).join('#');
 
   const successUploadHandler = (id) => {
     data.onImport();
-    const uploadButton = data.eventsInfo.uploadButton;
+    const uploadButton = eventsInfo.uploadButton;
 
     if (uploadButton) {
       trackEvent(uploadButton(getFilesNames()));
@@ -112,7 +121,7 @@ export const uploadFiles = (data, files, setFiles, addCancelRequest, dispatch, t
     setFiles(updatedFiles);
   };
 
-  const preparedData = prepareDataForServerUploading(data.url, files, setFiles, addCancelRequest);
+  const preparedData = prepareDataForServerUploading(url, files, setFiles, addCancelRequest);
 
   const updatedFiles = files.map((f) => (f.valid ? { ...f, isLoading: true } : f));
   setFiles(updatedFiles);
