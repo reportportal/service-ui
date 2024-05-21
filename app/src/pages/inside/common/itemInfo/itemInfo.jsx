@@ -216,7 +216,7 @@ export class ItemInfo extends Component {
                 withPreloader
               />
             ))}
-          {startTime && (
+          {!!startTime && (
             <span className={cx('duration-block')}>
               <DurationBlock
                 type={value.type}
@@ -230,7 +230,7 @@ export class ItemInfo extends Component {
               />
             </span>
           )}
-          {startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}
+          {!!startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}
           {value.hasRetries && (
             <div className={cx('retry-icon')} title={intl.formatMessage(messages.retryTooltip)}>
               {Parser(RetryIcon)}
