@@ -223,7 +223,7 @@ export class ProjectActivity extends Component {
               {ActivityComponent}
               <AbsRelTime
                 setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                startTime={+activity.lastModified}
+                startTime={new Date(activity.lastModified).getTime()}
                 customClass={cx('time')}
               />
             </div>

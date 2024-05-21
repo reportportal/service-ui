@@ -50,7 +50,7 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: isTimeline ? date : `${name} #${number}`,
-    startTime: isTimeline ? '' : dateFormat(Number(startTime)),
+    startTime: isTimeline ? '' : dateFormat(new Date(startTime).getTime()),
     growth,
     growthClass,
     total,
