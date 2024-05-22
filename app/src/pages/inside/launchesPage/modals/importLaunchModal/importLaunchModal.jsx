@@ -70,7 +70,7 @@ const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
   const [selectedPluginData, setSelectedPluginData] = useState();
   const [files, setFiles] = useState([]);
 
-  const url = URLS.launchImport(activeProject);
+  const url = URLS.pluginFileImport(activeProject, selectedPluginData?.name);
 
   return (
     <ImportModalLayout

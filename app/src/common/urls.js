@@ -292,6 +292,8 @@ export const URLS = {
     `${urlBase}integration/${projectId}/all/${type}`,
   testIntegrationConnection: (projectId, integrationId) =>
     `${urlBase}integration/${projectId}/${integrationId}/connection/test`,
+  pluginFileImport: (projectName, pluginName) =>
+    `${urlBase}plugin/${projectName}/${pluginName}/import`,
 
   btsIntegrationIssueTypes: (projectId, integrationId) =>
     `${urlBase}bts/${projectId}/${integrationId}/issue_types`,
