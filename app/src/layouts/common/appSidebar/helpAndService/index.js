@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ServiceWithPopover } from './servicePreview';
+export { ServiceWithPopover, FAQWithPopover } from './previewPopover';

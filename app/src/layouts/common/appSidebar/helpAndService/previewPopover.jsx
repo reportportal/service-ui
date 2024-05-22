@@ -17,41 +17,50 @@
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { withPopover } from 'componentLibrary/popover';
-import { ServicesContent } from 'layouts/common/appSidebar/helpAndService/servicesContent';
-import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
+import { ServicesContent } from './servicesContent';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
-import styles from './servicePreview.scss';
-import { messages } from './messages';
+import styles from './previewPopover.scss';
 
 const cx = classNames.bind(styles);
-
-const ServicePreview = ({ isFAQOpened }) => {
-  const { formatMessage } = useIntl();
+const PreviewPopover = ({ title, isFaqTouched, isHovered }) => {
   return (
-    <div className={cx('service-preview')}>
+    <div className={cx('preview', { hovered: isHovered })}>
       <div className={cx('content')}>
-        <div className={cx('title')}>{formatMessage(messages.helpAndServiceVersions)}</div>
-        <div className={cx('icon-container')}>
-          {!isFAQOpened && <div className={cx('tooltip')} />}
-          <div className={cx('arrow-icon')}>{Parser(ArrowRightIcon)}</div>
+        <span className={cx('title')}>{title}</span>
+        <div className={cx('arrow-icon', { untouched: !isFaqTouched })}>
+          {Parser(ArrowRightIcon)}
         </div>
       </div>
     </div>
   );
 };
 
-ServicePreview.propTypes = {
-  isFAQOpened: PropTypes.bool,
+PreviewPopover.propTypes = {
+  isFaqTouched: PropTypes.bool,
+  isHovered: PropTypes.bool,
+  title: PropTypes.string,
 };
-
 export const ServiceWithPopover = withPopover({
   ContentComponent: ServicesContent,
   side: 'right',
   arrowVerticalPosition: 'vertical-bottom',
-  popoverClassName: cx('popover'),
-  popoverWrapperClassName: cx('popover-control'),
+  popoverClassName: cx('service-popover'),
+  popoverWrapperClassName: cx('service-popover-control'),
   variant: 'dark',
   tabIndex: 0,
   topPosition: window.innerHeight - 72,
-})(ServicePreview);
+})(PreviewPopover);
+
+export const FAQWithPopover = withPopover({
+  ContentComponent: FAQContent,
+  side: 'right',
+  arrowVerticalPosition: 'vertical-top',
+  popoverClassName: cx('faq-popover'),
+  popoverWrapperClassName: cx('faq-popover-control'),
+  variant: 'dark',
+  tabIndex: 0,
+  topPosition: 1,
+})(PreviewPopover);

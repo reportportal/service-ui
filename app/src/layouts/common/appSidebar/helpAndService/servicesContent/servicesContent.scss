@@ -60,7 +60,7 @@
   margin: 16px;
 }
 
-.hover {
+.hovered {
   background-color: $COLOR--darkmode-gray-500;
 
   button {
@@ -77,8 +77,10 @@
 .FAQ-control {
   background-color: transparent;
   border: none;
+  padding: 0;
+  width: 100%;
 
-  &.hover {
+  &:hover {
     background-color: $COLOR--darkmode-gray-500;
   }
 }

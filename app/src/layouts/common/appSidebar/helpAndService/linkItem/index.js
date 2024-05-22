@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export LinkItem from './linkItem';
+export { LinkItem } from './linkItem';

@@ -53,17 +53,16 @@ export const docsReferences = {
   pluginsDocs: 'https://reportportal.io/docs/category/plugins',
 };
 
-export const referenceFAQDictionary = {
-  configureReportingFAQ:
+export const faqDictionary = {
+  configureReporting:
     'https://reportportal.io/docs/log-data-in-reportportal/test-framework-integration/',
-  improvePerformanceFAQ:
+  improvePerformance:
     'https://reportportal.io/docs/installation-steps/OptimalPerformanceHardwareSetup',
-  configureAnalyzerFAQ:
+  configureAnalyzer:
     'https://reportportal.io/docs/issues-troubleshooting/ResolveAnalyzerKnownIssues',
-  integrateJiraFAQ: 'https://reportportal.io/docs/plugins/AtlassianJiraServer',
-  configureCertificateFAQ:
-    'https://reportportal.io/docs/installation-steps/SetupTSLSSLInTraefik2.0.x',
-  fileStorageOptionsFAQ:
+  integrateJira: 'https://reportportal.io/docs/plugins/AtlassianJiraServer',
+  configureCertificate: 'https://reportportal.io/docs/installation-steps/SetupTSLSSLInTraefik2.0.x',
+  fileStorageOptions:
     'https://reportportal.io/docs/installation-steps/ReportPortal23.1FileStorageOptions',
-  pricingOptionsFAQ: 'https://reportportal.io/pricing/saas',
+  pricingOptions: 'https://reportportal.io/pricing/saas',
 };

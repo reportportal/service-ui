@@ -21,12 +21,12 @@ import {
   LOG_LEVELS,
   DEFAULT_LOG_LEVEL,
   LOG_VIEW_MODE_STORAGE_KEY,
-  FAQ_OPEN_STATUS_STORAGE_KEY,
 } from './constants';
 
-const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
+export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
 
-const updateUserSettingsInStorage = (userId, data) => updateStorageItem(`${userId}_settings`, data);
+export const updateUserSettingsInStorage = (userId, data) =>
+  updateStorageItem(`${userId}_settings`, data);
 
 const getLogLevelFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
@@ -52,8 +52,3 @@ export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || M
 
 export const setLogViewMode = (userId, viewMode) =>
   updateUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
-
-export const getFAQOpenStatus = (userId) =>
-  getUserSettingsFromStorage(userId)[FAQ_OPEN_STATUS_STORAGE_KEY];
-export const setFAQOpenStatusTrue = (userId) =>
-  updateUserSettingsInStorage(userId, { [FAQ_OPEN_STATUS_STORAGE_KEY]: true });

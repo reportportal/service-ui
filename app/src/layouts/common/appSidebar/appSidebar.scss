@@ -128,16 +128,22 @@
   }
 }
 
-.user-control,
-.service-control {
+.user-control {
   width: 100%;
   box-sizing: border-box;
   padding: 0 8px;
   cursor: pointer;
 
   &:hover {
-    @extend .hover;
+    @extend .hover
   }
+}
+
+.service-control {
+  border: none;
+  background-color: transparent;
+  width: 280px;
+  padding: 0;
 }
 
 .service-block {
@@ -161,7 +167,7 @@
     align-items: center;
   }
 
-  &.active-tooltip::after {
+  &.untouched::after {
     content: '';
     position: absolute;
     width: 8px;

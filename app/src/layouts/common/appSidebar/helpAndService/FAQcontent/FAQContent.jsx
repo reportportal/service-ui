@@ -16,55 +16,58 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
-import React from 'react';
-import { referenceDictionary, uniqueId } from 'common/utils';
+import { useEffect } from 'react';
+import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
-import { setFAQOpenStatusTrue } from 'controllers/log/storageUtils';
-import { messages } from 'layouts/common/appSidebar/helpAndService/messages';
-import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem/linkItem';
-import { referenceFAQDictionary } from 'common/utils/referenceDictionary';
+import { faqDictionary } from 'common/utils/referenceDictionary';
+import { setFAQOpenStatusTrue } from '../../utils';
+import { messages } from '../../messages';
+import { LinkItem } from '../linkItem';
 import styles from './FAQContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FAQContent = ({ onFAQOpen, closeNavbar, closePopover }) => {
+export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
   const { formatMessage } = useIntl();
-  onFAQOpen(true);
-  const userId = useSelector(userIdSelector);
-  setFAQOpenStatusTrue(userId);
   const dispatch = useDispatch();
+  const userId = useSelector(userIdSelector);
+
+  useEffect(() => {
+    onOpen(true);
+    setFAQOpenStatusTrue(userId);
+  }, []);
 
   const FAQContentItems = [
     {
-      linkTo: referenceFAQDictionary.configureReportingFAQ,
+      linkTo: faqDictionary.configureReporting,
       message: messages.configureReporting,
     },
     {
-      linkTo: referenceFAQDictionary.improvePerformanceFAQ,
+      linkTo: faqDictionary.improvePerformance,
       message: messages.improvePerformance,
     },
     {
-      linkTo: referenceFAQDictionary.configureAnalyzerFAQ,
+      linkTo: faqDictionary.configureAnalyzer,
       message: messages.configureAnalyzer,
     },
     {
-      linkTo: referenceFAQDictionary.integrateJiraFAQ,
+      linkTo: faqDictionary.integrateJira,
       message: messages.integrateJira,
     },
     {
-      linkTo: referenceFAQDictionary.configureCertificateFAQ,
+      linkTo: faqDictionary.configureCertificate,
       message: messages.configureCertificate,
     },
     {
-      linkTo: referenceFAQDictionary.fileStorageOptionsFAQ,
+      linkTo: faqDictionary.fileStorageOptions,
       message: messages.fileStorageOptions,
     },
     {
-      linkTo: referenceFAQDictionary.pricingOptionsFAQ,
+      linkTo: faqDictionary.pricingOptions,
       message: messages.pricingOptions,
     },
   ];
@@ -78,7 +81,7 @@ export const FAQContent = ({ onFAQOpen, closeNavbar, closePopover }) => {
     );
   };
 
-  const furtherAssistanceValues = {
+  const furtherAssistanceLinks = {
     support: (
       <LinkItem
         link={referenceDictionary.rpEmail}
@@ -98,39 +101,34 @@ export const FAQContent = ({ onFAQOpen, closeNavbar, closePopover }) => {
   };
   return (
     <>
-      {FAQContentItems.map((contentItem) => {
-        return (
-          <LinkItem
-            link={contentItem.linkTo}
-            content={formatMessage(contentItem.message)}
-            className={cx('menu-item')}
-            onClick={() => {
-              closePopover();
-              closeNavbar();
-            }}
-            key={`faq-${uniqueId()}`}
-          />
-        );
-      })}
+      {FAQContentItems.map((contentItem) => (
+        <LinkItem
+          link={contentItem.linkTo}
+          content={formatMessage(contentItem.message)}
+          className={cx('menu-item')}
+          onClick={() => {
+            closePopover();
+            closeNavbar();
+          }}
+          key={contentItem.linkTo}
+        />
+      ))}
       <p className={cx('assistance')}>
         {formatMessage(messages.furtherAssistance, {
-          support: () => furtherAssistanceValues.support,
-          channel: () => furtherAssistanceValues.channel,
+          support: () => furtherAssistanceLinks.support,
+          channel: () => furtherAssistanceLinks.channel,
         })}
       </p>
       <div className={cx('divider')} />
       <button className={cx('menu-item')} onClick={openModal}>
-        <FormattedMessage
-          id={'Sidebar.services.requestService'}
-          defaultMessage={'Request professional service'}
-        />
+        {formatMessage(messages.requestService)}
       </button>
     </>
   );
 };
 
 FAQContent.propTypes = {
-  onFAQOpen: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
   closeNavbar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
 };

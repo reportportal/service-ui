@@ -14,4 +14,13 @@
  * limitations under the License.
  */
 
-export { FAQWithPopover } from './FAQpreview';
+import { FAQ_TOUCHED_STATUS_STORAGE_KEY } from 'controllers/log/constants';
+import {
+  getUserSettingsFromStorage,
+  updateUserSettingsInStorage,
+} from 'controllers/log/storageUtils';
+
+export const getFAQOpenStatus = (userId) =>
+  getUserSettingsFromStorage(userId)[FAQ_TOUCHED_STATUS_STORAGE_KEY];
+export const setFAQOpenStatusTrue = (userId) =>
+  updateUserSettingsInStorage(userId, { [FAQ_TOUCHED_STATUS_STORAGE_KEY]: true });

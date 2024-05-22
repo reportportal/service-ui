@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { referenceDictionary } from 'common/utils';
-import { useIntl, defineMessages } from 'react-intl';
-import { Sidebar } from 'componentLibrary/sidebar';
-import { ServiceWithPopover } from 'layouts/common/appSidebar/helpAndService';
-import LogoHelp from 'common/img/help-inline.svg';
-import { useSelector } from 'react-redux';
-import { userIdSelector } from 'controllers/user';
-import { getFAQOpenStatus } from 'controllers/log/storageUtils';
+import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
+import { useSelector } from 'react-redux';
+import { Sidebar } from 'componentLibrary/sidebar';
+import HelpIcon from 'common/img/help-inline.svg';
+import { userIdSelector } from 'controllers/user';
+import { getFAQOpenStatus } from './utils';
+import { ServiceWithPopover } from './helpAndService';
 import LogoBlockIcon from './img/logo-icon-inline.svg';
 import LogoControlIcon from './img/logo-text-icon-inline.svg';
 import { UserAvatar } from './userAvatar';
 import { UserControlWithPopover } from './userControl';
 import styles from './appSidebar.scss';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  privacyPolicy: {
-    id: 'AppSidebar.privacyPolicy',
-    defaultMessage: 'Privacy Policy',
-  },
-});
 
 export const AppSidebar = ({
   createMainBlock,
@@ -51,7 +45,7 @@ export const AppSidebar = ({
   isOpenOrganizationPopover,
 }) => {
   const userId = useSelector(userIdSelector);
-  const [isFAQOpened, setIsFAQOpened] = useState(!!getFAQOpenStatus(userId));
+  const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
 
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
@@ -78,7 +72,7 @@ export const AppSidebar = ({
     <>
       <div className={cx('policy-block')} />
       <button
-        className={cx('service-block', { 'active-tooltip': !isFAQOpened })}
+        className={cx('service-block', { untouched: !isFaqTouched })}
         onClick={() => {
           openNavbar();
           setIsOpenSupportPopover(!isOpenSupportPopover);
@@ -86,7 +80,7 @@ export const AppSidebar = ({
         onMouseEnter={onHoverService}
         onMouseLeave={onClearService}
       >
-        <i>{Parser(LogoHelp)}</i>
+        <i>{Parser(HelpIcon)}</i>
       </button>
       <UserAvatar
         onClick={() => {
@@ -107,15 +101,21 @@ export const AppSidebar = ({
           {formatMessage(messages.privacyPolicy)}
         </a>
       </div>
-      <div className={cx('service-control', { hover: isHoveredService })}>
+      <button
+        className={cx('service-control')}
+        onMouseEnter={onHoverService}
+        onMouseLeave={onClearService}
+      >
         <ServiceWithPopover
           closeNavbar={onCloseNavbar}
           isOpenPopover={isOpenSupportPopover}
           togglePopover={setIsOpenSupportPopover}
-          isFAQOpened={isFAQOpened}
-          onFAQOpen={setIsFAQOpened}
+          isFaqTouched={isFaqTouched}
+          onOpen={setIsFaqTouched}
+          isHovered={isHoveredService}
+          title={formatMessage(messages.helpAndServiceVersions)}
         />
-      </div>
+      </button>
       <div className={cx('user-control', { hover: isHoveredUser })}>
         <UserControlWithPopover
           closeNavbar={onCloseNavbar}

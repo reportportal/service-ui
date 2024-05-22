@@ -70,4 +70,40 @@ export const messages = defineMessages({
     id: 'Sidebar.footer.rights',
     defaultMessage: '© Report Portal {currentYear}. All rights reserved',
   },
+  requestService: {
+    id: 'Sidebar.services.requestService',
+    defaultMessage: 'Request professional service',
+  },
+  documentation: {
+    id: 'Sidebar.footer.documentation',
+    defaultMessage: 'Documentation',
+  },
+  openAPI: {
+    id: 'Sidebar.footer.openAPI',
+    defaultMessage: 'OpenAPI',
+  },
+  github: {
+    id: 'Sidebar.footer.github',
+    defaultMessage: 'GitHub',
+  },
+  slack: {
+    id: 'Sidebar.footer.slack',
+    defaultMessage: 'Slack',
+  },
+  contactUs: {
+    id: 'Sidebar.footer.contactUs',
+    defaultMessage: 'Contact us',
+  },
+  epam: {
+    id: 'Sidebar.footer.epam',
+    defaultMessage: 'EPAM',
+  },
+  servicesVersions: {
+    id: 'Sidebar.footer.servicesVersions',
+    defaultMessage: 'Versions of connected services',
+  },
+  privacyPolicy: {
+    id: 'AppSidebar.privacyPolicy',
+    defaultMessage: 'Privacy Policy',
+  },
 });
