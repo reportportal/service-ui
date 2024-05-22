@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -6,7 +6,6 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import styles from './importPluginSelector.scss';
 
 const cx = classNames.bind(styles);
-const DEFAULT_PLUGIN_NAME = 'JUnit';
 
 const messages = defineMessages({
   reportType: {
@@ -15,24 +14,8 @@ const messages = defineMessages({
   },
 });
 
-export const ImportPluginSelector = ({
-  selectedPluginData,
-  setSelectedPluginData,
-  importPlugins,
-}) => {
+export const ImportPluginSelector = ({ selectedPluginData, importPlugins, selectPlugin }) => {
   const { formatMessage } = useIntl();
-
-  const selectPlugin = (name) => {
-    setSelectedPluginData(importPlugins.find((plugin) => plugin.name === name));
-  };
-
-  useEffect(() => {
-    if (importPlugins.some((plugin) => plugin.name === DEFAULT_PLUGIN_NAME)) {
-      selectPlugin(DEFAULT_PLUGIN_NAME);
-    } else {
-      selectPlugin(importPlugins?.[0]?.name);
-    }
-  }, []);
 
   const pluginNamesOptions = importPlugins.map((plugin) => ({
     label: plugin.name,
@@ -44,7 +27,7 @@ export const ImportPluginSelector = ({
       <span className={cx('field-name')}>{formatMessage(messages.reportType)}</span>
       <div className={cx('dropdown-wrapper')}>
         <InputDropdown
-          value={selectedPluginData?.name}
+          value={selectedPluginData.name}
           options={pluginNamesOptions}
           onChange={selectPlugin}
         />
@@ -54,6 +37,6 @@ export const ImportPluginSelector = ({
 };
 ImportPluginSelector.propTypes = {
   selectedPluginData: PropTypes.object.isRequired,
-  setSelectedPluginData: PropTypes.func.isRequired,
   importPlugins: PropTypes.array.isRequired,
+  selectPlugin: PropTypes.func.isRequired,
 };

@@ -32,6 +32,8 @@ import styles from './importLaunchModal.scss';
 
 const cx = classNames.bind(styles);
 
+const DEFAULT_PLUGIN_NAME = 'JUnit';
+
 const messages = defineMessages({
   note: {
     id: 'ImportLaunchModal.note',
@@ -67,10 +69,16 @@ const messages = defineMessages({
 
 const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
   const { formatMessage } = useIntl();
-  const [selectedPluginData, setSelectedPluginData] = useState();
-  const [files, setFiles] = useState([]);
 
-  const url = URLS.pluginFileImport(activeProject, selectedPluginData?.name);
+  const [files, setFiles] = useState([]);
+  const [selectedPluginData, setSelectedPluginData] = useState(
+    () => importPlugins.find((plugin) => plugin.name === DEFAULT_PLUGIN_NAME) || importPlugins[0],
+  );
+
+  const selectPlugin = (name) =>
+    setSelectedPluginData(importPlugins.find((plugin) => plugin.name === name));
+
+  const url = URLS.pluginFileImport(activeProject, selectedPluginData.name);
 
   return (
     <ImportModalLayout
@@ -89,15 +97,15 @@ const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
     >
       <ImportPluginSelector
         selectedPluginData={selectedPluginData}
-        setSelectedPluginData={setSelectedPluginData}
         importPlugins={importPlugins}
+        selectPlugin={selectPlugin}
       />
       <DropzoneComponent
         data={data}
         files={files}
         setFiles={setFiles}
-        maxFileSize={selectedPluginData?.details?.MAX_FILE_SIZES}
-        acceptFileMimeTypes={selectedPluginData?.details?.ACCEPT_FILE_MIME_TYPES || []}
+        maxFileSize={selectedPluginData.details?.MAX_FILE_SIZES}
+        acceptFileMimeTypes={selectedPluginData.details?.ACCEPT_FILE_MIME_TYPES || []}
         incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.importTip, {
           b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
