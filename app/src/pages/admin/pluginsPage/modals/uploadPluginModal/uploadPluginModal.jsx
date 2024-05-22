@@ -19,8 +19,8 @@ import { withModal } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import DOMPurify from 'dompurify';
-import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout/importModalLayout';
-import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent/dropzoneComponent';
+import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout';
+import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 
@@ -41,14 +41,6 @@ const messages = defineMessages({
   incorrectFileSize: {
     id: 'UploadPluginModal.incorrectFileSize',
     defaultMessage: 'File size is more than 128 Mb',
-  },
-  incorrectFileVersion: {
-    id: 'UploadPluginModal.incorrectFileVersion',
-    defaultMessage: 'Plugin version should be specified',
-  },
-  incorrectFileManifest: {
-    id: 'UploadPluginModal.incorrectFileManifest',
-    defaultMessage: 'Cannot find the manifest path',
   },
 });
 
@@ -84,7 +76,7 @@ export const UploadPluginModal = ({ data }) => {
         setFiles={setFiles}
         maxFileSize={MAX_FILE_SIZES}
         acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
-        incorrectFileSize={formatMessage(messages.incorrectFileSize)}
+        incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.uploadTip, {
           b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
           span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),

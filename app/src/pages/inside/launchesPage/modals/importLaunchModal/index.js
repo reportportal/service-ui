@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { ImportLaunchModal } from './importLaunchModal';
+import ImportLaunchModal from './importLaunchModal';
+
+export { ImportLaunchModal };

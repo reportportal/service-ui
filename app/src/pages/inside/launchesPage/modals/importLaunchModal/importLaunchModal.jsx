@@ -21,13 +21,13 @@ import { defineMessages, useIntl } from 'react-intl';
 import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import { withModal } from 'controllers/modal';
-import { ImportPluginSelector } from 'pages/inside/launchesPage/pluginDropDown';
-import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout/importModalLayout';
-import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent/dropzoneComponent';
+import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout';
+import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { enabledImportPluginsSelector } from 'controllers/plugins';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ImportPluginSelector } from './pluginDropDownSelector';
 import styles from './importLaunchModal.scss';
 
 const cx = classNames.bind(styles);
@@ -57,7 +57,7 @@ const messages = defineMessages({
   noteMessage: {
     id: 'ImportLaunchModal.noteMessage',
     defaultMessage:
-      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
+      'If your runner does not write the test start time in the file, then the current server time will be used.',
   },
   importConfirmationWarning: {
     id: 'ImportLaunchModal.importConfirmationWarning',
@@ -65,7 +65,7 @@ const messages = defineMessages({
   },
 });
 
-export const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
+const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
   const { formatMessage } = useIntl();
   const [selectedPluginData, setSelectedPluginData] = useState();
   const [files, setFiles] = useState([]);
@@ -88,6 +88,7 @@ export const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
       importConfirmationWarning={formatMessage(messages.importConfirmationWarning)}
     >
       <ImportPluginSelector
+        selectedPluginData={selectedPluginData}
         setSelectedPluginData={setSelectedPluginData}
         importPlugins={importPlugins}
       />
@@ -97,7 +98,7 @@ export const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
         setFiles={setFiles}
         maxFileSize={selectedPluginData?.details?.MAX_FILE_SIZES}
         acceptFileMimeTypes={selectedPluginData?.details?.ACCEPT_FILE_MIME_TYPES || []}
-        incorrectFileSize={formatMessage(messages.incorrectFileSize)}
+        incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.importTip, {
           b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
           span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),

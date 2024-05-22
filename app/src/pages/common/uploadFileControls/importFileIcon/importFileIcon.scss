@@ -68,6 +68,7 @@
 }
 
 .file-delete {
+  all: unset;
   display: none;
   color: $COLOR--charcoal-grey;
   height: 6px;

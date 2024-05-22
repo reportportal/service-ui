@@ -18,9 +18,16 @@
   margin-bottom: 24px;
 
   .field-name {
+    line-height: 30px;
+    vertical-align: bottom;
     margin-right: 12px;
     font-size: 13px;
     font-family: $FONT-REGULAR;
     color: $COLOR--charcoal-grey;
+  }
+
+  .dropdown-wrapper {
+    display: inline-block;
+    min-width: 160px;
   }
 }

@@ -36,7 +36,7 @@ const messages = defineMessages({
 
 export const DropzoneField = ({
   disabled,
-  incorrectFileSize,
+  incorrectFileSizeMessage,
   tip,
   singleImport,
   files,
@@ -60,7 +60,7 @@ export const DropzoneField = ({
   const formValidationMessage = (validationProperties) => {
     const validationMessages = {
       incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-      incorrectFileSize,
+      incorrectFileSizeMessage,
     };
     const validationMessage = [];
 
@@ -112,13 +112,12 @@ export const DropzoneField = ({
       maxSize={maxFileSize}
       disabled={disabled}
     >
-      {files.length === 0 && (
+      {files.length === 0 ? (
         <div className={cx('dropzone')}>
           <div className={cx('icon')}>{Parser(DropZoneIcon)}</div>
           <p className={cx('message')}>{Parser(tip)}</p>
         </div>
-      )}
-      {files.length > 0 && (
+      ) : (
         <div className={cx('files-list')}>
           {files.map((item) => (
             <ImportFileIcon {...item} onDelete={onDelete} key={item.id} />
@@ -130,7 +129,7 @@ export const DropzoneField = ({
 };
 DropzoneField.propTypes = {
   disabled: PropTypes.bool,
-  incorrectFileSize: PropTypes.string,
+  incorrectFileSizeMessage: PropTypes.string,
   tip: PropTypes.string,
   singleImport: PropTypes.bool,
   files: PropTypes.array,
@@ -140,7 +139,7 @@ DropzoneField.propTypes = {
 };
 DropzoneField.defaultProps = {
   disabled: false,
-  incorrectFileSize: '',
+  incorrectFileSizeMessage: '',
   tip: '',
   singleImport: true,
   files: [],

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import styles from './importPluginSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -15,13 +15,14 @@ const messages = defineMessages({
   },
 });
 
-export const ImportPluginSelector = ({ setSelectedPluginData, importPlugins }) => {
+export const ImportPluginSelector = ({
+  selectedPluginData,
+  setSelectedPluginData,
+  importPlugins,
+}) => {
   const { formatMessage } = useIntl();
 
-  const [selectedPluginName, setSelectedPluginName] = useState(DEFAULT_PLUGIN_NAME);
-
   const selectPlugin = (name) => {
-    setSelectedPluginName(name);
     setSelectedPluginData(importPlugins.find((plugin) => plugin.name === name));
   };
 
@@ -38,26 +39,21 @@ export const ImportPluginSelector = ({ setSelectedPluginData, importPlugins }) =
     value: plugin.name,
   }));
 
-  const onChangePluginName = (pluginName) => {
-    if (pluginName !== selectedPluginName) {
-      setSelectedPluginName(pluginName);
-      setSelectedPluginData(importPlugins.find((plugin) => plugin.name === pluginName));
-    }
-  };
-
-  const dropdownValue = {
-    label: selectedPluginName,
-    value: selectedPluginName,
-  };
-
   return (
     <div className={cx('import-plugin-selector')}>
       <span className={cx('field-name')}>{formatMessage(messages.reportType)}</span>
-      <Dropdown value={dropdownValue} options={pluginNamesOptions} onChange={onChangePluginName} />
+      <div className={cx('dropdown-wrapper')}>
+        <InputDropdown
+          value={selectedPluginData?.name}
+          options={pluginNamesOptions}
+          onChange={selectPlugin}
+        />
+      </div>
     </div>
   );
 };
 ImportPluginSelector.propTypes = {
+  selectedPluginData: PropTypes.object.isRequired,
   setSelectedPluginData: PropTypes.func.isRequired,
   importPlugins: PropTypes.array.isRequired,
 };

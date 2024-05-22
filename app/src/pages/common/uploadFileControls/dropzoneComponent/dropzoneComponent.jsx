@@ -28,7 +28,7 @@ export const DropzoneComponent = ({
   setFiles,
   maxFileSize,
   acceptFileMimeTypes,
-  incorrectFileSize,
+  incorrectFileSizeMessage,
   tip,
 }) => {
   const isDropZoneDisabled = () =>
@@ -37,7 +37,7 @@ export const DropzoneComponent = ({
   return (
     <DropzoneField
       disabled={isDropZoneDisabled()}
-      incorrectFileSize={incorrectFileSize}
+      incorrectFileSizeMessage={incorrectFileSizeMessage}
       tip={tip}
       singleImport={data.singleImport}
       files={files}
@@ -53,7 +53,7 @@ DropzoneComponent.propTypes = {
   setFiles: PropTypes.func.isRequired,
   maxFileSize: PropTypes.number,
   acceptFileMimeTypes: PropTypes.arrayOf(PropTypes.string),
-  incorrectFileSize: PropTypes.string.isRequired,
+  incorrectFileSizeMessage: PropTypes.string.isRequired,
   tip: PropTypes.string.isRequired,
 };
 DropzoneComponent.defaultProps = {

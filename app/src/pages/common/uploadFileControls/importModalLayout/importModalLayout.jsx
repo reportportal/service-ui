@@ -22,11 +22,13 @@ import { defineMessages, useIntl } from 'react-intl';
 import { ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
+  formDataForServerUploading,
   getValidFiles,
   isUploadFinished,
   isUploadInProgress,
   uploadFiles,
 } from 'pages/common/uploadFileControls/importModalLayout/utils';
+import { fetch } from 'common/utils';
 
 const messages = defineMessages({
   importConfirmation: {
@@ -51,7 +53,36 @@ const ImportModalLayoutComponent = ({
   const dispatch = useDispatch();
 
   const cancelRequests = [];
-  const addCancelRequest = (cancelRequest) => cancelRequests.push(cancelRequest);
+
+  const uploadFile = (file) => {
+    const { id } = file;
+
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data;' },
+      data: file.data,
+      abort: (cancelRequest) => {
+        cancelRequests.push(cancelRequest);
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const updatedFiles = files.map((f) =>
+          f.id === id ? { ...f, uploadingProgress: percentCompleted } : f,
+        );
+
+        setFiles(updatedFiles);
+      },
+    });
+  };
+
+  const prepareDataForServerUploading = () => {
+    const preparedData = formDataForServerUploading(files);
+
+    return preparedData.map((item) => ({
+      promise: uploadFile(item),
+      id: item.id,
+    }));
+  };
 
   const getOkButtonConfig = (isLoading, uploadFinished) => {
     const text = isLoading || uploadFinished ? formatMessage(COMMON_LOCALE_KEYS.OK) : importButton;
@@ -69,10 +100,10 @@ const ImportModalLayoutComponent = ({
             url,
             files,
             setFiles,
-            addCancelRequest,
             eventsInfo,
             dispatch,
             trackEvent,
+            prepareDataForServerUploading(),
           );
         }
       },
@@ -138,7 +169,6 @@ ImportModalLayoutComponent.propTypes = {
 };
 ImportModalLayoutComponent.defaultProps = {
   data: {},
-  dropzoneCountNumber: 0,
   children: [null],
   importConfirmationWarning: '',
   eventsInfo: { uploadButton: () => {}, cancelBtn: {}, closeIcon: {} },

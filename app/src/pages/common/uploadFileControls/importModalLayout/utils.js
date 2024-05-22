@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { fetch } from 'common/utils';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 
-const formDataForServerUploading = (files) =>
+export const formDataForServerUploading = (files) =>
   files
     .filter((item) => item.valid)
     .map((item) => {
@@ -30,36 +29,6 @@ const formDataForServerUploading = (files) =>
         id: item.id,
       };
     });
-
-const uploadFile = (url, file, files, setFiles, addCancelRequest) => {
-  const { id } = file;
-
-  return fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'multipart/form-data;' },
-    data: file.data,
-    abort: (cancelRequest) => {
-      addCancelRequest(cancelRequest);
-    },
-    onUploadProgress: (progressEvent) => {
-      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-      const updatedFiles = files.map((f) =>
-        f.id === id ? { ...f, uploadingProgress: percentCompleted } : f,
-      );
-
-      setFiles(updatedFiles);
-    },
-  });
-};
-
-export const prepareDataForServerUploading = (url, files, setFiles, addCancelRequest) => {
-  const data = formDataForServerUploading(files);
-
-  return data.map((item) => ({
-    promise: uploadFile(url, item, files, setFiles, addCancelRequest),
-    id: item.id,
-  }));
-};
 
 export const getValidFiles = (files) => files?.filter(({ valid }) => valid);
 
@@ -76,10 +45,10 @@ export const uploadFiles = (
   url,
   files,
   setFiles,
-  addCancelRequest,
   eventsInfo,
   dispatch,
   trackEvent,
+  preparedData,
 ) => {
   const getFilesNames = () => files.map(({ file: { name } }) => name).join('#');
 
@@ -120,8 +89,6 @@ export const uploadFiles = (
 
     setFiles(updatedFiles);
   };
-
-  const preparedData = prepareDataForServerUploading(url, files, setFiles, addCancelRequest);
 
   const updatedFiles = files.map((f) => (f.valid ? { ...f, isLoading: true } : f));
   setFiles(updatedFiles);
