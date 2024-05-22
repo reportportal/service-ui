@@ -88,6 +88,7 @@
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
+
     a {
       color: $COLOR--white-two;
     }
@@ -135,5 +136,46 @@
 
   &:hover {
     @extend .hover;
+  }
+}
+
+.service-control {
+  border: none;
+  background-color: transparent;
+  width: 280px;
+  padding: 0;
+}
+
+.service-block {
+  position: relative;
+  width: 40px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  i {
+    display: flex;
+    align-items: center;
+  }
+
+  &.untouched::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: $COLOR--system-notification-marker;
+    border-radius: 50%;
+    border: 2px solid $COLOR--darkmode-gray-500;
+    right: 20%;
+    top: 20%;
   }
 }

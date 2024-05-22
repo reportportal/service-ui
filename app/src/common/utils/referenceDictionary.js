@@ -52,3 +52,17 @@ export const docsReferences = {
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',
   pluginsDocs: 'https://reportportal.io/docs/category/plugins',
 };
+
+export const faqDictionary = {
+  configureReporting:
+    'https://reportportal.io/docs/log-data-in-reportportal/test-framework-integration/',
+  improvePerformance:
+    'https://reportportal.io/docs/installation-steps/OptimalPerformanceHardwareSetup',
+  configureAnalyzer:
+    'https://reportportal.io/docs/issues-troubleshooting/ResolveAnalyzerKnownIssues',
+  integrateJira: 'https://reportportal.io/docs/plugins/AtlassianJiraServer',
+  configureCertificate: 'https://reportportal.io/docs/installation-steps/SetupTSLSSLInTraefik2.0.x',
+  fileStorageOptions:
+    'https://reportportal.io/docs/installation-steps/ReportPortal23.1FileStorageOptions',
+  pricingOptions: 'https://reportportal.io/pricing/saas',
+};

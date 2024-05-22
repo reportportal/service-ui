@@ -14,30 +14,5 @@
  * limitations under the License.
  */
 
-.organization-block {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 60px;
-  background-color: $COLOR--darkmode-gray-300;
-  border-radius: 8px;
-  cursor: pointer;
-  color: $COLOR--darkmode-gray-100;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-BOLD;
-  border: none;
-
-  &:focus-visible {
-    outline: none;
-    border: 2px solid $COLOR--topaz-focused;
-  }
-}
-
-.hover {
-  color: $COLOR--white-two;
-  background-color: $COLOR--darkmode-gray-350;
-}
+export { FAQContent } from './FAQContent';
+export { RequestSupportModal } from '../../supportBlock/modal';
