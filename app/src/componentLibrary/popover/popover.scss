@@ -64,7 +64,7 @@
   }
 
   &.side-right.position-vertical-top::after {
-    top: 22px;
+    top: var(--top-offset, 22px);
   }
 
   &.side-right.position-vertical-bottom::after {

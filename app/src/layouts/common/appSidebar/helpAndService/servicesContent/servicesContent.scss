@@ -54,10 +54,21 @@
   }
 }
 
-.divider {
-  height: 1px;
-  background-color: $COLOR--almost-black;
-  margin: 16px;
+.with-divider {
+  position: relative;
+  margin-top: 33px;
+
+  &::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: $COLOR--almost-black;
+    margin: 16px;
+    position: absolute;
+    top: -33px;
+    width: calc(100% - 32px);
+    left: 0;
+  }
 }
 
 .hovered {

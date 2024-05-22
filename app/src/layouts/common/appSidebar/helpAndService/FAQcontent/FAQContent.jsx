@@ -119,8 +119,7 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
           channel: () => furtherAssistanceLinks.channel,
         })}
       </p>
-      <div className={cx('divider')} />
-      <button className={cx('menu-item')} onClick={openModal}>
+      <button className={cx('menu-item', 'with-divider')} onClick={openModal}>
         {formatMessage(messages.requestService)}
       </button>
     </>

@@ -100,9 +100,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
         />
       ))}
 
-      <div className={cx('divider')} />
-
-      <p className={cx('menu-item')}>{formatMessage(messages.servicesVersions)}</p>
+      <p className={cx('menu-item', 'with-divider')}>{formatMessage(messages.servicesVersions)}</p>
       <p className={cx('menu-item', 'rights')}>{formatMessage(messages.rights, { currentYear })}</p>
     </>
   );

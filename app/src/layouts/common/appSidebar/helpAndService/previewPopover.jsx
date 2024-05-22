@@ -63,4 +63,5 @@ export const FAQWithPopover = withPopover({
   variant: 'dark',
   tabIndex: 0,
   topPosition: 1,
+  arrowTopOffset: 16,
 })(PreviewPopover);
