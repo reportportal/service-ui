@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@
 .message {
   color: $COLOR--gray-60;
   font-size: 12px;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: $FONT-REGULAR;
 
   b {
     font-family: $FONT-SEMIBOLD, sans-serif;
@@ -59,17 +59,4 @@
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
-}
-
-.note-label {
-  margin-top: 20px;
-  color: $COLOR--tealish;
-  font-size: 13px;
-  font-family: $FONT-SEMIBOLD, sans-serif;
-}
-
-.note-message {
-  font-family: $FONT-REGULAR, sans-serif;
-  font-size: 12px;
-  line-height: 1.5;
 }

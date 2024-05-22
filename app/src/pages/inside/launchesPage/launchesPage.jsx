@@ -33,7 +33,6 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { projectConfigSelector } from 'controllers/project';
@@ -131,32 +130,6 @@ const messages = defineMessages({
   addWidgetSuccess: {
     id: 'LaunchesPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
-  },
-  modalTitle: {
-    id: 'LaunchesPage.modalTitle',
-    defaultMessage: 'Import Launch',
-  },
-  importButton: {
-    id: 'LaunchesPage.importButton',
-    defaultMessage: 'Import',
-  },
-  importTip: {
-    id: 'LaunchesPage.tip',
-    defaultMessage:
-      'Drop <b>.xml</b> or <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
-  },
-  noteMessage: {
-    id: 'LaunchesPage.noteMessage',
-    defaultMessage:
-      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
-  },
-  importConfirmationWarning: {
-    id: 'LaunchesPage.importConfirmationWarning',
-    defaultMessage: 'Are you sure you want to interrupt import launches?',
-  },
-  incorrectFileSize: {
-    id: 'LaunchesPage.incorrectFileSize',
-    defaultMessage: 'File size is more than 32 Mb',
   },
 });
 
@@ -639,29 +612,11 @@ export class LaunchesPage extends Component {
   };
 
   openImportModal = () => {
-    const {
-      intl: { formatMessage },
-      activeProject,
-    } = this.props;
-
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
-      id: 'importModal',
+      id: 'importLaunchModal',
       data: {
-        type: MODAL_TYPE_IMPORT_LAUNCH,
         onImport: this.props.fetchLaunchesAction,
-        title: formatMessage(messages.modalTitle),
-        importButton: formatMessage(messages.importButton),
-        tip: formatMessage(messages.importTip),
-        incorrectFileSize: formatMessage(messages.incorrectFileSize),
-        noteMessage: formatMessage(messages.noteMessage),
-        importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
-        url: URLS.launchImport(activeProject),
-        eventsInfo: {
-          okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
-        },
       },
     });
   };

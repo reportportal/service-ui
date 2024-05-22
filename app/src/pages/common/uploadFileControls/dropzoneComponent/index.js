@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,4 @@
  * limitations under the License.
  */
 
-.most-time-consuming-chart {
-  :global {
-    svg {
-      .c3-axis {
-        font-family: $FONT-REGULAR;
-        fill: $COLOR--charcoal-grey;
-        .c3-axis-y-label {
-          font-size: 12px;
-        }
-        &.c3-axis-y path.domain {
-          display: inline;
-          stroke: $COLOR--gray-80;
-        }
-      }
-    }
-
-    .c3-grid line {
-      stroke: $COLOR--gray-80;
-    }
-    .c3-xgrid,
-    .c3-ygrid {
-      stroke-dasharray: none;
-    }
-  }
-}
+export { DropzoneComponent } from './dropzoneComponent';

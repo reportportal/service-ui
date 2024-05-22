@@ -90,3 +90,15 @@
     transform: translate3d(0, -4px, 0);
   }
 }
+
+.no-import-message {
+  font-family: $FONT-REGULAR;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  line-height: 18px;
+
+  a {
+    color: $COLOR--topaz;
+    text-decoration: none;
+  }
+}
