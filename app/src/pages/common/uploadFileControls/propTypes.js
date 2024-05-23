@@ -14,4 +14,20 @@
  * limitations under the License.
  */
 
-export { DropzoneField } from './dropzoneField';
+import PropTypes from 'prop-types';
+
+export const fileTypeFields = {
+  id: PropTypes.string.isRequired,
+  file: PropTypes.object,
+  valid: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  uploaded: PropTypes.bool,
+  uploadingProgress: PropTypes.number,
+  rejectMessage: PropTypes.string,
+  uploadFailed: PropTypes.bool,
+  uploadFailReason: PropTypes.shape({
+    message: PropTypes.string,
+  }),
+};
+
+export const fileType = PropTypes.shape(fileTypeFields);

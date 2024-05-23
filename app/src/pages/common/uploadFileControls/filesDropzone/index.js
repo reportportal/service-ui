@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ImportModalLayout } from './importModalLayout';
+export { FilesDropzone } from './filesDropzone';

@@ -15,15 +15,17 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
+import Dropzone from 'react-dropzone';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import Dropzone from 'react-dropzone';
-import PropTypes from 'prop-types';
-import { ImportFileIcon } from 'pages/common/uploadFileControls/importFileIcon';
 import { uniqueId } from 'common/utils';
 import DropZoneIcon from 'common/img/shape-inline.svg';
-import styles from './dropzoneField.scss';
+import { isUploadFinished, isUploadInProgress } from '../utils';
+import { fileType } from '../propTypes';
+import { ImportFileIcon } from './importFileIcon';
+import styles from './filesDropzone.scss';
 
 const cx = classNames.bind(styles);
 
@@ -34,17 +36,20 @@ const messages = defineMessages({
   },
 });
 
-export const DropzoneField = ({
-  disabled,
-  incorrectFileSizeMessage,
-  tip,
-  singleImport,
+export const FilesDropzone = ({
   files,
-  setFiles,
+  addFiles,
+  removeFile,
   maxFileSize,
   acceptFileMimeTypes,
+  multiple,
+  incorrectFileSizeMessage,
+  tip,
 }) => {
   const { formatMessage } = useIntl();
+
+  const isDropZoneDisabled = () =>
+    isUploadFinished(files) || isUploadInProgress(files) || (!multiple && files.length > 0);
 
   const acceptFile = acceptFileMimeTypes.join(',');
 
@@ -95,22 +100,18 @@ export const DropzoneField = ({
     const accepted = acceptedFiles.map(onDropAcceptedFileHandler);
     const rejected = rejectedFiles.map(onDropRejectedFileHandler);
 
-    setFiles([...files, ...accepted, ...rejected]);
-  };
-
-  const onDelete = (id) => {
-    setFiles(files.filter((item) => item.id !== id));
+    addFiles([...accepted, ...rejected]);
   };
 
   return (
     <Dropzone
-      className={cx('dropzone-wrapper')}
-      activeClassName={cx('dropzone-wrapper-active')}
+      className={cx('files-dropzone')}
+      activeClassName={cx('files-dropzone-active')}
       accept={acceptFile}
       onDrop={onDrop}
-      multiple={!singleImport}
+      multiple={multiple}
       maxSize={maxFileSize}
-      disabled={disabled}
+      disabled={isDropZoneDisabled()}
     >
       {files.length === 0 ? (
         <div className={cx('dropzone')}>
@@ -120,28 +121,25 @@ export const DropzoneField = ({
       ) : (
         <div className={cx('files-list')}>
           {files.map((item) => (
-            <ImportFileIcon {...item} onDelete={onDelete} key={item.id} />
+            <ImportFileIcon {...item} onDelete={removeFile} key={item.id} />
           ))}
         </div>
       )}
     </Dropzone>
   );
 };
-DropzoneField.propTypes = {
-  disabled: PropTypes.bool,
-  incorrectFileSizeMessage: PropTypes.string,
-  tip: PropTypes.string,
-  singleImport: PropTypes.bool,
-  files: PropTypes.array,
-  setFiles: PropTypes.func,
-  maxFileSize: PropTypes.number.isRequired,
-  acceptFileMimeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+FilesDropzone.propTypes = {
+  files: PropTypes.arrayOf(fileType).isRequired,
+  addFiles: PropTypes.func.isRequired,
+  removeFile: PropTypes.func.isRequired,
+  incorrectFileSizeMessage: PropTypes.string.isRequired,
+  tip: PropTypes.string.isRequired,
+  multiple: PropTypes.bool,
+  maxFileSize: PropTypes.number,
+  acceptFileMimeTypes: PropTypes.arrayOf(PropTypes.string),
 };
-DropzoneField.defaultProps = {
-  disabled: false,
-  incorrectFileSizeMessage: '',
-  tip: '',
-  singleImport: true,
-  files: [],
-  setFiles: () => {},
+FilesDropzone.defaultProps = {
+  multiple: true,
+  maxFileSize: 0,
+  acceptFileMimeTypes: [],
 };

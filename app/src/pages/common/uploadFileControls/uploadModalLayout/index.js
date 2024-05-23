@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { DropzoneComponent } from './dropzoneComponent';
+export { UploadModalLayout } from './uploadModalLayout';

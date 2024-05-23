@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { fileSizeConverter } from 'common/utils';
 import SheetIcon from 'common/img/file-icon-inline.svg';
 import DeleteIcon from 'common/img/icon-delete-inline.svg';
+import { fileTypeFields } from '../../propTypes';
 import { ProgressLoader } from './progressLoader';
 import { InvalidIcon, UploadIndicator } from './iconStateIndicators';
 import styles from './importFileIcon.scss';
@@ -82,20 +83,10 @@ export const ImportFileIcon = ({
     </div>
   );
 };
-
 ImportFileIcon.propTypes = {
-  file: PropTypes.object,
-  valid: PropTypes.bool,
-  uploaded: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  id: PropTypes.string,
+  ...fileTypeFields,
   onDelete: PropTypes.func,
-  uploadingProgress: PropTypes.number,
-  rejectMessage: PropTypes.string,
-  uploadFailed: PropTypes.bool,
-  uploadFailReason: PropTypes.object,
 };
-
 ImportFileIcon.defaultProps = {
   file: {},
   valid: false,
@@ -103,8 +94,8 @@ ImportFileIcon.defaultProps = {
   isLoading: false,
   id: '',
   rejectMessage: '',
-  onDelete: () => {},
   uploadingProgress: 0,
   uploadFailed: false,
   uploadFailReason: {},
+  onDelete: () => {},
 };

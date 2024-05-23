@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { withModal } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { useDispatch } from 'react-redux';
 import DOMPurify from 'dompurify';
-import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout';
-import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent';
-import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { getFilesNames } from 'pages/common/uploadFileControls/utils';
+import {
+  FilesDropzone,
+  UploadModalLayout,
+  useFiles,
+  useFilesUpload,
+} from 'pages/common/uploadFileControls';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   modalTitle: {
@@ -42,39 +50,62 @@ const messages = defineMessages({
     id: 'UploadPluginModal.incorrectFileSize',
     defaultMessage: 'File size is more than 128 Mb',
   },
+  importConfirmationWarning: {
+    id: 'UploadPluginModal.importConfirmationWarning',
+    defaultMessage: 'Are you sure you want to interrupt the plugin uploading?',
+  },
 });
 
-const MAX_FILE_SIZES = 134217728;
+const MAX_FILE_SIZE = 134217728;
 const ACCEPT_FILE_MIME_TYPES = ['.jar'];
 
-export const UploadPluginModal = ({ data }) => {
-  const [files, setFiles] = useState([]);
+export const UploadPluginModal = ({ data: { onImport } }) => {
+  const {
+    files,
+    actions: { addFiles, removeFile, updateFile },
+  } = useFiles();
+  const { uploadFiles, cancelRequests } = useFilesUpload(files, updateFile);
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
 
-  const url = URLS.plugin();
+  const onUploadSuccess = () => {
+    onImport();
+  };
+
+  const onUploadError = (id, err) => {
+    dispatch(
+      showNotification({
+        message: err.message,
+        type: NOTIFICATION_TYPES.ERROR,
+      }),
+    );
+  };
+
+  const saveFiles = async () => {
+    trackEvent(PLUGINS_PAGE_EVENTS.clickUploadModalBtn(getFilesNames(files)));
+    await uploadFiles(URLS.plugin(), onUploadSuccess, onUploadError);
+  };
 
   return (
-    <ImportModalLayout
-      data={data}
-      title={formatMessage(messages.modalTitle)}
-      importButton={formatMessage(messages.uploadButton)}
-      url={url}
-      singleImport
+    <UploadModalLayout
+      title={messages.modalTitle}
       eventsInfo={{
-        uploadButton: PLUGINS_PAGE_EVENTS.clickUploadModalBtn,
-        cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
         closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UPLOAD_MODAL,
+        cancelButton: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
       }}
-      maxFileSize={MAX_FILE_SIZES}
-      acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
+      importConfirmationWarning={messages.importConfirmationWarning}
+      uploadButtonTitle={messages.uploadButton}
       files={files}
-      setFiles={setFiles}
+      onCancel={cancelRequests}
+      onSave={saveFiles}
     >
-      <DropzoneComponent
-        data={data}
+      <FilesDropzone
         files={files}
-        setFiles={setFiles}
-        maxFileSize={MAX_FILE_SIZES}
+        addFiles={addFiles}
+        removeFile={removeFile}
+        multiple={false}
+        maxFileSize={MAX_FILE_SIZE}
         acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}
         incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.uploadTip, {
@@ -82,10 +113,12 @@ export const UploadPluginModal = ({ data }) => {
           span: (d) => DOMPurify.sanitize(`<span>${d}</span>`),
         })}
       />
-    </ImportModalLayout>
+    </UploadModalLayout>
   );
 };
 UploadPluginModal.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.shape({
+    onImport: PropTypes.func,
+  }).isRequired,
 };
 export default withModal('uploadPluginModal')(UploadPluginModal);
