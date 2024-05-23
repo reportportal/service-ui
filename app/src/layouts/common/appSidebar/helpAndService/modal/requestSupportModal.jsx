@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,23 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { withModal } from 'controllers/modal';
-import { ModalLayout } from 'components/main/modal';
-import { commonValidators } from 'common/utils/validation';
+import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { userEmailSelector } from 'controllers/user';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputOutside } from 'components/inputs/inputOutside';
-import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
-import { messages } from '../messages';
+import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndSupportEvents';
+import { FieldText } from 'componentLibrary/fieldText';
+import { ModalLayout } from 'componentLibrary/modal';
+import { withModal } from 'components/main/modal';
+import { Checkbox } from 'componentLibrary/checkbox';
+import { hideModalAction } from 'controllers/modal';
+import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
+import { referenceDictionary } from 'common/utils';
+import { messages } from '../../messages';
+import { LinkItem } from '../linkItem';
 import styles from './requestSupportModal.scss';
 
 const cx = classNames.bind(styles);
@@ -44,6 +47,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   const { formatMessage } = useIntl();
   const email = useSelector(userEmailSelector);
   const [iframe, setIframe] = useState(null);
+  const [isConsentChecked, setIsConsentChecked] = useState(false);
 
   useEffect(() => {
     const dummyframe = document.createElement('iframe');
@@ -53,7 +57,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     document.body.appendChild(dummyframe);
 
     setIframe(dummyframe);
-
     initialize({ email });
 
     return () => {
@@ -75,25 +78,40 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       nextAction();
     };
   };
+  const consentHandler = (e) => {
+    setIsConsentChecked(e.target.checked);
+  };
+
+  const privocyPolicyRef = {
+    a: (
+      <LinkItem
+        link={referenceDictionary.rpEpamPolicy}
+        content={formatMessage(messages.privacyPolicy)}
+        icon={OpenIcon}
+        className={cx('inline-ref')}
+      />
+    ),
+  };
 
   return (
     <ModalLayout
-      title={formatMessage(messages.requestSupport)}
+      title={formatMessage(messages.requestService)}
       okButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.SEND),
-        onClick: (closeModal) => {
+        text: formatMessage(messages.sendRequest),
+        onClick: () => {
           handleSubmit(() => {
-            onSubmit(closeModal);
+            onSubmit(() => dispatch(hideModalAction()));
           })();
         },
-        disabled: invalid,
+        disabled: invalid || !isConsentChecked,
         attributes: { type: 'submit', form: REQUEST_FORM_ID },
         eventInfo: HELP_AND_SUPPORT_EVENTS.CLICK_SEND_REQUEST_SUPPORT_BUTTON,
       }}
       cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
+      onClose={() => dispatch(hideModalAction())}
     >
       <>
-        <span className={cx('text')}>{Parser(formatMessage(messages.modalText))}</span>
+        <span className={cx('text')} />
         <form
           action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
           method="POST"
@@ -106,51 +124,63 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
           <input type="hidden" name="lead_source" value="RP Product" />
           <input type="hidden" name="ReportPortalSource__c" value="ReportPortal instance" />
 
-          <div className={cx('form-field')}>
+          <div className={cx('form-fields')}>
             <FieldProvider name="first_name">
-              <FieldErrorHint>
-                <InputOutside
-                  icon={LoginIcon}
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.firstNameLabel)}
                   placeholder={formatMessage(messages.firstNamePlaceholder)}
-                  name="first_name"
+                  defaultWidth={false}
                 />
               </FieldErrorHint>
             </FieldProvider>
-          </div>
 
-          <div className={cx('form-field')}>
             <FieldProvider name="last_name">
-              <FieldErrorHint>
-                <InputOutside
-                  icon={LoginIcon}
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.lastNameLabel)}
                   placeholder={formatMessage(messages.lastNamePlaceholder)}
-                  name="last_name"
+                  defaultWidth={false}
                 />
               </FieldErrorHint>
             </FieldProvider>
-          </div>
 
-          <div className={cx('form-field')}>
             <FieldProvider name="email">
-              <FieldErrorHint>
-                <InputOutside
-                  icon={LoginIcon}
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.emailLabel)}
                   placeholder={formatMessage(messages.emailPlaceholder)}
-                  name="email"
+                  defaultWidth={false}
                 />
               </FieldErrorHint>
             </FieldProvider>
-          </div>
 
-          <FieldProvider name="company">
-            <FieldErrorHint>
-              <InputOutside
-                icon={LoginIcon}
-                placeholder={formatMessage(messages.companyNamePlaceholder)}
-                name="company"
-              />
-            </FieldErrorHint>
-          </FieldProvider>
+            <FieldProvider name="company">
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.companyNameLabel)}
+                  placeholder={formatMessage(messages.companyNamePlaceholder)}
+                  defaultWidth={false}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+
+            <FieldProvider name="00N7T000000i00E" format={(value) => !!value}>
+              <Checkbox className={cx('check-item')}>
+                {formatMessage(messages.subscribeToNews)}
+              </Checkbox>
+            </FieldProvider>
+
+            <FieldProvider format={(value) => !!value} onChange={consentHandler}>
+              <Checkbox
+                value={isConsentChecked}
+                onChange={consentHandler}
+                className={cx('check-item')}
+              >
+                {formatMessage(messages.consentToProcessing, { a: () => privocyPolicyRef.a })}
+              </Checkbox>
+            </FieldProvider>
+          </div>
         </form>
       </>
     </ModalLayout>
@@ -169,7 +199,7 @@ export const RequestSupportModal = withModal('requestSupportModal')(
       return {
         first_name: commonValidators.requiredField(firstName),
         last_name: commonValidators.requiredField(lastName),
-        email: commonValidators.email(email),
+        email: bindMessageToValidator(validate.requiredEmail, 'validEmailHint')(email),
         company: commonValidators.requiredField(company),
       };
     },
