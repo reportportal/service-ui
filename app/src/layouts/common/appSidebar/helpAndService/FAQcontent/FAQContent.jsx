@@ -84,7 +84,7 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
   const furtherAssistanceLinks = {
     support: (
       <LinkItem
-        link={referenceDictionary.rpEmail}
+        link={faqDictionary.rpEmailRequestSupport}
         content={formatMessage(messages.supportTeam)}
         icon={OpenIcon}
         className={cx('inline-ref')}
