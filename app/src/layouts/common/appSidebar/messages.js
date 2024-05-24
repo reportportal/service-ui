@@ -92,7 +92,7 @@ export const messages = defineMessages({
   },
   contactUs: {
     id: 'Sidebar.footer.contactUs',
-    defaultMessage: 'Contact us',
+    defaultMessage: 'Contact Us',
   },
   epam: {
     id: 'Sidebar.footer.epam',

@@ -51,7 +51,8 @@ export const ServiceWithPopover = withPopover({
   popoverWrapperClassName: cx('service-popover-control'),
   variant: 'dark',
   tabIndex: 0,
-  topPosition: window.innerHeight - 72,
+  topPosition: 'auto',
+  arrowVerticalOffset: 16,
 })(PreviewPopover);
 
 export const FAQWithPopover = withPopover({
@@ -63,5 +64,5 @@ export const FAQWithPopover = withPopover({
   variant: 'dark',
   tabIndex: 0,
   topPosition: 1,
-  arrowTopOffset: 16,
+  arrowVerticalOffset: 16,
 })(PreviewPopover);
