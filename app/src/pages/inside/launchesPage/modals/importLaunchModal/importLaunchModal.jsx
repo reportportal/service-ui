@@ -104,8 +104,8 @@ const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
         data={data}
         files={files}
         setFiles={setFiles}
-        maxFileSize={selectedPluginData.details?.MAX_FILE_SIZES}
-        acceptFileMimeTypes={selectedPluginData.details?.ACCEPT_FILE_MIME_TYPES || []}
+        maxFileSize={selectedPluginData.details?.maxFileSize}
+        acceptFileMimeTypes={selectedPluginData.details?.acceptFileMimeTypes || []}
         incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.importTip, {
           b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
