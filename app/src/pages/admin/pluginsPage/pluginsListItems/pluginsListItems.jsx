@@ -25,6 +25,7 @@ import {
   BTS_GROUP_TYPE,
   ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import { isPluginSwitchable } from 'controllers/plugins';
 import styles from './pluginsListItems.scss';
@@ -52,6 +53,10 @@ const pluginTitle = defineMessages({
   [ANALYZER_GROUP_TYPE]: {
     id: 'PluginsList.analyzer',
     defaultMessage: 'Analyzer',
+  },
+  [IMPORT_GROUP_TYPE]: {
+    id: 'PluginsList.import',
+    defaultMessage: 'Import Launches',
   },
   [OTHER_GROUP_TYPE]: {
     id: 'PluginsList.other',
