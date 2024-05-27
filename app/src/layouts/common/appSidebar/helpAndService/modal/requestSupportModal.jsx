@@ -20,18 +20,17 @@ import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
+import { commonValidators } from 'common/utils/validation';
 import { userEmailSelector } from 'controllers/user';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndSupportEvents';
+import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
 import { FieldText } from 'componentLibrary/fieldText';
 import { ModalLayout } from 'componentLibrary/modal';
-import { withModal } from 'components/main/modal';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { hideModalAction } from 'controllers/modal';
+import { withModal, hideModalAction } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
 import { messages } from '../../messages';
@@ -64,7 +63,9 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     };
   }, []);
 
-  const onSubmit = (nextAction) => {
+  const hideModal = () => dispatch(hideModalAction());
+
+  const onSubmit = () => {
     iframe.onload = () => {
       dispatch(
         showNotification({
@@ -72,17 +73,22 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
           type: NOTIFICATION_TYPES.SUCCESS,
         }),
       );
-      nextAction();
+      hideModal();
     };
     iframe.onerror = () => {
-      nextAction();
+      dispatch(
+        showNotification({
+          message: formatMessage(messages.requestSentFail),
+          type: NOTIFICATION_TYPES.ERROR,
+        }),
+      );
     };
   };
   const consentHandler = (e) => {
     setIsConsentChecked(e.target.checked);
   };
 
-  const privocyPolicyRef = {
+  const privacyPolicyAnchor = {
     a: (
       <LinkItem
         link={referenceDictionary.rpEpamPolicy}
@@ -99,16 +105,14 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       okButton={{
         text: formatMessage(messages.sendRequest),
         onClick: () => {
-          handleSubmit(() => {
-            onSubmit(() => dispatch(hideModalAction()));
-          })();
+          handleSubmit(onSubmit)();
         },
         disabled: invalid || !isConsentChecked,
         attributes: { type: 'submit', form: REQUEST_FORM_ID },
         eventInfo: HELP_AND_SUPPORT_EVENTS.CLICK_SEND_REQUEST_SUPPORT_BUTTON,
       }}
       cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
-      onClose={() => dispatch(hideModalAction())}
+      onClose={hideModal}
     >
       <>
         <span className={cx('text')} />
@@ -131,6 +135,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.firstNameLabel)}
                   placeholder={formatMessage(messages.firstNamePlaceholder)}
                   defaultWidth={false}
+                  name="first_name"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -141,6 +146,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.lastNameLabel)}
                   placeholder={formatMessage(messages.lastNamePlaceholder)}
                   defaultWidth={false}
+                  name="last_name"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -149,8 +155,9 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(messages.emailLabel)}
-                  placeholder={formatMessage(messages.emailPlaceholder)}
+                  placeholder="example@mail.com"
                   defaultWidth={false}
+                  name="email"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -161,23 +168,24 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.companyNameLabel)}
                   placeholder={formatMessage(messages.companyNamePlaceholder)}
                   defaultWidth={false}
+                  name="company"
                 />
               </FieldErrorHint>
             </FieldProvider>
 
-            <FieldProvider name="00N7T000000i00E" format={(value) => !!value}>
-              <Checkbox className={cx('check-item')}>
+            <FieldProvider name="00N7T000000i00E" format={Boolean}>
+              <Checkbox className={cx('check-item')} name="00N7T000000i00E">
                 {formatMessage(messages.subscribeToNews)}
               </Checkbox>
             </FieldProvider>
 
-            <FieldProvider format={(value) => !!value} onChange={consentHandler}>
+            <FieldProvider format={Boolean} onChange={consentHandler}>
               <Checkbox
                 value={isConsentChecked}
                 onChange={consentHandler}
                 className={cx('check-item')}
               >
-                {formatMessage(messages.consentToProcessing, { a: () => privocyPolicyRef.a })}
+                {formatMessage(messages.consentToProcessing, { a: () => privacyPolicyAnchor.a })}
               </Checkbox>
             </FieldProvider>
           </div>
@@ -199,7 +207,7 @@ export const RequestSupportModal = withModal('requestSupportModal')(
       return {
         first_name: commonValidators.requiredField(firstName),
         last_name: commonValidators.requiredField(lastName),
-        email: bindMessageToValidator(validate.requiredEmail, 'validEmailHint')(email),
+        email: commonValidators.email(email),
         company: commonValidators.requiredField(company),
       };
     },

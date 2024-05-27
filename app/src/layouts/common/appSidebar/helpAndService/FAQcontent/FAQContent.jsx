@@ -24,8 +24,8 @@ import { showModalAction } from 'controllers/modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
 import { faqDictionary } from 'common/utils/referenceDictionary';
-import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndSupportEvents';
-import { trackEvent } from 'react-tracking';
+import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
+import { useTracking } from 'react-tracking';
 import { setFAQOpenStatusTrue } from '../../utils';
 import { messages } from '../../messages';
 import { LinkItem } from '../linkItem';
@@ -37,6 +37,7 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
+  const { trackEvent } = useTracking();
 
   useEffect(() => {
     onOpen(true);

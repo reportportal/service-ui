@@ -126,10 +126,6 @@ export const messages = defineMessages({
     id: 'ServiceModal.emailLabel',
     defaultMessage: 'Email',
   },
-  emailPlaceholder: {
-    id: 'ServiceModal.emailPlaceholder',
-    defaultMessage: 'example@mail.com',
-  },
   companyNameLabel: {
     id: 'ServiceModal.companyNameLabel',
     defaultMessage: 'Company name',
@@ -154,5 +150,9 @@ export const messages = defineMessages({
   requestSent: {
     id: 'ServiceModal.requestSent',
     defaultMessage: 'Request has been sent',
+  },
+  requestSentFail: {
+    id: 'ServiceModal.requestSentFail',
+    defaultMessage: 'Request was not sent',
   },
 });

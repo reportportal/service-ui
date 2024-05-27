@@ -54,10 +54,6 @@ const messages = defineMessages({
     id: 'RegistrationForm.emailDuplicateHint',
     defaultMessage: 'Entered email already exists in the system.',
   },
-  validEmailHint: {
-    id: 'ServiceModal.validEmailHint',
-    defaultMessage: 'Please enter valid email',
-  },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
