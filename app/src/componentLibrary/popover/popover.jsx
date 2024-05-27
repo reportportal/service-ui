@@ -36,7 +36,7 @@ export const Popover = ({
   popoverClassName,
   arrowVerticalPosition,
   topPosition,
-  arrowTopOffset,
+  arrowVerticalOffset,
 }) => {
   const popoverRef = useRef();
   const [top, setTop] = useState(topPosition);
@@ -117,7 +117,7 @@ export const Popover = ({
       className={className}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
-      style={{ top, left, '--top-offset': `${arrowTopOffset}px` }}
+      style={{ top, left, '--arrow-offset': `${arrowVerticalOffset}px` }}
     >
       {title && <div className={cx('title')}>{title}</div>}
       <div className={cx('content')}>{children}</div>
@@ -140,7 +140,7 @@ Popover.propTypes = {
     null,
   ]),
   topPosition: PropTypes.number,
-  arrowTopOffset: PropTypes.number,
+  arrowVerticalOffset: PropTypes.number,
 };
 
 Popover.defaultProps = {
@@ -155,5 +155,5 @@ Popover.defaultProps = {
   variant: 'light',
   arrowVerticalPosition: null,
   topPosition: 0,
-  arrowTopOffset: 22,
+  arrowVerticalOffset: 22,
 };

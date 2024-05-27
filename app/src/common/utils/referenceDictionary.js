@@ -65,4 +65,5 @@ export const faqDictionary = {
   fileStorageOptions:
     'https://reportportal.io/docs/installation-steps/ReportPortal23.1FileStorageOptions',
   pricingOptions: 'https://reportportal.io/pricing/saas',
+  rpEmailRequestSupport: 'mailto:support@reportportal.io?subject=Support Request from RP instance',
 };

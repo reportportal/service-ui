@@ -64,11 +64,11 @@
   }
 
   &.side-right.position-vertical-top::after {
-    top: var(--top-offset, 22px);
+    top: var(--arrow-offset, 22px);
   }
 
   &.side-right.position-vertical-bottom::after {
-    bottom: 22px;
+    bottom: var(--arrow-offset, 22px);
     top: auto;
   }
 
