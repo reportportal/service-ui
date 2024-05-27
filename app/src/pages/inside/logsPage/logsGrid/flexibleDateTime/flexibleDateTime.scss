@@ -1,0 +1,68 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.abs-rel-time {
+  display: inline-block;
+  min-height: 40px;
+  cursor: pointer;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 1.5;
+  vertical-align: top;
+
+  &:hover {
+    .extended-time {
+      display: inline;
+    }
+    .absolute-time {
+      display: none;
+    }
+  }
+
+  &.extended {
+    .extended-time {
+      display: inline;
+    }
+    .absolute-time {
+      display: none;
+    }
+
+    &:hover {
+      .extended-time {
+        display: none;
+      }
+      .absolute-time {
+        display: inline;
+      }
+    }
+  }
+}
+.extended-time {
+  display: none;
+  text-align: right;
+}
+.absolute-time {
+  display: inline;
+  text-align: right;
+}
+.min-height-auto {
+  min-height: auto;
+}
+
+.micro-seconds {
+  color: $COLOR--gray-60;
+}
