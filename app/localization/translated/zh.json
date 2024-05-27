@@ -1322,7 +1322,6 @@
   "MarkAsImportantModal.descriptionNote": "This launch will be stored forever and can be deleted only manually.",
   "MarkAsImportantModal.markAsImportant": "Mark as Important",
   "MarkAsImportantModal.note": "Please, be aware with the number of important launches to prevent running out of memory for regular launches.",
-  "MarkAsImportantModal.statistic": "Current ratio: <b>{important}%</b> important / <b>{regular}%</b> regular launches.",
   "MarkdownEditor.bold": "加粗",
   "MarkdownEditor.cleanBlock": "删除字体格式",
   "MarkdownEditor.code": "代码",

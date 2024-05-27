@@ -1322,7 +1322,6 @@
   "MarkAsImportantModal.descriptionNote": "Этот запуск будет сохранен навсегда и удалить его можно будет только вручную.",
   "MarkAsImportantModal.markAsImportant": "Отметить как важное",
   "MarkAsImportantModal.note": "Пожалуйста, следите за количеством важных запусков, чтобы избежать нехватки памяти для регулярных запусков.",
-  "MarkAsImportantModal.statistic": "Текущее соотношение: <b>{important}%</b> важных / <b>{regular}%</b> регулярных запусков.",
   "MarkdownEditor.bold": "Жирное начертание",
   "MarkdownEditor.cleanBlock": "Очистить блок",
   "MarkdownEditor.code": "Добавить код",

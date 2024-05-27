@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import { defineMessages, useIntl } from 'react-intl';
-import DOMPurify from 'dompurify';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
@@ -49,13 +48,7 @@ const messages = defineMessages({
     defaultMessage:
       'If all your memory space is used for important launches and a new important launch is coming, they will be deleted in reverse chronological order, starting with the oldest launches.',
   },
-  statistic: {
-    id: 'MarkAsImportantModal.statistic',
-    defaultMessage:
-      'Current ratio: <b>{important}%</b> important / <b>{regular}%</b> regular launches.',
-  },
 });
-// todo get important launch count statistic
 const MarkAsImportantModal = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -97,17 +90,6 @@ const MarkAsImportantModal = ({ data }) => {
           <p>{formatMessage(messages.note)}</p>
         </div>
         <p className={cx('description')}>{formatMessage(messages.description)}</p>
-        <p>
-          {Parser(
-            DOMPurify.sanitize(
-              formatMessage(messages.statistic, {
-                b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
-                important: 10,
-                regular: 90,
-              }),
-            ),
-          )}
-        </p>
       </div>
     </ModalLayout>
   );
