@@ -41,7 +41,7 @@ import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/d
 import { canSeeDemoData } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
@@ -60,8 +60,7 @@ export const ProjectSettingsPageContainer = () => {
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
@@ -155,7 +154,7 @@ export const ProjectSettingsPageContainer = () => {
         mobileDisabled: true,
       },
     };
-    if (!canSeeDemoData(accountRole, userRole)) {
+    if (!canSeeDemoData(userRoles)) {
       delete navConfig[DEMO_DATA];
     }
     Object.keys(extensionsConfig).forEach((key) => {
@@ -166,7 +165,7 @@ export const ProjectSettingsPageContainer = () => {
       }
     });
     return { ...navConfig, ...extensionsConfig };
-  }, [accountRole, extensionsConfig, createTabLink, userRole]);
+  }, [formatMessage, createTabLink, userRoles, extensionsConfig]);
 
   const navigation = useMemo(() => {
     if (subPage) {

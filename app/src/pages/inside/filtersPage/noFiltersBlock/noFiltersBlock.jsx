@@ -26,12 +26,14 @@ import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'contro
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
-
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/user';
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
+  userRoles: userRolesSelector(state),
   slugs: urlOrganizationAndProjectSelector(state),
 }))
 @track()
@@ -46,9 +48,11 @@ export class NoFiltersBlock extends PureComponent {
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
     }),
+    userRoles: PropTypes.object,
   };
   static defaultProps = {
     onAddFilter: () => {},
+    userRoles: {},
   };
   onClickAddFilter = () => {
     this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_BTN_EMPTY_FILTER_PAGE);
@@ -57,6 +61,7 @@ export class NoFiltersBlock extends PureComponent {
   render() {
     const {
       slugs: { organizationSlug, projectSlug },
+      userRoles,
     } = this.props;
     return (
       <div className={cx('no-filters-block')}>
@@ -88,7 +93,11 @@ export class NoFiltersBlock extends PureComponent {
             <FormattedMessage id={'NoFiltersBlock.or'} defaultMessage={'or'} />
           </div>
           <div className={cx('button')}>
-            <GhostButton icon={AddFilterIcon} onClick={this.onClickAddFilter}>
+            <GhostButton
+              icon={AddFilterIcon}
+              onClick={this.onClickAddFilter}
+              disabled={!canWorkWithFilters(userRoles)}
+            >
               <FormattedMessage id={'NoFiltersBlock.Button'} defaultMessage={'Add filter'} />
             </GhostButton>
           </div>

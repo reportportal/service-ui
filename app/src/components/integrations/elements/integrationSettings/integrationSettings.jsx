@@ -28,7 +28,7 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
 } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
@@ -53,9 +53,8 @@ export const IntegrationSettings = (props) => {
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const projectKey = useSelector(projectKeySelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
-  const isEditable = canUpdateSettings(accountRole, userRole);
+  const userRoles = useSelector(userRolesSelector);
+  const isEditable = canUpdateSettings(userRoles);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();

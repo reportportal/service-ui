@@ -97,8 +97,7 @@ export class TestItemDetailsModal extends Component {
       eventsInfo: PropTypes.object,
     }).isRequired,
     launch: PropTypes.object,
-    userProjectRole: PropTypes.string,
-    userAccountRole: PropTypes.string.isRequired,
+    userRoles: PropTypes.object.isRequired,
     userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
@@ -118,7 +117,7 @@ export class TestItemDetailsModal extends Component {
   static defaultProps = {
     launch: {},
     userId: '',
-    userProjectRole: '',
+    userRoles: {},
     dirty: false,
     clearLogPageStackTrace: () => {},
     extensions: [],
@@ -362,8 +361,7 @@ export class TestItemDetailsModal extends Component {
       intl,
       data: { item, eventsInfo },
       launch,
-      userAccountRole,
-      userProjectRole,
+      userRoles,
       userId,
       handleSubmit,
     } = this.props;
@@ -379,8 +377,7 @@ export class TestItemDetailsModal extends Component {
     };
 
     const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
+      userRoles,
       item.owner ? userId === item.owner : userId === launch.owner,
     );
     return (

@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  userInfoSelector,
-  userAccountRoleSelector,
-  activeProjectRoleSelector,
-} from 'controllers/user';
+import { userInfoSelector, userRolesSelector } from 'controllers/user';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import {
   canMergeLaunches,
@@ -32,9 +28,8 @@ export const validateMergeLaunch = (launch, launches, state) => {
     return 'selectMoreItems';
   }
   const user = userInfoSelector(state);
-  const userRole = userAccountRoleSelector(state);
-  const projectRole = activeProjectRoleSelector(state);
-  if (!canMergeLaunches(userRole, projectRole, launch.owner === user.userId)) {
+  const userRoles = userRolesSelector(state);
+  if (!canMergeLaunches(userRoles, launch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
@@ -51,9 +46,8 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
     return 'launchFinished';
   }
   const user = userInfoSelector(state);
-  const userRole = userAccountRoleSelector(state);
-  const projectRole = activeProjectRoleSelector(state);
-  if (!canForceFinishLaunch(userRole, projectRole, launch.owner === user.userId || launch.rerun)) {
+  const userRoles = userRolesSelector(state);
+  if (!canForceFinishLaunch(userRoles, launch.owner === user.userId || launch.rerun)) {
     return 'notYourOwnLaunch';
   }
   return null;
@@ -61,9 +55,8 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
 
 export const validateMoveLaunch = (launch, launches, state) => {
   const user = userInfoSelector(state);
-  const userRole = userAccountRoleSelector(state);
-  const projectRole = activeProjectRoleSelector(state);
-  if (!canMoveToDebug(userRole, projectRole, launch.owner === user.userId)) {
+  const userRoles = userRolesSelector(state);
+  if (!canMoveToDebug(userRoles, launch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
   return null;
@@ -71,9 +64,8 @@ export const validateMoveLaunch = (launch, launches, state) => {
 
 export const validateDeleteLaunch = (launch, launches, state) => {
   const user = userInfoSelector(state);
-  const userRole = userAccountRoleSelector(state);
-  const projectRole = activeProjectRoleSelector(state);
-  if (!canDeleteLaunch(userRole, projectRole, launch.owner === user.userId)) {
+  const userRoles = userRolesSelector(state);
+  if (!canDeleteLaunch(userRoles, launch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {

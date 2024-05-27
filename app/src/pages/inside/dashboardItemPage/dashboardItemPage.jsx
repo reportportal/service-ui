@@ -34,7 +34,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import { userInfoSelector } from 'controllers/user';
+import { userInfoSelector, userRolesSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
@@ -53,6 +53,7 @@ import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { WIDGETS_EVENTS, DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -116,6 +117,7 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -153,11 +155,13 @@ export class DashboardItemPage extends Component {
       projectSlug: PropTypes.string.isRequired,
     }),
     projectKey: PropTypes.string.isRequired,
+    userRoles: PropTypes.object,
   };
 
   static defaultProps = {
     fullScreenMode: false,
     activeDashboardId: undefined,
+    userRoles: {},
   };
 
   onDeleteDashboard = () => {
@@ -323,6 +327,7 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       changeFullScreenModeAction: changeFullScreenMode,
       slugs: { organizationSlug, projectSlug },
+      userRoles,
     } = this.props;
 
     return (
@@ -334,7 +339,11 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                <GhostButton
+                  icon={AddWidgetIcon}
+                  onClick={this.showWidgetWizard}
+                  disabled={!canWorkWithWidgets(userRoles)}
+                >
                   {formatMessage(messages.addNewWidget)}
                 </GhostButton>
               </div>

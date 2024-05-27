@@ -22,7 +22,7 @@ import track from 'react-tracking';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import {
   removePluginAction,
   addIntegrationAction,
@@ -113,8 +113,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -135,8 +134,7 @@ export class InstancesSection extends Component {
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
     removePluginAction: PropTypes.func.isRequired,
-    accountRole: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
+    userRoles: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -284,13 +282,12 @@ export class InstancesSection extends Component {
       onItemClick,
       projectIntegrations,
       globalIntegrations,
-      accountRole,
-      userRole,
+      userRoles,
       isGlobal,
       pluginDetails: { metadata },
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
-    const disabled = !canUpdateSettings(accountRole, userRole);
+    const disabled = !canUpdateSettings(userRoles);
     const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;

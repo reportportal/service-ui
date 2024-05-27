@@ -30,11 +30,7 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
+import { userIdSelector, userRolesSelector } from 'controllers/user';
 import { formatItemName, isItemOwner } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -123,8 +119,7 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
-    userAccountRole: userAccountRoleSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     userId: userIdSelector(state),
     projectKey: projectKeySelector(state),
   }),
@@ -142,8 +137,7 @@ export class EditItemModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    userProjectRole: PropTypes.string,
-    userAccountRole: PropTypes.string,
+    userRoles: PropTypes.object,
     userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
@@ -158,8 +152,7 @@ export class EditItemModal extends Component {
   };
 
   static defaultProps = {
-    userProjectRole: '',
-    userAccountRole: '',
+    userRoles: {},
     userId: '',
   };
 
@@ -265,8 +258,7 @@ export class EditItemModal extends Component {
       data: { item, type, parentLaunch, eventsInfo },
       userId,
       handleSubmit,
-      userAccountRole,
-      userProjectRole,
+      userRoles,
       tracking,
     } = this.props;
     const okButton = {
@@ -281,11 +273,7 @@ export class EditItemModal extends Component {
       eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
-      isItemOwner(userId, item, parentLaunch),
-    );
+    const editable = canEditLaunch(userRoles, isItemOwner(userId, item, parentLaunch));
 
     return (
       <ModalLayout

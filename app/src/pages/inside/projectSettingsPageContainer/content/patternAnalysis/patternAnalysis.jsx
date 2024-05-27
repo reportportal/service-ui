@@ -24,7 +24,7 @@ import { hideModalAction, showModalAction } from 'controllers/modal';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import PropTypes from 'prop-types';
 import { docsReferences } from 'common/utils';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -34,8 +34,7 @@ import { messages } from './messages';
 
 export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const patterns = useSelector(patternsSelector);
-  const userRole = useSelector(userAccountRoleSelector);
-  const projectRole = useSelector(activeProjectRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
 
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -71,7 +70,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const isAbleToCreate = canUpdateSettings(userRole, projectRole);
+  const isAbleToCreate = canUpdateSettings(userRoles);
 
   const handleDocumentationClick = () => {
     trackEvent(

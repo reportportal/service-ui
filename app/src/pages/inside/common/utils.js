@@ -19,6 +19,7 @@ import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
 import { DEFECT_TYPES_SEQUENCE, DEFAULT_DEFECT_TYPES_LOCATORS } from 'common/constants/defectTypes';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
+import { canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
@@ -65,8 +66,7 @@ export const createStepActionDescriptors = (params) => {
     btsIntegrations,
     isBtsPluginsExist,
     enabledBtsPlugins,
-    accountRole,
-    projectRole,
+    userRoles,
     selectedItems = [],
   } = params;
   const isIssueOperationDisabled = selectedItems.length > ISSUE_OPERATION_MAX_ITEMS;
@@ -86,14 +86,14 @@ export const createStepActionDescriptors = (params) => {
     {
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
       value: 'action-edit',
-      hidden: !canBulkEditItems(accountRole, projectRole),
+      hidden: !canBulkEditItems(userRoles),
       onClick: onEditItems,
     },
     {
       label: formatMessage(actionMessages.editDefects),
       value: 'action-edit-defects',
       onClick: onEditDefects,
-      disabled: isIssueOperationDisabled,
+      disabled: isIssueOperationDisabled || !canWorkWithDefectTypes(userRoles),
       title: isIssueOperationDisabled ? issueTitle : '',
     },
     {

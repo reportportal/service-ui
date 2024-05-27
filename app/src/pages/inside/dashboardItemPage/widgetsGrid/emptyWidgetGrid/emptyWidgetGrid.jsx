@@ -20,6 +20,9 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { connect } from 'react-redux';
+import { userRolesSelector } from 'controllers/user';
 import styles from './emptyWidgetGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -38,21 +41,26 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @injectIntl
 export class EmptyWidgetGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     isDisable: PropTypes.bool,
+    userRoles: PropTypes.object,
   };
 
   static defaultProps = {
     action: () => {},
     isDisable: false,
+    userRoles: {},
   };
 
   render() {
-    const { action, intl, isDisable } = this.props;
+    const { action, intl, isDisable, userRoles } = this.props;
 
     return (
       <div className={cx('empty-widget')}>
@@ -66,7 +74,11 @@ export class EmptyWidgetGrid extends Component {
               {intl.formatMessage(messages.dashboardEmptyText)}
             </p>
             <div className={cx('empty-widget-content')}>
-              <GhostButton icon={AddDashboardIcon} onClick={action}>
+              <GhostButton
+                icon={AddDashboardIcon}
+                onClick={action}
+                disabled={!canWorkWithWidgets(userRoles)}
+              >
                 {intl.formatMessage(messages.addNewWidget)}
               </GhostButton>
             </div>

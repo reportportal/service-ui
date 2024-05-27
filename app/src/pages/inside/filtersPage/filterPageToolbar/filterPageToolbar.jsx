@@ -26,6 +26,9 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { connect } from 'react-redux';
+import { userRolesSelector } from 'controllers/user';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -41,6 +44,9 @@ const messages = defineMessages({
   searchInputPlaceholder: { id: 'FiltersPage.searchByName', defaultMessage: 'Search by name' },
 });
 @track()
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @reduxForm({
   form: 'searchFilterForm',
   validate: ({ filter }) => ({
@@ -59,6 +65,7 @@ export class FilterPageToolbar extends React.Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    userRoles: PropTypes.object,
   };
 
   static defaultProps = {
@@ -66,6 +73,7 @@ export class FilterPageToolbar extends React.Component {
     isSearchDisabled: false,
     onAddFilter: () => {},
     onFilterChange: () => {},
+    userRoles: {},
   };
 
   handleFilterChange = (e, filter) => {
@@ -80,6 +88,7 @@ export class FilterPageToolbar extends React.Component {
       intl: { formatMessage },
       isSearchDisabled,
       onAddFilter,
+      userRoles,
     } = this.props;
 
     return (
@@ -96,7 +105,11 @@ export class FilterPageToolbar extends React.Component {
           </FieldProvider>
         </div>
         <div className={cx('label')}>{formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton icon={AddFilterIcon} onClick={onAddFilter}>
+        <GhostButton
+          icon={AddFilterIcon}
+          onClick={onAddFilter}
+          disabled={!canWorkWithFilters(userRoles)}
+        >
           {formatMessage(messages.addFilter)}
         </GhostButton>
       </div>
