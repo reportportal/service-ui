@@ -54,7 +54,7 @@ export const FlexibleDateTime = ({ time, customClass }) => {
 
   const extractTime = () => absoluteTime.slice(-8);
   return (
-    <div
+    <button
       className={cx('abs-rel-time', { extended: !isAbsolute() }, customClass)}
       onClick={toggleFormat}
     >
@@ -63,7 +63,7 @@ export const FlexibleDateTime = ({ time, customClass }) => {
         {extractTime()}.{extractMilliseconds()}
         <span className={cx('micro-seconds')}>{extractMicroSeconds()}</span>
       </span>
-    </div>
+    </button>
   );
 };
 

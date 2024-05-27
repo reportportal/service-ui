@@ -23,15 +23,8 @@
   color: $COLOR--charcoal-grey;
   line-height: 1.5;
   vertical-align: top;
-
-  &:hover {
-    .extended-time {
-      display: inline;
-    }
-    .absolute-time {
-      display: none;
-    }
-  }
+  border: none;
+  background: none;
 
   &.extended {
     .extended-time {
@@ -39,15 +32,6 @@
     }
     .absolute-time {
       display: none;
-    }
-
-    &:hover {
-      .extended-time {
-        display: none;
-      }
-      .absolute-time {
-        display: inline;
-      }
     }
   }
 }
