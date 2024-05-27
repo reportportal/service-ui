@@ -135,7 +135,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.firstNameLabel)}
                   placeholder={formatMessage(messages.firstNamePlaceholder)}
                   defaultWidth={false}
-                  name="first_name"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -146,7 +145,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.lastNameLabel)}
                   placeholder={formatMessage(messages.lastNamePlaceholder)}
                   defaultWidth={false}
-                  name="last_name"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -157,7 +155,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.emailLabel)}
                   placeholder="example@mail.com"
                   defaultWidth={false}
-                  name="email"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -168,13 +165,12 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                   label={formatMessage(messages.companyNameLabel)}
                   placeholder={formatMessage(messages.companyNamePlaceholder)}
                   defaultWidth={false}
-                  name="company"
                 />
               </FieldErrorHint>
             </FieldProvider>
 
             <FieldProvider name="00N7T000000i00E" format={Boolean}>
-              <Checkbox className={cx('check-item')} name="00N7T000000i00E">
+              <Checkbox className={cx('check-item')}>
                 {formatMessage(messages.subscribeToNews)}
               </Checkbox>
             </FieldProvider>
