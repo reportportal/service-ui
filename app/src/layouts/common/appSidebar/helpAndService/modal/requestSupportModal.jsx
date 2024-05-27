@@ -175,15 +175,13 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
               </Checkbox>
             </FieldProvider>
 
-            <FieldProvider format={Boolean} onChange={consentHandler}>
-              <Checkbox
-                value={isConsentChecked}
-                onChange={consentHandler}
-                className={cx('check-item')}
-              >
-                {formatMessage(messages.consentToProcessing, { a: () => privacyPolicyAnchor.a })}
-              </Checkbox>
-            </FieldProvider>
+            <Checkbox
+              value={isConsentChecked}
+              onChange={consentHandler}
+              className={cx('check-item')}
+            >
+              {formatMessage(messages.consentToProcessing, { a: () => privacyPolicyAnchor.a })}
+            </Checkbox>
           </div>
         </form>
       </>
