@@ -114,77 +114,70 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={hideModal}
     >
-      <>
-        <span className={cx('text')} />
-        <form
-          action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
-          method="POST"
-          id={REQUEST_FORM_ID}
-          target="dummyframe"
-        >
-          <input type="hidden" name="oid" value="00D24000000k2Rp" />
-          <input type="hidden" name="retURL" value="http://" />
-          <input type="hidden" name="lead_status" value="New" />
-          <input type="hidden" name="lead_source" value="RP Product" />
-          <input type="hidden" name="ReportPortalSource__c" value="ReportPortal instance" />
+      <form
+        action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
+        method="POST"
+        id={REQUEST_FORM_ID}
+        target="dummyframe"
+      >
+        <input type="hidden" name="oid" value="00D24000000k2Rp" />
+        <input type="hidden" name="retURL" value="http://" />
+        <input type="hidden" name="lead_status" value="New" />
+        <input type="hidden" name="lead_source" value="RP Product" />
+        <input type="hidden" name="ReportPortalSource__c" value="ReportPortal instance" />
 
-          <div className={cx('form-fields')}>
-            <FieldProvider name="first_name">
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.firstNameLabel)}
-                  placeholder={formatMessage(messages.firstNamePlaceholder)}
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
+        <div className={cx('form-fields')}>
+          <FieldProvider name="first_name">
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.firstNameLabel)}
+                placeholder={formatMessage(messages.firstNamePlaceholder)}
+                defaultWidth={false}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
 
-            <FieldProvider name="last_name">
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.lastNameLabel)}
-                  placeholder={formatMessage(messages.lastNamePlaceholder)}
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
+          <FieldProvider name="last_name">
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.lastNameLabel)}
+                placeholder={formatMessage(messages.lastNamePlaceholder)}
+                defaultWidth={false}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
 
-            <FieldProvider name="email">
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.emailLabel)}
-                  placeholder="example@mail.com"
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
+          <FieldProvider name="email">
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.emailLabel)}
+                placeholder="example@mail.com"
+                defaultWidth={false}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
 
-            <FieldProvider name="company">
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.companyNameLabel)}
-                  placeholder={formatMessage(messages.companyNamePlaceholder)}
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
+          <FieldProvider name="company">
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.companyNameLabel)}
+                placeholder={formatMessage(messages.companyNamePlaceholder)}
+                defaultWidth={false}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
 
-            <FieldProvider name="00N7T000000i00E" format={Boolean}>
-              <Checkbox className={cx('check-item')}>
-                {formatMessage(messages.subscribeToNews)}
-              </Checkbox>
-            </FieldProvider>
-
-            <Checkbox
-              value={isConsentChecked}
-              onChange={consentHandler}
-              className={cx('check-item')}
-            >
-              {formatMessage(messages.consentToProcessing, { a: () => privacyPolicyAnchor.a })}
+          <FieldProvider name="00N7T000000i00E" format={Boolean}>
+            <Checkbox className={cx('check-item')}>
+              {formatMessage(messages.subscribeToNews)}
             </Checkbox>
-          </div>
-        </form>
-      </>
+          </FieldProvider>
+
+          <Checkbox value={isConsentChecked} onChange={consentHandler} className={cx('check-item')}>
+            {formatMessage(messages.consentToProcessing, { a: () => privacyPolicyAnchor.a })}
+          </Checkbox>
+        </div>
+      </form>
     </ModalLayout>
   );
 };
