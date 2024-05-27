@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-export const RETENTION_POLICY = {
-  REGULAR: 'REGULAR',
-  IMPORTANT: 'IMPORTANT',
-  RETENTION_POLICY_KEY: 'retentionPolicy',
-};
+.content p {
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  line-height: 24px;
+}

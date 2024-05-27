@@ -108,6 +108,8 @@ export const URLS = {
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
+  singleLaunchUpdate: (activeProject, launchId) =>
+    `${urlBase}${activeProject}/launch/${launchId}/update`,
   launchesInfo: (activeProject) => `${urlBase}${activeProject}/launch/info`,
   launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesItemsUpdate: (activeProject, id, type) =>
