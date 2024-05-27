@@ -65,7 +65,7 @@ export const FilesDropzone = ({
   const formValidationMessage = (validationProperties) => {
     const validationMessages = {
       incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-      incorrectFileSizeMessage,
+      incorrectFileSize: incorrectFileSizeMessage,
     };
     const validationMessage = [];
 
