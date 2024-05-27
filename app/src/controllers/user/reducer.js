@@ -26,12 +26,15 @@ import {
   SET_API_KEYS,
   ADD_API_KEY_SUCCESS,
   DELETE_API_KEY_SUCCESS,
+  SET_LOG_TIME_FORMAT,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type = '', payload = {} }) => {
   switch (type) {
     case SET_START_TIME_FORMAT:
       return { ...state, startTimeFormat: payload };
+    case SET_LOG_TIME_FORMAT:
+      return { ...state, logTimeFormat: payload };
     case SET_PHOTO_TIME_STAMP:
       return { ...state, photoTimeStamp: payload };
     default:
