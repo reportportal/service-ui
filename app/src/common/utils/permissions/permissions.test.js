@@ -21,7 +21,7 @@ const PERMISSIONS_MAP = {
     CREATE_USER: 'OWNER',
   },
   MANAGER: {
-    DELETE_USER: 'ALL',
+    CREATE_USER: 'ALL',
   },
   MEMBER: {
     EDITOR: {
@@ -46,6 +46,9 @@ describe('permissions', () => {
     expect(
       canCreateUser({ userRole: 'USER', organizationRole: 'MEMBER', projectRole: 'EDITOR' }, true),
     ).toBeTruthy();
+  });
+  it('should return true if user has MANAGER role', () => {
+    expect(canCreateUser({ userRole: 'USER', organizationRole: 'MANAGER' })).toBeTruthy();
   });
   it('should return false if user has permission "OWNER"', () => {
     expect(

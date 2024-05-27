@@ -119,7 +119,7 @@ export class GeneralTab extends Component {
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
-    userRoles: PropTypes.object.isRequired,
+    userRoles: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -134,6 +134,7 @@ export class GeneralTab extends Component {
     lang: 'en',
     retention: null,
     isLoading: false,
+    userRoles: {},
   };
   state = {
     processingData: false,

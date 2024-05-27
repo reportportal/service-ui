@@ -97,7 +97,7 @@ export class TestItemDetailsModal extends Component {
       eventsInfo: PropTypes.object,
     }).isRequired,
     launch: PropTypes.object,
-    userRoles: PropTypes.object.isRequired,
+    userRoles: PropTypes.object,
     userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,

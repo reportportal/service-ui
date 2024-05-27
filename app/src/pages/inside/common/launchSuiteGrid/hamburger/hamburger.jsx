@@ -254,7 +254,7 @@ export class Hamburger extends Component {
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            <Fragment>
+            <>
               {launch.mode === 'DEFAULT' ? (
                 <HamburgerMenuItem
                   title={this.getMoveToDebugTooltip()}
@@ -279,7 +279,7 @@ export class Hamburger extends Component {
                   }}
                 />
               )}
-            </Fragment>
+            </>
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
               title={this.getForceFinishTooltip()}

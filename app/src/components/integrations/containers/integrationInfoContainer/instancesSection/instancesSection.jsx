@@ -134,7 +134,7 @@ export class InstancesSection extends Component {
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
     removePluginAction: PropTypes.func.isRequired,
-    userRoles: PropTypes.object.isRequired,
+    userRoles: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -156,6 +156,7 @@ export class InstancesSection extends Component {
     title: '',
     pluginId: null,
     events: {},
+    userRoles: {},
   };
 
   constructor(props) {
