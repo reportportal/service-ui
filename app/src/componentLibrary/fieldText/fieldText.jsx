@@ -50,6 +50,7 @@ export const FieldText = ({
   hasDoubleMessage,
   type,
   variant,
+  name,
 }) => {
   const clearInput = () => onChange('');
 
@@ -83,6 +84,7 @@ export const FieldText = ({
             type={type}
             className={cx(variant, 'input')}
             value={value}
+            name={name}
             maxLength={maxLength}
             disabled={disabled}
             onChange={disabled ? null : onChange}
@@ -130,6 +132,7 @@ export const FieldText = ({
   );
 };
 FieldText.propTypes = {
+  name: PropTypes.string,
   value: PropTypes.string,
   className: PropTypes.string,
   error: PropTypes.string,
@@ -156,6 +159,7 @@ FieldText.propTypes = {
   variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
 };
 FieldText.defaultProps = {
+  name: '',
   value: '',
   className: '',
   error: '',

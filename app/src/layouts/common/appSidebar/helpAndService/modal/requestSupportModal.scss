@@ -1,5 +1,5 @@
-/*
- * Copyright 2021 EPAM Systems
+/*!
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,28 @@
  * limitations under the License.
  */
 
-export { SupportBlock } from './supportBlock';
-export { RequestSupportModal } from './modal';
+.form-fields {
+ display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transform: translateY(-8px);
+}
+
+.inline-ref {
+  display: inline-flex;
+  align-items: center;
+  color: $COLOR--darkmode-topaz-main;
+  text-decoration: none;
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+    transform: translateY(2px);
+  }
+}
+
+.check-item{
+  align-items: start;
+}

@@ -106,4 +106,53 @@ export const messages = defineMessages({
     id: 'AppSidebar.privacyPolicy',
     defaultMessage: 'Privacy Policy',
   },
+  firstNameLabel: {
+    id: 'ServiceModal.firstNameLabel',
+    defaultMessage: 'First name',
+  },
+  firstNamePlaceholder: {
+    id: 'ServiceModal.firstNamePlaceholder',
+    defaultMessage: 'Enter your first name',
+  },
+  lastNameLabel: {
+    id: 'ServiceModal.lastNameLabel',
+    defaultMessage: 'Last name',
+  },
+  lastNamePlaceholder: {
+    id: 'ServiceModal.lastNamePlaceholder',
+    defaultMessage: 'Enter your last name',
+  },
+  emailLabel: {
+    id: 'ServiceModal.emailLabel',
+    defaultMessage: 'Email',
+  },
+  companyNameLabel: {
+    id: 'ServiceModal.companyNameLabel',
+    defaultMessage: 'Company name',
+  },
+  companyNamePlaceholder: {
+    id: 'ServiceModal.companyNamePlaceholder',
+    defaultMessage: 'Enter company name',
+  },
+  subscribeToNews: {
+    id: 'ServiceModal.subscribeToNews',
+    defaultMessage: 'Subscribe to ReportPortal news',
+  },
+  consentToProcessing: {
+    id: 'ServiceModal.consentToProcessing',
+    defaultMessage:
+      'I consent to EPAM Systems, Inc. (“EPAM”) processing my personal information as set out in the <a>Privacy Policy</a>',
+  },
+  sendRequest: {
+    id: 'ServiceModal.sendRequest',
+    defaultMessage: 'Send request',
+  },
+  requestSent: {
+    id: 'ServiceModal.requestSent',
+    defaultMessage: 'Request has been sent',
+  },
+  requestSentFail: {
+    id: 'ServiceModal.requestSentFail',
+    defaultMessage: 'Request was not sent',
+  },
 });

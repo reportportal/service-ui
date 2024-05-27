@@ -32,6 +32,7 @@ export const Checkbox = ({
   onFocus,
   onBlur,
   className,
+  name,
   value,
   variant,
   dataAutomationId,
@@ -73,6 +74,7 @@ export const Checkbox = ({
         disabled={disabled}
         onChange={onChange}
         checked={value}
+        name={name}
       />
       <span
         aria-labelledby="chk1-label"
@@ -90,6 +92,7 @@ Checkbox.propTypes = {
   variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
   title: PropTypes.string,
   children: PropTypes.node,
+  name: PropTypes.string,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
@@ -102,6 +105,7 @@ Checkbox.defaultProps = {
   variant: LIGHT_VARIANT,
   children: '',
   title: '',
+  name: '',
   value: false,
   disabled: false,
   onChange: () => {},
