@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -254,32 +254,26 @@ export class Hamburger extends Component {
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            <>
-              {launch.mode === 'DEFAULT' ? (
-                <HamburgerMenuItem
-                  title={this.getMoveToDebugTooltip()}
-                  text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                  disabled={
-                    !canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)
-                  }
-                  onClick={() => {
-                    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
-                    customProps.onMove(launch);
-                  }}
-                />
-              ) : (
-                <HamburgerMenuItem
-                  text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-                  title={this.getMoveToDebugTooltip()}
-                  disabled={
-                    !canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)
-                  }
-                  onClick={() => {
-                    customProps.onMove(launch);
-                  }}
-                />
-              )}
-            </>
+            {launch.mode === 'DEFAULT' ? (
+              <HamburgerMenuItem
+                title={this.getMoveToDebugTooltip()}
+                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                onClick={() => {
+                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                  customProps.onMove(launch);
+                }}
+              />
+            ) : (
+              <HamburgerMenuItem
+                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+                title={this.getMoveToDebugTooltip()}
+                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                onClick={() => {
+                  customProps.onMove(launch);
+                }}
+              />
+            )}
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
               title={this.getForceFinishTooltip()}
