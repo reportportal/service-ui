@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { FlexibleDateTime } from './flexibleDateTime';
+export { FlexibleLogTime } from './flexibleLogTime';

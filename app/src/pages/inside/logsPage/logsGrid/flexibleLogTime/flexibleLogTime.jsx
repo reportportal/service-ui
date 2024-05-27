@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { dateFormat, getMicroSeconds } from 'common/utils/timeDateUtils';
@@ -22,23 +22,15 @@ import { LOG_TIME_FORMAT_ABSOLUTE, LOG_TIME_FORMAT_EXTENDED } from 'controllers/
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogTimeFormatAction, userIdSelector } from 'controllers/user';
 import { logTimeFormatSelector } from 'controllers/user/selectors';
-import {
-  getLogTimeFormatFromStorage,
-  setLogTimeFormatInStorage,
-} from 'controllers/log/storageUtils';
-import styles from './flexibleDateTime.scss';
+import { setLogTimeFormatInStorage } from 'controllers/log/storageUtils';
+import styles from './flexibleLogTime.scss';
 
 const cx = classNames.bind(styles);
 
-export const FlexibleDateTime = ({ time, customClass }) => {
+export const FlexibleLogTime = ({ time }) => {
   const dispatch = useDispatch();
   const logTimeFormat = useSelector(logTimeFormatSelector);
   const userId = useSelector(userIdSelector);
-
-  useEffect(() => {
-    const format = getLogTimeFormatFromStorage(userId);
-    dispatch(setLogTimeFormatAction(format));
-  }, []);
 
   const isAbsolute = () => logTimeFormat === LOG_TIME_FORMAT_ABSOLUTE;
   const toggleFormat = () => {
@@ -53,11 +45,9 @@ export const FlexibleDateTime = ({ time, customClass }) => {
   const extractMicroSeconds = () => getMicroSeconds(time).slice(3);
 
   const extractTime = () => absoluteTime.slice(-8);
+
   return (
-    <button
-      className={cx('abs-rel-time', { extended: !isAbsolute() }, customClass)}
-      onClick={toggleFormat}
-    >
+    <button className={cx('flexible-log-time', { extended: !isAbsolute() })} onClick={toggleFormat}>
       <span className={cx('absolute-time')}>{absoluteTime}</span>
       <span className={cx('extended-time')}>
         {extractTime()}.{extractMilliseconds()}
@@ -67,11 +57,9 @@ export const FlexibleDateTime = ({ time, customClass }) => {
   );
 };
 
-FlexibleDateTime.propTypes = {
+FlexibleLogTime.propTypes = {
   time: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  customClass: PropTypes.string,
 };
-FlexibleDateTime.defaultProps = {
+FlexibleLogTime.defaultProps = {
   time: 0,
-  customClass: '',
 };
