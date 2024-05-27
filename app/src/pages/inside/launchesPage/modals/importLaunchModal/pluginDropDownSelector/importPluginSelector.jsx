@@ -14,10 +14,10 @@ const messages = defineMessages({
   },
 });
 
-export const ImportPluginSelector = ({ selectedPluginData, importPlugins, selectPlugin }) => {
+export const ImportPluginSelector = ({ selectedPlugin, plugins, selectPlugin }) => {
   const { formatMessage } = useIntl();
 
-  const pluginNamesOptions = importPlugins.map((plugin) => ({
+  const pluginNamesOptions = plugins.map((plugin) => ({
     label: plugin.name,
     value: plugin.name,
   }));
@@ -27,7 +27,7 @@ export const ImportPluginSelector = ({ selectedPluginData, importPlugins, select
       <span className={cx('field-name')}>{formatMessage(messages.reportType)}</span>
       <div className={cx('dropdown-wrapper')}>
         <InputDropdown
-          value={selectedPluginData.name}
+          value={selectedPlugin.name}
           options={pluginNamesOptions}
           onChange={selectPlugin}
         />
@@ -36,7 +36,7 @@ export const ImportPluginSelector = ({ selectedPluginData, importPlugins, select
   );
 };
 ImportPluginSelector.propTypes = {
-  selectedPluginData: PropTypes.object.isRequired,
-  importPlugins: PropTypes.array.isRequired,
+  selectedPlugin: PropTypes.object.isRequired,
+  plugins: PropTypes.array.isRequired,
   selectPlugin: PropTypes.func.isRequired,
 };

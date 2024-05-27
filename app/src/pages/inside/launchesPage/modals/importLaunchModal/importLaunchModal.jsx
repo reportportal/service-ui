@@ -16,17 +16,23 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import DOMPurify from 'dompurify';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { withModal } from 'controllers/modal';
-import { ImportModalLayout } from 'pages/common/uploadFileControls/importModalLayout';
-import { DropzoneComponent } from 'pages/common/uploadFileControls/dropzoneComponent';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { enabledImportPluginsSelector } from 'controllers/plugins';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import {
+  FilesDropzone,
+  UploadModalLayout,
+  useFiles,
+  useFilesUpload,
+} from 'pages/common/uploadFileControls';
 import { ImportPluginSelector } from './pluginDropDownSelector';
 import styles from './importLaunchModal.scss';
 
@@ -67,45 +73,67 @@ const messages = defineMessages({
   },
 });
 
-const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
+const ImportLaunchModal = ({ data: { onImport }, activeProject, importPlugins }) => {
+  const {
+    files,
+    actions: { addFiles, removeFile, updateFile },
+  } = useFiles();
+  const { uploadFiles, cancelRequests } = useFilesUpload(files, updateFile);
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
 
-  const [files, setFiles] = useState([]);
-  const [selectedPluginData, setSelectedPluginData] = useState(
+  const [selectedPlugin, setSelectedPlugin] = useState(
     () => importPlugins.find((plugin) => plugin.name === DEFAULT_PLUGIN_NAME) || importPlugins[0],
   );
 
-  const selectPlugin = (name) =>
-    setSelectedPluginData(importPlugins.find((plugin) => plugin.name === name));
+  const onUploadSuccess = () => {
+    onImport();
+  };
 
-  const url = URLS.pluginFileImport(activeProject, selectedPluginData.name);
+  const onUploadError = (id, err) => {
+    dispatch(
+      showNotification({
+        message: err.message,
+        type: NOTIFICATION_TYPES.ERROR,
+      }),
+    );
+  };
+
+  const selectPlugin = (name) =>
+    setSelectedPlugin(importPlugins.find((plugin) => plugin.name === name));
+
+  const saveFiles = async () => {
+    const url = URLS.pluginFileImport(activeProject, selectedPlugin.name);
+
+    trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL);
+    await uploadFiles(url, onUploadSuccess, onUploadError);
+  };
 
   return (
-    <ImportModalLayout
-      data={data}
-      files={files}
-      setFiles={setFiles}
-      title={formatMessage(messages.modalTitle)}
-      importButton={formatMessage(messages.importButton)}
-      url={url}
+    <UploadModalLayout
+      title={messages.modalTitle}
       eventsInfo={{
-        okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
-        cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
         closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
+        cancelButton: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
       }}
-      importConfirmationWarning={formatMessage(messages.importConfirmationWarning)}
+      importConfirmationWarning={messages.importConfirmationWarning}
+      uploadButtonTitle={messages.importButton}
+      files={files}
+      onCancel={cancelRequests}
+      onSave={saveFiles}
     >
       <ImportPluginSelector
-        selectedPluginData={selectedPluginData}
-        importPlugins={importPlugins}
+        selectedPlugin={selectedPlugin}
+        plugins={importPlugins}
         selectPlugin={selectPlugin}
       />
-      <DropzoneComponent
-        data={data}
+      <FilesDropzone
         files={files}
-        setFiles={setFiles}
-        maxFileSize={selectedPluginData.details?.maxFileSize}
-        acceptFileMimeTypes={selectedPluginData.details?.acceptFileMimeTypes || []}
+        addFiles={addFiles}
+        removeFile={removeFile}
+        maxFileSize={selectedPlugin.details?.maxFileSize}
+        acceptFileMimeTypes={selectedPlugin.details?.acceptFileMimeTypes || []}
         incorrectFileSizeMessage={formatMessage(messages.incorrectFileSize)}
         tip={formatMessage(messages.importTip, {
           b: (d) => DOMPurify.sanitize(`<b>${d}</b>`),
@@ -114,16 +142,15 @@ const ImportLaunchModal = ({ data, activeProject, importPlugins }) => {
       />
       <p className={cx('note-label')}>{formatMessage(messages.note)}</p>
       <p className={cx('note-message')}>{formatMessage(messages.noteMessage)}</p>
-    </ImportModalLayout>
+    </UploadModalLayout>
   );
 };
 ImportLaunchModal.propTypes = {
-  data: PropTypes.object.isRequired,
-  activeProject: PropTypes.string,
+  data: PropTypes.shape({
+    onImport: PropTypes.func,
+  }).isRequired,
   importPlugins: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-ImportLaunchModal.defaultProps = {
-  activeProject: '',
+  activeProject: PropTypes.string.isRequired,
 };
 export default withModal('importLaunchModal')(
   connect((state) => ({
