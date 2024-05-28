@@ -240,13 +240,16 @@ export class Hamburger extends Component {
     });
   };
 
-  changeImportantState = (markAsImportant) => {
+  changeImportantState = (retentionType) => {
     this.props.showModal({
-      id: markAsImportant ? 'markAsImportantModal' : 'unmarkAsImportantModal',
+      id:
+        retentionType === RETENTION_POLICY.IMPORTANT
+          ? 'unmarkAsImportantModal'
+          : 'markAsImportantModal',
       data: {
         activeProject: this.props.projectId,
         launch: this.props.launch,
-        updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
+        onSuccess: (data) => this.props.updateLaunchLocallyAction(data),
       },
     });
   };
@@ -285,9 +288,6 @@ export class Hamburger extends Component {
       projectRole,
       this.props.userId === this.props.launch.owner,
     );
-    const updateImportantTitle = canUpdateImportant
-      ? ''
-      : intl.formatMessage(messages.noPermissions);
 
     return (
       <div className={cx('hamburger')}>
@@ -355,25 +355,18 @@ export class Hamburger extends Component {
                 customProps.onForceFinish(launch);
               }}
             />
-            {launch.retentionPolicy === RETENTION_POLICY.IMPORTANT ? (
-              <HamburgerMenuItem
-                disabled={!canUpdateImportant}
-                title={updateImportantTitle}
-                text={intl.formatMessage(messages.unmarkAsImportant)}
-                onClick={() => {
-                  this.changeImportantState();
-                }}
-              />
-            ) : (
-              <HamburgerMenuItem
-                disabled={!canUpdateImportant}
-                title={updateImportantTitle}
-                text={intl.formatMessage(messages.markAsImportant)}
-                onClick={() => {
-                  this.changeImportantState(true);
-                }}
-              />
-            )}
+            <HamburgerMenuItem
+              disabled={!canUpdateImportant}
+              title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
+              text={intl.formatMessage(
+                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                  ? messages.unmarkAsImportant
+                  : messages.markAsImportant,
+              )}
+              onClick={() => {
+                this.changeImportantState(launch.retentionPolicy);
+              }}
+            />
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
                 text={intl.formatMessage(messages.analysis)}

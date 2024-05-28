@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import { RETENTION_POLICY_KEY } from 'common/constants/retentionPolicy';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 
 const messages = defineMessages({
@@ -28,28 +28,25 @@ const messages = defineMessages({
   },
 });
 
-export const useFetchRetentionPolicy = (
-  isImportant,
-  activeProject,
-  launch,
-  updateLaunchLocally,
-) => {
+export const useFetchRetentionPolicy = (policy, activeProject, launch, onSuccess) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  const policy = isImportant ? RETENTION_POLICY.IMPORTANT : RETENTION_POLICY.REGULAR;
-
-  const fetchRetentionPolicy = () => {
-    fetch(URLS.singleLaunchUpdate(activeProject, launch.id), {
-      method: 'PUT',
-      data: [
-        {
-          key: RETENTION_POLICY.RETENTION_POLICY_KEY,
-          value: policy,
-          system: true,
+  const fetchRetentionPolicy = async () => {
+    try {
+      await fetch(URLS.singleLaunchUpdate(activeProject, launch.id), {
+        method: 'PUT',
+        data: {
+          attributes: [
+            {
+              key: RETENTION_POLICY_KEY,
+              value: policy,
+              system: true,
+            },
+          ],
         },
-      ],
-    }).then(() => {
+      });
+
       const updatedLaunch = {
         ...launch,
         retentionPolicy: policy,
@@ -62,8 +59,15 @@ export const useFetchRetentionPolicy = (
         }),
       );
 
-      updateLaunchLocally(updatedLaunch);
-    });
+      onSuccess(updatedLaunch);
+    } catch (error) {
+      dispatch(
+        showNotification({
+          message: error.message,
+          type: NOTIFICATION_TYPES.ERROR,
+        }),
+      );
+    }
   };
 
   return { fetchRetentionPolicy };

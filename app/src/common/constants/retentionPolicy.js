@@ -17,5 +17,6 @@
 export const RETENTION_POLICY = {
   REGULAR: 'REGULAR',
   IMPORTANT: 'IMPORTANT',
-  RETENTION_POLICY_KEY: 'retentionPolicy',
 };
+
+export const RETENTION_POLICY_KEY = 'retentionPolicy';

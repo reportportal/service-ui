@@ -17,11 +17,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { withModal, ModalLayout } from 'components/main/modal';
-import { hideModalAction } from 'controllers/modal';
 import { useFetchRetentionPolicy } from '../hooks';
 import styles from './unmarkAsImportantModal.scss';
 
@@ -47,16 +46,15 @@ const messages = defineMessages({
 });
 
 const UnmarkAsImportantModal = ({ data }) => {
-  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  const { activeProject, launch, updateLaunchLocally } = data;
+  const { activeProject, launch, onSuccess } = data;
 
   const { fetchRetentionPolicy } = useFetchRetentionPolicy(
-    false,
+    RETENTION_POLICY.REGULAR,
     activeProject,
     launch,
-    updateLaunchLocally,
+    onSuccess,
   );
 
   const onSubmit = (closeModal) => {
@@ -79,7 +77,6 @@ const UnmarkAsImportantModal = ({ data }) => {
       title={formatMessage(messages.unmarkAsImportant)}
       okButton={okButton}
       cancelButton={cancelButton}
-      onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('content')}>
         <p>{formatMessage(messages.descriptionNote)}</p>
