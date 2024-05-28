@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-export const RETENTION_POLICY = {
-  REGULAR: 'REGULAR',
-  IMPORTANT: 'IMPORTANT',
-};
+import MarkAsImportantModal from './markAsImportantModal';
 
-export const RETENTION_POLICY_KEY = 'retentionPolicy';
+export { MarkAsImportantModal };
