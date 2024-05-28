@@ -22,8 +22,13 @@ import styles from './textTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const TextTooltip = ({ tooltipContent, className, preventParsing, preventSanitizing }) => {
-  const content = preventSanitizing
+export const TextTooltip = ({
+  tooltipContent,
+  className,
+  preventParsing,
+  preventTargetSanitizing,
+}) => {
+  const content = preventTargetSanitizing
     ? Parser(DOMPurify.sanitize(tooltipContent, { ADD_ATTR: ['target'] }))
     : Parser(DOMPurify.sanitize(tooltipContent));
 
@@ -35,11 +40,11 @@ TextTooltip.propTypes = {
   tooltipContent: PropTypes.any,
   className: PropTypes.string,
   preventParsing: PropTypes.bool,
-  preventSanitizing: PropTypes.bool,
+  preventTargetSanitizing: PropTypes.bool,
 };
 TextTooltip.defaultProps = {
   tooltipContent: '',
   className: '',
   preventParsing: false,
-  preventSanitizing: false,
+  preventTargetSanitizing: false,
 };

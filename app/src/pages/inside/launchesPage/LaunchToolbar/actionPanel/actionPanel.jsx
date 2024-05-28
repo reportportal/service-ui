@@ -287,7 +287,7 @@ export class ActionPanel extends Component {
                     a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
                   })}
                   className={cx('no-import-message')}
-                  preventSanitizing
+                  preventTargetSanitizing
                 />
               )}
             </div>
