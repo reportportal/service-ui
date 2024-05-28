@@ -21,7 +21,8 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -51,8 +52,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    projectRole: activeProjectRoleSelector(state),
-    accountRole: userAccountRoleSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -72,8 +72,7 @@ export class MembersPageToolbar extends React.Component {
     intl: PropTypes.object,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
-    projectRole: PropTypes.string,
-    accountRole: PropTypes.string,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -84,8 +83,7 @@ export class MembersPageToolbar extends React.Component {
   static defaultProps = {
     intl: {},
     onInvite: () => {},
-    projectRole: '',
-    accountRole: '',
+    userRoles: {},
     onFilterChange: () => {},
   };
 
@@ -125,7 +123,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton
             icon={InviteUserIcon}
             onClick={this.showInviteUserModal}
-            disabled={!canInviteInternalUser(this.props.accountRole, this.props.projectRole)}
+            disabled={!canInviteInternalUser(this.props.userRoles)}
           >
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>

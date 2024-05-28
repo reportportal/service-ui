@@ -40,7 +40,7 @@ import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';
@@ -68,13 +68,12 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const isAnalyzerServiceAvailable = !!analyzerExtensions.length;
   const analyzerUnavailableTitle = !isAnalyzerServiceAvailable
     ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
     : null;
-  const hasPermission = canUpdateSettings(accountRole, userRole);
+  const hasPermission = canUpdateSettings(userRoles);
 
   useEffect(() => {
     dispatch(fetchConfigurationAttributesAction(projectKey));

@@ -18,10 +18,9 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -52,8 +51,7 @@ import { OrganizationsControlWithPopover } from './organizationsControl';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -92,10 +90,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
-    ];
-
-    if (projectRole !== CUSTOMER) {
-      topItems.push({
+      {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
@@ -103,17 +98,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug Mode'} />,
-      });
-    }
+      },
+      {
+        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
+        link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
+        icon: FiltersIcon,
+        message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+      },
+    ];
 
-    topItems.push({
-      onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-      link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
-      icon: FiltersIcon,
-      message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
-    });
-
-    if (canSeeMembers(accountRole, projectRole)) {
+    if (canSeeMembers(userRoles)) {
       topItems.push({
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {

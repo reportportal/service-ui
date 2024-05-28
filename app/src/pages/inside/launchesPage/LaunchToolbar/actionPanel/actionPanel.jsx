@@ -21,8 +21,8 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
-import { CUSTOMER } from 'common/constants/projectRoles';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
@@ -31,6 +31,7 @@ import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
 
@@ -49,8 +50,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    projectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -68,8 +68,7 @@ export class ActionPanel extends Component {
     intl: PropTypes.object.isRequired,
     onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
-    accountRole: PropTypes.string,
-    projectRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     onProceedValidItems: PropTypes.func,
     onEditItem: PropTypes.func,
     onEditItems: PropTypes.func,
@@ -110,7 +109,7 @@ export class ActionPanel extends Component {
     activeFilterId: null,
     onAddNewWidget: () => {},
     finishedLaunchesCount: null,
-    accountRole: '',
+    userRoles: {},
   };
 
   onClickActionButton = () =>
@@ -125,8 +124,7 @@ export class ActionPanel extends Component {
       onMove,
       onForceFinish,
       onDelete,
-      accountRole,
-      projectRole,
+      userRoles,
       onEditItems,
       onEditItem,
       selectedLaunches,
@@ -136,7 +134,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canBulkEditItems(accountRole, projectRole),
+        hidden: debugMode || !canBulkEditItems(userRoles),
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
@@ -171,7 +169,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode || projectRole === CUSTOMER,
+        hidden: debugMode,
         onClick: () => {
           onMove();
           this.props.tracking.trackEvent(
@@ -233,6 +231,7 @@ export class ActionPanel extends Component {
       restorePath,
       onAddNewWidget,
       finishedLaunchesCount,
+      userRoles,
     } = this.props;
     const actionDescriptors = this.createActionDescriptors();
 
@@ -260,7 +259,11 @@ export class ActionPanel extends Component {
           )}
           {this.isShowWidgetButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
+              <GhostButton
+                icon={AddWidgetIcon}
+                onClick={onAddNewWidget}
+                disabled={!canWorkWithWidgets(userRoles)}
+              >
                 <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
               </GhostButton>
             </div>

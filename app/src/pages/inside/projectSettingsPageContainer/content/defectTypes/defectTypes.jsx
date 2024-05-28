@@ -22,7 +22,7 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
-import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { Button } from 'componentLibrary/button';
@@ -76,8 +76,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const { trackEvent } = useTracking();
 
   const defectTypes = useSelector(defectTypesSelector);
-  const userAccountRole = useSelector(userAccountRoleSelector);
-  const userProjectRole = useSelector(activeProjectRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
 
   const addDefect = (data) => {
     dispatch(addDefectTypeAction({ ...data }));
@@ -101,7 +100,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0),
     [defectTypes],
   );
-  const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
+  const isEditable = canUpdateSettings(userRoles);
   const canAddNewDefectType = defectTypesLength < MAX_DEFECT_TYPES_COUNT;
   const isInformationMessage =
     defectTypesLength >= WARNING_DEFECT_TYPES_COUNT && canAddNewDefectType;

@@ -21,7 +21,8 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,
@@ -48,8 +49,7 @@ const cx = classNames.bind(styles);
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    projectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
@@ -64,8 +64,7 @@ export class TestItemActionPanel extends Component {
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
-    accountRole: PropTypes.string,
-    projectRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     restorePath: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     hasErrors: PropTypes.bool,
@@ -97,7 +96,7 @@ export class TestItemActionPanel extends Component {
     debugMode: false,
     onRefresh: () => {},
     breadcrumbs: [],
-    accountRole: '',
+    userRoles: {},
     restorePath: () => {},
     level: '',
     showBreadcrumbs: true,
@@ -169,8 +168,7 @@ export class TestItemActionPanel extends Component {
       btsIntegrations,
       isBtsPluginsExist,
       enabledBtsPlugins,
-      accountRole,
-      projectRole,
+      userRoles,
       selectedItems,
     } = this.props;
 
@@ -185,8 +183,7 @@ export class TestItemActionPanel extends Component {
       btsIntegrations,
       isBtsPluginsExist,
       enabledBtsPlugins,
-      accountRole,
-      projectRole,
+      userRoles,
       selectedItems,
       onEditDefects: this.onEditDefects,
       onPostIssue: this.onPostIssue,
@@ -195,13 +192,13 @@ export class TestItemActionPanel extends Component {
   };
 
   createSuiteActionDescriptors = () => {
-    const { intl, deleteDisabled, onDelete, onEditItems, accountRole, projectRole } = this.props;
+    const { intl, deleteDisabled, onDelete, onEditItems, userRoles } = this.props;
 
     return [
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
         value: 'action-edit',
-        hidden: !canBulkEditItems(accountRole, projectRole),
+        hidden: !canBulkEditItems(userRoles),
         onClick: onEditItems,
       },
       {

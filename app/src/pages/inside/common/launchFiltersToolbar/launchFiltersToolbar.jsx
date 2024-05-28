@@ -37,6 +37,9 @@ import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -52,6 +55,7 @@ const cx = classNames.bind(styles);
     unsavedFilterIds: unsavedFilterIdsSelector(state),
     dirtyFilterIds: dirtyFilterIdsSelector(state),
     launchDistinct: launchDistinctSelector(state),
+    userRoles: userRolesSelector(state),
     level: levelSelector(state),
   }),
   {
@@ -95,6 +99,7 @@ export class LaunchFiltersToolbar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
@@ -122,6 +127,7 @@ export class LaunchFiltersToolbar extends Component {
     changeLaunchDistinct: () => {},
     launchDistinct: '',
     level: '',
+    userRoles: {},
   };
 
   state = {
@@ -233,6 +239,7 @@ export class LaunchFiltersToolbar extends Component {
       onFilterRemove,
       changeLaunchDistinct,
       unsavedFilterIds,
+      userRoles,
       level,
       intl,
     } = this.props;
@@ -249,7 +256,11 @@ export class LaunchFiltersToolbar extends Component {
           </div>
           <div className={cx('separator')} />
           <div className={cx('add-filter-button')}>
-            <GhostButton icon={AddFilterIcon} onClick={this.handleFilterCreate}>
+            <GhostButton
+              icon={AddFilterIcon}
+              onClick={this.handleFilterCreate}
+              disabled={!canWorkWithFilters(userRoles)}
+            >
               <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />
             </GhostButton>
           </div>

@@ -27,12 +27,8 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import { urlProjectSlugSelector } from 'controllers/pages';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-  assignedProjectsSelector,
-} from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userIdSelector, assignedProjectsSelector, userRolesSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
@@ -87,8 +83,7 @@ const messages = defineMessages({
   (state) => ({
     currentUser: userIdSelector(state),
     projectSlug: urlProjectSlugSelector(state),
-    projectRole: activeProjectRoleSelector(state),
-    accountRole: userAccountRoleSelector(state),
+    userRoles: userRolesSelector(state),
     entryType: assignedProjectsSelector(state)[urlProjectSlugSelector(state)]?.entryType,
     projectKey: projectKeySelector(state),
   }),
@@ -101,8 +96,7 @@ export class UnassignButton extends Component {
     showModalAction: PropTypes.func.isRequired,
     userId: PropTypes.string,
     projectSlug: PropTypes.string.isRequired,
-    accountRole: PropTypes.string,
-    projectRole: PropTypes.string,
+    userRoles: userRolesType,
     currentUser: PropTypes.string,
     entryType: PropTypes.string,
     showNotification: PropTypes.func,
@@ -115,8 +109,7 @@ export class UnassignButton extends Component {
   };
   static defaultProps = {
     userId: '',
-    accountRole: '',
-    projectRole: '',
+    userRoles: {},
     currentUser: '',
     entryType: '',
     showNotification: () => {},
@@ -127,7 +120,7 @@ export class UnassignButton extends Component {
       return this.props.intl.formatMessage(messages.unAssignTitlePersonal);
     } else if (this.props.currentUser === this.props.userId) {
       return this.props.intl.formatMessage(messages.unAssignTitleYou);
-    } else if (!canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole)) {
+    } else if (!canAssignUnassignInternalUser(this.props.userRoles)) {
       return this.props.intl.formatMessage(messages.unAssignTitleNoPermission);
     }
     return this.props.intl.formatMessage(messages.unAssignTitle);
@@ -182,7 +175,7 @@ export class UnassignButton extends Component {
         onClick={this.showUnassignModal}
         title={this.getUnAssignTitle()}
         disabled={
-          !canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole) ||
+          !canAssignUnassignInternalUser(this.props.userRoles) ||
           this.props.currentUser === this.props.userId ||
           this.isPersonalProject()
         }

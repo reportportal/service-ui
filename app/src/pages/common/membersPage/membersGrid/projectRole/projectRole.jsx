@@ -26,11 +26,7 @@ import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
 import { urlProjectSlugSelector } from 'controllers/pages';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
+import { userIdSelector, userRolesSelector } from 'controllers/user';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -57,10 +53,7 @@ const messages = defineMessages({
   (state) => ({
     currentUser: userIdSelector(state),
     projectSlug: urlProjectSlugSelector(state),
-    canChangeRole: canChangeUserRole(
-      userAccountRoleSelector(state),
-      activeProjectRoleSelector(state),
-    ),
+    canChangeRole: canChangeUserRole(userRolesSelector(state)),
     projectKey: projectKeySelector(state),
   }),
   { showNotification },

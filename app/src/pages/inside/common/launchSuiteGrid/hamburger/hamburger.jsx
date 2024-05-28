@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -29,11 +28,8 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import {
-  activeProjectRoleSelector,
-  userIdSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userIdSelector, userRolesSelector } from 'controllers/user';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -92,9 +88,8 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    projectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     userId: userIdSelector(state),
-    accountRole: userAccountRoleSelector(state),
     projectKey: projectKeySelector(state),
     enabledPatterns: enabledPattersSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
@@ -109,11 +104,10 @@ export class Hamburger extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
-    projectRole: PropTypes.string.isRequired,
     launch: PropTypes.object.isRequired,
     projectKey: PropTypes.string.isRequired,
     customProps: PropTypes.object,
-    accountRole: PropTypes.string,
+    userRoles: userRolesType,
     enabledPatterns: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -151,10 +145,10 @@ export class Hamburger extends Component {
   };
 
   getForceFinishTooltip = () => {
-    const { intl, projectRole, accountRole, userId, launch } = this.props;
+    const { intl, userRoles, userId, launch } = this.props;
     let forceFinishTitle = '';
 
-    if (!canForceFinishLaunch(accountRole, projectRole, userId === launch.owner || launch.rerun)) {
+    if (!canForceFinishLaunch(userRoles, userId === launch.owner || launch.rerun)) {
       forceFinishTitle = intl.formatMessage(messages.noPermissions);
     }
     if (!this.isInProgress()) {
@@ -164,20 +158,14 @@ export class Hamburger extends Component {
   };
 
   getMoveToDebugTooltip = () => {
-    const { intl, projectRole, accountRole, userId, launch } = this.props;
-    return !canMoveToDebug(accountRole, projectRole, userId === launch.owner)
+    const { intl, userRoles, userId, launch } = this.props;
+    return !canMoveToDebug(userRoles, userId === launch.owner)
       ? intl.formatMessage(messages.noPermissions)
       : '';
   };
 
   getDeleteItemTooltip = () => {
-    if (
-      !canDeleteLaunch(
-        this.props.accountRole,
-        this.props.projectRole,
-        this.props.userId === this.props.launch.owner,
-      )
-    ) {
+    if (!canDeleteLaunch(this.props.userRoles, this.props.userId === this.props.launch.owner)) {
       return this.props.intl.formatMessage(messages.notYourLaunch);
     }
     if (this.isInProgress()) {
@@ -248,15 +236,7 @@ export class Hamburger extends Component {
   };
 
   render() {
-    const {
-      intl,
-      projectRole,
-      accountRole,
-      launch,
-      customProps,
-      enabledPatterns,
-      tracking,
-    } = this.props;
+    const { intl, userRoles, launch, customProps, enabledPatterns, tracking } = this.props;
 
     const clusterTitle = this.getClusterTitle();
 
@@ -275,51 +255,32 @@ export class Hamburger extends Component {
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            {projectRole !== CUSTOMER && (
-              <Fragment>
-                {launch.mode === 'DEFAULT' ? (
-                  <HamburgerMenuItem
-                    title={this.getMoveToDebugTooltip()}
-                    text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                    disabled={
-                      !canMoveToDebug(
-                        accountRole,
-                        projectRole,
-                        this.props.userId === this.props.launch.owner,
-                      )
-                    }
-                    onClick={() => {
-                      tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
-                      customProps.onMove(launch);
-                    }}
-                  />
-                ) : (
-                  <HamburgerMenuItem
-                    text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-                    title={this.getMoveToDebugTooltip()}
-                    disabled={
-                      !canMoveToDebug(
-                        accountRole,
-                        projectRole,
-                        this.props.userId === this.props.launch.owner,
-                      )
-                    }
-                    onClick={() => {
-                      customProps.onMove(launch);
-                    }}
-                  />
-                )}
-              </Fragment>
+            {launch.mode === 'DEFAULT' ? (
+              <HamburgerMenuItem
+                title={this.getMoveToDebugTooltip()}
+                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                onClick={() => {
+                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                  customProps.onMove(launch);
+                }}
+              />
+            ) : (
+              <HamburgerMenuItem
+                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+                title={this.getMoveToDebugTooltip()}
+                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                onClick={() => {
+                  customProps.onMove(launch);
+                }}
+              />
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
               title={this.getForceFinishTooltip()}
               disabled={
-                !canForceFinishLaunch(
-                  accountRole,
-                  projectRole,
-                  this.props.userId === this.props.launch.owner,
-                ) || !this.isInProgress()
+                !canForceFinishLaunch(userRoles, this.props.userId === this.props.launch.owner) ||
+                !this.isInProgress()
               }
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
@@ -356,11 +317,8 @@ export class Hamburger extends Component {
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
               disabled={
-                !canDeleteLaunch(
-                  accountRole,
-                  projectRole,
-                  this.props.userId === this.props.launch.owner,
-                ) || this.isInProgress()
+                !canDeleteLaunch(userRoles, this.props.userId === this.props.launch.owner) ||
+                this.isInProgress()
               }
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);

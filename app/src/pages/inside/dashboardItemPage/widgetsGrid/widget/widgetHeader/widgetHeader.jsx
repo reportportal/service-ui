@@ -30,6 +30,10 @@ import {
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { connect } from 'react-redux';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -45,6 +49,9 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @injectIntl
 export class WidgetHeader extends Component {
   static propTypes = {
@@ -56,6 +63,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    userRoles: userRolesType,
   };
   static defaultProps = {
     data: {},
@@ -65,6 +73,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
+    userRoles: {},
   };
 
   renderMetaInfo = () =>
@@ -90,10 +99,12 @@ export class WidgetHeader extends Component {
       onForceUpdate,
       customClass,
       isPrintMode,
+      userRoles,
     } = this.props;
 
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
     const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
+    const isDisabled = !canWorkWithWidgets(userRoles);
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
@@ -142,7 +153,7 @@ export class WidgetHeader extends Component {
                   </div>
                 </div>
               )}
-              {!isEditControlHidden && data.type && (
+              {!isEditControlHidden && data.type && !isDisabled && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
@@ -152,9 +163,11 @@ export class WidgetHeader extends Component {
                   {Parser(RefreshIcon)}
                 </div>
               )}
-              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                {Parser(CrossIcon)}
-              </div>
+              {!isDisabled && (
+                <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
+                  {Parser(CrossIcon)}
+                </div>
+              )}
             </div>
           </div>
         )}

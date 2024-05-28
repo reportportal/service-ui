@@ -36,6 +36,9 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -92,6 +95,7 @@ const messages = defineMessages({
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
@@ -125,6 +129,7 @@ export class FiltersControl extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     eventsInfo: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
@@ -142,6 +147,7 @@ export class FiltersControl extends Component {
     onFormAppearanceChange: () => {},
     notify: () => {},
     eventsInfo: {},
+    userRoles: {},
   };
 
   constructor(props) {
@@ -243,6 +249,7 @@ export class FiltersControl extends Component {
   getCustomActionBlock = () => {
     const {
       intl: { formatMessage },
+      userRoles,
     } = this.props;
 
     return (
@@ -250,6 +257,7 @@ export class FiltersControl extends Component {
         icon={AddFilterIcon}
         title={formatMessage(messages.addFilterButton)}
         onClick={this.onFilterAdd}
+        disabled={!canWorkWithFilters(userRoles)}
       >
         {formatMessage(messages.addFilterButton)}
       </GhostButton>

@@ -36,11 +36,7 @@ import {
 import { canUpdateSettings } from 'common/utils/permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import {
-  activeProjectRoleSelector,
-  activeProjectSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+import { activeProjectSelector, userRolesSelector } from 'controllers/user';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -86,15 +82,14 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const { formatMessage } = useIntl();
 
   const dispatch = useDispatch();
-  const projectRole = useSelector(activeProjectRoleSelector);
   const activeProject = useSelector(activeProjectSelector);
-  const userRole = useSelector(userAccountRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const isPluginNotificationsEnabled = useSelector(
     projectPluginNotificationsStateSelector(pluginName),
   );
 
-  const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
+  const isUpdateSettingAvailable = canUpdateSettings(userRoles);
   const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
   const isActivationRequired = isUpdateSettingAvailable || rules?.length > 0;
   const isDisabledTooltipActivationRequired = !isPluginEnabled && isActivationRequired;

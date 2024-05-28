@@ -39,7 +39,8 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -93,8 +94,7 @@ const getAnalyticsData = (...periods) =>
     projectName: projectNameSelector(state),
     isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
   }),
@@ -120,8 +120,7 @@ export class GeneralTab extends Component {
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
-    accountRole: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -136,6 +135,7 @@ export class GeneralTab extends Component {
     lang: 'en',
     retention: null,
     isLoading: false,
+    userRoles: {},
   };
   state = {
     processingData: false,
@@ -329,9 +329,9 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoading, projectName } = this.props;
+    const { intl, userRoles, isLoading, projectName } = this.props;
     const { processingData } = this.state;
-    const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
+    const isDisabled = !canUpdateSettings(userRoles) || processingData;
     return isLoading ? (
       <SpinningPreloader />
     ) : (
