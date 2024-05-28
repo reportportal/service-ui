@@ -88,10 +88,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     setIsConsentChecked(e.target.checked);
   };
 
-  const subscribeHandler = (e) => {
-    e.target.value = e.target.checked;
-  };
-
   const privacyPolicyAnchor = {
     a: (
       <LinkItem
@@ -174,11 +170,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
             </FieldErrorHint>
           </FieldProvider>
 
-          <FieldProvider
-            name="wouldLikeToReceiveAds__c"
-            format={Boolean}
-            onChange={subscribeHandler}
-          >
+          <FieldProvider name="wouldLikeToReceiveAds__c" format={Boolean} value>
             <Checkbox className={cx('check-item')}>
               {formatMessage(messages.subscribeToNews)}
             </Checkbox>
