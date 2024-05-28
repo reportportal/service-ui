@@ -75,6 +75,7 @@ export const Checkbox = ({
         onChange={onChange}
         checked={value}
         name={name}
+        value={value}
       />
       <span
         aria-labelledby="chk1-label"

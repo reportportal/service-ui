@@ -30,7 +30,7 @@ import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
 import { FieldText } from 'componentLibrary/fieldText';
 import { ModalLayout } from 'componentLibrary/modal';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { withModal, hideModalAction } from 'controllers/modal';
+import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
 import { messages } from '../../messages';
@@ -133,6 +133,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                 label={formatMessage(messages.firstNameLabel)}
                 placeholder={formatMessage(messages.firstNamePlaceholder)}
                 defaultWidth={false}
+                maxLength={40}
               />
             </FieldErrorHint>
           </FieldProvider>
@@ -143,6 +144,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                 label={formatMessage(messages.lastNameLabel)}
                 placeholder={formatMessage(messages.lastNamePlaceholder)}
                 defaultWidth={false}
+                maxLength={80}
               />
             </FieldErrorHint>
           </FieldProvider>
@@ -153,6 +155,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
                 label={formatMessage(messages.emailLabel)}
                 placeholder="example@mail.com"
                 defaultWidth={false}
+                maxLength={80}
               />
             </FieldErrorHint>
           </FieldProvider>
@@ -167,7 +170,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
             </FieldErrorHint>
           </FieldProvider>
 
-          <FieldProvider name="00N7T000000i00E" format={Boolean}>
+          <FieldProvider name="wouldLikeToReceiveAds__c" format={Boolean}>
             <Checkbox className={cx('check-item')}>
               {formatMessage(messages.subscribeToNews)}
             </Checkbox>
