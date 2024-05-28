@@ -37,6 +37,7 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
 import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
@@ -128,7 +129,7 @@ export class FiltersControl extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     eventsInfo: PropTypes.object,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {

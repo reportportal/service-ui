@@ -38,6 +38,7 @@ import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
@@ -98,7 +99,7 @@ export class LaunchFiltersToolbar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {

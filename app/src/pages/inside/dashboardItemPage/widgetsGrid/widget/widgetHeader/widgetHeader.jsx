@@ -32,6 +32,7 @@ import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { connect } from 'react-redux';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
@@ -62,7 +63,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
   static defaultProps = {
     data: {},

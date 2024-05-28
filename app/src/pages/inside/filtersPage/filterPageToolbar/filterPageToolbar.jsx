@@ -28,6 +28,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { connect } from 'react-redux';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import styles from './filterPageToolbar.scss';
 
@@ -65,7 +66,7 @@ export class FilterPageToolbar extends React.Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {

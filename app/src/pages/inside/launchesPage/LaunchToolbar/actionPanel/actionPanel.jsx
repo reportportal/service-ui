@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -67,7 +68,7 @@ export class ActionPanel extends Component {
     intl: PropTypes.object.isRequired,
     onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     onProceedValidItems: PropTypes.func,
     onEditItem: PropTypes.func,
     onEditItems: PropTypes.func,

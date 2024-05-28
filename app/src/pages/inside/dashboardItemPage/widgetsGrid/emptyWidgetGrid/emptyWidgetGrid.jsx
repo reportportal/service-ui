@@ -22,6 +22,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { connect } from 'react-redux';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import styles from './emptyWidgetGrid.scss';
 
@@ -50,7 +51,7 @@ export class EmptyWidgetGrid extends Component {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     isDisable: PropTypes.bool,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {

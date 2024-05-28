@@ -22,6 +22,7 @@ import track from 'react-tracking';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import {
   removePluginAction,
@@ -134,7 +135,7 @@ export class InstancesSection extends Component {
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
     removePluginAction: PropTypes.func.isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

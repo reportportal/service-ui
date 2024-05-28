@@ -28,6 +28,7 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userIdSelector, userRolesSelector } from 'controllers/user';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
@@ -106,7 +107,7 @@ export class Hamburger extends Component {
     launch: PropTypes.object.isRequired,
     projectKey: PropTypes.string.isRequired,
     customProps: PropTypes.object,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     enabledPatterns: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

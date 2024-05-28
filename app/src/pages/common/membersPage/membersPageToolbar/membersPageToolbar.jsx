@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -71,7 +72,7 @@ export class MembersPageToolbar extends React.Component {
     intl: PropTypes.object,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

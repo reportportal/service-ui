@@ -30,6 +30,7 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userIdSelector, userRolesSelector } from 'controllers/user';
 import { formatItemName, isItemOwner } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
@@ -137,7 +138,7 @@ export class EditItemModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,

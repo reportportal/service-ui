@@ -29,11 +29,8 @@ import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector, userIdSelector } from 'controllers/user';
 import { clearLogPageStackTrace } from 'controllers/log';
 import { launchSelector } from 'controllers/testItem';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
@@ -72,8 +69,7 @@ const cx = classNames.bind(styles);
 })
 @connect(
   (state) => ({
-    userAccountRole: userAccountRoleSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     userId: userIdSelector(state),
     launch: launchSelector(state),
     projectKey: projectKeySelector(state),
@@ -97,7 +93,7 @@ export class TestItemDetailsModal extends Component {
       eventsInfo: PropTypes.object,
     }).isRequired,
     launch: PropTypes.object,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,

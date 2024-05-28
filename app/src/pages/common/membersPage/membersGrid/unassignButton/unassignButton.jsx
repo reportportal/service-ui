@@ -27,6 +27,7 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import { urlProjectSlugSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userIdSelector, assignedProjectsSelector, userRolesSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -95,7 +96,7 @@ export class UnassignButton extends Component {
     showModalAction: PropTypes.func.isRequired,
     userId: PropTypes.string,
     projectSlug: PropTypes.string.isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     currentUser: PropTypes.string,
     entryType: PropTypes.string,
     showNotification: PropTypes.func,

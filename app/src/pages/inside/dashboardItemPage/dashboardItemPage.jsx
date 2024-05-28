@@ -34,6 +34,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userInfoSelector, userRolesSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
@@ -155,7 +156,7 @@ export class DashboardItemPage extends Component {
       projectSlug: PropTypes.string.isRequired,
     }),
     projectKey: PropTypes.string.isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {

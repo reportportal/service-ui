@@ -27,6 +27,7 @@ import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import styles from './noFiltersBlock.scss';
 
@@ -48,7 +49,7 @@ export class NoFiltersBlock extends PureComponent {
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
     }),
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
   };
   static defaultProps = {
     onAddFilter: () => {},

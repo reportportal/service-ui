@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import {
   availableBtsIntegrationsSelector,
@@ -63,7 +64,7 @@ export class TestItemActionPanel extends Component {
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     restorePath: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     hasErrors: PropTypes.bool,

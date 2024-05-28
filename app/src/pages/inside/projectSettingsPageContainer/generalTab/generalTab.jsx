@@ -39,6 +39,7 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
+import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
@@ -119,7 +120,7 @@ export class GeneralTab extends Component {
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
-    userRoles: PropTypes.object,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
