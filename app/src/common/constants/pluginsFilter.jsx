@@ -22,6 +22,7 @@ import {
   AUTHORIZATION_GROUP_TYPE,
   ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
 } from './pluginsGroupTypes';
 
 const PLUGINS_FILTER_LIST = [
@@ -40,6 +41,10 @@ const PLUGINS_FILTER_LIST = [
   {
     value: AUTHORIZATION_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
+  },
+  {
+    value: IMPORT_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Import Launches'} />,
   },
   {
     value: NOTIFICATION_GROUP_TYPE,
