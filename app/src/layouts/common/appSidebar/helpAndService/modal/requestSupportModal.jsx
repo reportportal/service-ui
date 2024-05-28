@@ -170,7 +170,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
             </FieldErrorHint>
           </FieldProvider>
 
-          <FieldProvider name="wouldLikeToReceiveAds__c" format={Boolean} value>
+          <FieldProvider name="wouldLikeToReceiveAds__c" format={Boolean}>
             <Checkbox className={cx('check-item')}>
               {formatMessage(messages.subscribeToNews)}
             </Checkbox>
