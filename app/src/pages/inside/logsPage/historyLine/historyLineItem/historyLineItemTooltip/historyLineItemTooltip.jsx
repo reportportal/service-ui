@@ -59,7 +59,7 @@ const messages = defineMessages({
     id: 'HistoryLineItemTooltip.bts',
     defaultMessage: 'BTS Links Included',
   },
-  lauchName: {
+  launchName: {
     id: 'HistoryLineItemTooltip.launchName',
     defaultMessage: 'Launch Name',
   },
@@ -159,7 +159,7 @@ export class HistoryLineItemTooltip extends Component {
         </span>
         {includeAllLaunches && (
           <div className={cx('launch-name-block')}>
-            <span className={cx('title')}>{formatMessage(messages.lauchName)}:</span>
+            <span className={cx('title')}>{formatMessage(messages.launchName)}:</span>
             <span className={cx('launch-name-value')}>
               {pathNames.launchPathName.name} #{pathNames.launchPathName.number}
             </span>
@@ -180,7 +180,7 @@ export class HistoryLineItemTooltip extends Component {
         {status !== NOT_FOUND && status !== IN_PROGRESS && (
           <div className={cx('duration-block')}>
             <span className={cx('title')}>{formatMessage(messages.duration)}</span>
-            {getDuration(startTime, endTime, true)}
+            {getDuration(new Date(startTime).getTime(), new Date(endTime).getTime(), true)}
             {growthDuration && (
               <span className={cx('growth-duration')}>
                 <Triangles growthDuration={growthDuration} />

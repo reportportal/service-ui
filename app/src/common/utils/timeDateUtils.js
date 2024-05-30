@@ -124,6 +124,13 @@ export const dateFormat = (val, withUtc) => {
   )}:${normalize(minute)}:${normalize(second)}${withUtc ? ` ${utc}` : ''}`;
 };
 
+export const getMicroSeconds = (val) => {
+  return val
+    .slice(0, -1)
+    .split('.')[1]
+    .padEnd(6, 0)
+    .slice(0, 6);
+};
 export const fromNowFormat = (date) => moment(date).fromNow();
 
 export const daysFromNow = (stamp) => fromNowFormat(dateFormat(stamp));

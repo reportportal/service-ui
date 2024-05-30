@@ -20,12 +20,12 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
-import { dateFormat } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { FlexibleLogTime } from './flexibleLogTime';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';
@@ -104,7 +104,9 @@ StatusColumn.propTypes = {
 };
 
 const TimeColumn = ({ className, value, customProps: { mobile } }) => (
-  <div className={cx('time-column', className, { mobile })}>{dateFormat(value.time)}</div>
+  <div className={cx('time-column', className, { mobile })}>
+    <FlexibleLogTime time={value.time} />
+  </div>
 );
 TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,

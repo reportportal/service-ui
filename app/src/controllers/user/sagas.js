@@ -21,6 +21,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_PROJECT,
@@ -43,6 +44,7 @@ import {
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
   setActiveProjectKeyAction,
+  setLogTimeFormatAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -163,6 +165,8 @@ function* fetchUserWorker() {
 
   yield put(setActiveProjectAction(activeProject));
   yield put(setActiveProjectKeyAction(projectKey));
+  const format = getLogTimeFormatFromStorage(user.userId);
+  yield put(setLogTimeFormatAction(format));
 }
 
 function* saveActiveProjectWorker({ payload: activeProject }) {

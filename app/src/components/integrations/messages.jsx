@@ -20,6 +20,7 @@ import {
   ANALYZER_GROUP_TYPE,
   AUTHORIZATION_GROUP_TYPE,
   BTS_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
   OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
@@ -80,6 +81,11 @@ const messages = defineMessages({
     defaultMessage:
       '{name} will be hidden on project settings. RP users can not get notifications and send invitations for new users',
   },
+  pluginDisabledImport: {
+    id: 'Plugins.disabled.import',
+    defaultMessage:
+      'No {name} plugin is currently enabled/uploaded on the instance. <a>Documentation</a>',
+  },
   pluginDisabledOther: {
     id: 'Plugins.disabled.other',
     defaultMessage: '{name} will be hidden on project settings',
@@ -89,7 +95,8 @@ const messages = defineMessages({
 export const PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE = {
   [BTS_GROUP_TYPE]: messages.pluginDisabledBts,
   [NOTIFICATION_GROUP_TYPE]: messages.pluginDisabledNotification,
-  [OTHER_GROUP_TYPE]: messages.pluginDisabledOther,
+  [IMPORT_GROUP_TYPE]: messages.pluginDisabledImport,
   [AUTHORIZATION_GROUP_TYPE]: messages.pluginDisabledOther,
   [ANALYZER_GROUP_TYPE]: messages.pluginDisabledOther,
+  [OTHER_GROUP_TYPE]: messages.pluginDisabledOther,
 };
