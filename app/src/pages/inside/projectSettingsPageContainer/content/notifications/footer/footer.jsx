@@ -45,6 +45,7 @@ export const NotificationsFooter = () => {
       link: docsReferences.pluginsDocs,
       description: formatMessage(messages.discoverPluginsDescription),
       openIcon: openInNewTabIcon,
+      automationId: 'documentationLink',
     },
     {
       title: formatMessage(messages.integrationSettings),
@@ -58,6 +59,7 @@ export const NotificationsFooter = () => {
       },
       description: formatMessage(messages.integrationSettingsDescription),
       openIcon: arrowRightIcon,
+      automationId: 'integrationSettingsLink',
     },
   ];
 

@@ -375,6 +375,7 @@ const AddEditNotificationModal = ({
                 type={field.type}
                 className={cx('dynamicField')}
                 description={field.description}
+                dataAutomationId={`${field.name}Field`}
               >
                 <FieldErrorHint provideHint={false}>
                   <TypedComponent

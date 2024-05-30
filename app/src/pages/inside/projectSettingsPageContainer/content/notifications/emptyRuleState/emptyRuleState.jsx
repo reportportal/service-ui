@@ -35,6 +35,7 @@ export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
         variant={'text'}
         customClassName={cx('button')}
         startIcon={plusIcon}
+        dataAutomationId="createRuleFromEmptyStateButton"
       >
         {formatMessage(messages.create)}
       </Button>

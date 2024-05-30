@@ -26,16 +26,16 @@ const cx = classNames.bind(styles);
 export const HelpPanel = ({ items }) => {
   return (
     <div className={cx('help-panel-container')}>
-      {items.map((item) => (
-        <div key={`info-item-${item.title}`} className={cx('info-item')}>
+      {items.map(({ title, mainIcon, link, openIcon, automationId, description }) => (
+        <div key={`info-item-${title}`} className={cx('info-item')}>
           <span className={cx('main-item-icon')}>
-            <i className={cx('icon')}>{Parser(item.mainIcon)}</i>
+            <i className={cx('icon')}>{Parser(mainIcon)}</i>
           </span>
           <div className={cx('item-content-wrapper')}>
-            <LinkComponent to={item.link} icon={item.openIcon}>
-              <span className={cx('item-title')}>{item.title}</span>
+            <LinkComponent to={link} icon={openIcon} automationId={automationId}>
+              <span className={cx('item-title')}>{title}</span>
             </LinkComponent>
-            <p>{item.description}</p>
+            <p>{description}</p>
           </div>
         </div>
       ))}
@@ -56,6 +56,10 @@ HelpPanel.propTypes = {
           payload: PropTypes.object,
         }),
       ]).isRequired,
+      automationId: PropTypes.string,
     }),
   ),
+};
+HelpPanel.defaultProps = {
+  items: [],
 };

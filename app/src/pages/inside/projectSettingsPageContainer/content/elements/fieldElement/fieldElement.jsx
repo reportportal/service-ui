@@ -94,6 +94,6 @@ FieldElement.defaultProps = {
   labelClassName: '',
   descriptionClassName: '',
   withoutProvider: false,
-  dataAutomationId: '',
+  dataAutomationId: null,
   isRequired: false,
 };
