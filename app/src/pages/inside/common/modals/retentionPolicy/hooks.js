@@ -38,6 +38,7 @@ export const useFetchRetentionPolicy = (policy, activeProject, launch, onSuccess
         method: 'PUT',
         data: {
           attributes: [
+            ...launch.attributes,
             {
               key: RETENTION_POLICY_KEY,
               value: policy,
