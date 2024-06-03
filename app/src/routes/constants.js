@@ -59,6 +59,7 @@ import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 import { AdminUiExtensionPageLayout } from 'layouts/adminLayout/adminUiExtensionPageLayout';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
+import { OrganizationProjectsPage } from 'pages/inside/organizationProjectsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -77,6 +78,7 @@ export const pageRendering = {
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
   [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: AppLayout },
   API_PAGE: { component: ApiPage, layout: AppLayout },
+  ORGANIZATION_PROJECTS_PAGE: { component: OrganizationProjectsPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },

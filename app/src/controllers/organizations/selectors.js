@@ -19,3 +19,8 @@ const organizationsSelector = (state) => state.organizations || {};
 export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
 
 export const organizationsListLoadingSelector = (state) => organizationsSelector(state).listLoading;
+
+export const activeOrganizationSelector = (state) =>
+  organizationsSelector(state).activeOrganization || {};
+
+export const organizationProjectsSelector = (state) => organizationsSelector(state).projects || [];
