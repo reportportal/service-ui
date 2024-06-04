@@ -16,11 +16,13 @@
 
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { MARKDOWN } from 'common/constants/logViewModes';
+import { LOG_TIME_FORMAT_ABSOLUTE } from 'controllers/user/constants';
 import {
   LOG_LEVEL_STORAGE_KEY,
   LOG_LEVELS,
   DEFAULT_LOG_LEVEL,
   LOG_VIEW_MODE_STORAGE_KEY,
+  LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
 
 export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
@@ -30,6 +32,12 @@ export const updateUserSettingsInStorage = (userId, data) =>
 
 const getLogLevelFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
+
+export const getLogTimeFormatFromStorage = (userId) =>
+  getUserSettingsFromStorage(userId)[LOG_TIME_FORMAT_STORAGE_KEY] || LOG_TIME_FORMAT_ABSOLUTE;
+
+export const setLogTimeFormatInStorage = (userId, format) =>
+  updateUserSettingsInStorage(userId, { [LOG_TIME_FORMAT_STORAGE_KEY]: format });
 
 const getLogViewModeFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_VIEW_MODE_STORAGE_KEY];

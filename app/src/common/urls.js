@@ -108,6 +108,7 @@ export const URLS = {
   launchesLatest: (projectKey, ids) =>
     `${urlBase}${projectKey}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (projectKey) => `${urlBase}${projectKey}/launch/update`,
+  singleLaunchUpdate: (projectKey, launchId) => `${urlBase}${projectKey}/launch/${launchId}/update`,
   launchesInfo: (projectKey) => `${urlBase}${projectKey}/launch/info`,
   launchStop: (projectKey) => `${urlBase}${projectKey}/launch/stop`,
   launchesItemsUpdate: (projectKey, id, type) => `${urlBase}${projectKey}/${type}/${id}/update`,
@@ -293,6 +294,8 @@ export const URLS = {
     `${urlBase}integration/${projectKey}/all/${type}`,
   testIntegrationConnection: (projectKey, integrationId) =>
     `${urlBase}integration/${projectKey}/${integrationId}/connection/test`,
+  pluginFileImport: (projectKey, pluginName) =>
+    `${urlBase}plugin/${projectKey}/${pluginName}/import`,
 
   btsIntegrationIssueTypes: (projectKey, integrationId) =>
     `${urlBase}bts/${projectKey}/${integrationId}/issue_types`,

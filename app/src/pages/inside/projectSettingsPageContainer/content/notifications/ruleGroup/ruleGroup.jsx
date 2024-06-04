@@ -51,7 +51,7 @@ import { projectPluginNotificationsStateSelector } from 'controllers/project/sel
 import { EMAIL } from 'common/constants/pluginNames';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { DEFAULT_CASE_CONFIG } from '../constants';
-import { convertNotificationCaseForSubmission, flatRule } from '../utils';
+import { convertNotificationCaseForSubmission, flatRule, toCamelCase } from '../utils';
 import {
   FieldElement,
   MODAL_ACTION_TYPE_ADD,
@@ -86,7 +86,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const userRoles = useSelector(userRolesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const isPluginNotificationsEnabled = useSelector(
-    projectPluginNotificationsStateSelector(pluginName),
+    projectPluginNotificationsStateSelector(toCamelCase(pluginName)),
   );
 
   const isUpdateSettingAvailable = canUpdateSettings(userRoles);
@@ -116,7 +116,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
     dispatch(
       updateNotificationStateAction(
         isEnabled,
-        NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginName),
+        NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(toCamelCase(pluginName)),
       ),
     );
   };

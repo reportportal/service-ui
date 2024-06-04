@@ -61,25 +61,24 @@ export class LinkIssueFields extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    withAutocomplete: PropTypes.bool,
   };
 
   static defaultProps = {
     addEventInfo: {},
-    withAutocomplete: false,
   };
 
   updateIssueId = (e, value, oldValue, name) => {
+    const decodedValue = decodeURIComponent(value);
     const issueIndex = /\d+/.exec(name)[0];
     if (value.indexOf('/') !== -1 && !this.props.fields.get(issueIndex).issueId) {
-      let issueIdAutoValue = value.split('/');
+      let issueIdAutoValue = decodedValue.split('/');
       issueIdAutoValue = issueIdAutoValue[issueIdAutoValue.length - 1];
       this.props.change(`issues[${issueIndex}].issueId`, issueIdAutoValue);
     }
   };
 
   render() {
-    const { fields, addEventInfo, tracking, withAutocomplete, intl } = this.props;
+    const { fields, addEventInfo, tracking, intl } = this.props;
     return (
       <ul className={cx('link-issue-fields')}>
         {fields.map((issue, index) => (
@@ -95,7 +94,7 @@ export class LinkIssueFields extends Component {
             <FieldElement
               name={`${issue}.issueLink`}
               label={intl.formatMessage(messages.issueLinkLabel)}
-              onChange={withAutocomplete ? this.updateIssueId : null}
+              onChange={this.updateIssueId}
               className={cx('field')}
               labelClassName={cx('label')}
             >

@@ -15,3 +15,8 @@
  */
 
 export { Hamburger } from './hamburger';
+
+export {
+  MarkAsImportantModal,
+  UnmarkAsImportantModal,
+} from 'pages/inside/common/modals/retentionPolicy';
