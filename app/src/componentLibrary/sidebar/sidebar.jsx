@@ -76,9 +76,10 @@ export const Sidebar = ({
         {topSidebarItems.length > 0 && (
           <div className={cx('top-block')}>
             {topSidebarItems.map(
-              ({ icon, link, onClick, message, component }) =>
+              ({ icon, link, onClick, message, name, component }) =>
                 component || (
                   <SidebarButton
+                    key={component ? name : link.type}
                     icon={icon}
                     link={link}
                     onClick={onClick}
