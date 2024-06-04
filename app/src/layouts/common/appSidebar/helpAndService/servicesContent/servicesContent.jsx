@@ -27,7 +27,7 @@ import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
-export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpen }) => {
+export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOpen }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { formatMessage } = useIntl();
 
@@ -77,7 +77,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
         onMouseEnter={onSetHover}
       >
         <FAQWithPopover
-          closeNavbar={closeNavbar}
+          closeSidebar={closeSidebar}
           closePopover={closePopover}
           isFaqTouched={isFaqTouched}
           onOpen={onOpen}
@@ -91,7 +91,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
           content={formatMessage(contentItem.message)}
           onClick={() => {
             closePopover();
-            closeNavbar();
+            closeSidebar();
           }}
           className={cx('menu-item')}
           isInternal={contentItem.isInternal}
@@ -108,7 +108,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
 
 ServicesContent.propTypes = {
   closePopover: PropTypes.func.isRequired,
-  closeNavbar: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
   isFaqTouched: PropTypes.bool.isRequired,
   onOpen: PropTypes.func.isRequired,
 };

@@ -21,11 +21,31 @@
   max-width: $maxSize;
 }
 
+.user-block-wrapper {
+  display: flex;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+
+    .user-email,
+    .username {
+      color: $COLOR--white-two;
+    }
+  }
+
+  .arrow-icon {
+    path {
+      fill: $COLOR--white-two;
+    }
+  }
+}
+
 .user-control {
   position: relative;
   display: block;
   color: $COLOR--darkmode-gray-100;
-  width: 100%;
+  width: 248px;
+  padding: 0px 16px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -86,15 +106,13 @@
 
 .popover {
   padding: 8px 16px;
-  margin-left: 4px;
+  margin-left: -4px;
   margin-top: -8px;
 }
 
 .popover-control {
   height: 48px;
-  width: 264px;
-  padding: 0 6px;
-  border: 2px solid transparent;
+  width: 328px;
   display: flex;
   align-items: center;
 
@@ -103,4 +121,27 @@
     border: 2px solid $COLOR--topaz-focused;
     border-radius: 4px;
   }
+}
+
+.avatar-block {
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+  }
+}
+
+.avatar-img {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
 }

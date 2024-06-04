@@ -19,154 +19,96 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
-import { Navbar } from './navbar';
 import { SidebarButton } from './sidebarButton';
 import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
-const HOVER = 'hover';
-const ACTIVE = 'active';
 
 export const Sidebar = ({
-  logoBlockIcon,
+  logoLeftIcon,
+  logoRightIcon,
   createMainBlock,
   topSidebarItems,
-  bottomSidebarItems,
   createFooterBlock,
   shouldBeCollapsedOnLeave,
-  ...navbarProps
 }) => {
-  const [isOpenNavbar, setIsOpenNavbar] = useState(false);
-
-  const [actionButtonKey, setActionButtonKey] = useState(null);
-  const [actionButtonType, setActionButtonType] = useState(null);
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const sidebarRef = useRef(null);
 
-  const onCloseNavbar = () => {
-    setIsOpenNavbar(false);
+  const onCloseSidebar = () => {
+    setIsOpenSidebar(false);
   };
 
   const handleClickOutside = useCallback(() => {
-    if (isOpenNavbar) {
-      onCloseNavbar();
+    if (isOpenSidebar) {
+      onCloseSidebar();
     }
-  }, [isOpenNavbar]);
+  }, [isOpenSidebar]);
 
   useOnClickOutside(sidebarRef, handleClickOutside);
 
-  const onOpenNavbar = () => {
-    setIsOpenNavbar(true);
+  const onOpenSidebar = () => {
+    setIsOpenSidebar(true);
   };
 
-  const onLeaveNavbar = () => {
+  const onLeaveSidebar = () => {
     if (shouldBeCollapsedOnLeave) {
-      onCloseNavbar();
+      onCloseSidebar();
     }
-  };
-
-  const onButtonClick = (onClick) => {
-    onClick();
-    onCloseNavbar();
-  };
-
-  const setHoverType = (key) => {
-    setActionButtonKey(key);
-    setActionButtonType(HOVER);
-  };
-
-  const setActiveType = (key) => {
-    setActionButtonKey(key);
-    setActionButtonType(ACTIVE);
-  };
-
-  const clearActionButton = () => {
-    setActionButtonKey(null);
-    setActionButtonType(null);
-  };
-
-  const getClassName = (key) => {
-    const isAction = actionButtonKey === key;
-
-    return cx({
-      hover: isAction && actionButtonType === HOVER,
-      active: isAction && actionButtonType === ACTIVE,
-    });
   };
 
   return (
     <div
       ref={sidebarRef}
-      className={cx('sidebar-container')}
-      onMouseEnter={onOpenNavbar}
-      onMouseLeave={onLeaveNavbar}
+      className={cx('sidebar-container', { open: isOpenSidebar })}
+      onMouseEnter={onOpenSidebar}
+      onMouseLeave={onLeaveSidebar}
     >
       <aside className={cx('sidebar')}>
-        <div className={cx('logo')}>
-          <i>{Parser(logoBlockIcon)}</i>
+        <div className={cx('logo-wrapper')}>
+          <i className={cx('logo-left')}>{Parser(logoLeftIcon)}</i>
+          <i className={cx('logo-right')}>{Parser(logoRightIcon)}</i>
         </div>
-        <div className={cx('main-block')}>{createMainBlock(onOpenNavbar)}</div>
+        <div className={cx('main-block-wrapper')}>
+          {createMainBlock(onOpenSidebar, onCloseSidebar)}
+        </div>
         {topSidebarItems.length > 0 && (
           <div className={cx('top-block')}>
-            {topSidebarItems.map(({ key, topSidebarItem, onClick }) => (
-              <SidebarButton
-                key={key}
-                onClick={() => onButtonClick(onClick)}
-                className={cx('sidebar-btn', getClassName(key))}
-                onMouseEnter={() => setHoverType(key)}
-                onMouseLeave={clearActionButton}
-                onMouseDown={() => setActiveType(key)}
-              >
-                {topSidebarItem}
-              </SidebarButton>
-            ))}
+            {topSidebarItems.map(
+              ({ icon, link, onClick, message, component }) =>
+                component || (
+                  <SidebarButton
+                    icon={icon}
+                    link={link}
+                    onClick={onClick}
+                    message={message}
+                    onLeaveSidebar={onLeaveSidebar}
+                  />
+                ),
+            )}
           </div>
         )}
-        {bottomSidebarItems.length > 0 && (
-          <div className={cx('bottom-block')}>
-            {bottomSidebarItems.map(({ key, bottomSidebarItem, onClick }) => (
-              <SidebarButton
-                key={key}
-                onClick={() => onButtonClick(onClick)}
-                className={cx('sidebar-btn', getClassName(key))}
-                onMouseEnter={() => setHoverType(key)}
-                onMouseLeave={clearActionButton}
-                onMouseDown={() => setActiveType(key)}
-              >
-                {bottomSidebarItem}
-              </SidebarButton>
-            ))}
-          </div>
-        )}
-        <div className={cx('footer-block')}>{createFooterBlock(onOpenNavbar)}</div>
+        <div className={cx('footer-block')}>{createFooterBlock(onOpenSidebar)}</div>
       </aside>
-      <Navbar
-        active={isOpenNavbar}
-        onCloseNavbar={onCloseNavbar}
-        getClassName={getClassName}
-        setHoverType={setHoverType}
-        clearActionButton={clearActionButton}
-        setActiveType={setActiveType}
-        {...navbarProps}
-      />
     </div>
   );
 };
 
 Sidebar.propTypes = {
   topSidebarItems: PropTypes.array,
-  bottomSidebarItems: PropTypes.array,
-  logoBlockIcon: PropTypes.element,
+  logoLeftIcon: PropTypes.element,
+  logoRightIcon: PropTypes.element,
   createMainBlock: PropTypes.element,
   createFooterBlock: PropTypes.func,
   shouldBeCollapsedOnLeave: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
-  logoBlockIcon: null,
+  logoLeftIcon: null,
+  logoRightIcon: null,
   createMainBlock: null,
   topSidebarItems: [],
-  bottomSidebarItems: [],
   shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
 };

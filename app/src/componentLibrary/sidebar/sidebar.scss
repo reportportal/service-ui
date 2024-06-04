@@ -17,24 +17,61 @@
 .sidebar-container {
   height: 100%;
   font-family: $FONT-ROBOTO-REGULAR;
+  width: 48px;
+  transition: width 0.3s ease-out;
+  transition-delay: 0.5s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   padding: 16px 0px 24px 0;
-  width: 48px;
   height: calc(100% - 40px);
   gap: 32px;
-  background-color: $COLOR--darkmode-gray-500;
+  background-image:
+    linear-gradient(to right, $COLOR--darkmode-gray-500 0 48px,$COLOR--darkmode-gray-450 48px 100%);
   z-index: 3;
+
+  width: 328px;
+  align-items: start;
 }
 
-.logo {
-  width: 48px;
+.open {
+  width: 328px;
+  animation-name: delay-overflow;
+  animation-delay: 0.8s;
+  animation-duration: 99999s;
+}
+
+@keyframes delay-overflow {
+  from { overflow: visible; }
+}
+
+.logo-wrapper {
+  width: 100%;
   height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-left {
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.logo-right {
+  width: 102px;
+  height: 24px;
+  margin-left: 16px;
 }
 
 .top-block {
@@ -43,7 +80,7 @@
   flex-direction: column;
 }
 
-.main-block {
+.main-block-wrapper {
   height: 60px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -72,22 +109,6 @@
   }
 }
 
-.active {
-  path,
-  rect,
-  polygon {
-    fill: $COLOR--darkmode-topaz-pressed;
-  }
-
-  & > div {
-    background-color: $COLOR--darkmode-gray-500;
-
-    a {
-      color: $COLOR--darkmode-topaz-pressed;
-    }
-  }
-}
-
 .bottom-block {
   display: flex;
   flex-direction: column;
@@ -111,8 +132,9 @@
 .footer-block {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   justify-content: end;
   flex-grow: 1;
   gap: 8px;
+  width: 100%;
 }

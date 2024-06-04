@@ -28,7 +28,7 @@ import styles from './profileMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProfileMenu = ({ closePopover, closeNavbar }) => {
+export const ProfileMenu = ({ closePopover, closeSidebar }) => {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
@@ -45,7 +45,7 @@ export const ProfileMenu = ({ closePopover, closeNavbar }) => {
         activeClassName={cx('active')}
         onClick={() => {
           closePopover();
-          closeNavbar();
+          closeSidebar();
         }}
       >
         {Parser(MyProfileIcon)}
@@ -61,5 +61,5 @@ export const ProfileMenu = ({ closePopover, closeNavbar }) => {
 
 ProfileMenu.propTypes = {
   closePopover: PropTypes.func.isRequired,
-  closeNavbar: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
 };

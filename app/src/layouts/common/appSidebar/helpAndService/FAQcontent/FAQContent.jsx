@@ -33,7 +33,7 @@ import styles from './FAQContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
+export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
@@ -76,7 +76,7 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
   ];
   const openModal = () => {
     closePopover();
-    closeNavbar();
+    closeSidebar();
     dispatch(
       showModalAction({
         id: 'requestSupportModal',
@@ -112,7 +112,7 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
           className={cx('menu-item')}
           onClick={() => {
             closePopover();
-            closeNavbar();
+            closeSidebar();
           }}
           key={contentItem.linkTo}
         />
@@ -132,6 +132,6 @@ export const FAQContent = ({ onOpen, closeNavbar, closePopover }) => {
 
 FAQContent.propTypes = {
   onOpen: PropTypes.func.isRequired,
-  closeNavbar: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
 };

@@ -75,107 +75,40 @@
 }
 
 .policy-block {
-  height: 36px;
-}
-
-.policy-control {
   font-size: 11px;
   line-height: 16px;
+  height: 36px;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 8px;
+  padding-left: 48px;
   cursor: pointer;
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
 
-    a {
+    .policy-block-link {
       color: $COLOR--white-two;
-    }
-  }
 
-  a {
-    text-decoration: none;
-    color: $COLOR--darkmode-gray-100;
-    padding: 10px 8px;
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 4px;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
-    }
-
-    &:active {
-      color: $COLOR--darkmode-topaz-pressed;
+      svg path {
+        fill: $COLOR--white-two;
+      }
     }
   }
 }
 
-.hover {
-  background-color: $COLOR--darkmode-gray-500;
-
-  button {
-    div {
-      color: $COLOR--white-two;
-    }
-
-    path {
-      fill: $COLOR--white-two;
-    }
-  }
-}
-
-.user-control {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 8px;
-  cursor: pointer;
-
-  &:hover {
-    @extend .hover;
-  }
-}
-
-.service-control {
-  border: none;
-  background-color: transparent;
-  width: 280px;
-  padding: 0;
-}
-
-.service-block {
-  position: relative;
-  width: 40px;
-  height: 48px;
+.policy-block-link {
+  text-decoration: none;
+  color: $COLOR--darkmode-gray-100;
+  padding: 10px 0px 10px 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
+  width: 100%;
+}
 
+.policy-block-icon {
   svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
-
-  i {
-    display: flex;
-    align-items: center;
-  }
-
-  &.untouched::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: $COLOR--system-notification-marker;
-    border-radius: 50%;
-    border: 2px solid $COLOR--darkmode-gray-500;
-    right: 20%;
-    top: 20%;
-  }
+  margin-left: 4px;
 }
