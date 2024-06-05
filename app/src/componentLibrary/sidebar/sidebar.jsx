@@ -90,7 +90,7 @@ export const Sidebar = ({
             )}
           </div>
         )}
-        <div className={cx('footer-block')}>{createFooterBlock(onOpenSidebar)}</div>
+        <div className={cx('footer-block')}>{createFooterBlock(onOpenSidebar, onCloseSidebar)}</div>
       </aside>
     </div>
   );

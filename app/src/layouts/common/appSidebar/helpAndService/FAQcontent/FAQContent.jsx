@@ -103,6 +103,7 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
       />
     ),
   };
+
   return (
     <>
       {FAQContentItems.map((contentItem) => (
