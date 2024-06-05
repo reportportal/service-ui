@@ -23,7 +23,7 @@ import {
   organizationsListLoadingSelector,
 } from 'controllers/organizations';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { Header } from './header';
+import { ProjectsPageHeader } from './header';
 import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
 
@@ -38,11 +38,14 @@ export const OrganizationProjectsPage = () => {
 
   return (
     <>
-      {organizationLoading && <SpinningPreloader />}
-      <div className={cx('organization-page-container')}>
-        <Header hasPermission={hasPermission} />
-        {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
-      </div>
+      {organizationLoading ? (
+        <SpinningPreloader />
+      ) : (
+        <div className={cx('organization-projects-container')}>
+          <ProjectsPageHeader hasPermission={hasPermission} />
+          {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
+        </div>
+      )}
     </>
   );
 };

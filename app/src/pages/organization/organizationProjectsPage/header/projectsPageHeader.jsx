@@ -16,23 +16,23 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { useIntl } from 'react-intl';
-import { PROJECTS_PAGE } from 'controllers/pages';
+import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
+import classNames from 'classnames/bind';
+import { PROJECTS_PAGE } from 'controllers/pages';
+import { activeOrganizationSelector } from 'controllers/organizations';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
-import { Button } from 'componentLibrary/button';
 import plusIcon from 'common/img/plus-button-inline.svg';
-import { useSelector } from 'react-redux';
-import { activeOrganizationSelector } from 'controllers/organizations';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { Button } from 'componentLibrary/button';
 import { messages } from '../messages';
-import styles from './header.scss';
+import styles from './projectsPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const Header = ({ hasPermission }) => {
+export const ProjectsPageHeader = ({ hasPermission }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
 
@@ -50,7 +50,7 @@ export const Header = ({ hasPermission }) => {
   ];
 
   return (
-    <div className={cx('container')}>
+    <div className={cx('projects-page-header-container')}>
       <div className={cx('top-breadcrumbs')}>
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
@@ -73,9 +73,9 @@ export const Header = ({ hasPermission }) => {
     </div>
   );
 };
-Header.propTypes = {
+ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
 };
-Header.defaultProps = {
+ProjectsPageHeader.defaultProps = {
   hasPermission: false,
 };
