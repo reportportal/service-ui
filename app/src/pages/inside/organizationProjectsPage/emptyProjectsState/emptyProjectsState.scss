@@ -57,7 +57,7 @@
   padding: 7px 16px;
   margin-top: 16px;
 
-  &:hover {
+  &:hover:not(.disabled), &:focus:not(.disabled) {
     border: 1px solid $COLOR--topaz-hover-2;
     background-color: $COLOR--topaz-hover-2;
     color: $COLOR--white-two;

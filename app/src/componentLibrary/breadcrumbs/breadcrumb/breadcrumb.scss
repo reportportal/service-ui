@@ -37,6 +37,9 @@
 .breadcrumb:last-child {
   .breadcrumb-text {
     color: $COLOR--e-200;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

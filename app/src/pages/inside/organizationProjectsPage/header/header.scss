@@ -33,6 +33,9 @@
   line-height: 31px;
   color: $COLOR--almost-black;
   text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .top-breadcrumbs {
