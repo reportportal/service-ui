@@ -49,11 +49,11 @@
   width: 328px;
   animation-name: delay-overflow;
   animation-delay: 0.8s;
-  animation-duration: 99999s;
+  animation-fill-mode: forwards;
 }
 
 @keyframes delay-overflow {
-  from { overflow: visible; }
+  to { overflow: visible; }
 }
 
 .items-block {
