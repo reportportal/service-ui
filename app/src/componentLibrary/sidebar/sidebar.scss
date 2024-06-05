@@ -19,14 +19,9 @@
   font-family: $FONT-ROBOTO-REGULAR;
   width: 48px;
   transition: width 0.3s ease-out;
-  transition-delay: 0.5s;
   position: relative;
   z-index: 1;
   overflow: hidden;
-
-  &:not(.open) {
-    transition-delay: 0s;
-  }
 }
 
 .open {
@@ -34,6 +29,7 @@
   animation-name: delay-overflow;
   animation-delay: 0.8s;
   animation-fill-mode: forwards;
+  transition-delay: 0.5s;
 }
 
 .sidebar {
