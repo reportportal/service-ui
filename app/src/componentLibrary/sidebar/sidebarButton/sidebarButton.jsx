@@ -22,15 +22,12 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ icon, onClick, message, onLeaveSidebar, link }) => (
+export const SidebarButton = ({ icon, onClick, message, link }) => (
   <NavLink
     to={link}
     className={cx('sidebar-button')}
     activeClassName={cx('active')}
-    onClick={() => {
-      onClick();
-      onLeaveSidebar();
-    }}
+    onClick={onClick}
   >
     <i className={cx('btn-icon')}>{Parser(icon)}</i>
     <span className={cx('title')}>{message}</span>
@@ -41,6 +38,5 @@ SidebarButton.propTypes = {
   icon: PropTypes.element.isRequired,
   onClick: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  onLeaveSidebar: PropTypes.func.isRequired,
   link: PropTypes.string.isRequired,
 };

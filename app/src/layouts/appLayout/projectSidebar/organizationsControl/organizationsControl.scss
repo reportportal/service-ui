@@ -39,7 +39,7 @@
       color: $COLOR--white-two;
     }
 
-    .open-popover path {
+    .open-popover:not(.action) path {
       fill: $COLOR--white-two;
     }
   }

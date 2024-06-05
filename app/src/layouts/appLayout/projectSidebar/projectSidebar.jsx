@@ -61,7 +61,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   };
 
   const getSidebarItems = () => {
-    const topItems = [
+    const sidebarItems = [
       {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
@@ -97,7 +97,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     ];
 
     if (canSeeMembers(userRoles)) {
-      topItems.push({
+      sidebarItems.push({
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
@@ -108,7 +108,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       });
     }
 
-    topItems.push({
+    sidebarItems.push({
       onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
@@ -119,7 +119,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     });
     projectPageExtensions.forEach(({ icon, internalRoute }) => {
       if (icon) {
-        topItems.push({
+        sidebarItems.push({
           onClick: onClickNavBtn,
           link: {
             type: PROJECT_PLUGIN_PAGE,
@@ -131,14 +131,14 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       }
     });
     sidebarExtensions.forEach((extension) =>
-      topItems.push({
+      sidebarItems.push({
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,
         onClick: onClickNavBtn,
       }),
     );
 
-    return topItems;
+    return sidebarItems;
   };
 
   const createMainBlock = (openSidebar, closeSidebar) => (
@@ -156,7 +156,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   return (
     <AppSidebar
       createMainBlock={createMainBlock}
-      topSidebarItems={getSidebarItems()}
+      items={getSidebarItems()}
       isOpenOrganizationPopover={isOpenOrganizationPopover}
     />
   );

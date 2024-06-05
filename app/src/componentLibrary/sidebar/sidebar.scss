@@ -23,6 +23,10 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
+
+  &:not(.open) {
+    transition-delay: 0s;
+  }
 }
 
 .sidebar {
@@ -37,7 +41,6 @@
   background-image:
     linear-gradient(to right, $COLOR--darkmode-gray-500 0 48px,$COLOR--darkmode-gray-450 48px 100%);
   z-index: 3;
-
   width: 328px;
   align-items: start;
 }
@@ -53,27 +56,7 @@
   from { overflow: visible; }
 }
 
-.logo-wrapper {
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: center;
-}
-
-.logo-left {
-  svg {
-    width: 48px;
-    height: 48px;
-  }
-}
-
-.logo-right {
-  width: 102px;
-  height: 24px;
-  margin-left: 16px;
-}
-
-.top-block {
+.items-block {
   width: 100%;
   display: flex;
   flex-direction: column;

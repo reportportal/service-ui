@@ -34,13 +34,20 @@ import styles from './appSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-export const AppSidebar = ({ createMainBlock, topSidebarItems, isOpenOrganizationPopover }) => {
+export const AppSidebar = ({ createMainBlock, items, isOpenOrganizationPopover }) => {
   const userId = useSelector(userIdSelector);
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
 
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
   const [isOpenSupportPopover, setIsOpenSupportPopover] = useState(false);
+
+  const logoBlock = (
+    <div className={cx('logo-wrapper')}>
+      <i className={cx('logo-left')}>{Parser(LogoLeftIcon)}</i>
+      <i className={cx('logo-right')}>{Parser(LogoRightIcon)}</i>
+    </div>
+  );
 
   const createFooterBlock = (openSidebar, closeSidebar) => (
     <>
@@ -80,10 +87,9 @@ export const AppSidebar = ({ createMainBlock, topSidebarItems, isOpenOrganizatio
 
   return (
     <Sidebar
-      logoLeftIcon={LogoLeftIcon}
-      logoRightIcon={LogoRightIcon}
+      logoBlock={logoBlock}
+      items={items}
       createMainBlock={createMainBlock}
-      topSidebarItems={topSidebarItems}
       createFooterBlock={createFooterBlock}
       shouldBeCollapsedOnLeave={
         !(isOpenAvatarPopover || isOpenOrganizationPopover || isOpenSupportPopover)
@@ -93,13 +99,13 @@ export const AppSidebar = ({ createMainBlock, topSidebarItems, isOpenOrganizatio
 };
 
 AppSidebar.propTypes = {
-  topSidebarItems: PropTypes.array,
+  items: PropTypes.array,
   isOpenOrganizationPopover: PropTypes.bool,
   createMainBlock: PropTypes.func,
 };
 
 AppSidebar.defaultProps = {
-  topSidebarItems: [],
+  items: [],
   isOpenOrganizationPopover: false,
   createMainBlock: () => {},
 };

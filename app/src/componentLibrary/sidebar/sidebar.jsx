@@ -16,7 +16,6 @@
 
 import React, { useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
 import { SidebarButton } from './sidebarButton';
@@ -25,10 +24,9 @@ import styles from './sidebar.scss';
 const cx = classNames.bind(styles);
 
 export const Sidebar = ({
-  logoLeftIcon,
-  logoRightIcon,
+  logoBlock,
   createMainBlock,
-  topSidebarItems,
+  items,
   createFooterBlock,
   shouldBeCollapsedOnLeave,
 }) => {
@@ -66,25 +64,24 @@ export const Sidebar = ({
       onMouseLeave={onLeaveSidebar}
     >
       <aside className={cx('sidebar')}>
-        <div className={cx('logo-wrapper')}>
-          <i className={cx('logo-left')}>{Parser(logoLeftIcon)}</i>
-          <i className={cx('logo-right')}>{Parser(logoRightIcon)}</i>
-        </div>
+        {logoBlock}
         <div className={cx('main-block-wrapper')}>
           {createMainBlock(onOpenSidebar, onCloseSidebar)}
         </div>
-        {topSidebarItems.length > 0 && (
-          <div className={cx('top-block')}>
-            {topSidebarItems.map(
+        {items.length > 0 && (
+          <div className={cx('items-block')}>
+            {items.map(
               ({ icon, link, onClick, message, name, component }) =>
                 component || (
                   <SidebarButton
                     key={component ? name : link.type}
                     icon={icon}
                     link={link}
-                    onClick={onClick}
+                    onClick={() => {
+                      onClick();
+                      onLeaveSidebar();
+                    }}
                     message={message}
-                    onLeaveSidebar={onLeaveSidebar}
                   />
                 ),
             )}
@@ -97,19 +94,17 @@ export const Sidebar = ({
 };
 
 Sidebar.propTypes = {
-  topSidebarItems: PropTypes.array,
-  logoLeftIcon: PropTypes.element,
-  logoRightIcon: PropTypes.element,
+  logoBlock: PropTypes.element,
+  items: PropTypes.array,
   createMainBlock: PropTypes.element,
   createFooterBlock: PropTypes.func,
   shouldBeCollapsedOnLeave: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
-  logoLeftIcon: null,
-  logoRightIcon: null,
+  logoBlock: null,
   createMainBlock: null,
-  topSidebarItems: [],
+  items: [],
   shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
 };
