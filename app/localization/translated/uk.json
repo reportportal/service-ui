@@ -1801,7 +1801,7 @@
   "ServiceModal.lastNameLabel": "Прізвище",
   "ServiceModal.lastNamePlaceholder": "Введіть своє прізвище",
   "ServiceModal.requestSent": "Запит надіслано",
-  "ServiceModal.requestSentFail": "Request was not sent",
+  "ServiceModal.requestSentFail": "Запит не відправлено",
   "ServiceModal.sendRequest": "Відправляти запит",
   "ServiceModal.subscribeToNews": "Підпишіться на новини ReportPortal",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",

@@ -1801,7 +1801,7 @@
   "ServiceModal.lastNameLabel": "Фамилия",
   "ServiceModal.lastNamePlaceholder": "Введите свою фамилию",
   "ServiceModal.requestSent": "Запрос был отправлен",
-  "ServiceModal.requestSentFail": "Request was not sent",
+  "ServiceModal.requestSentFail": "Не удалось отправить запрос",
   "ServiceModal.sendRequest": "Послать запрос",
   "ServiceModal.subscribeToNews": "Подпишитесь на новости ReportPortal",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",

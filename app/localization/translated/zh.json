@@ -1801,7 +1801,7 @@
   "ServiceModal.lastNameLabel": "姓",
   "ServiceModal.lastNamePlaceholder": "输入您的姓氏",
   "ServiceModal.requestSent": "请求已发送",
-  "ServiceModal.requestSentFail": "Request was not sent",
+  "ServiceModal.requestSentFail": "请求发送失败",
   "ServiceModal.sendRequest": "发送请求",
   "ServiceModal.subscribeToNews": "订阅 ReportPortal 新闻",
   "ServiceVersionItem.newVersion": "新版本可用：{newVersion}",
