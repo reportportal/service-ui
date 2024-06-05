@@ -96,14 +96,14 @@ export const Sidebar = ({
 Sidebar.propTypes = {
   logoBlock: PropTypes.element,
   items: PropTypes.array,
-  createMainBlock: PropTypes.element,
+  createMainBlock: PropTypes.func,
   createFooterBlock: PropTypes.func,
   shouldBeCollapsedOnLeave: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
   logoBlock: null,
-  createMainBlock: null,
+  createMainBlock: () => {},
   items: [],
   shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
