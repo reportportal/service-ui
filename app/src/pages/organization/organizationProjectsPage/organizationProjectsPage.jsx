@@ -19,8 +19,8 @@ import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { organizationsListLoadingSelector } from 'controllers/organizations';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { organizationProjectsSelector } from 'controllers/organizations/organization';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { ProjectsPageHeader } from './header';
 import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
@@ -35,15 +35,17 @@ export const OrganizationProjectsPage = () => {
   const isProjectsEmpty = orgProjects.length === 0;
 
   return (
-    <>
+    <div className={cx('organization-projects-container')}>
       {organizationLoading ? (
-        <SpinningPreloader />
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
       ) : (
-        <div className={cx('organization-projects-container')}>
+        <>
           <ProjectsPageHeader hasPermission={hasPermission} />
           {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 };

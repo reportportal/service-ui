@@ -16,11 +16,11 @@
 
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION_NAMESPACE } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION } from './constants';
 
 export const activeOrganizationReducer = (state = null, { type = '', payload = {} }) => {
   switch (type) {
-    case SET_ACTIVE_ORGANIZATION_NAMESPACE:
+    case SET_ACTIVE_ORGANIZATION:
       return payload;
     default:
       return state;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION_NAMESPACE } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION } from './constants';
 
 export const fetchOrganizationProjectsAction = (payload) => ({
   type: FETCH_ORGANIZATION_PROJECTS,
@@ -22,6 +22,6 @@ export const fetchOrganizationProjectsAction = (payload) => ({
 });
 
 export const setActiveOrganizationAction = (payload) => ({
-  type: SET_ACTIVE_ORGANIZATION_NAMESPACE,
+  type: SET_ACTIVE_ORGANIZATION,
   payload,
 });
