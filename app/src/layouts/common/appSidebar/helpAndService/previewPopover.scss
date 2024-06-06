@@ -25,8 +25,7 @@
   position: relative;
   display: flex;
   color: $COLOR--darkmode-gray-100;
-  width: 100%;
-  height: 48px;
+  height: 40px;
   align-items: center;
   padding: 0 16px;
 
@@ -38,12 +37,13 @@
 .service-popover {
   padding: 8px 0px;
   margin-left: -4px;
+  margin-top: 4px;
   transform: translateY(-100%);
 }
 
 .service-popover-control {
-  height: 48px;
-  width: 280px;
+  height: 40px;
+  width: 328px;
   display: flex;
   align-items: center;
 
@@ -67,22 +67,6 @@
     width: 16px;
     height: 16px;
   }
-
-  &:hover {
-    @extend .hovered;
-  }
-}
-
-.hovered {
-  background-color: $COLOR--darkmode-gray-500;
-
-  .title {
-    color: $COLOR--white-two;
-  }
-
-  path {
-    fill: $COLOR--white-two;
-  }
 }
 
 .title {
@@ -101,6 +85,10 @@
   min-width: 270px;
   display: flex;
   align-items: center;
+
+  .service-block {
+    display: none;
+  }
 }
 
 .arrow-icon {
@@ -114,5 +102,67 @@
     background-color: $COLOR--system-notification-marker;
     border-radius: 50%;
     margin-right: 8px;
+  }
+}
+
+.service-wrapper {
+  display: flex;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+
+    .title,
+    .service-block {
+      color: $COLOR--white-two;
+    }
+
+    .service-block,
+    .arrow-icon {
+      path {
+        fill: $COLOR--white-two;
+      }
+    }
+  }
+}
+
+.service-control {
+  border: none;
+  background-color: transparent;
+  width: 280px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.service-block {
+  position: relative;
+  width: 48px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  i {
+    display: flex;
+    align-items: center;
+  }
+
+  &.untouched::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: $COLOR--system-notification-marker;
+    border-radius: 50%;
+    border: 2px solid $COLOR--darkmode-gray-500;
+    right: 20%;
+    top: 20%;
   }
 }

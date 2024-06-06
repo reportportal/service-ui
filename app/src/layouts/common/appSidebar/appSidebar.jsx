@@ -22,121 +22,74 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { useSelector } from 'react-redux';
 import { Sidebar } from 'componentLibrary/sidebar';
-import HelpIcon from 'common/img/help-inline.svg';
 import { userIdSelector } from 'controllers/user';
 import { getFAQOpenStatus } from './utils';
 import { ServiceWithPopover } from './helpAndService';
-import LogoBlockIcon from './img/logo-icon-inline.svg';
-import LogoControlIcon from './img/logo-text-icon-inline.svg';
-import { UserAvatar } from './userAvatar';
+import LogoLeftIcon from './img/logo-icon-inline.svg';
+import LogoRightIcon from './img/logo-text-icon-inline.svg';
+import OpenOutsideIcon from './img/open-outside-inline.svg';
 import { UserControlWithPopover } from './userControl';
-import styles from './appSidebar.scss';
 import { messages } from './messages';
+import styles from './appSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-export const AppSidebar = ({
-  createMainBlock,
-  createMainControlBlock,
-  topSidebarItems,
-  bottomSidebarItems,
-  topSidebarControlItems,
-  bottomSidebarControlItems,
-  isOpenOrganizationPopover,
-}) => {
+export const AppSidebar = ({ createMainBlock, items, isOpenOrganizationPopover }) => {
   const userId = useSelector(userIdSelector);
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
 
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
   const [isOpenSupportPopover, setIsOpenSupportPopover] = useState(false);
-  const [isHoveredUser, setIsHoveredUser] = useState(false);
-  const [isHoveredService, setIsHoveredService] = useState(false);
 
-  const onHoverUser = () => {
-    setIsHoveredUser(true);
-  };
-
-  const onClearUser = () => {
-    setIsHoveredUser(false);
-  };
-  const onHoverService = () => {
-    setIsHoveredService(true);
-  };
-
-  const onClearService = () => {
-    setIsHoveredService(false);
-  };
-
-  const createFooterBlock = (openNavbar) => (
-    <>
-      <div className={cx('policy-block')} />
-      <button
-        className={cx('service-block', { untouched: !isFaqTouched })}
-        onClick={() => {
-          openNavbar();
-          setIsOpenSupportPopover(!isOpenSupportPopover);
-        }}
-        onMouseEnter={onHoverService}
-        onMouseLeave={onClearService}
-      >
-        <i>{Parser(HelpIcon)}</i>
-      </button>
-      <UserAvatar
-        onClick={() => {
-          openNavbar();
-          setIsOpenAvatarPopover(!isOpenAvatarPopover);
-        }}
-        onHoverUser={onHoverUser}
-        onClearUser={onClearUser}
-        isHoveredUser={isHoveredUser}
-      />
-    </>
+  const logoBlock = (
+    <div className={cx('logo-wrapper')}>
+      <i className={cx('logo-left')}>{Parser(LogoLeftIcon)}</i>
+      <i className={cx('logo-right')}>{Parser(LogoRightIcon)}</i>
+    </div>
   );
 
-  const createFooterControlBlock = (onCloseNavbar) => (
+  const createFooterBlock = (openSidebar, closeSidebar) => (
     <>
-      <div className={cx('policy-control')}>
-        <a href={referenceDictionary.rpEpamPolicy} target="_blank">
+      <div className={cx('policy-block')}>
+        <a
+          className={cx('policy-block-link')}
+          href={referenceDictionary.rpEpamPolicy}
+          target="_blank"
+        >
           {formatMessage(messages.privacyPolicy)}
+          <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>
         </a>
       </div>
-      <button
-        className={cx('service-control')}
-        onMouseEnter={onHoverService}
-        onMouseLeave={onClearService}
-      >
-        <ServiceWithPopover
-          closeNavbar={onCloseNavbar}
-          isOpenPopover={isOpenSupportPopover}
-          togglePopover={setIsOpenSupportPopover}
-          isFaqTouched={isFaqTouched}
-          onOpen={setIsFaqTouched}
-          isHovered={isHoveredService}
-          title={formatMessage(messages.helpAndServiceVersions)}
-        />
-      </button>
-      <div className={cx('user-control', { hover: isHoveredUser })}>
-        <UserControlWithPopover
-          closeNavbar={onCloseNavbar}
-          isOpenPopover={isOpenAvatarPopover}
-          togglePopover={setIsOpenAvatarPopover}
-        />
-      </div>
+      <ServiceWithPopover
+        closeSidebar={closeSidebar}
+        isOpenPopover={isOpenSupportPopover}
+        togglePopover={setIsOpenSupportPopover}
+        isFaqTouched={isFaqTouched}
+        onOpen={setIsFaqTouched}
+        title={formatMessage(messages.helpAndServiceVersions)}
+        onClick={() => {
+          openSidebar();
+          setIsOpenSupportPopover(!isOpenSupportPopover);
+        }}
+      />
+      <UserControlWithPopover
+        closeSidebar={closeSidebar}
+        isOpenPopover={isOpenAvatarPopover}
+        togglePopover={setIsOpenAvatarPopover}
+        onClick={() => {
+          openSidebar();
+          setIsOpenAvatarPopover(!isOpenAvatarPopover);
+        }}
+      />
     </>
   );
 
   return (
     <Sidebar
-      logoBlockIcon={LogoBlockIcon}
-      logoControlIcon={LogoControlIcon}
+      logoBlock={logoBlock}
+      items={items}
       createMainBlock={createMainBlock}
-      createMainControlBlock={createMainControlBlock}
-      topSidebarItems={topSidebarItems}
-      topSidebarControlItems={topSidebarControlItems}
-      bottomSidebarItems={bottomSidebarItems}
-      bottomSidebarControlItems={bottomSidebarControlItems}
-      createFooterControlBlock={createFooterControlBlock}
       createFooterBlock={createFooterBlock}
       shouldBeCollapsedOnLeave={
         !(isOpenAvatarPopover || isOpenOrganizationPopover || isOpenSupportPopover)
@@ -146,21 +99,13 @@ export const AppSidebar = ({
 };
 
 AppSidebar.propTypes = {
-  topSidebarItems: PropTypes.array,
-  bottomSidebarItems: PropTypes.array,
-  topSidebarControlItems: PropTypes.array,
-  bottomSidebarControlItems: PropTypes.array,
-  createMainControlBlock: PropTypes.func,
-  createMainBlock: PropTypes.func,
+  items: PropTypes.array,
   isOpenOrganizationPopover: PropTypes.bool,
+  createMainBlock: PropTypes.func,
 };
 
 AppSidebar.defaultProps = {
-  topSidebarItems: [],
-  bottomSidebarItems: [],
-  topSidebarControlItems: [],
-  bottomSidebarControlItems: [],
+  items: [],
   isOpenOrganizationPopover: false,
-  createMainControlBlock: () => {},
   createMainBlock: () => {},
 };

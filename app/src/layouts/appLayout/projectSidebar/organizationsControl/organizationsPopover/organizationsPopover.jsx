@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
+export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const { organizationSlug: currentOrganization, projectSlug } = useSelector(
@@ -45,7 +45,7 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
 
   const onClose = () => {
-    closeNavbar();
+    closeSidebar();
     closePopover();
   };
 
@@ -89,6 +89,6 @@ export const OrganizationsPopover = ({ closePopover, closeNavbar }) => {
 };
 
 OrganizationsPopover.propTypes = {
-  closeNavbar: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
 };

@@ -16,35 +16,27 @@
 
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
+import { NavLink } from 'components/main/navLink';
+import Parser from 'html-react-parser';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({
-  className,
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
-  onMouseDown,
-  children,
-}) => (
-  <button
-    className={cx('sidebar-button', className)}
+export const SidebarButton = ({ icon, onClick, message, link }) => (
+  <NavLink
+    to={link}
+    className={cx('sidebar-button')}
+    activeClassName={cx('active')}
     onClick={onClick}
-    tabIndex={-1}
-    onMouseEnter={onMouseEnter}
-    onMouseLeave={onMouseLeave}
-    onMouseDown={onMouseDown}
   >
-    {children}
-  </button>
+    <i className={cx('btn-icon')}>{Parser(icon)}</i>
+    <span className={cx('title')}>{message}</span>
+  </NavLink>
 );
 
 SidebarButton.propTypes = {
-  className: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
   onClick: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired,
-  onMouseEnter: PropTypes.func.isRequired,
-  onMouseLeave: PropTypes.func.isRequired,
-  onMouseDown: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
 };

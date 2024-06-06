@@ -40,13 +40,11 @@ import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
-import { OrganizationsBlock } from './organizationsBlock';
 import { OrganizationsControlWithPopover } from './organizationsControl';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
@@ -56,23 +54,14 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
-  const [isHoveredOrganization, setIsHoveredOrganization] = useState(false);
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
     trackEvent(eventInfo);
   };
 
-  const onHoverOrganization = () => {
-    setIsHoveredOrganization(true);
-  };
-
-  const onClearOrganization = () => {
-    setIsHoveredOrganization(false);
-  };
-
   const getSidebarItems = () => {
-    const topItems = [
+    const sidebarItems = [
       {
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
@@ -108,7 +97,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     ];
 
     if (canSeeMembers(userRoles)) {
-      topItems.push({
+      sidebarItems.push({
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
@@ -119,7 +108,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       });
     }
 
-    topItems.push({
+    sidebarItems.push({
       onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
@@ -130,7 +119,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     });
     projectPageExtensions.forEach(({ icon, internalRoute }) => {
       if (icon) {
-        topItems.push({
+        sidebarItems.push({
           onClick: onClickNavBtn,
           link: {
             type: PROJECT_PLUGIN_PAGE,
@@ -142,71 +131,32 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       }
     });
     sidebarExtensions.forEach((extension) =>
-      topItems.push({
+      sidebarItems.push({
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,
         onClick: onClickNavBtn,
       }),
     );
 
-    const topSidebarItems = topItems.map(({ link, icon, message, name, component, onClick }) => ({
-      key: component ? name : link.type,
-      onClick,
-      topSidebarItem: (
-        <>
-          {component || (
-            <SidebarButton link={link} icon={icon}>
-              {message}
-            </SidebarButton>
-          )}
-        </>
-      ),
-    }));
-
-    const topSidebarControlItems = topItems.map(({ component, name, link, onClick, message }) => ({
-      key: component ? name : link.type,
-      onClick,
-      sidebarBlockItem: component || (
-        <SidebarButton link={link} isNavbar>
-          {message}
-        </SidebarButton>
-      ),
-    }));
-
-    return { topSidebarItems, topSidebarControlItems };
+    return sidebarItems;
   };
 
-  const { topSidebarItems, topSidebarControlItems } = getSidebarItems();
-
-  const createMainBlock = (openNavbar) => (
-    <OrganizationsBlock
-      onHoverOrganization={onHoverOrganization}
-      onClearOrganization={onClearOrganization}
-      isHoveredOrganization={isHoveredOrganization}
-      onClick={() => {
-        openNavbar();
-        setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
-      }}
-    />
-  );
-
-  const createMainControlBlock = (closeNavbar) => (
+  const createMainBlock = (openSidebar, closeSidebar) => (
     <OrganizationsControlWithPopover
-      closeNavbar={closeNavbar}
+      closeSidebar={closeSidebar}
       isOpenPopover={isOpenOrganizationPopover}
       togglePopover={setIsOpenOrganizationPopover}
-      onHoverOrganization={onHoverOrganization}
-      onClearOrganization={onClearOrganization}
-      isHoveredOrganization={isHoveredOrganization}
+      onClick={() => {
+        openSidebar();
+        setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
+      }}
     />
   );
 
   return (
     <AppSidebar
       createMainBlock={createMainBlock}
-      createMainControlBlock={createMainControlBlock}
-      topSidebarItems={topSidebarItems}
-      topSidebarControlItems={topSidebarControlItems}
+      items={getSidebarItems()}
       isOpenOrganizationPopover={isOpenOrganizationPopover}
     />
   );

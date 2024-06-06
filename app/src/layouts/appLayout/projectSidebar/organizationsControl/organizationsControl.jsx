@@ -35,48 +35,42 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsControl = ({
-  isPopoverOpen,
-  onHoverOrganization,
-  onClearOrganization,
-  isHoveredOrganization,
-}) => {
+export const OrganizationsControl = ({ isPopoverOpen, onClick }) => {
   const { formatMessage } = useIntl();
   const organizationName = useSelector(organizationNameSelector);
   const projectName = useSelector(projectNameSelector);
+  const title = `${organizationName[0]}${organizationName[organizationName.length - 1]}`;
 
   return (
-    <button
-      className={cx('organizations-control', { hover: isHoveredOrganization })}
-      onMouseEnter={onHoverOrganization}
-      onMouseLeave={onClearOrganization}
-      tabIndex={-1}
-    >
-      <div>
-        <button className={cx('organization-btn')} tabIndex={-1}>
-          <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-          <div className={cx('organization-name')}>
-            {formatMessage(messages.organization)}: {organizationName}
-          </div>
-        </button>
-        <div className={cx('project-name')}>{projectName}</div>
-      </div>
-      <i
-        className={cx('open-popover', {
-          action: isPopoverOpen,
-        })}
-      >
-        {Parser(OpenPopoverIcon)}
-      </i>
-    </button>
+    <div className={cx('organizations-control-wrapper')}>
+      <button className={cx('organization-block')} onClick={onClick}>
+        {title}
+      </button>
+      <button className={cx('organizations-control')} tabIndex={-1}>
+        <div>
+          <button className={cx('organization-btn')} tabIndex={-1}>
+            <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
+            <div className={cx('organization-name')}>
+              {formatMessage(messages.organization)}: {organizationName}
+            </div>
+          </button>
+          <div className={cx('project-name')}>{projectName}</div>
+        </div>
+        <i
+          className={cx('open-popover', {
+            action: isPopoverOpen,
+          })}
+        >
+          {Parser(OpenPopoverIcon)}
+        </i>
+      </button>
+    </div>
   );
 };
 
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
-  onHoverOrganization: PropTypes.func.isRequired,
-  onClearOrganization: PropTypes.func.isRequired,
-  isHoveredOrganization: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export const OrganizationsControlWithPopover = withPopover({

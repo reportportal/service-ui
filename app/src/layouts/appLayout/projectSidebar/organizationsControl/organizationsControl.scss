@@ -21,25 +21,50 @@
   max-width: $maxSize;
 }
 
+.organizations-control-wrapper {
+  display: flex;
+  width: 324px;
+
+  &:hover {
+    .organization-block {
+      color: $COLOR--white-two;
+      background-color: $COLOR--darkmode-gray-350;
+    }
+
+    .organizations-control {
+      background-color: $COLOR--darkmode-gray-350;
+    }
+
+    .project-name {
+      color: $COLOR--white-two;
+    }
+
+    .open-popover:not(.action) path {
+      fill: $COLOR--white-two;
+    }
+  }
+}
+
 .organizations-control {
-  width: 264px;
+  width: 280px;
   height: 60px;
   background-color: $COLOR--darkmode-gray-300;
   border-radius: 8px;
   cursor: pointer;
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 0px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-clip: padding-box;
-  border: 2px solid $COLOR--darkmode-gray-300;
+  border: none;
   outline: none;
+  margin-left: 12px;
+  margin-right: 4px;
 }
 
 .hover {
   background-color: $COLOR--darkmode-gray-350;
-  border: 2px solid $COLOR--darkmode-gray-350;
 
   .project-name {
     color: $COLOR--white-two;
@@ -93,7 +118,6 @@
 
 .popover {
   max-height: calc(100% - 112px);
-  margin-left: 4px;
   padding: 8px 0;
 
   &::after {
@@ -102,7 +126,6 @@
 }
 
 .popover-control {
-  margin-left: 8px;
   background-color: transparent;
   height: 60px;
   outline: none;
@@ -111,9 +134,30 @@
 
   &:focus-visible {
     box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+  }
+}
 
-    .organizations-control {
-      border: 2px solid transparent;
-    }
+.organization-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 60px;
+  background-color: $COLOR--darkmode-gray-300;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $COLOR--darkmode-gray-100;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-BOLD;
+  border: none;
+  margin-left: 4px;
+
+  &:focus-visible {
+    outline: none;
+    border: 2px solid $COLOR--topaz-focused;
   }
 }

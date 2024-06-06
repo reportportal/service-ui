@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { API_PAGE } from 'controllers/pages';
-import { useState } from 'react';
 import { referenceDictionary } from 'common/utils';
 import { LinkItem } from '../linkItem';
 import { FAQWithPopover } from '../index';
@@ -27,8 +26,7 @@ import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
-export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpen }) => {
-  const [isHovered, setIsHovered] = useState(false);
+export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOpen }) => {
   const { formatMessage } = useIntl();
 
   const currentYear = new Date().getFullYear();
@@ -61,29 +59,15 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
     },
   ];
 
-  const onClearHover = () => {
-    setIsHovered(false);
-  };
-
-  const onSetHover = () => {
-    setIsHovered(true);
-  };
-
   return (
     <>
-      <button
-        className={cx('FAQ-control', { hovered: isHovered })}
-        onMouseLeave={onClearHover}
-        onMouseEnter={onSetHover}
-      >
-        <FAQWithPopover
-          closeNavbar={closeNavbar}
-          closePopover={closePopover}
-          isFaqTouched={isFaqTouched}
-          onOpen={onOpen}
-          title={formatMessage(messages.FAQ)}
-        />
-      </button>
+      <FAQWithPopover
+        closeSidebar={closeSidebar}
+        closePopover={closePopover}
+        isFaqTouched={isFaqTouched}
+        onOpen={onOpen}
+        title={formatMessage(messages.FAQ)}
+      />
 
       {ServiceContentItems.map((contentItem) => (
         <LinkItem
@@ -91,7 +75,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
           content={formatMessage(contentItem.message)}
           onClick={() => {
             closePopover();
-            closeNavbar();
+            closeSidebar();
           }}
           className={cx('menu-item')}
           isInternal={contentItem.isInternal}
@@ -108,7 +92,7 @@ export const ServicesContent = ({ closePopover, closeNavbar, isFaqTouched, onOpe
 
 ServicesContent.propTypes = {
   closePopover: PropTypes.func.isRequired,
-  closeNavbar: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
   isFaqTouched: PropTypes.bool.isRequired,
   onOpen: PropTypes.func.isRequired,
 };

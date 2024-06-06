@@ -20,29 +20,39 @@ import { withPopover } from 'componentLibrary/popover';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
+import HelpIcon from 'common/img/help-inline.svg';
 import { ServicesContent } from './servicesContent';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
 import styles from './previewPopover.scss';
 
 const cx = classNames.bind(styles);
-const PreviewPopover = ({ title, isFaqTouched, isHovered }) => {
+
+const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
   return (
-    <div className={cx('preview', { hovered: isHovered })}>
-      <div className={cx('content')}>
-        <span className={cx('title')}>{title}</span>
-        <div className={cx('arrow-icon', { untouched: !isFaqTouched })}>
-          {Parser(ArrowRightIcon)}
+    <div className={cx('service-wrapper')}>
+      <button className={cx('service-block', { untouched: !isFaqTouched })} onClick={onClick}>
+        <i>{Parser(HelpIcon)}</i>
+      </button>
+      <button className={cx('service-control')}>
+        <div className={cx('preview')}>
+          <div className={cx('content')}>
+            <span className={cx('title')}>{title}</span>
+            <div className={cx('arrow-icon', { untouched: !isFaqTouched })}>
+              {Parser(ArrowRightIcon)}
+            </div>
+          </div>
         </div>
-      </div>
+      </button>
     </div>
   );
 };
 
 PreviewPopover.propTypes = {
-  isFaqTouched: PropTypes.bool,
-  isHovered: PropTypes.bool,
-  title: PropTypes.string,
+  isFaqTouched: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
+
 export const ServiceWithPopover = withPopover({
   ContentComponent: ServicesContent,
   side: 'right',
