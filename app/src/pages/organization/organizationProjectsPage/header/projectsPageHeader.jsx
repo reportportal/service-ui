@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { PROJECTS_PAGE } from 'controllers/pages';
-import { activeOrganizationSelector } from 'controllers/organizations';
+import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import plusIcon from 'common/img/plus-button-inline.svg';
@@ -35,7 +35,6 @@ const cx = classNames.bind(styles);
 export const ProjectsPageHeader = ({ hasPermission }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-
   const orgName = organization.name;
   const isNotEmpty = organization.relationships?.projects?.meta.count > 0;
 

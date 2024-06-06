@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATIONS } from './constants';
 
 export const fetchOrganizationsAction = () => ({
   type: FETCH_ORGANIZATIONS,
-});
-
-export const fetchOrganizationProjectsAction = (payload) => ({
-  type: FETCH_ORGANIZATION_PROJECTS,
-  payload,
 });

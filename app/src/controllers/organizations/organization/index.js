@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+export { fetchOrganizationProjectsAction } from './actionCreators';
+export { organizationReducer } from './reducer';
+export { organizationProjectsSelector, activeOrganizationSelector } from './selectors';
+export { organizationSagas } from './sagas';

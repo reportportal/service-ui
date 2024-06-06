@@ -15,7 +15,7 @@
  */
 
 .form-fields {
- display: flex;
+  display: flex;
   flex-direction: column;
   gap: 16px;
   transform: translateY(-8px);
@@ -36,6 +36,6 @@
   }
 }
 
-.check-item{
+.check-item {
   align-items: start;
 }

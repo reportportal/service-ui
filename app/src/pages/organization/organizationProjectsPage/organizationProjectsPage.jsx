@@ -16,13 +16,11 @@
 
 import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/user';
-import { canUpdateSettings } from 'common/utils/permissions';
+import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
-import {
-  organizationProjectsSelector,
-  organizationsListLoadingSelector,
-} from 'controllers/organizations';
+import { organizationsListLoadingSelector } from 'controllers/organizations';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { organizationProjectsSelector } from 'controllers/organizations/organization';
 import { ProjectsPageHeader } from './header';
 import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
@@ -31,7 +29,7 @@ const cx = classNames.bind(styles);
 
 export const OrganizationProjectsPage = () => {
   const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canUpdateSettings(userRoles);
+  const hasPermission = canCreateProject(userRoles);
   const orgProjects = useSelector(organizationProjectsSelector);
   const organizationLoading = useSelector(organizationsListLoadingSelector);
   const isProjectsEmpty = orgProjects.length === 0;

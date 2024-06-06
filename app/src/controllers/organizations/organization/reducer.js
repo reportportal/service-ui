@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+import { combineReducers } from 'redux';
+import { fetchReducer } from 'controllers/fetch';
+import { ACTIVE_ORGANIZATION_NAMESPACE, PROJECTS_NAMESPACE } from './constants';
+
+export const activeOrganizationReducer = (state, { type = '', payload = {} }) => {
+  return type === ACTIVE_ORGANIZATION_NAMESPACE ? payload : null;
+};
+export const organizationReducer = combineReducers({
+  projects: fetchReducer(PROJECTS_NAMESPACE, { contentPath: 'content' }),
+  activeOrganization: activeOrganizationReducer,
+});

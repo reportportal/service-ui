@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+import { FETCH_ORGANIZATION_PROJECTS } from './constants';
+
+export const fetchOrganizationProjectsAction = (payload) => ({
+  type: FETCH_ORGANIZATION_PROJECTS,
+  payload,
+});

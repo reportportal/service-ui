@@ -17,11 +17,11 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { ACTIVE_ORGANIZATION_NAMESPACE, NAMESPACE, PROJECTS_NAMESPACE } from './constants';
+import { organizationReducer } from 'controllers/organizations/organization/reducer';
+import { NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
   list: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   listLoading: loadingReducer(NAMESPACE),
-  projects: fetchReducer(PROJECTS_NAMESPACE, { contentPath: 'content' }),
-  activeOrganization: fetchReducer(ACTIVE_ORGANIZATION_NAMESPACE),
+  organization: organizationReducer,
 });

@@ -16,10 +16,4 @@
 
 export const NAMESPACE = 'organizations';
 
-export const PROJECTS_NAMESPACE = 'projects';
-
-export const ACTIVE_ORGANIZATION_NAMESPACE = 'activeOrganization';
-
 export const FETCH_ORGANIZATIONS = 'fetchOrganizations';
-
-export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';

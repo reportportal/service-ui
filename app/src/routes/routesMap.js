@@ -95,7 +95,7 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
-import { fetchOrganizationProjectsAction } from 'controllers/organizations/actionCreators';
+import { fetchOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({

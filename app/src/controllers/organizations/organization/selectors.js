@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+import { organizationsSelector } from 'controllers/organizations/selectors';
+
+const organizationSelector = (state) => organizationsSelector(state).organization || {};
+
+export const activeOrganizationSelector = (state) => organizationSelector(state).activeOrganization;
+
+export const organizationProjectsSelector = (state) => organizationSelector(state).projects || [];
