@@ -21,7 +21,7 @@ import { organizationReducer } from 'controllers/organizations/organization/redu
 import { NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
-  list: fetchReducer(NAMESPACE, { contentPath: 'content' }),
+  list: fetchReducer(NAMESPACE, { contentPath: 'items' }),
   listLoading: loadingReducer(NAMESPACE),
   organization: organizationReducer,
 });

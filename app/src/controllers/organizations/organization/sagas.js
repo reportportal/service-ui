@@ -18,9 +18,10 @@ import { takeEvery, all, put, select, take } from 'redux-saga/effects';
 import { createFetchPredicate } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { PROJECTS_PAGE } from 'controllers/pages';
+import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
 import { organizationsListSelector } from '../selectors';
 import { fetchOrganizationsAction } from '../actionCreators';
-import { FETCH_ORGANIZATION_PROJECTS, ACTIVE_ORGANIZATION_NAMESPACE } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { NAMESPACE } from '../constants';
 
@@ -35,7 +36,7 @@ function* fetchOrganizationProjects({ payload: { organizationSlug } }) {
       if (!organization) {
         throw new Error('Organization not found');
       }
-      yield put({ type: ACTIVE_ORGANIZATION_NAMESPACE, payload: organization });
+      yield put(setActiveOrganizationAction(organization));
     }
 
     // TODO: Uncomment this line after implementation of the organizationProjects in backend

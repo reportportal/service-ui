@@ -16,6 +16,6 @@
 
 export const PROJECTS_NAMESPACE = 'projects';
 
-export const ACTIVE_ORGANIZATION_NAMESPACE = 'activeOrganization';
+export const SET_ACTIVE_ORGANIZATION_NAMESPACE = 'setActiveOrganization';
 
 export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
