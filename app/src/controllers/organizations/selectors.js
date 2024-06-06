@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const organizationsSelector = (state) => state.organizations || {};
+export const organizationsSelector = (state) => state.organizations || {};
 
 export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
 

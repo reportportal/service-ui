@@ -94,6 +94,8 @@ import {
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { fetchOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -161,6 +163,16 @@ const routesMap = {
     },
   ),
   [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
+
+  [ORGANIZATION_PROJECTS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects',
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(fetchOrganizationProjectsAction(payload));
+    },
+  },
 
   [PROJECT_PAGE]: {
     path: '/organizations/:organizationSlug?/projects/:projectSlug',

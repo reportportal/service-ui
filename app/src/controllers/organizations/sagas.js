@@ -18,6 +18,7 @@ import { takeEvery, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
+import { organizationSagas } from 'controllers/organizations/organization/sagas';
 import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {
@@ -33,5 +34,5 @@ function* watchFetchOrganizations() {
 }
 
 export function* organizationsSagas() {
-  yield all([watchFetchOrganizations()]);
+  yield all([watchFetchOrganizations(), organizationSagas()]);
 }

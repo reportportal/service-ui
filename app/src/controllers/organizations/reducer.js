@@ -17,9 +17,11 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
+import { organizationReducer } from 'controllers/organizations/organization/reducer';
 import { NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
   list: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   listLoading: loadingReducer(NAMESPACE),
+  organization: organizationReducer,
 });
