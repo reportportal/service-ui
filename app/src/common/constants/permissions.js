@@ -86,6 +86,7 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.VIEW_INFO_BILLING]: true,
     [ACTIONS.RENAME_ORGANIZATION]: true,
     [ACTIONS.WORK_WITH_DEFECT_TYPES]: true,
+    [ACTIONS.SEE_DEMO_DATA]: true,
   },
   [MEMBER]: {
     [VIEWER]: {
@@ -113,6 +114,7 @@ export const PERMISSIONS_MAP = {
       [ACTIONS.WORK_WITH_WIDGETS]: true,
       [ACTIONS.RENAME_PROJECT]: true,
       [ACTIONS.WORK_WITH_DEFECT_TYPES]: true,
+      [ACTIONS.SEE_DEMO_DATA]: true,
     },
   },
 };

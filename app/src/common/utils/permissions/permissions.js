@@ -22,7 +22,7 @@ export const createCheckPermission = (permissionMap) => (permission) => ({
   userRole,
   organizationRole,
   projectRole,
-}) => {
+} = {}) => {
   if (userRole === ADMINISTRATOR) {
     return true;
   }
