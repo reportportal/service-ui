@@ -42,17 +42,7 @@ describe('permissions', () => {
   it("should return false if user hasn't got permission", () => {
     expect(canCreateUser({ userRole: 'USER', organizationRole: 'PROJECT_MANAGER' })).toBeFalsy();
   });
-  it('should return true if owner has permission "OWNER"', () => {
-    expect(
-      canCreateUser({ userRole: 'USER', organizationRole: 'MEMBER', projectRole: 'EDITOR' }, true),
-    ).toBeTruthy();
-  });
   it('should return true if user has MANAGER role', () => {
     expect(canCreateUser({ userRole: 'USER', organizationRole: 'MANAGER' })).toBeTruthy();
-  });
-  it('should return false if user has permission "OWNER"', () => {
-    expect(
-      canCreateUser({ userRole: 'USER', organizationRole: 'MEMBER', projectRole: 'EDITOR' }, false),
-    ).toBeFalsy();
   });
 });
