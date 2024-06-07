@@ -19,7 +19,7 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 
 export const createCheckPermission = (permissionMap) => (permission) => (
-  { userRole, organizationRole, projectRole },
+  { userRole, organizationRole, projectRole } = {},
   isOwner,
 ) => {
   if (userRole === ADMINISTRATOR) {
