@@ -30,7 +30,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector, userIdSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { clearLogPageStackTrace } from 'controllers/log';
 import { launchSelector } from 'controllers/testItem';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
@@ -70,7 +70,6 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     userRoles: userRolesSelector(state),
-    userId: userIdSelector(state),
     launch: launchSelector(state),
     projectKey: projectKeySelector(state),
     extensions: testItemDetailsAddonSelector(state),
@@ -94,7 +93,6 @@ export class TestItemDetailsModal extends Component {
     }).isRequired,
     launch: PropTypes.object,
     userRoles: userRolesType,
-    userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
@@ -112,7 +110,6 @@ export class TestItemDetailsModal extends Component {
 
   static defaultProps = {
     launch: {},
-    userId: '',
     userRoles: {},
     dirty: false,
     clearLogPageStackTrace: () => {},
@@ -355,10 +352,8 @@ export class TestItemDetailsModal extends Component {
   render() {
     const {
       intl,
-      data: { item, eventsInfo },
-      launch,
+      data: { eventsInfo },
       userRoles,
-      userId,
       handleSubmit,
     } = this.props;
     const okButton = {
@@ -372,10 +367,7 @@ export class TestItemDetailsModal extends Component {
       eventInfo: eventsInfo.cancelBtn,
     };
 
-    const editable = canEditLaunch(
-      userRoles,
-      item.owner ? userId === item.owner : userId === launch.owner,
-    );
+    const editable = canEditLaunch(userRoles);
     return (
       <ModalLayout
         title={intl.formatMessage(messages.modalTitle)}

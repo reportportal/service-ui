@@ -28,7 +28,6 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
-import { userIdSelector } from 'controllers/user';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import {
   levelSelector,
@@ -40,7 +39,6 @@ import {
   launchSelector,
   fetchTestItemsAction,
   namespaceSelector,
-  isItemOwner,
   LEVELS,
 } from 'controllers/testItem';
 import { showModalAction } from 'controllers/modal';
@@ -106,31 +104,25 @@ const messages = defineMessages({
 export const getDeleteItemsActionParameters = (
   items,
   formatMessage,
-  { userId, parentLaunch, ...rest } = {},
-) => {
-  const isOwner = isItemOwner(userId, items[0], parentLaunch);
-
-  return {
-    header:
-      items.length === 1
-        ? formatMessage(messages.deleteModalHeader)
-        : formatMessage(messages.deleteModalMultipleHeader),
-    mainContent:
-      items.length === 1
-        ? formatMessage(messages.deleteModalContent, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: items[0].name,
-          })
-        : formatMessage(messages.deleteModalMultipleContent),
-    warning:
-      (!isOwner &&
-        (items.length === 1
-          ? formatMessage(messages.warning)
-          : formatMessage(messages.warningMultiple))) ||
-      '',
-    ...rest,
-  };
-};
+  { parentLaunch, ...rest } = {},
+) => ({
+  header:
+    items.length === 1
+      ? formatMessage(messages.deleteModalHeader)
+      : formatMessage(messages.deleteModalMultipleHeader),
+  mainContent:
+    items.length === 1
+      ? formatMessage(messages.deleteModalContent, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+          name: items[0].name,
+        })
+      : formatMessage(messages.deleteModalMultipleContent),
+  warning:
+    (items.length === 1
+      ? formatMessage(messages.warning)
+      : formatMessage(messages.warningMultiple)) || '',
+  ...rest,
+});
 
 const testItemPages = {
   [LEVEL_SUITE]: SuitesPage,
@@ -144,7 +136,6 @@ const testItemPages = {
     loading: pageLoadingSelector(state),
     breadcrumbs: breadcrumbsSelector(state),
     parentLaunch: launchSelector(state),
-    userId: userIdSelector(state),
   }),
   (dispatch) => ({
     bulkDeleteTestItemsAction: (namespace) => (selectedItems, modalConfig) =>
@@ -166,7 +157,6 @@ const testItemPages = {
 export class TestItemPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     deleteTestItemsAction: PropTypes.func.isRequired,
     bulkDeleteTestItemsAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
@@ -234,7 +224,6 @@ export class TestItemPage extends Component {
   deleteItems = (selectedItems) => {
     const {
       intl: { formatMessage },
-      userId,
       parentLaunch,
       tracking,
       level,
@@ -252,7 +241,6 @@ export class TestItemPage extends Component {
           callback: this.unselectAndFetchItems,
         });
       },
-      userId,
       parentLaunch,
       eventsInfo: {},
     });

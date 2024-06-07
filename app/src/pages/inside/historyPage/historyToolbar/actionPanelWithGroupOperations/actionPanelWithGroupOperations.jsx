@@ -100,7 +100,6 @@ const getLinkIssueEventsInfo = (place) => ({
 export class ActionPanelWithGroupOperations extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
@@ -263,7 +262,6 @@ export class ActionPanelWithGroupOperations extends Component {
       intl: { formatMessage },
       tracking,
       selectedItems,
-      userId,
       deleteHistoryItems,
     } = this.props;
     tracking.trackEvent(HISTORY_PAGE_EVENTS.DELETE_ACTION);
@@ -278,7 +276,6 @@ export class ActionPanelWithGroupOperations extends Component {
           callback: this.unselectAndRefreshItems,
         });
       },
-      userId,
       parentLaunch: this.props.parentLaunch,
       eventsInfo: {},
     });
