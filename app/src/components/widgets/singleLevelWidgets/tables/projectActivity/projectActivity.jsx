@@ -47,6 +47,8 @@ import {
   CHANGE_ROLE,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -179,6 +181,8 @@ export class ProjectActivity extends Component {
       case START_LAUNCH:
       case FINISH_LAUNCH:
       case DELETE_LAUNCH:
+      case MARK_LAUNCH_AS_IMPORTANT:
+      case UNMARK_LAUNCH_AS_IMPORTANT:
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
         return activity.objectType === UPDATE_NOTIFICATIONS ? (
