@@ -73,16 +73,6 @@ const messages = defineMessages({
     id: 'TestItemsPage.deleteModalMultipleContent',
     defaultMessage: 'Are you sure you want to delete items? They will no longer exist.',
   },
-  warning: {
-    id: 'TestItemsPage.warning',
-    defaultMessage:
-      'You are going to delete not your own item. This may affect other users information on the project.',
-  },
-  warningMultiple: {
-    id: 'TestItemsPage.warningMultiple',
-    defaultMessage:
-      'You are going to delete not your own items. This may affect other users information on the project.',
-  },
   success: {
     id: 'TestItemsPage.success',
     defaultMessage: 'Item was deleted',
@@ -117,10 +107,6 @@ export const getDeleteItemsActionParameters = (
           name: items[0].name,
         })
       : formatMessage(messages.deleteModalMultipleContent),
-  warning:
-    (items.length === 1
-      ? formatMessage(messages.warning)
-      : formatMessage(messages.warningMultiple)) || '',
   ...rest,
 });
 
