@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { userInfoSelector, userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { canDeleteUser } from 'common/utils/permissions';
 
 export const validateDeleteUser = (user, users, state) => {
-  const activeUser = userInfoSelector(state);
   const userRoles = userRolesSelector(state);
-  if (!canDeleteUser(userRoles, user.id !== activeUser.id)) {
+  if (!canDeleteUser(userRoles)) {
     return 'cantDeleteYourSelf';
   }
   return null;

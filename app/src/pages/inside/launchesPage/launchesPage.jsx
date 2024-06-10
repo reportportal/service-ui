@@ -93,16 +93,6 @@ const messages = defineMessages({
     id: 'LaunchesPage.deleteModalMultipleContent',
     defaultMessage: 'Are you sure you want to delete launches? They will no longer exist.',
   },
-  warning: {
-    id: 'LaunchesPage.warning',
-    defaultMessage:
-      'You are going to delete not your own launch. This may affect other users information on the project.',
-  },
-  warningMultiple: {
-    id: 'LaunchesPage.warningMultiple',
-    defaultMessage:
-      'You are going to delete not your own launches. This may affect other users information on the project.',
-  },
   success: {
     id: 'LaunchesPage.success',
     defaultMessage: 'Launch was deleted',
@@ -506,19 +496,9 @@ export class LaunchesPage extends Component {
       });
   };
 
-  isNotAllOwnLaunches = (launches) => {
-    const { userId } = this.props;
-    return launches.some((launch) => launch.owner !== userId);
-  };
-
   deleteItems = (launches) => {
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
-    const warning =
-      this.isNotAllOwnLaunches(selectedLaunches) &&
-      (selectedLaunches.length === 1
-        ? intl.formatMessage(messages.warning)
-        : intl.formatMessage(messages.warningMultiple));
 
     this.props.deleteItemsAction(selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
@@ -534,7 +514,6 @@ export class LaunchesPage extends Component {
             })
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
-      warning,
       eventsInfo: {},
     });
   };

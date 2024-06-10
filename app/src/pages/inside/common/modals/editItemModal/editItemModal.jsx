@@ -31,8 +31,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userIdSelector, userRolesSelector } from 'controllers/user';
-import { formatItemName, isItemOwner } from 'controllers/testItem';
+import { userRolesSelector } from 'controllers/user';
+import { formatItemName } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -121,7 +121,6 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userRoles: userRolesSelector(state),
-    userId: userIdSelector(state),
     projectKey: projectKeySelector(state),
   }),
   {
@@ -139,7 +138,6 @@ export class EditItemModal extends Component {
       eventsInfo: PropTypes.object,
     }).isRequired,
     userRoles: userRolesType,
-    userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -154,7 +152,6 @@ export class EditItemModal extends Component {
 
   static defaultProps = {
     userRoles: {},
-    userId: '',
   };
 
   componentDidMount() {
@@ -256,8 +253,7 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, type, parentLaunch, eventsInfo },
-      userId,
+      data: { item, type, eventsInfo },
       handleSubmit,
       userRoles,
       tracking,
@@ -274,7 +270,7 @@ export class EditItemModal extends Component {
       eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(userRoles, isItemOwner(userId, item, parentLaunch));
+    const editable = canEditLaunch(userRoles);
 
     return (
       <ModalLayout

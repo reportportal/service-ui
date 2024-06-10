@@ -29,7 +29,7 @@ import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/ut
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userIdSelector, userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/user';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -98,7 +98,6 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userRoles: userRolesSelector(state),
-    userId: userIdSelector(state),
     projectKey: projectKeySelector(state),
     enabledPatterns: enabledPattersSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
@@ -112,7 +111,6 @@ const messages = defineMessages({
 export class Hamburger extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     launch: PropTypes.object.isRequired,
     projectKey: PropTypes.string.isRequired,
     customProps: PropTypes.object,
@@ -154,10 +152,10 @@ export class Hamburger extends Component {
   };
 
   getForceFinishTooltip = () => {
-    const { intl, userRoles, userId, launch } = this.props;
+    const { intl, userRoles } = this.props;
     let forceFinishTitle = '';
 
-    if (!canForceFinishLaunch(userRoles, userId === launch.owner || launch.rerun)) {
+    if (!canForceFinishLaunch(userRoles)) {
       forceFinishTitle = intl.formatMessage(messages.noPermissions);
     }
     if (!this.isInProgress()) {
@@ -167,14 +165,12 @@ export class Hamburger extends Component {
   };
 
   getMoveToDebugTooltip = () => {
-    const { intl, userRoles, userId, launch } = this.props;
-    return !canMoveToDebug(userRoles, userId === launch.owner)
-      ? intl.formatMessage(messages.noPermissions)
-      : '';
+    const { intl, userRoles } = this.props;
+    return !canMoveToDebug(userRoles) ? intl.formatMessage(messages.noPermissions) : '';
   };
 
   getDeleteItemTooltip = () => {
-    if (!canDeleteLaunch(this.props.userRoles, this.props.userId === this.props.launch.owner)) {
+    if (!canDeleteLaunch(this.props.userRoles)) {
       return this.props.intl.formatMessage(messages.notYourLaunch);
     }
     if (this.isInProgress()) {
@@ -262,10 +258,7 @@ export class Hamburger extends Component {
     const { intl, userRoles, launch, customProps, enabledPatterns, tracking } = this.props;
 
     const clusterTitle = this.getClusterTitle();
-    const canUpdateImportant = canDeleteLaunch(
-      userRoles,
-      this.props.userId === this.props.launch.owner,
-    );
+    const canUpdateImportant = canDeleteLaunch(userRoles);
 
     return (
       <div className={cx('hamburger')}>
@@ -286,7 +279,7 @@ export class Hamburger extends Component {
               <HamburgerMenuItem
                 title={this.getMoveToDebugTooltip()}
                 text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                disabled={!canMoveToDebug(userRoles)}
                 onClick={() => {
                   tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                   customProps.onMove(launch);
@@ -296,7 +289,7 @@ export class Hamburger extends Component {
               <HamburgerMenuItem
                 text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
                 title={this.getMoveToDebugTooltip()}
-                disabled={!canMoveToDebug(userRoles, this.props.userId === this.props.launch.owner)}
+                disabled={!canMoveToDebug(userRoles)}
                 onClick={() => {
                   customProps.onMove(launch);
                 }}
@@ -305,10 +298,7 @@ export class Hamburger extends Component {
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
               title={this.getForceFinishTooltip()}
-              disabled={
-                !canForceFinishLaunch(userRoles, this.props.userId === this.props.launch.owner) ||
-                !this.isInProgress()
-              }
+              disabled={!canForceFinishLaunch(userRoles) || !this.isInProgress()}
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                 customProps.onForceFinish(launch);
@@ -355,10 +345,7 @@ export class Hamburger extends Component {
             />
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-              disabled={
-                !canDeleteLaunch(userRoles, this.props.userId === this.props.launch.owner) ||
-                this.isInProgress()
-              }
+              disabled={!canDeleteLaunch(userRoles) || this.isInProgress()}
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                 customProps.onDeleteItem(launch);

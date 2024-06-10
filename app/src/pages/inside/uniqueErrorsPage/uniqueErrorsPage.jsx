@@ -49,7 +49,6 @@ import { showModalAction } from 'controllers/modal';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDeleteItemsActionParameters } from 'pages/inside/testItemPage';
 import { injectIntl } from 'react-intl';
-import { userIdSelector } from 'controllers/user';
 import { reloadClustersAction } from 'controllers/uniqueErrors/actionCreators';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
@@ -92,7 +91,6 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     clusters: clustersSelector(state),
     selectedItems: selectedClusterItemsSelector(state),
     validationErrors: validationErrorsSelector(state),
-    userId: userIdSelector(state),
   }),
   {
     toggleClusterItemSelectionAction,
@@ -115,7 +113,6 @@ const UNLINK_ISSUE_EVENTS_INFO = {
 export class UniqueErrorsPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     pageLoading: PropTypes.bool,
     loading: PropTypes.bool,
     parentLaunch: PropTypes.object,
@@ -248,7 +245,6 @@ export class UniqueErrorsPage extends Component {
     const {
       intl: { formatMessage },
       selectedItems,
-      userId,
     } = this.props;
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
       onConfirm: (items) => {
@@ -260,7 +256,6 @@ export class UniqueErrorsPage extends Component {
           callback: this.unselectAndFetchItems,
         });
       },
-      userId,
       parentLaunch: this.props.parentLaunch,
       eventsInfo: {},
     });

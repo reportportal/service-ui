@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { PERMISSIONS_MAP, ACTIONS, ALL, OWNER } from 'common/constants/permissions';
+import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 
-export const createCheckPermission = (permissionMap) => (permission) => (
-  { userRole, organizationRole, projectRole } = {},
-  isOwner,
-) => {
+export const createCheckPermission = (permissionMap) => (permission) => ({
+  userRole,
+  organizationRole,
+  projectRole,
+} = {}) => {
   if (userRole === ADMINISTRATOR) {
     return true;
   }
@@ -31,14 +32,7 @@ export const createCheckPermission = (permissionMap) => (permission) => (
   }
 
   if (permissionMap[organizationRole]?.[projectRole]) {
-    const userPermission = permissionMap[organizationRole][projectRole][permission];
-
-    if (userPermission) {
-      if (isOwner) {
-        return userPermission === ALL || userPermission === OWNER;
-      }
-      return userPermission === ALL;
-    }
+    return !!permissionMap[organizationRole][projectRole][permission];
   }
 
   return false;

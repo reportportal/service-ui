@@ -123,16 +123,6 @@ export const groupItemsByParent = (items) =>
     };
   }, {});
 
-export const isItemOwner = (userId, item, launch) => {
-  if (item.owner) {
-    return userId === item.owner;
-  } else if (launch?.owner) {
-    return userId === launch.owner;
-  }
-
-  return true;
-};
-
 export const cleanUpTestItemQuery = (query) => {
   const keys = Object.keys(query).filter((item) => !/^item+[0-9]/.test(item));
   return omit(query, keys);
