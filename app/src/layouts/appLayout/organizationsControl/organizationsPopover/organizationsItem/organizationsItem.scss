@@ -131,3 +131,7 @@
   text-align: start;
   @include truncate();
 }
+
+.active {
+  color: $COLOR--darkmode-topaz-text;
+}

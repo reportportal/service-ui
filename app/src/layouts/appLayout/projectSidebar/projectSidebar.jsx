@@ -40,12 +40,12 @@ import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import DashboardIcon from './img/dashboard-icon-inline.svg';
-import LaunchesIcon from './img/launches-icon-inline.svg';
-import DebugIcon from './img/debug-icon-inline.svg';
-import MembersIcon from './img/members-icon-inline.svg';
-import SettingsIcon from './img/settings-icon-inline.svg';
-import { OrganizationsControlWithPopover } from './organizationsControl';
+import DashboardIcon from 'common/img/sidebar/dashboard-icon-inline.svg';
+import LaunchesIcon from 'common/img/sidebar/launches-icon-inline.svg';
+import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
+import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
+import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
+import { OrganizationsControlWithPopover } from '../organizationsControl';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
@@ -104,7 +104,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           payload: { organizationSlug, projectSlug },
         },
         icon: MembersIcon,
-        message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project Team'} />,
+        message: <FormattedMessage id={'Sidebar.membersBtn'} defaultMessage={'Project Team'} />,
       });
     }
 
@@ -115,7 +115,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         payload: { organizationSlug, projectSlug },
       },
       icon: SettingsIcon,
-      message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project Settings'} />,
+      message: <FormattedMessage id={'Sidebar.settingsBtn'} defaultMessage={'Project Settings'} />,
     });
     projectPageExtensions.forEach(({ icon, internalRoute }) => {
       if (icon) {

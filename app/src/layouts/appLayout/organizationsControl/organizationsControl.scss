@@ -71,8 +71,12 @@
   }
 }
 
-.organization-btn {
+.organization-btn-wrapper {
+  display: flex;
   height: 16px;
+}
+
+.organization-btn {
   display: flex;
   border: none;
   padding: 0;
@@ -81,12 +85,15 @@
   line-height: 16px;
   font-size: 11px;
   font-family: $FONT-ROBOTO-REGULAR;
+  text-decoration: none;
   cursor: pointer;
 }
 
 .arrow-icon {
-  width: 16px;
-  height: 16px;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
   margin-right: 4px;
 }
 

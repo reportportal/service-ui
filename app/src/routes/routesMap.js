@@ -94,7 +94,11 @@ import {
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
-import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import {
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATION_MEMBERS_PAGE,
+  ORGANIZATION_SETTINGS_PAGE,
+} from 'controllers/pages/constants';
 import { fetchOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
@@ -172,6 +176,14 @@ const routesMap = {
       } = getState();
       dispatch(fetchOrganizationProjectsAction(payload));
     },
+  },
+
+  [ORGANIZATION_MEMBERS_PAGE]: {
+    path: '/organizations/:organizationSlug?/members',
+  },
+
+  [ORGANIZATION_SETTINGS_PAGE]: {
+    path: '/organizations/:organizationSlug?/settings',
   },
 
   [PROJECT_PAGE]: {
