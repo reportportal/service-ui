@@ -150,13 +150,17 @@ export const moveLaunchesAction = defineGroupOperation(
     }),
   validateMoveLaunch,
 );
-export const deleteItemsAction = defineGroupOperation(
+export const deleteLaunchesAction = defineGroupOperation(
   NAMESPACE,
   'deleteLaunches',
-  (items, { onConfirm, header, mainContent, userId, warning, eventsInfo }) =>
+  (launches, { confirmDeleteLaunches, userId }) =>
     showModalAction({
-      id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, warning, eventsInfo },
+      id: 'deleteLaunchModal',
+      data: {
+        launches,
+        confirmDeleteLaunches,
+        userId,
+      },
     }),
   validateDeleteLaunch,
 );
