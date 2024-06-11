@@ -79,6 +79,7 @@ export class ModalLayout extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    CustomFooter: PropTypes.node,
   };
   static defaultProps = {
     className: '',
@@ -94,6 +95,7 @@ export class ModalLayout extends Component {
     closeIconEventInfo: {},
     renderHeaderElements: () => {},
     renderFooterElements: () => {},
+    CustomFooter: null,
   };
   state = {
     shown: false,
@@ -191,6 +193,7 @@ export class ModalLayout extends Component {
       children,
       closeConfirmation,
       renderFooterElements,
+      CustomFooter,
     } = this.props;
     const footerProps = {
       warningMessage,
@@ -241,12 +244,20 @@ export class ModalLayout extends Component {
                       {status !== 'exited' ? children : null}
                     </ModalContent>
 
-                    <ModalFooter
-                      {...footerProps}
-                      onClickOk={this.closeModalWithOk}
-                      closeHandler={this.onClickCancelButton}
-                      className={this.props.className}
-                    />
+                    {CustomFooter ? (
+                      <CustomFooter
+                        {...footerProps}
+                        onClickOk={this.closeModalWithOk}
+                        closeHandler={this.onClickCancelButton}
+                      />
+                    ) : (
+                      <ModalFooter
+                        {...footerProps}
+                        onClickOk={this.closeModalWithOk}
+                        closeHandler={this.onClickCancelButton}
+                        className={this.props.className}
+                      />
+                    )}
                   </div>
                 )}
               </CSSTransition>
