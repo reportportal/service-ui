@@ -19,8 +19,12 @@ import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
 import { withPopover } from 'componentLibrary/popover';
 import { organizationNameSelector, projectNameSelector } from 'controllers/project';
+import { ORGANIZATION_LEVEL, INSTANCE_LEVEL } from 'routes/constants';
+import { ADMINISTRATE_PAGE, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import ArrowLeftIcon from './img/arrow-left-inline.svg';
 import OpenPopoverIcon from './img/open-popover-inline.svg';
 import { OrganizationsPopover } from './organizationsPopover/organizationsPopover';
@@ -33,28 +37,65 @@ const messages = defineMessages({
     id: 'OrganizationsControl.organization',
     defaultMessage: 'Organization',
   },
+  all: {
+    id: 'OrganizationsControl.all',
+    defaultMessage: 'All',
+  },
+  allOrganizations: {
+    id: 'OrganizationsControl.allOrganizations',
+    defaultMessage: 'All organizations',
+  },
 });
 
-export const OrganizationsControl = ({ isPopoverOpen, onClick }) => {
+export const OrganizationsControl = ({ isPopoverOpen, onClick, sidebarType, closeSidebar }) => {
   const { formatMessage } = useIntl();
   const organizationName = useSelector(organizationNameSelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectName = useSelector(projectNameSelector);
-  const title = `${organizationName[0]}${organizationName[organizationName.length - 1]}`;
+
+  const titles = {
+    shortTitle: formatMessage(messages.all),
+    topTitle: formatMessage(messages.allOrganizations),
+    bottomTitle: null,
+  };
+
+  const link = { type: ADMINISTRATE_PAGE };
+
+  const getShortTitle = (title) => `${title[0]}${title[title.length - 1]}`;
+
+  switch (sidebarType) {
+    case INSTANCE_LEVEL: {
+      break;
+    }
+    case ORGANIZATION_LEVEL: {
+      titles.shortTitle = getShortTitle(organizationName);
+      titles.bottomTitle = organizationName;
+      break;
+    }
+    default: {
+      titles.shortTitle = getShortTitle(projectName);
+      titles.topTitle = `${formatMessage(messages.organization)}: ${organizationName}`;
+      titles.bottomTitle = projectName;
+      link.type = ORGANIZATION_PROJECTS_PAGE;
+      link.payload = { organizationSlug };
+      break;
+    }
+  }
 
   return (
     <div className={cx('organizations-control-wrapper')}>
       <button className={cx('organization-block')} onClick={onClick}>
-        {title}
+        {titles.shortTitle}
       </button>
       <button className={cx('organizations-control')} tabIndex={-1}>
         <div>
-          <button className={cx('organization-btn')} tabIndex={-1}>
+          <div className={cx('organization-btn-wrapper')}>
             <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-            <div className={cx('organization-name')}>
-              {formatMessage(messages.organization)}: {organizationName}
-            </div>
-          </button>
-          <div className={cx('project-name')}>{projectName}</div>
+            <Link to={link} className={cx('organization-btn')} onClick={closeSidebar}>
+              <div className={cx('organization-name')}>{titles.topTitle}</div>
+            </Link>
+          </div>
+          <div className={cx('project-name')}>{titles.bottomTitle}</div>
         </div>
         <i
           className={cx('open-popover', {
@@ -71,6 +112,12 @@ export const OrganizationsControl = ({ isPopoverOpen, onClick }) => {
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
+  sidebarType: PropTypes.string,
+};
+
+OrganizationsControl.defaultProps = {
+  sidebarType: null,
 };
 
 export const OrganizationsControlWithPopover = withPopover({

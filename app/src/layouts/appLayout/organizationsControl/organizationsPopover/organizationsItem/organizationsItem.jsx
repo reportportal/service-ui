@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
@@ -39,6 +39,7 @@ export const OrganizationsItem = ({
   organizationSlug,
   projects,
   isOpen,
+  isActive,
   onClick,
   currentProject,
 }) => {
@@ -47,8 +48,15 @@ export const OrganizationsItem = ({
   const [isShowOpenButton, setIsShowOpenButton] = useState(false);
   const [isFocusedShowOpenButton, setIsFocusedShowOpenButton] = useState(false);
   const [isFocusedCollapsedButton, setIsFocusedCollapsedButton] = useState(false);
+  const organizationItemRef = useRef(null);
 
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
+
+  useLayoutEffect(() => {
+    if (isActive) {
+      organizationItemRef.current.scrollIntoView({ block: 'end' });
+    }
+  }, [isActive]);
 
   const onShowOpenButton = () => {
     setIsShowOpenButton(true);
@@ -84,7 +92,7 @@ export const OrganizationsItem = ({
   };
 
   return (
-    <div className={cx('organization-item')}>
+    <div ref={organizationItemRef} className={cx('organization-item')}>
       <button
         className={cx('header-item')}
         onMouseEnter={onShowOpenButton}
@@ -101,7 +109,7 @@ export const OrganizationsItem = ({
             onBlur={onBlurCollapseButton}
           >
             {Parser(ArrowIcon)}
-            <div className={cx('organization-name')}>{organizationName}</div>
+            <div className={cx('organization-name', { active: isActive })}>{organizationName}</div>
           </button>
           <button
             className={cx('organization-open', {
@@ -140,6 +148,7 @@ OrganizationsItem.propTypes = {
   organizationSlug: PropTypes.string.isRequired,
   projects: PropTypes.array.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  isActive: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   currentProject: PropTypes.string.isRequired,
 };

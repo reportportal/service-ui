@@ -63,6 +63,8 @@ import { OrganizationProjectsPage } from 'pages/organization/organizationProject
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
+export const ORGANIZATION_LEVEL = 'ORGANIZATION_LEVEL';
+export const INSTANCE_LEVEL = 'INSTANCE_LEVEL';
 
 export const pageRendering = {
   [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
@@ -82,6 +84,7 @@ export const pageRendering = {
     component: OrganizationProjectsPage,
     layout: AppLayout,
     rawContent: true,
+    sidebarType: ORGANIZATION_LEVEL,
   },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },

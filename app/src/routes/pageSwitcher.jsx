@@ -56,7 +56,12 @@ export default class PageSwitcher extends React.Component {
 
     if (!page || !isInitialDispatchDone) return null;
 
-    const { component: PageComponent, layout: Layout, rawContent = false } = pageRendering[page];
+    const {
+      component: PageComponent,
+      layout: Layout,
+      rawContent = false,
+      sidebarType,
+    } = pageRendering[page];
 
     if (!PageComponent) throw new Error(`Page ${page} does not exist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
@@ -66,7 +71,7 @@ export default class PageSwitcher extends React.Component {
     return (
       <div className={styles.pageSwitcher}>
         <ThemeProvider>
-          <Layout rawContent={rawContent}>
+          <Layout rawContent={rawContent} sidebarType={sidebarType}>
             {mode === 'development' && <LocalizationSwitcher />}
             <PageErrorBoundary key={page}>
               <DndProvider backend={HTML5Backend}>

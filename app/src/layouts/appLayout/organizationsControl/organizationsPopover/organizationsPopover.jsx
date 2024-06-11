@@ -19,7 +19,7 @@ import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
 import { ADMINISTRATE_PAGE } from 'controllers/pages/constants';
@@ -39,9 +39,8 @@ const messages = defineMessages({
 export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
-  const { organizationSlug: currentOrganization, projectSlug } = useSelector(
-    urlOrganizationAndProjectSelector,
-  );
+  const currentOrganization = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
 
   const onClose = () => {
@@ -79,6 +78,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
             projects={projects}
             onClick={onClose}
             isOpen={currentOrganization === organizationSlug}
+            isActive={currentOrganization === organizationSlug && !projectSlug}
             currentProject={projectSlug}
             key={`${organizationSlug}-${projectSlug}`}
           />
