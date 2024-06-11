@@ -125,7 +125,7 @@ export class ProjectActivity extends Component {
   };
 
   getDayKey = (lastModified) => {
-    const date = new Date(parseFloat(lastModified));
+    const date = new Date(lastModified);
     const dateWoTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return Date.parse(dateWoTime);
   };
@@ -135,7 +135,7 @@ export class ProjectActivity extends Component {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).valueOf();
     const yesterday = new Date(today - 86400000).valueOf();
-    const dt = new Date(parseFloat(dateKey));
+    const dt = new Date(dateKey);
     if (dateKey === today) {
       return intl.formatMessage(COMMON_LOCALE_KEYS.today);
     } else if (dateKey === yesterday) {

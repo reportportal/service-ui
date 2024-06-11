@@ -99,9 +99,12 @@ export class Launch extends Component {
 
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.user}</span>
-        {!isRetentionType &&
-          `${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`}
+        {!isRetentionType && (
+          <Fragment>
+            <span className={cx('user-name')}>{activity.user}</span>
+            `${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`
+          </Fragment>
+        )}
         {activity.actionType === DELETE_LAUNCH && (
           <Fragment>
             {` ${formatMessage(messages.launch)} `}
