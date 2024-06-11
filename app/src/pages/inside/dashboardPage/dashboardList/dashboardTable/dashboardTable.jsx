@@ -22,6 +22,9 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { userRolesSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import {
   NameColumn,
   DescriptionColumn,
@@ -58,6 +61,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   slugs: urlOrganizationAndProjectSelector(state),
+  userRoles: userRolesSelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
@@ -69,6 +73,7 @@ export class DashboardTable extends Component {
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
+    userRoles: userRolesType,
     slugs: PropTypes.shape({
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
@@ -82,6 +87,7 @@ export class DashboardTable extends Component {
     projectId: '',
     dashboardItems: [],
     loading: false,
+    userRoles: {},
     filter: '',
   };
 
@@ -91,8 +97,11 @@ export class DashboardTable extends Component {
       onEditItem,
       intl,
       projectId,
+      userRoles,
       slugs: { organizationSlug, projectSlug },
     } = this.props;
+
+    const disabled = !canWorkWithDashboard(userRoles);
 
     return [
       {
@@ -131,6 +140,7 @@ export class DashboardTable extends Component {
         component: EditColumn,
         customProps: {
           onEdit: onEditItem,
+          disabled,
         },
         align: ALIGN_CENTER,
       },
@@ -142,6 +152,7 @@ export class DashboardTable extends Component {
         component: DeleteColumn,
         customProps: {
           onDelete: onDeleteItem,
+          disabled,
         },
         align: ALIGN_CENTER,
       },

@@ -29,14 +29,14 @@
 
 .icon-pencil {
   background-image: url(./img/pencil-icon.svg);
-  &:hover {
+  &:hover:not(.disabled) {
     background-image: url(./img/pencil-icon-hover.svg);
   }
 }
 
 .icon-delete {
   background-image: url(./img/bin-icon.svg);
-  &:hover {
+  &:hover:not(.disabled) {
     background-image: url(./img/bin-icon-hover.svg);
   }
 }

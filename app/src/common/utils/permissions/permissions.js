@@ -76,3 +76,5 @@ export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATIO
 export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
 export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);
 export const canRenameOrganization = checkPermission(ACTIONS.RENAME_ORGANIZATION);
+export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD);
+export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);

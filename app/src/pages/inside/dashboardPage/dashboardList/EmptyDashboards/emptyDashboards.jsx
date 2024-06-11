@@ -16,8 +16,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import { userRolesSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import styles from './emptyDashboards.scss';
@@ -44,20 +48,25 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 export class EmptyDashboards extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     filter: PropTypes.string,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
     action: () => {},
     filter: '',
+    userRoles: {},
   };
 
   render() {
-    const { action, intl, filter } = this.props;
+    const { action, intl, filter, userRoles } = this.props;
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
@@ -72,7 +81,11 @@ export class EmptyDashboards extends Component {
           {intl.formatMessage(messages.currentUserDashboardsText)}
         </p>
         <div className={cx('empty-dashboard-content')}>
-          <GhostButton icon={AddDashboardIcon} onClick={action}>
+          <GhostButton
+            icon={AddDashboardIcon}
+            onClick={action}
+            disabled={!canWorkWithDashboard(userRoles)}
+          >
             {intl.formatMessage(messages.currentUserDashboardsActionText)}
           </GhostButton>
         </div>

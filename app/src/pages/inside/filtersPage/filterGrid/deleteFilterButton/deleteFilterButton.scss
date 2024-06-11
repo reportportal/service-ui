@@ -20,7 +20,7 @@
   cursor: pointer;
   fill: $COLOR--gray-60;
 
-  &:hover {
+  &:hover:not(.disabled) {
     fill: $COLOR--gray-47;
   }
 }

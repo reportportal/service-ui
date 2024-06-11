@@ -21,13 +21,17 @@ import styles from './icon.scss';
 
 const cx = classNames.bind(styles);
 
-export const Icon = ({ type, onClick }) => <i className={cx('icon', type)} onClick={onClick} />;
+export const Icon = ({ type, onClick, disabled }) => (
+  <i className={cx('icon', type, { disabled })} onClick={disabled ? null : onClick} />
+);
 
 Icon.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 Icon.defaultProps = {
   onClick: () => {},
+  disabled: false,
 };
