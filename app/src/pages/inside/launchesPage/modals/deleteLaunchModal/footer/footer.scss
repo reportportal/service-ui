@@ -14,8 +14,39 @@
  * limitations under the License.
  */
 
-.message {
-  b {
-    font-family: $FONT-SEMIBOLD;
+.modal-footer {
+  position: relative;
+  display: table;
+  width: 100%;
+}
+.buttons-block {
+  float: right;
+  white-space: nowrap;
+}
+.left {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 20px;
+}
+.button-container {
+  &.left {
+    min-width: 20px;
+    height: 20px;
+    display: inline-block;
+    user-select: none;
+    cursor: pointer;
+  }
+  display: inline-block;
+  height: 30px;
+  min-width: 70px;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    font-size: 13px;
   }
 }

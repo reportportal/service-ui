@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-.message {
-  b {
-    font-family: $FONT-SEMIBOLD;
-  }
-}
+import { Footer } from './footer';
+
+export { Footer };

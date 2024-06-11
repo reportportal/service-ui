@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import DOMPurify from 'dompurify';
-import { BigButton } from 'components/buttons/bigButton';
-import { GhostButton } from 'components/buttons/ghostButton';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { Footer } from './footer';
 import styles from './deleteLaunchModal.scss';
 
 const messages = defineMessages({
@@ -54,22 +53,6 @@ const messages = defineMessages({
     id: 'DeleteLaunchModal.warningMultiple',
     defaultMessage:
       'You are going to delete not your own launches. This may affect other users information on the project.',
-  },
-  deleteImportantLaunches: {
-    id: 'DeleteLaunchModal.deleteImportantLaunches',
-    defaultMessage: 'Delete Important Launches',
-  },
-  deleteImportantLaunch: {
-    id: 'DeleteLaunchModal.deleteImportantLaunch',
-    defaultMessage: 'Delete Important Launch',
-  },
-  deleteWithImportantLaunch: {
-    id: 'DeleteLaunchModal.deleteWithImportantLaunch',
-    defaultMessage: 'Delete with Important Launches',
-  },
-  deleteOnlyRegular: {
-    id: 'DeleteLaunchModal.deleteOnlyRegular',
-    defaultMessage: 'Delete only regular',
   },
   deleteWithImportantLaunchMessage: {
     id: 'DeleteLaunchModal.deleteWithImportantLaunchMessage',
@@ -119,30 +102,41 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
     (launch) => launch.retentionPolicy === RETENTION_POLICY.REGULAR,
   );
 
+  const CustomFooter = useCallback(
+    (props) => (
+      <Footer
+        {...props}
+        launches={launches}
+        selectedRegularLaunches={selectedRegularLaunches}
+        selectedImportantLaunches={selectedImportantLaunches}
+        confirmDeleteLaunches={confirmDeleteLaunches}
+      />
+    ),
+    [launches, selectedRegularLaunches, selectedImportantLaunches, confirmDeleteLaunches],
+  );
+
   const getMainContent = () => {
     if (selectedImportantLaunches.length > 0 && selectedRegularLaunches.length > 0) {
-      return formatMessage(
-        selectedImportantLaunches.length === 1
-          ? messages.deleteWithImportantLaunchMessage
-          : messages.deleteWithImportantLaunchesMessage,
-        {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          name: selectedImportantLaunches[0].name,
-          importantCount: selectedImportantLaunches.length,
-          totalCount: launches.length,
-        },
-      );
+      return selectedImportantLaunches.length === 1
+        ? formatMessage(messages.deleteWithImportantLaunchMessage, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            name: selectedImportantLaunches[0].name,
+          })
+        : formatMessage(messages.deleteWithImportantLaunchesMessage, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            importantCount: selectedImportantLaunches.length,
+            totalCount: launches.length,
+          });
     } else if (selectedImportantLaunches.length > 0) {
-      return formatMessage(
-        selectedImportantLaunches.length === 1
-          ? messages.deleteImportantLaunchMessage
-          : messages.deleteImportantLaunchesMessage,
-        {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          name: selectedImportantLaunches[0].name,
-          importantCount: selectedImportantLaunches.length,
-        },
-      );
+      return selectedImportantLaunches.length === 1
+        ? formatMessage(messages.deleteImportantLaunchMessage, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            name: selectedImportantLaunches[0].name,
+          })
+        : formatMessage(messages.deleteImportantLaunchesMessage, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            importantCount: selectedImportantLaunches.length,
+          });
     } else {
       return launches.length === 1
         ? formatMessage(messages.deleteModalContent, {
@@ -161,64 +155,6 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
       ? formatMessage(messages.warning)
       : formatMessage(messages.warningMultiple));
 
-  const Footer = ({ onClickOk, closeHandler }) => (
-    <div className={cx('modal-footer')}>
-      <div className={cx('buttons-block')}>
-        <div className={cx('button-container', 'left')}>
-          {selectedRegularLaunches.length > 0 ? (
-            <GhostButton
-              color={'red'}
-              onClick={() => {
-                confirmDeleteLaunches(launches);
-                onClickOk();
-              }}
-              transparentBorder
-            >
-              {formatMessage(messages.deleteWithImportantLaunch)}
-            </GhostButton>
-          ) : (
-            <GhostButton
-              color={'red'}
-              onClick={() => {
-                confirmDeleteLaunches(selectedImportantLaunches);
-                onClickOk();
-              }}
-              transparentBorder
-            >
-              {formatMessage(
-                selectedImportantLaunches.length > 1
-                  ? messages.deleteImportantLaunches
-                  : messages.deleteImportantLaunch,
-              )}
-            </GhostButton>
-          )}
-        </div>
-        <div className={cx('button-container')}>
-          <BigButton color={'gray-60'} onClick={closeHandler}>
-            {cancelButton.text}
-          </BigButton>
-        </div>
-        {selectedRegularLaunches.length > 0 && (
-          <div className={cx('button-container')}>
-            <BigButton
-              color={'tomato'}
-              onClick={() => {
-                confirmDeleteLaunches(selectedRegularLaunches);
-                onClickOk();
-              }}
-            >
-              {formatMessage(messages.deleteOnlyRegular)}
-            </BigButton>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-  Footer.propTypes = {
-    onClickOk: PropTypes.func.isRequired,
-    closeHandler: PropTypes.func.isRequired,
-  };
-
   return (
     <ModalLayout
       title={
@@ -229,7 +165,7 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
       okButton={okButton}
       cancelButton={cancelButton}
       warningMessage={warning}
-      CustomFooter={selectedImportantLaunches.length > 0 ? Footer : null}
+      CustomFooter={selectedImportantLaunches.length > 0 ? CustomFooter : null}
     >
       <p className={cx('message')}>{Parser(DOMPurify.sanitize(getMainContent()))}</p>
     </ModalLayout>
