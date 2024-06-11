@@ -106,7 +106,7 @@ const ImportLaunchModal = ({ data: { onImport }, activeProject, importPlugins })
   const saveFiles = async () => {
     const url = URLS.pluginFileImport(activeProject, selectedPlugin.name);
 
-    trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL);
+    trackEvent(LAUNCHES_MODAL_EVENTS.getOkBtnImportModal(selectedPlugin.name));
     await uploadFiles(url, onUploadSuccess, onUploadError);
   };
 

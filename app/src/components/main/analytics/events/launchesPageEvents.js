@@ -268,11 +268,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
     LAUNCHES_PAGE,
   ),
-  OK_BTN_IMPORT_MODAL: {
+  getOkBtnImportModal: (selectedPluginName) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'import_launch',
     element_name: 'import',
-  },
+    type: selectedPluginName,
+  }),
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
