@@ -25,7 +25,12 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
 import { downloadFile } from 'common/utils/downloadFile';
-import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
+import {
+  canDeleteLaunch,
+  canForceFinishLaunch,
+  canMoveToDebug,
+  canStartAnalysis,
+} from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
 import { userRolesType } from 'common/constants/projectRoles';
@@ -318,6 +323,7 @@ export class Hamburger extends Component {
             />
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
+                disabled={!canStartAnalysis(userRoles)}
                 text={intl.formatMessage(messages.analysis)}
                 onClick={() => {
                   tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
@@ -326,7 +332,7 @@ export class Hamburger extends Component {
               />
             )}
             <HamburgerMenuItem
-              disabled={!!clusterTitle}
+              disabled={!!clusterTitle || !canStartAnalysis(userRoles)}
               title={clusterTitle}
               text={intl.formatMessage(messages.uniqueErrorAnalysis)}
               onClick={() => {
@@ -341,7 +347,7 @@ export class Hamburger extends Component {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
                 customProps.onPatternAnalysis(launch);
               }}
-              disabled={!enabledPatterns.length}
+              disabled={!enabledPatterns.length || !canStartAnalysis(userRoles)}
             />
             <HamburgerMenuItem
               text={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}

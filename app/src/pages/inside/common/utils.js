@@ -19,7 +19,7 @@ import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
 import { DEFECT_TYPES_SEQUENCE, DEFAULT_DEFECT_TYPES_LOCATORS } from 'common/constants/defectTypes';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
-import { canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
+import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
@@ -124,12 +124,14 @@ export const createStepActionDescriptors = (params) => {
       label: formatMessage(actionMessages.ignoreInAA),
       value: 'action-ignore-in-AA',
       hidden: debugMode || historyView,
+      disabled: !canWorkWithTests(userRoles),
       onClick: onIgnoreInAA,
     },
     {
       label: formatMessage(actionMessages.includeInAA),
       value: 'action-include-into-AA',
       hidden: debugMode || historyView,
+      disabled: !canWorkWithTests(userRoles),
       onClick: onIncludeInAA,
     },
     {

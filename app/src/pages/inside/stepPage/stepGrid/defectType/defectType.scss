@@ -37,7 +37,7 @@
 }
 
 .defect-type {
-  &:hover {
+  &:hover:not(.disabled) {
     .edit-icon {
       visibility: visible;
     }

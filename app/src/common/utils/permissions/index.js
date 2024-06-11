@@ -38,4 +38,5 @@ export {
   canWorkWithFilters,
   canReadData,
   canSeeDemoData,
+  canWorkWithTests,
 } from './permissions';

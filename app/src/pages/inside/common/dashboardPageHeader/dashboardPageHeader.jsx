@@ -33,6 +33,9 @@ import {
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
+import { userRolesSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
@@ -53,6 +56,7 @@ const DASHBOARDS_LIMIT = 300;
   activeItemId: activeDashboardIdSelector(state),
   totalDashboards: totalDashboardsSelector(state),
   isLoading: loadingSelector(state),
+  userRoles: userRolesSelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {
@@ -62,6 +66,7 @@ export class DashboardPageHeader extends Component {
     dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
     isLoading: PropTypes.bool,
     totalDashboards: PropTypes.number,
+    userRoles: userRolesType,
     slugs: PropTypes.shape({
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
@@ -73,6 +78,7 @@ export class DashboardPageHeader extends Component {
     dashboardsToDisplay: [],
     isLoading: true,
     totalDashboards: 0,
+    userRoles: {},
   };
 
   getDashboardPageItem = () => {
@@ -126,10 +132,10 @@ export class DashboardPageHeader extends Component {
     );
 
   render() {
-    const { activeItemId, isLoading, totalDashboards } = this.props;
+    const { activeItemId, isLoading, totalDashboards, userRoles } = this.props;
 
     const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
-    const disabled = isLoading || isAboveLimit;
+    const disabled = isLoading || isAboveLimit || !canWorkWithDashboard(userRoles);
 
     return (
       <div className={cx('dashboard-page-header')}>

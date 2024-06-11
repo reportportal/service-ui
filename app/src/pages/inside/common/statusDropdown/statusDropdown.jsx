@@ -64,6 +64,7 @@ export class StatusDropdown extends Component {
     showMessage: PropTypes.func,
     onChange: PropTypes.func,
     withIndicator: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -73,6 +74,7 @@ export class StatusDropdown extends Component {
     showMessage: () => {},
     onChange: () => {},
     withIndicator: false,
+    disabled: false,
   };
 
   updateItem = (newStatus) => {
@@ -140,7 +142,7 @@ export class StatusDropdown extends Component {
   };
 
   render() {
-    const { status, withIndicator } = this.props;
+    const { status, withIndicator, disabled } = this.props;
     return (
       <div className={cx('status-dropdown')}>
         <InputDropdown
@@ -156,6 +158,7 @@ export class StatusDropdown extends Component {
             dropdownOption: (withIndicator && cx('dropdown-option')) || '',
             opened: (withIndicator && cx('opened')) || '',
           }}
+          disabled={disabled}
           mobileDisabled
         />
       </div>

@@ -36,6 +36,10 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
+import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
+import { userRolesSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { connect } from 'react-redux';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -81,7 +85,7 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }) => {
+const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc, disabled } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -92,6 +96,7 @@ const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }
         description={description}
         onChange={onChange}
         fetchFunc={fetchFunc}
+        disabled={disabled}
       />
     </div>
   );
@@ -103,6 +108,7 @@ StatusColumn.propTypes = {
     formatMessage: PropTypes.func.isRequired,
     onChange: PropTypes.func,
     fetchFunc: PropTypes.func,
+    disabled: PropTypes.bool,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -127,7 +133,7 @@ StartTimeColumn.defaultProps = {
 const DefectTypeColumn = ({
   className,
   value,
-  customProps: { onEdit, onUnlinkSingleTicket, events },
+  customProps: { onEdit, onUnlinkSingleTicket, events, disabled },
 }) => (
   <div className={cx('defect-type-col', className)}>
     {value.issue?.issueType && (
@@ -137,6 +143,7 @@ const DefectTypeColumn = ({
         onEdit={() => onEdit(value)}
         onRemove={onUnlinkSingleTicket(value)}
         events={events}
+        disabled={disabled}
       />
     )}
   </div>
@@ -148,6 +155,7 @@ DefectTypeColumn.propTypes = {
     onEdit: PropTypes.func.isRequired,
     onUnlinkSingleTicket: PropTypes.func.isRequired,
     events: PropTypes.object,
+    disabled: PropTypes.bool,
   }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
@@ -167,6 +175,9 @@ PredefinedFilterSwitcherCell.defaultProps = {
   className: null,
 };
 
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @injectIntl
 @track()
 export class StepGrid extends Component {
@@ -198,6 +209,7 @@ export class StepGrid extends Component {
     }),
     onStatusUpdate: PropTypes.func.isRequired,
     modifyColumnsFunc: PropTypes.func,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
@@ -222,6 +234,7 @@ export class StepGrid extends Component {
       highlightedRowId: null,
     }),
     modifyColumnsFunc: null,
+    userRoles: {},
   };
 
   constructor(props) {
@@ -235,6 +248,7 @@ export class StepGrid extends Component {
       onEditDefect,
       onStatusUpdate,
       modifyColumnsFunc,
+      userRoles,
     } = props;
     this.columns = [
       {
@@ -286,6 +300,7 @@ export class StepGrid extends Component {
           formatMessage,
           onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
+          disabled: !canWorkWithTests(userRoles),
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,
@@ -318,6 +333,7 @@ export class StepGrid extends Component {
             onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
+          disabled: !canWorkWithDefectTypes(userRoles),
         },
         withFilter: true,
         filterEventInfo: events.DEFECT_TYPE_FILTER,

@@ -86,7 +86,7 @@ OwnerColumn.defaultProps = {
 };
 
 export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
-  const { onEdit } = customProps;
+  const { onEdit, disabled } = customProps;
   const { id } = value;
 
   const editItemHandler = () => {
@@ -96,7 +96,7 @@ export const EditColumn = track()(({ value, customProps, className, tracking: { 
 
   return (
     <div className={cx(className, 'icon-cell', 'with-button')}>
-      <Icon type="icon-pencil" onClick={editItemHandler} />
+      <Icon type="icon-pencil" onClick={editItemHandler} disabled={disabled} />
     </div>
   );
 });
@@ -113,16 +113,17 @@ EditColumn.defaultProps = {
 
 export const DeleteColumn = track()(
   ({ value, customProps, className, tracking: { trackEvent } }) => {
+    const { onDelete, disabled } = customProps;
     const deleteItemHandler = () => {
       const { id } = value;
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
-      customProps.onDelete(value);
+      onDelete(value);
     };
 
     return (
       <div className={cx(className, 'icon-cell', 'with-button')}>
         <div className={cx('icon-holder')}>
-          <Icon type="icon-delete" onClick={deleteItemHandler} />
+          <Icon type="icon-delete" onClick={deleteItemHandler} disabled={disabled} />
         </div>
       </div>
     );

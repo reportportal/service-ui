@@ -23,6 +23,9 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/user';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
 import { DisplayFilter } from './displayFilter';
@@ -39,7 +42,7 @@ const messages = defineMessages({
 });
 
 const NameColumn = ({ className, value, customProps }) => {
-  const { organizationSlug, projectSlug } = customProps;
+  const { organizationSlug, projectSlug, editable = true } = customProps;
   return (
     <div className={cx('name-col', className)}>
       <FilterName
@@ -51,6 +54,7 @@ const NameColumn = ({ className, value, customProps }) => {
           type: PROJECT_LAUNCHES_PAGE,
           payload: { projectSlug, filterId: value.id, organizationSlug },
         }}
+        editable={editable}
         isLink
         isBold
       />
@@ -96,15 +100,20 @@ OwnerColumn.defaultProps = {
   value: {},
 };
 
-const DisplayOnLaunchColumn = ({ className, value, customProps }) => (
-  <div className={cx('display-col', className)}>
-    <DisplayFilter
-      filter={value}
-      onChangeDisplay={customProps.onChangeDisplay}
-      userFilters={customProps.userFilters}
-    />
-  </div>
-);
+const DisplayOnLaunchColumn = ({ className, value, customProps }) => {
+  const { onChangeDisplay, userFilters, readOnly } = customProps;
+  return (
+    <div className={cx('display-col', className)}>
+      <DisplayFilter
+        filter={value}
+        onChangeDisplay={onChangeDisplay}
+        userFilters={userFilters}
+        readOnly={readOnly}
+      />
+    </div>
+  );
+};
+
 DisplayOnLaunchColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -115,11 +124,15 @@ DisplayOnLaunchColumn.defaultProps = {
   customProps: {},
 };
 
-const DeleteColumn = ({ className, value, customProps }) => (
-  <div className={cx('delete-col', className)}>
-    <DeleteFilterButton filter={value} onDelete={customProps.onDelete} />
-  </div>
-);
+const DeleteColumn = ({ className, value, customProps }) => {
+  const { disabled, onDelete } = customProps;
+
+  return (
+    <div className={cx('delete-col', className)}>
+      <DeleteFilterButton filter={value} onDelete={onDelete} disabled={disabled} />
+    </div>
+  );
+};
 DeleteColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -132,6 +145,7 @@ DeleteColumn.defaultProps = {
 
 @connect((state) => ({
   slugs: urlOrganizationAndProjectSelector(state),
+  userRoles: userRolesSelector(state),
 }))
 @injectIntl
 @track()
@@ -149,6 +163,7 @@ export class FilterGrid extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    userRoles: userRolesType,
     slugs: PropTypes.shape({
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
@@ -162,79 +177,88 @@ export class FilterGrid extends Component {
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     onDelete: () => {},
+    userRoles: {},
     loading: false,
   };
 
-  getColumns = () => [
-    {
-      id: 'name',
-      title: {
-        full: this.props.intl.formatMessage(messages.nameCol),
-      },
-      component: NameColumn,
-      customProps: {
-        userFilters: this.props.userFilters,
-        onClickName: (filter) => {
-          const isActiveFilter = this.props.userFilters.find((item) => item.id === filter.id);
-          if (!isActiveFilter) {
-            this.props.showFilterOnLaunchesAction(filter);
-          }
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_FILTER_NAME);
+  getColumns = () => {
+    const { userRoles } = this.props;
+    const editable = canWorkWithFilters(userRoles);
+
+    return [
+      {
+        id: 'name',
+        title: {
+          full: this.props.intl.formatMessage(messages.nameCol),
         },
-        onEdit: (filter) => {
-          this.props.onEdit(filter);
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
-        },
-        organizationSlug: this.props.slugs.organizationSlug,
-        projectSlug: this.props.slugs.projectSlug,
-      },
-    },
-    {
-      id: 'options',
-      title: {
-        full: this.props.intl.formatMessage(messages.optionsCol),
-      },
-      component: OptionsColumn,
-    },
-    {
-      id: 'owner',
-      title: {
-        full: this.props.intl.formatMessage(messages.ownerCol),
-      },
-      component: OwnerColumn,
-    },
-    {
-      id: 'display',
-      title: {
-        full: this.props.intl.formatMessage(messages.displayCol),
-      },
-      align: ALIGN_CENTER,
-      component: DisplayOnLaunchColumn,
-      customProps: {
-        userFilters: this.props.userFilters,
-        onChangeDisplay: (isFilterDisplayed, filter) => {
-          isFilterDisplayed
-            ? this.props.hideFilterOnLaunchesAction(filter)
-            : this.props.showFilterOnLaunchesAction(filter);
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
+        component: NameColumn,
+        customProps: {
+          userFilters: this.props.userFilters,
+          onClickName: (filter) => {
+            const isActiveFilter = this.props.userFilters.find((item) => item.id === filter.id);
+            if (!isActiveFilter) {
+              this.props.showFilterOnLaunchesAction(filter);
+            }
+            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_FILTER_NAME);
+          },
+          onEdit: (filter) => {
+            this.props.onEdit(filter);
+            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
+          },
+          organizationSlug: this.props.slugs.organizationSlug,
+          projectSlug: this.props.slugs.projectSlug,
+          editable,
         },
       },
-    },
-    {
-      id: 'delete',
-      title: {
-        full: this.props.intl.formatMessage(messages.deleteCol),
+      {
+        id: 'options',
+        title: {
+          full: this.props.intl.formatMessage(messages.optionsCol),
+        },
+        component: OptionsColumn,
       },
-      align: ALIGN_CENTER,
-      component: DeleteColumn,
-      customProps: {
-        onDelete: (filter) => {
-          this.props.onDelete(filter);
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
+      {
+        id: 'owner',
+        title: {
+          full: this.props.intl.formatMessage(messages.ownerCol),
+        },
+        component: OwnerColumn,
+      },
+      {
+        id: 'display',
+        title: {
+          full: this.props.intl.formatMessage(messages.displayCol),
+        },
+        align: ALIGN_CENTER,
+        component: DisplayOnLaunchColumn,
+        customProps: {
+          userFilters: this.props.userFilters,
+          onChangeDisplay: (isFilterDisplayed, filter) => {
+            isFilterDisplayed
+              ? this.props.hideFilterOnLaunchesAction(filter)
+              : this.props.showFilterOnLaunchesAction(filter);
+            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
+          },
+          readOnly: !editable,
         },
       },
-    },
-  ];
+      {
+        id: 'delete',
+        title: {
+          full: this.props.intl.formatMessage(messages.deleteCol),
+        },
+        align: ALIGN_CENTER,
+        component: DeleteColumn,
+        customProps: {
+          onDelete: (filter) => {
+            this.props.onDelete(filter);
+            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
+          },
+          disabled: !editable,
+        },
+      },
+    ];
+  };
 
   render() {
     return (

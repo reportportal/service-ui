@@ -70,7 +70,7 @@ PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }) => {
+export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, disabled }) => {
   const { trackEvent } = useTracking();
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const onClickEdit = (event) => {
@@ -84,7 +84,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
   };
 
   return (
-    <div className={cx('defect-type')}>
+    <div className={cx('defect-type', { disabled })}>
       <div className={cx('defect-type-labels')}>
         {issue.ignoreAnalyzer && <IgnoredInAALabel />}
         {issue.autoAnalyzed && <AALabel />}
@@ -92,7 +92,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
-            onClick={() => onClickEdit(events.onEditEvent?.(eventData))}
+            onClick={disabled ? null : () => onClickEdit(events.onEditEvent?.(eventData))}
           />
         )}
         <div
@@ -120,10 +120,12 @@ DefectType.propTypes = {
   onRemove: PropTypes.func,
   patternTemplates: PropTypes.array,
   events: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
   onRemove: () => {},
   patternTemplates: [],
   events: {},
+  disabled: false,
 };
