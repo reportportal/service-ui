@@ -22,7 +22,7 @@ import styles from './icon.scss';
 const cx = classNames.bind(styles);
 
 export const Icon = ({ type, onClick, disabled }) => (
-  <i className={cx('icon', type, { disabled })} onClick={disabled ? null : onClick} />
+  <button className={cx('icon', type, { disabled })} onClick={disabled ? null : onClick} />
 );
 
 Icon.propTypes = {

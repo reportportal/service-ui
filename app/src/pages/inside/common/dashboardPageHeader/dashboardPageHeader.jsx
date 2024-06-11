@@ -35,7 +35,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
 import { userRolesSelector } from 'controllers/user';
 import { userRolesType } from 'common/constants/projectRoles';
-import { canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
@@ -135,7 +135,7 @@ export class DashboardPageHeader extends Component {
     const { activeItemId, isLoading, totalDashboards, userRoles } = this.props;
 
     const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
-    const disabled = isLoading || isAboveLimit || !canWorkWithDefectTypes(userRoles);
+    const disabled = isLoading || isAboveLimit || !canWorkWithDashboard(userRoles);
 
     return (
       <div className={cx('dashboard-page-header')}>
