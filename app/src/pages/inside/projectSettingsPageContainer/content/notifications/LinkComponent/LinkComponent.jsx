@@ -24,14 +24,20 @@ import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
-export const LinkComponent = ({ to, children, icon, className }) => {
+export const LinkComponent = ({ to, children, icon, className, automationId }) => {
   return isInternalLink(to) ? (
-    <Link to={to} className={cx(className)} target={'_blank'}>
+    <Link to={to} className={cx(className)} target={'_blank'} data-automation-id={automationId}>
       {children}
       {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
     </Link>
   ) : (
-    <a href={to} className={cx(className)} target={'_blank'} rel="noopener noreferrer">
+    <a
+      href={to}
+      className={cx(className)}
+      target={'_blank'}
+      rel="noopener noreferrer"
+      data-automation-id={automationId}
+    >
       {children}
       {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
     </a>
@@ -49,8 +55,10 @@ LinkComponent.propTypes = {
   children: PropTypes.node.isRequired,
   icon: PropTypes.string,
   className: PropTypes.string,
+  automationId: PropTypes.string,
 };
-
 LinkComponent.defaultProps = {
   className: 'link-item-wrapper',
+  icon: null,
+  automationId: null,
 };

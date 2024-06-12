@@ -85,8 +85,9 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const activeProject = useSelector(activeProjectSelector);
   const userRoles = useSelector(userRolesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+  const pluginNameInCamelCase = toCamelCase(pluginName);
   const isPluginNotificationsEnabled = useSelector(
-    projectPluginNotificationsStateSelector(toCamelCase(pluginName)),
+    projectPluginNotificationsStateSelector(pluginNameInCamelCase),
   );
 
   const isUpdateSettingAvailable = canUpdateSettings(userRoles);
@@ -116,7 +117,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
     dispatch(
       updateNotificationStateAction(
         isEnabled,
-        NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(toCamelCase(pluginName)),
+        NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY(pluginNameInCamelCase),
       ),
     );
   };
@@ -229,7 +230,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   ];
 
   return (
-    <div className={cx('rule-section')}>
+    <div className={cx('rule-section')} data-automation-id={`${pluginNameInCamelCase}RulesSection`}>
       <Layout description={''} className={cx('rule-section-layout')}>
         <div className={cx('rule-section-header')}>
           <FieldElement
@@ -314,6 +315,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                   onClick={onAdd}
                   variant={'text'}
                   startIcon={addIcon}
+                  dataAutomationId="addRuleButton"
                 >
                   {formatMessage(messages.addRule)}
                 </Button>

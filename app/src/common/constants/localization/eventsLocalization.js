@@ -73,6 +73,8 @@ import {
   IMPORT as EVENT_ACTIONS_IMPORT,
   FINISH_IMPORT,
   START_IMPORT,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -123,6 +125,14 @@ export const actionMessages = defineMessages({
   [DELETE_LAUNCH]: {
     id: 'EventActions.deleteLaunch',
     defaultMessage: 'Delete launch',
+  },
+  [MARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'EventActions.markLaunchAsImportant',
+    defaultMessage: 'Mark launch as Important',
+  },
+  [UNMARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'EventActions.unmarkLaunchAsImportant',
+    defaultMessage: 'Unmark as launch as Important',
   },
   [EVENT_ACTIONS_IMPORT]: {
     id: 'EventActions.import',

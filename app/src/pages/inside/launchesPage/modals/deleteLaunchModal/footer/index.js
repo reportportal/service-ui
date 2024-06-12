@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-export { MoveToDebugModal } from './moveToDebugModal';
-export { LaunchCompareModal } from './launchCompareModal';
-export { LaunchMergeModal } from './launchMergeModal';
-export { LaunchFinishForceModal } from './launchFinishForceModal';
-export { LaunchAnalysisModal } from './launchAnalysisModal';
-export { LaunchPatternAnalysisModal } from './launchPatternAnalysisModal';
-export { ImportLaunchModal } from './importLaunchModal';
-export { DeleteLaunchModal } from './deleteLaunchModal';
+import { Footer } from './footer';
+
+export { Footer };
