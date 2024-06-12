@@ -447,9 +447,6 @@ export class LaunchesPage extends Component {
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_MODAL_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
-    );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
     fetch(URLS.launches(this.props.activeProject, ids), {

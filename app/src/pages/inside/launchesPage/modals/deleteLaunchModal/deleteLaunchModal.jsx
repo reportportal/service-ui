@@ -21,6 +21,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import DOMPurify from 'dompurify';
 import { withModal, ModalLayout } from 'components/main/modal';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Footer } from './footer';
@@ -85,15 +86,6 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
     closeModal();
   };
 
-  const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    danger: true,
-    onClick: confirmAndClose,
-  };
-  const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-  };
-
   const selectedImportantLaunches = launches.filter(
     (launch) => launch.retentionPolicy === RETENTION_POLICY.IMPORTANT,
   );
@@ -101,6 +93,18 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
   const selectedRegularLaunches = launches.filter(
     (launch) => launch.retentionPolicy === RETENTION_POLICY.REGULAR,
   );
+
+  const okButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    danger: true,
+    onClick: confirmAndClose,
+    eventInfo: LAUNCHES_MODAL_EVENTS.getClickDeleteLaunchesBtnModalEvent(
+      selectedRegularLaunches.length > 1,
+    ),
+  };
+  const cancelButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+  };
 
   const CustomFooter = useCallback(
     (props) => (
