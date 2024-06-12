@@ -17,9 +17,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { BigButton } from 'components/buttons/bigButton';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './footer.scss';
 
@@ -53,6 +55,7 @@ export const Footer = ({
   closeHandler,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
 
   return (
     <div className={cx('modal-footer')}>
@@ -64,6 +67,11 @@ export const Footer = ({
               onClick={() => {
                 confirmDeleteLaunches(launches);
                 onClickOk();
+                trackEvent(
+                  LAUNCHES_MODAL_EVENTS.getClickDeleteWithImportantLaunchesBtnModalEvent(
+                    launches.length > 1,
+                  ),
+                );
               }}
               transparentBorder
             >
@@ -75,6 +83,11 @@ export const Footer = ({
               onClick={() => {
                 confirmDeleteLaunches(selectedImportantLaunches);
                 onClickOk();
+                trackEvent(
+                  LAUNCHES_MODAL_EVENTS.getClickDeleteImportantLaunchesBtnModalEvent(
+                    selectedImportantLaunches.length > 1,
+                  ),
+                );
               }}
               transparentBorder
             >
@@ -98,6 +111,11 @@ export const Footer = ({
               onClick={() => {
                 confirmDeleteLaunches(selectedRegularLaunches);
                 onClickOk();
+                trackEvent(
+                  LAUNCHES_MODAL_EVENTS.getClickDeleteRegularLaunchesBtnModalEvent(
+                    selectedRegularLaunches.length > 1,
+                  ),
+                );
               }}
             >
               {formatMessage(messages.deleteOnlyRegular)}
