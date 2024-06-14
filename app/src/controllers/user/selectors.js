@@ -50,8 +50,8 @@ export const activeOrganizationRoleSelector = createSelector(
   activeProjectSelector,
   assignedOrganizationsSelector,
   (activeProject, assignedOrganizations) => {
-    const { projectSlug } = activeProject;
-    const assignedOrganization = assignedOrganizations[projectSlug];
+    const { organizationSlug } = activeProject;
+    const assignedOrganization = assignedOrganizations[organizationSlug];
     return assignedOrganization?.organizationRole;
   },
 );
