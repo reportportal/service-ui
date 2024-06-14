@@ -352,6 +352,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     !isAdminNewPageType
   ) {
     if (isProjectExists) {
+      // TODO: This will be replaced with request for organization by slug
       const organization = organizations.find(({ slug }) => slug === hashOrganizationSlug);
       dispatch(setActiveOrganizationAction(organization));
       dispatch(
