@@ -135,3 +135,9 @@
 .active {
   color: $COLOR--darkmode-topaz-text;
 }
+
+.disabled {
+  svg {
+    opacity: 0.3;
+  }
+}

@@ -51,6 +51,7 @@ export const OrganizationsItem = ({
   const organizationItemRef = useRef(null);
 
   const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
+  const isDisabled = projects.length === 0;
 
   useLayoutEffect(() => {
     if (isActive) {
@@ -87,7 +88,10 @@ export const OrganizationsItem = ({
   };
 
   const onClickCollapseButton = () => {
-    setIsCollapsed(!isCollapsed);
+    if (!isDisabled) {
+      setIsCollapsed(!isCollapsed);
+    }
+
     setIsFocusedCollapsedButton(false);
   };
 
@@ -103,6 +107,7 @@ export const OrganizationsItem = ({
           <button
             className={cx('collapse-projects', {
               focus: isFocusedCollapsedButton,
+              disabled: isDisabled,
             })}
             onClick={onClickCollapseButton}
             onFocus={onFocusCollapseButton}
