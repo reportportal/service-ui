@@ -88,18 +88,16 @@ export const availableProjectsSelector = createSelector(
             projectKey,
           }));
 
-        return organizationProjects.length > 0
-          ? [
-              ...projects,
-              {
-                organizationSlug,
-                organizationName,
-                projects: organizationProjects.sort((a, b) =>
-                  a.projectName.toLowerCase() > b.projectName.toLowerCase() ? 1 : -1,
-                ),
-              },
-            ]
-          : projects;
+        return [
+          ...projects,
+          {
+            organizationSlug,
+            organizationName,
+            projects: organizationProjects.sort((a, b) =>
+              a.projectName.toLowerCase() > b.projectName.toLowerCase() ? 1 : -1,
+            ),
+          },
+        ];
       }, []);
   },
 );
