@@ -88,10 +88,7 @@ export const OrganizationsItem = ({
   };
 
   const onClickCollapseButton = () => {
-    if (!isDisabled) {
-      setIsCollapsed(!isCollapsed);
-    }
-
+    setIsCollapsed(!isCollapsed);
     setIsFocusedCollapsedButton(false);
   };
 
@@ -109,6 +106,7 @@ export const OrganizationsItem = ({
               focus: isFocusedCollapsedButton,
               disabled: isDisabled,
             })}
+            disabled={isDisabled}
             onClick={onClickCollapseButton}
             onFocus={onFocusCollapseButton}
             onBlur={onBlurCollapseButton}
