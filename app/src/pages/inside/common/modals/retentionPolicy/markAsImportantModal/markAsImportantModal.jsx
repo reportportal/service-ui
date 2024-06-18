@@ -22,6 +22,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { withModal, ModalLayout } from 'components/main/modal';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import InfoYellowIcon from './icon/info-yellow-inline.svg';
 import { useFetchRetentionPolicy } from '../hooks';
 import styles from './markAsImportantModal.scss';
@@ -68,6 +69,7 @@ const MarkAsImportantModal = ({ data }) => {
   const okButton = {
     text: formatMessage(messages.markAsImportant),
     onClick: onSubmit,
+    eventInfo: LAUNCHES_MODAL_EVENTS.CLICK_MARK_AS_IMPORTANT_BTN_MODAL,
   };
 
   const cancelButton = {

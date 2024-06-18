@@ -318,6 +318,11 @@ export class Hamburger extends Component {
                   : messages.markAsImportant,
               )}
               onClick={() => {
+                tracking.trackEvent(
+                  launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                    ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                    : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                );
                 this.changeImportantState(launch.retentionPolicy);
               }}
             />

@@ -27,7 +27,7 @@ export {
   toggleAllLaunchesAction,
   setDebugMode,
   changeLaunchDistinctAction,
-  deleteItemsAction,
+  deleteLaunchesAction,
   fetchLaunchesWithParamsAction,
   updateLaunchLocallyAction,
   updateLaunchesLocallyAction,

@@ -17,6 +17,8 @@
 export const START_LAUNCH = 'startLaunch';
 export const FINISH_LAUNCH = 'finishLaunch';
 export const DELETE_LAUNCH = 'deleteLaunch';
+export const MARK_LAUNCH_AS_IMPORTANT = 'markLaunchAsImportant';
+export const UNMARK_LAUNCH_AS_IMPORTANT = 'unmarkLaunchAsImportant';
 export const POST_ISSUE = 'postIssue';
 export const LINK_ISSUE = 'linkIssue';
 export const UNLINK_ISSUE = 'unlinkIssue';

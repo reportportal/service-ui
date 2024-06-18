@@ -20,7 +20,6 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
-import DOMPurify from 'dompurify';
 import {
   LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
@@ -59,7 +58,7 @@ import {
   loadingSelector,
   NAMESPACE,
   toggleAllLaunchesAction,
-  deleteItemsAction,
+  deleteLaunchesAction,
   updateLaunchLocallyAction,
   updateLaunchesLocallyAction,
 } from 'controllers/launch';
@@ -76,23 +75,6 @@ import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
 
 const messages = defineMessages({
-  deleteModalHeader: {
-    id: 'LaunchesPage.deleteModalHeader',
-    defaultMessage: 'Delete launch',
-  },
-  deleteModalMultipleHeader: {
-    id: 'LaunchesPage.deleteModalMultipleHeader',
-    defaultMessage: 'Delete launches',
-  },
-  deleteModalContent: {
-    id: 'LaunchesPage.deleteModalContent',
-    defaultMessage:
-      "Are you sure you want to delete launch <b>''{name}''</b>? It will no longer exist.",
-  },
-  deleteModalMultipleContent: {
-    id: 'LaunchesPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure you want to delete launches? They will no longer exist.',
-  },
   success: {
     id: 'LaunchesPage.success',
     defaultMessage: 'Launch was deleted',
@@ -150,7 +132,7 @@ const messages = defineMessages({
     moveLaunchesAction,
     fetchLaunchesAction,
     toggleAllLaunchesAction,
-    deleteItemsAction,
+    deleteLaunchesAction,
     showNotification,
     showScreenLockAction,
     hideScreenLockAction,
@@ -195,7 +177,7 @@ export class LaunchesPage extends Component {
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
-    deleteItemsAction: PropTypes.func,
+    deleteLaunchesAction: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -232,7 +214,7 @@ export class LaunchesPage extends Component {
     lastOperation: {},
     loading: false,
     fetchLaunchesAction: () => {},
-    deleteItemsAction: () => {},
+    deleteLaunchesAction: () => {},
     highlightItemId: null,
     isDemoInstance: false,
   };
@@ -465,9 +447,6 @@ export class LaunchesPage extends Component {
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_MODAL_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
-    );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
     fetch(URLS.launches(this.props.projectKey, ids), {
@@ -497,24 +476,12 @@ export class LaunchesPage extends Component {
   };
 
   deleteItems = (launches) => {
-    const { intl, userId } = this.props;
+    const { userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
 
-    this.props.deleteItemsAction(selectedLaunches, {
-      onConfirm: this.confirmDeleteItems,
-      header:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.deleteModalHeader)
-          : intl.formatMessage(messages.deleteModalMultipleHeader),
-      mainContent:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, {
-              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-              name: selectedLaunches[0].name,
-            })
-          : intl.formatMessage(messages.deleteModalMultipleContent),
+    this.props.deleteLaunchesAction(selectedLaunches, {
+      confirmDeleteLaunches: this.confirmDeleteItems,
       userId,
-      eventsInfo: {},
     });
   };
 

@@ -27,6 +27,8 @@ import {
   DELETE_LAUNCH,
   START_IMPORT,
   FINISH_IMPORT,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 import { getProjectKey, getTestItemPageLink } from './utils';
 import styles from './common.scss';
@@ -46,6 +48,14 @@ const messages = defineMessages({
   [DELETE_LAUNCH]: {
     id: 'LaunchChanges.delete',
     defaultMessage: 'deleted',
+  },
+  [MARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'LaunchChanges.markLaunchAsImportant',
+    defaultMessage: ' is marked as important by ',
+  },
+  [UNMARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'LaunchChanges.unmarkLaunchAsImportant',
+    defaultMessage: ' is unmarked as important by ',
   },
   [START_IMPORT]: {
     id: 'LaunchChanges.startImport',
@@ -83,14 +93,30 @@ export class Launch extends Component {
       activity,
       intl: { formatMessage },
     } = this.props;
+
+    const isRetentionType =
+      activity.actionType === MARK_LAUNCH_AS_IMPORTANT ||
+      activity.actionType === UNMARK_LAUNCH_AS_IMPORTANT;
+
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.user}</span>
-        {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`}
+        {!isRetentionType && (
+          <Fragment>
+            <span className={cx('user-name')}>{activity.user}</span>
+            {messages[activity.actionType] && formatMessage(messages[activity.actionType])}
+          </Fragment>
+        )}
         {activity.actionType === DELETE_LAUNCH && (
           <Fragment>
             {` ${formatMessage(messages.launch)} `}
             {activity.objectName}.
+          </Fragment>
+        )}
+        {isRetentionType && (
+          <Fragment>
+            <span className={cx('activity-name')}>{activity.objectName}</span>
+            {formatMessage(messages[activity.actionType])}
+            <span className={cx('user-name')}>{activity.user}</span>
           </Fragment>
         )}
         {(activity.actionType === START_LAUNCH || activity.actionType === FINISH_LAUNCH) && (
