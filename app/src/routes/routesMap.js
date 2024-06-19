@@ -322,8 +322,13 @@ const routesMap = {
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const {
     type: nextPageType,
-    payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
+    payload: {
+      organizationSlug: hashOrganizationSlug,
+      projectSlug: hashProjectSlug,
+      projectKey: hashProjectKey,
+    },
   } = action;
+
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
@@ -334,12 +339,13 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
+  const projectKey =
+    isAdmin && hashProjectKey ? hashProjectKey : assignedProjects?.[hashProjectSlug]?.projectKey;
   const isProjectExists =
     assignedOrganizations &&
-    hashOrganizationSlug in assignedOrganizations &&
+    (isAdmin || hashOrganizationSlug in assignedOrganizations) &&
     assignedProjects &&
-    hashProjectSlug in assignedProjects;
+    (isAdmin || hashProjectSlug in assignedProjects);
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 

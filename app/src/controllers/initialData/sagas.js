@@ -32,6 +32,7 @@ import {
 } from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
 import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
+import { fetchOrganizationsAction } from 'controllers/organizations';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
@@ -39,6 +40,7 @@ function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
   yield put(fetchAppInfoAction());
   yield put(fetchUserAction());
+  yield put(fetchOrganizationsAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
     const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);

@@ -140,11 +140,11 @@ function* watchDeleteProject() {
 
 function* navigateToProject({ payload }) {
   const { project } = payload;
-  const { organizationSlug, projectSlug } = project;
+  const { organizationSlug, projectSlug, projectKey } = project;
 
   yield put({
     type: PROJECT_PAGE,
-    payload: { organizationSlug, projectSlug },
+    payload: { organizationSlug, projectSlug, projectKey },
   });
 }
 
