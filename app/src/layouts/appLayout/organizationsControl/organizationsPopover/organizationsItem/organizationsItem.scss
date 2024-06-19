@@ -137,7 +137,13 @@
 }
 
 .disabled {
+  cursor: default;
+
   svg {
     opacity: 0.3;
+  }
+
+  &:hover {
+    color: $COLOR--darkmode-gray-100;
   }
 }

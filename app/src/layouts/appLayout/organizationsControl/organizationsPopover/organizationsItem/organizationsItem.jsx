@@ -50,8 +50,8 @@ export const OrganizationsItem = ({
   const [isFocusedCollapsedButton, setIsFocusedCollapsedButton] = useState(false);
   const organizationItemRef = useRef(null);
 
-  const ArrowIcon = isCollapsed ? ArrowDownIcon : ArrowRightIcon;
   const isDisabled = projects.length === 0;
+  const ArrowIcon = isCollapsed && !isDisabled ? ArrowDownIcon : ArrowRightIcon;
 
   useLayoutEffect(() => {
     if (isActive) {
