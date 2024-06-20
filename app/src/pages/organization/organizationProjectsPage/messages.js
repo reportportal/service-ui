@@ -42,4 +42,28 @@ export const messages = defineMessages({
     id: 'OrganizationProjectsPage.noProjectsListWithPermission',
     defaultMessage: 'Create a new project to begin your ReportPortal journey',
   },
+  projects: {
+    id: 'OrganizationProjectsPage.projects',
+    defaultMessage: 'Projects',
+  },
+  users: {
+    id: 'OrganizationProjectsPage.users',
+    defaultMessage: 'Users',
+  },
+  projectName: {
+    id: 'OrganizationProjectsTableColumn.projectName',
+    defaultMessage: 'Project name',
+  },
+  teammates: {
+    id: 'OrganizationProjectsTableColumn.teammates',
+    defaultMessage: 'Teammates',
+  },
+  launches: {
+    id: 'OrganizationProjectsTableColumn.launches',
+    defaultMessage: 'Launches',
+  },
+  lastLaunch: {
+    id: 'OrganizationProjectsTableColumn.lastLaunch',
+    defaultMessage: 'Last launch date',
+  },
 });

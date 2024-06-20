@@ -14,16 +14,4 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.loader{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: auto;
-}
+export { ProjectsListTable } from './projectsListTable';

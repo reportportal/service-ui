@@ -21,7 +21,11 @@ import { PROJECTS_PAGE } from 'controllers/pages';
 import { fetchOrganizationBySlugAction } from 'controllers/organizations/organization/actionCreators';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import {
+  FETCH_ORGANIZATION_BY_SLUG,
+  FETCH_ORGANIZATION_PROJECTS,
+  PROJECTS_NAMESPACE,
+} from './constants';
 import { activeOrganizationSelector } from './selectors';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
@@ -31,7 +35,6 @@ function* fetchOrganizationBySlug({ payload: slug }) {
     yield put(showDefaultErrorNotification(error));
   }
 }
-
 function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }) {
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
@@ -42,10 +45,11 @@ function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }
     activeOrganization = yield select(activeOrganizationSelector);
 
     yield put(
-      fetchDataAction(FETCH_ORGANIZATION_PROJECTS)(
+      fetchDataAction(PROJECTS_NAMESPACE)(
         URLS.organizationProjects(activeOrganization.id, prefParam),
       ),
     );
+    yield take(createFetchPredicate(PROJECTS_NAMESPACE));
   } catch (error) {
     yield put(
       redirect({
@@ -58,7 +62,6 @@ function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }
 function* watchFetchOrganizationProjects() {
   yield takeEvery(FETCH_ORGANIZATION_PROJECTS, fetchOrganizationProjects);
 }
-
 function* watchFetchOrganizationBySlug() {
   yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
 }

@@ -18,9 +18,10 @@ import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
-import { organizationsListLoadingSelector } from 'controllers/organizations';
-import { organizationProjectsSelector } from 'controllers/organizations/organization';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { organizationLoadingSelector } from 'controllers/organizations/organization/selectors';
+import { projectsPaginationSelector } from 'controllers/administrate/projects';
+import { ProjectsListTable } from './projectsListTable';
 import { ProjectsPageHeader } from './header';
 import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
@@ -30,10 +31,10 @@ const cx = classNames.bind(styles);
 export const OrganizationProjectsPage = () => {
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
-  const orgProjects = useSelector(organizationProjectsSelector);
-  const organizationLoading = useSelector(organizationsListLoadingSelector);
-  const isProjectsEmpty = orgProjects.length === 0;
+  const { items: projects } = useSelector(projectsPaginationSelector);
+  const organizationLoading = useSelector(organizationLoadingSelector);
 
+  const isProjectsEmpty = projects?.length === 0;
   return (
     <div className={cx('organization-projects-container')}>
       {organizationLoading ? (
@@ -44,6 +45,7 @@ export const OrganizationProjectsPage = () => {
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
           {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
+          {!isProjectsEmpty && <ProjectsListTable projects={projects} />}
         </>
       )}
     </div>

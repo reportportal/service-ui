@@ -17,10 +17,9 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
 
 export const organizationReducer = combineReducers({
-  projects: fetchReducer(FETCH_ORGANIZATION_PROJECTS, { contentPath: 'content' }),
   activeOrganization: fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
     contentPath: 'items',
     getFirst: true,

@@ -21,22 +21,26 @@ import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { PROJECTS_PAGE } from 'controllers/pages';
-import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import plusIcon from 'common/img/plus-button-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { Button } from 'componentLibrary/button';
+import { activeOrganizationSelector } from 'controllers/organizations/organization';
+import userIcon from './img/user-inline.svg';
 import { messages } from '../messages';
 import styles from './projectsPageHeader.scss';
+import projectsIcon from './img/projects-inline.svg';
 
 const cx = classNames.bind(styles);
 
 export const ProjectsPageHeader = ({ hasPermission }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-  const organizationName = organization?.name;
-  const isNotEmpty = organization?.relationships?.projects?.meta?.count > 0;
+  const orgName = organization.name;
+  const projectsCount = organization.relationships?.projects?.meta.count;
+  const usersCount = organization.relationships?.users?.meta.count;
+  const isNotEmpty = projectsCount > 0;
 
   const breadcrumbs = [
     {
@@ -44,7 +48,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
       link: { type: PROJECTS_PAGE },
     },
     {
-      title: organizationName,
+      title: orgName,
     },
   ];
 
@@ -54,7 +58,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header')}>
-        <span className={cx('title')}>{organizationName}</span>
+        <span className={cx('title')}>{orgName}</span>
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
@@ -69,6 +73,20 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
           )}
         </div>
       </div>
+      {isNotEmpty && hasPermission && (
+        <div className={cx('details')}>
+          <div className={cx('details-item')}>
+            <i className={cx('details-item-icon')}>{Parser(projectsIcon)}</i>
+            <span>{formatMessage(messages.projects)}:</span>
+            <b>{projectsCount}</b>
+          </div>
+          <div className={cx('details-item')}>
+            <i className={cx('details-item-icon')}>{Parser(userIcon)}</i>
+            <span>{formatMessage(messages.users)}:</span>
+            <b>{usersCount}</b>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
