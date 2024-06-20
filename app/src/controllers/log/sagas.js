@@ -137,20 +137,23 @@ function* fetchAllErrorLogs({
   if (logViewMode === DETAILED_LOG_VIEW) {
     retryId = yield select(activeRetryIdSelector);
   }
+  const isDebugMode = yield select(debugModeSelector);
   let cancelRequest = () => {};
   try {
-    yield put(
-      fetchDataAction(namespace)(
-        URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
-        {
-          params: { ...query, excludeLogContent },
-          abort: (cancelFunc) => {
-            cancelRequest = cancelFunc;
+    if (!isDebugMode) {
+      yield put(
+        fetchDataAction(namespace)(
+          URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
+          {
+            params: { ...query, excludeLogContent },
+            abort: (cancelFunc) => {
+              cancelRequest = cancelFunc;
+            },
           },
-        },
-      ),
-    );
-    yield take(createFetchPredicate(namespace));
+        ),
+      );
+      yield take(createFetchPredicate(namespace));
+    }
   } catch (err) {
     yield handleError(err);
   } finally {
