@@ -40,6 +40,7 @@ import UkrainianFlagIcon from './img/ua-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
 import BelarusFlagIcon from './img/be-flag-inline.svg';
 import ChineseFlagIcon from './img/zh-flag-inline.svg';
+import SpanishFlagIcon from './img/es-flag-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -68,6 +69,10 @@ const messages = defineMessages({
     id: 'LocalizationBlock.chinese',
     defaultMessage: '简体中文',
   },
+  spanish: {
+    id: 'LocalizationBlock.spanish',
+    defaultMessage: 'Spanish',
+  },
   note: {
     id: 'LocalizationBlock.note',
     defaultMessage: 'Note',
@@ -84,6 +89,7 @@ const langName = {
   [RUSSIAN]: 'russian',
   [BELARUSIAN]: 'belarusian',
   [SIMPLIFIED_CHINESE]: 'chinese',
+  [SPANISH]: 'spanish',
 };
 
 const langNameByCode = (code) => langName[code];
@@ -128,6 +134,11 @@ const LANG_OPTIONS = [
     value: SIMPLIFIED_CHINESE,
     icon: ChineseFlagIcon,
     label: messages.chinese,
+  },
+  {
+    value: SPANISH,
+    icon: SpanishFlagIcon,
+    label: messages.spanish,
   },
 ];
 
