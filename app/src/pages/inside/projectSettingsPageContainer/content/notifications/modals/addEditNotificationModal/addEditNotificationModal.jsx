@@ -40,7 +40,7 @@ import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
-import { capitalizeWord } from 'pages/inside/projectSettingsPageContainer/content/notifications/modals/addEditNotificationModal/util';
+import { capitalizeWord } from './util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
