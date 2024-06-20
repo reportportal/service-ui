@@ -83,7 +83,7 @@ import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCre
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
-import { fetchOrganizationsAction, organizationsListSelector } from 'controllers/organizations';
+import { fetchOrganizationsAction } from 'controllers/organizations';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
@@ -100,8 +100,8 @@ import {
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
 import {
+  fetchOrganizationBySlugAction,
   fetchOrganizationProjectsAction,
-  setActiveOrganizationAction,
 } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
@@ -329,7 +329,6 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const authorized = isAuthorizedSelector(getState());
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
-  const organizations = organizationsListSelector(getState());
   const { assignedOrganizations, assignedProjects } = userInfo || {};
   const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
@@ -352,9 +351,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     !isAdminNewPageType
   ) {
     if (isProjectExists) {
-      // TODO: This will be replaced with request for organization by slug
-      const organization = organizations.find(({ slug }) => slug === hashOrganizationSlug);
-      dispatch(setActiveOrganizationAction(organization));
+      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,

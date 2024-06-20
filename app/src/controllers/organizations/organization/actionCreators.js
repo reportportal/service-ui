@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION } from './constants';
+import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
 
 export const fetchOrganizationProjectsAction = (payload) => ({
   type: FETCH_ORGANIZATION_PROJECTS,
   payload,
 });
 
-export const setActiveOrganizationAction = (payload) => ({
-  type: SET_ACTIVE_ORGANIZATION,
+export const fetchOrganizationBySlugAction = (payload) => ({
+  type: FETCH_ORGANIZATION_BY_SLUG,
   payload,
 });
