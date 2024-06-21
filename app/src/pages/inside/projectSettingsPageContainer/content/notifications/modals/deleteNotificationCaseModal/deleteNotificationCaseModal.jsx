@@ -23,7 +23,7 @@ import { ModalLayout } from 'componentLibrary/modal';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
-import { capitalizeWord } from '../addEditNotificationModal/util';
+import { capitalizeWord } from '../util';
 
 const messages = defineMessages({
   title: {
