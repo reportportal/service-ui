@@ -190,6 +190,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
         id: 'deleteNotificationModal',
         data: {
           onSave: () => confirmDelete(notification.id),
+          type: pluginName,
         },
       }),
     );
