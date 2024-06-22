@@ -40,6 +40,7 @@ import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
+import { capitalizeWord } from '../util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -70,7 +71,7 @@ const cx = className.bind(styles);
 const messages = defineMessages({
   title: {
     id: 'AddEditNotificationCaseModal.title',
-    defaultMessage: '{actionType} Notification Rule',
+    defaultMessage: '{actionType} {pluginType} Notification Rule',
   },
   description: {
     id: 'AddEditNotificationCaseModal.description',
@@ -323,6 +324,7 @@ const AddEditNotificationModal = ({
     <ModalLayout
       title={formatMessage(messages.title, {
         actionType: formatMessage(messages[data.actionType]),
+        pluginType: capitalizeWord(data.type),
       })}
       okButton={okButton}
       cancelButton={cancelButton}
