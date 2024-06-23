@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import { FETCH_PROJECT_DATA } from './constants';
+import { FETCH_PROJECT_DATA, FETCH_ACTIVE_PROJECT_DATA } from './constants';
 
 export const fetchProjectDataAction = () => ({
   type: FETCH_PROJECT_DATA,
+});
+
+export const fetchActiveProjectDataAction = (payload) => ({
+  type: FETCH_ACTIVE_PROJECT_DATA,
+  payload,
 });

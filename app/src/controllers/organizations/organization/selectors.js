@@ -16,8 +16,12 @@
 
 import { organizationsSelector } from 'controllers/organizations/selectors';
 
-const organizationSelector = (state) => organizationsSelector(state).organization || {};
+export const organizationSelector = (state) => organizationsSelector(state).organization || {};
 
-export const activeOrganizationSelector = (state) => organizationSelector(state).activeOrganization;
+export const activeOrganizationSelector = (state) =>
+  organizationSelector(state).activeOrganization?.[0];
 
 export const organizationProjectsSelector = (state) => organizationSelector(state).projects || [];
+
+export const organizationLoadingSelector = (state) =>
+  organizationSelector(state).organizationLoading;
