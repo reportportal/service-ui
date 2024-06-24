@@ -17,7 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
@@ -46,7 +46,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               onClick={okButton.onClick}
               disabled={okButton.disabled}
               type={okButton.attributes?.type}
-              form={okButton.attributes?.form}
+              // form={okButton.attributes?.form} //todo
               dataAutomationId={'submitButton'}
             >
               {okButton.text}

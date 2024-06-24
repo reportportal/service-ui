@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
@@ -118,7 +118,7 @@ const UniqueErrors = ({
         <Button
           type="submit"
           disabled={isFieldDisabled}
-          mobileDisabled
+          // mobileDisabled //todo delete
           dataAutomationId="submitButton"
         >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}

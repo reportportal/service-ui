@@ -17,8 +17,9 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import Parser from 'html-react-parser';
 import plusIcon from 'common/img/plus-button-inline.svg';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import styles from './emptyRuleState.scss';
 import { messages } from '../messages';
@@ -33,8 +34,8 @@ export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
       <Button
         onClick={onCreateClick}
         variant={'text'}
-        customClassName={cx('button')}
-        startIcon={plusIcon}
+        className={cx('button')}
+        icon={Parser(plusIcon)}
         dataAutomationId="createRuleFromEmptyStateButton"
       >
         {formatMessage(messages.create)}

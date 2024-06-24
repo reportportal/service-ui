@@ -21,7 +21,7 @@ import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
@@ -199,7 +199,7 @@ const AutoAnalysis = ({
         <Button
           type="submit"
           disabled={isFieldDisabled}
-          mobileDisabled
+          // mobileDisabled// todo delete
           dataAutomationId="submitButton"
         >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}

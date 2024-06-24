@@ -30,7 +30,7 @@ import {
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -184,7 +184,6 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
-import { Button } from 'componentLibrary/button';
 import { Toggle } from 'componentLibrary/toggle';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Dropdown } from 'componentLibrary/dropdown';

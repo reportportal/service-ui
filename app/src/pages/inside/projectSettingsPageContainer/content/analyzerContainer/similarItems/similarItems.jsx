@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
@@ -91,7 +91,7 @@ const SimilarItems = ({
         <Button
           type="submit"
           disabled={isFieldDisabled}
-          mobileDisabled
+          // mobileDisabled //todo delete
           dataAutomationId="submitButton"
         >
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}

@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { projectIdSelector } from 'controllers/pages';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import {
   NOTIFICATION_TYPES,
   showDefaultErrorNotification,

@@ -25,7 +25,7 @@ import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
 import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
 import { withTooltip } from 'componentLibrary/tooltip';
