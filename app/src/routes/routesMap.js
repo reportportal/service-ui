@@ -315,7 +315,7 @@ const routesMap = {
   [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 
-export const onBeforeRouteChange = async (dispatch, getState, { action }) => {
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },

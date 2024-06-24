@@ -63,6 +63,7 @@ function* fetchActiveProjectData({ payload: { organizationSlug, projectSlug, pro
       yield put(fetchOrganizationProjectsAction(organizationSlug));
       yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
 
+      // TODO: Fetch project by slug
       const organizationProjects = yield select(organizationProjectsSelector);
       const key = organizationProjects?.items?.find(({ slug }) => slug === projectSlug)?.key;
 

@@ -46,7 +46,6 @@ function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }
         URLS.organizationProjects(activeOrganization.id, prefParam),
       ),
     );
-    yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
   } catch (error) {
     yield put(
       redirect({
