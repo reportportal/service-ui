@@ -29,6 +29,7 @@ import {
   RUSSIAN,
   BELARUSIAN,
   SIMPLIFIED_CHINESE,
+  SPANISH,
   DEFAULT_LANGUAGE,
 } from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
