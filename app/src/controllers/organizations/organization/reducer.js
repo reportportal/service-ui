@@ -16,17 +16,15 @@
 
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { FETCH_ORGANIZATION_PROJECTS, SET_ACTIVE_ORGANIZATION } from './constants';
+import { loadingReducer } from 'controllers/loading';
+import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
 
-export const activeOrganizationReducer = (state = null, { type = '', payload = {} }) => {
-  switch (type) {
-    case SET_ACTIVE_ORGANIZATION:
-      return payload;
-    default:
-      return state;
-  }
-};
 export const organizationReducer = combineReducers({
   projects: fetchReducer(FETCH_ORGANIZATION_PROJECTS, { contentPath: 'content' }),
-  activeOrganization: activeOrganizationReducer,
+  activeOrganization: fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
+    contentPath: 'items',
+    getFirst: true,
+    initialState: null,
+  }),
+  organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
 });

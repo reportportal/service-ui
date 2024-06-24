@@ -15,32 +15,37 @@
  */
 
 import { takeEvery, all, put, select, take } from 'redux-saga/effects';
-import { createFetchPredicate } from 'controllers/fetch';
+import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { PROJECTS_PAGE } from 'controllers/pages';
-import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
-import { organizationsListSelector } from '../selectors';
-import { fetchOrganizationsAction } from '../actionCreators';
-import { FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { fetchOrganizationBySlugAction } from 'controllers/organizations/organization/actionCreators';
+import { URLS } from 'common/urls';
+import { showDefaultErrorNotification } from 'controllers/notification';
+import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
-import { NAMESPACE } from '../constants';
 
-function* fetchOrganizationProjects({ payload: { organizationSlug } }) {
-  yield put(fetchOrganizationsAction());
-  yield take(createFetchPredicate(NAMESPACE));
-  const organizations = yield select(organizationsListSelector);
-  const activeOrganization = yield select(activeOrganizationSelector);
+function* fetchOrganizationBySlug({ payload: slug }) {
+  try {
+    yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }) {
+  let activeOrganization = yield select(activeOrganizationSelector);
   try {
     if (!activeOrganization) {
-      const organization = organizations.find((org) => org.slug === organizationSlug);
-      if (!organization) {
-        throw new Error('Organization not found');
-      }
-      yield put(setActiveOrganizationAction(organization));
+      yield put(fetchOrganizationBySlugAction(organizationSlug));
+      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
     }
+    activeOrganization = yield select(activeOrganizationSelector);
 
-    // TODO: Uncomment this line after implementation of the organizationProjects in backend
-    // yield put(fetchDataAction(PROJECTS_NAMESPACE)(URLS.organizationProjects(orgsSlug)));
+    yield put(
+      fetchDataAction(FETCH_ORGANIZATION_PROJECTS)(
+        URLS.organizationProjects(activeOrganization.id, prefParam),
+      ),
+    );
   } catch (error) {
     yield put(
       redirect({
@@ -54,6 +59,10 @@ function* watchFetchOrganizationProjects() {
   yield takeEvery(FETCH_ORGANIZATION_PROJECTS, fetchOrganizationProjects);
 }
 
+function* watchFetchOrganizationBySlug() {
+  yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
+}
+
 export function* organizationSagas() {
-  yield all([watchFetchOrganizationProjects()]);
+  yield all([watchFetchOrganizationProjects(), watchFetchOrganizationBySlug()]);
 }

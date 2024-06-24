@@ -143,11 +143,12 @@ function* fetchUserWorker() {
     projectKey: defaultProjectKey,
     organizationId,
   } = assignedProjects[defaultProject];
-  const defaultOrganization =
-    Object.keys(assignedOrganizations).find(
-      (key) => assignedOrganizations[key].organizationId === organizationId,
-    ) || {};
-  const { organizationSlug: defaultOrganizationSlug } = assignedOrganizations[defaultOrganization];
+  const defaultOrganization = Object.keys(assignedOrganizations).find(
+    (key) => assignedOrganizations[key].organizationId === organizationId,
+  );
+  const { organizationSlug: defaultOrganizationSlug } = defaultOrganization
+    ? assignedOrganizations[defaultOrganization]
+    : Object.keys(assignedOrganizations)[0];
 
   const isSavedProjectExist =
     savedOrganizationSlug &&
