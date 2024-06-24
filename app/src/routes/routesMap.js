@@ -76,7 +76,7 @@ import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/p
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchProjectDataAction, fetchActiveProjectDataAction } from 'controllers/administrate';
+import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
@@ -99,6 +99,7 @@ import {
 } from 'controllers/pages/constants';
 import { MANAGER } from 'common/constants/projectRoles';
 import { fetchOrganizationProjectsAction } from 'controllers/organizations/organization';
+import { fetchActiveProjectDataAction } from 'controllers/project';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -196,6 +197,7 @@ const routesMap = {
       );
     },
   },
+  // TODO: Move the request for dashboards to the component
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/organizations/:organizationSlug?/projects/:projectSlug/dashboard',
     thunk: (dispatch) => {

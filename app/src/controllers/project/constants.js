@@ -25,6 +25,7 @@ export const FETCH_PROJECT_SUCCESS = 'fetchProjectSuccess';
 export const FETCH_PROJECT_PREFERENCES = 'fetchProjectPreferences';
 export const FETCH_PROJECT_PREFERENCES_SUCCESS = 'fetchProjectPreferencesSuccess';
 export const FETCH_CONFIGURATION_ATTRIBUTES = 'fetchConfigurationAttributes';
+export const FETCH_ACTIVE_PROJECT_DATA = 'fetchActiveProjectData';
 export const UPDATE_CONFIGURATION_ATTRIBUTES = 'updateConfigurationAttributes';
 export const UPDATE_DEFECT_TYPE = 'updateDefectType';
 export const UPDATE_DEFECT_TYPE_SUCCESS = 'updateDefectTypeSuccess';
