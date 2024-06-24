@@ -1213,6 +1213,7 @@
   "LocalizationBlock.label": "Мова",
   "LocalizationBlock.note": "До відома",
   "LocalizationBlock.russian": "Російська",
+  "LocalizationBlock.spanish": "Iспанська",
   "LocalizationBlock.ukrainian": "Українська",
   "LogItemActivity.changedByAnalyzer": "АА змінив тип дефекту",
   "LogItemActivity.issueLoadByAnalyzer": "АА прив’язав помилку",

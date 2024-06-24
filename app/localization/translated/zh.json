@@ -1213,6 +1213,7 @@
   "LocalizationBlock.label": "语言",
   "LocalizationBlock.note": "注释",
   "LocalizationBlock.russian": "俄语",
+  "LocalizationBlock.spanish": "英语",
   "LocalizationBlock.ukrainian": "乌克兰运",
   "LogItemActivity.changedByAnalyzer": "自动分析服务已更改缺陷类型",
   "LogItemActivity.issueLoadByAnalyzer": "自动分析服务已关联问题",
