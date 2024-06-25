@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector, userRolesSelector } from 'controllers/user';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { EDITOR, MANAGER, VIEWER } from 'common/constants/projectRoles';
@@ -28,13 +28,15 @@ import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/administrate/allUsers';
+import { fetchMembersAction } from 'controllers/members';
 import { messages } from './messages';
 import styles from './membersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersListTableWrapped = ({ members }) => {
+export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirection }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const { userRole: role, organizationRole, projectRole } = useSelector(userRolesSelector);
@@ -149,6 +151,14 @@ export const MembersListTableWrapped = ({ members }) => {
     </Popover>
   );
 
+  const onTableSorting = ({ key }) => {
+    onChangeSorting(key);
+
+    if (key === 'fullName') {
+      dispatch(fetchMembersAction());
+    }
+  };
+
   return (
     <Table
       data={data}
@@ -156,12 +166,17 @@ export const MembersListTableWrapped = ({ members }) => {
       fixedColumns={fixedColumns}
       rowActionMenu={isViewer ? null : rowActionMenu}
       className={cx('members-list-table')}
+      sortingColumn={primaryColumn}
+      sortingDirection={sortingDirection.toLowerCase()}
+      onChangeSorting={onTableSorting}
     />
   );
 };
 
 MembersListTableWrapped.propTypes = {
   members: PropTypes.array,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
 
 MembersListTableWrapped.defaultProps = {
