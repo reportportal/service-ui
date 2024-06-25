@@ -1,6 +1,6 @@
-export const convertQueryForRequest = (query) => {
+export const convertQueryForRequest = (query = {}) => {
   const result = { ...query };
-  if (query && query.order) {
+  if (result.order) {
     const [sort, order] = query.order.split(',');
     result.sort = sort;
     result.order = order;
