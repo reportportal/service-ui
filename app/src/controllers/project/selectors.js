@@ -17,7 +17,9 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { assignedOrganizationsSelector } from 'controllers/user';
+import { assignedOrganizationsSelector, userAccountRoleSelector } from 'controllers/user';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -55,13 +57,17 @@ export const projectNameSelector = (state) => projectInfoSelector(state).project
 export const organizationNameSelector = createSelector(
   assignedOrganizationsSelector,
   projectInfoSelector,
-  (assignedOrganizations, { organizationId }) => {
+  userAccountRoleSelector,
+  activeOrganizationSelector,
+  (assignedOrganizations, { organizationId }, accountRole, activeOrganization) => {
     const assignedOrganizationKey = Object.keys(assignedOrganizations).find(
       (assignedOrganization) =>
         assignedOrganizations[assignedOrganization].organizationId === organizationId,
     );
 
-    return assignedOrganizations[assignedOrganizationKey]?.organizationName;
+    const organizationName = assignedOrganizations[assignedOrganizationKey]?.organizationName;
+
+    return organizationName || (accountRole === ADMINISTRATOR && activeOrganization?.name);
   },
 );
 

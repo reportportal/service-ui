@@ -48,6 +48,7 @@ import {
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  FETCH_ACTIVE_PROJECT_DATA,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -211,5 +212,10 @@ export const setProjectNotificationsLoadingAction = (loading) => ({
 
 export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
   type: FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  payload,
+});
+
+export const fetchActiveProjectDataAction = (payload) => ({
+  type: FETCH_ACTIVE_PROJECT_DATA,
   payload,
 });
