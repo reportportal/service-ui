@@ -15,6 +15,8 @@
  */
 
 import { useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 import { BubblesLoader, MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,35 +24,30 @@ import {
   activeOrganizationSelector,
   fetchOrganizationProjectsAction,
 } from 'controllers/organizations/organization';
-import { ProjectName } from 'pages/admin/projectsPage/projectName';
 import { AbsRelTime } from 'components/main/absRelTime';
-import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
-import { loadingSelector, projectsPaginationSelector } from 'controllers/administrate/projects';
+import {
+  loadingSelector,
+  projectsPaginationSelector,
+} from 'controllers/organizations/projects/selectors';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/organizations/projects/constants';
+import { withPagination } from 'controllers/pagination';
 import { messages } from '../messages';
+import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
 
 const cx = classNames.bind(styles);
-export const ProjectsListTable = ({ projects }) => {
+
+export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting }) => {
   const { formatMessage } = useIntl();
   const [checkedRows, setCheckedRows] = useState(new Set([]));
   const organizationSlug = useSelector(activeOrganizationSelector).slug;
   const loadingState = useSelector(loadingSelector);
-  const { order: sortingDirection } = useSelector(projectsPaginationSelector);
   const dispatch = useDispatch();
-
-  const onTableColumnSort = ({ key, direction }) => {
-    const updatedDirection = direction === 'asc' ? 'desc' : 'asc';
-
+  const onTableColumnSort = ({ key }) => {
+    onChangeSorting(key);
     if (key === 'name') {
-      dispatch(
-        fetchOrganizationProjectsAction({
-          prefParam: {
-            order: updatedDirection.toUpperCase(),
-            sort: key,
-          },
-        }),
-      );
+      dispatch(fetchOrganizationProjectsAction());
     }
   };
   const data = useMemo(
@@ -168,7 +165,19 @@ export const ProjectsListTable = ({ projects }) => {
 
 ProjectsListTable.propTypes = {
   projects: PropTypes.array,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
 ProjectsListTable.defaultProps = {
   projects: [],
 };
+
+export const ProjectsListTableWrapper = withSortingURL({
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+})(
+  withPagination({
+    paginationSelector: projectsPaginationSelector,
+  })(ProjectsListTable),
+);

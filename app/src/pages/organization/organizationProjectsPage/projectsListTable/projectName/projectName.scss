@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-export { ProjectsListTableWrapper } from './projectsListTable';
+.name {
+  font-family: $FONT-REGULAR;
+  text-decoration: none;
+  color: $COLOR--topaz;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      cursor: default;
+      color: $COLOR--black-2;
+    }
+  }
+}

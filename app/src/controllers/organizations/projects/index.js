@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-export { ProjectsListTableWrapper } from './projectsListTable';
+export {
+  fetchProjectsByIdAction,
+  navigateToProjectAction,
+  navigateToProjectSectionAction,
+} from './actionCreators';
+export { projectsReducer } from './reducer';
+export {
+  projectsPaginationSelector,
+  projectsSelector,
+  loadingSelector,
+  querySelector,
+} from './selectors';
+export { projectsSagas } from './sagas';
+export {
+  DEFAULT_LIMITATION,
+  DEFAULT_OFFSET,
+  DEFAULT_SORT_COLUMN,
+  DEFAULT_QUERY_PARAMS,
+  FETCH_PROJECTS_BY_ID,
+  SORTING_KEY,
+} from './constants';
