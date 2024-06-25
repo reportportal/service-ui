@@ -16,7 +16,7 @@
 
 import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
-export const FETCH_PROJECTS_BY_ID = 'fetchProjectsById';
+export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
 export const NAMESPACE = 'projects';
 export const DEFAULT_LIMITATION = 300;
 export const DEFAULT_OFFSET = 0;

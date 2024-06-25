@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   activeOrganizationSelector,
-  fetchOrganizationProjectsAction,
+  prepareActiveOrganizationProjectsAction,
 } from 'controllers/organizations/organization';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
@@ -47,7 +47,7 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
   const onTableColumnSort = ({ key }) => {
     onChangeSorting(key);
     if (key === 'name') {
-      dispatch(fetchOrganizationProjectsAction());
+      dispatch(prepareActiveOrganizationProjectsAction());
     }
   };
   const data = useMemo(

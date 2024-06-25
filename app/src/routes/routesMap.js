@@ -101,7 +101,7 @@ import {
 } from 'controllers/pages/constants';
 import {
   fetchOrganizationBySlugAction,
-  fetchOrganizationProjectsAction,
+  prepareActiveOrganizationProjectsAction,
 } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
@@ -177,7 +177,7 @@ const routesMap = {
       const {
         location: { payload },
       } = getState();
-      dispatch(fetchOrganizationProjectsAction(payload));
+      dispatch(prepareActiveOrganizationProjectsAction(payload));
     },
   },
 

@@ -18,10 +18,10 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { convertQueryForRequest } from './util';
-import { NAMESPACE, FETCH_PROJECTS_BY_ID } from './constants';
+import { NAMESPACE, FETCH_ORGANIZATION_PROJECTS } from './constants';
 import { querySelector } from './selectors';
 
-function* fetchProjectsById({ payload: organizationId }) {
+function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
   const queryParams = convertQueryForRequest(query);
   yield put(
@@ -30,7 +30,7 @@ function* fetchProjectsById({ payload: organizationId }) {
 }
 
 function* watchFetchProjects() {
-  yield takeEvery(FETCH_PROJECTS_BY_ID, fetchProjectsById);
+  yield takeEvery(FETCH_ORGANIZATION_PROJECTS, fetchOrganizationProjects);
 }
 
 export function* projectsSagas() {
