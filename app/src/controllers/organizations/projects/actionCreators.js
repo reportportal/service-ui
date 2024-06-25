@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
+import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import { FETCH_ORGANIZATION_PROJECTS, NAVIGATE_TO_PROJECT } from './constants';
 
-export const prepareActiveOrganizationProjectsAction = (payload) => ({
-  type: PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
-  payload,
+export const fetchOrganizationProjectsAction = (params) => {
+  return {
+    type: FETCH_ORGANIZATION_PROJECTS,
+    payload: params,
+  };
+};
+
+export const navigateToProjectAction = (project) => ({
+  type: NAVIGATE_TO_PROJECT,
+  payload: project,
 });
 
-export const fetchOrganizationBySlugAction = (payload) => ({
-  type: FETCH_ORGANIZATION_BY_SLUG,
-  payload,
+export const navigateToProjectSectionAction = ({ organizationSlug, projectSlug }, section) => ({
+  type: PROJECT_DETAILS_PAGE,
+  payload: {
+    projectSlug,
+    projectSection: section,
+    organizationSlug,
+  },
 });

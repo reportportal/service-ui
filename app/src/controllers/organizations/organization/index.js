@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-export { fetchOrganizationProjectsAction, fetchOrganizationBySlugAction } from './actionCreators';
-export { organizationReducer } from './reducer';
 export {
-  organizationSelector,
-  organizationProjectsSelector,
-  organizationLoadingSelector,
-  activeOrganizationSelector,
-} from './selectors';
+  prepareActiveOrganizationProjectsAction,
+  fetchOrganizationBySlugAction,
+} from './actionCreators';
+export { organizationReducer } from './reducer';
+export { activeOrganizationSelector } from './selectors';
 export { organizationSagas } from './sagas';

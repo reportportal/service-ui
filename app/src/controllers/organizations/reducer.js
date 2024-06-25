@@ -18,10 +18,12 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { organizationReducer } from 'controllers/organizations/organization/reducer';
+import { projectsReducer } from './projects/reducer';
 import { NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
   list: fetchReducer(NAMESPACE, { contentPath: 'items' }),
   listLoading: loadingReducer(NAMESPACE),
   organization: organizationReducer,
+  projects: projectsReducer,
 });

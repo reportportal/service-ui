@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-export const PROJECTS_NAMESPACE = 'projects';
-
-export const PREPARE_ACTIVE_ORGANIZATION_PROJECTS = 'prepareActiveOrganizationProjects';
-
-export const FETCH_ORGANIZATION_BY_SLUG = 'fetchOrganizationBySlug';
+export { ProjectsListTableWrapper } from './projectsListTable';

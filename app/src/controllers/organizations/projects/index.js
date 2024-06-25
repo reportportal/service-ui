@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-export const PROJECTS_NAMESPACE = 'projects';
-
-export const PREPARE_ACTIVE_ORGANIZATION_PROJECTS = 'prepareActiveOrganizationProjects';
-
-export const FETCH_ORGANIZATION_BY_SLUG = 'fetchOrganizationBySlug';
+export {
+  fetchOrganizationProjectsAction,
+  navigateToProjectAction,
+  navigateToProjectSectionAction,
+} from './actionCreators';
+export { projectsReducer } from './reducer';
+export {
+  projectsPaginationSelector,
+  projectsSelector,
+  loadingSelector,
+  querySelector,
+} from './selectors';
+export { projectsSagas } from './sagas';
+export {
+  DEFAULT_LIMITATION,
+  DEFAULT_OFFSET,
+  DEFAULT_SORT_COLUMN,
+  DEFAULT_QUERY_PARAMS,
+  FETCH_ORGANIZATION_PROJECTS,
+  SORTING_KEY,
+} from './constants';
