@@ -44,7 +44,7 @@ export const OrganizationProjectsPage = () => {
   const buttonTitle = formatMessage(messages.createProject);
 
   const organization = useSelector(activeOrganizationSelector);
-  const isNotEmpty = organization?.relationships?.projects?.meta.count > 0;
+  const isEmpty = organization?.relationships?.projects?.meta.count === 0;
 
   return (
     <div className={cx('organization-projects-container')}>
@@ -55,7 +55,7 @@ export const OrganizationProjectsPage = () => {
       ) : (
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
-          {!isNotEmpty && (
+          {isEmpty && (
             <EmptyStatePage
               hasPermission={hasPermission}
               label={label}
