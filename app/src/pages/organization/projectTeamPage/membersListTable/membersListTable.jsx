@@ -131,7 +131,7 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
       key: 'permissions',
       header: formatMessage(messages.permissions),
       width: 114,
-      align: 'center',
+      align: 'left',
     },
   );
 
