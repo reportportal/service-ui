@@ -16,7 +16,7 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { withTooltip } from 'componentLibrary/tooltip';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
@@ -78,7 +78,7 @@ export const EmptyStatePage = ({
         ) : (
           <Button
             disabled={disableButton}
-            wide
+            adjustWidthOn={'wide-content'}
             onClick={disableButton ? null : handleButton}
             dataAutomationId={buttonDataAutomationId}
           >

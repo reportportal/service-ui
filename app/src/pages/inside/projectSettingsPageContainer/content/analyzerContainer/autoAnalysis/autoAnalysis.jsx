@@ -21,12 +21,11 @@ import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button } from 'componentLibrary/button';
+import { Button, Checkbox } from '@reportportal/ui-kit';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
-import { Checkbox } from 'componentLibrary/checkbox';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
@@ -196,12 +195,7 @@ const AutoAnalysis = ({
         >
           <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
         </FieldElement>
-        <Button
-          type="submit"
-          disabled={isFieldDisabled}
-          mobileDisabled
-          dataAutomationId="submitButton"
-        >
+        <Button type="submit" disabled={isFieldDisabled} dataAutomationId="submitButton">
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}

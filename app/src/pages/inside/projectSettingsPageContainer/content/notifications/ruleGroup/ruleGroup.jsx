@@ -16,7 +16,7 @@
 
 import { Layout } from 'pages/inside/projectSettingsPageContainer/content/layout';
 import { Toggle } from 'componentLibrary/toggle';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import addIcon from 'common/img/add-inline.svg';
 import React from 'react';
 import classNames from 'classnames/bind';
@@ -317,10 +317,10 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
               />
               {isUpdateSettingAvailable && (
                 <Button
-                  customClassName={cx('add-rule')}
+                  className={cx('add-rule')}
                   onClick={onAdd}
                   variant={'text'}
-                  startIcon={addIcon}
+                  icon={Parser(addIcon)}
                   dataAutomationId="addRuleButton"
                 >
                   {formatMessage(messages.addRule)}

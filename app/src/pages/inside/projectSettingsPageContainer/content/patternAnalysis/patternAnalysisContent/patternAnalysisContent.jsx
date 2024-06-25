@@ -27,8 +27,7 @@ import {
 } from 'controllers/project';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { useIntl } from 'react-intl';
-import { Checkbox } from 'componentLibrary/checkbox';
-import { Button } from 'componentLibrary/button';
+import { Button, Checkbox } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';

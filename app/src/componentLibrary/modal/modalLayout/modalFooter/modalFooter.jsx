@@ -17,7 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);

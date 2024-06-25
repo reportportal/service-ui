@@ -33,7 +33,7 @@ import { URLS } from 'common/urls';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';

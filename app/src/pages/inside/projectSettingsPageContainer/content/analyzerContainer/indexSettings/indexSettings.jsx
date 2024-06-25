@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
@@ -87,7 +87,6 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             disabled={indexingRunning || isFieldDisabled}
             onClick={generateIndex}
             title={analyzerUnavailableTitle}
-            mobileDisabled
             variant="ghost"
             dataAutomationId="generateIndexButton"
           >
@@ -97,7 +96,6 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             disabled={indexingRunning || isFieldDisabled}
             onClick={removeIndex}
             title={analyzerUnavailableTitle}
-            mobileDisabled
             variant="ghost"
             dataAutomationId="removeIndexButton"
           >

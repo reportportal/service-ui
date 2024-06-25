@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
@@ -88,12 +88,7 @@ const SimilarItems = ({
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
-        <Button
-          type="submit"
-          disabled={isFieldDisabled}
-          mobileDisabled
-          dataAutomationId="submitButton"
-        >
+        <Button type="submit" disabled={isFieldDisabled} dataAutomationId="submitButton">
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
