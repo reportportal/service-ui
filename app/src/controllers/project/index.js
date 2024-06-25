@@ -44,6 +44,7 @@ export {
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
   fetchProjectSuccessAction,
+  fetchActiveProjectDataAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

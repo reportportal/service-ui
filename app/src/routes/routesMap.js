@@ -21,9 +21,7 @@ import {
   userAccountRoleSelector,
   userInfoSelector,
   setActiveProjectAction,
-  setActiveProjectKeyAction,
 } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -83,7 +81,7 @@ import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCre
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
-import { fetchOrganizationsAction, organizationsListSelector } from 'controllers/organizations';
+import { fetchOrganizationsAction } from 'controllers/organizations';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
@@ -99,10 +97,9 @@ import {
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
-import {
-  fetchOrganizationProjectsAction,
-  setActiveOrganizationAction,
-} from 'controllers/organizations/organization/actionCreators';
+import { MANAGER } from 'common/constants/projectRoles';
+import { fetchOrganizationProjectsAction } from 'controllers/organizations/organization';
+import { fetchActiveProjectDataAction } from 'controllers/project';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -200,6 +197,7 @@ const routesMap = {
       );
     },
   },
+  // TODO: Move the request for dashboards to the component
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/organizations/:organizationSlug?/projects/:projectSlug/dashboard',
     thunk: (dispatch) => {
@@ -324,22 +322,27 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
+
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
-  const organizations = organizationsListSelector(getState());
   const { assignedOrganizations, assignedProjects } = userInfo || {};
+
   const isAdmin = accountRole === ADMINISTRATOR;
+  const isManager = accountRole === MANAGER;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
+
+  const isOrganizationExists =
+    assignedOrganizations && hashOrganizationSlug in assignedOrganizations;
+
   const isProjectExists =
-    assignedOrganizations &&
-    hashOrganizationSlug in assignedOrganizations &&
-    assignedProjects &&
-    hashProjectSlug in assignedProjects;
+    isOrganizationExists && assignedProjects && hashProjectSlug in assignedProjects;
+
+  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
+
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
@@ -351,18 +354,22 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     (isChangedProject || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (isProjectExists) {
-      // TODO: This will be replaced with request for organization by slug
-      const organization = organizations.find(({ slug }) => slug === hashOrganizationSlug);
-      dispatch(setActiveOrganizationAction(organization));
+    if (isAdmin || (isManager && isOrganizationExists) || isProjectExists) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
           projectSlug: hashProjectSlug,
         }),
       );
-      dispatch(setActiveProjectKeyAction(projectKey));
-      dispatch(fetchProjectAction(projectKey));
+
+      dispatch(
+        fetchActiveProjectDataAction({
+          organizationSlug: hashOrganizationSlug,
+          projectSlug: hashProjectSlug,
+          projectKey,
+        }),
+      );
+
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
       // TODO: to provide redirect in case of an existing organization and a non-existing project.
