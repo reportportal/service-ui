@@ -425,7 +425,7 @@ export class GeneralTab extends Component {
             />
           </FormField>
           <div className={cx('submit-block')}>
-            <Button variant={'topaz'} type="submit" disabled={isDisabled}>
+            <Button type="submit" disabled={isDisabled}>
               {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
             </Button>
             {processingData && (

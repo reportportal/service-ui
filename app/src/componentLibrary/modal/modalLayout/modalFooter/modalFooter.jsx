@@ -42,7 +42,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
         {okButton && (
           <div className={cx('button-container')}>
             <Button
-              variant={okButton.danger ? 'danger' : 'topaz'}
+              variant={okButton.danger ? 'danger' : undefined}
               onClick={okButton.onClick}
               disabled={okButton.disabled}
               type={okButton.attributes?.type}
