@@ -170,7 +170,7 @@ export class IntegrationForm extends Component {
                   <Button
                     onClick={this.toggleDisabled}
                     disabled={shouldFieldsBeHidden}
-                    dataAutomationId="editConfigurationButton"
+                    data-automation-id="editConfigurationButton"
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   </Button>
@@ -180,7 +180,7 @@ export class IntegrationForm extends Component {
                       <Button
                         onClick={handleSubmit(this.submitIntegration)}
                         disabled={shouldFieldsBeHidden}
-                        dataAutomationId="submitConfigurationButton"
+                        data-automation-id="submitConfigurationButton"
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
                       </Button>
@@ -192,7 +192,7 @@ export class IntegrationForm extends Component {
                           variant="ghost"
                           onClick={this.toggleDisabled}
                           disabled={shouldFieldsBeHidden}
-                          dataAutomationId="cancelConfigurationButton"
+                          data-automation-id="cancelConfigurationButton"
                         >
                           {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
                         </Button>

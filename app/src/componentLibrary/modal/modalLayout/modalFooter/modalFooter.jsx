@@ -33,7 +33,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               variant="ghost"
               onClick={closeHandler}
               disabled={cancelButton.disabled}
-              dataAutomationId={'cancelButton'}
+              data-automation-id={'cancelButton'}
             >
               {cancelButton.text}
             </Button>
@@ -47,7 +47,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               disabled={okButton.disabled}
               type={okButton.attributes?.type}
               form={okButton.attributes?.form}
-              dataAutomationId={'submitButton'}
+              data-automation-id={'submitButton'}
             >
               {okButton.text}
             </Button>

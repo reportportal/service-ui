@@ -69,7 +69,7 @@ export const AttributeListFormField = ({
       <Checkbox
         value={shown}
         onChange={attributeControlHandler}
-        dataAutomationId={'showAttributesCheckbox'}
+        data-automation-id={'showAttributesCheckbox'}
       >
         {formatMessage(messages.attributes)}
       </Checkbox>

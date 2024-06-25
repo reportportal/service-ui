@@ -80,7 +80,7 @@ export const EmptyStatePage = ({
             disabled={disableButton}
             adjustWidthOn={'wide-content'}
             onClick={disableButton ? null : handleButton}
-            dataAutomationId={buttonDataAutomationId}
+            data-automation-id={buttonDataAutomationId}
           >
             {buttonName}
           </Button>
