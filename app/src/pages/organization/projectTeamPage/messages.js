@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+import { defineMessages } from 'react-intl';
 
-.loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
+export const messages = defineMessages({
+  title: {
+    id: 'ProjectTeamPage.title',
+    defaultMessage: 'Project team',
+  },
+  noUsers: {
+    id: 'ProjectTeamPage.noUsers',
+    defaultMessage: 'No users added yet',
+  },
+  description: {
+    id: 'ProjectTeamPage.description',
+    defaultMessage:
+      'User list is currently empty. To make the most out of your project, invite your team members and collaborate efficiently.',
+  },
+  inviteUser: {
+    id: 'ProjectTeamPage.inviteUser',
+    defaultMessage: 'Invite user',
+  },
+});

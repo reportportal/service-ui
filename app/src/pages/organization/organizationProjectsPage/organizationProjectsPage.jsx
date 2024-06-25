@@ -18,21 +18,33 @@ import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import plusIcon from 'common/img/plus-button-inline.svg';
 import { organizationsListLoadingSelector } from 'controllers/organizations';
-import { organizationProjectsSelector } from 'controllers/organizations/organization';
+import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import { ProjectsPageHeader } from './header';
-import { EmptyProjectsState } from './emptyProjectsState';
+import { useIntl } from 'react-intl';
+import { ProjectsPageHeader } from './projectsPageHeader';
+import { EmptyStatePage } from '../emptyStatePage';
+import EmptyIcon from './img/empty-projects-icon-inline.svg';
+import { messages } from './messages';
 import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);
 
 export const OrganizationProjectsPage = () => {
+  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
-  const orgProjects = useSelector(organizationProjectsSelector);
   const organizationLoading = useSelector(organizationsListLoadingSelector);
-  const isProjectsEmpty = orgProjects.length === 0;
+
+  const permissionSuffix = hasPermission ? 'WithPermission' : 'WithoutPermission';
+  const label = formatMessage(messages[`noProjects${permissionSuffix}`]);
+  const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
+  const buttonTitle = formatMessage(messages.createProject);
+
+  const organization = useSelector(activeOrganizationSelector);
+  const isNotEmpty = organization?.relationships?.projects?.meta.count > 0;
 
   return (
     <div className={cx('organization-projects-container')}>
@@ -43,7 +55,16 @@ export const OrganizationProjectsPage = () => {
       ) : (
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
-          {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
+          {!isNotEmpty && (
+            <EmptyStatePage
+              hasPermission={hasPermission}
+              label={label}
+              description={description}
+              startIcon={plusIcon}
+              buttonTitle={buttonTitle}
+              emptyIcon={EmptyIcon}
+            />
+          )}
         </>
       )}
     </div>
