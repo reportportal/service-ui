@@ -46,7 +46,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               onClick={okButton.onClick}
               disabled={okButton.disabled}
               type={okButton.attributes?.type}
-              // form={okButton.attributes?.form} //todo
+              form={okButton.attributes?.form}
               dataAutomationId={'submitButton'}
             >
               {okButton.text}

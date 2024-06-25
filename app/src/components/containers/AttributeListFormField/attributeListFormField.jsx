@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import styles from './attributeListFormField.scss';
 

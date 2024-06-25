@@ -87,7 +87,6 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             disabled={indexingRunning || isFieldDisabled}
             onClick={generateIndex}
             title={analyzerUnavailableTitle}
-            // mobileDisabled //todo delete
             variant="ghost"
             dataAutomationId="generateIndexButton"
           >
@@ -97,7 +96,6 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
             disabled={indexingRunning || isFieldDisabled}
             onClick={removeIndex}
             title={analyzerUnavailableTitle}
-            // mobileDisabled //todo delete
             variant="ghost"
             dataAutomationId="removeIndexButton"
           >

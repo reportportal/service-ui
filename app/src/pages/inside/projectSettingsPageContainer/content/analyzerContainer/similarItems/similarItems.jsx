@@ -88,12 +88,7 @@ const SimilarItems = ({
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
-        <Button
-          type="submit"
-          disabled={isFieldDisabled}
-          // mobileDisabled //todo delete
-          dataAutomationId="submitButton"
-        >
+        <Button type="submit" disabled={isFieldDisabled} dataAutomationId="submitButton">
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
