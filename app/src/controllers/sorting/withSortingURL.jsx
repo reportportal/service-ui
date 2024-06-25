@@ -26,13 +26,16 @@ export const withSortingURL = ({
   staticFields = [],
   namespace,
   namespaceSelector,
+  sortingKey = SORTING_KEY,
 } = {}) => (WrappedComponent) => {
   @connectRouter(
-    (query) => ({
-      sortingString: query[SORTING_KEY],
-    }),
+    (query) => {
+      return {
+        sortingString: query[sortingKey],
+      };
+    },
     {
-      updateSorting: (sortingString) => ({ [SORTING_KEY]: sortingString }),
+      updateSorting: (sortingString) => ({ [sortingKey]: sortingString }),
     },
     { namespace, namespaceSelector },
   )

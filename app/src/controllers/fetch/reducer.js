@@ -34,7 +34,7 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   switch (type) {
     case FETCH_SUCCESS:
       if (options.getFirst && payload[contentPath] instanceof Array) {
-        return payload[contentPath][0];
+        return payload[contentPath][0] || null;
       }
       return contentPath && payload[contentPath] ? payload[contentPath] : payload;
     case CONCAT_FETCH_SUCCESS: {

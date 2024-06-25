@@ -20,8 +20,8 @@ import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { organizationLoadingSelector } from 'controllers/organizations/organization/selectors';
-import { projectsPaginationSelector } from 'controllers/administrate/projects';
-import { ProjectsListTable } from './projectsListTable';
+import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
+import { ProjectsListTableWrapper } from './projectsListTable';
 import { ProjectsPageHeader } from './header';
 import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
@@ -44,8 +44,11 @@ export const OrganizationProjectsPage = () => {
       ) : (
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
-          {isProjectsEmpty && <EmptyProjectsState hasPermission={hasPermission} />}
-          {!isProjectsEmpty && <ProjectsListTable projects={projects} />}
+          {isProjectsEmpty ? (
+            <EmptyProjectsState hasPermission={hasPermission} />
+          ) : (
+            <ProjectsListTableWrapper projects={projects} />
+          )}
         </>
       )}
     </div>

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,26 @@
  * limitations under the License.
  */
 
-export { ProjectsListTableWrapper } from './projectsListTable';
+import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import { FETCH_PROJECTS_BY_ID, NAVIGATE_TO_PROJECT } from './constants';
+
+export const fetchProjectsByIdAction = (params) => {
+  return {
+    type: FETCH_PROJECTS_BY_ID,
+    payload: params,
+  };
+};
+
+export const navigateToProjectAction = (project) => ({
+  type: NAVIGATE_TO_PROJECT,
+  payload: project,
+});
+
+export const navigateToProjectSectionAction = ({ organizationSlug, projectSlug }, section) => ({
+  type: PROJECT_DETAILS_PAGE,
+  payload: {
+    projectSlug,
+    projectSection: section,
+    organizationSlug,
+  },
+});
