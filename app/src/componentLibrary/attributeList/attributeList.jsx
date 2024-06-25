@@ -326,7 +326,7 @@ export const AttributeList = ({
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
-            dataAutomationId={'addAttributeButton'}
+            data-automation-id={'addAttributeButton'}
           >
             {newAttrMessage || (
               <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />

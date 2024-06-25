@@ -102,7 +102,7 @@ export const IntegrationHeader = (props) => {
             <Button
               disabled={!isAbleToClick}
               onClick={onAddProjectIntegration}
-              dataAutomationId="addProjectIntegrationButton"
+              data-automation-id="addProjectIntegrationButton"
             >
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
@@ -110,7 +110,7 @@ export const IntegrationHeader = (props) => {
               <Button
                 onClick={onResetProjectIntegration}
                 variant="ghost"
-                dataAutomationId="resetToGlobalIntegrationsButton"
+                data-automation-id="resetToGlobalIntegrationsButton"
               >
                 {formatMessage(messages.projectIntegrationReset)}
               </Button>

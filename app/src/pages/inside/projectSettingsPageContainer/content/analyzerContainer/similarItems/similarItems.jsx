@@ -88,7 +88,7 @@ const SimilarItems = ({
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} dataAutomationId="submitButton">
+        <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}

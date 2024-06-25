@@ -321,7 +321,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                   onClick={onAdd}
                   variant={'text'}
                   icon={Parser(addIcon)}
-                  dataAutomationId="addRuleButton"
+                  data-automation-id="addRuleButton"
                 >
                   {formatMessage(messages.addRule)}
                 </Button>

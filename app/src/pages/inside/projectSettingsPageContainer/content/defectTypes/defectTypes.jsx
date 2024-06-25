@@ -131,7 +131,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
               trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
             )
           }
-          dataAutomationId={'createDefectTypeButton'}
+          data-automation-id={'createDefectTypeButton'}
         >
           {formatMessage(messages.createDefectHeader)}
         </Button>
