@@ -18,9 +18,9 @@ import { redirect, actionToPath } from 'redux-first-router';
 import qs from 'qs';
 import {
   activeProjectSelector,
-  userAccountRoleSelector,
   userInfoSelector,
   setActiveProjectAction,
+  userRolesSelector,
 } from 'controllers/user';
 import {
   LOGIN_PAGE,
@@ -326,12 +326,12 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const accountRole = userAccountRoleSelector(getState());
+  const { userRole, organizationRole } = userRolesSelector(getState());
   const userInfo = userInfoSelector(getState());
   const { assignedOrganizations, assignedProjects } = userInfo || {};
 
-  const isAdmin = accountRole === ADMINISTRATOR;
-  const isManager = accountRole === MANAGER;
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = organizationRole === MANAGER;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
