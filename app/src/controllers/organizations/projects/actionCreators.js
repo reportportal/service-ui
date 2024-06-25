@@ -15,11 +15,11 @@
  */
 
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
-import { FETCH_PROJECTS_BY_ID, NAVIGATE_TO_PROJECT } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS, NAVIGATE_TO_PROJECT } from './constants';
 
-export const fetchProjectsByIdAction = (params) => {
+export const fetchOrganizationProjectsAction = (params) => {
   return {
-    type: FETCH_PROJECTS_BY_ID,
+    type: FETCH_ORGANIZATION_PROJECTS,
     payload: params,
   };
 };

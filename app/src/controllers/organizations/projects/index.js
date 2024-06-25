@@ -15,7 +15,7 @@
  */
 
 export {
-  fetchProjectsByIdAction,
+  fetchOrganizationProjectsAction,
   navigateToProjectAction,
   navigateToProjectSectionAction,
 } from './actionCreators';
@@ -32,6 +32,6 @@ export {
   DEFAULT_OFFSET,
   DEFAULT_SORT_COLUMN,
   DEFAULT_QUERY_PARAMS,
-  FETCH_PROJECTS_BY_ID,
+  FETCH_ORGANIZATION_PROJECTS,
   SORTING_KEY,
 } from './constants';

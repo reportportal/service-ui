@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
 
-export const fetchOrganizationProjectsAction = (payload) => ({
-  type: FETCH_ORGANIZATION_PROJECTS,
+export const prepareActiveOrganizationProjectsAction = (payload) => ({
+  type: PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
   payload,
 });
 
