@@ -23,15 +23,15 @@ import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Button } from 'componentLibrary/button';
 import { useIntl } from 'react-intl';
 import { messages } from '../messages';
-import styles from './membersPageHeader.scss';
+import styles from './projectTeamPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersPageHeader = ({ hasPermission, isNotEmpty }) => {
+export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className={cx('members-page-header-container')}>
+    <div className={cx('project-team-page-header-container')}>
       <div className={cx('header')}>
         <span className={cx('title')}>{formatMessage(messages.title)}</span>
         <div className={cx('actions')}>
@@ -52,12 +52,12 @@ export const MembersPageHeader = ({ hasPermission, isNotEmpty }) => {
   );
 };
 
-MembersPageHeader.propTypes = {
+ProjectTeamPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
   isNotEmpty: PropTypes.bool,
 };
 
-MembersPageHeader.defaultProps = {
+ProjectTeamPageHeader.defaultProps = {
   hasPermission: false,
   isNotEmpty: false,
 };

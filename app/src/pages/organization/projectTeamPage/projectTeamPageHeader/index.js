@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { MembersPageHeader } from './membersPageHeader';
+export { ProjectTeamPageHeader } from './projectTeamPageHeader';

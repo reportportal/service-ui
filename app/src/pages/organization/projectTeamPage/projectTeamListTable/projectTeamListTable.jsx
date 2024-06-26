@@ -20,8 +20,6 @@ import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector, userRolesSelector } from 'controllers/user';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { EDITOR, MANAGER, VIEWER } from 'common/constants/projectRoles';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
@@ -29,33 +27,19 @@ import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/administrate/allUsers';
 import { fetchMembersAction } from 'controllers/members';
+import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
+import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import { messages } from './messages';
-import styles from './membersListTable.scss';
+import styles from './projectTeamListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirection }) => {
+export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingDirection }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const { userRole: role, organizationRole, projectRole } = useSelector(userRolesSelector);
-  const hasPermission = role === ADMINISTRATOR || organizationRole === MANAGER;
-  const isViewer = projectRole === VIEWER;
-
-  const getPermission = (memberRole, memberOrganizationRole, memberProjectRole) => {
-    if (memberRole === ADMINISTRATOR) {
-      return formatMessage(messages.adminRole);
-    }
-    if (memberOrganizationRole === MANAGER) {
-      return formatMessage(messages.managerRole);
-    }
-    if (memberProjectRole === EDITOR) {
-      return formatMessage(messages.editorRole);
-    } else {
-      return formatMessage(messages.viewerRole);
-    }
-  };
+  const userRoles = useSelector(userRolesSelector);
 
   const data = useMemo(
     () =>
@@ -67,11 +51,11 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
           metadata,
           userRole,
           userId,
-          assignedOrganization,
-          assignedProject,
+          assignedOrganizations,
+          assignedProjects,
         }) => {
-          const memberOrganizationRole = assignedOrganization?.[organizationSlug]?.organizationRole;
-          const memberProjectRole = assignedProject?.[projectSlug]?.projectRole;
+          const organizationRole = assignedOrganizations?.[organizationSlug]?.organizationRole;
+          const projectRole = assignedProjects?.[projectSlug]?.projectRole;
 
           return {
             id,
@@ -97,7 +81,9 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
                 <span>n/a</span>
               ),
             },
-            permissions: getPermission(userRole, memberOrganizationRole, memberProjectRole),
+            permissions: formatMessage(
+              getRoleTitle(messages, userRole, organizationRole, projectRole),
+            ),
           };
         },
       ),
@@ -111,7 +97,7 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
 
   const fixedColumns = [];
 
-  if (hasPermission) {
+  if (canSeeEmailMembers(userRoles)) {
     fixedColumns.push({
       key: 'email',
       header: formatMessage(messages.email),
@@ -164,8 +150,8 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
       data={data}
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
-      rowActionMenu={isViewer ? null : rowActionMenu}
-      className={cx('members-list-table')}
+      rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
+      className={cx('project-team-list-table')}
       sortingColumn={primaryColumn}
       sortingDirection={sortingDirection.toLowerCase()}
       onChangeSorting={onTableSorting}
@@ -173,17 +159,17 @@ export const MembersListTableWrapped = ({ members, onChangeSorting, sortingDirec
   );
 };
 
-MembersListTableWrapped.propTypes = {
+ProjectTeamListTableWrapped.propTypes = {
   members: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
 };
 
-MembersListTableWrapped.defaultProps = {
+ProjectTeamListTableWrapped.defaultProps = {
   members: [],
 };
 
-export const MembersListTable = withSortingURL({
+export const ProjectTeamListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
-})(MembersListTableWrapped);
+})(ProjectTeamListTableWrapped);

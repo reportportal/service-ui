@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { EmptyStatePage } from './emptyProjectsState';
+export { EmptyPageState } from './emptyPageState';

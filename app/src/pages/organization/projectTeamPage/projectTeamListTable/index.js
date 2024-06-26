@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { MembersListTable } from './membersListTable';
+export { ProjectTeamListTable } from './projectTeamListTable';

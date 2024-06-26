@@ -25,7 +25,7 @@ import { activeOrganizationSelector } from 'controllers/organizations/organizati
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { ProjectsPageHeader } from './projectsPageHeader';
-import { EmptyStatePage } from '../emptyStatePage';
+import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
 import styles from './organizationProjectsPage.scss';
@@ -56,7 +56,7 @@ export const OrganizationProjectsPage = () => {
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
           {isEmpty && (
-            <EmptyStatePage
+            <EmptyPageState
               hasPermission={hasPermission}
               label={label}
               description={description}

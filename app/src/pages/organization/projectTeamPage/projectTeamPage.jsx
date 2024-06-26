@@ -18,12 +18,12 @@ import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
-import { BubblesLoader } from '@reportportal/ui-kit';
 import { loadingSelector, membersSelector } from 'controllers/members';
 import { useIntl } from 'react-intl';
-import { MembersPageHeader } from './membersPageHeader';
-import { EmptyStatePage } from '../emptyStatePage';
-import { MembersListTable } from './membersListTable';
+import { BubblesLoader } from '@reportportal/ui-kit';
+import { ProjectTeamPageHeader } from './projectTeamPageHeader';
+import { EmptyPageState } from '../emptyPageState';
+import { ProjectTeamListTable } from './projectTeamListTable';
 import EmptyIcon from './img/empty-members-icon-inline.svg';
 import { messages } from './messages';
 import styles from './projectTeamPage.scss';
@@ -38,33 +38,29 @@ export const ProjectTeamPage = () => {
   const isMembersLoading = useSelector(loadingSelector);
   const isEmptyMembers = members.length === 0;
 
-  const getMembersContent = () =>
-    isEmptyMembers ? (
-      <EmptyStatePage
+  const getEmptyPageState = () =>
+    isMembersLoading ? (
+      <div className={cx('loader')}>
+        <BubblesLoader />
+      </div>
+    ) : (
+      <EmptyPageState
         hasPermission={hasPermission}
         emptyIcon={EmptyIcon}
         label={formatMessage(messages.noUsers)}
         description={formatMessage(messages.description)}
         buttonTitle={formatMessage(messages.inviteUser)}
       />
-    ) : (
-      <MembersListTable members={members} />
     );
 
   return (
     <div className={cx('project-team-page-container')}>
-      <MembersPageHeader
+      <ProjectTeamPageHeader
         hasPermission={hasPermission}
         title={formatMessage(messages.title)}
         isNotEmpty={!isEmptyMembers}
       />
-      {isMembersLoading ? (
-        <div className={cx('loader')}>
-          <BubblesLoader />
-        </div>
-      ) : (
-        getMembersContent()
-      )}
+      {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
     </div>
   );
 };

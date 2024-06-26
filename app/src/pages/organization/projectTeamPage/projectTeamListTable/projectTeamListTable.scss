@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.members-list-table {
+.project-team-list-table {
   margin: 24px auto;
   padding: 0 36px;
 }
@@ -62,4 +62,11 @@
   img {
     border-radius: 50%;
   }
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }

@@ -18,11 +18,11 @@ import classNames from 'classnames/bind';
 import { Button } from 'componentLibrary/button';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import styles from './emptyStatePage.scss';
+import styles from './emptyPageState.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyStatePage = ({
+export const EmptyPageState = ({
   hasPermission,
   label,
   description,
@@ -30,7 +30,7 @@ export const EmptyStatePage = ({
   buttonTitle,
   emptyIcon,
 }) => (
-  <div className={cx('empty-projects-state')}>
+  <div className={cx('empty-page-state')}>
     <div className={cx('empty-icon')}>{Parser(emptyIcon)}</div>
     <div className={cx('content')}>
       <span className={cx('label')}>{label}</span>
@@ -44,7 +44,7 @@ export const EmptyStatePage = ({
   </div>
 );
 
-EmptyStatePage.propTypes = {
+EmptyPageState.propTypes = {
   hasPermission: PropTypes.bool,
   label: PropTypes.string,
   description: PropTypes.string,
@@ -53,7 +53,7 @@ EmptyStatePage.propTypes = {
   emptyIcon: PropTypes.element.isRequired,
 };
 
-EmptyStatePage.defaultProps = {
+EmptyPageState.defaultProps = {
   hasPermission: false,
   label: '',
   description: '',
