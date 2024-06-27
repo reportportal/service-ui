@@ -40,7 +40,7 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector, projectKeySelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';

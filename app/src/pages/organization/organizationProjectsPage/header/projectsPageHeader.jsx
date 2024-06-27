@@ -25,7 +25,7 @@ import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import plusIcon from 'common/img/plus-button-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import userIcon from './img/user-inline.svg';
 import { messages } from '../messages';
