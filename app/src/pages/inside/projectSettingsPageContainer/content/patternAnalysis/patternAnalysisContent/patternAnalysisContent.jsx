@@ -27,8 +27,7 @@ import {
 } from 'controllers/project';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { useIntl } from 'react-intl';
-import { Checkbox } from 'componentLibrary/checkbox';
-import { Button } from 'componentLibrary/button';
+import { Button, Checkbox } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
@@ -58,7 +57,7 @@ export const PatternAnalysisContent = ({
   useEffect(() => {
     setHeaderTitleNode(
       <span className={cx('button')} onClick={onAddPattern}>
-        <Button disabled={disabled} dataAutomationId="createPatternButton">
+        <Button disabled={disabled} data-automation-id="createPatternButton">
           {formatMessage(messages.create)}
         </Button>
       </span>,

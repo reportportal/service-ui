@@ -16,8 +16,8 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { Button } from '@reportportal/ui-kit';
 import plusIcon from 'common/img/plus-button-inline.svg';
-import { Button } from 'componentLibrary/button';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import styles from './emptyProjectsState.scss';

@@ -5,7 +5,7 @@ For localization needs Report Portal uses [react-intl](https://github.com/yahoo/
 [Documentation](https://github.com/yahoo/react-intl/wiki)
 
 All text content of application should be controlled by localization system.
-At the moment Report Portal supports English (default), Russian, Belorussian and Ukrainian languages.
+At the moment Report Portal supports English (default), Russian, Belorussian, Ukrainian and Spanish languages.
 
 Localization message id format: `ComponentsName.elementName` (for example FiltersPage.addFilterButton)
 

@@ -226,7 +226,7 @@ const messages = defineMessages({
   },
   ruleNameDuplicateHint: {
     id: 'Notifications.ruleNameDuplicateHint',
-    defaultMessage: 'Rule with the same name already exist on the project',
+    defaultMessage: 'Rule with the same name already exists for this communication channel',
   },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',

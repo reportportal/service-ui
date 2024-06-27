@@ -19,5 +19,6 @@ export const UKRAINIAN = 'uk';
 export const RUSSIAN = 'ru';
 export const BELARUSIAN = 'be';
 export const SIMPLIFIED_CHINESE = 'zh';
+export const SPANISH = 'es';
 
 export const DEFAULT_LANGUAGE = ENGLISH;

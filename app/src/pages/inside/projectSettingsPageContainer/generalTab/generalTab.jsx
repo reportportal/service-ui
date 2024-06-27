@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
 import moment from 'moment';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
 import { fetch, secondsToDays } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -44,7 +44,6 @@ import { userRolesSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import styles from './generalTab.scss';
@@ -429,7 +428,7 @@ export class GeneralTab extends Component {
             />
           </FormField>
           <div className={cx('submit-block')}>
-            <Button variant={'topaz'} type="submit" disabled={isDisabled}>
+            <Button type="submit" disabled={isDisabled}>
               {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
             </Button>
             {processingData && (

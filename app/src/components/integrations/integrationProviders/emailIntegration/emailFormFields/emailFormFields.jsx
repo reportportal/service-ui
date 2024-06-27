@@ -28,7 +28,7 @@ import {
 } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldText } from 'componentLibrary/fieldText';
