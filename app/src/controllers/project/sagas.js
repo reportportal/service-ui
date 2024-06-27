@@ -35,16 +35,14 @@ import { redirect } from 'redux-first-router';
 import { PROJECTS_PAGE } from 'controllers/pages';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { SIZE_KEY } from 'controllers/pagination';
-import {
-  fetchOrganizationBySlugAction,
-  organizationProjectsSelector,
-} from 'controllers/organizations/organization';
+import { fetchOrganizationBySlugAction } from 'controllers/organizations/organization';
 import { createFetchPredicate } from 'controllers/fetch';
 import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organizations/organization/constants';
 import { setActiveProjectKeyAction } from 'controllers/user';
 import {
   FETCH_ORGANIZATION_PROJECTS,
   fetchOrganizationProjectsAction,
+  projectsSelector,
 } from 'controllers/organizations/projects';
 import {
   UPDATE_DEFECT_TYPE,
@@ -508,8 +506,8 @@ function* fetchActiveProjectData({ payload: { organizationSlug, projectSlug, pro
       yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
 
       // TODO: Fetch project by slug
-      const organizationProjects = yield select(organizationProjectsSelector);
-      const key = organizationProjects?.items?.find(({ slug }) => slug === projectSlug)?.key;
+      const organizationProjects = yield select(projectsSelector);
+      const key = organizationProjects?.find(({ slug }) => slug === projectSlug)?.key;
 
       yield put(setActiveProjectKeyAction(key));
       yield put(fetchProjectAction(key));
