@@ -37,15 +37,15 @@ import { fetchDashboardsAction } from 'controllers/dashboard';
 import { SIZE_KEY } from 'controllers/pagination';
 import {
   fetchOrganizationBySlugAction,
-  fetchOrganizationProjectsAction,
   organizationProjectsSelector,
 } from 'controllers/organizations/organization';
 import { createFetchPredicate } from 'controllers/fetch';
-import {
-  FETCH_ORGANIZATION_BY_SLUG,
-  FETCH_ORGANIZATION_PROJECTS,
-} from 'controllers/organizations/organization/constants';
+import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organizations/organization/constants';
 import { setActiveProjectKeyAction } from 'controllers/user';
+import {
+  FETCH_ORGANIZATION_PROJECTS,
+  fetchOrganizationProjectsAction,
+} from 'controllers/organizations/projects';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,

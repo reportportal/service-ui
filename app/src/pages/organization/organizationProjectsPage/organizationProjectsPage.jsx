@@ -19,15 +19,16 @@ import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import plusIcon from 'common/img/plus-button-inline.svg';
+import PlusIcon from 'common/img/plus-button-inline.svg';
 import { organizationsListLoadingSelector } from 'controllers/organizations';
-import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
+import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
+import { ProjectsListTableWrapper } from './projectsListTable';
 import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -43,8 +44,8 @@ export const OrganizationProjectsPage = () => {
   const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
   const buttonTitle = formatMessage(messages.createProject);
 
-  const organization = useSelector(activeOrganizationSelector);
-  const isEmpty = organization?.relationships?.projects?.meta.count === 0;
+  const { items: projects } = useSelector(projectsPaginationSelector);
+  const isProjectsEmpty = projects?.length === 0;
 
   return (
     <div className={cx('organization-projects-container')}>
@@ -55,15 +56,17 @@ export const OrganizationProjectsPage = () => {
       ) : (
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
-          {isEmpty && (
+          {isProjectsEmpty ? (
             <EmptyPageState
               hasPermission={hasPermission}
               label={label}
               description={description}
-              startIcon={plusIcon}
+              startIcon={PlusIcon}
               buttonTitle={buttonTitle}
               emptyIcon={EmptyIcon}
             />
+          ) : (
+            <ProjectsListTableWrapper projects={projects} />
           )}
         </>
       )}

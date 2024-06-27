@@ -33,6 +33,9 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   const contentPath = options.contentPath || DEFAULT_OPTIONS.contentPath;
   switch (type) {
     case FETCH_SUCCESS:
+      if (options.getFirst && payload[contentPath] instanceof Array) {
+        return payload[contentPath][0] || null;
+      }
       return contentPath && payload[contentPath] ? payload[contentPath] : payload;
     case CONCAT_FETCH_SUCCESS: {
       const data = contentPath ? payload[contentPath] : payload;

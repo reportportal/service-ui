@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-.projects-page-header-container {
+ .projects-page-header-container {
   padding: 16px 32px;
   border-bottom: 1px solid $COLOR--e-100;
   background: $COLOR--bg-000;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
 }
 
 .header {
@@ -74,8 +76,36 @@
     }
   }
 }
+
 .button {
   border: $COLOR--topaz solid 1px;
   height: 36px;
   padding: 7px 16px;
+}
+
+.details {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 32px 0 0;
+
+  .details-item{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 20px;
+    font-family: $FONT-ROBOTO-REGULAR;
+
+    b{
+      margin-left: -4px;
+      font-family: $FONT-ROBOTO-BOLD;
+    }
+  }
+
+  .details-item-icon, svg {
+      width: 16px;
+      height: 16px;
+    }
 }

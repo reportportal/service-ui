@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,21 @@
 
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
+import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
-import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { NAMESPACE } from './constants';
 
-export const organizationReducer = combineReducers({
-  activeOrganization: fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
-    contentPath: 'items',
-    getFirst: true,
-    initialState: null,
-  }),
-  organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
+export const projectFetchReducer = fetchReducer(NAMESPACE, {
+  contentPath: 'items',
+  initialState: [],
 });
+
+export const reducer = combineReducers({
+  pagination: paginationReducer(NAMESPACE),
+  loading: loadingReducer(NAMESPACE),
+  projects: projectFetchReducer,
+});
+
+export const projectsReducer = createPageScopedReducer(reducer, ORGANIZATION_PROJECTS_PAGE);

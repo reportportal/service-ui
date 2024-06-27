@@ -99,13 +99,14 @@ export const createQueryParametersSelector = ({
   namespace: staticNamespace,
   defaultPagination,
   defaultSorting,
+  sortingKey = SORTING_KEY,
 } = {}) => (state, namespace) => {
   const calculatedNamespace = staticNamespace || namespace;
   const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
   const query = pagePropertiesSelector(state, calculatedNamespace);
   const queryParameters = {
     ...calculatedPagination,
-    [SORTING_KEY]: defaultSorting || '',
+    [sortingKey]: defaultSorting || '',
     ...query,
   };
   const defaultPageSize = calculatedPagination[SIZE_KEY];

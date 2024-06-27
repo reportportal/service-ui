@@ -14,16 +14,49 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
+.projects-list-table {
+  margin: 16px auto;
+  padding: 0 32px;
+
+  & > div:hover .date {
+    color: $COLOR--topaz-hover-2;
+  }
+
+  .date {
+    font-family: inherit;
+    color: inherit;
+    min-height: auto;
+  }
 }
 
-.loader {
+.row-action-dropdown {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  flex-direction: column;
+
+  p {
+    padding: 7px 16px;
+    align-items: center;
+    font-size: 13px;
+    line-height: 20px;
+    width: 88px;
+
+    &.rename {
+      color: $COLOR--almost-black;
+    }
+
+    &.delete {
+      color: $COLOR--error;
+    }
+  }
+}
+
+.project-name-col {
+  a {
+    all: inherit;
+    cursor: pointer;
+  }
+}
+
+.loader{
   margin: auto;
 }

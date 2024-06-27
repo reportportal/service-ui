@@ -21,7 +21,8 @@ import { PROJECTS_PAGE } from 'controllers/pages';
 import { fetchOrganizationBySlugAction } from 'controllers/organizations/organization/actionCreators';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { FETCH_ORGANIZATION_BY_SLUG, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { fetchOrganizationProjectsAction } from 'controllers/organizations/projects';
+import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
@@ -31,8 +32,7 @@ function* fetchOrganizationBySlug({ payload: slug }) {
     yield put(showDefaultErrorNotification(error));
   }
 }
-
-function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }) {
+function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
     if (!activeOrganization) {
@@ -40,12 +40,7 @@ function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
     }
     activeOrganization = yield select(activeOrganizationSelector);
-
-    yield put(
-      fetchDataAction(FETCH_ORGANIZATION_PROJECTS)(
-        URLS.organizationProjects(activeOrganization.id, prefParam),
-      ),
-    );
+    yield put(fetchOrganizationProjectsAction(activeOrganization.id));
   } catch (error) {
     yield put(
       redirect({
@@ -56,9 +51,8 @@ function* fetchOrganizationProjects({ payload: { organizationSlug, prefParam } }
 }
 
 function* watchFetchOrganizationProjects() {
-  yield takeEvery(FETCH_ORGANIZATION_PROJECTS, fetchOrganizationProjects);
+  yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_PROJECTS, prepareActiveOrganizationProjects);
 }
-
 function* watchFetchOrganizationBySlug() {
   yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
 }

@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-import { organizationsSelector } from 'controllers/organizations/selectors';
-
-const organizationSelector = (state) => organizationsSelector(state).organization || {};
-
-export const activeOrganizationSelector = (state) => organizationSelector(state).activeOrganization;
-
-export const organizationProjectsSelector = (state) => organizationSelector(state).projects || [];
+export {
+  fetchOrganizationProjectsAction,
+  navigateToProjectAction,
+  navigateToProjectSectionAction,
+} from './actionCreators';
+export { projectsReducer } from './reducer';
+export {
+  projectsPaginationSelector,
+  projectsSelector,
+  loadingSelector,
+  querySelector,
+} from './selectors';
+export { projectsSagas } from './sagas';
+export {
+  DEFAULT_LIMITATION,
+  DEFAULT_OFFSET,
+  DEFAULT_SORT_COLUMN,
+  DEFAULT_QUERY_PARAMS,
+  FETCH_ORGANIZATION_PROJECTS,
+  SORTING_KEY,
+} from './constants';
