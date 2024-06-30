@@ -25,7 +25,7 @@ import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN } from 'controllers/administrate/allUsers';
+import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
 import { fetchMembersAction } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
@@ -81,9 +81,7 @@ export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingD
                 <span>n/a</span>
               ),
             },
-            permissions: formatMessage(
-              getRoleTitle(messages, userRole, organizationRole, projectRole),
-            ),
+            permissions: formatMessage(getRoleTitle(userRole, organizationRole, projectRole)),
           };
         },
       ),

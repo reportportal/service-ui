@@ -36,15 +36,17 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty }) => {
         <span className={cx('title')}>{formatMessage(messages.title)}</span>
         <div className={cx('actions')}>
           {isNotEmpty && (
-            <div className={cx('icons')}>
-              <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
-              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
-            </div>
-          )}
-          {isNotEmpty && hasPermission && (
-            <Button variant={'text'} customClassName={cx('button')}>
-              {formatMessage(messages.inviteUser)}
-            </Button>
+            <>
+              <div className={cx('icons')}>
+                <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
+                <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+              </div>
+              {hasPermission && (
+                <Button variant={'text'} customClassName={cx('button')}>
+                  {formatMessage(messages.inviteUser)}
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

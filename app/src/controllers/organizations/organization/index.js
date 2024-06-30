@@ -19,5 +19,5 @@ export {
   fetchOrganizationBySlugAction,
 } from './actionCreators';
 export { organizationReducer } from './reducer';
-export { activeOrganizationSelector } from './selectors';
+export { activeOrganizationSelector, organizationProjectsSelector } from './selectors';
 export { organizationSagas } from './sagas';

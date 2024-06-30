@@ -54,7 +54,7 @@ export const ProjectTeamPage = () => {
     );
 
   return (
-    <div className={cx('project-team-page-container')}>
+    <div className={cx('project-team-page')}>
       <ProjectTeamPageHeader
         hasPermission={hasPermission}
         title={formatMessage(messages.title)}

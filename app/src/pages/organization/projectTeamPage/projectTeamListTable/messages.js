@@ -33,20 +33,4 @@ export const messages = defineMessages({
     id: 'MembersListTable.permissions',
     defaultMessage: 'Permissions',
   },
-  adminRole: {
-    id: 'MembersListTable.adminRole',
-    defaultMessage: 'Admin',
-  },
-  managerRole: {
-    id: 'MembersListTable.managerRole',
-    defaultMessage: 'Manager',
-  },
-  editorRole: {
-    id: 'MembersListTable.editorRole',
-    defaultMessage: 'Can edit',
-  },
-  viewerRole: {
-    id: 'MembersListTable.viewerRole',
-    defaultMessage: 'View only',
-  },
 });

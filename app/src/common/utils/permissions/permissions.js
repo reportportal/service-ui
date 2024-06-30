@@ -16,7 +16,7 @@
 
 import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { EDITOR, MANAGER } from 'common/constants/projectRoles';
+import { MANAGER } from 'common/constants/projectRoles';
 
 export const createCheckPermission = (permissionMap) => (permission) => ({
   userRole,
@@ -80,17 +80,3 @@ export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD)
 export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
 export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
 export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
-
-export const getRoleTitle = (messages, userRole, organizationRole, projectRole) => {
-  if (userRole === ADMINISTRATOR) {
-    return messages.adminRole;
-  }
-  if (organizationRole === MANAGER) {
-    return messages.managerRole;
-  }
-  if (projectRole === EDITOR) {
-    return messages.editorRole;
-  }
-
-  return messages.viewerRole;
-};

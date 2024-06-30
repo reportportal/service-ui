@@ -44,6 +44,7 @@ export const OrganizationProjectsPage = () => {
   const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
   const buttonTitle = formatMessage(messages.createProject);
 
+  // TODO: Items should not be selected from pagination, it would be better to split the structure by several reducers.
   const { items: projects } = useSelector(projectsPaginationSelector);
   const isProjectsEmpty = projects?.length === 0;
 

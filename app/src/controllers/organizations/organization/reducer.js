@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
+import { projectsReducer } from '../projects/reducer';
 import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
 
 export const organizationReducer = combineReducers({
@@ -26,4 +27,5 @@ export const organizationReducer = combineReducers({
     initialState: null,
   }),
   organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
+  projects: projectsReducer,
 });
