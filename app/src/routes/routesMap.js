@@ -18,10 +18,11 @@ import { redirect, actionToPath } from 'redux-first-router';
 import qs from 'qs';
 import {
   activeProjectSelector,
-  userAccountRoleSelector,
   userInfoSelector,
   setActiveProjectAction,
   setActiveProjectKeyAction,
+  userRolesSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -99,10 +100,8 @@ import {
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
-import {
-  fetchOrganizationBySlugAction,
-  prepareActiveOrganizationProjectsAction,
-} from 'controllers/organizations/organization/actionCreators';
+import { prepareActiveOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
+import { MANAGER } from 'common/constants/projectRoles';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -324,21 +323,31 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
+
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
+  const hashProjectKey = activeProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const accountRole = userAccountRoleSelector(getState());
+  const { userRole, organizationRole } = userRolesSelector(getState());
   const userInfo = userInfoSelector(getState());
   const { assignedOrganizations, assignedProjects } = userInfo || {};
-  const isAdmin = accountRole === ADMINISTRATOR;
+
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = organizationRole === MANAGER;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
+
+  const isOrganizationExists =
+    assignedOrganizations && hashOrganizationSlug in assignedOrganizations;
+
   const isProjectExists =
-    assignedOrganizations &&
-    hashOrganizationSlug in assignedOrganizations &&
-    assignedProjects &&
-    hashProjectSlug in assignedProjects;
+    isOrganizationExists && assignedProjects && hashProjectSlug in assignedProjects;
+
+  const hasPermission = isAdmin || (isManager && isOrganizationExists);
+
+  const projectKey =
+    assignedProjects?.[hashProjectSlug]?.projectKey || (hasPermission && hashProjectKey);
+
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
@@ -350,8 +359,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     (isChangedProject || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (isProjectExists) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+    if (hasPermission || isProjectExists) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
@@ -360,6 +368,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       );
       dispatch(setActiveProjectKeyAction(projectKey));
       dispatch(fetchProjectAction(projectKey));
+
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
       // TODO: to provide redirect in case of an existing organization and a non-existing project.

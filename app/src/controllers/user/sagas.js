@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, all, put, select, take } from 'redux-saga/effects';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { MANAGER, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { userIdSelector, userInfoSelector } from './selectors';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import {
-  ASSIGN_TO_PROJECT,
-  UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
-  ADD_API_KEY,
-  FETCH_API_KEYS,
-  DELETE_API_KEY,
-  FETCH_USER,
-  DELETE_USER_ACCOUNT,
-} from './constants';
+  activeOrganizationSelector,
+  fetchOrganizationBySlugAction,
+} from 'controllers/organizations/organization';
+import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organizations/organization/constants';
+import {
+  FETCH_ORGANIZATION_PROJECTS,
+  fetchOrganizationProjectsAction,
+  projectsSelector,
+} from 'controllers/organizations/projects';
+import { createFetchPredicate } from 'controllers/fetch';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -46,6 +47,17 @@ import {
   setActiveProjectKeyAction,
   setLogTimeFormatAction,
 } from './actionCreators';
+import {
+  ASSIGN_TO_PROJECT,
+  UNASSIGN_FROM_PROJECT,
+  SET_ACTIVE_PROJECT,
+  ADD_API_KEY,
+  FETCH_API_KEYS,
+  DELETE_API_KEY,
+  FETCH_USER,
+  DELETE_USER_ACCOUNT,
+} from './constants';
+import { userIdSelector, userInfoSelector } from './selectors';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);
@@ -131,7 +143,7 @@ function* fetchUserWorker() {
     return;
   }
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
-  const { userId, assignedOrganizations, assignedProjects } = user;
+  const { userId, assignedOrganizations, assignedProjects, userRole } = user;
   const userSettings = getStorageItem(`${userId}_settings`) || {};
   const savedActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
   const { organizationSlug: savedOrganizationSlug, projectSlug: savedProjectSlug } =
@@ -150,19 +162,39 @@ function* fetchUserWorker() {
     ? assignedOrganizations[defaultOrganization]
     : Object.keys(assignedOrganizations)[0];
 
+  const isSavedOrganizationExist =
+    savedOrganizationSlug && savedOrganizationSlug in assignedOrganizations;
+
   const isSavedProjectExist =
-    savedOrganizationSlug &&
-    savedOrganizationSlug in assignedOrganizations &&
-    savedProjectSlug &&
-    savedProjectSlug in assignedProjects;
+    savedProjectSlug && savedProjectSlug in assignedProjects && isSavedOrganizationExist;
 
-  const activeProject = isSavedProjectExist
-    ? savedActiveProject
-    : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = assignedOrganizations?.[savedOrganizationSlug]?.organizationRole === MANAGER;
 
-  const projectKey = isSavedProjectExist
-    ? assignedProjects[savedProjectSlug].projectKey
-    : defaultProjectKey;
+  let projectKey;
+
+  if (!isSavedProjectExist && (isAdmin || (isManager && isSavedOrganizationExist))) {
+    yield put(fetchOrganizationBySlugAction(savedOrganizationSlug));
+    yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
+    const activeOrganization = yield select(activeOrganizationSelector);
+    yield put(fetchOrganizationProjectsAction(activeOrganization.id));
+    yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
+
+    // TODO: Fetch project by slug
+    const organizationProjects = yield select(projectsSelector);
+    projectKey = organizationProjects?.find(({ slug }) => slug === savedProjectSlug)?.key;
+  }
+
+  const activeProject =
+    isSavedProjectExist || projectKey
+      ? savedActiveProject
+      : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+
+  if (!projectKey) {
+    projectKey = isSavedProjectExist
+      ? assignedProjects[savedProjectSlug].projectKey
+      : defaultProjectKey;
+  }
 
   yield put(setActiveProjectAction(activeProject));
   yield put(setActiveProjectKeyAction(projectKey));

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call, take } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -31,21 +31,6 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
-import { redirect } from 'redux-first-router';
-import { PROJECTS_PAGE } from 'controllers/pages';
-import { fetchDashboardsAction } from 'controllers/dashboard';
-import { SIZE_KEY } from 'controllers/pagination';
-import {
-  fetchOrganizationBySlugAction,
-  fetchOrganizationProjectsAction,
-  organizationProjectsSelector,
-} from 'controllers/organizations/organization';
-import { createFetchPredicate } from 'controllers/fetch';
-import {
-  FETCH_ORGANIZATION_BY_SLUG,
-  FETCH_ORGANIZATION_PROJECTS,
-} from 'controllers/organizations/organization/constants';
-import { setActiveProjectKeyAction } from 'controllers/user';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -67,7 +52,6 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
-  FETCH_ACTIVE_PROJECT_DATA,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -87,7 +71,6 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
-  fetchProjectAction,
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
 
@@ -495,44 +478,6 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
-function* fetchActiveProjectData({ payload: { organizationSlug, projectSlug, projectKey } }) {
-  try {
-    yield put(fetchOrganizationBySlugAction(organizationSlug));
-
-    if (projectKey) {
-      yield put(setActiveProjectKeyAction(projectKey));
-      yield put(fetchProjectAction(projectKey));
-    } else {
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      yield put(fetchOrganizationProjectsAction(organizationSlug));
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
-
-      // TODO: Fetch project by slug
-      const organizationProjects = yield select(organizationProjectsSelector);
-      const key = organizationProjects?.items?.find(({ slug }) => slug === projectSlug)?.key;
-
-      yield put(setActiveProjectKeyAction(key));
-      yield put(fetchProjectAction(key));
-      // TODO: Move the request for dashboards to the component
-      yield put(
-        fetchDashboardsAction({
-          [SIZE_KEY]: 300,
-        }),
-      );
-    }
-  } catch (error) {
-    yield put(
-      redirect({
-        type: PROJECTS_PAGE,
-      }),
-    );
-  }
-}
-
-function* watchFetchActiveProjectData() {
-  yield takeEvery(FETCH_ACTIVE_PROJECT_DATA, fetchActiveProjectData);
-}
-
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -553,6 +498,5 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
-    watchFetchActiveProjectData(),
   ]);
 }

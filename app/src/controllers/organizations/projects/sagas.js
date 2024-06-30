@@ -18,14 +18,16 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { convertQueryForRequest } from './util';
-import { NAMESPACE, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
   const queryParams = convertQueryForRequest(query);
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.organizationProjects(organizationId, { ...queryParams })),
+    fetchDataAction(FETCH_ORGANIZATION_PROJECTS)(
+      URLS.organizationProjects(organizationId, { ...queryParams }),
+    ),
   );
 }
 
