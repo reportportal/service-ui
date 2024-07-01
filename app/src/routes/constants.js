@@ -33,7 +33,6 @@ import { LaunchesPage } from 'pages/inside/launchesPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
-import { ProjectMembersPageContainer } from 'pages/inside/projectMembersPageContainer';
 import { HistoryPage } from 'pages/inside/historyPage';
 import { UniqueErrorsPage } from 'pages/inside/uniqueErrorsPage';
 import { LoginPage } from 'pages/outside/loginPage';
@@ -60,6 +59,7 @@ import { AdminUiExtensionPageLayout } from 'layouts/adminLayout/adminUiExtension
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
 import { OrganizationProjectsPage } from 'pages/organization/organizationProjectsPage';
+import { ProjectTeamPage } from 'pages/organization/projectTeamPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -92,7 +92,7 @@ export const pageRendering = {
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
+  PROJECT_MEMBERS_PAGE: { component: ProjectTeamPage, rawContent: true, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
   PROJECT_SETTINGS_PAGE: {
     component: ProjectSettingsPageContainer,

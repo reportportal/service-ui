@@ -41,7 +41,7 @@ const cx = classNames.bind(styles);
 export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting }) => {
   const { formatMessage } = useIntl();
   const [checkedRows, setCheckedRows] = useState(new Set([]));
-  const organizationSlug = useSelector(activeOrganizationSelector).slug;
+  const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const loadingState = useSelector(loadingSelector);
   const dispatch = useDispatch();
   const onTableColumnSort = ({ key }) => {

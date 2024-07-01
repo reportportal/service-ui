@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-import { combineReducers } from 'redux';
-import { fetchReducer } from 'controllers/fetch';
-import { loadingReducer } from 'controllers/loading';
-import { projectsReducer } from '../projects/reducer';
-import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
+import { defineMessages } from 'react-intl';
 
-export const organizationReducer = combineReducers({
-  activeOrganization: fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
-    contentPath: 'items',
-    getFirst: true,
-    initialState: null,
-  }),
-  organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
-  projects: projectsReducer,
+export const messages = defineMessages({
+  name: {
+    id: 'MembersListTable.name',
+    defaultMessage: 'Name',
+  },
+  lastLogin: {
+    id: 'MembersListTable.lastLogin',
+    defaultMessage: 'Last Login',
+  },
+  email: {
+    id: 'MembersListTable.email',
+    defaultMessage: 'Email',
+  },
+  permissions: {
+    id: 'MembersListTable.permissions',
+    defaultMessage: 'Permissions',
+  },
 });

@@ -18,23 +18,36 @@ import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import PlusIcon from 'common/img/plus-button-inline.svg';
+import { organizationsListLoadingSelector } from 'controllers/organizations';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import { organizationLoadingSelector } from 'controllers/organizations/organization/selectors';
+import { useIntl } from 'react-intl';
 import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
+import { ProjectsPageHeader } from './projectsPageHeader';
+import { EmptyPageState } from '../emptyPageState';
+import EmptyIcon from './img/empty-projects-icon-inline.svg';
+import { messages } from './messages';
 import { ProjectsListTableWrapper } from './projectsListTable';
-import { ProjectsPageHeader } from './header';
-import { EmptyProjectsState } from './emptyProjectsState';
 import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);
 
 export const OrganizationProjectsPage = () => {
+  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
-  const { items: projects } = useSelector(projectsPaginationSelector);
-  const organizationLoading = useSelector(organizationLoadingSelector);
+  const organizationLoading = useSelector(organizationsListLoadingSelector);
 
+  const permissionSuffix = hasPermission ? 'WithPermission' : 'WithoutPermission';
+  const label = formatMessage(messages[`noProjects${permissionSuffix}`]);
+  const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
+  const buttonTitle = formatMessage(messages.createProject);
+
+  // TODO: Items should not be selected from pagination, it would be better to split the structure by several reducers.
+  const { items: projects } = useSelector(projectsPaginationSelector);
   const isProjectsEmpty = projects?.length === 0;
+
   return (
     <div className={cx('organization-projects-container')}>
       {organizationLoading ? (
@@ -45,7 +58,14 @@ export const OrganizationProjectsPage = () => {
         <>
           <ProjectsPageHeader hasPermission={hasPermission} />
           {isProjectsEmpty ? (
-            <EmptyProjectsState hasPermission={hasPermission} />
+            <EmptyPageState
+              hasPermission={hasPermission}
+              label={label}
+              description={description}
+              startIcon={PlusIcon}
+              buttonTitle={buttonTitle}
+              emptyIcon={EmptyIcon}
+            />
           ) : (
             <ProjectsListTableWrapper projects={projects} />
           )}
