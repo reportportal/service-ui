@@ -37,9 +37,9 @@ const cx = classNames.bind(styles);
 export const ProjectsPageHeader = ({ hasPermission }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-  const orgName = organization.name;
-  const projectsCount = organization.relationships?.projects?.meta.count;
-  const usersCount = organization.relationships?.users?.meta.count;
+  const organizationName = organization?.name;
+  const projectsCount = organization?.relationships?.projects?.meta.count;
+  const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = projectsCount > 0;
 
   const breadcrumbs = [
@@ -48,7 +48,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
       link: { type: PROJECTS_PAGE },
     },
     {
-      title: orgName,
+      title: organizationName,
     },
   ];
 
@@ -58,7 +58,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header')}>
-        <span className={cx('title')}>{orgName}</span>
+        <span className={cx('title')}>{organizationName}</span>
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
@@ -90,9 +90,11 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
     </div>
   );
 };
+
 ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
 };
+
 ProjectsPageHeader.defaultProps = {
   hasPermission: false,
 };

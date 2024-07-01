@@ -14,10 +14,54 @@
  * limitations under the License.
  */
 
-.organization-projects-container {
+.project-team-list-table {
+  margin: 24px auto;
+  padding: 0 36px;
+}
+
+.date {
+  font-family: inherit;
+  color: inherit;
+  min-height: auto;
+}
+
+.row-action-menu {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+
+  .add,
+  .remove {
+    padding: 7px 16px;
+    align-items: center;
+    font-size: 13px;
+    line-height: 20px;
+    width: 120px;
+    color: $COLOR--almost-black;
+  }
+}
+
+.menu-icon {
+  svg {
+    margin-bottom: 3px;
+  }
+}
+
+.member-name-column {
+  display: flex;
+  align-items: center;
+}
+
+.full-name {
+  margin-left: 16px;
+}
+
+.custom-user-avatar {
+  width: 32px;
+  height: 32px;
+
+  img {
+    border-radius: 50%;
+  }
 }
 
 .loader {
@@ -25,5 +69,4 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin: auto;
 }

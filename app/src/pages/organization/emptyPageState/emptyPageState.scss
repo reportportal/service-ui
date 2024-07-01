@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.empty-projects-state {
+.empty-page-state {
   width: 100%;
   flex: 1;
   display: flex;
@@ -49,6 +49,12 @@
   }
 }
 
+.empty-icon {
+  svg {
+    width: 168px;
+  }
+}
+
 .button {
   background-color: $COLOR--topaz;
   border: 1px solid $COLOR--topaz;
@@ -56,6 +62,7 @@
   height: 36px;
   padding: 7px 16px;
   margin-top: 16px;
+  min-width: 120px;
 
   &:hover:not(.disabled),
   &:focus:not(.disabled) {
