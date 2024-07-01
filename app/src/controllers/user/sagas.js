@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeLatest, takeEvery, call, all, put, select, take } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -23,17 +23,6 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import {
-  activeOrganizationSelector,
-  fetchOrganizationBySlugAction,
-} from 'controllers/organizations/organization';
-import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organizations/organization/constants';
-import {
-  FETCH_ORGANIZATION_PROJECTS,
-  fetchOrganizationProjectsAction,
-  projectsSelector,
-} from 'controllers/organizations/projects';
-import { createFetchPredicate } from 'controllers/fetch';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -174,15 +163,20 @@ function* fetchUserWorker() {
   let projectKey;
 
   if (!isSavedProjectExist && (isAdmin || (isManager && isSavedOrganizationExist))) {
-    yield put(fetchOrganizationBySlugAction(savedOrganizationSlug));
-    yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-    const activeOrganization = yield select(activeOrganizationSelector);
-    yield put(fetchOrganizationProjectsAction(activeOrganization.id));
-    yield take(createFetchPredicate(FETCH_ORGANIZATION_PROJECTS));
+    try {
+      const activeOrganization = yield call(
+        fetch,
+        URLS.organizationList({ slug: savedOrganizationSlug }),
+      );
+      const id = activeOrganization?.items?.[0]?.id;
 
-    // TODO: Fetch project by slug
-    const organizationProjects = yield select(projectsSelector);
-    projectKey = organizationProjects?.find(({ slug }) => slug === savedProjectSlug)?.key;
+      // TODO: Fetch project by slug
+      const organizationProjects = yield call(fetch, URLS.organizationProjects(id));
+      projectKey = organizationProjects?.items?.find(({ slug }) => slug === savedProjectSlug)?.key;
+    } catch (err) {
+      yield put(fetchUserErrorAction());
+      return;
+    }
   }
 
   const activeProject =
