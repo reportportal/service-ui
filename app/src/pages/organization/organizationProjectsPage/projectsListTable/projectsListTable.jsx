@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
@@ -40,15 +40,12 @@ const cx = classNames.bind(styles);
 
 export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting }) => {
   const { formatMessage } = useIntl();
-  const [checkedRows, setCheckedRows] = useState(new Set([]));
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const loadingState = useSelector(loadingSelector);
   const dispatch = useDispatch();
   const onTableColumnSort = ({ key }) => {
     onChangeSorting(key);
-    if (key === 'name') {
-      dispatch(prepareActiveOrganizationProjectsAction());
-    }
+    dispatch(prepareActiveOrganizationProjectsAction());
   };
   const data = useMemo(
     () =>
@@ -135,29 +132,11 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
       data={data}
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
-      selectable
       sortingDirection={sortingDirection.toLowerCase()}
       sortingColumn={primaryColumn}
+      sortableColumns={primaryColumn.key}
       rowActionMenu={rowActionMenu}
       className={cx('projects-list-table')}
-      onToggleRowSelection={(id) => {
-        const newCheckedRows = new Set(checkedRows);
-        if (newCheckedRows.has(id)) {
-          newCheckedRows.delete(id);
-        } else {
-          newCheckedRows.add(id);
-        }
-        setCheckedRows(newCheckedRows);
-      }}
-      onToggleAllRowsSelection={() => {
-        if (checkedRows.size === data.length) {
-          setCheckedRows(new Set());
-        } else {
-          const allRows = new Set(data.map((item) => item.id));
-          setCheckedRows(allRows);
-        }
-      }}
-      selectedRowIds={[...checkedRows]}
       onChangeSorting={onTableColumnSort}
     />
   );
@@ -168,6 +147,7 @@ ProjectsListTable.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
 };
+
 ProjectsListTable.defaultProps = {
   projects: [],
 };
