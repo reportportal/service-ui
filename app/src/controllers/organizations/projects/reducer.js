@@ -20,9 +20,9 @@ import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
-import { NAMESPACE } from './constants';
+import { NAMESPACE, FETCH_ORGANIZATION_PROJECTS } from './constants';
 
-export const projectFetchReducer = fetchReducer(NAMESPACE, {
+export const projectFetchReducer = fetchReducer(FETCH_ORGANIZATION_PROJECTS, {
   contentPath: 'items',
   initialState: [],
 });

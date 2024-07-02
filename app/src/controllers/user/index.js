@@ -63,5 +63,6 @@ export {
   availableProjectsSelector,
   activeProjectKeySelector,
   assignedOrganizationsSelector,
+  createUserAssignedSelector,
 } from './selectors';
 export { userSagas } from './sagas';

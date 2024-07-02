@@ -18,10 +18,11 @@ import { redirect, actionToPath } from 'redux-first-router';
 import qs from 'qs';
 import {
   activeProjectSelector,
-  userAccountRoleSelector,
   userInfoSelector,
   setActiveProjectAction,
   setActiveProjectKeyAction,
+  activeProjectKeySelector,
+  createUserAssignedSelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -59,7 +60,6 @@ import {
   PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
@@ -99,10 +99,7 @@ import {
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
-import {
-  fetchOrganizationBySlugAction,
-  prepareActiveOrganizationProjectsAction,
-} from 'controllers/organizations/organization/actionCreators';
+import { prepareActiveOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -324,34 +321,34 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
+
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
+  const hashProjectKey = activeProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const accountRole = userAccountRoleSelector(getState());
-  const userInfo = userInfoSelector(getState());
-  const { assignedOrganizations, assignedProjects } = userInfo || {};
-  const isAdmin = accountRole === ADMINISTRATOR;
+  const userId = userInfoSelector(getState())?.userId;
+  const {
+    isAdmin,
+    hasPermission,
+    assignedProjectKey,
+    assignmentNotRequired,
+  } = createUserAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
+
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-  const projectKey = assignedProjects?.[hashProjectSlug]?.projectKey;
-  const isProjectExists =
-    assignedOrganizations &&
-    hashOrganizationSlug in assignedOrganizations &&
-    assignedProjects &&
-    hashProjectSlug in assignedProjects;
+
+  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
+
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
   if (
     hashOrganizationSlug &&
-    assignedOrganizations &&
     hashProjectSlug &&
-    assignedProjects &&
     (isChangedProject || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (isProjectExists) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+    if (hasPermission) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
@@ -360,6 +357,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       );
       dispatch(setActiveProjectKeyAction(projectKey));
       dispatch(fetchProjectAction(projectKey));
+
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
       // TODO: to provide redirect in case of an existing organization and a non-existing project.
@@ -409,7 +407,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }
@@ -426,7 +424,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }

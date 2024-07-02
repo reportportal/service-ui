@@ -16,6 +16,7 @@
 
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
+import { MANAGER } from 'common/constants/projectRoles';
 import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
@@ -105,3 +106,42 @@ export const availableProjectsSelector = createSelector(
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
 
 export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;
+
+export const createUserAssignedSelector = (projectSlug, organizationSlug) =>
+  createSelector(
+    userRolesSelector,
+    assignedOrganizationsSelector,
+    assignedProjectsSelector,
+    (userRoles, assignedOrganizations, assignedProjects) => {
+      const { userRole, organizationRole } = userRoles;
+      const isAdmin = userRole === ADMINISTRATOR;
+      const isManager = organizationRole === MANAGER;
+      let isAssignedToTargetOrganization = false;
+
+      if (organizationSlug) {
+        isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
+      } else {
+        const organizationId = assignedProjects[projectSlug]?.organizationId || '';
+        isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
+          (key) => assignedOrganizations[key]?.organizationId === organizationId,
+        );
+      }
+
+      const isAssignedToTargetProject =
+        projectSlug && projectSlug in assignedProjects && isAssignedToTargetOrganization;
+
+      const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
+
+      const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
+
+      const assignedProjectKey = assignedProjects?.[projectSlug]?.projectKey;
+
+      return {
+        isAdmin,
+        hasPermission,
+        assignedProjectKey,
+        assignmentNotRequired,
+        isAssignedToTargetProject,
+      };
+    },
+  );
