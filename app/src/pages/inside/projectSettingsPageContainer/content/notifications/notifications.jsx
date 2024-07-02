@@ -68,7 +68,7 @@ export const Notifications = () => {
   }, []);
 
   const toggleNotificationsEnabled = (isEnabled) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_ALL_NOTIFICATIONS(isEnabled));
     dispatch(updateNotificationStateAction(isEnabled));
   };
   // separate notifications by types
@@ -111,7 +111,4 @@ export const Notifications = () => {
       <NotificationsFooter />
     </SettingsPageContent>
   );
-};
-Notifications.propTypes = {
-  setHeaderTitleNode: PropTypes.func.isRequired,
 };

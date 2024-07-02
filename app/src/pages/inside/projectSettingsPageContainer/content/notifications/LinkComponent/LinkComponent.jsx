@@ -19,19 +19,31 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
+import { trackEvent } from 'react-tracking';
 import styles from './LinkComponent.scss';
 import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
-export const LinkComponent = ({ to, children, icon, className, automationId }) => {
+export const LinkComponent = ({ to, children, icon, className, event, automationId }) => {
+  const handleLinkTracking = () => {
+    if (!event) return;
+    trackEvent(event);
+  };
   return isInternalLink(to) ? (
-    <Link to={to} className={cx(className)} target={'_blank'} data-automation-id={automationId}>
+    <Link
+      to={to}
+      onClick={handleLinkTracking}
+      className={cx(className)}
+      target={'_blank'}
+      data-automation-id={automationId}
+    >
       {children}
       {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
     </Link>
   ) : (
     <a
+      onClick={handleLinkTracking}
       href={to}
       className={cx(className)}
       target={'_blank'}
@@ -54,6 +66,7 @@ LinkComponent.propTypes = {
   ]).isRequired,
   children: PropTypes.node.isRequired,
   icon: PropTypes.string,
+  event: PropTypes.object,
   className: PropTypes.string,
   automationId: PropTypes.string,
 };

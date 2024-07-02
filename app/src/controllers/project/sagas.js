@@ -201,7 +201,7 @@ function* updateNotificationState({
   yield put(updateConfigurationAttributesAction(updatedConfig));
 }
 
-function* addProjectNotification({ payload: notification }) {
+function* addProjectNotification({ payload: { notification, triggerAddingEvent = () => {} } }) {
   try {
     const projectId = yield select(projectIdSelector);
 
@@ -217,6 +217,7 @@ function* addProjectNotification({ payload: notification }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
+    triggerAddingEvent(response.id);
     yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
