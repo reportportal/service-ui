@@ -21,8 +21,8 @@ import {
   userInfoSelector,
   setActiveProjectAction,
   setActiveProjectKeyAction,
-  userRolesSelector,
   activeProjectKeySelector,
+  createUserAssignedSelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -60,7 +60,6 @@ import {
   PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
@@ -101,7 +100,6 @@ import {
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
 import { prepareActiveOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
-import { MANAGER } from 'common/constants/projectRoles';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -328,38 +326,29 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const hashProjectKey = activeProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const { userRole, organizationRole } = userRolesSelector(getState());
-  const userInfo = userInfoSelector(getState());
-  const { assignedOrganizations, assignedProjects } = userInfo || {};
+  const userId = userInfoSelector(getState())?.userId;
+  const {
+    isAdmin,
+    hasPermission,
+    assignedProjectKey,
+    assignmentNotRequired,
+  } = createUserAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
 
-  const isAdmin = userRole === ADMINISTRATOR;
-  const isManager = organizationRole === MANAGER;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
-  const isOrganizationExists =
-    assignedOrganizations && hashOrganizationSlug in assignedOrganizations;
-
-  const isProjectExists =
-    isOrganizationExists && assignedProjects && hashProjectSlug in assignedProjects;
-
-  const hasPermission = isAdmin || (isManager && isOrganizationExists);
-
-  const projectKey =
-    assignedProjects?.[hashProjectSlug]?.projectKey || (hasPermission && hashProjectKey);
+  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
 
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
   if (
     hashOrganizationSlug &&
-    assignedOrganizations &&
     hashProjectSlug &&
-    assignedProjects &&
     (isChangedProject || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (hasPermission || isProjectExists) {
+    if (hasPermission) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
@@ -418,7 +407,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }
@@ -435,7 +424,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }

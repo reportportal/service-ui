@@ -22,27 +22,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/organizations/projects';
+import { createUserAssignedSelector, setActiveProjectKeyAction } from 'controllers/user';
 import { PROJECT_PAGE } from 'controllers/pages';
-import { assignedProjectsSelector } from 'controllers/user';
 import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
 
 export const ProjectName = ({ project, disableAnalytics = false }) => {
-  const isAssigned = useSelector((state) => !!assignedProjectsSelector(state)[project.projectKey]);
+  const { projectSlug, organizationSlug, projectName, projectKey } = project;
+  const { hasPermission } = useSelector(createUserAssignedSelector(projectSlug, organizationSlug));
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
   const onProjectClick = (event) => {
-    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
+    if (!hasPermission && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
     }
-    dispatch(
-      navigateToProjectAction({
-        project,
-      }),
-    );
+
+    dispatch(setActiveProjectKeyAction(projectKey));
+    dispatch(navigateToProjectAction({ project }));
+
     if (!disableAnalytics) {
       trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
     }
@@ -51,20 +51,18 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
 
   return (
     <Link
-      className={cx('name', {
-        'mobile-disabled': !isAssigned,
-      })}
+      className={cx('name')}
       to={{
         type: PROJECT_PAGE,
         payload: {
-          projectSlug: project.projectSlug,
-          organizationSlug: project.organizationSlug,
+          projectSlug,
+          organizationSlug,
         },
       }}
       onClick={onProjectClick}
-      title={project.projectName}
+      title={projectName}
     >
-      {project.projectName}
+      {projectName}
     </Link>
   );
 };
@@ -73,5 +71,3 @@ ProjectName.propTypes = {
   project: PropTypes.object.isRequired,
   disableAnalytics: PropTypes.bool,
 };
-
-export default ProjectName;

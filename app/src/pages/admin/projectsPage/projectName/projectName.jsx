@@ -24,29 +24,17 @@ import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/administrate/projects';
 import { PROJECT_PAGE } from 'controllers/pages';
-import {
-  assignedProjectsSelector,
-  assignedOrganizationsSelector,
-  setActiveProjectKeyAction,
-  userRolesSelector,
-} from 'controllers/user';
-import { MANAGER, userRolesType } from 'common/constants/projectRoles';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { assignedProjectsSelector } from 'controllers/user';
 import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
 
 @connect(
   (state, ownProps) => ({
-    isProjectAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectKey],
-    isOrganizationAssigned: Object.keys(assignedOrganizationsSelector(state)).some(
-      ({ organizationId }) => organizationId === ownProps.project.organizationId,
-    ),
-    userRoles: userRolesSelector(state),
+    isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectKey],
   }),
   {
     navigateToProject: navigateToProjectAction,
-    setActiveProjectKey: setActiveProjectKeyAction,
   },
 )
 @track()
@@ -54,49 +42,28 @@ export class ProjectName extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     navigateToProject: PropTypes.func.isRequired,
-    setActiveProjectKey: PropTypes.func.isRequired,
-    isOrganizationAssigned: PropTypes.bool,
-    isProjectAssigned: PropTypes.bool,
+    isAssigned: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     disableAnalytics: PropTypes.bool,
-    userRoles: userRolesType,
   };
 
   static defaultProps = {
-    isOrganizationAssigned: false,
-    isProjectAssigned: false,
+    isAssigned: false,
     disableAnalytics: false,
-    userRoles: {},
   };
 
   onProjectClick = (event) => {
-    const {
-      tracking,
-      isOrganizationAssigned,
-      isProjectAssigned,
-      disableAnalytics,
-      project,
-      userRoles: { userRole, organizationRole },
-      setActiveProjectKey,
-      navigateToProject,
-    } = this.props;
-
-    const isAdmin = userRole === ADMINISTRATOR;
-    const isManager = organizationRole === MANAGER;
-    const isNotPermission =
-      !isProjectAssigned && (!isAdmin || (isManager && isOrganizationAssigned));
-
-    if (isNotPermission && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
+    const { tracking, isAssigned, disableAnalytics } = this.props;
+    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
     }
-
-    setActiveProjectKey(project.projectKey);
-    navigateToProject({ project });
-
+    this.props.navigateToProject({
+      project: this.props.project,
+    });
     if (!disableAnalytics) {
       tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
     }
@@ -106,13 +73,13 @@ export class ProjectName extends Component {
   render() {
     const {
       project: { projectSlug, organizationSlug, projectName },
-      isProjectAssigned,
+      isAssigned,
     } = this.props;
 
     return (
       <Link
         className={cx('name', {
-          'mobile-disabled': !isProjectAssigned,
+          'mobile-disabled': !isAssigned,
         })}
         to={{
           type: PROJECT_PAGE,
