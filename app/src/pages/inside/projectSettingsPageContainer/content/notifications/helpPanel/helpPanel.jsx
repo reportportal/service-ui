@@ -26,13 +26,13 @@ const cx = classNames.bind(styles);
 export const HelpPanel = ({ items }) => {
   return (
     <div className={cx('help-panel-container')}>
-      {items.map(({ title, mainIcon, link, openIcon, automationId, description }) => (
+      {items.map(({ title, mainIcon, link, openIcon, automationId, description, event }) => (
         <div key={`info-item-${title}`} className={cx('info-item')}>
           <span className={cx('main-item-icon')}>
             <i className={cx('icon')}>{Parser(mainIcon)}</i>
           </span>
           <div className={cx('item-content-wrapper')}>
-            <LinkComponent to={link} icon={openIcon} automationId={automationId}>
+            <LinkComponent to={link} icon={openIcon} event={event} automationId={automationId}>
               <span className={cx('item-title')}>{title}</span>
             </LinkComponent>
             <p>{description}</p>

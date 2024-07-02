@@ -17,7 +17,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formValueSelector, reduxForm } from 'redux-form';
-import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
@@ -34,7 +33,6 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from '@reportportal/ui-kit';
-import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
@@ -216,7 +214,6 @@ const AddEditNotificationModal = ({
   dirty,
 }) => {
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const attributesValue =
@@ -281,9 +278,7 @@ const AddEditNotificationModal = ({
       switcher,
       number: isEditorShown ? length : undefined,
     };
-
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
-    onSave(newFormValues);
+    onSave(newFormValues, eventParameters);
   };
 
   const okButton = {
