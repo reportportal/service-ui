@@ -19,11 +19,12 @@ import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import PlusIcon from 'common/img/plus-button-inline.svg';
-import { organizationsListLoadingSelector } from 'controllers/organizations';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
+import { loadingSelector, projectsSelector } from 'controllers/organizations/projects/selectors';
+import { activeOrganizationLoadingSelector } from 'controllers/organizations/organization/selectors';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import PlusIcon from 'common/img/plus-button-inline.svg';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -37,40 +38,41 @@ export const OrganizationProjectsPage = () => {
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
-  const organizationLoading = useSelector(organizationsListLoadingSelector);
-
+  const organizationLoading = useSelector(activeOrganizationLoadingSelector);
+  const projectsLoading = useSelector(loadingSelector);
   const permissionSuffix = hasPermission ? 'WithPermission' : 'WithoutPermission';
   const label = formatMessage(messages[`noProjects${permissionSuffix}`]);
   const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
   const buttonTitle = formatMessage(messages.createProject);
 
-  // TODO: Items should not be selected from pagination, it would be better to split the structure by several reducers.
-  const { items: projects } = useSelector(projectsPaginationSelector);
-  const isProjectsEmpty = projects?.length === 0;
+  const projects = useSelector(projectsSelector);
+  const isProjectsEmpty = !projectsLoading && projects.length === 0;
 
   return (
-    <div className={cx('organization-projects-container')}>
-      {organizationLoading ? (
-        <div className={cx('loader')}>
-          <BubblesLoader />
-        </div>
-      ) : (
-        <>
-          <ProjectsPageHeader hasPermission={hasPermission} />
-          {isProjectsEmpty ? (
-            <EmptyPageState
-              hasPermission={hasPermission}
-              label={label}
-              description={description}
-              startIcon={PlusIcon}
-              buttonTitle={buttonTitle}
-              emptyIcon={EmptyIcon}
-            />
-          ) : (
-            <ProjectsListTableWrapper projects={projects} />
-          )}
-        </>
-      )}
-    </div>
+    <ScrollWrapper autoHeightMax={100}>
+      <div className={cx('organization-projects-container')}>
+        {organizationLoading ? (
+          <div className={cx('loader')}>
+            <BubblesLoader />
+          </div>
+        ) : (
+          <>
+            <ProjectsPageHeader hasPermission={hasPermission} />
+            {isProjectsEmpty ? (
+              <EmptyPageState
+                hasPermission={hasPermission}
+                label={label}
+                description={description}
+                startIcon={PlusIcon}
+                buttonTitle={buttonTitle}
+                emptyIcon={EmptyIcon}
+              />
+            ) : (
+              <ProjectsListTableWrapper projects={projects} />
+            )}
+          </>
+        )}
+      </div>
+    </ScrollWrapper>
   );
 };

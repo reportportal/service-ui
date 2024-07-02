@@ -137,10 +137,7 @@ export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingD
 
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
-
-    if (key === 'fullName') {
-      dispatch(fetchMembersAction());
-    }
+    dispatch(fetchMembersAction());
   };
 
   return (
@@ -153,6 +150,7 @@ export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingD
       sortingColumn={primaryColumn}
       sortingDirection={sortingDirection.toLowerCase()}
       onChangeSorting={onTableSorting}
+      sortableColumns={primaryColumn.key}
     />
   );
 };

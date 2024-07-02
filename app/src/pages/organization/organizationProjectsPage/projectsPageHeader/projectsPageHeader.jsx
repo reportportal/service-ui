@@ -58,7 +58,23 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header')}>
-        <span className={cx('title')}>{organizationName}</span>
+        <div className={cx('main-content')}>
+          <span className={cx('title')}>{organizationName}</span>
+          {isNotEmpty && hasPermission && (
+            <div className={cx('details')}>
+              <div className={cx('details-item')}>
+                <i className={cx('details-item-icon')}>{Parser(projectsIcon)}</i>
+                <span>{formatMessage(messages.projects)}:</span>
+                <b>{projectsCount}</b>
+              </div>
+              <div className={cx('details-item')}>
+                <i className={cx('details-item-icon')}>{Parser(userIcon)}</i>
+                <span>{formatMessage(messages.users)}:</span>
+                <b>{usersCount}</b>
+              </div>
+            </div>
+          )}
+        </div>
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
@@ -73,20 +89,6 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
           )}
         </div>
       </div>
-      {isNotEmpty && hasPermission && (
-        <div className={cx('details')}>
-          <div className={cx('details-item')}>
-            <i className={cx('details-item-icon')}>{Parser(projectsIcon)}</i>
-            <span>{formatMessage(messages.projects)}:</span>
-            <b>{projectsCount}</b>
-          </div>
-          <div className={cx('details-item')}>
-            <i className={cx('details-item-icon')}>{Parser(userIcon)}</i>
-            <span>{formatMessage(messages.users)}:</span>
-            <b>{usersCount}</b>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

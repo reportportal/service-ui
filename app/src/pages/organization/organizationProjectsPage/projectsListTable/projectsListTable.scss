@@ -17,10 +17,7 @@
 .projects-list-table {
   margin: 16px auto;
   padding: 0 32px;
-
-  & > div:hover .date {
-    color: $COLOR--topaz-hover-2;
-  }
+  max-width: 1264px;
 
   .date {
     font-family: inherit;
@@ -54,6 +51,13 @@
   a {
     all: inherit;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover{
+    color: $COLOR--topaz-hover-2;
   }
 }
 
