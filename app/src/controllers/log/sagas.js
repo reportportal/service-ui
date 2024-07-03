@@ -376,7 +376,6 @@ function* fetchHistoryItemData() {
 }
 
 function* fetchLogPageData({ meta = {} }) {
-  console.log('data');
   const isPathNameChanged = yield select(pathnameChangedSelector);
   let logItem = yield select(activeLogSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
