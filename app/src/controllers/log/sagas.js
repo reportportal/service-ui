@@ -142,7 +142,7 @@ function* fetchAllErrorLogs({
   }
   let cancelRequest = () => {};
   try {
-    if (requiresErrorLogLocation) {
+    if (logViewMode === DETAILED_LOG_VIEW && requiresErrorLogLocation) {
       yield put(
         fetchDataAction(namespace)(
           URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
@@ -376,6 +376,7 @@ function* fetchHistoryItemData() {
 }
 
 function* fetchLogPageData({ meta = {} }) {
+  console.log('data');
   const isPathNameChanged = yield select(pathnameChangedSelector);
   let logItem = yield select(activeLogSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
@@ -385,6 +386,7 @@ function* fetchLogPageData({ meta = {} }) {
       put(fetchTestItemsAction({ offset })),
       put(fetchLogPageStackTrace(logItem)),
       put(fetchFirstAttachmentsAction()),
+      put(fetchErrorLogs(logItem)),
       call(fetchLogs),
     ]);
     return;
