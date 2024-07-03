@@ -142,7 +142,7 @@ function* fetchAllErrorLogs({
   }
   let cancelRequest = () => {};
   try {
-    if (requiresErrorLogLocation) {
+    if (logViewMode === DETAILED_LOG_VIEW && requiresErrorLogLocation) {
       yield put(
         fetchDataAction(namespace)(
           URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
@@ -385,6 +385,7 @@ function* fetchLogPageData({ meta = {} }) {
       put(fetchTestItemsAction({ offset })),
       put(fetchLogPageStackTrace(logItem)),
       put(fetchFirstAttachmentsAction()),
+      put(fetchErrorLogs(logItem)),
       call(fetchLogs),
     ]);
     return;
