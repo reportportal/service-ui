@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { trackEvent } from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
@@ -35,7 +35,6 @@ import { projectNotificationsLoadingSelector } from 'controllers/project/selecto
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { Toggle } from 'componentLibrary/toggle';
-
 import { FieldElement, FormattedDescription } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -55,7 +54,7 @@ export const Notifications = () => {
   const allNotificationPlugins = useSelector(notificationPluginsSelector);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-
+  const { trackEvent } = useTracking();
   const projectRole = useSelector(activeProjectRoleSelector);
   const userRole = useSelector(userAccountRoleSelector);
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);

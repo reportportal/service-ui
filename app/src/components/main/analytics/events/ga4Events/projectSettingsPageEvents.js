@@ -103,7 +103,15 @@ export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
-  CLICK_SAVE_BUTTON_IN_MODAL: ({ modalName, status, number, type, switcher, ruleId }) => ({
+  CLICK_SAVE_BUTTON_IN_MODAL: ({
+    modalName,
+    status,
+    number,
+    type,
+    switcher,
+    ruleId,
+    commChanelName,
+  }) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
@@ -111,6 +119,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
     icon_name: ruleId,
+    condition: commChanelName,
     ...(number !== undefined && { number }),
   }),
 
