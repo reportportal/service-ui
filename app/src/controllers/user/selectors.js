@@ -142,6 +142,7 @@ export const createUserAssignedSelector = (projectSlug, organizationSlug) =>
         assignedProjectKey,
         assignmentNotRequired,
         isAssignedToTargetProject,
+        isAssignedToTargetOrganization,
       };
     },
   );
