@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
+import {
+  FETCH_ORGANIZATION_BY_SLUG,
+  PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
+  SET_ACTIVE_ORGANIZATION,
+} from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
   type: PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
@@ -23,5 +27,10 @@ export const prepareActiveOrganizationProjectsAction = (payload) => ({
 
 export const fetchOrganizationBySlugAction = (payload) => ({
   type: FETCH_ORGANIZATION_BY_SLUG,
+  payload,
+});
+
+export const setActiveOrganizationAction = (payload) => ({
+  type: SET_ACTIVE_ORGANIZATION,
   payload,
 });

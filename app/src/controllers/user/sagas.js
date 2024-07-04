@@ -22,6 +22,7 @@ import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
+import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -158,15 +159,23 @@ function* fetchUserWorker() {
 
   if (!isAssignedToTargetProject && assignmentNotRequired) {
     try {
-      const activeOrganization = yield call(
+      const activeOrganizationResponse = yield call(
         fetch,
         URLS.organizationList({ slug: targetOrganizationSlug }),
       );
-      const id = activeOrganization?.items?.[0]?.id;
+
+      const activeOrganization = activeOrganizationResponse?.items?.[0];
 
       // TODO: Fetch project by slug
-      const organizationProjects = yield call(fetch, URLS.organizationProjects(id));
+      const organizationProjects = yield call(
+        fetch,
+        URLS.organizationProjects(activeOrganization?.id),
+      );
       projectKey = organizationProjects?.items?.find(({ slug }) => slug === targetProjectSlug)?.key;
+
+      if (activeOrganization) {
+        yield put(setActiveOrganizationAction(activeOrganization));
+      }
     } catch (e) {} // eslint-disable-line no-empty
   }
 
