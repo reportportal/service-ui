@@ -19,13 +19,14 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
-import { trackEvent } from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import styles from './LinkComponent.scss';
 import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
 export const LinkComponent = ({ to, children, icon, className, event, automationId }) => {
+  const { trackEvent } = useTracking();
   const handleLinkTracking = () => {
     trackEvent(event);
   };

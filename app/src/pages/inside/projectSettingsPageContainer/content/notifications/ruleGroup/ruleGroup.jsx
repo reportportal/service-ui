@@ -159,7 +159,13 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
     dispatch(deleteProjectNotificationAction(id));
   };
 
-  const confirmEdit = (notification) => {
+  const confirmEdit = (notification, eventParameters) => {
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL({
+        ...eventParameters,
+        ruleId: notification.id,
+      }),
+    );
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({
@@ -240,7 +246,8 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
           type: pluginName,
           actionType: MODAL_ACTION_TYPE_COPY,
           ruleFields,
-          onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
+          onSave: (withoutAttributes, eventParameters) =>
+            confirmAdd(withoutAttributes, eventParameters),
           notification: {
             ...newNotification,
             ruleName: notification.ruleName + COPY_POSTFIX,

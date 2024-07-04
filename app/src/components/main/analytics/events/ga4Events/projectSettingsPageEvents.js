@@ -103,7 +103,15 @@ export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
-  CLICK_SAVE_BUTTON_IN_MODAL: ({ modalName, status, number, type, switcher, ruleId }) => ({
+  CLICK_SAVE_BUTTON_IN_MODAL: ({
+    modalName,
+    status,
+    number,
+    type,
+    switcher,
+    ruleId,
+    communicationChanelName,
+  }) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
@@ -111,21 +119,22 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
     icon_name: ruleId,
+    condition: communicationChanelName,
     ...(number !== undefined && { number }),
   }),
 
-  SWITCH_NOTIFICATION_RULE: (commChanelName, ruleId, switcher) => ({
+  SWITCH_NOTIFICATION_RULE: (communicationChanelName, ruleId, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     switcher: getSwitcher(switcher),
-    condition: commChanelName,
+    condition: communicationChanelName,
     element_name: 'rule',
     icon_name: ruleId,
   }),
 
-  SWITCH_PLUGIN_NOTIFICATIONS: (commChanelName, switcher) => ({
+  SWITCH_PLUGIN_NOTIFICATIONS: (communicationChanelName, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     switcher: getSwitcher(switcher),
-    element_name: `${commChanelName}_notifications`,
+    element_name: `${communicationChanelName}_notifications`,
   }),
 
   SWITCH_ALL_NOTIFICATIONS: (switcher) => ({
@@ -149,35 +158,35 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     element_name: 'configure_integration',
   },
 
-  CLICK_CREATE_RULE_BUTTON: (commChanelName) => ({
+  CLICK_CREATE_RULE_BUTTON: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_create_rule',
-    condition: commChanelName,
+    condition: communicationChanelName,
   }),
 
-  CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS: (commChanelName) => ({
+  CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'notifications_name',
     status: 'open',
-    condition: commChanelName,
+    condition: communicationChanelName,
   }),
 
-  CLICK_ICON_EDIT_NOTIFICATIONS: (commChanelName) => ({
+  CLICK_ICON_EDIT_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_edit',
-    condition: commChanelName,
+    condition: communicationChanelName,
   }),
 
-  CLICK_ICON_DUPLICATE_NOTIFICATIONS: (commChanelName) => ({
+  CLICK_ICON_DUPLICATE_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_duplicate',
-    condition: commChanelName,
+    condition: communicationChanelName,
   }),
 
-  CLICK_ICON_DELETE_NOTIFICATIONS: (commChanelName) => ({
+  CLICK_ICON_DELETE_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_delete',
-    condition: commChanelName,
+    condition: communicationChanelName,
   }),
 };
 
