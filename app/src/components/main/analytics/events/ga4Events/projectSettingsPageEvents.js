@@ -156,6 +156,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
   CLICK_CONFIGURE_INTEGRATION_LINK: {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'configure_integration',
+    condition: 'email',
   },
 
   CLICK_CREATE_RULE_BUTTON: (communicationChanelName) => ({
