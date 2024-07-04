@@ -1633,7 +1633,7 @@
   "PostIssueModal.postIssue": "Отправить проблему",
   "PostIssueModal.postIssueFailed": "Неудалось отправить ошибку",
   "PostIssueModal.postIssueForTheTest": "Отправить проблему для теста {launchNumber}",
-  "PostIssueModal.postIssueSuccess": "Карточка была создана",
+  "PostIssueModal.postIssueSuccess": "Карточка была успешно создана",
   "PostIssueModal.systemUrlInfo": "Проблема будет отправлена на {systemUrl}",
   "ProductStatus.filterNameColumn": "Имя фильтра",
   "ProductStatus.nameColumn": "Имя",
