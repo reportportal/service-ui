@@ -24,9 +24,11 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
-import { isAdminSelector } from 'controllers/user';
+import { isAdminSelector, userIdSelector } from 'controllers/user';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { EPAM } from 'controllers/appInfo/constants';
+import { DEFAULT_USER_ID } from 'common/constants/accountRoles';
 import styles from './deleteAccountBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -35,10 +37,14 @@ const messages = defineMessages({
     id: 'DeleteAccountBlock.deleteAccount',
     defaultMessage: 'Delete account',
   },
-  tooltipText: {
-    id: 'DeleteAccountBlock.tooltipText',
+  tooltipAdminDisabledText: {
+    id: 'DeleteAccountBlock.tooltipAdminDisabledText',
     defaultMessage:
       'Only users with non-admin role can delete their account.\nAlternatively, other admin can do it.',
+  },
+  tooltipDefaultUserDisabledText: {
+    id: 'DeleteAccountBlock.tooltipDefaultUserDisabledText',
+    defaultMessage: "It's forbidden to delete account of default user on Demo instance.",
   },
 });
 
@@ -57,17 +63,23 @@ const Button = ({ onClick, formatMessage, disabled }) => (
 );
 Button.propTypes = {
   formatMessage: PropTypes.func.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   onClick: PropTypes.func,
 };
 Button.propTypes = {
+  disabled: false,
   onClick: () => {},
 };
-const TooltipContent = ({ formatMessage }) => (
-  <div className={cx('tooltip-content')}>{formatMessage(messages.tooltipText)}</div>
+const TooltipContent = ({ formatMessage, isAdmin }) => (
+  <div className={cx('tooltip-content')}>
+    {formatMessage(
+      isAdmin ? messages.tooltipAdminDisabledText : messages.tooltipDefaultUserDisabledText,
+    )}
+  </div>
 );
 TooltipContent.propTypes = {
   formatMessage: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 const ButtonWithTooltip = withTooltip({
@@ -83,7 +95,9 @@ export const DeleteAccountBlock = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const isAdmin = useSelector(isAdminSelector);
+  const isDefaultUser = useSelector(userIdSelector) === DEFAULT_USER_ID;
   const instanceType = useSelector(instanceTypeSelector);
+  const isDemoInstance = useSelector(isDemoInstanceSelector);
 
   const onDeleteAccountClick = () => {
     trackEvent(PROFILE_PAGE_EVENTS.CLICK_DELETE_ACCOUNT);
@@ -97,8 +111,8 @@ export const DeleteAccountBlock = () => {
 
   return (
     <div className={cx('delete-account-block')}>
-      {isAdmin ? (
-        <ButtonWithTooltip formatMessage={formatMessage} disabled />
+      {isAdmin || (isDefaultUser && isDemoInstance) ? (
+        <ButtonWithTooltip formatMessage={formatMessage} isAdmin={isAdmin} disabled />
       ) : (
         <Button onClick={onDeleteAccountClick} formatMessage={formatMessage} />
       )}
