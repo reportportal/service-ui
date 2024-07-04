@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector } from 'controllers/members';
 import { useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
@@ -54,13 +55,15 @@ export const ProjectTeamPage = () => {
     );
 
   return (
-    <div className={cx('project-team-page')}>
-      <ProjectTeamPageHeader
-        hasPermission={hasPermission}
-        title={formatMessage(messages.title)}
-        isNotEmpty={!isEmptyMembers}
-      />
-      {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
-    </div>
+    <ScrollWrapper autoHeightMax={100}>
+      <div className={cx('project-team-page')}>
+        <ProjectTeamPageHeader
+          hasPermission={hasPermission}
+          title={formatMessage(messages.title)}
+          isNotEmpty={!isEmptyMembers}
+        />
+        {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
+      </div>
+    </ScrollWrapper>
   );
 };
