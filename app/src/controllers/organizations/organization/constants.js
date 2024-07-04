@@ -19,3 +19,5 @@ export const PROJECTS_NAMESPACE = 'projects';
 export const PREPARE_ACTIVE_ORGANIZATION_PROJECTS = 'prepareActiveOrganizationProjects';
 
 export const FETCH_ORGANIZATION_BY_SLUG = 'fetchOrganizationBySlug';
+
+export const SET_ACTIVE_ORGANIZATION = 'setActiveOrganization';

@@ -17,15 +17,28 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
+import { queueReducers } from 'common/utils';
 import { projectsReducer } from '../projects/reducer';
-import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
+import { FETCH_ORGANIZATION_BY_SLUG, SET_ACTIVE_ORGANIZATION } from './constants';
+
+const setActiveOrganizationReducer = (state = [], { type = '', payload = {} }) => {
+  switch (type) {
+    case SET_ACTIVE_ORGANIZATION:
+      return payload;
+    default:
+      return state;
+  }
+};
 
 export const organizationReducer = combineReducers({
-  activeOrganization: fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
-    contentPath: 'items',
-    getFirst: true,
-    initialState: null,
-  }),
+  activeOrganization: queueReducers(
+    fetchReducer(FETCH_ORGANIZATION_BY_SLUG, {
+      contentPath: 'items',
+      getFirst: true,
+      initialState: null,
+    }),
+    setActiveOrganizationReducer,
+  ),
   organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
   projects: projectsReducer,
 });
