@@ -277,7 +277,7 @@ const AddEditNotificationModal = ({
       type: messages[sendCase].defaultMessage,
       switcher,
       number: isEditorShown ? length : undefined,
-      commChanelName: data.type,
+      communicationChanelName: data.type,
     };
     onSave(newFormValues, eventParameters);
   };
