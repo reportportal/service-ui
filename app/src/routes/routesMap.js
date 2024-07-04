@@ -99,7 +99,10 @@ import {
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
-import { prepareActiveOrganizationProjectsAction } from 'controllers/organizations/organization/actionCreators';
+import {
+  fetchOrganizationBySlugAction,
+  prepareActiveOrganizationProjectsAction,
+} from 'controllers/organizations/organization/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -332,6 +335,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     hasPermission,
     assignedProjectKey,
     assignmentNotRequired,
+    isAssignedToTargetOrganization,
   } = createUserAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
 
   const isAdminNewPageType = !!adminPageNames[nextPageType];
@@ -342,12 +346,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
-  if (
-    hashOrganizationSlug &&
-    hashProjectSlug &&
-    (isChangedProject || isAdminCurrentPageType) &&
-    !isAdminNewPageType
-  ) {
+  if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
     if (hasPermission) {
       dispatch(
         setActiveProjectAction({
@@ -357,10 +356,18 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       );
       dispatch(setActiveProjectKeyAction(projectKey));
       dispatch(fetchProjectAction(projectKey));
+      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
 
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
-      // TODO: to provide redirect in case of an existing organization and a non-existing project.
+    } else if (
+      hashOrganizationSlug &&
+      !hashProjectSlug &&
+      (isAssignedToTargetOrganization || assignmentNotRequired)
+    ) {
+      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+
+      organizationSlug = hashOrganizationSlug;
     } else if (isChangedProject) {
       dispatch(
         redirect({
