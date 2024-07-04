@@ -19,6 +19,8 @@
   border-bottom: 1px solid $COLOR--e-100;
   background: $COLOR--bg-000;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
 }
 
 .header {

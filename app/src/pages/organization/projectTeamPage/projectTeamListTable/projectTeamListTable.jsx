@@ -108,7 +108,7 @@ export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingD
     {
       key: 'lastLogin',
       header: formatMessage(messages.lastLogin),
-      width: 138,
+      width: 156,
       align: 'left',
     },
     {
