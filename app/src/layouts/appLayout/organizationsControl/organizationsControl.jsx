@@ -21,7 +21,8 @@ import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { withPopover } from 'componentLibrary/popover';
-import { organizationNameSelector, projectNameSelector } from 'controllers/project';
+import { projectNameSelector } from 'controllers/project';
+import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
 import { ORGANIZATION_LEVEL, INSTANCE_LEVEL } from 'routes/constants';
 import { ADMINISTRATE_PAGE, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { urlOrganizationSlugSelector } from 'controllers/pages';
@@ -49,7 +50,7 @@ const messages = defineMessages({
 
 export const OrganizationsControl = ({ isPopoverOpen, onClick, sidebarType, closeSidebar }) => {
   const { formatMessage } = useIntl();
-  const organizationName = useSelector(organizationNameSelector);
+  const organizationName = useSelector(activeOrganizationNameSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectName = useSelector(projectNameSelector);
 

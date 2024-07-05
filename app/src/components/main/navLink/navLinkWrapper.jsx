@@ -32,6 +32,8 @@ export class NavLinkWrapper extends Component {
     activeClassName: PropTypes.string,
     children: PropTypes.node,
     onClick: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     location: PropTypes.object,
   };
 
@@ -41,6 +43,8 @@ export class NavLinkWrapper extends Component {
     activeClassName: '',
     children: null,
     onClick: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
     location: null,
   };
 
@@ -93,7 +97,8 @@ export class NavLinkWrapper extends Component {
   };
 
   render() {
-    const { onClick, children, to, className, activeClassName } = this.props;
+    const { onClick, onFocus, onBlur, children, to, className, activeClassName } = this.props;
+
     return (
       <NavLink
         to={to}
@@ -101,6 +106,8 @@ export class NavLinkWrapper extends Component {
         activeClassName={activeClassName}
         onClick={onClick}
         isActive={this.isActive}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         {children}
       </NavLink>

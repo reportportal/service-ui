@@ -19,6 +19,8 @@ import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { NavLink } from 'components/main/navLink';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
@@ -114,17 +116,22 @@ export const OrganizationsItem = ({
             {Parser(ArrowIcon)}
             <div className={cx('organization-name', { active: isActive })}>{organizationName}</div>
           </button>
-          <button
+          <NavLink
+            to={{
+              type: ORGANIZATION_PROJECTS_PAGE,
+              payload: { organizationSlug },
+            }}
             className={cx('organization-open', {
               displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
               focus: isFocusedShowOpenButton,
             })}
+            onClick={onClick}
             onFocus={onFocusOpenButton}
             onBlur={onBlurOpenButton}
           >
             <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
             {Parser(OpenIcon)}
-          </button>
+          </NavLink>
         </div>
       </button>
       {isCollapsed && (

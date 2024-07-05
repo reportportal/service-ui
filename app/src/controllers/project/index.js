@@ -74,7 +74,6 @@ export {
   projectNotificationsStateSelector,
   projectKeySelector,
   projectNameSelector,
-  organizationNameSelector,
   projectInfoIdSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
