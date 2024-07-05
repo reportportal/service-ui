@@ -32,10 +32,11 @@ function* fetchOrganizationBySlug({ payload: slug }) {
     yield put(showDefaultErrorNotification(error));
   }
 }
+
 function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
-    if (!activeOrganization) {
+    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
       yield put(fetchOrganizationBySlugAction(organizationSlug));
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
     }
@@ -53,6 +54,7 @@ function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
 function* watchFetchOrganizationProjects() {
   yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_PROJECTS, prepareActiveOrganizationProjects);
 }
+
 function* watchFetchOrganizationBySlug() {
   yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
 }

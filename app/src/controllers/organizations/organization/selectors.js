@@ -22,3 +22,5 @@ export const activeOrganizationSelector = (state) => organizationSelector(state)
 
 export const activeOrganizationLoadingSelector = (state) =>
   organizationSelector(state).organizationLoading || false;
+
+export const activeOrganizationName = (state) => activeOrganizationSelector(state)?.name;

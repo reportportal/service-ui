@@ -156,26 +156,25 @@ function* fetchUserWorker() {
     : Object.keys(assignedOrganizations)[0];
 
   let projectKey;
+  let activeOrganization;
+
+  try {
+    const activeOrganizationResponse = yield call(
+      fetch,
+      URLS.organizationList({ slug: targetOrganizationSlug }),
+    );
+
+    activeOrganization = activeOrganizationResponse?.items?.[0];
+  } catch (e) {} // eslint-disable-line no-empty
 
   if (!isAssignedToTargetProject && assignmentNotRequired) {
     try {
-      const activeOrganizationResponse = yield call(
-        fetch,
-        URLS.organizationList({ slug: targetOrganizationSlug }),
-      );
-
-      const activeOrganization = activeOrganizationResponse?.items?.[0];
-
       // TODO: Fetch project by slug
       const organizationProjects = yield call(
         fetch,
         URLS.organizationProjects(activeOrganization?.id),
       );
       projectKey = organizationProjects?.items?.find(({ slug }) => slug === targetProjectSlug)?.key;
-
-      if (activeOrganization) {
-        yield put(setActiveOrganizationAction(activeOrganization));
-      }
     } catch (e) {} // eslint-disable-line no-empty
   }
 
@@ -192,6 +191,7 @@ function* fetchUserWorker() {
 
   yield put(setActiveProjectAction(activeProject));
   yield put(setActiveProjectKeyAction(projectKey));
+  yield put(setActiveOrganizationAction(activeOrganization));
   const format = getLogTimeFormatFromStorage(user.userId);
   yield put(setLogTimeFormatAction(format));
 }

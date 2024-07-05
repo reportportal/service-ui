@@ -347,7 +347,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
   if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
-    if (hasPermission) {
+    if (hashOrganizationSlug && hashProjectSlug && hasPermission) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
