@@ -21,7 +21,7 @@ import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './integrationForm.scss';
@@ -170,7 +170,7 @@ export class IntegrationForm extends Component {
                   <Button
                     onClick={this.toggleDisabled}
                     disabled={shouldFieldsBeHidden}
-                    dataAutomationId="editConfigurationButton"
+                    data-automation-id="editConfigurationButton"
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   </Button>
@@ -180,7 +180,7 @@ export class IntegrationForm extends Component {
                       <Button
                         onClick={handleSubmit(this.submitIntegration)}
                         disabled={shouldFieldsBeHidden}
-                        dataAutomationId="submitConfigurationButton"
+                        data-automation-id="submitConfigurationButton"
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
                       </Button>
@@ -192,7 +192,7 @@ export class IntegrationForm extends Component {
                           variant="ghost"
                           onClick={this.toggleDisabled}
                           disabled={shouldFieldsBeHidden}
-                          dataAutomationId="cancelConfigurationButton"
+                          data-automation-id="cancelConfigurationButton"
                         >
                           {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
                         </Button>

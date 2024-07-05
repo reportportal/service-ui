@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import {
   NOTIFICATION_TYPES,
   showDefaultErrorNotification,

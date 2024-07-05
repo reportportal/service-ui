@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { trackEvent } from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
@@ -54,6 +54,7 @@ export const Notifications = () => {
   const allNotificationPlugins = useSelector(notificationPluginsSelector);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const userRoles = useSelector(userRolesSelector);
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
@@ -66,7 +67,7 @@ export const Notifications = () => {
   }, []);
 
   const toggleNotificationsEnabled = (isEnabled) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_ALL_NOTIFICATIONS(isEnabled));
     dispatch(updateNotificationStateAction(isEnabled));
   };
   // separate notifications by types
@@ -109,7 +110,4 @@ export const Notifications = () => {
       <NotificationsFooter />
     </SettingsPageContent>
   );
-};
-Notifications.propTypes = {
-  setHeaderTitleNode: PropTypes.func.isRequired,
 };

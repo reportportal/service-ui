@@ -40,7 +40,7 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector, projectKeySelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
@@ -105,7 +105,7 @@ const messages = defineMessages({
   },
   postIssueSuccess: {
     id: 'PostIssueModal.postIssueSuccess',
-    defaultMessage: 'Ticket has been created.',
+    defaultMessage: 'Ticket has been created successfully',
   },
   postIssueForTheTest: {
     id: 'PostIssueModal.postIssueForTheTest',
@@ -381,10 +381,10 @@ export class PostIssueModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         this.props.hideScreenLockAction();
         this.props.showNotification({
-          message: formatMessage(messages.postIssueFailed),
+          message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
           type: NOTIFICATION_TYPES.ERROR,
         });
       });

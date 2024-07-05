@@ -28,6 +28,7 @@ import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { docsReferences } from 'common/utils';
+import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { messages } from '../messages';
 import styles from './footer.scss';
 import { HelpPanel } from '../helpPanel';
@@ -45,6 +46,7 @@ export const NotificationsFooter = () => {
       link: docsReferences.pluginsDocs,
       description: formatMessage(messages.discoverPluginsDescription),
       openIcon: openInNewTabIcon,
+      event: PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_DISCOVER_PLUGINS_LINK,
       automationId: 'documentationLink',
     },
     {
@@ -59,6 +61,7 @@ export const NotificationsFooter = () => {
       },
       description: formatMessage(messages.integrationSettingsDescription),
       openIcon: arrowRightIcon,
+      event: PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_INTEGRATION_SETTINGS_LINK,
       automationId: 'integrationSettingsLink',
     },
   ];
