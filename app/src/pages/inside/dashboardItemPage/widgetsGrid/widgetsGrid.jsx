@@ -25,7 +25,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import { Widget } from './widget';
 import styles from './widgetsGrid.scss';
@@ -95,6 +95,8 @@ export class WidgetsGrid extends Component {
   };
 
   onGridItemChange = (newLayout, oldWidgetPosition, newWidgetPosition) => {
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+
     let newWidgets;
     const itemChanged = Object.keys(oldWidgetPosition).some(
       (prop) => oldWidgetPosition[prop] !== newWidgetPosition[prop],
@@ -127,7 +129,9 @@ export class WidgetsGrid extends Component {
   };
 
   onResizeStart = (layout, oldItem) => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.RESIZE_WIDGET);
+    const widgets = this.props.dashboard.widgets;
+    const targetWidget = widgets.find((widget) => widget.widgetId === oldItem.i);
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.clickOnResizeWidgetIcon(targetWidget.widgetType));
     this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
 
@@ -231,7 +235,6 @@ export class WidgetsGrid extends Component {
       rowHeight={rowHeight}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
-      onDragStart={() => this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DRAG_WIDGET)}
       onDragStop={this.onGridItemChange}
       onResizeStart={this.onResizeStart}
       onResizeStop={this.onResizeStop}

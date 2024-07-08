@@ -106,31 +106,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Click on Btn Remove on Dashboard',
     label: 'Arise Modal Delete Dashboard',
   },
-  DRAG_WIDGET: {
-    category: DASHBOARD_PAGE,
-    action: 'Click and drag Widget',
-    label: 'Move Widget',
-  },
-  EDIT_WIDGET: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Edit on Widget',
-    label: 'Arise Modal Edit Widget',
-  },
-  REFRESH_WIDGET: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Refresh on Widget',
-    label: 'Refresh Widget',
-  },
-  REMOVE_WIDGET: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Remove on Widget',
-    label: 'Arise Modal Delete Widget',
-  },
-  RESIZE_WIDGET: {
-    category: DASHBOARD_PAGE,
-    action: 'Click and drag on icon Resize on Widget',
-    label: 'Resize Widget',
-  },
   CLOSE_ICON_ADD_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on icon Close on Modal Add New Widget',

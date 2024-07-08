@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-import { submit } from 'redux-form';
+import { getFormInitialValues, submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -36,6 +36,11 @@ import {
   getEcWidget,
 } from 'components/main/analytics/events/common/widgetPages/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
+import {
+  getCreatedWidgetLevelsCount,
+  getModifiedFieldsLabels,
+} from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/widgetWizardContent/utils';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -52,6 +57,7 @@ const cx = classNames.bind(styles);
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
+    initialFormValues: getFormInitialValues(WIDGET_WIZARD_FORM)(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -84,6 +90,7 @@ export class WidgetWizardContent extends Component {
     activeDashboardId: PropTypes.number,
     currentPage: PropTypes.string,
     baseEventParameters: baseEventParametersShape,
+    initialFormValues: PropTypes.object,
   };
   static defaultProps = {
     formValues: {
@@ -163,8 +170,8 @@ export class WidgetWizardContent extends Component {
       eventsInfo: { excludeSkippedTests },
       projectId,
       onConfirm,
-      isAnalyticsEnabled,
-      baseEventParameters,
+      initialFormValues,
+      activeDashboardId,
     } = this.props;
 
     const { selectedDashboard, ...rest } = formData;
@@ -191,23 +198,20 @@ export class WidgetWizardContent extends Component {
           ...getDefaultWidgetConfig(widgetType),
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
-        if (isAnalyticsEnabled) {
-          provideEcGA({
-            eventName: 'add_to_cart',
-            baseEventParameters,
-            additionalParameters: {
-              item_list_name: selectedDashboard.id,
-              items: [
-                getEcWidget({
-                  itemId: id,
-                  itemName: widgetTypesMessages[widgetType].defaultMessage,
-                  itemVariant: this.props.currentPage,
-                  itemListName: selectedDashboard.id,
-                }),
-              ],
-            },
-          });
-        }
+
+        trackEvent(
+          WIDGETS_EVENTS.clickOnSaveWidget({
+            type: widgetType,
+            dashboardId: activeDashboardId,
+            modifiedFields: getModifiedFieldsLabels(
+              initialFormValues?.contentParameters,
+              data?.contentParameters,
+            ),
+            isWidgetNameChanged: name !== initialFormValues?.name,
+            isWidgetDescriptionChanged: data?.description !== initialFormValues?.description,
+            levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
+          }),
+        );
       })
       .catch((err) => {
         this.props.hideScreenLockAction();

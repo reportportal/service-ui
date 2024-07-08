@@ -20,6 +20,7 @@ import {
   COMPONENT_HEALTH_CHECK,
   COMPONENT_HEALTH_CHECK_TABLE,
 } from 'common/constants/widgetTypes';
+import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
@@ -45,6 +46,67 @@ export const WIDGETS_EVENTS = {
     modal: modalNames[modalId],
     element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
   }),
+  clickOnDeleteWidgetButton: (type, dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'delete',
+    modal: 'delete_widget',
+    number: dashboardId,
+    type,
+  }),
+  clickOnResizeWidgetIcon: (type) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'resize_widget',
+    type,
+  }),
+  clickOnSaveWidget: ({
+    type,
+    dashboardId,
+    isWidgetDescriptionChanged = false,
+    isWidgetNameChanged = false,
+    levelsCount,
+    modifiedFields,
+    isEditModal = false,
+  }) => {
+    const actionType = isEditModal
+      ? {
+          element_name: 'add',
+          modal: 'add_new_widget',
+        }
+      : {
+          element_name: 'save',
+          modal: 'edit_widget',
+        };
+
+    return {
+      ...getBasicClickEventParameters(DASHBOARDS),
+      condition: getJoinedFieldEventNamesByType(type, modifiedFields),
+      number: dashboardId,
+      link_name: isWidgetDescriptionChanged,
+      status: isWidgetNameChanged,
+      element_name: 'add',
+      modal: 'add_new_widget',
+      type,
+      ...(levelsCount && { switcher: levelsCount }),
+      ...actionType,
+    };
+  },
+
+  ON_DRAG_WIDGET: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'drag_widget',
+  },
+  CLICK_ON_REFRESH_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'refresh_widget',
+  },
+  CLICK_ON_EDIT_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'edit_widget',
+  },
+  CLICK_ON_DELETE_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'delete_widget',
+  },
 };
 
 export const DASHBOARD_EVENTS = {

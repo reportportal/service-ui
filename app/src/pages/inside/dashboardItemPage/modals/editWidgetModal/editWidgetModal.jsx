@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
+import { destroy, getFormInitialValues, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { activeProjectSelector } from 'controllers/user';
@@ -31,6 +31,12 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import {
+  getCreatedWidgetLevelsCount,
+  getModifiedFieldsLabels,
+} from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/widgetWizardContent/utils';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
@@ -56,6 +62,8 @@ const messages = defineMessages({
   (state) => ({
     projectId: activeProjectSelector(state),
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
+    initiallyFilledWidgetSettings: getFormInitialValues(WIDGET_WIZARD_FORM)(state),
+    activeDashboardId: activeDashboardIdSelector(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
     valid: isValid(WIDGET_WIZARD_FORM)(state),
   }),
@@ -78,6 +86,8 @@ export class EditWidgetModal extends Component {
     dirty: PropTypes.bool.isRequired,
     valid: PropTypes.bool.isRequired,
     widgetSettings: PropTypes.object,
+    activeDashboardId: PropTypes.number,
+    initiallyFilledWidgetSettings: PropTypes.object,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       widget: PropTypes.object,
@@ -144,6 +154,8 @@ export class EditWidgetModal extends Component {
       intl: { formatMessage },
       widgetSettings,
       projectId,
+      initiallyFilledWidgetSettings,
+      activeDashboardId,
     } = this.props;
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
@@ -164,6 +176,22 @@ export class EditWidgetModal extends Component {
       data,
     })
       .then(() => {
+        trackEvent(
+          WIDGETS_EVENTS.clickOnSaveWidget({
+            type: widgetType,
+            dashboardId: activeDashboardId,
+            modifiedFields: getModifiedFieldsLabels(
+              initiallyFilledWidgetSettings?.contentParameters,
+              data?.contentParameters,
+            ),
+            isWidgetNameChanged: name !== initiallyFilledWidgetSettings?.name,
+            isWidgetDescriptionChanged:
+              data?.description !== initiallyFilledWidgetSettings?.description,
+            levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
+            isEditModal: true,
+          }),
+        );
+
         this.props.hideScreenLockAction();
         closeModal();
         onConfirm(isForceUpdateNeeded);

@@ -47,6 +47,7 @@
     "html-react-parser": "5.1.1",
     "intl": "1.2.5",
     "intl-locales-supported": "1.8.4",
+    "lodash": "^4.17.21",
     "marked": "0.7.0",
     "marked-lts": "npm:marked@5.1.1",
     "mime-types": "2.1.35",
