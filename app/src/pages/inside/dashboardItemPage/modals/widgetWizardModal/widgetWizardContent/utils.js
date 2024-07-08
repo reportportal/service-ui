@@ -53,7 +53,8 @@ export const getCreatedWidgetLevelsCount = (widgetType, data) => {
     ![CUMULATIVE_TREND, COMPONENT_HEALTH_CHECK, COMPONENT_HEALTH_CHECK_TABLE].includes(widgetType)
   )
     return null;
-  return (
-    data.contentParameters.attributes.length || data.contentParameters.attributeKeys.length || 1
-  );
+  const {
+    contentParameters: { widgetOptions },
+  } = data;
+  return widgetOptions.attributes?.length || widgetOptions.attributeKeys?.length || 1;
 };
