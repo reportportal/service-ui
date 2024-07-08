@@ -15,7 +15,7 @@
  */
 
 import classNames from 'classnames/bind';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import styles from './emptyPageState.scss';
