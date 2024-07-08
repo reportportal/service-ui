@@ -1,6 +1,6 @@
 import { select, call, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils/fetch';
+import { fetch as internalFetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { PUBLIC_PLUGINS } from 'controllers/plugins/constants';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
@@ -29,7 +29,7 @@ export function* fetchExtensionsMetadata(action) {
   // TODO: discuss with BE whether we can fetch plugins metadata via single API call
   const calls = uiExtensionPlugins.map((plugin) => {
     const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
-    return fetch(URLS.pluginPublicFile(plugin.name, metadataFile), {
+    return internalFetch(URLS.pluginPublicFile(plugin.name, metadataFile), {
       contentType: 'application/json',
     });
   });
@@ -40,6 +40,7 @@ export function* fetchExtensionsMetadata(action) {
 
   try {
     const results = yield Promise.allSettled(calls);
+    // const results = [];
     const metadataArray = results.reduce((acc, result, index) => {
       if (result.status !== 'fulfilled') {
         return acc;
@@ -50,7 +51,17 @@ export function* fetchExtensionsMetadata(action) {
       });
     }, []);
 
-    yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
+    const REMOTE_PLUGIN_MANIFEST_URL =
+      'https://raw.githubusercontent.com/AmsterGet/remote-plugin-config/main/manifest.json';
+
+    const response = yield call(fetch, REMOTE_PLUGIN_MANIFEST_URL, {
+      method: 'get',
+      contentType: 'application/json',
+    });
+
+    const remotePluginsManifest = yield response.json();
+
+    yield put(fetchExtensionsMetadataSuccessAction(metadataArray.concat(remotePluginsManifest)));
   } catch (error) {
     console.error('Plugins metadata load error'); // eslint-disable-line no-console
   }
@@ -60,7 +71,6 @@ export function* fetchExtensionsMetadata(action) {
 export function* fetchUiExtensions() {
   yield call(fetchExtensionsMetadata);
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
-  // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
   const globalIntegrations = yield select(globalIntegrationsSelector);
   if (!globalIntegrations?.length) {
     return;
@@ -90,7 +100,7 @@ export function* fetchUiExtensions() {
         url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
       }
 
-      return fetch(url, {
+      return internalFetch(url, {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
