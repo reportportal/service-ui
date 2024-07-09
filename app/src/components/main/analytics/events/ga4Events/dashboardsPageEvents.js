@@ -69,12 +69,12 @@ export const WIDGETS_EVENTS = {
   }) => {
     const actionType = isEditModal
       ? {
-          element_name: 'add',
-          modal: 'add_new_widget',
-        }
-      : {
           element_name: 'save',
           modal: 'edit_widget',
+        }
+      : {
+          element_name: 'add',
+          modal: 'add_new_widget',
         };
 
     return {
