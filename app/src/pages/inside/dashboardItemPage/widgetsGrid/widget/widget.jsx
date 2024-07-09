@@ -35,8 +35,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
-import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -299,7 +299,7 @@ export class SimpleWidget extends Component {
 
   showEditWidgetModal = () => {
     const modalId = 'editWidgetModal';
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_EDIT_WIDGET_ICON);
     this.props.showModalAction({
       id: modalId,
       data: {
@@ -333,14 +333,14 @@ export class SimpleWidget extends Component {
   };
 
   refreshWidget = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.fetchWidget();
   };
 
   showDeleteWidgetModal = () => {
     const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
 
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
+    tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_DELETE_WIDGET_ICON);
     const onConfirm = () => {
       const { widgetId, activeDashboardId, widgetType } = this.props;
       const {
@@ -349,6 +349,10 @@ export class SimpleWidget extends Component {
 
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
+        tracking.trackEvent(
+          WIDGETS_EVENTS.clickOnDeleteWidgetButton(widgetType, activeDashboardId),
+        );
+
         provideEcGA({
           eventName: 'remove_from_cart',
           baseEventParameters,

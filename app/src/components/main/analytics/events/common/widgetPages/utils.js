@@ -26,6 +26,29 @@ import {
   STATS_TOTAL,
 } from 'common/constants/statistics';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
+import {
+  COMPONENT_HEALTH_CHECK,
+  COMPONENT_HEALTH_CHECK_TABLE,
+  CUMULATIVE_TREND,
+  DIFFERENT_LAUNCHES_COMPARISON,
+  FAILED_CASES_TREND,
+  FLAKY_TEST_CASES_TABLE,
+  INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
+  LAUNCH_DURATION,
+  LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
+  LAUNCH_STATISTICS,
+  LAUNCHES_TABLE,
+  MOST_FAILED_TEST_CASES_TABLE,
+  MOST_POPULAR_PATTERNS,
+  MOST_TIME_CONSUMING,
+  NON_PASSED_TEST_CASES_TREND,
+  OVERALL_STATISTICS,
+  PASSING_RATE_PER_LAUNCH,
+  PASSING_RATE_SUMMARY,
+  PROJECT_ACTIVITY,
+  TEST_CASES_GROWTH_TREND,
+  UNIQUE_BUGS_TABLE,
+} from 'common/constants/widgetTypes';
 import { getDefectTypeLabel } from '../../common/utils';
 
 export const SORTING_ENTITY_MAP = {
@@ -101,4 +124,108 @@ export const formatEcDashboardData = (dashboard) => {
       itemName: widgetTypesMessages[widget.widgetType].defaultMessage,
     }),
   );
+};
+
+export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
+  [LAUNCH_STATISTICS]: {
+    'contentParameters.contentFields': 'criteria_for_widget',
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.zoom': 'zoom_widget_area',
+    'contentParameters.widgetOptions.timeline': 'toggler',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+  },
+  [LAUNCH_DURATION]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.latest': 'toggler',
+  },
+  [PROJECT_ACTIVITY]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.actionType': 'criteria_for_widget',
+    'contentParameters.widgetOptions.user': 'user_name',
+  },
+  [INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.timeline': 'toggler',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+  },
+  [UNIQUE_BUGS_TABLE]: {
+    'contentParameters.widgetOptions.latest': 'toggler',
+  },
+  [FAILED_CASES_TREND]: {
+    'contentParameters.itemsCount': 'items',
+  },
+  [DIFFERENT_LAUNCHES_COMPARISON]: {},
+  [PASSING_RATE_SUMMARY]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+  },
+  [CUMULATIVE_TREND]: {
+    'contentParameters.itemsCount': 'number_of_launches',
+    'contentParameters.widgetOptions.attributes': 'level',
+  },
+  [COMPONENT_HEALTH_CHECK]: {
+    'contentParameters.widgetOptions.latest': 'toggler',
+    'contentParameters.widgetOptions.attributeKeys': 'level',
+  },
+  [MOST_TIME_CONSUMING]: {
+    'contentParameters.contentFields': 'criteria_for_widget',
+    'contentParameters.widgetOptions.launchNameFilter': 'launch_name',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+    'contentParameters.widgetOptions.includeMethods': 'include_before_and_after_methods',
+  },
+  [OVERALL_STATISTICS]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.contentFields': 'criteria_for_widget',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+    'contentParameters.widgetOptions.latest': 'toggler',
+  },
+  [LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: {},
+  [TEST_CASES_GROWTH_TREND]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.widgetOptions.timeline': 'toggler',
+  },
+  [LAUNCHES_TABLE]: {
+    'contentParameters.itemsCount': 'items',
+    'contentParameters.contentFields': 'criteria_for_widget',
+  },
+  [MOST_FAILED_TEST_CASES_TABLE]: {
+    'contentParameters.contentFields': 'criteria_for_widget',
+    'contentParameters.itemsCount': 'launches_count',
+    'contentParameters.widgetOptions.launchNameFilter': 'launch_name',
+    'contentParameters.widgetOptions.includeMethods': 'include_before_and_after_methods',
+  },
+  [NON_PASSED_TEST_CASES_TREND]: {
+    'contentParameters.itemsCount': 'items',
+  },
+  [PASSING_RATE_PER_LAUNCH]: {
+    'contentParameters.widgetOptions.launchNameFilter': 'launch_name',
+    'contentParameters.widgetOptions.viewMode': 'toggler',
+  },
+  [FLAKY_TEST_CASES_TABLE]: {
+    'contentParameters.itemsCount': 'launches_count',
+    'contentParameters.widgetOptions.launchNameFilter': 'launch_name',
+    'contentParameters.widgetOptions.includeMethods': 'include_before_and_after_methods',
+  },
+  [MOST_POPULAR_PATTERNS]: {
+    'contentParameters.itemsCount': 'number_of_launches',
+    'contentParameters.widgetOptions.latest': 'toggler',
+  },
+  [COMPONENT_HEALTH_CHECK_TABLE]: {
+    'contentParameters.widgetOptions.attributeKeys': 'level',
+  },
+};
+
+export const getJoinedFieldEventNamesByType = (type, keys) => {
+  const uniqueValues = new Set();
+
+  const changedFields = WIDGET_FIELD_EVENT_NAME_BY_TYPE[type];
+
+  keys.forEach((key) => {
+    const value = changedFields[key];
+    if (value) {
+      uniqueValues.add(value);
+    }
+  });
+
+  return Array.from(uniqueValues).join('#');
 };
