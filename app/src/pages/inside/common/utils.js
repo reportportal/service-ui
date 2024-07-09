@@ -150,6 +150,10 @@ export const getGroupedDefectTypesOptions = (
   formatMessage,
   defectTypesSequence = DEFECT_TYPES_SEQUENCE,
 ) => {
+  if (Object.keys(defectTypes).length === 0) {
+    return [];
+  }
+
   let defectTypesOptions = [];
   defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];
