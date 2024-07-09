@@ -129,7 +129,7 @@ export class WidgetsGrid extends Component {
 
   onResizeStart = (layout, oldItem) => {
     const widgets = this.props.dashboard.widgets;
-    const targetWidget = widgets.find((widget) => widget.widgetId === oldItem.i);
+    const targetWidget = widgets.find((widget) => +widget.widgetId === +oldItem.i);
     this.props.tracking.trackEvent(WIDGETS_EVENTS.clickOnResizeWidgetIcon(targetWidget.widgetType));
     this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
