@@ -67,7 +67,7 @@ export const WIDGETS_EVENTS = {
     modifiedFields,
     isEditModal = false,
   }) => {
-    const actionType = isEditModal
+    const actionType = !isEditModal
       ? {
           element_name: 'add',
           modal: 'add_new_widget',
@@ -76,7 +76,7 @@ export const WIDGETS_EVENTS = {
           element_name: 'save',
           modal: 'edit_widget',
         };
-
+    console.log(modifiedFields);
     return {
       ...getBasicClickEventParameters(DASHBOARDS),
       condition: getJoinedFieldEventNamesByType(type, modifiedFields),

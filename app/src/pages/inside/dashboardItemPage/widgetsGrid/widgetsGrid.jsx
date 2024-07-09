@@ -96,7 +96,6 @@ export class WidgetsGrid extends Component {
 
   onGridItemChange = (newLayout, oldWidgetPosition, newWidgetPosition) => {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
-
     let newWidgets;
     const itemChanged = Object.keys(oldWidgetPosition).some(
       (prop) => oldWidgetPosition[prop] !== newWidgetPosition[prop],
