@@ -76,7 +76,7 @@ export const WIDGETS_EVENTS = {
           element_name: 'save',
           modal: 'edit_widget',
         };
-    console.log(modifiedFields);
+
     return {
       ...getBasicClickEventParameters(DASHBOARDS),
       condition: getJoinedFieldEventNamesByType(type, modifiedFields),
