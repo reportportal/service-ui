@@ -17,7 +17,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formValueSelector, reduxForm } from 'redux-form';
-import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
@@ -33,13 +32,13 @@ import { URLS } from 'common/urls';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Checkbox } from 'componentLibrary/checkbox';
-import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { Checkbox } from '@reportportal/ui-kit';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
+import { capitalizeWord } from '../util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import {
@@ -70,7 +69,7 @@ const cx = className.bind(styles);
 const messages = defineMessages({
   title: {
     id: 'AddEditNotificationCaseModal.title',
-    defaultMessage: '{actionType} Notification Rule',
+    defaultMessage: '{actionType} {pluginType} Notification Rule',
   },
   description: {
     id: 'AddEditNotificationCaseModal.description',
@@ -215,7 +214,6 @@ const AddEditNotificationModal = ({
   dirty,
 }) => {
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const attributesValue =
@@ -279,10 +277,9 @@ const AddEditNotificationModal = ({
       type: messages[sendCase].defaultMessage,
       switcher,
       number: isEditorShown ? length : undefined,
+      communicationChanelName: data.type,
     };
-
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
-    onSave(newFormValues);
+    onSave(newFormValues, eventParameters);
   };
 
   const okButton = {
@@ -323,6 +320,7 @@ const AddEditNotificationModal = ({
     <ModalLayout
       title={formatMessage(messages.title, {
         actionType: formatMessage(messages[data.actionType]),
+        pluginType: capitalizeWord(data.type),
       })}
       okButton={okButton}
       cancelButton={cancelButton}

@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -102,7 +102,7 @@ export const IntegrationHeader = (props) => {
             <Button
               disabled={!isAbleToClick}
               onClick={onAddProjectIntegration}
-              dataAutomationId="addProjectIntegrationButton"
+              data-automation-id="addProjectIntegrationButton"
             >
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
@@ -110,7 +110,7 @@ export const IntegrationHeader = (props) => {
               <Button
                 onClick={onResetProjectIntegration}
                 variant="ghost"
-                dataAutomationId="resetToGlobalIntegrationsButton"
+                data-automation-id="resetToGlobalIntegrationsButton"
               >
                 {formatMessage(messages.projectIntegrationReset)}
               </Button>

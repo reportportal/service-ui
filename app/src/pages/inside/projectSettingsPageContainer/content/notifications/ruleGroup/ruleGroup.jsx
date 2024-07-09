@@ -16,7 +16,7 @@
 
 import { Layout } from 'pages/inside/projectSettingsPageContainer/content/layout';
 import { Toggle } from 'componentLibrary/toggle';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import addIcon from 'common/img/add-inline.svg';
 import React from 'react';
 import classNames from 'classnames/bind';
@@ -98,7 +98,13 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
     pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
 
   const onToggleHandler = (isEnabled, notification) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(
+        pluginNameInCamelCase,
+        notification.id,
+        isEnabled,
+      ),
+    );
 
     dispatch(
       updateProjectNotificationAction(
@@ -109,11 +115,22 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
 
   const handleRuleItemClick = (isShown) => {
     if (isShown) {
-      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
+      trackEvent(
+        PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS(
+          pluginNameInCamelCase,
+        ),
+      );
     }
   };
 
   const togglePluginNotificationsEnabled = (isEnabled) => {
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_PLUGIN_NOTIFICATIONS(
+        pluginNameInCamelCase,
+        isEnabled,
+      ),
+    );
+
     dispatch(
       updateNotificationStateAction(
         isEnabled,
@@ -121,16 +138,29 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
       ),
     );
   };
-  const confirmAdd = (newNotification) => {
+  const confirmAdd = (newNotification, eventParameters) => {
+    const trackAddingEvent = (id) =>
+      trackEvent(
+        PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL({
+          ...eventParameters,
+          ruleId: id,
+        }),
+      );
     const notification = convertNotificationCaseForSubmission(newNotification);
-    dispatch(addProjectNotificationAction(notification));
+    dispatch(addProjectNotificationAction(notification, trackAddingEvent));
   };
 
   const confirmDelete = (id) => {
     dispatch(deleteProjectNotificationAction(id));
   };
 
-  const confirmEdit = (notification) => {
+  const confirmEdit = (notification, eventParameters) => {
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL({
+        ...eventParameters,
+        ruleId: notification.id,
+      }),
+    );
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({
@@ -142,7 +172,9 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   };
 
   const onAdd = () => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CREATE_RULE_BUTTON);
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CREATE_RULE_BUTTON(pluginNameInCamelCase),
+    );
 
     dispatch(
       showModalAction({
@@ -160,7 +192,9 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   };
 
   const onEdit = (notification) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_EDIT_NOTIFICATIONS);
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_EDIT_NOTIFICATIONS(pluginNameInCamelCase),
+    );
 
     dispatch(
       showModalAction({
@@ -178,19 +212,26 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   };
 
   const onDelete = (notification) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DELETE_NOTIFICATIONS);
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DELETE_NOTIFICATIONS(pluginNameInCamelCase),
+    );
 
     dispatch(
       showModalAction({
         id: 'deleteNotificationModal',
         data: {
           onSave: () => confirmDelete(notification.id),
+          type: pluginName,
         },
       }),
     );
   };
   const onCopy = (notification) => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS(
+        pluginNameInCamelCase,
+      ),
+    );
 
     const { id, ...newNotification } = flatRule(notification);
     dispatch(
@@ -200,7 +241,8 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
           type: pluginName,
           actionType: MODAL_ACTION_TYPE_COPY,
           ruleFields,
-          onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
+          onSave: (withoutAttributes, eventParameters) =>
+            confirmAdd(withoutAttributes, eventParameters),
           notification: {
             ...newNotification,
             ruleName: notification.ruleName + COPY_POSTFIX,
@@ -283,6 +325,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                       },
                     }}
                     icon={arrowRightIcon}
+                    event={PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CONFIGURE_INTEGRATION_LINK}
                   >
                     {formatMessage(messages.configureIntegration)}
                   </LinkComponent>
@@ -311,11 +354,11 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
               />
               {isUpdateSettingAvailable && (
                 <Button
-                  customClassName={cx('add-rule')}
+                  className={cx('add-rule')}
                   onClick={onAdd}
                   variant={'text'}
-                  startIcon={addIcon}
-                  dataAutomationId="addRuleButton"
+                  icon={Parser(addIcon)}
+                  data-automation-id="addRuleButton"
                 >
                   {formatMessage(messages.addRule)}
                 </Button>

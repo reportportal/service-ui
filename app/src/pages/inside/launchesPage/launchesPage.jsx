@@ -623,7 +623,12 @@ export class LaunchesPage extends Component {
   };
 
   mergeLaunches = () => {
-    this.props.mergeLaunchesAction(this.props.selectedLaunches, {
+    const launches = this.props.selectedLaunches.map((launch) => ({
+      ...launch,
+      startTime: new Date(launch.startTime).getTime(),
+      endTime: new Date(launch.endTime).getTime(),
+    }));
+    this.props.mergeLaunchesAction(launches, {
       fetchFunc: this.unselectAndResetPage,
     });
   };

@@ -17,7 +17,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button } from 'componentLibrary/button';
+import Parser from 'html-react-parser';
+import { Button } from '@reportportal/ui-kit';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../propTypes';
 import styles from './autocompleteOption.scss';
@@ -48,8 +49,8 @@ export const AutocompleteOption = ({
         <span className={cx('value')}>{children}</span>
         <Button
           {...(!disabled ? props : {})}
-          customClassName={cx({ 'button-active': isActive })}
-          startIcon={PlusIcon}
+          className={cx({ 'button-active': isActive })}
+          icon={Parser(PlusIcon)}
           variant={'text'}
         >
           {optionVariant === 'key-variant' ? 'New key' : 'New value'}
