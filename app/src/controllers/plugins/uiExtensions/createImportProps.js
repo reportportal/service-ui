@@ -294,7 +294,7 @@ export const createImportProps = (pluginName) => ({
     AttributeListFormField,
     Breadcrumbs,
     PlainTable,
-    BubblesLoader,
+    BubblesPreloader: BubblesLoader,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
