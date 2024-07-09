@@ -83,8 +83,6 @@ export const WIDGETS_EVENTS = {
       number: dashboardId,
       link_name: isWidgetDescriptionChanged,
       status: isWidgetNameChanged,
-      element_name: 'add',
-      modal: 'add_new_widget',
       type,
       ...(levelsCount && { switcher: levelsCount }),
       ...actionType,

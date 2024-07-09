@@ -35,7 +35,9 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
-import { baseEventParametersShape } from 'components/main/analytics/utils';
+import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
+import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -336,17 +338,35 @@ export class SimpleWidget extends Component {
   };
 
   showDeleteWidgetModal = () => {
-    const { tracking, isAnalyticsEnabled, onDelete } = this.props;
+    const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
 
     tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_DELETE_WIDGET_ICON);
     const onConfirm = () => {
       const { widgetId, activeDashboardId, widgetType } = this.props;
+      const {
+        widget: { id },
+      } = this.state;
 
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
         tracking.trackEvent(
           WIDGETS_EVENTS.clickOnDeleteWidgetButton(widgetType, activeDashboardId),
         );
+
+        provideEcGA({
+          eventName: 'remove_from_cart',
+          baseEventParameters,
+          additionalParameters: {
+            item_list_name: activeDashboardId,
+            items: [
+              getEcWidget({
+                itemId: id,
+                itemName: widgetTypesMessages[widgetType].defaultMessage,
+                itemListName: activeDashboardId,
+              }),
+            ],
+          },
+        });
       }
     };
     this.props.showModalAction({

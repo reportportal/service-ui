@@ -36,13 +36,14 @@ import {
   getEcWidget,
 } from 'components/main/analytics/events/common/widgetPages/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import {
   getCreatedWidgetLevelsCount,
   getModifiedFieldsLabels,
-} from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/widgetWizardContent/utils';
-import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
-import { WIDGET_WIZARD_FORM } from '../../common/constants';
-import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
+  prepareWidgetDataForSubmit,
+  getDefaultWidgetConfig,
+} from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -172,6 +173,8 @@ export class WidgetWizardContent extends Component {
       onConfirm,
       initialFormValues,
       activeDashboardId,
+      isAnalyticsEnabled,
+      baseEventParameters,
     } = this.props;
 
     const { selectedDashboard, ...rest } = formData;
@@ -212,6 +215,24 @@ export class WidgetWizardContent extends Component {
             levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
           }),
         );
+
+        if (isAnalyticsEnabled) {
+          provideEcGA({
+            eventName: 'add_to_cart',
+            baseEventParameters,
+            additionalParameters: {
+              item_list_name: selectedDashboard.id,
+              items: [
+                getEcWidget({
+                  itemId: id,
+                  itemName: widgetTypesMessages[widgetType].defaultMessage,
+                  itemVariant: this.props.currentPage,
+                  itemListName: selectedDashboard.id,
+                }),
+              ],
+            },
+          });
+        }
       })
       .catch((err) => {
         this.props.hideScreenLockAction();

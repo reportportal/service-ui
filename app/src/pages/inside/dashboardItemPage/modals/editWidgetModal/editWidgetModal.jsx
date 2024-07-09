@@ -32,15 +32,15 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
-import {
-  getCreatedWidgetLevelsCount,
-  getModifiedFieldsLabels,
-} from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/widgetWizardContent/utils';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
-import { prepareWidgetDataForSubmit } from '../common/utils';
+import {
+  getCreatedWidgetLevelsCount,
+  getModifiedFieldsLabels,
+  prepareWidgetDataForSubmit,
+} from '../common/utils';
 import { FORM_APPEARANCE_MODE_LOCKED } from '../common/widgetControls/controls/filtersControl/common/constants';
 import styles from './editWidgetModal.scss';
 
