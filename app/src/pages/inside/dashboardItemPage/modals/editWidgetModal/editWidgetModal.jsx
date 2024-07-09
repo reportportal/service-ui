@@ -176,6 +176,7 @@ export class EditWidgetModal extends Component {
       data,
     })
       .then(() => {
+        const { name } = data;
         trackEvent(
           WIDGETS_EVENTS.clickOnSaveWidget({
             type: widgetType,
