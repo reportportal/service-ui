@@ -169,7 +169,6 @@ export class WidgetWizardContent extends Component {
   onAddWidget = (formData) => {
     const {
       tracking: { trackEvent },
-      // eventsInfo: { excludeSkippedTests },
       projectId,
       onConfirm,
       initialFormValues,
