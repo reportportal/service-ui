@@ -66,6 +66,7 @@ export const WIDGETS_EVENTS = {
     levelsCount,
     modifiedFields,
     isEditModal = false,
+    isExcludeSkippedTests = null,
   }) => {
     const actionType = isEditModal
       ? {
@@ -84,6 +85,7 @@ export const WIDGETS_EVENTS = {
       link_name: isWidgetDescriptionChanged,
       status: isWidgetNameChanged,
       type,
+      ...(isExcludeSkippedTests !== null && { place: isExcludeSkippedTests }),
       ...(levelsCount && { switcher: levelsCount }),
       ...actionType,
     };

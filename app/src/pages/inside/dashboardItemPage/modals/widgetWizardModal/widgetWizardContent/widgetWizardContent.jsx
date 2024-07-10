@@ -43,6 +43,7 @@ import {
   getModifiedFieldsLabels,
   prepareWidgetDataForSubmit,
   getDefaultWidgetConfig,
+  getIsExcludeSkipped,
 } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
@@ -168,7 +169,7 @@ export class WidgetWizardContent extends Component {
   onAddWidget = (formData) => {
     const {
       tracking: { trackEvent },
-      eventsInfo: { excludeSkippedTests },
+      // eventsInfo: { excludeSkippedTests },
       projectId,
       onConfirm,
       initialFormValues,
@@ -179,14 +180,7 @@ export class WidgetWizardContent extends Component {
 
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
-    const {
-      widgetType,
-      name,
-      contentParameters: {
-        widgetOptions: { excludeSkipped },
-      },
-    } = data;
-    trackEvent(excludeSkippedTests(widgetType, excludeSkipped));
+    const { widgetType, name } = data;
 
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId), {
@@ -213,6 +207,7 @@ export class WidgetWizardContent extends Component {
             isWidgetNameChanged: name !== initialFormValues?.name,
             isWidgetDescriptionChanged: data?.description !== initialFormValues?.description,
             levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
+            isExcludeSkippedTests: getIsExcludeSkipped(widgetType, data),
           }),
         );
 
