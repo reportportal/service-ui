@@ -95,7 +95,6 @@ export class WidgetsGrid extends Component {
   };
 
   onGridItemChange = (newLayout, oldWidgetPosition, newWidgetPosition) => {
-    this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
     let newWidgets;
     const itemChanged = Object.keys(oldWidgetPosition).some(
       (prop) => oldWidgetPosition[prop] !== newWidgetPosition[prop],
@@ -125,6 +124,11 @@ export class WidgetsGrid extends Component {
         widgets: newWidgets,
       });
     }
+  };
+
+  onDragStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+    this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
   };
 
   onResizeStart = (layout, oldItem) => {
@@ -234,7 +238,7 @@ export class WidgetsGrid extends Component {
       rowHeight={rowHeight}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
-      onDragStop={this.onGridItemChange}
+      onDragStop={this.onDragStop}
       onResizeStart={this.onResizeStart}
       onResizeStop={this.onResizeStop}
       cols={cols}
