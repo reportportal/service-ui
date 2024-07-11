@@ -55,7 +55,6 @@ export {
   assignedProjectsSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  activeOrganizationRoleSelector,
   userRolesSelector,
   photoTimeStampSelector,
   apiKeysSelector,
