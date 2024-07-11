@@ -14,38 +14,12 @@
  * limitations under the License.
  */
 
-import {
-  PASSING_RATE_PER_LAUNCH,
-  PASSING_RATE_SUMMARY,
-  COMPONENT_HEALTH_CHECK,
-  COMPONENT_HEALTH_CHECK_TABLE,
-} from 'common/constants/widgetTypes';
 import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
-const EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS = 'exclude_skipped_tests_from_statistics';
-
-const modalNames = {
-  editWidgetModal: 'edit_widget',
-  widgetWizardModal: 'add_widget',
-};
-
-const widgetType = {
-  [PASSING_RATE_PER_LAUNCH]: 'passing_rate_per_launch',
-  [PASSING_RATE_SUMMARY]: 'passing_rate_summary',
-  [COMPONENT_HEALTH_CHECK]: 'component_health_check',
-  [COMPONENT_HEALTH_CHECK_TABLE]: 'component_health_check_table_view',
-};
 
 export const WIDGETS_EVENTS = {
-  createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
-    ...getBasicClickEventParameters(DASHBOARDS),
-    type: widgetType[type],
-    status,
-    modal: modalNames[modalId],
-    element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
-  }),
   clickOnDeleteWidgetButton: (type, dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'delete',
@@ -66,6 +40,7 @@ export const WIDGETS_EVENTS = {
     levelsCount,
     modifiedFields,
     isEditModal = false,
+    isExcludeSkippedTests = null,
   }) => {
     const actionType = isEditModal
       ? {
@@ -84,6 +59,7 @@ export const WIDGETS_EVENTS = {
       link_name: isWidgetDescriptionChanged,
       status: isWidgetNameChanged,
       type,
+      ...(isExcludeSkippedTests !== null && { place: isExcludeSkippedTests }),
       ...(levelsCount && { switcher: levelsCount }),
       ...actionType,
     };

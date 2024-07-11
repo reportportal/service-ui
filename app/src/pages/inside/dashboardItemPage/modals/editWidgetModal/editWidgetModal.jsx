@@ -38,6 +38,7 @@ import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
 import {
   getCreatedWidgetLevelsCount,
+  getIsExcludeSkipped,
   getModifiedFieldsLabels,
   prepareWidgetDataForSubmit,
 } from '../common/utils';
@@ -146,11 +147,7 @@ export class EditWidgetModal extends Component {
   onSave = (closeModal) => {
     const {
       tracking: { trackEvent },
-      data: {
-        onConfirm,
-        widget,
-        eventsInfo: { excludeSkippedTests },
-      },
+      data: { onConfirm, widget },
       intl: { formatMessage },
       widgetSettings,
       projectId,
@@ -160,8 +157,6 @@ export class EditWidgetModal extends Component {
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
     const { widgetType, contentParameters, filterIds } = data;
-    const { excludeSkipped } = contentParameters.widgetOptions;
-    trackEvent(excludeSkippedTests(widgetType, excludeSkipped));
 
     const isForceUpdateNeeded =
       !isEqual(widget.contentParameters, contentParameters) ||
@@ -189,6 +184,7 @@ export class EditWidgetModal extends Component {
             isWidgetDescriptionChanged:
               data?.description !== initiallyFilledWidgetSettings?.description,
             levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
+            isExcludeSkippedTests: getIsExcludeSkipped(widgetType, data),
             isEditModal: true,
           }),
         );

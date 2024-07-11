@@ -215,10 +215,7 @@ export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
   },
 };
 
-export const getJoinedFieldEventNamesByType = (type, keys) => {
-  if (!keys.length) {
-    return 'not_set';
-  }
+export const getJoinedFieldEventNamesByType = (type, keys = []) => {
   const uniqueValues = new Set();
 
   const changedFields = WIDGET_FIELD_EVENT_NAME_BY_TYPE[type];
@@ -230,5 +227,5 @@ export const getJoinedFieldEventNamesByType = (type, keys) => {
     }
   });
 
-  return Array.from(uniqueValues).join('#');
+  return Array.from(uniqueValues).join('#') || 'not_set';
 };

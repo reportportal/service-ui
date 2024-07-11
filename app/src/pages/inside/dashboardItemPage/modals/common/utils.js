@@ -92,3 +92,11 @@ export const getCreatedWidgetLevelsCount = (widgetType, data) => {
   } = data;
   return widgetOptions.attributes?.length || widgetOptions.attributeKeys?.length || 1;
 };
+
+export const getIsExcludeSkipped = (widgetType, data) => {
+  if (![COMPONENT_HEALTH_CHECK, COMPONENT_HEALTH_CHECK_TABLE].includes(widgetType)) return null;
+  const {
+    contentParameters: { widgetOptions },
+  } = data;
+  return widgetOptions.excludeSkipped.toString();
+};
