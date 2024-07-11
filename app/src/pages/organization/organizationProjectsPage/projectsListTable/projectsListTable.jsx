@@ -61,6 +61,7 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
                   project={{
                     projectName: project.name,
                     projectSlug: project.slug,
+                    projectKey: project.key,
                     organizationSlug,
                   }}
                 />
