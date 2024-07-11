@@ -108,10 +108,11 @@ export const WIDGETS_EVENTS = {
 };
 
 export const DASHBOARD_EVENTS = {
-  CLICK_ON_ADD_NEW_DASHBOARD_BTN: {
+  clickOnAddNewWidgetButton: (dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add_new_dashboard',
-  },
+    number: dashboardId,
+  }),
 
   clickOnDashboardName: (dashboardName, dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),

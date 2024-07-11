@@ -273,8 +273,9 @@ export class DashboardItemPage extends Component {
   };
 
   showWidgetWizard = () => {
+    const dashboardId = this.props.activeDashboardId;
     const modalId = 'widgetWizardModal';
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
+    this.props.tracking.trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(dashboardId));
     this.props.showModalAction({
       id: modalId,
       data: {
