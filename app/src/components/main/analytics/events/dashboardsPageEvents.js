@@ -31,11 +31,6 @@ import {
 
 export const DASHBOARD_PAGE = 'dashboards';
 export const DASHBOARD_PAGE_EVENTS = {
-  ADD_NEW_DASHBOARD_BTN: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add New Dashboard',
-    label: 'Arise Modal Add New Dashboard',
-  },
   ENTER_PARAM_FOR_SEARCH: {
     category: DASHBOARD_PAGE,
     action: 'Enter parameter for search',
