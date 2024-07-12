@@ -60,7 +60,11 @@ const compareFields = (defaultValues, changedValues, parentKey = '') => {
   Object.keys(defaultValues).forEach((key) => {
     const fullKey = parentKey ? `${parentKey}.${key}` : key;
 
-    if (typeof defaultValues[key] === 'object' && !Array.isArray(defaultValues[key])) {
+    if (
+      defaultValues[key] &&
+      typeof defaultValues[key] === 'object' &&
+      !Array.isArray(defaultValues[key])
+    ) {
       const nestedDifferences = compareFields(
         defaultValues[key],
         changedValues[key] || {},
