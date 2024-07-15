@@ -31,7 +31,7 @@ import {
   proceedWithValidItemsAction,
   validationErrorsSelector,
 } from 'controllers/itemsHistory';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userAccountRoleSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
 import {
@@ -46,6 +46,7 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { activeProjectRoleSelector } from 'controllers/pages';
 import { HistoryActionPanel } from '../actionPanel';
 
 const getUnlinkIssueEventsInfo = (place) => ({

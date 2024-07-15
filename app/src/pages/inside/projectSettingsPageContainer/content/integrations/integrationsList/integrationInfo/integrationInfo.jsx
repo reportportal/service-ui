@@ -21,7 +21,12 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector } from 'controllers/user';
+import {
+  userRolesSelector,
+  urlOrganizationAndProjectSelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -33,11 +38,6 @@ import {
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import {
-  urlOrganizationAndProjectSelector,
-  PROJECT_SETTINGS_TAB_PAGE,
-  updatePagePropertiesAction,
-} from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';

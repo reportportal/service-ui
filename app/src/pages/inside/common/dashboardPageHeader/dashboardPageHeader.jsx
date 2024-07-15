@@ -24,6 +24,7 @@ import {
   activeDashboardIdSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  userRolesSelector,
 } from 'controllers/pages';
 import {
   dashboardItemsSelector,
@@ -33,7 +34,6 @@ import {
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
-import { userRolesSelector } from 'controllers/user';
 import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { AddDashboardButton } from './addDashboardButton';

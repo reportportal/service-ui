@@ -53,16 +53,12 @@ export {
   startTimeFormatSelector,
   isAdminSelector,
   assignedProjectsSelector,
-  activeProjectRoleSelector,
   userAccountRoleSelector,
-  activeOrganizationRoleSelector,
-  userRolesSelector,
   photoTimeStampSelector,
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
   activeProjectKeySelector,
   assignedOrganizationsSelector,
-  createUserAssignedSelector,
 } from './selectors';
 export { userSagas } from './sagas';

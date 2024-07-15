@@ -22,10 +22,13 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_LAUNCHES_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
 import { DisplayFilter } from './displayFilter';

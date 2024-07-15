@@ -15,7 +15,6 @@
  */
 
 import { useSelector } from 'react-redux';
-import { userRolesSelector } from 'controllers/user';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -25,6 +24,7 @@ import { loadingSelector, projectsSelector } from 'controllers/organizations/pro
 import { activeOrganizationLoadingSelector } from 'controllers/organizations/organization/selectors';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { userRolesSelector } from 'controllers/pages';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';

@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,

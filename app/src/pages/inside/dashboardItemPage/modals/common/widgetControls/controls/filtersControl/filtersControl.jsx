@@ -38,7 +38,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';

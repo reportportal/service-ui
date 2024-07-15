@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import {
   canMergeLaunches,

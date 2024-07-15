@@ -15,7 +15,7 @@
  */
 
 import { useSelector } from 'react-redux';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector } from 'controllers/members';

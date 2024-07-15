@@ -37,7 +37,7 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { connect } from 'react-redux';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';

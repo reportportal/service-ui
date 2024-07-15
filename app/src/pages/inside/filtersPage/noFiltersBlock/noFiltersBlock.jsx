@@ -22,13 +22,16 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
-import { PROJECT_LAUNCHES_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_LAUNCHES_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);

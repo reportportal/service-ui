@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { FormattedMessage } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import {
@@ -29,7 +29,6 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';

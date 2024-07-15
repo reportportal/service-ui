@@ -42,6 +42,9 @@ export {
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
   urlOrganizationAndProjectSelector,
+  userRolesSelector,
+  activeProjectRoleSelector,
+  userAssignedSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 

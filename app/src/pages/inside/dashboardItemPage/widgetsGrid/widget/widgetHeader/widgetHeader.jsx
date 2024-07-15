@@ -33,7 +33,7 @@ import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { connect } from 'react-redux';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
