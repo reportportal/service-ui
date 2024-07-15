@@ -23,14 +23,14 @@ import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/organizations/projects';
 import { setActiveProjectKeyAction } from 'controllers/user';
-import { createUserAssignedSelector, PROJECT_PAGE } from 'controllers/pages';
+import { userAssignedSelector, PROJECT_PAGE } from 'controllers/pages';
 import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
 
 export const ProjectName = ({ project, disableAnalytics = false }) => {
   const { projectSlug, organizationSlug, projectName, projectKey } = project;
-  const { hasPermission } = useSelector(createUserAssignedSelector(projectSlug, organizationSlug));
+  const { hasPermission } = useSelector(userAssignedSelector(projectSlug, organizationSlug));
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 

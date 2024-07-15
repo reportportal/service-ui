@@ -57,7 +57,7 @@ import {
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
-  createUserAssignedSelector,
+  userAssignedSelector,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -336,7 +336,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     assignedProjectKey,
     assignmentNotRequired,
     isAssignedToTargetOrganization,
-  } = createUserAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
+  } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
 
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];

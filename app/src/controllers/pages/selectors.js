@@ -168,6 +168,7 @@ export const urlOrganizationAndProjectSelector = createSelector(
   },
 );
 
+// TODO: User role selectors are stored here due to circular dependency
 export const activeProjectRoleSelector = createSelector(
   urlProjectSlugSelector,
   assignedProjectsSelector,
@@ -199,42 +200,39 @@ export const userRolesSelector = createSelector(
   }),
 );
 
-export const createUserAssignedSelector = (projectSlug, organizationSlug) =>
-  createSelector(
-    userRolesSelector,
-    assignedOrganizationsSelector,
-    assignedProjectsSelector,
-    (userRoles, assignedOrganizations, assignedProjects) => {
-      const { userRole, organizationRole } = userRoles;
-      const isAdmin = userRole === ADMINISTRATOR;
-      const isManager = organizationRole === MANAGER;
-      let isAssignedToTargetOrganization = false;
+export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
+  const assignedOrganizations = assignedOrganizationsSelector(state);
+  const assignedProjects = assignedProjectsSelector(state);
+  const { userRole, organizationRole } = userRolesSelector(state);
 
-      if (organizationSlug) {
-        isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
-      } else {
-        const organizationId = assignedProjects[projectSlug]?.organizationId || '';
-        isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
-          (key) => assignedOrganizations[key]?.organizationId === organizationId,
-        );
-      }
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = organizationRole === MANAGER;
+  let isAssignedToTargetOrganization = false;
 
-      const isAssignedToTargetProject =
-        projectSlug && projectSlug in assignedProjects && isAssignedToTargetOrganization;
+  if (organizationSlug) {
+    isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
+  } else {
+    const organizationId = assignedProjects[projectSlug]?.organizationId || '';
+    isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
+      (key) => assignedOrganizations[key]?.organizationId === organizationId,
+    );
+  }
 
-      const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
+  const isAssignedToTargetProject =
+    projectSlug && projectSlug in assignedProjects && isAssignedToTargetOrganization;
 
-      const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
+  const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
 
-      const assignedProjectKey = assignedProjects?.[projectSlug]?.projectKey;
+  const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
 
-      return {
-        isAdmin,
-        hasPermission,
-        assignedProjectKey,
-        assignmentNotRequired,
-        isAssignedToTargetProject,
-        isAssignedToTargetOrganization,
-      };
-    },
-  );
+  const assignedProjectKey = assignedProjects?.[projectSlug]?.projectKey;
+
+  return {
+    isAdmin,
+    hasPermission,
+    assignedProjectKey,
+    assignmentNotRequired,
+    isAssignedToTargetProject,
+    isAssignedToTargetOrganization,
+  };
+};

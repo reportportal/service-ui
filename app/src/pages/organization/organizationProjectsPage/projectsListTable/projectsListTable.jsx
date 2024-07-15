@@ -50,7 +50,7 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
   const data = useMemo(
     () =>
       projects.map((project) => {
-        const lastLaunch = project.relationships.launches.meta.last_occurred_at;
+        const lastLaunch = project.relationships[0].launches.meta.last_occurred_at;
         return {
           id: project.id,
           name: {
@@ -68,8 +68,8 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
               </div>
             ),
           },
-          usersCount: project.relationships.users.meta.count,
-          launchesCount: project.relationships.launches.meta.count,
+          usersCount: project.relationships[0].users.meta.count,
+          launchesCount: project.relationships[0].launches.meta.count,
           lastLaunch: {
             content: lastLaunch,
             component: lastLaunch ? (

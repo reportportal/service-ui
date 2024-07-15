@@ -44,7 +44,7 @@ export {
   urlOrganizationAndProjectSelector,
   userRolesSelector,
   activeProjectRoleSelector,
-  createUserAssignedSelector,
+  userAssignedSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
