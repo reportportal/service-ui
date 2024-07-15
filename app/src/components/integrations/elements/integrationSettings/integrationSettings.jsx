@@ -26,9 +26,9 @@ import {
   urlOrganizationAndProjectSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
+  userRolesSelector,
 } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { userRolesSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {

@@ -44,8 +44,8 @@ import {
   unlinkIssueAction,
   proceedWithValidItemsAction,
 } from 'controllers/uniqueErrors/clusterItems';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-
+import { userAccountRoleSelector } from 'controllers/user';
+import { activeProjectRoleSelector } from 'controllers/pages';
 import styles from './uniqueErrorsActionPanel.scss';
 
 const cx = classNames.bind(styles);

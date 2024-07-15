@@ -23,6 +23,7 @@ import {
   querySelector,
   settingsTabSelector,
   urlOrganizationAndProjectSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
@@ -41,7 +42,6 @@ import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/d
 import { canSeeDemoData } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { userRolesSelector } from 'controllers/user';
 import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';

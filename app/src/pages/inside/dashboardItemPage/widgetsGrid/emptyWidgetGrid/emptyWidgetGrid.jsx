@@ -23,7 +23,7 @@ import AddDashboardIcon from 'common/img/add-widget-inline.svg';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { connect } from 'react-redux';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import styles from './emptyWidgetGrid.scss';
 
 const cx = classNames.bind(styles);

@@ -25,7 +25,7 @@ import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
 } from 'controllers/project';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import {
   fetchProjectNotificationsAction,
   updateNotificationStateAction,

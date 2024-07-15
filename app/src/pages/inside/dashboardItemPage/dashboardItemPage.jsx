@@ -35,13 +35,14 @@ import {
   updateDashboardAction,
 } from 'controllers/dashboard';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userInfoSelector, userRolesSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';

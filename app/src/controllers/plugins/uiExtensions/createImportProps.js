@@ -55,11 +55,7 @@ import {
   CANCELLED,
   STOPPED,
 } from 'common/constants/testStatuses';
-import {
-  activeProjectRoleSelector,
-  isAdminSelector,
-  activeProjectSelector,
-} from 'controllers/user';
+import { isAdminSelector, activeProjectSelector } from 'controllers/user';
 import {
   projectMembersSelector,
   projectInfoSelector,
@@ -78,6 +74,7 @@ import {
   urlProjectSlugSelector,
   querySelector,
   payloadSelector,
+  activeProjectRoleSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {

@@ -24,7 +24,7 @@ import { hideModalAction, showModalAction } from 'controllers/modal';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import PropTypes from 'prop-types';
 import { docsReferences } from 'common/utils';
 import { SettingsPageContent } from '../settingsPageContent';

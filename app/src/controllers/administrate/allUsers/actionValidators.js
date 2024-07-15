@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { canDeleteUser } from 'common/utils/permissions';
 
 export const validateDeleteUser = (user, users, state) => {

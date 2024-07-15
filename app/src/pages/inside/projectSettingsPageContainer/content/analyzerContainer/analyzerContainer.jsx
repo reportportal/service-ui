@@ -22,6 +22,7 @@ import {
   payloadSelector,
   PROJECT_SETTINGS_TAB_PAGE,
   urlOrganizationAndProjectSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import {
   projectKeySelector,
@@ -40,7 +41,6 @@ import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';

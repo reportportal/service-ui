@@ -30,7 +30,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { clearLogPageStackTrace } from 'controllers/log';
 import { launchSelector } from 'controllers/testItem';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';

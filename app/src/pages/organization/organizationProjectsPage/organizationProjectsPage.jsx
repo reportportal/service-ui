@@ -21,12 +21,10 @@ import Parser from 'html-react-parser';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { loadingSelector, projectsSelector } from 'controllers/organizations/projects/selectors';
-import {
-  activeOrganizationLoadingSelector,
-  activeOrganizationRolesSelector,
-} from 'controllers/organizations/organization/selectors';
+import { activeOrganizationLoadingSelector } from 'controllers/organizations/organization/selectors';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { userRolesSelector } from 'controllers/pages';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -38,7 +36,7 @@ const cx = classNames.bind(styles);
 
 export const OrganizationProjectsPage = () => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(activeOrganizationRolesSelector);
+  const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
   const organizationLoading = useSelector(activeOrganizationLoadingSelector);
   const projectsLoading = useSelector(loadingSelector);

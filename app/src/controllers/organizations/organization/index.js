@@ -20,9 +20,5 @@ export {
   setActiveOrganizationAction,
 } from './actionCreators';
 export { organizationReducer } from './reducer';
-export {
-  activeOrganizationSelector,
-  activeOrganizationNameSelector,
-  activeOrganizationRolesSelector,
-} from './selectors';
+export { activeOrganizationSelector, activeOrganizationNameSelector } from './selectors';
 export { organizationSagas } from './sagas';

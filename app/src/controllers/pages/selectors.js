@@ -19,8 +19,16 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
 import { SORTING_KEY } from 'controllers/sorting/constants';
 import { getStorageItem } from 'common/utils/storageUtils';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  assignedOrganizationsSelector,
+  assignedProjectsSelector,
+  userAccountRoleSelector,
+  userIdSelector,
+} from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { MANAGER } from 'common/constants/projectRoles';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -159,3 +167,74 @@ export const urlOrganizationAndProjectSelector = createSelector(
     return activeProject;
   },
 );
+
+export const activeProjectRoleSelector = createSelector(
+  urlProjectSlugSelector,
+  assignedProjectsSelector,
+  (projectSlug, assignedProjects) => {
+    const assignedProject = assignedProjects[projectSlug];
+
+    return assignedProject?.projectRole;
+  },
+);
+
+const activeOrganizationRoleSelector = createSelector(
+  urlOrganizationSlugSelector,
+  assignedOrganizationsSelector,
+  (organizationSlug, assignedOrganizations) => {
+    const assignedOrganization = assignedOrganizations[organizationSlug];
+
+    return assignedOrganization?.organizationRole;
+  },
+);
+
+export const userRolesSelector = createSelector(
+  userAccountRoleSelector,
+  activeOrganizationRoleSelector,
+  activeProjectRoleSelector,
+  (userRole, organizationRole, projectRole) => ({
+    userRole,
+    organizationRole,
+    projectRole,
+  }),
+);
+
+export const createUserAssignedSelector = (projectSlug, organizationSlug) =>
+  createSelector(
+    userRolesSelector,
+    assignedOrganizationsSelector,
+    assignedProjectsSelector,
+    (userRoles, assignedOrganizations, assignedProjects) => {
+      const { userRole, organizationRole } = userRoles;
+      const isAdmin = userRole === ADMINISTRATOR;
+      const isManager = organizationRole === MANAGER;
+      let isAssignedToTargetOrganization = false;
+
+      if (organizationSlug) {
+        isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
+      } else {
+        const organizationId = assignedProjects[projectSlug]?.organizationId || '';
+        isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
+          (key) => assignedOrganizations[key]?.organizationId === organizationId,
+        );
+      }
+
+      const isAssignedToTargetProject =
+        projectSlug && projectSlug in assignedProjects && isAssignedToTargetOrganization;
+
+      const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
+
+      const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
+
+      const assignedProjectKey = assignedProjects?.[projectSlug]?.projectKey;
+
+      return {
+        isAdmin,
+        hasPermission,
+        assignedProjectKey,
+        assignmentNotRequired,
+        isAssignedToTargetProject,
+        isAssignedToTargetOrganization,
+      };
+    },
+  );

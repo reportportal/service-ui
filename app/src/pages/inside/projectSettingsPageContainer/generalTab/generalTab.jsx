@@ -40,7 +40,7 @@ import {
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';

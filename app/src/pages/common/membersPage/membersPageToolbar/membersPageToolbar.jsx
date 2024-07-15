@@ -22,7 +22,7 @@ import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';

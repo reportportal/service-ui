@@ -22,7 +22,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';

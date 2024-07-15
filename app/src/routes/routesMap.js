@@ -22,7 +22,6 @@ import {
   setActiveProjectAction,
   setActiveProjectKeyAction,
   activeProjectKeySelector,
-  createUserAssignedSelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -58,6 +57,7 @@ import {
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
+  createUserAssignedSelector,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';

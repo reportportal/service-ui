@@ -23,7 +23,7 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import {
   removePluginAction,
   addIntegrationAction,

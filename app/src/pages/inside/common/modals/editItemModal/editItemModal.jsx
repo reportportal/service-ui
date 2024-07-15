@@ -31,7 +31,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { formatItemName } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';

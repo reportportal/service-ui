@@ -21,8 +21,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { userRolesSelector } from 'controllers/user';
+import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import {

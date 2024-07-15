@@ -29,7 +29,7 @@ import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { connect } from 'react-redux';
 import { userRolesType } from 'common/constants/projectRoles';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);

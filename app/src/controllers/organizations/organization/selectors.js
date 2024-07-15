@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import { createSelector } from 'reselect';
 import { organizationsSelector } from 'controllers/organizations/selectors';
-import {
-  activeProjectRoleSelector,
-  assignedOrganizationsSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
 
 export const organizationSelector = (state) => organizationsSelector(state).organization || {};
 
@@ -30,20 +24,3 @@ export const activeOrganizationLoadingSelector = (state) =>
   organizationSelector(state).organizationLoading || false;
 
 export const activeOrganizationNameSelector = (state) => activeOrganizationSelector(state)?.name;
-
-export const activeOrganizationRolesSelector = createSelector(
-  userAccountRoleSelector,
-  activeOrganizationSelector,
-  assignedOrganizationsSelector,
-  activeProjectRoleSelector,
-  (userRole, activeOrganization, assignedOrganizations, projectRole) => {
-    const { slug } = activeOrganization;
-    const assignedOrganization = assignedOrganizations[slug];
-
-    return {
-      userRole,
-      organizationRole: assignedOrganization?.organizationRole,
-      projectRole,
-    };
-  },
-);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { canDeleteTestItem } from 'common/utils/permissions';
 import { launchSelector } from './selectors';

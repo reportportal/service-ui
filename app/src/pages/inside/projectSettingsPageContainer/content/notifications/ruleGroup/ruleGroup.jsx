@@ -36,12 +36,12 @@ import {
 import { canUpdateSettings } from 'common/utils/permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import { activeProjectSelector, userRolesSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE, userRolesSelector } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';

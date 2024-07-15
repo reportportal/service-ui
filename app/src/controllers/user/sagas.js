@@ -20,7 +20,7 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { createUserAssignedSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
 import {
@@ -46,7 +46,7 @@ import {
   FETCH_USER,
   DELETE_USER_ACCOUNT,
 } from './constants';
-import { createUserAssignedSelector, userIdSelector, userInfoSelector } from './selectors';
+import { userIdSelector, userInfoSelector } from './selectors';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);

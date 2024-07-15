@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { userRolesSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
