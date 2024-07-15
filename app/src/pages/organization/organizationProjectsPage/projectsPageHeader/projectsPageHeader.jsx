@@ -38,8 +38,8 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
-  const projectsCount = organization?.relationships[0]?.projects?.meta.count;
-  const usersCount = organization?.relationships[0]?.users?.meta.count;
+  const projectsCount = organization?.relationships?.projects?.meta.count;
+  const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = projectsCount > 0;
 
   const breadcrumbs = [
