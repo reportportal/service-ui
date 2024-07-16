@@ -356,7 +356,7 @@ const AddEditNotificationModal = ({
             </FieldElement>
             <FieldElement
               name={INFORM_OWNER_FIELD_KEY}
-              type="text"
+              type="checkbox"
               className={cx('checkbox')}
               dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
             >
