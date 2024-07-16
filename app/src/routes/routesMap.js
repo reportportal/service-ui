@@ -23,7 +23,6 @@ import {
   setActiveProjectKeyAction,
   notAssignedProjectKeySelector,
   setNotAssignedProjectKeyAction,
-  fetchUserAction,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -321,7 +320,7 @@ const routesMap = {
   [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 
-export const onBeforeRouteChange = async (dispatch, getState, { action }) => {
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
@@ -363,11 +362,6 @@ export const onBeforeRouteChange = async (dispatch, getState, { action }) => {
 
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
-    } else if (!projectKey) {
-      await dispatch(setActiveProjectKeyAction(null));
-      dispatch(fetchUserAction());
-      organizationSlug = hashOrganizationSlug;
-      projectSlug = hashProjectSlug;
     } else if (
       hashOrganizationSlug &&
       !hashProjectSlug &&
@@ -376,7 +370,7 @@ export const onBeforeRouteChange = async (dispatch, getState, { action }) => {
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
 
       organizationSlug = hashOrganizationSlug;
-    } else if (isChangedProject) {
+    } else if (isChangedProject || !projectKey) {
       dispatch(
         redirect({
           ...action,
