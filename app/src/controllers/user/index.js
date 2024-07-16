@@ -42,6 +42,7 @@ export {
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
   unassignFromProjectAction,
+  setNotAssignedProjectKeyAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -60,5 +61,6 @@ export {
   availableProjectsSelector,
   activeProjectKeySelector,
   assignedOrganizationsSelector,
+  notAssignedProjectKeySelector,
 } from './selectors';
 export { userSagas } from './sagas';

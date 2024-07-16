@@ -21,7 +21,9 @@ import {
   userInfoSelector,
   setActiveProjectAction,
   setActiveProjectKeyAction,
-  activeProjectKeySelector,
+  notAssignedProjectKeySelector,
+  setNotAssignedProjectKeyAction,
+  fetchUserAction,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
@@ -319,14 +321,14 @@ const routesMap = {
   [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 
-export const onBeforeRouteChange = (dispatch, getState, { action }) => {
+export const onBeforeRouteChange = async (dispatch, getState, { action }) => {
   const {
     type: nextPageType,
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
 
   let { organizationSlug, projectSlug } = activeProjectSelector(getState());
-  const hashProjectKey = activeProjectKeySelector(getState());
+  const notAssignedProjectKey = notAssignedProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   const userId = userInfoSelector(getState())?.userId;
@@ -341,13 +343,13 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
-  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
+  const projectKey = assignedProjectKey || (assignmentNotRequired && notAssignedProjectKey);
 
   const isChangedProject =
     organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
 
   if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
-    if (hashProjectSlug && hasPermission) {
+    if (projectKey && hashProjectSlug && hasPermission) {
       dispatch(
         setActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
@@ -357,7 +359,13 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       dispatch(setActiveProjectKeyAction(projectKey));
       dispatch(fetchProjectAction(projectKey));
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+      dispatch(setNotAssignedProjectKeyAction(null));
 
+      organizationSlug = hashOrganizationSlug;
+      projectSlug = hashProjectSlug;
+    } else if (!projectKey) {
+      await dispatch(setActiveProjectKeyAction(null));
+      dispatch(fetchUserAction());
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
     } else if (

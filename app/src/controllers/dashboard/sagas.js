@@ -59,6 +59,10 @@ import {
 
 function* fetchDashboards({ payload: params }) {
   const projectKey = yield select(activeProjectKeySelector);
+  if (!projectKey) {
+    return;
+  }
+
   const query = yield select(querySelector);
 
   yield put(

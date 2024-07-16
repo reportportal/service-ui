@@ -35,6 +35,7 @@ import {
   DELETE_USER_ACCOUNT,
   SET_ACTIVE_PROJECT_KEY,
   SET_LOG_TIME_FORMAT,
+  SET_NOT_ASSIGNED_PROJECT_KEY,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -65,6 +66,11 @@ export const setActiveProjectAction = (activeProject) => ({
 export const setActiveProjectKeyAction = (activeProjectKey) => ({
   type: SET_ACTIVE_PROJECT_KEY,
   payload: activeProjectKey,
+});
+
+export const setNotAssignedProjectKeyAction = (notAssignedProjectKey) => ({
+  type: SET_NOT_ASSIGNED_PROJECT_KEY,
+  payload: notAssignedProjectKey,
 });
 
 export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({

@@ -23,6 +23,9 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userAssignedSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
+import { fetchDashboardsAction } from 'controllers/dashboard';
+import { SIZE_KEY } from 'controllers/pagination';
+import { fetchProjectAction } from 'controllers/project';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -191,6 +194,16 @@ function* fetchUserWorker() {
 
   yield put(setActiveProjectAction(activeProject));
   yield put(setActiveProjectKeyAction(projectKey));
+
+  if (!isAssignedToTargetProject && assignmentNotRequired) {
+    yield put(
+      fetchDashboardsAction({
+        [SIZE_KEY]: 300,
+      }),
+    );
+    yield put(fetchProjectAction(projectKey));
+  }
+
   yield put(setActiveOrganizationAction(activeOrganization));
   const format = getLogTimeFormatFromStorage(user.userId);
   yield put(setLogTimeFormatAction(format));

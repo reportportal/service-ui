@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/organizations/projects';
-import { setActiveProjectKeyAction } from 'controllers/user';
+import { setNotAssignedProjectKeyAction } from 'controllers/user';
 import { userAssignedSelector, PROJECT_PAGE } from 'controllers/pages';
 import styles from './projectName.scss';
 
@@ -40,7 +40,7 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
       return;
     }
 
-    dispatch(setActiveProjectKeyAction(projectKey));
+    dispatch(setNotAssignedProjectKeyAction(projectKey));
     dispatch(navigateToProjectAction({ project }));
 
     if (!disableAnalytics) {
