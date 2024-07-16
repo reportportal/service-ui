@@ -212,6 +212,7 @@ export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
   },
   [COMPONENT_HEALTH_CHECK_TABLE]: {
     'contentParameters.widgetOptions.attributeKeys': 'level',
+    'contentParameters.widgetOptions.latest': 'toggler',
   },
 };
 
