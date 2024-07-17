@@ -24,6 +24,8 @@ import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
+import { DASHBOARD_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import track from 'react-tracking';
 import styles from './emptyDashboards.scss';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 
@@ -47,6 +49,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 @connect((state) => ({
   userRoles: userRolesSelector(state),
@@ -57,6 +60,10 @@ export class EmptyDashboards extends Component {
     action: PropTypes.func,
     filter: PropTypes.string,
     userRoles: userRolesType,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -65,8 +72,17 @@ export class EmptyDashboards extends Component {
     userRoles: {},
   };
 
+  handleAddDashboardAction = () => {
+    const {
+      action,
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ADD_NEW_DASHBOARD_BTN);
+    action();
+  };
+
   render() {
-    const { action, intl, filter, userRoles } = this.props;
+    const { intl, filter, userRoles } = this.props;
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
@@ -83,7 +99,7 @@ export class EmptyDashboards extends Component {
         <div className={cx('empty-dashboard-content')}>
           <GhostButton
             icon={AddDashboardIcon}
-            onClick={action}
+            onClick={this.handleAddDashboardAction}
             disabled={!canWorkWithDashboard(userRoles)}
           >
             {intl.formatMessage(messages.currentUserDashboardsActionText)}

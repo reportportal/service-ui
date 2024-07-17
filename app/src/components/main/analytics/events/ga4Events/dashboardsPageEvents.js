@@ -14,37 +14,73 @@
  * limitations under the License.
  */
 
-import {
-  PASSING_RATE_PER_LAUNCH,
-  PASSING_RATE_SUMMARY,
-  COMPONENT_HEALTH_CHECK,
-  COMPONENT_HEALTH_CHECK_TABLE,
-} from 'common/constants/widgetTypes';
+import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
-const EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS = 'exclude_skipped_tests_from_statistics';
-
-const modalNames = {
-  editWidgetModal: 'edit_widget',
-  widgetWizardModal: 'add_widget',
-};
-
-const widgetType = {
-  [PASSING_RATE_PER_LAUNCH]: 'passing_rate_per_launch',
-  [PASSING_RATE_SUMMARY]: 'passing_rate_summary',
-  [COMPONENT_HEALTH_CHECK]: 'component_health_check',
-  [COMPONENT_HEALTH_CHECK_TABLE]: 'component_health_check_table_view',
-};
 
 export const WIDGETS_EVENTS = {
-  createClickExcludeSkippedTestsOnHealthCheck: (modalId) => (type, status) => ({
+  clickOnDeleteWidgetButton: (type, dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    type: widgetType[type],
-    status,
-    modal: modalNames[modalId],
-    element_name: EXCLUDE_SKIPPED_TESTS_FROM_STATISTICS,
+    element_name: 'delete',
+    modal: 'delete_widget',
+    number: dashboardId,
+    type,
   }),
+  clickOnResizeWidgetIcon: (type) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'resize_widget',
+    type,
+  }),
+  clickOnSaveWidget: ({
+    type,
+    dashboardId,
+    isWidgetDescriptionChanged = false,
+    isWidgetNameChanged = false,
+    levelsCount,
+    modifiedFields,
+    isEditModal = false,
+    isExcludeSkippedTests = null,
+  }) => {
+    const actionType = isEditModal
+      ? {
+          element_name: 'save',
+          modal: 'edit_widget',
+        }
+      : {
+          element_name: 'add',
+          modal: 'add_new_widget',
+        };
+
+    return {
+      ...getBasicClickEventParameters(DASHBOARDS),
+      condition: getJoinedFieldEventNamesByType(type, modifiedFields),
+      number: dashboardId,
+      link_name: isWidgetDescriptionChanged,
+      status: isWidgetNameChanged,
+      type,
+      ...(isExcludeSkippedTests !== null && { place: isExcludeSkippedTests }),
+      ...(levelsCount && { switcher: levelsCount }),
+      ...actionType,
+    };
+  },
+
+  ON_DRAG_WIDGET: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'drag_widget',
+  },
+  CLICK_ON_REFRESH_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'refresh_widget',
+  },
+  CLICK_ON_EDIT_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'edit_widget',
+  },
+  CLICK_ON_DELETE_WIDGET_ICON: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'delete_widget',
+  },
 };
 
 export const DASHBOARD_EVENTS = {
@@ -52,6 +88,12 @@ export const DASHBOARD_EVENTS = {
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add_new_dashboard',
   },
+
+  clickOnAddNewWidgetButton: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'add_new_widget',
+    number: dashboardId,
+  }),
 
   clickOnDashboardName: (dashboardName, dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),

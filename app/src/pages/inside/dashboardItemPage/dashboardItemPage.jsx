@@ -54,7 +54,7 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
-import { WIDGETS_EVENTS, DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
@@ -289,8 +289,9 @@ export class DashboardItemPage extends Component {
   };
 
   showWidgetWizard = () => {
+    const dashboardId = this.props.activeDashboardId;
     const modalId = 'widgetWizardModal';
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
+    this.props.tracking.trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(dashboardId));
     this.props.showModalAction({
       id: modalId,
       data: {
@@ -315,7 +316,6 @@ export class DashboardItemPage extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
-          excludeSkippedTests: WIDGETS_EVENTS.createClickExcludeSkippedTestsOnHealthCheck(modalId),
         },
       },
     });
