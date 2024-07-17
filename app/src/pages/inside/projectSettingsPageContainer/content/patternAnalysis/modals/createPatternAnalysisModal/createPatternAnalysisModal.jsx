@@ -89,7 +89,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
         </FieldProvider>
         <FieldElement
           name="type"
-          type="text"
           label={formatMessage(messages.createPatternModalType)}
           className={cx('dropdown')}
           dataAutomationId="patternTypeField"
@@ -99,7 +98,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
         <FieldElement
           label={formatMessage(messages.createPatternModalCondition)}
           name="value"
-          type="text"
           isRequired
           dataAutomationId="patternConditionField"
         >

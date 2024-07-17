@@ -336,7 +336,7 @@ const AddEditNotificationModal = ({
     >
       {formatMessage(messages.description)}
       <div className={cx('content')}>
-        <FieldProvider name={RULE_NAME_FIELD_KEY} type="text">
+        <FieldProvider name={RULE_NAME_FIELD_KEY}>
           <FieldErrorHint provideHint={false} dataAutomationId={RULE_NAME_FIELD_KEY + FIELD}>
             <FieldText label={formatMessage(messages.nameLabel)} defaultWidth={false} isRequired />
           </FieldErrorHint>
@@ -346,7 +346,6 @@ const AddEditNotificationModal = ({
             <FieldElement
               name={RECIPIENTS_FIELD_KEY}
               className={cx('autocomplete')}
-              type="text"
               label={formatMessage(messages.recipientsLabel)}
               dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
             >
@@ -356,7 +355,6 @@ const AddEditNotificationModal = ({
             </FieldElement>
             <FieldElement
               name={INFORM_OWNER_FIELD_KEY}
-              type="text"
               className={cx('checkbox')}
               dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
             >
@@ -390,7 +388,6 @@ const AddEditNotificationModal = ({
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
-          type="text"
           className={cx('input')}
           dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
