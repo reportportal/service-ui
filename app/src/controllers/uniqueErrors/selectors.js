@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
+import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
+import { createQueryParametersSelector } from 'controllers/pages';
+
 const domainSelector = (state) => state.uniqueErrors || {};
 
 export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
 export const loadingSelector = (state) => domainSelector(state).loading;
 export const clustersSelector = (state) => domainSelector(state).clusters || [];
 export const uniqueErrorsPaginationSelector = (state) => domainSelector(state).pagination;
+
+export const DEFAULT_SORTING = formatSortingString(['matchedTests'], SORTING_ASC);
+export const queryParametersSelector = createQueryParametersSelector({
+  defaultSorting: DEFAULT_SORTING,
+});

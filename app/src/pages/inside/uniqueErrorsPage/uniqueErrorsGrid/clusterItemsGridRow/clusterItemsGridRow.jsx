@@ -76,7 +76,7 @@ ClusterColumn.defaultProps = {
 };
 
 export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) => {
-  const { id } = data;
+  const { id, matchedTests } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const clusterItems = useSelector((state) => clusterItemsSelector(state, id));
@@ -138,6 +138,9 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
               <ExtensionLoader extension={extension} data={data} />
             </div>
           ))}
+          <div className={cx('table-cell')}>
+            <span className={cx('matched-tests-col-text')}>{matchedTests}</span>
+          </div>
         </div>
       </div>
 
@@ -145,7 +148,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
         <div className={cx('table-row-group')}>
           <div className={cx('table-row')}>
             <div className={cx('table-cell', 'nested-expand-col')} />
-            <td colSpan="2">
+            <td colSpan="3">
               <div className={cx('nested-grid')}>
                 <div className={cx('table-cell', 'table-cell-full-width')}>
                   <StepGrid

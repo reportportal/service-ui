@@ -25,10 +25,23 @@
 .table-cell {
   display: table-cell;
   border-bottom: 6px solid $COLOR--primary-gray;
+  position: relative;
 
   &-full-width {
     width: 100%;
   }
+}
+
+.matched-tests-col-text {
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  text-align: right;
+  right: 24px;
+  display: block;
+  width: 130px;
+  top: 12px;
+  position: absolute;
 }
 
 .expand-col {

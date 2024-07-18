@@ -27,13 +27,15 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from 'controllers/uniqueErrors';
 import { querySelector } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
+const MATCHED_TESTS_COLUMN_ID = 'matchedTests';
 
-export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
+export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }) => {
   const { formatMessage } = useIntl();
   const query = useSelector(querySelector);
   const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
@@ -70,6 +72,18 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
     });
   }
 
+  columns.push({
+    id: MATCHED_TESTS_COLUMN_ID,
+    title: {
+      full: 'MATCHED TESTS',
+    },
+    activeSorting: true,
+    sortable: true,
+    customProps: {
+      gridHeaderCellStyles: cx('matched-header'),
+    },
+  });
+
   return (
     <>
       {data.length > 0 || hasNamespacedQuery ? (
@@ -95,13 +109,18 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
     </>
   );
 };
-UniqueErrorsGrid.propTypes = {
+UniqueErrorsGridWrapped.propTypes = {
   parentLaunch: PropTypes.object,
   data: PropTypes.array,
   loading: PropTypes.bool,
 };
-UniqueErrorsGrid.defaultProps = {
+UniqueErrorsGridWrapped.defaultProps = {
   parentLaunch: {},
   data: [],
   loading: false,
 };
+
+export const UniqueErrorsGrid = withSortingURL({
+  defaultFields: [MATCHED_TESTS_COLUMN_ID],
+  defaultDirection: SORTING_ASC,
+})(UniqueErrorsGridWrapped);
