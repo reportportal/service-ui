@@ -17,13 +17,7 @@
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import {
-  fetchParentItems,
-  fetchParentLaunch,
-  launchSelector,
-  namespaceSelector,
-  queryParametersSelector,
-} from 'controllers/testItem';
+import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
   launchIdSelector,
@@ -35,9 +29,9 @@ import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
-
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import { locationSelector } from 'controllers/pages/selectors';
+import { queryParametersSelector } from './selectors';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
@@ -84,9 +78,7 @@ function* fetchClusters(payload = {}) {
     yield call(fetchParentLaunch, { payload: { project, launchId } });
   }
 
-  const namespace = yield select(namespaceSelector);
-  const query = yield select(queryParametersSelector, namespace);
-
+  const query = yield select(queryParametersSelector);
   let url;
   const requestParams = {};
   const plugin = yield call(getPlugin);
@@ -99,6 +91,7 @@ function* fetchClusters(payload = {}) {
       ...uniqueErrorsParams,
       pageNumber: query[PAGE_KEY],
       pageSize: query[SIZE_KEY],
+      pageSort: query[SORTING_KEY],
     };
   } else {
     url = URLS.clusterByLaunchId(project, launchId, {
