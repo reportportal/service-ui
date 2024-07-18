@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,7 @@
  */
 
 import { combineReducers } from 'redux';
-import {
-  EXTENSION_LOAD_FINISH,
-  EXTENSION_LOAD_START,
-  FETCH_EXTENSIONS_METADATA_SUCCESS,
-  UPDATE_EXTENSION_METADATA,
-} from './constants';
-
-const extensionsLoadedReducer = (state = false, { type = '' }) => {
-  switch (type) {
-    case EXTENSION_LOAD_START:
-      return false;
-    case EXTENSION_LOAD_FINISH:
-      return true;
-    default:
-      return state;
-  }
-};
+import { FETCH_EXTENSIONS_METADATA_SUCCESS, UPDATE_EXTENSION_METADATA } from './constants';
 
 const extensionsMetadataReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
@@ -50,6 +34,5 @@ const extensionsMetadataReducer = (state = [], { type = '', payload = {} }) => {
 };
 
 export const uiExtensionsReducer = combineReducers({
-  uiExtensionsLoaded: extensionsLoadedReducer,
   extensionsMetadata: extensionsMetadataReducer,
 });

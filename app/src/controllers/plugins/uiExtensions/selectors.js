@@ -41,10 +41,6 @@ import {
   enabledPluginNamesSelector,
   enabledPublicPluginNamesSelector,
 } from '../selectors';
-import { uiExtensionMap } from './uiExtensionStorage';
-
-export const extensionsLoadedSelector = (state) =>
-  domainSelector(state).uiExtensions.uiExtensionsLoaded;
 
 const extensionsMetadataSelector = (state) =>
   domainSelector(state).uiExtensions.extensionsMetadata || [];
@@ -53,15 +49,9 @@ const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPlugin
   createSelector(
     pluginNamesSelector,
     extensionsMetadataSelector,
-    extensionsLoadedSelector,
     (pluginNames, extensionsMetadata) => {
-      // TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
-      const uiExtensions = Array.from(uiExtensionMap.entries())
-        .filter(([name]) => pluginNames.includes(name))
-        .map(([, extensions]) => extensions);
-
-      // TODO: update 'pluginType' usage once the backend will be ready
-      const newExtensions = extensionsMetadata
+      // TODO: update 'pluginType' usage once the backend for remote plugins will be ready
+      const uiExtensions = extensionsMetadata
         .filter(
           ({ pluginName, pluginType }) =>
             pluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
@@ -71,12 +61,12 @@ const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPlugin
         );
 
       return uiExtensions
-        .concat(newExtensions)
         .reduce((acc, val) => acc.concat(val), [])
         .filter((extension) => extension.type === type);
     },
   );
 
+// TODO: update extension points
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SETTINGS_TAB,
 );

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,7 +225,7 @@ const INPUTS = {
   WithAsyncLoading,
 };
 
-// TODO: in the future these components and other stuff will be shared via WMF
+// TODO: share these components and other stuff will be shared via WMF and ui-kit library
 export const createImportProps = (pluginName) => ({
   lib: {
     React,

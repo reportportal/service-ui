@@ -1,13 +1,14 @@
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils/fetch';
-import { fetchUiExtensions } from './sagas';
+import { fetchExtensionsMetadata } from './sagas';
 
 jest.mock('common/utils/fetch');
 
 fetch.mockImplementation(() => {});
 
+// TODO: update to test fetchExtensionsMetadata
 describe('controllers/plugins/uiExtensions/sagas', () => {
-  describe('fetchUiExtensions', () => {
+  describe('fetchExtensionsMetadata', () => {
     beforeEach(() => {
       fetch.mockClear();
     });
@@ -20,7 +21,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchUiExtensions,
+        fetchExtensionsMetadata,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -80,7 +81,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchUiExtensions,
+        fetchExtensionsMetadata,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -115,7 +116,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchUiExtensions,
+        fetchExtensionsMetadata,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -155,7 +156,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchUiExtensions,
+        fetchExtensionsMetadata,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -214,7 +215,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
           dispatch: () => {},
           getState: () => state,
         },
-        fetchUiExtensions,
+        fetchExtensionsMetadata,
       ).done;
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/123/getFile', {

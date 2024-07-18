@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import {
   REMOVE_INTEGRATION,
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
-  FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   UPDATE_PLUGIN_SUCCESS,
   PUBLIC_PLUGINS,
 } from './constants';
@@ -56,7 +55,7 @@ import {
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
-import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
+import { fetchExtensionsMetadata } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -255,11 +254,11 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
-// TODO: in the future plugins with js parts should not depend on integrations, only on plugins.
+// TODO: fetch single metadata in case of one plugin change
 function* watchPluginChange() {
   yield takeEvery(
-    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS, UPDATE_PLUGIN_SUCCESS],
-    fetchUiExtensions,
+    [createFetchPredicate(NAMESPACE), UPDATE_PLUGIN_SUCCESS],
+    fetchExtensionsMetadata,
   );
 }
 

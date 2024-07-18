@@ -1,8 +1,7 @@
-export { fetchUiExtensions, fetchExtensionsMetadata } from './sagas';
+export { fetchExtensionsMetadata } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
-  extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionAdminSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,

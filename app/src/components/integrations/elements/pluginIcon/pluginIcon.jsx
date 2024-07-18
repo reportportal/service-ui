@@ -29,6 +29,7 @@ import {
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
+// TODO: remove COMMAND_GET_FILE usage
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;
   const isDynamicIconAvailable = details?.binaryData?.icon;
