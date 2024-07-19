@@ -20,12 +20,12 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { referenceDictionary, connectRouter } from 'common/utils';
-import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -54,7 +54,7 @@ const cx = classNames.bind(styles);
     showDefaultErrorNotification,
   },
 )
-@track({ page: LOGIN_PAGE })
+@track()
 export class LoginPage extends PureComponent {
   static propTypes = {
     forgotPass: PropTypes.string,
@@ -65,6 +65,10 @@ export class LoginPage extends PureComponent {
     extensions: PropTypes.array,
     showDefaultErrorNotification: PropTypes.func,
     instanceType: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     forgotPass: '',
@@ -115,14 +119,18 @@ export class LoginPage extends PureComponent {
   };
 
   render() {
-    const { registration, instanceType } = this.props;
+    const { registration, instanceType, tracking } = this.props;
     const currentBlock = this.getCurrentBlock();
 
     return (
       <div className={cx('login-page')}>
         <div className={cx('login-page-content')}>
           <div className={cx('background')} />
-          <a href={referenceDictionary.rpLanding} target="_blank">
+          <a
+            href={referenceDictionary.rpLanding}
+            target="_blank"
+            onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_RPP_LOGO)}
+          >
             <div className={cx('logo')} />
           </a>
           <LoginPageSection left>
