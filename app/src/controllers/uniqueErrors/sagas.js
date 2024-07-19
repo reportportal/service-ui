@@ -17,12 +17,7 @@
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import {
-  fetchParentItems,
-  fetchParentLaunch,
-  launchSelector,
-  namespaceSelector,
-} from 'controllers/testItem';
+import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
   launchIdSelector,
@@ -83,8 +78,7 @@ function* fetchClusters(payload = {}) {
     yield call(fetchParentLaunch, { payload: { project, launchId } });
   }
 
-  const namespace = yield select(namespaceSelector);
-  const query = yield select(queryParametersSelector, namespace);
+  const query = yield select(queryParametersSelector, NAMESPACE);
   let url;
   const requestParams = {};
   const plugin = yield call(getPlugin);

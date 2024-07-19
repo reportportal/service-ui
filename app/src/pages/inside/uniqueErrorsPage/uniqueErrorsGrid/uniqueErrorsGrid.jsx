@@ -123,4 +123,5 @@ UniqueErrorsGridWrapped.defaultProps = {
 export const UniqueErrorsGrid = withSortingURL({
   defaultFields: [MATCHED_TESTS_COLUMN_ID],
   defaultDirection: SORTING_DESC,
+  namespace: NAMESPACE,
 })(UniqueErrorsGridWrapped);
