@@ -27,7 +27,7 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from 'controllers/uniqueErrors';
 import { querySelector } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
@@ -122,5 +122,5 @@ UniqueErrorsGridWrapped.defaultProps = {
 
 export const UniqueErrorsGrid = withSortingURL({
   defaultFields: [MATCHED_TESTS_COLUMN_ID],
-  defaultDirection: SORTING_ASC,
+  defaultDirection: SORTING_DESC,
 })(UniqueErrorsGridWrapped);
