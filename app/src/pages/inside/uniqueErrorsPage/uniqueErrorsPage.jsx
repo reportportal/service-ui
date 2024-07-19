@@ -18,18 +18,14 @@ import React, { Component } from 'react';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import {
-  deleteTestItemsAction,
-  launchSelector,
-  namespaceSelector,
-  parentItemSelector,
-} from 'controllers/testItem';
+import { deleteTestItemsAction, launchSelector, parentItemSelector } from 'controllers/testItem';
 import {
   clustersSelector,
   fetchClustersAction,
   loadingSelector,
   pageLoadingSelector,
   uniqueErrorsPaginationSelector,
+  NAMESPACE,
 } from 'controllers/uniqueErrors';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -108,7 +104,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
 )
 @withPagination({
   paginationSelector: uniqueErrorsPaginationSelector,
-  namespaceSelector,
+  namespace: NAMESPACE,
 })
 @injectIntl
 @track({ page: UNIQUE_ERRORS_PAGE })

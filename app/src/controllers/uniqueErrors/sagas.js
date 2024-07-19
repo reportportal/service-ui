@@ -78,7 +78,7 @@ function* fetchClusters(payload = {}) {
     yield call(fetchParentLaunch, { payload: { project, launchId } });
   }
 
-  const query = yield select(queryParametersSelector);
+  const query = yield select(queryParametersSelector, NAMESPACE);
   let url;
   const requestParams = {};
   const plugin = yield call(getPlugin);
