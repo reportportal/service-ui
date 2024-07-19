@@ -37,8 +37,8 @@ export {
   isPostIssueActionAvailable,
   isAuthorizationPlugin,
   isPluginSwitchable,
-  isPluginSupportsCommonCommand,
 } from './utils';
+export { isPluginSupportsCommonCommand } from './uiExtensions/utils';
 export {
   pluginsSelector,
   pluginByNameSelector,
@@ -62,7 +62,6 @@ export { pluginSagas } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
-  extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,

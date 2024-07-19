@@ -15,13 +15,13 @@
  */
 
 import { combineReducers } from 'redux';
-import { FETCH_EXTENSIONS_METADATA_SUCCESS, UPDATE_EXTENSION_METADATA } from './constants';
+import { FETCH_EXTENSION_MANIFESTS_SUCCESS, UPDATE_EXTENSION_MANIFEST } from './constants';
 
-const extensionsMetadataReducer = (state = [], { type = '', payload = {} }) => {
+const extensionManifestsReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
-    case FETCH_EXTENSIONS_METADATA_SUCCESS:
+    case FETCH_EXTENSION_MANIFESTS_SUCCESS:
       return payload;
-    case UPDATE_EXTENSION_METADATA:
+    case UPDATE_EXTENSION_MANIFEST:
       return state.map((item) => {
         if (item.pluginName === payload.pluginName) {
           return payload;
@@ -34,5 +34,5 @@ const extensionsMetadataReducer = (state = [], { type = '', payload = {} }) => {
 };
 
 export const uiExtensionsReducer = combineReducers({
-  extensionsMetadata: extensionsMetadataReducer,
+  extensionManifests: extensionManifestsReducer,
 });

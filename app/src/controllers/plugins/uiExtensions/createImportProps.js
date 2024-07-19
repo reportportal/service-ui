@@ -225,7 +225,7 @@ const INPUTS = {
   WithAsyncLoading,
 };
 
-// TODO: share these components and other stuff will be shared via WMF and ui-kit library
+// TODO: share these components and other stuff via WMF and ui-kit library
 export const createImportProps = (pluginName) => ({
   lib: {
     React,

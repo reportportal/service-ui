@@ -55,7 +55,7 @@ import {
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
-import { fetchExtensionsMetadata } from './uiExtensions';
+import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -254,19 +254,15 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
-// TODO: fetch single metadata in case of one plugin change
-function* watchPluginChange() {
+function* watchPluginListFetch() {
   yield takeEvery(
-    [createFetchPredicate(NAMESPACE), UPDATE_PLUGIN_SUCCESS],
-    fetchExtensionsMetadata,
+    [createFetchPredicate(NAMESPACE), createFetchPredicate(PUBLIC_PLUGINS)],
+    fetchExtensionManifests,
   );
 }
 
-function* watchPublicPluginChange() {
-  yield takeEvery(
-    [createFetchPredicate(PUBLIC_PLUGINS), UPDATE_PLUGIN_SUCCESS],
-    fetchExtensionsMetadata,
-  );
+function* watchPluginChange() {
+  yield takeEvery([UPDATE_PLUGIN_SUCCESS], fetchExtensionManifest);
 }
 
 export function* pluginSagas() {
@@ -280,6 +276,6 @@ export function* pluginSagas() {
     watchFetchPublicPlugins(),
     watchRemovePlugin(),
     watchPluginChange(),
-    watchPublicPluginChange(),
+    watchPluginListFetch(),
   ]);
 }

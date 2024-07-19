@@ -42,31 +42,30 @@ import {
   enabledPublicPluginNamesSelector,
 } from '../selectors';
 
-const extensionsMetadataSelector = (state) =>
-  domainSelector(state).uiExtensions.extensionsMetadata || [];
+const extensionManifestsSelector = (state) =>
+  domainSelector(state).uiExtensions.extensionManifests || [];
 
 const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPluginNamesSelector) =>
   createSelector(
     pluginNamesSelector,
-    extensionsMetadataSelector,
-    (pluginNames, extensionsMetadata) => {
+    extensionManifestsSelector,
+    (enabledPluginNames, extensionManifests) => {
       // TODO: update 'pluginType' usage once the backend for remote plugins will be ready
-      const uiExtensions = extensionsMetadata
+      const uiExtensions = extensionManifests
         .filter(
           ({ pluginName, pluginType }) =>
-            pluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
+            enabledPluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
         )
-        .map(({ extensions, ...commonMetadata }) =>
-          extensions.map((ext) => ({ ...ext, ...commonMetadata })),
+        .reduce(
+          (acc, { extensions, ...commonManifestProperties }) =>
+            acc.concat(extensions.map((ext) => ({ ...ext, ...commonManifestProperties }))),
+          [],
         );
 
-      return uiExtensions
-        .reduce((acc, val) => acc.concat(val), [])
-        .filter((extension) => extension.type === type);
+      return uiExtensions.filter((extension) => extension.type === type);
     },
   );
 
-// TODO: update extension points
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SETTINGS_TAB,
 );

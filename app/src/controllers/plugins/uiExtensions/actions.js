@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { FETCH_EXTENSIONS_METADATA_SUCCESS, UPDATE_EXTENSION_METADATA } from './constants';
+import { FETCH_EXTENSION_MANIFESTS_SUCCESS, UPDATE_EXTENSION_MANIFEST } from './constants';
 
-export const fetchExtensionsMetadataSuccessAction = (extensionsMetadata) => ({
-  type: FETCH_EXTENSIONS_METADATA_SUCCESS,
-  payload: extensionsMetadata,
+export const fetchExtensionManifestsSuccessAction = (extensionManifests) => ({
+  type: FETCH_EXTENSION_MANIFESTS_SUCCESS,
+  payload: extensionManifests,
 });
-export const updateExtensionMetadataAction = (extensionMetadata) => ({
-  type: UPDATE_EXTENSION_METADATA,
-  payload: extensionMetadata,
+export const updateExtensionManifestAction = (extensionManifest) => ({
+  type: UPDATE_EXTENSION_MANIFEST,
+  payload: extensionManifest,
 });

@@ -62,9 +62,3 @@ export const filterAvailablePlugins = (plugins = []) =>
 
     return item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE && isEmbedded;
   });
-
-export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
-  enabled && details?.commonCommands?.length && details.commonCommands.includes(command);
-
-export const isPluginSupportsAllowedCommand = ({ enabled, details }, command) =>
-  enabled && details?.allowedCommands?.length && details.allowedCommands.includes(command);

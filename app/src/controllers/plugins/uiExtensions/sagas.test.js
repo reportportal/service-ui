@@ -1,14 +1,14 @@
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils/fetch';
-import { fetchExtensionsMetadata } from './sagas';
+import { fetchExtensionManifests } from './sagas';
 
 jest.mock('common/utils/fetch');
 
 fetch.mockImplementation(() => {});
 
-// TODO: update to test fetchExtensionsMetadata
+// TODO: update to test fetchExtensionManifests
 describe('controllers/plugins/uiExtensions/sagas', () => {
-  describe('fetchExtensionsMetadata', () => {
+  describe('fetchExtensionManifests', () => {
     beforeEach(() => {
       fetch.mockClear();
     });
@@ -21,7 +21,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchExtensionsMetadata,
+        fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -81,7 +81,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchExtensionsMetadata,
+        fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -116,7 +116,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchExtensionsMetadata,
+        fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -156,7 +156,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         {
           getState: () => state,
         },
-        fetchExtensionsMetadata,
+        fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -215,7 +215,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
           dispatch: () => {},
           getState: () => state,
         },
-        fetchExtensionsMetadata,
+        fetchExtensionManifests,
       ).done;
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/123/getFile', {
