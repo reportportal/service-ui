@@ -1,12 +1,14 @@
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils/fetch';
+import { fetchExtensionManifestsSuccessAction } from 'controllers/plugins/uiExtensions/actions';
 import { fetchExtensionManifests } from './sagas';
 
 jest.mock('common/utils/fetch');
+jest.mock('controllers/plugins/uiExtensions/actions');
 
-fetch.mockImplementation(() => {});
+fetch.mockImplementation(() => Promise.resolve({ name: 'extension1' }));
+fetchExtensionManifestsSuccessAction.mockImplementation(() => ({ type: 'test', payload: [] }));
 
-// TODO: update to test fetchExtensionManifests
 describe('controllers/plugins/uiExtensions/sagas', () => {
   describe('fetchExtensionManifests', () => {
     beforeEach(() => {
@@ -24,92 +26,25 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
+      expect(fetchExtensionManifestsSuccessAction).not.toHaveBeenCalled();
     });
-    test('should do nothing in case of no plugins with binaryData or getFile command found', async () => {
+    test('should do nothing in case of no plugins with binaryData and manifest file found', async () => {
       const state = {
-        user: {
-          activeProject: 'testProject',
-        },
-        plugins: [
-          {
-            name: 'plugin1',
-            enabled: true,
-            details: {
-              binaryData: {
-                main: 'main.js',
-              },
-            },
-          },
-          {
-            name: 'plugin2',
-            enabled: true,
-            details: {
-              allowedCommands: ['getFile'],
-            },
-          },
-        ],
-        integrations: {
-          globalIntegrations: [
-            {
-              id: 123,
-              enabled: true,
-              integrationType: {
-                name: 'plugin1',
-                enabled: true,
-                details: {
-                  binaryData: {
-                    main: 'main.js',
-                  },
-                },
-              },
-            },
-            {
-              id: 124,
-              enabled: true,
-              integrationType: {
-                name: 'plugin2',
-                enabled: true,
-                details: {
-                  allowedCommands: ['getFile'],
-                },
-              },
-            },
-          ],
-        },
-      };
-      await runSaga(
-        {
-          getState: () => state,
-        },
-        fetchExtensionManifests,
-      ).done;
-      expect(fetch).not.toHaveBeenCalled();
-    });
-    test('should not send response for plugins without global integration', async () => {
-      const state = {
-        user: {
-          activeProject: 'testProject',
-        },
         plugins: {
           plugins: [
             {
               name: 'plugin1',
               enabled: true,
-              details: {
-                binaryData: {
-                  main: 'main.js',
-                },
-              },
+              details: {},
             },
             {
               name: 'plugin2',
               enabled: true,
               details: {
-                allowedCommands: ['getFile'],
+                binaryData: {},
               },
             },
           ],
-          integrations: { globalIntegrations: [] },
         },
       };
       await runSaga(
@@ -119,8 +54,9 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
+      expect(fetchExtensionManifestsSuccessAction).not.toHaveBeenCalled();
     });
-    test('should not execute getFile command for disabled plugins', async () => {
+    test('should not fetch manifests for disabled plugins', async () => {
       const state = {
         user: {
           activeProject: 'testProject',
@@ -130,26 +66,9 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
             {
               name: 'plugin1',
               enabled: false,
-              details: { binaryData: { main: 'main.js' }, allowedCommands: ['getFile'] },
+              details: { binaryData: { metadata: 'manifest.json' } },
             },
           ],
-          integrations: {
-            globalIntegrations: [
-              {
-                id: 123,
-                integrationType: {
-                  name: 'plugin1',
-                  enabled: false,
-                  details: {
-                    binaryData: {
-                      main: 'main.js',
-                    },
-                    allowedCommands: ['getFile'],
-                  },
-                },
-              },
-            ],
-          },
         },
       };
       await runSaga(
@@ -159,55 +78,23 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchExtensionManifests,
       ).done;
       expect(fetch).not.toHaveBeenCalled();
+      expect(fetchExtensionManifestsSuccessAction).not.toHaveBeenCalled();
     });
-    test('should execute getFile command for plugins with a file', async () => {
+    test('should fetch manifests for enabled plugins with manifest file present', async () => {
       const state = {
-        user: {
-          activeProject: 'testProject',
-        },
         plugins: {
           plugins: [
             {
               name: 'plugin1',
               enabled: true,
-              details: { binaryData: { main: 'main.js' }, allowedCommands: ['getFile'] },
+              details: { binaryData: { metadata: 'manifest.json' } },
             },
             {
               name: 'plugin2',
               enabled: true,
-              details: { binaryData: { main: 'main.js' }, allowedCommands: ['getFile'] },
+              details: { binaryData: { metadata: 'manifest2.json' } },
             },
           ],
-          integrations: {
-            globalIntegrations: [
-              {
-                id: 123,
-                enabled: true,
-                integrationType: {
-                  name: 'plugin1',
-                  enabled: true,
-                  details: {
-                    binaryData: {
-                      main: 'main.js',
-                    },
-                    allowedCommands: ['getFile'],
-                  },
-                },
-              },
-              {
-                id: 124,
-                enabled: true,
-                integrationType: {
-                  name: 'plugin2',
-                  enabled: true,
-                  details: {
-                    binaryData: { main: 'main.js' },
-                    allowedCommands: ['getFile'],
-                  },
-                },
-              },
-            ],
-          },
         },
       };
       await runSaga(
@@ -218,14 +105,17 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchExtensionManifests,
       ).done;
       expect(fetch).toHaveBeenCalledTimes(2);
-      expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/123/getFile', {
-        method: 'PUT',
-        data: { fileKey: 'main' },
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugin/public/plugin1/file/manifest.json', {
+        contentType: 'application/json',
       });
-      expect(fetch).toHaveBeenCalledWith('../api/v1/integration/testProject/124/getFile', {
-        method: 'PUT',
-        data: { fileKey: 'main' },
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugin/public/plugin2/file/manifest2.json', {
+        contentType: 'application/json',
       });
+      expect(fetchExtensionManifestsSuccessAction).toHaveBeenCalledTimes(1);
+      expect(fetchExtensionManifestsSuccessAction).toHaveBeenCalledWith([
+        { name: 'extension1', pluginName: 'plugin1', binaryData: { metadata: 'manifest.json' } },
+        { name: 'extension1', pluginName: 'plugin2', binaryData: { metadata: 'manifest2.json' } },
+      ]);
     });
   });
 });

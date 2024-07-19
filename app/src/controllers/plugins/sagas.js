@@ -262,7 +262,7 @@ function* watchPluginListFetch() {
 }
 
 function* watchPluginChange() {
-  yield takeEvery([UPDATE_PLUGIN_SUCCESS], fetchExtensionManifest);
+  yield takeEvery(UPDATE_PLUGIN_SUCCESS, fetchExtensionManifest);
 }
 
 export function* pluginSagas() {
