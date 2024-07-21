@@ -34,7 +34,7 @@ export const NameColumn = track()(
         className={cx(className, 'name')}
         to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
         onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(name, dashboardId));
+          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
         }}
       >
         {name}
