@@ -78,13 +78,13 @@ import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/p
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchProjectDataAction } from 'controllers/administrate';
-import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCreators';
+import { fetchProjectDataAction } from 'controllers/instance';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { fetchProjectsAction } from 'controllers/administrate/projects';
+import { fetchProjectsAction } from 'controllers/instance/projects';
 import { fetchOrganizationsAction } from 'controllers/organizations';
-import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
+import { startSetViewMode } from 'controllers/instance/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
@@ -124,7 +124,7 @@ const routesMap = {
   [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
 
-  ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
+  ORGANIZATIONS_PAGE: redirectRoute('/organizations', () => ({ type: PROJECTS_PAGE })),
   USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
     type: USER_PROFILE_SUB_PAGE,
     payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
@@ -135,7 +135,7 @@ const routesMap = {
   API_PAGE: '/api',
 
   [PROJECTS_PAGE]: {
-    path: '/administrate/projects',
+    path: '/projects',
     thunk: (dispatch) => {
       dispatch(fetchProjectsAction());
       dispatch(fetchOrganizationsAction());
@@ -143,23 +143,22 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    // TODO: All administrate pages it will be changed accordingly, f.e '/administrate/users' => '/users'
-    path: `/administrate/projects/organizations/:organizationSlug?/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
+    path: `/organizations/projects/organizations/:organizationSlug?/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
   },
   [ALL_USERS_PAGE]: {
-    path: '/administrate/users',
+    path: '/users',
     thunk: (dispatch) => dispatch(fetchAllUsersAction()),
   },
-  [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
+  [SERVER_SETTINGS_PAGE]: redirectRoute('/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
   [PLUGINS_PAGE]: redirectRoute(
-    '/administrate/plugins',
+    '/plugins',
     () => ({
       type: PLUGINS_TAB_PAGE,
       payload: { pluginsTab: INSTALLED },
@@ -169,10 +168,10 @@ const routesMap = {
       dispatch(fetchGlobalIntegrationsAction());
     },
   ),
-  [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
+  [PLUGINS_TAB_PAGE]: `/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
 
   [ORGANIZATION_PROJECTS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects',
+    path: '/organizations/:organizationSlug?/projects',
     thunk: (dispatch, getState) => {
       const {
         location: { payload },
@@ -315,7 +314,7 @@ const routesMap = {
       dispatch(fetchTestItemsAction());
     },
   },
-  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage/:pluginRoute*',
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 

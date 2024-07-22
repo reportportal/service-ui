@@ -124,7 +124,7 @@ import { AttributeListContainer as AttributeListField } from 'components/contain
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { ProjectName } from 'pages/admin/projectsPage/projectName';
+import { ProjectName } from 'pages/instance/projectsPage/projectName';
 import { debounce } from 'common/utils/debounce';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';

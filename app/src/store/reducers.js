@@ -33,7 +33,7 @@ import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
 import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
-import { administrateReducer } from 'controllers/administrate';
+import { administrateReducer } from 'controllers/instance';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
