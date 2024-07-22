@@ -26,10 +26,7 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import {
-  deleteProjectAction,
-  navigateToProjectSectionAction,
-} from 'controllers/instance/projects';
+import { deleteProjectAction, navigateToProjectSectionAction } from 'controllers/instance/projects';
 import { fetchProjectSuccessAction } from 'controllers/project';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
