@@ -51,11 +51,12 @@ export const analyticsEventObserver = ReactObserver();
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
-        auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
-        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
+        auto_analysis:
+          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
-        ...(userId && { uid: `${userId}|${instanceId}` }),
-        ...(!isAdmin && projectInfoId && { project_id: `${projectInfoId}|${instanceId}` }),
+        uid: `${userId}|${instanceId}`,
+        ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
       GA4.event(data.action, eventParameters);
