@@ -19,7 +19,7 @@ import { eventsReducer } from './events';
 import { allUsersReducer } from './allUsers';
 import { projectsReducer } from './projects';
 
-export const administrateReducer = combineReducers({
+export const instanceReducer = combineReducers({
   events: eventsReducer,
   allUsers: allUsersReducer,
   projects: projectsReducer,

@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -31,6 +31,7 @@ import {
   PROJECT_MEMBERS_PAGE,
   PROJECT_SETTINGS_PAGE,
   PROJECT_PLUGIN_PAGE,
+  ORGANIZATION_PROJECTS_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -44,14 +45,26 @@ import LaunchesIcon from 'common/img/sidebar/launches-icon-inline.svg';
 import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
+import { projectNameSelector } from 'controllers/project';
+import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
+
+const messages = defineMessages({
+  organization: {
+    id: 'OrganizationsControl.organization',
+    defaultMessage: 'Organization',
+  },
+});
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const organizationName = useSelector(activeOrganizationNameSelector);
+  const projectName = useSelector(projectNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
@@ -140,6 +153,13 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
+  const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };
+  const titles = {
+    shortTitle: `${projectName[0]}${projectName[projectName.length - 1]}`,
+    topTitle: `${formatMessage(messages.organization)}: ${organizationName}`,
+    bottomTitle: projectName,
+  };
+
   const createMainBlock = (openSidebar, closeSidebar) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
@@ -149,7 +169,8 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
-      isProjectLevel
+      link={link}
+      titles={titles}
     />
   );
 

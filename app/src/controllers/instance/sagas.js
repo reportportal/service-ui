@@ -41,6 +41,6 @@ function* watchFetchProjectData() {
   yield takeEvery(FETCH_PROJECT_DATA, fetchProjectData);
 }
 
-export function* administrateSagas() {
+export function* instanceSagas() {
   yield all([eventsSagas(), watchFetchProjectData(), allUsersSagas(), projectsSagas()]);
 }

@@ -27,6 +27,7 @@ import {
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import {
@@ -112,6 +113,18 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
+  const link = { type: ORGANIZATIONS_PAGE };
+  const titles = {
+    shortTitle: <FormattedMessage id={'OrganizationsControl.all'} defaultMessage={'All'} />,
+    topTitle: (
+      <FormattedMessage
+        id={'OrganizationsControl.allOrganizations'}
+        defaultMessage={'All organizations'}
+      />
+    ),
+    bottomTitle: null,
+  };
+
   const createMainBlock = (openSidebar, closeSidebar) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
@@ -121,7 +134,8 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
-      isInstanceLevel
+      link={link}
+      titles={titles}
     />
   );
 

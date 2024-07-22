@@ -25,6 +25,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
@@ -32,6 +33,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';
+import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
@@ -39,6 +41,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const organizationName = useSelector(activeOrganizationNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
@@ -101,6 +104,18 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
+  const link = { type: ORGANIZATIONS_PAGE };
+  const titles = {
+    shortTitle: `${organizationName[0]}${organizationName[organizationName.length - 1]}`,
+    topTitle: (
+      <FormattedMessage
+        id={'OrganizationsControl.allOrganizations'}
+        defaultMessage={'All organizations'}
+      />
+    ),
+    bottomTitle: organizationName,
+  };
+
   const createMainBlock = (openSidebar, closeSidebar) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
@@ -110,7 +125,8 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
-      isOrganizationLevel
+      link={link}
+      titles={titles}
     />
   );
 

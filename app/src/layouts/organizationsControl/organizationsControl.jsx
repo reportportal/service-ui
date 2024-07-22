@@ -15,15 +15,11 @@
  */
 
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { withPopover } from 'componentLibrary/popover';
-import { projectNameSelector } from 'controllers/project';
-import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
-import { ORGANIZATIONS_PAGE, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { useSelector } from 'react-redux';
 import { urlOrganizationSlugSelector } from 'controllers/pages';
 import ArrowLeftIcon from './img/arrow-left-inline.svg';
 import OpenPopoverIcon from './img/open-popover-inline.svg';
@@ -32,57 +28,9 @@ import styles from './organizationsControl.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  organization: {
-    id: 'OrganizationsControl.organization',
-    defaultMessage: 'Organization',
-  },
-  all: {
-    id: 'OrganizationsControl.all',
-    defaultMessage: 'All',
-  },
-  allOrganizations: {
-    id: 'OrganizationsControl.allOrganizations',
-    defaultMessage: 'All organizations',
-  },
-});
-
-export const OrganizationsControl = ({
-  isPopoverOpen,
-  onClick,
-  closeSidebar,
-  isInstanceLevel,
-  isOrganizationLevel,
-  isProjectLevel,
-}) => {
-  const { formatMessage } = useIntl();
-  const organizationName = useSelector(activeOrganizationNameSelector);
+export const OrganizationsControl = ({ isPopoverOpen, onClick, closeSidebar, link, titles }) => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
-  const projectName = useSelector(projectNameSelector);
-
-  const titles = {
-    shortTitle: formatMessage(messages.all),
-    topTitle: formatMessage(messages.allOrganizations),
-    bottomTitle: null,
-  };
-
-  const link = { type: ORGANIZATIONS_PAGE };
-
-  const getShortTitle = (title) => `${title[0]}${title[title.length - 1]}`;
-
-  if (isOrganizationLevel) {
-    titles.shortTitle = getShortTitle(organizationName);
-    titles.bottomTitle = organizationName;
-    link.type = ORGANIZATIONS_PAGE;
-  }
-
-  if (isProjectLevel) {
-    titles.shortTitle = getShortTitle(projectName);
-    titles.topTitle = `${formatMessage(messages.organization)}: ${organizationName}`;
-    titles.bottomTitle = projectName;
-    link.type = ORGANIZATION_PROJECTS_PAGE;
-    link.payload = { organizationSlug };
-  }
+  const isInstanceLevel = !organizationSlug;
 
   return (
     <div className={cx('organizations-control-wrapper')}>
@@ -122,15 +70,8 @@ OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   closeSidebar: PropTypes.func.isRequired,
-  isInstanceLevel: PropTypes.bool,
-  isOrganizationLevel: PropTypes.bool,
-  isProjectLevel: PropTypes.bool,
-};
-
-OrganizationsControl.defaultProps = {
-  isInstanceLevel: false,
-  isOrganizationLevel: false,
-  isProjectLevel: false,
+  link: PropTypes.object.isRequired,
+  titles: PropTypes.object.isRequired,
 };
 
 export const OrganizationsControlWithPopover = withPopover({
