@@ -26,6 +26,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { LOGIN_PAGE } from 'components/main/analytics/events';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -54,7 +55,7 @@ const cx = classNames.bind(styles);
     showDefaultErrorNotification,
   },
 )
-@track()
+@track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
     forgotPass: PropTypes.string,
