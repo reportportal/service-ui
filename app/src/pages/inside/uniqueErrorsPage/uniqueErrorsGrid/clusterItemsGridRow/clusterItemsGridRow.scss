@@ -30,6 +30,18 @@
   &-full-width {
     width: 100%;
   }
+
+  &.matched-tests{
+    width: 130px;
+  }
+
+  &.extension-col {
+    width: 130px;
+
+    &.large {
+      width: 165px;
+    }
+  }
 }
 
 .matched-tests-col-text {
@@ -37,11 +49,10 @@
   font-family: $FONT-REGULAR;
   font-size: 12px;
   text-align: right;
-  right: 24px;
+  padding-right: 24px;
   display: block;
   width: 130px;
-  top: 12px;
-  position: absolute;
+  padding-top: 12px;
 }
 
 .expand-col {
