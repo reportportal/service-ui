@@ -40,5 +40,6 @@ export {
   canSeeDemoData,
   canWorkWithTests,
   canSeeEmailMembers,
+  canSeeSidebarOptions,
 } from './permissions';
 export { getRoleTitle } from './getRoleTitle';
