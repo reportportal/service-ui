@@ -4,7 +4,7 @@ import { MANIFEST_FILE_KEY } from './constants';
 
 // TODO: restrict access to this function (f.e. only for admins)
 export const createExtensionOverrider = (store) => async (pluginName, url) => {
-  const plugin = pluginByNameSelector(store);
+  const plugin = pluginByNameSelector(store.getState(), pluginName);
 
   const manifestFileName =
     plugin.details?.binaryData?.[MANIFEST_FILE_KEY] || `${MANIFEST_FILE_KEY}.json`;
