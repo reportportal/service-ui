@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -48,13 +48,7 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
-
-const messages = defineMessages({
-  organization: {
-    id: 'OrganizationsControl.organization',
-    defaultMessage: 'Organization',
-  },
-});
+import { messages } from '../../messages';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();

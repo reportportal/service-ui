@@ -15,7 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { useIntl, defineMessages } from 'react-intl';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
@@ -24,17 +24,11 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Link from 'redux-first-router-link';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { OrganizationsItem } from './organizationsItem';
+import { messages } from '../../messages';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
 const MARGIN_TOP_AND_MARGIN_BOTTOM = 172;
-
-const messages = defineMessages({
-  allOrganizations: {
-    id: 'OrganizationsPopover.allOrganizations',
-    defaultMessage: 'All organizations',
-  },
-});
 
 export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
@@ -55,6 +49,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           <div className={cx('all-organizations')}>
             <Link
               to={{ type: ORGANIZATIONS_PAGE }}
+              // TODO: Instead of an additional class, use the active class
               className={cx('all-organizations-link', { 'instance-level': !currentOrganization })}
               onClick={onClose}
             >

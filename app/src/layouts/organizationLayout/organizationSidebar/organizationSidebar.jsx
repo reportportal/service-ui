@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import {
   ORGANIZATION_PROJECTS_PAGE,
@@ -35,9 +35,11 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';
 import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
+import { messages } from '../../messages';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -107,12 +109,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const link = { type: ORGANIZATIONS_PAGE };
   const titles = {
     shortTitle: `${organizationName[0]}${organizationName[organizationName.length - 1]}`,
-    topTitle: (
-      <FormattedMessage
-        id={'OrganizationsControl.allOrganizations'}
-        defaultMessage={'All organizations'}
-      />
-    ),
+    topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: organizationName,
   };
 

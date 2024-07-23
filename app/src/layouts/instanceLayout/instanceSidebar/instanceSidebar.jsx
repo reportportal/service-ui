@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { canSeeSidebarOptions } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
@@ -41,9 +41,11 @@ import UsersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import PluginsIcon from 'common/img/sidebar/plugins-icon-inline.svg';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
+import { messages } from '../../messages';
 
 export const InstanceSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const adminPageExtensions = useSelector(uiExtensionAdminPagesSelector);
@@ -115,13 +117,8 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
 
   const link = { type: ORGANIZATIONS_PAGE };
   const titles = {
-    shortTitle: <FormattedMessage id={'OrganizationsControl.all'} defaultMessage={'All'} />,
-    topTitle: (
-      <FormattedMessage
-        id={'OrganizationsControl.allOrganizations'}
-        defaultMessage={'All organizations'}
-      />
-    ),
+    shortTitle: formatMessage(messages.all),
+    topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: null,
   };
 
@@ -136,6 +133,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      isExtendedNav
     />
   );
 

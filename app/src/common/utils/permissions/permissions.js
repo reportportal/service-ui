@@ -80,4 +80,4 @@ export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD)
 export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
 export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
 export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
-export const canSeeSidebarOptions = checkPermission(ACTIONS.SEE_SIDEBAR_OPTIONS);
+export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
