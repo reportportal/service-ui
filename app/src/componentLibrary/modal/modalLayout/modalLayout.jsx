@@ -81,9 +81,6 @@ export const ModalLayout = ({
   useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
     setShown(true);
-    if (modalRef && modalRef.current) {
-      modalRef.current.focus();
-    }
 
     return () => document.removeEventListener('keydown', onKeydown, false);
   }, []);
@@ -111,6 +108,7 @@ export const ModalLayout = ({
               animate={{ opacity: 1, marginTop: modalMargin }}
               exit={{ opacity: 0, marginTop: -modalMargin }}
               transition={{ duration: 0.3 }}
+              onAnimationComplete={() => modalRef.current?.focus()}
             >
               <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
               <Scrollbars
