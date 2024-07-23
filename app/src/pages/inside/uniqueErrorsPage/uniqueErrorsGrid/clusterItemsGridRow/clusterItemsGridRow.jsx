@@ -75,13 +75,7 @@ ClusterColumn.defaultProps = {
   cluster: {},
 };
 
-export const ClusterItemsGridRow = ({
-  data,
-  onEditItem,
-  onUnlinkSingleTicket,
-  onEditDefect,
-  isSelectedOptionAll,
-}) => {
+export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) => {
   const { id, matchedTests } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -140,10 +134,7 @@ export const ClusterItemsGridRow = ({
             <ClusterColumn cluster={data} />
           </div>
           {extensions.map((extension) => (
-            <div
-              className={cx('table-cell', 'extension-col', { large: isSelectedOptionAll })}
-              key={extension.name}
-            >
+            <div className={cx('table-cell', 'extension-col')} key={extension.name}>
               <ExtensionLoader extension={extension} data={data} />
             </div>
           ))}
@@ -206,7 +197,6 @@ ClusterItemsGridRow.propTypes = {
   onEditItem: PropTypes.func,
   onUnlinkSingleTicket: PropTypes.func,
   onEditDefect: PropTypes.func,
-  isSelectedOptionAll: PropTypes.bool,
 };
 ClusterItemsGridRow.defaultProps = {
   data: {},

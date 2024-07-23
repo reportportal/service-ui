@@ -34,13 +34,11 @@ import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
 const MATCHED_TESTS_COLUMN_ID = 'matchedTests';
-const ALL_UNIQUE_ERRORS = 'all';
 
 export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }) => {
   const { formatMessage } = useIntl();
   const query = useSelector(querySelector);
   const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
-  const { mode: selectedErrorType = ALL_UNIQUE_ERRORS } = extractNamespacedQuery(query, NAMESPACE);
   const extensions = useSelector(uniqueErrorGridHeaderCellComponentSelector);
   const columns = [
     {
@@ -69,7 +67,7 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
 
     return extensions.map((extension) => {
       const MemoizedComponent = (params) => (
-        <div className={cx('extension-col', { large: selectedErrorType === ALL_UNIQUE_ERRORS })}>
+        <div className={cx('extension-col')}>
           <ExtensionLoader extension={extension} {...params} />
         </div>
       );
@@ -80,7 +78,7 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
         },
       };
     });
-  }, [extensions, selectedErrorType]);
+  }, [extensions]);
 
   columns.push(...memoizedExtensionsColumns, {
     id: MATCHED_TESTS_COLUMN_ID,
@@ -107,7 +105,6 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
             loading={loading}
             nestedGridRow={ClusterItemsGridRow}
             nestedView
-            isSelectedOptionAll={selectedErrorType === ALL_UNIQUE_ERRORS}
             {...rest}
           />
           {!loading && !data.length && (
