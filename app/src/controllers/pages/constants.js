@@ -23,6 +23,7 @@ export const CLEAR_PAGE_STATE = 'clearPageStateAction';
 export const NO_PAGE = undefined;
 // admin
 export const ORGANIZATIONS_PAGE = 'ORGANIZATIONS_PAGE';
+export const ALL_ORGANIZATIONS_PAGE = 'ALL_ORGANIZATIONS_PAGE';
 export const PROJECTS_PAGE = 'PROJECTS_PAGE';
 export const PROJECT_DETAILS_PAGE = 'PROJECT_DETAILS_PAGE';
 export const ALL_USERS_PAGE = 'ALL_USERS_PAGE';

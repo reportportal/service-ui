@@ -21,8 +21,8 @@ import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
 import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import Link from 'redux-first-router-link';
-import { ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { NavLink } from 'components/main/navLink';
 import { OrganizationsItem } from './organizationsItem';
 import { messages } from '../../messages';
 import styles from './organizationsPopover.scss';
@@ -47,14 +47,14 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
       {availableProjects.length > 0 && (
         <>
           <div className={cx('all-organizations')}>
-            <Link
-              to={{ type: ORGANIZATIONS_PAGE }}
-              // TODO: Instead of an additional class, use the active class
-              className={cx('all-organizations-link', { 'instance-level': !currentOrganization })}
+            <NavLink
+              to={{ type: ALL_ORGANIZATIONS_PAGE }}
+              className={cx('all-organizations-link')}
               onClick={onClose}
+              activeClassName={cx('active')}
             >
               {formatMessage(messages.allOrganizations)}
-            </Link>
+            </NavLink>
           </div>
           <div className={cx('divider')} />
         </>
