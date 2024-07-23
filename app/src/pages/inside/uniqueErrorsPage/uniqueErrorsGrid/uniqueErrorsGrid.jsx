@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
@@ -62,17 +62,25 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
     },
   ];
 
-  if (extensions.length) {
-    extensions.forEach((extension) => {
-      columns.push({
-        title: {
-          component: (params) => <ExtensionLoader extension={extension} {...params} />,
-        },
-      });
-    });
-  }
+  const memoizedExtensionsColumns = useMemo(() => {
+    if (!extensions.length) return [];
 
-  columns.push({
+    return extensions.map((extension) => {
+      const MemoizedComponent = (params) => (
+        <div className={cx('extension-col')}>
+          <ExtensionLoader extension={extension} {...params} />
+        </div>
+      );
+
+      return {
+        title: {
+          component: MemoizedComponent,
+        },
+      };
+    });
+  }, [extensions]);
+
+  columns.push(...memoizedExtensionsColumns, {
     id: MATCHED_TESTS_COLUMN_ID,
     title: {
       full: 'MATCHED TESTS',
