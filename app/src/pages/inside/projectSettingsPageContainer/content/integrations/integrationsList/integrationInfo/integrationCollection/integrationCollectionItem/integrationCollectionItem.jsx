@@ -71,7 +71,9 @@ export const IntegrationCollectionItem = ({
     >
       <div className={cx('item-data')}>
         <div className={cx('general-info')}>
-          <h4 className={cx('integration-name')}>{title}</h4>
+          <h4 className={cx('integration-name')} title={title}>
+            {title}
+          </h4>
           {!connected && (
             <span className={cx('connection-error-message')}>
               {formatMessage(messages.ConnectionErrorMessage)}
