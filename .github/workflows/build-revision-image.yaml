@@ -12,18 +12,7 @@ jobs:
     name: Setting variables for docker build
     runs-on: ubuntu-latest
     environment: rc
-    steps:
-      - id: get_version
-        uses: oprypin/find-latest-tag@v1
-        with:
-          repository: ${{ github.repository }}
-          releases-only: true
-         
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: "refs/tags/${{ steps.get_version.outputs.tag }}"
-        
+    steps:        
       - name: Create variables
         id: vars
         run: |
