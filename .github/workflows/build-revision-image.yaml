@@ -1,0 +1,18 @@
+name: Build revision Docker image
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+ 
+jobs:
+  call-docker-build:
+    name: Call develop Docker build
+    uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
+    with:
+      aws-region: ${{ vars.AWS_REGION }}
+      image-tag: '${{ github.event.inputs.version }}'
+      version: '${{ github.event.inputs.version }}'
+    secrets: inherit
