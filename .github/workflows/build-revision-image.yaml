@@ -16,6 +16,7 @@ jobs:
       - id: get_version
         uses: oprypin/find-latest-tag@v1
         with:
+          repository: ${{ github.repository }}
           releases-only: true
          
       - name: Checkout
