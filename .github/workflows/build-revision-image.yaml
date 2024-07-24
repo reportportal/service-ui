@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.get_version.outputs.tag }}
+          ref: "refs/tags/${{ steps.get_version.outputs.tag }}"
         
       - name: Create variables
         id: vars
