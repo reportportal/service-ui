@@ -39,7 +39,7 @@ export const userName = composeValidators([
 ]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
-export const launchDescription = maxLength(1024);
+export const launchDescription = maxLength(2048);
 export const dashboardName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const createDashboardNameUniqueValidator = (dashboardItems, dashboardItem) => (name) =>
   !dashboardItems.some((dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id);
