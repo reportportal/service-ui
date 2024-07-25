@@ -59,7 +59,7 @@ FoundInColumn.propTypes = ColumnProps;
 const SubmitDateColumn = ({ className, value: { submitDate = 0 } }, formatMessage) => (
   <div className={cx('submit-date-col', className)}>
     <span className={cx('mobile-hint')}>{formatMessage(hintMessages.submitDateHint)}</span>
-    <AbsRelTime startTime={Number(submitDate)} />
+    <AbsRelTime startTime={submitDate} />
   </div>
 );
 SubmitDateColumn.propTypes = ColumnProps;
@@ -108,7 +108,7 @@ export class UniqueBugsTable extends PureComponent {
   render() {
     const { result } = this.props.widget.content;
     const data = Object.keys(result).map((key) => ({ id: key, ...result[key] }));
-
+    console.log(data, 'dtaatat');
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
         <Grid columns={this.columns} data={data} />
