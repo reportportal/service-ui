@@ -366,7 +366,9 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       !hashProjectSlug &&
       (isAssignedToTargetOrganization || assignmentNotRequired)
     ) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+      if (nextPageType !== ORGANIZATION_PROJECTS_PAGE) {
+        dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+      }
 
       organizationSlug = hashOrganizationSlug;
     } else if (isChangedProject) {
