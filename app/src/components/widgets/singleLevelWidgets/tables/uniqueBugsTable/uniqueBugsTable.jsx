@@ -108,7 +108,6 @@ export class UniqueBugsTable extends PureComponent {
   render() {
     const { result } = this.props.widget.content;
     const data = Object.keys(result).map((key) => ({ id: key, ...result[key] }));
-    console.log(data, 'dtaatat');
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
         <Grid columns={this.columns} data={data} />
