@@ -16,8 +16,8 @@
 
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
-import { withTooltip } from 'components/main/tooltips/tooltip';
-import styles from './organizationsItemWithPopover.scss';
+import { withTooltip } from 'componentLibrary/tooltip';
+import styles from './organizationsItemContentHeaderWithTooltip.scss';
 
 const cx = classNames.bind(styles);
 
@@ -38,15 +38,14 @@ const NoProjectAssignments = () => {
   );
 };
 
-export const OrganizationsItemWithPopover = withTooltip({
-  TooltipComponent: NoProjectAssignments,
-  data: {
-    tooltipTriggerClass: cx('tooltip'),
-    customClassName: cx('custom'),
-    placement: 'left',
-    dark: true,
-    topOffset: -10,
-    leftOffset: 170,
-    width: 165,
-  },
+export const OrganizationsItemContentHeaderWithTooltip = withTooltip({
+  ContentComponent: NoProjectAssignments,
+  tooltipWrapperClassName: cx('tooltip'),
+  customClassName: cx('custom'),
+  side: 'left',
+  placement: 'left',
+  dark: true,
+  topOffset: -15,
+  leftOffset: 169,
+  width: 160,
 })(({ children }) => children);

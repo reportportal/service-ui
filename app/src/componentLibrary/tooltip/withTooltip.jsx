@@ -21,12 +21,12 @@ import ReactDOM from 'react-dom';
 import styles from './withTooltip.scss';
 
 const cx = classNames.bind(styles);
-const TOOLTIP_DELAY_MS = 2000;
 const SAFE_ZONE = 100;
 
 export const withTooltip = ({
   ContentComponent,
   tooltipWrapperClassName,
+  customClassName,
   dynamicWidth,
   width,
   topOffset,
@@ -34,6 +34,7 @@ export const withTooltip = ({
   side,
   noArrow,
   dataAutomationId,
+  delay,
 }) => (WrappedComponent) => (props) => {
   const [isOpened, setOpened] = useState(false);
   const timeoutId = useRef(null);
@@ -51,7 +52,11 @@ export const withTooltip = ({
   };
 
   const handleShowTooltip = () => {
-    timeoutId.current = setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS);
+    if (delay) {
+      timeoutId.current = setTimeout(() => setOpened(true), delay);
+    } else {
+      setOpened(true);
+    }
   };
 
   return (
@@ -86,7 +91,7 @@ export const withTooltip = ({
                 data-automation-id={dataAutomationId}
               >
                 <div
-                  className={cx('tooltip-content')}
+                  className={cx('tooltip-content', customClassName)}
                   style={{
                     maxWidth: `${maxWidth}px`,
                   }}

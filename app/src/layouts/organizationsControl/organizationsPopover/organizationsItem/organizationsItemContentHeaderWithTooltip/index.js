@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OrganizationsItemWithPopover } from './organizationsItemWithPopover';
+export { OrganizationsItemContentHeaderWithTooltip } from './organizationsItemContentHeaderWithTooltip';

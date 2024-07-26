@@ -19,7 +19,7 @@
 $ARROW_HEIGHT: 9px;
 $ARROW_WIDTH: 18px;
 $DEFAULT_MARGIN: 4px;
-$triangle-color: rgba($COLOR--almost-black, 0.75);
+$triangle-color: rgba($COLOR--darkmode-gray-500, 0.75);
 
 .with-tooltip {
   display: block;
@@ -52,7 +52,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
 .tooltip-content {
   padding: 16px;
   border-radius: 8px;
-  background-color: rgba($COLOR--almost-black, 0.95);
+  background-color: rgba($COLOR--darkmode-gray-500, 0.95);
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 11px;
   color: $COLOR--white-two;

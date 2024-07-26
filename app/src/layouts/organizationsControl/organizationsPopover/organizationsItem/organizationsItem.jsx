@@ -25,7 +25,7 @@ import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
 import { ProjectItem } from './projectItem';
-import { OrganizationsItemWithPopover } from './organizationsItemWithPopover';
+import { OrganizationsItemContentHeaderWithTooltip } from './organizationsItemContentHeaderWithTooltip';
 import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -137,9 +137,9 @@ export const OrganizationsItem = ({
         tabIndex={-1}
       >
         {isDisabled ? (
-          <OrganizationsItemWithPopover>
+          <OrganizationsItemContentHeaderWithTooltip>
             {getOrganizationItemContentHeader()}
-          </OrganizationsItemWithPopover>
+          </OrganizationsItemContentHeaderWithTooltip>
         ) : (
           getOrganizationItemContentHeader()
         )}
