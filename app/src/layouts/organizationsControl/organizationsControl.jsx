@@ -45,12 +45,18 @@ export const OrganizationsControl = ({
             'instance-level': isExtendedNav,
           })}
         >
-          {!isExtendedNav ? <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i> : null}
-          <Link to={link} className={cx('organization-btn')} onClick={closeSidebar}>
-            <div className={cx('top-title')}>{titles.topTitle}</div>
-          </Link>
+          {isExtendedNav ? (
+            <div className={cx('extended-top-title')}>{titles.topTitle}</div>
+          ) : (
+            <>
+              <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
+              <Link to={link} className={cx('organization-btn')} onClick={closeSidebar}>
+                <div className={cx('top-title')}>{titles.topTitle}</div>
+              </Link>
+            </>
+          )}
         </div>
-        {!isExtendedNav ? <div className={cx('bottom-title')}>{titles.bottomTitle}</div> : null}
+        {isExtendedNav ? null : <div className={cx('bottom-title')}>{titles.bottomTitle}</div>}
       </div>
       <i
         className={cx('open-popover', {

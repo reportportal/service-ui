@@ -108,6 +108,13 @@
   text-align: start;
 }
 
+.extended-top-title {
+  color: $COLOR--darkmode-gray-100;
+  line-height: 20px;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}
+
 .bottom-title {
   @include truncate(220px);
   color: $COLOR--darkmode-gray-100;
