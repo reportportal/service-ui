@@ -25,6 +25,7 @@ import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
 import { ProjectItem } from './projectItem';
+import { OrganizationsItemWithPopover } from './organizationsItemWithPopover';
 import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -93,6 +94,40 @@ export const OrganizationsItem = ({
     setIsFocusedCollapsedButton(false);
   };
 
+  const getOrganizationItemContentHeader = () => (
+    <div className={cx('header-item-wrapper')}>
+      <button
+        className={cx('collapse-projects', {
+          focus: isFocusedCollapsedButton,
+          disabled: isDisabled,
+        })}
+        disabled={isDisabled}
+        onClick={onClickCollapseButton}
+        onFocus={onFocusCollapseButton}
+        onBlur={onBlurCollapseButton}
+      >
+        {Parser(ArrowIcon)}
+        <div className={cx('organization-name', { active: isActive })}>{organizationName}</div>
+      </button>
+      <NavLink
+        to={{
+          type: ORGANIZATION_PROJECTS_PAGE,
+          payload: { organizationSlug },
+        }}
+        className={cx('organization-open', {
+          displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
+          focus: isFocusedShowOpenButton,
+        })}
+        onClick={onClick}
+        onFocus={onFocusOpenButton}
+        onBlur={onBlurOpenButton}
+      >
+        <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
+        {Parser(OpenIcon)}
+      </NavLink>
+    </div>
+  );
+
   return (
     <div ref={organizationItemRef} className={cx('organization-item')}>
       <button
@@ -101,37 +136,13 @@ export const OrganizationsItem = ({
         onMouseLeave={onHideOpenButton}
         tabIndex={-1}
       >
-        <div className={cx('header-item-wrapper')}>
-          <button
-            className={cx('collapse-projects', {
-              focus: isFocusedCollapsedButton,
-              disabled: isDisabled,
-            })}
-            disabled={isDisabled}
-            onClick={onClickCollapseButton}
-            onFocus={onFocusCollapseButton}
-            onBlur={onBlurCollapseButton}
-          >
-            {Parser(ArrowIcon)}
-            <div className={cx('organization-name', { active: isActive })}>{organizationName}</div>
-          </button>
-          <NavLink
-            to={{
-              type: ORGANIZATION_PROJECTS_PAGE,
-              payload: { organizationSlug },
-            }}
-            className={cx('organization-open', {
-              displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
-              focus: isFocusedShowOpenButton,
-            })}
-            onClick={onClick}
-            onFocus={onFocusOpenButton}
-            onBlur={onBlurOpenButton}
-          >
-            <div className={cx('organization-open-text')}>{formatMessage(messages.open)}</div>
-            {Parser(OpenIcon)}
-          </NavLink>
-        </div>
+        {isDisabled ? (
+          <OrganizationsItemWithPopover>
+            {getOrganizationItemContentHeader()}
+          </OrganizationsItemWithPopover>
+        ) : (
+          getOrganizationItemContentHeader()
+        )}
       </button>
       {isCollapsed && (
         <>
