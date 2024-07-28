@@ -177,7 +177,7 @@ export const Dropdown = ({
             index,
             selected: option.value === (selectedItem?.value ?? selectedItem),
             variant,
-            option: { ...option, title: option.label },
+            option: { title: option.label, ...option },
             highlightHovered: highlightedIndex === index && eventName !== EVENT_NAME.ON_CLICK,
             render: renderOption,
             onChange: option.disabled ? null : () => handleChange(option),
