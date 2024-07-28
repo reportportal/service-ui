@@ -18,7 +18,6 @@ import { takeEvery, all, put, select, take } from 'redux-saga/effects';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { PROJECTS_PAGE } from 'controllers/pages';
-import { fetchOrganizationBySlugAction } from 'controllers/organizations/organization/actionCreators';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchOrganizationProjectsAction } from 'controllers/organizations/projects';
@@ -37,10 +36,9 @@ function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
     if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
-      yield put(fetchOrganizationBySlugAction(organizationSlug));
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
+      activeOrganization = yield select(activeOrganizationSelector);
     }
-    activeOrganization = yield select(activeOrganizationSelector);
     yield put(fetchOrganizationProjectsAction(activeOrganization.id));
   } catch (error) {
     yield put(
