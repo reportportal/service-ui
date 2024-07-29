@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './dropdownOption.scss';
@@ -22,7 +22,6 @@ import styles from './dropdownOption.scss';
 const cx = classNames.bind(styles);
 
 export const DropdownOption = React.forwardRef((props, ref) => {
-  const [isTextTruncated, setIsTextTruncated] = useState(false);
   const {
     option: { value, disabled, hidden, label, title, groupRef },
     selected,
@@ -34,9 +33,6 @@ export const DropdownOption = React.forwardRef((props, ref) => {
   } = props;
 
   const onChangeHandler = () => onChange?.(value);
-  const handleOptionHover = ({ target }) => {
-    setIsTextTruncated(target.offsetWidth < target.scrollWidth);
-  };
 
   return (
     <div
@@ -46,15 +42,12 @@ export const DropdownOption = React.forwardRef((props, ref) => {
         hidden,
         hover: highlightHovered,
       })}
-      title={((disabled || isTextTruncated) && title) || undefined}
+      title={title}
       onClick={onChangeHandler}
       ref={ref}
       onMouseEnter={onMouseEnter}
     >
-      <div
-        className={cx('single-option', { 'sub-option': !!groupRef })}
-        onMouseEnter={handleOptionHover}
-      >
+      <div className={cx('single-option', { 'sub-option': !!groupRef })}>
         {render ? render(props) : label}
       </div>
     </div>
