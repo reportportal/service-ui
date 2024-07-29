@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal, Toggle } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { PATTERN_TYPES, REGEX_PATTERN } from 'common/constants/patternTypes';
 import { commonValidators } from 'common/utils/validation';
@@ -29,7 +29,6 @@ import { formValueSelector, reduxForm } from 'redux-form';
 import { FieldProvider } from 'components/fields';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Toggle } from 'componentLibrary/toggle';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { RegExEditor } from 'components/inputs/regExEditor';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -62,7 +61,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={data.modalTitle || formatMessage(messages.createPatternModalHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
@@ -110,7 +109,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           </FieldErrorHint>
         </FieldElement>
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 CreatePatternAnalysisModal.propTypes = {

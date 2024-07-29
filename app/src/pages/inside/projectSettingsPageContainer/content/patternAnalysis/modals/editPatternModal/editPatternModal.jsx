@@ -24,7 +24,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { useDispatch } from 'react-redux';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { useTracking } from 'react-tracking';
 import { FieldText } from 'componentLibrary/fieldText';
@@ -57,7 +57,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.headerTitle)}
       okButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -79,7 +79,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
           <FieldText maxLength={55} defaultWidth={false} />
         </FieldErrorHint>
       </FieldElement>
-    </ModalLayout>
+    </Modal>
   );
 };
 EditPatternModal.propTypes = {

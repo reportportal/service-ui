@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
@@ -44,7 +44,7 @@ const DeleteDefectTypeModal = ({
   const dispatch = useDispatch();
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.title, { name })}
       okButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -57,7 +57,7 @@ const DeleteDefectTypeModal = ({
       onClose={() => dispatch(hideModalAction())}
     >
       <div>{formatMessage(messages.message, { name })}</div>
-    </ModalLayout>
+    </Modal>
   );
 };
 DeleteDefectTypeModal.propTypes = {

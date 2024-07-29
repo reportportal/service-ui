@@ -21,7 +21,7 @@ import { useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils/validation';
@@ -172,7 +172,7 @@ const AddEditDefectTypeModal = ({
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.title, {
         actionType: formatMessage(messages[data.actionType]),
       })}
@@ -180,6 +180,7 @@ const AddEditDefectTypeModal = ({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
     >
       {actionType === MODAL_ACTION_TYPE_ADD && formatMessage(messages.description)}
       <div className={cx('content')}>
@@ -231,7 +232,7 @@ const AddEditDefectTypeModal = ({
           <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
         </FieldElement>
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 AddEditDefectTypeModal.propTypes = {

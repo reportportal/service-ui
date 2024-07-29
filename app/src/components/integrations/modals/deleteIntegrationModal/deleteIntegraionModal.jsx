@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 
 const DeleteIntegrationModal = ({ data }) => {
@@ -44,14 +44,14 @@ const DeleteIntegrationModal = ({ data }) => {
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={data.modalTitle}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
       {data.description}
-    </ModalLayout>
+    </Modal>
   );
 };
 DeleteIntegrationModal.propTypes = {

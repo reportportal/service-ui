@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
@@ -41,7 +41,7 @@ const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
   const dispatch = useDispatch();
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.title, { pluginType: capitalizeWord(type) })}
       okButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -56,7 +56,7 @@ const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
       onClose={() => dispatch(hideModalAction())}
     >
       <div>{Parser(formatMessage(messages.message))}</div>
-    </ModalLayout>
+    </Modal>
   );
 };
 DeleteNotificationCaseModal.propTypes = {

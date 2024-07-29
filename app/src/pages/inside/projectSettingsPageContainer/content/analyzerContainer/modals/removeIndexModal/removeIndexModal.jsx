@@ -28,7 +28,7 @@ import {
 import { projectIdSelector } from 'controllers/pages';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 
 const messages = defineMessages({
   removeIndexHeader: {
@@ -78,14 +78,14 @@ const RemoveIndexModal = () => {
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.removeIndexHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
       {formatMessage(messages.contentHeaderMessage)}
-    </ModalLayout>
+    </Modal>
   );
 };
 
