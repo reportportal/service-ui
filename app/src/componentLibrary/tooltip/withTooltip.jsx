@@ -21,6 +21,7 @@ import ReactDOM from 'react-dom';
 import styles from './withTooltip.scss';
 
 const cx = classNames.bind(styles);
+const TOOLTIP_DELAY_MS = 300;
 const SAFE_ZONE = 100;
 
 export const withTooltip = ({
@@ -34,7 +35,6 @@ export const withTooltip = ({
   side,
   noArrow,
   dataAutomationId,
-  delay,
 }) => (WrappedComponent) => (props) => {
   const [isOpened, setOpened] = useState(false);
   const timeoutId = useRef(null);
@@ -52,11 +52,7 @@ export const withTooltip = ({
   };
 
   const handleShowTooltip = () => {
-    if (delay) {
-      timeoutId.current = setTimeout(() => setOpened(true), delay);
-    } else {
-      setOpened(true);
-    }
+    timeoutId.current = setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS);
   };
 
   return (
