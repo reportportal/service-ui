@@ -154,7 +154,7 @@ const AddEditDefectTypeModal = ({
   };
 
   const okButton = {
-    text:
+    children:
       actionType === MODAL_ACTION_TYPE_ADD
         ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
         : formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -164,7 +164,7 @@ const AddEditDefectTypeModal = ({
   };
 
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   const normalizeColor = (currentColor) => {

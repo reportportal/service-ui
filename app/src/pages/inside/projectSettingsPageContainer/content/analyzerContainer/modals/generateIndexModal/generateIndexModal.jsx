@@ -83,11 +83,11 @@ const GenerateIndexModal = ({ data }) => {
   };
 
   const okButton = {
-    text: formatMessage(messages.generateButtonText),
+    children: formatMessage(messages.generateButtonText),
     onClick: onClickGenerate,
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (

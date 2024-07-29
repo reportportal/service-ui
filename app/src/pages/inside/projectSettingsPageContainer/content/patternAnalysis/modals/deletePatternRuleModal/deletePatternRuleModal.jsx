@@ -29,12 +29,12 @@ const DeletePatternRuleModal = ({ data }) => {
   const { formatMessage } = useIntl();
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: data.onDelete,
     danger: true,
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (

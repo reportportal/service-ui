@@ -69,12 +69,12 @@ const RemoveIndexModal = () => {
   };
 
   const okButton = {
-    text: formatMessage(messages.removeButtonText),
+    children: formatMessage(messages.removeButtonText),
     danger: true,
     onClick: onClickRemove,
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (

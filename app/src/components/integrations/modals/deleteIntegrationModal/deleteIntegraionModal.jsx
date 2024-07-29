@@ -33,14 +33,14 @@ const DeleteIntegrationModal = ({ data }) => {
   };
 
   const okButton = {
-    text: data.isReset
+    children: data.isReset
       ? formatMessage(COMMON_LOCALE_KEYS.RESET)
       : formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: onDelete,
     danger: true,
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (

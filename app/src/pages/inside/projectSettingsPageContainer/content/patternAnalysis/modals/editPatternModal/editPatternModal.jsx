@@ -60,11 +60,11 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
     <Modal
       title={formatMessage(messages.headerTitle)}
       okButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
+        children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
         onClick: handleSubmit(saveAndClose),
       }}
       cancelButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}

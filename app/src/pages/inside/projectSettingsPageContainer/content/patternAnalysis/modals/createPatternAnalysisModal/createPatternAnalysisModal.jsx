@@ -53,11 +53,11 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
   const { formatMessage } = useIntl();
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSave)(),
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (

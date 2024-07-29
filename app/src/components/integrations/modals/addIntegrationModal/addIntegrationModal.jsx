@@ -87,13 +87,13 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   };
 
   const okButton = {
-    text: customProps.editAuthMode
+    children: customProps.editAuthMode
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;

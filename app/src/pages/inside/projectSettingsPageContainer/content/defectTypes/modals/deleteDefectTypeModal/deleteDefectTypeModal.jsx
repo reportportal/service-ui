@@ -47,12 +47,12 @@ const DeleteDefectTypeModal = ({
     <Modal
       title={formatMessage(messages.title, { name })}
       okButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         danger: true,
         onClick: onSave,
       }}
       cancelButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
     >

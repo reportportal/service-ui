@@ -281,7 +281,7 @@ const AddEditNotificationModal = ({
   };
 
   const okButton = {
-    text:
+    children:
       actionType === MODAL_ACTION_TYPE_ADD
         ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
         : formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -291,7 +291,7 @@ const AddEditNotificationModal = ({
   };
 
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
