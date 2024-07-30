@@ -165,6 +165,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      isExtendedNav
     />
   );
 

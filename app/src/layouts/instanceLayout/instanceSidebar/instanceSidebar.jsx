@@ -133,7 +133,6 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
-      isExtendedNav
     />
   );
 
