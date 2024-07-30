@@ -21,18 +21,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal, Checkbox, Toggle } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Toggle } from 'componentLibrary/toggle';
 import { URLS } from 'common/urls';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Checkbox } from '@reportportal/ui-kit';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
@@ -283,7 +281,7 @@ const AddEditNotificationModal = ({
   };
 
   const okButton = {
-    text:
+    children:
       actionType === MODAL_ACTION_TYPE_ADD
         ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
         : formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -293,7 +291,7 @@ const AddEditNotificationModal = ({
   };
 
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
@@ -317,7 +315,7 @@ const AddEditNotificationModal = ({
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.title, {
         actionType: formatMessage(messages[data.actionType]),
         pluginType: capitalizeWord(data.type),
@@ -326,9 +324,10 @@ const AddEditNotificationModal = ({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
       footerNode={
         <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
-          <Toggle className={cx('toggle')} dataAutomationId="enabledToggle">
+          <Toggle className={cx('toggle')} data-automation-id="enabledToggle">
             {formatMessage(messages.active)}
           </Toggle>
         </FieldProvider>
@@ -432,7 +431,7 @@ const AddEditNotificationModal = ({
           </FieldElement>
         )}
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 
