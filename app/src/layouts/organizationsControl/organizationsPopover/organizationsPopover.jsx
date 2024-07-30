@@ -15,7 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
@@ -24,11 +24,21 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
 import { OrganizationsItem } from './organizationsItem';
-import { messages } from '../../messages';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
 const MARGIN_TOP_AND_MARGIN_BOTTOM = 172;
+
+export const messages = defineMessages({
+  allOrganizations: {
+    id: 'OrganizationsControl.allOrganizations',
+    defaultMessage: 'All organizations',
+  },
+  assignmentsList: {
+    id: 'OrganizationsControl.assignmentsList',
+    defaultMessage: 'Assignments list',
+  },
+});
 
 export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
@@ -59,6 +69,9 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           <div className={cx('divider')} />
         </>
       )}
+      <div className={cx('organizations-assignments')}>
+        {formatMessage(messages.assignmentsList)}
+      </div>
       <ScrollWrapper
         autoHide
         autoHeight
