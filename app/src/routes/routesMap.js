@@ -54,10 +54,16 @@ import {
   clearPageStateAction,
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-  USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
   userAssignedSelector,
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATION_MEMBERS_PAGE,
+  ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATIONS_PAGE,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -95,12 +101,6 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import {
-  ORGANIZATION_PROJECTS_PAGE,
-  ORGANIZATION_MEMBERS_PAGE,
-  ORGANIZATION_SETTINGS_PAGE,
-  ORGANIZATIONS_PAGE,
-} from 'controllers/pages/constants';
-import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
 } from 'controllers/organizations/organization/actionCreators';
@@ -127,12 +127,33 @@ const routesMap = {
 
   ALL_ORGANIZATIONS_PAGE: redirectRoute('/', () => ({ type: ORGANIZATIONS_PAGE })),
   ORGANIZATIONS_PAGE: redirectRoute('/organizations', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
-    type: USER_PROFILE_SUB_PAGE,
+
+  USER_PROFILE_PAGE_INSTANCE_LEVEL: redirectRoute('/userProfile', () => ({
+    type: USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL,
     payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
   })),
 
-  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL: redirectRoute(
+    'organizations/:organizationSlug?/userProfile',
+    ({ organizationSlug }) => ({
+      type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+      payload: { organizationSlug, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    }),
+  ),
+
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `organizations/:organizationSlug?/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+
+  USER_PROFILE_PAGE_PROJECT_LEVEL: redirectRoute(
+    'organizations/:organizationSlug?/projects/:projectSlug/userProfile',
+    (payload) => ({
+      type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+      payload: { ...payload, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    }),
+  ),
+
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `organizations/:organizationSlug?/projects/:projectSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 
