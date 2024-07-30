@@ -26,9 +26,9 @@ import {
   userProfileRouteSelector,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
-  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE,
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
-  USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
 } from 'controllers/pages';
 import { allowDeleteAccountSelector } from 'controllers/appInfo/selectors';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -67,37 +67,6 @@ const messages = defineMessages({
   },
 });
 
-const getProfilePageLink = (profileRoute, typeRoute, organizationSlug, projectSlug) => ({
-  type: typeRoute,
-  payload: {
-    profileRoute,
-    organizationSlug,
-    projectSlug,
-  },
-});
-
-const getNavigationTabsConfig = (
-  formatMessage,
-  { typeRoute, projectAssignmentRoute, apyKeysRoute, configRoute, organizationSlug, projectSlug },
-) => ({
-  [projectAssignmentRoute]: {
-    name: formatMessage(messages.profilePageProjectAssignmentTab),
-    link: getProfilePageLink(projectAssignmentRoute, typeRoute, organizationSlug, projectSlug),
-    component: <AssignedProjectsBlock />,
-  },
-  [apyKeysRoute]: {
-    name: formatMessage(messages.profilePageProjectApiKeysTab),
-    link: getProfilePageLink(apyKeysRoute, typeRoute, organizationSlug, projectSlug),
-    component: <ApiKeys />,
-    eventInfo: PROFILE_EVENTS.CLICK_API_KEYS_TAB_EVENT,
-  },
-  [configRoute]: {
-    name: formatMessage(messages.profilePageConfigurationExamplesTab),
-    link: getProfilePageLink(configRoute, typeRoute, organizationSlug, projectSlug),
-    component: <ConfigExamplesBlock />,
-  },
-});
-
 @connect((state) => ({
   activeTab: userProfileRouteSelector(state),
   allowDeleteAccount: allowDeleteAccountSelector(state),
@@ -124,34 +93,58 @@ export class ProfilePage extends Component {
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
 
-  getTypeRoute = () => {
+  getRouteLink = (profileRoute) => {
     const { organizationSlug, projectSlug } = this.props;
-    const tabRoutes = {
-      projectAssignmentRoute: PROJECT_ASSIGNMENT_ROUTE,
-      apyKeysRoute: API_KEYS_ROUTE,
-      configRoute: CONFIG_EXAMPLES_ROUTE,
-    };
 
-    if (projectSlug) {
+    if (projectSlug && organizationSlug) {
       return {
-        ...tabRoutes,
-        typeRoute: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
-        organizationSlug,
-        projectSlug,
+        type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          profileRoute,
+        },
       };
-    }
-
-    if (organizationSlug && !projectSlug) {
+    } else if (organizationSlug) {
       return {
-        ...tabRoutes,
-        typeRoute: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
-        organizationSlug,
+        type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+        payload: {
+          organizationSlug,
+          profileRoute,
+        },
       };
     }
 
     return {
-      ...tabRoutes,
-      typeRoute: USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL,
+      type: USER_PROFILE_SUB_PAGE,
+      payload: {
+        profileRoute,
+      },
+    };
+  };
+
+  getNavigationTabsConfig = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    return {
+      [PROJECT_ASSIGNMENT_ROUTE]: {
+        name: formatMessage(messages.profilePageProjectAssignmentTab),
+        link: this.getRouteLink(PROJECT_ASSIGNMENT_ROUTE),
+        component: <AssignedProjectsBlock />,
+      },
+      [API_KEYS_ROUTE]: {
+        name: formatMessage(messages.profilePageProjectApiKeysTab),
+        link: this.getRouteLink(API_KEYS_ROUTE),
+        component: <ApiKeys />,
+        eventInfo: PROFILE_EVENTS.CLICK_API_KEYS_TAB_EVENT,
+      },
+      [CONFIG_EXAMPLES_ROUTE]: {
+        name: formatMessage(messages.profilePageConfigurationExamplesTab),
+        link: this.getRouteLink(CONFIG_EXAMPLES_ROUTE),
+        component: <ConfigExamplesBlock />,
+      },
     };
   };
 
@@ -163,7 +156,7 @@ export class ProfilePage extends Component {
           <div className={cx('section-wrapper')}>
             <PersonalInfoBlock />
             <NavigationTabs
-              config={getNavigationTabsConfig(this.props.intl.formatMessage, this.getTypeRoute())}
+              config={this.getNavigationTabsConfig()}
               activeTab={this.props.activeTab}
               onChangeTab={this.props.dispatch}
             />

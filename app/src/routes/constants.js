@@ -50,6 +50,12 @@ import {
   PROJECT_PLUGIN_PAGE,
   UNIQUE_ERRORS_PAGE,
   ACCOUNT_REMOVED_PAGE,
+  USER_PROFILE_PAGE,
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -74,12 +80,15 @@ export const pageRendering = {
   },
   REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
-  USER_PROFILE_PAGE_INSTANCE_LEVEL: { component: ProfilePage, layout: InstanceLayout },
-  USER_PROFILE_SUB_PAGE_INSTANCE_LEVEL: { component: ProfilePage, layout: InstanceLayout },
-  USER_PROFILE_PAGE_ORGANIZATION_LEVEL: { component: ProfilePage, layout: OrganizationLayout },
-  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL: { component: ProfilePage, layout: OrganizationLayout },
-  USER_PROFILE_PAGE_PROJECT_LEVEL: { component: ProfilePage, layout: ProjectLayout },
-  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL: { component: ProfilePage, layout: ProjectLayout },
+  [USER_PROFILE_PAGE]: { component: ProfilePage, layout: InstanceLayout },
+  [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: InstanceLayout },
+  [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: { component: ProfilePage, layout: OrganizationLayout },
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: {
+    component: ProfilePage,
+    layout: OrganizationLayout,
+  },
+  [USER_PROFILE_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   API_PAGE: { component: ApiPage, layout: ProjectLayout },
   ORGANIZATIONS_PAGE: {
     component: ProjectsPage,
