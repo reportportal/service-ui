@@ -42,7 +42,7 @@ export const OrganizationsControl = ({
       <div>
         <div
           className={cx('organization-btn-wrapper', {
-            'instance-level': !isExtendedNav,
+            'not-extended': !isExtendedNav,
           })}
         >
           {isExtendedNav ? (
