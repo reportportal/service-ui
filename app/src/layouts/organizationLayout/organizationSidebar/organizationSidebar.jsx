@@ -124,6 +124,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      isExtendedNav
     />
   );
 
