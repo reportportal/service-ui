@@ -26,6 +26,8 @@ import {
   MULTIPLE_AUTOCOMPLETE_TYPE,
   CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
   MULTILINE_TEXT_TYPE,
+  OPTION_TYPE,
+  VALUE_NONE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -42,6 +44,9 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
   fields.map((field) => {
     if (!field?.definedValues?.length) {
       return field;
+    }
+    if (!field.required && field.fieldType === OPTION_TYPE) {
+      field.definedValues.unshift({ [VALUE_NAME_KEY]: VALUE_NONE });
     }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
