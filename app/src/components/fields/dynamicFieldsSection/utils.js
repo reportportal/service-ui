@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { omit } from 'common/utils/omit';
 import {
   ARRAY_TYPE,
   DROPDOWN_TYPE,
@@ -52,7 +53,10 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
 
 export const mergeFields = (savedFields, fetchedFields) =>
   fetchedFields.map((field) => {
-    const savedField = savedFields.find((item) => item.id === field.id);
+    const savedField = omit(
+      savedFields.find((item) => item.id === field.id),
+      ['definedValues'],
+    );
     return savedField ? { ...field, ...savedField } : field;
   });
 
