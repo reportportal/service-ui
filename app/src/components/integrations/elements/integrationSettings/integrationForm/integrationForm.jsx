@@ -24,7 +24,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { removeNoneValues } from 'components/integrations/elements/integrationSettings/integrationForm/utils';
+import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);

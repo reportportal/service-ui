@@ -236,7 +236,9 @@ export class BtsPropertiesForIssueForm extends Component {
     const fields = initialData.defectFormFields || [];
     let normalizedFields = [];
     let checkedFieldsIds = {};
+    console.log(fields, 'fields');
     if (fields.length) {
+      console.log(fields);
       normalizedFields = normalizeFieldsWithOptions(fields, this.defaultOptionValueKey);
       const fieldsValues = mapFieldsToValues(normalizedFields);
       initialize(fieldsValues);
@@ -293,7 +295,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   updateFields = (issueTypeValue) =>
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
-      let { defectFormFields } = this.props.initialData;
+      let { defectFormFields = [] } = this.props.initialData;
       defectFormFields = normalizeFieldsWithOptions(defectFormFields, this.defaultOptionValueKey);
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
 

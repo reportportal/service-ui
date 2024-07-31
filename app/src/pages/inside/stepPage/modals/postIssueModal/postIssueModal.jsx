@@ -37,6 +37,7 @@ import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
+  removeNoneValues,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -273,6 +274,7 @@ export class PostIssueModal extends Component {
   };
 
   prepareDataToSend = (formData) => {
+    const refinedData = removeNoneValues(formData);
     const {
       getBtsIntegrationBackLink,
       data: { items },
@@ -283,7 +285,7 @@ export class PostIssueModal extends Component {
         field.fieldType === AUTOCOMPLETE_TYPE ||
         field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
         field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
-      const formFieldData = formData[field.id];
+      const formFieldData = refinedData[field.id];
       let preparedFormFieldData = formFieldData;
       if (!Array.isArray(formFieldData)) {
         preparedFormFieldData = formFieldData ? [formFieldData] : [];
@@ -295,9 +297,9 @@ export class PostIssueModal extends Component {
       {},
     );
     const data = {
-      [INCLUDE_COMMENTS_KEY]: formData[INCLUDE_COMMENTS_KEY],
-      [INCLUDE_ATTACHMENTS_KEY]: formData[INCLUDE_ATTACHMENTS_KEY],
-      [INCLUDE_LOGS_KEY]: formData[INCLUDE_LOGS_KEY],
+      [INCLUDE_COMMENTS_KEY]: refinedData[INCLUDE_COMMENTS_KEY],
+      [INCLUDE_ATTACHMENTS_KEY]: refinedData[INCLUDE_ATTACHMENTS_KEY],
+      [INCLUDE_LOGS_KEY]: refinedData[INCLUDE_LOGS_KEY],
       logQuantity: LOG_QUANTITY,
       item: items[0].id,
       fields,
