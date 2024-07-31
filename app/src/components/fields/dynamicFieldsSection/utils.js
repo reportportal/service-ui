@@ -45,7 +45,7 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
     }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
-    if (!value?.length) {
+    if (!value?.length && field.fieldType !== ARRAY_TYPE) {
       value = [definedValues[0][defaultOptionValueKey]];
     }
     return { ...field, definedValues, value };
