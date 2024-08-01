@@ -31,10 +31,12 @@ const DeletePatternRuleModal = ({ data }) => {
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: data.onDelete,
-    danger: true,
+    variant: 'danger',
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   return (

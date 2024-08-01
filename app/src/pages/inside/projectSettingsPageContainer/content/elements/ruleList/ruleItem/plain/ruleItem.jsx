@@ -68,7 +68,6 @@ export const RuleItem = ({
             value={enabled}
             onChange={(e) => onToggleActive(e.target.checked)}
             disabled={disabled}
-            data-automation-id="enabledToggle"
           />
         </span>
       )}

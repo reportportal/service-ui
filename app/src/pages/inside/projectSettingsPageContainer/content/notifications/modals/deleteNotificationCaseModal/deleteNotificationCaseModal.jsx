@@ -45,13 +45,15 @@ const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
       title={formatMessage(messages.title, { pluginType: capitalizeWord(type) })}
       okButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        danger: true,
+        variant: 'danger',
         onClick: () => {
           onSave();
         },
+        'data-automation-id': 'submitButton',
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        'data-automation-id': 'cancelButton',
       }}
       onClose={() => dispatch(hideModalAction())}
     >

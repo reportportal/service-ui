@@ -91,9 +91,11 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;

@@ -70,7 +70,7 @@ const RemoveIndexModal = () => {
 
   const okButton = {
     children: formatMessage(messages.removeButtonText),
-    danger: true,
+    variant: 'danger',
     onClick: onClickRemove,
   };
   const cancelButton = {
