@@ -39,11 +39,8 @@ export const URLS = {
     `${urlBase}data/${activeProject}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams({
-      'page.page': 1,
-      'page.size': 300,
-    })}`,
+  dashboards: (activeProject, params) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams({ ...params })}`,
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
   widgetMultilevel: (activeProject, widgetId, params) =>

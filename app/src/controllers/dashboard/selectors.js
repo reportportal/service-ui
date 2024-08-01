@@ -16,6 +16,7 @@
 
 import { createSelector } from 'reselect';
 import { activeDashboardIdSelector, createQueryParametersSelector } from 'controllers/pages';
+import { NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.dashboards || {};
 export const loadingSelector = (state) => domainSelector(state).loading || false;
@@ -40,4 +41,6 @@ export const totalDashboardsSelector = (state) =>
 
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
-export const querySelector = createQueryParametersSelector();
+export const querySelector = createQueryParametersSelector({ namespace: NAMESPACE });
+
+export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;

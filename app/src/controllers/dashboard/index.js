@@ -33,6 +33,7 @@ export {
   dashboardFullScreenModeSelector,
   loadingSelector,
   totalDashboardsSelector,
+  dashboardPaginationSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,
@@ -40,5 +41,6 @@ export {
   dashboardItemPropTypes,
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
+  NAMESPACE,
 } from './constants';
 export { dashboardSagas } from './sagas';

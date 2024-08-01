@@ -31,8 +31,12 @@ import {
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
   loadingSelector,
+  NAMESPACE,
+  dashboardPaginationSelector,
 } from 'controllers/dashboard';
+import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
@@ -89,6 +93,10 @@ const messages = defineMessages({
     addDashboard: addDashboardAction,
   },
 )
+@withPagination({
+  paginationSelector: dashboardPaginationSelector,
+  namespace: NAMESPACE,
+})
 @withFilter()
 @injectIntl
 @track({ page: DASHBOARD_PAGE })
@@ -110,6 +118,12 @@ export class DashboardPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     loading: PropTypes.bool,
+    pageCount: PropTypes.number,
+    activePage: PropTypes.number,
+    itemCount: PropTypes.number,
+    pageSize: PropTypes.number,
+    onChangePage: PropTypes.func,
+    onChangePageSize: PropTypes.func,
   };
 
   static defaultProps = {
@@ -124,6 +138,12 @@ export class DashboardPage extends Component {
     onFilterChange: () => {},
     changeVisibilityType: () => {},
     loading: false,
+    pageCount: null,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
+    itemCount: null,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
+    onChangePage: () => {},
+    onChangePageSize: () => {},
   };
 
   onDeleteDashboardItem = (item) => {
@@ -200,7 +220,20 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter, dashboardItems, loading } = this.props;
+    const {
+      gridType,
+      userInfo,
+      onFilterChange,
+      filter,
+      dashboardItems,
+      loading,
+      pageCount,
+      activePage,
+      itemCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
+    } = this.props;
 
     return (
       <PageLayout>
@@ -226,6 +259,16 @@ export class DashboardPage extends Component {
             onAddItem={this.onAddDashboardItem}
             filter={filter}
           />
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );
