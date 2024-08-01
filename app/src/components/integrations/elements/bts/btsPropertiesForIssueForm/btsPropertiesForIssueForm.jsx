@@ -236,9 +236,7 @@ export class BtsPropertiesForIssueForm extends Component {
     const fields = initialData.defectFormFields || [];
     let normalizedFields = [];
     let checkedFieldsIds = {};
-    console.log(fields, 'fields');
     if (fields.length) {
-      console.log(fields);
       normalizedFields = normalizeFieldsWithOptions(fields, this.defaultOptionValueKey);
       const fieldsValues = mapFieldsToValues(normalizedFields);
       initialize(fieldsValues);
