@@ -44,7 +44,10 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
     if (!field?.definedValues?.length) {
       return field;
     }
-    if (!field.required && field.fieldType !== ARRAY_TYPE) {
+    const isNoneValueExist = field.definedValues.some(
+      (item) => item[VALUE_NAME_KEY] === VALUE_NONE,
+    );
+    if (!field.required && field.fieldType !== ARRAY_TYPE && !isNoneValueExist) {
       field.definedValues.unshift({ [VALUE_NAME_KEY]: VALUE_NONE });
     }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
