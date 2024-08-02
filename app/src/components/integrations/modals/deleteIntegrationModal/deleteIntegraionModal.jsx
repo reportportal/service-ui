@@ -37,7 +37,7 @@ const DeleteIntegrationModal = ({ data }) => {
       ? formatMessage(COMMON_LOCALE_KEYS.RESET)
       : formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: onDelete,
-    danger: true,
+    variant: 'danger',
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
