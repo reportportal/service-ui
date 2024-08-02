@@ -50,7 +50,10 @@ export const IntegrationCollectionItem = ({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
+    Promise.all([
+      fetch(URLS.testIntegrationConnection(projectId || activeProject, id)),
+      fetch(URLS.testIntegrationAvailability(id)),
+    ])
       .then(() => {
         setConnected(true);
       })
