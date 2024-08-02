@@ -22,7 +22,7 @@ import { reduxForm } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations/formFieldComponentsMap';
@@ -87,13 +87,13 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   };
 
   const okButton = {
-    text: customProps.editAuthMode
+    children: customProps.editAuthMode
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
@@ -106,12 +106,13 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     (integrationFieldsExtension && ExtensionLoader);
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
     >
       {data.hasWarningMessage && (
         <SystemMessage
@@ -132,7 +133,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
           {...customProps}
         />
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 AddIntegrationModal.propTypes = {

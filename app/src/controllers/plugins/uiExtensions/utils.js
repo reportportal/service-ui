@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,10 @@
  * limitations under the License.
  */
 
-export { Toggle } from './toggle';
+import { MANIFEST_FILE_KEY } from './constants';
+
+export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
+  enabled && details?.commonCommands?.length && details.commonCommands.includes(command);
+
+export const isPluginManifestAvailable = ({ enabled, details }) =>
+  enabled && details?.binaryData?.[MANIFEST_FILE_KEY];

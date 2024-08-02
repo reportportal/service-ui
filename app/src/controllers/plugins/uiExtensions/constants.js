@@ -1,7 +1,23 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+// extension types
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
 export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
-export const EXTENSION_TYPE_MODAL = 'uiExtension:modal';
 export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';
 export const EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT = 'uiExtension:launchItemComponent';
 export const EXTENSION_TYPE_INTEGRATION_FORM_FIELDS = 'uiExtension:integrationFormFields';
@@ -22,22 +38,20 @@ export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAdd
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
-export const COMMAND_GET_FILE = 'getFile';
+// plugin commands
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
 export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
 export const COMMAND_POST_ISSUE = 'postTicket';
 export const COMMAND_GET_ISSUE = 'getIssue';
 export const COMMAND_GET_CLUSTERS = 'getClusters';
 
-export const EXTENSION_LOAD_START = 'extensionLoadStart';
-export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
-
-/* New plugins mechanism related code below */
-
-export const METADATA_FILE_KEY = 'metadata';
+// core files keys
+export const MANIFEST_FILE_KEY = 'metadata';
 export const MAIN_FILE_KEY = 'main';
+export const ICON_FILE_KEY = 'icon';
 
-export const FETCH_EXTENSIONS_METADATA_SUCCESS = 'fetchExtensionsMetadataSuccess';
-export const UPDATE_EXTENSION_METADATA = 'updateExtensionMetadata';
+// redux actions
+export const FETCH_EXTENSION_MANIFESTS_SUCCESS = 'fetchExtensionManifestsSuccess';
+export const UPDATE_EXTENSION_MANIFEST = 'updateExtensionManifest';
 
 export const PLUGIN_TYPE_REMOTE = 'remote';

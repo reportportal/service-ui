@@ -1131,7 +1131,7 @@
   "LaunchLevelEntities.launchNumberEntityHint": "此过滤器仅接受数字",
   "LaunchLevelEntities.launchNumberPlaceholder": "请输入编号",
   "LaunchLevelEntities.ownerName.placeholder": "请输入所有者姓名",
-  "LaunchMergeModal.launchDescriptionHint": "描述文本的长度应不超过1024个字符",
+  "LaunchMergeModal.launchDescriptionHint": "描述文本的长度应不超过2048个字符",
   "LaunchMergeModal.launchNameHint": "测试任务名字的取值范围是1~256。",
   "LaunchStatistics.noDataMessage": "没有运行测试任务",
   "LaunchStatisticsControls.ContentFieldsValidationError": "您必须至少选择一项测试项",

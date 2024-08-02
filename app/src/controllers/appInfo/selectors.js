@@ -18,6 +18,7 @@ import { createSelector } from 'reselect';
 import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
+  enabledPattersSelector,
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
@@ -77,6 +78,7 @@ export const baseEventParametersSelector = createSelector(
   projectInfoIdSelector,
   isAdminSelector,
   analyzerExtensionsSelector,
+  enabledPattersSelector,
   (
     instanceId,
     buildVersion,
@@ -86,12 +88,14 @@ export const baseEventParametersSelector = createSelector(
     projectInfoId,
     isAdmin,
     analyzerExtensions,
+    enabledPatterns,
   ) => ({
     instanceId,
     buildVersion,
     userId,
     isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
+    isPatternAnalyzerEnabled:
+      !!enabledPatterns.length && String(isPatternAnalyzerEnabled) === 'true',
     projectInfoId,
     isAdmin,
     isAnalyzerAvailable: !!analyzerExtensions.length,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import LdapIcon from 'common/img/plugins/ldap.png';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
+// Constants for plugins that do not provide UI extensions in their bundles
 export const PLUGIN_NAME_TITLES = {
   [JIRA]: 'JIRA Server',
   [RALLY]: 'RALLY',

@@ -68,7 +68,7 @@ const messages = defineMessages({
   },
   launchDescriptionHint: {
     id: 'LaunchMergeModal.launchDescriptionHint',
-    defaultMessage: 'Description should have size not more than 1024 symbols.',
+    defaultMessage: 'Description should have size not more than 2048 symbols.',
   },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',

@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { Toggle } from 'componentLibrary/toggle';
+import { Toggle } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
@@ -68,7 +68,7 @@ export const RuleItem = ({
             value={enabled}
             onChange={(e) => onToggleActive(e.target.checked)}
             disabled={disabled}
-            dataAutomationId="enabledToggle"
+            data-automation-id="enabledToggle"
           />
         </span>
       )}

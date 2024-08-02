@@ -41,39 +41,28 @@ import {
   enabledPluginNamesSelector,
   enabledPublicPluginNamesSelector,
 } from '../selectors';
-import { uiExtensionMap } from './uiExtensionStorage';
 
-export const extensionsLoadedSelector = (state) =>
-  domainSelector(state).uiExtensions.uiExtensionsLoaded;
-
-const extensionsMetadataSelector = (state) =>
-  domainSelector(state).uiExtensions.extensionsMetadata || [];
+const extensionManifestsSelector = (state) =>
+  domainSelector(state).uiExtensions.extensionManifests || [];
 
 const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPluginNamesSelector) =>
   createSelector(
     pluginNamesSelector,
-    extensionsMetadataSelector,
-    extensionsLoadedSelector,
-    (pluginNames, extensionsMetadata) => {
-      // TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
-      const uiExtensions = Array.from(uiExtensionMap.entries())
-        .filter(([name]) => pluginNames.includes(name))
-        .map(([, extensions]) => extensions);
-
-      // TODO: update 'pluginType' usage once the backend will be ready
-      const newExtensions = extensionsMetadata
+    extensionManifestsSelector,
+    (enabledPluginNames, extensionManifests) => {
+      // TODO: update 'pluginType' usage once the backend for remote plugins will be ready
+      const uiExtensions = extensionManifests
         .filter(
           ({ pluginName, pluginType }) =>
-            pluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
+            enabledPluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
         )
-        .map(({ extensions, ...commonMetadata }) =>
-          extensions.map((ext) => ({ ...ext, ...commonMetadata })),
+        .reduce(
+          (acc, { extensions, ...commonManifestProperties }) =>
+            acc.concat(extensions.map((ext) => ({ ...ext, ...commonManifestProperties }))),
+          [],
         );
 
-      return uiExtensions
-        .concat(newExtensions)
-        .reduce((acc, val) => acc.concat(val), [])
-        .filter((extension) => extension.type === type);
+      return uiExtensions.filter((extension) => extension.type === type);
     },
   );
 

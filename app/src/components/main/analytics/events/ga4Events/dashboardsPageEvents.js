@@ -95,9 +95,9 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  clickOnDashboardName: (dashboardName, dashboardId) => ({
+  clickOnDashboardName: (dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    element_name: dashboardName,
+    element_name: 'dashboard_name',
     number: dashboardId,
   }),
 

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { BigButton } from 'components/buttons/bigButton';
 import { useIntl } from 'react-intl';
@@ -42,14 +42,14 @@ FooterNode.propTypes = {
 
 export const ServiceVersionsBlockModal = ({ services, hideModal }) => {
   return (
-    <ModalLayout
+    <Modal
       onClose={hideModal}
       overlay={'light-cyan'}
       className={cx('modal-window-mobile')}
       footerNode={<FooterNode hideModal={hideModal} />}
     >
       <ServiceVersionsTooltip services={services} className={cx('tooltip-modal')} />
-    </ModalLayout>
+    </Modal>
   );
 };
 ServiceVersionsBlockModal.propTypes = {
