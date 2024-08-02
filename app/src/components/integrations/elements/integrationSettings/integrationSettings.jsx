@@ -80,10 +80,12 @@ export const IntegrationSettings = (props) => {
   const testIntegrationConnection = useCallback(() => {
     if ('id' in props.data && !props.preventTestConnection) {
       setLoading(true);
-      Promise.all([
-        fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id)),
-        fetch(URLS.testIntegrationAvailability(props.data.id)),
-      ])
+      const { isGlobal } = props;
+      const fetchConnection = isGlobal
+        ? fetch(URLS.testGlobalIntegrationConnection(props.data.id))
+        : fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id));
+
+      fetchConnection
         .then(() => {
           setConnected(true);
           setLoading(false);
