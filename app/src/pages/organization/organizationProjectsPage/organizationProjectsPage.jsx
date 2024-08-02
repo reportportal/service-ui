@@ -25,6 +25,7 @@ import { activeOrganizationLoadingSelector } from 'controllers/organizations/org
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { userRolesSelector } from 'controllers/pages';
+import { messagesWithPagination } from 'components/main/withPagination';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -68,7 +69,17 @@ export const OrganizationProjectsPage = () => {
                 emptyIcon={EmptyIcon}
               />
             ) : (
-              <ProjectsListTableWrapper projects={projects} />
+              <ProjectsListTableWrapper
+                projects={projects}
+                captions={{
+                  items: formatMessage(messagesWithPagination.items),
+                  of: formatMessage(messagesWithPagination.of),
+                  page: formatMessage(messagesWithPagination.page),
+                  goTo: formatMessage(messagesWithPagination.goToPage),
+                  goAction: formatMessage(messagesWithPagination.go),
+                  perPage: formatMessage(messagesWithPagination.perPage),
+                }}
+              />
             )}
           </>
         )}

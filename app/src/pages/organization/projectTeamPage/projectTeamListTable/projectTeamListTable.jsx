@@ -25,16 +25,17 @@ import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
-import { fetchMembersAction } from 'controllers/members';
+import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
+import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
+import { withPagination } from 'components/main/withPagination';
 import { messages } from './messages';
 import styles from './projectTeamListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingDirection }) => {
+const ProjectTeamListTableWrapped = ({ members, onChangeSorting, sortingDirection }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
@@ -168,4 +169,10 @@ ProjectTeamListTableWrapped.defaultProps = {
 export const ProjectTeamListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
-})(ProjectTeamListTableWrapped);
+})(
+  withPagination({
+    namespace: NAMESPACE,
+    pageSizeOptions: [20, 50, 100, 300],
+    paginationSelector: membersPaginationSelector,
+  })(ProjectTeamListTableWrapped),
+);
