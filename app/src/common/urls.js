@@ -294,6 +294,8 @@ export const URLS = {
     `${urlBase}integration/${projectId}/all/${type}`,
   testIntegrationConnection: (projectId, integrationId) =>
     `${urlBase}integration/${projectId}/${integrationId}/connection/test`,
+  testGlobalIntegrationConnection: (integrationId) =>
+    `${urlBase}integration/${integrationId}/connection/test`,
   pluginFileImport: (projectName, pluginName) =>
     `${urlBase}plugin/${projectName}/${pluginName}/import`,
 
