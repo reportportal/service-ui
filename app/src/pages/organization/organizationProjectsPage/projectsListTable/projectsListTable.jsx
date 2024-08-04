@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, MeatballMenuIcon, Pagination, Popover, Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -30,16 +30,30 @@ import {
   projectsPaginationSelector,
 } from 'controllers/organizations/projects/selectors';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/organizations/projects/constants';
-import { NAMESPACE } from 'controllers/instance/projects/constants';
-import { withPagination } from 'components/main/withPagination';
+import {
+  DEFAULT_PROJECTS_PAGE_SIZE,
+  DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
+} from 'controllers/organizations/projects/constants';
+import { withPagination } from 'controllers/pagination';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting }) => {
+export const ProjectsListTable = ({
+  projects,
+  sortingDirection,
+  onChangeSorting,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+  captions,
+}) => {
   const { formatMessage } = useIntl();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const loadingState = useSelector(loadingSelector);
@@ -130,17 +144,33 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
       <BubblesLoader />
     </div>
   ) : (
-    <Table
-      data={data}
-      primaryColumn={primaryColumn}
-      fixedColumns={fixedColumns}
-      sortingDirection={sortingDirection.toLowerCase()}
-      sortingColumn={primaryColumn}
-      sortableColumns={primaryColumn.key}
-      rowActionMenu={rowActionMenu}
-      className={cx('projects-list-table')}
-      onChangeSorting={onTableColumnSort}
-    />
+    <div className={cx('with-pagination-container')}>
+      <Table
+        data={data}
+        primaryColumn={primaryColumn}
+        fixedColumns={fixedColumns}
+        sortingDirection={sortingDirection.toLowerCase()}
+        sortingColumn={primaryColumn}
+        sortableColumns={primaryColumn.key}
+        rowActionMenu={rowActionMenu}
+        className={cx('projects-list-table')}
+        onChangeSorting={onTableColumnSort}
+      />
+      {pageCount > 1 && (
+        <div className={cx('with-pagination')}>
+          <Pagination
+            pageSize={pageSize}
+            activePage={activePage}
+            totalItems={itemCount}
+            totalPages={pageCount}
+            pageSizeOptions={[10, 20, 50, 100]}
+            changePage={onChangePage}
+            changePageSize={onChangePageSize}
+            captions={captions}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -148,10 +178,18 @@ ProjectsListTable.propTypes = {
   projects: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  pageSize: PropTypes.number,
+  captions: PropTypes.object.isRequired,
+  activePage: PropTypes.number.isRequired,
+  itemCount: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  onChangePageSize: PropTypes.func.isRequired,
 };
 
 ProjectsListTable.defaultProps = {
   projects: [],
+  pageSize: DEFAULT_PROJECTS_PAGE_SIZE,
 };
 
 export const ProjectsListTableWrapper = withSortingURL({
@@ -160,9 +198,6 @@ export const ProjectsListTableWrapper = withSortingURL({
   sortingKey: SORTING_KEY,
 })(
   withPagination({
-    namespace: NAMESPACE,
-    defaultPageSize: 20,
-    pageSizeOptions: [10, 20, 50, 100],
     paginationSelector: projectsPaginationSelector,
   })(ProjectsListTable),
 );

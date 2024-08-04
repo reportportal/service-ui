@@ -71,3 +71,15 @@
   align-items: center;
   height: 100%;
 }
+
+.with-pagination-container {
+  position: relative;
+}
+
+.with-pagination {
+  width: calc(100% - 60px);
+  margin: 0 30px;
+  background-color: $COLOR--bg-100;
+  position: sticky;
+  bottom: 0;
+}

@@ -22,7 +22,6 @@ import { loadingSelector, membersSelector } from 'controllers/members';
 import { useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { messagesWithPagination } from 'components/main/withPagination';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
@@ -63,21 +62,7 @@ export const ProjectTeamPage = () => {
           title={formatMessage(messages.title)}
           isNotEmpty={!isEmptyMembers}
         />
-        {isEmptyMembers ? (
-          getEmptyPageState()
-        ) : (
-          <ProjectTeamListTable
-            members={members}
-            captions={{
-              items: formatMessage(messagesWithPagination.items),
-              of: formatMessage(messagesWithPagination.of),
-              page: formatMessage(messagesWithPagination.page),
-              goTo: formatMessage(messagesWithPagination.goToPage),
-              goAction: formatMessage(messagesWithPagination.go),
-              perPage: formatMessage(messagesWithPagination.perPage),
-            }}
-          />
-        )}
+        {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
       </div>
     </ScrollWrapper>
   );

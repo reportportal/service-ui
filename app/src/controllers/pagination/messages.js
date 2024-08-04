@@ -16,7 +16,7 @@
 
 import { defineMessages } from 'react-intl';
 
-export const messagesWithPagination = defineMessages({
+export const messages = defineMessages({
   items: {
     id: 'WithPagination.items',
     defaultMessage: 'items',
