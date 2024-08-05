@@ -51,10 +51,11 @@ export const analyticsEventObserver = ReactObserver();
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
-        uid: `${userId}|${instanceId}`,
-        auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
-        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
+        auto_analysis:
+          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
+        uid: `${userId}|${instanceId}`,
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };

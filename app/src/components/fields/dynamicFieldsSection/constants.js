@@ -25,3 +25,4 @@ export const CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE = 'creatableMultiAutocomplete'
 
 export const VALUE_NAME_KEY = 'valueName';
 export const VALUE_ID_KEY = 'valueId';
+export const VALUE_NONE = 'None';

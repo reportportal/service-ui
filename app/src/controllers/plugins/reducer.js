@@ -119,9 +119,10 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
   }
 };
 
+// TODO: store remote plugins separately
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
-  publicPlugins: fetchReducer(PUBLIC_PLUGINS),
+  publicPlugins: queueReducers(fetchReducer(PUBLIC_PLUGINS), updatePluginLocallyReducer),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
   pluginsLoading: loadingReducer(NAMESPACE),

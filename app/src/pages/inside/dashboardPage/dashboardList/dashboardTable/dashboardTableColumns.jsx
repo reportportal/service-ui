@@ -42,7 +42,7 @@ export const NameColumn = track()(
           payload: { projectSlug, dashboardId, organizationSlug },
         }}
         onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(name, dashboardId));
+          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
         }}
       >
         {name}

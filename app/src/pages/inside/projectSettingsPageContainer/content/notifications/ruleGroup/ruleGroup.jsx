@@ -15,8 +15,7 @@
  */
 
 import { Layout } from 'pages/inside/projectSettingsPageContainer/content/layout';
-import { Toggle } from 'componentLibrary/toggle';
-import { Button } from '@reportportal/ui-kit';
+import { Button, Toggle } from '@reportportal/ui-kit';
 import addIcon from 'common/img/add-inline.svg';
 import React from 'react';
 import classNames from 'classnames/bind';
@@ -289,7 +288,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 disabled={isReadOnly}
                 value={isPluginNotificationsEnabled}
                 onChange={(e) => togglePluginNotificationsEnabled(e.target.checked)}
-                dataAutomationId="enabledToggle"
+                data-automation-id="enabledToggle"
               >
                 <span className={cx('name-wrapper')}>
                   <i className={cx('capitalized')}>{pluginName}</i>

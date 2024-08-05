@@ -1,14 +1,20 @@
-import { updateExtensionMetadataAction } from './actions';
-import { METADATA_FILE_KEY } from './constants';
+import { pluginByNameSelector } from 'controllers/plugins';
+import { updateExtensionManifestAction } from './actions';
+import { MANIFEST_FILE_KEY } from './constants';
 
 // TODO: restrict access to this function (f.e. only for admins)
 export const createExtensionOverrider = (store) => async (pluginName, url) => {
-  const response = await fetch(`${url}/${METADATA_FILE_KEY}.json`, {
+  const plugin = pluginByNameSelector(store.getState(), pluginName);
+
+  const manifestFileName =
+    plugin.details?.binaryData?.[MANIFEST_FILE_KEY] || `${MANIFEST_FILE_KEY}.json`;
+
+  const response = await fetch(`${url}/${manifestFileName}`, {
     contentType: 'application/json',
   });
-  const metadata = await response.json();
+  const manifest = await response.json();
 
-  store.dispatch(updateExtensionMetadataAction({ ...metadata, pluginName, url }));
+  store.dispatch(updateExtensionManifestAction({ ...manifest, pluginName, url }));
 
-  return metadata;
+  return manifest;
 };

@@ -288,7 +288,8 @@ export class BtsPropertiesForIssueForm extends Component {
 
   updateFields = (issueTypeValue) =>
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
-      const { defectFormFields } = this.props.initialData;
+      let { defectFormFields = [] } = this.props.initialData;
+      defectFormFields = normalizeFieldsWithOptions(defectFormFields, this.defaultOptionValueKey);
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
 
       let checkedFieldsIds = {};

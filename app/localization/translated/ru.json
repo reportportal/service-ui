@@ -1131,7 +1131,7 @@
   "LaunchLevelEntities.launchNumberEntityHint": "Этот фильтр принимает только цифры.",
   "LaunchLevelEntities.launchNumberPlaceholder": "Введите номер",
   "LaunchLevelEntities.ownerName.placeholder": "Введите имя пользователя",
-  "LaunchMergeModal.launchDescriptionHint": "Description should have size not more than 1024 symbols.",
+  "LaunchMergeModal.launchDescriptionHint": "Описание должно иметь размер не более 2048 символов",
   "LaunchMergeModal.launchNameHint": "Имя запуска должно быть длиной от 1 до 256.",
   "LaunchStatistics.noDataMessage": "Нет запусков",
   "LaunchStatisticsControls.ContentFieldsValidationError": "Необходимо выбрать минимум один элемент",

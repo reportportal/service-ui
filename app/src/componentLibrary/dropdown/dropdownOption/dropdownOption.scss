@@ -16,8 +16,6 @@
 
 @mixin dropdown-option($color) {
   display: inline-block;
-  width: 100%;
-  padding: 9px 12px 7px;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   color: $color;
@@ -100,9 +98,11 @@
 }
 
 .single-option {
-  display: flex;
-  align-items: center;
   height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 9px 12px 7px;
 }
 
 .sub-option {

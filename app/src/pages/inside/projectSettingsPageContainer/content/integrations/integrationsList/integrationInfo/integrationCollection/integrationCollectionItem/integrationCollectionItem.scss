@@ -56,6 +56,8 @@
 }
 
 .item-data {
+  width: 100%;
+
   .general-info {
     display: flex;
     align-items: flex-start;
@@ -67,6 +69,8 @@
     font-size: 20px;
     font-family: $FONT-REGULAR;
     line-height: 31px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .connection-error-message {
     padding: 5px 8px 4px;

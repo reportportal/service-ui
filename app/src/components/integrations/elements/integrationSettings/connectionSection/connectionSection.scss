@@ -34,6 +34,7 @@
 .integration-info-block {
   display: flex;
   flex-direction: column;
+  width: calc(100% - 48px);
 }
 
 .buttons-block {
@@ -67,13 +68,19 @@
 
 .sub-header-block {
   display: flex;
+  width: inherit;
+
   .general-info {
+    width: calc(100% - 89px);
+
     h1 {
       font-size: 20px;
       line-height: 31px;
       color: $COLOR--almost-black;
       font-family: $FONT-REGULAR;
       margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &.blocked {
@@ -100,6 +107,7 @@
   border-radius: 6px;
   margin-top: 3px;
   margin-left: 16px;
+  margin-right: 24px;
   display: flex;
   align-items: center;
 

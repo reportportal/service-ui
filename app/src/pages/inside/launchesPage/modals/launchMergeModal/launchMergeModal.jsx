@@ -336,7 +336,7 @@ export class LaunchMergeModal extends Component {
               label={intl.formatMessage(messages.launchDescriptionLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name="description" maxLength={'1024'}>
+              <FieldProvider name="description" maxLength={'2048'}>
                 <FieldErrorHint>
                   <InputTextArea />
                 </FieldErrorHint>

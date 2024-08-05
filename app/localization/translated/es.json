@@ -1130,7 +1130,7 @@
   "LaunchLevelEntities.launchNumberEntityHint": "Este filtro solo acepta números",
   "LaunchLevelEntities.launchNumberPlaceholder": "Ingrese el número",
   "LaunchLevelEntities.ownerName.placeholder": "Ingrese el nombre de usuario",
-  "LaunchMergeModal.launchDescriptionHint": "La descripción debe tener como máximo 1024 símbolos.",
+  "LaunchMergeModal.launchDescriptionHint": "La descripción debe tener como máximo 2048 símbolos.",
   "LaunchMergeModal.launchNameHint": "El nombre de la ejecución debe tener entre 1 y 256 caracteres.",
   "LaunchStatistics.noDataMessage": "No hay ejecuciones",
   "LaunchStatisticsControls.ContentFieldsValidationError": "Debe seleccionar al menos un elemento",
