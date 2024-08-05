@@ -462,7 +462,7 @@
   "DashboardForm.editModalSubmitButtonText": "Актуалізаваць",
   "DashboardForm.editModalTitle": "Рэдагаваць панэль кіравання",
   "DashboardForm.modalCancelButtonText": "Адмяніць",
-  "DashboardHeaderButton.buttonTooltip": "Ліміт у 300 панэляў дасягнуты. Каб стварыць новы, трэба выдаліць хаця б адзін, створаны раней",
+  "DashboardHeaderButton.buttonTooltip": "Ліміт у 3000 панэляў дасягнуты. Каб стварыць новы, трэба выдаліць хаця б адзін, створаны раней",
   "DashboardItemPage.addNewWidget": "Дадаць новы віджэт",
   "DashboardItemPage.addWidgetSuccess": "Віджэт дададзены",
   "DashboardItemPage.dashboardEmptyText": "Дадайце Ваш першы віджэт каб прааналізаваць статыстыку",

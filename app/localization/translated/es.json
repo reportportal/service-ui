@@ -462,7 +462,7 @@
   "DashboardForm.editModalSubmitButtonText": "Actualizar",
   "DashboardForm.editModalTitle": "editar panel de control",
   "DashboardForm.modalCancelButtonText": "Cancelar",
-  "DashboardHeaderButton.buttonTooltip": "Se alcanzó el límite de 300 paneles de control. Para crear uno nuevo, debe eliminar al menos uno de los creados anteriormente",
+  "DashboardHeaderButton.buttonTooltip": "Se alcanzó el límite de 3000 paneles de control. Para crear uno nuevo, debe eliminar al menos uno de los creados anteriormente",
   "DashboardItemPage.addNewWidget": "Añadir nuevo widget",
   "DashboardItemPage.addWidgetSuccess": "Widget añadido",
   "DashboardItemPage.dashboardEmptyText": "Añade el primer widget para analizar las estadísticas",

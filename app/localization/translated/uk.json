@@ -462,7 +462,7 @@
   "DashboardForm.editModalSubmitButtonText": "Оновити",
   "DashboardForm.editModalTitle": "редагувати панель управління",
   "DashboardForm.modalCancelButtonText": "Скасувати",
-  "DashboardHeaderButton.buttonTooltip": "Досягнуто обмеження в 300 інформаційних панелей. Щоб створити новий, потрібно видалити принаймні один, створений раніше",
+  "DashboardHeaderButton.buttonTooltip": "Досягнуто обмеження в 3000 інформаційних панелей. Щоб створити новий, потрібно видалити принаймні один, створений раніше",
   "DashboardItemPage.addNewWidget": "Додати новий віджет",
   "DashboardItemPage.addWidgetSuccess": "Доданий віджет",
   "DashboardItemPage.dashboardEmptyText": "Додайте перший віджет, щоб проаналізувати статистику",
