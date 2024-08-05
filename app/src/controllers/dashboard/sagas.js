@@ -62,8 +62,8 @@ function* fetchDashboards({ payload: params }) {
   yield put(
     fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject), {
       params: {
-        ...params,
         ...query,
+        ...params,
       },
     }),
   );
