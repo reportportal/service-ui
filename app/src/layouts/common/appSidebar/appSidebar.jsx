@@ -34,7 +34,12 @@ import styles from './appSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-export const AppSidebar = ({ createMainBlock, items, isOpenOrganizationPopover }) => {
+export const AppSidebar = ({
+  createMainBlock,
+  items,
+  isOpenOrganizationPopover,
+  linkToUserProfilePage,
+}) => {
   const userId = useSelector(userIdSelector);
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
 
@@ -77,6 +82,7 @@ export const AppSidebar = ({ createMainBlock, items, isOpenOrganizationPopover }
         closeSidebar={closeSidebar}
         isOpenPopover={isOpenAvatarPopover}
         togglePopover={setIsOpenAvatarPopover}
+        linkToUserProfilePage={linkToUserProfilePage}
         onClick={() => {
           openSidebar();
           setIsOpenAvatarPopover(!isOpenAvatarPopover);
@@ -99,6 +105,7 @@ export const AppSidebar = ({ createMainBlock, items, isOpenOrganizationPopover }
 };
 
 AppSidebar.propTypes = {
+  linkToUserProfilePage: PropTypes.object.isRequired,
   items: PropTypes.array,
   isOpenOrganizationPopover: PropTypes.bool,
   createMainBlock: PropTypes.func,

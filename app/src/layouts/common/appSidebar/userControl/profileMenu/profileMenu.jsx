@@ -19,7 +19,6 @@ import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { USER_PROFILE_PAGE } from 'controllers/pages';
 import { logoutAction } from 'controllers/auth';
 import { NavLink } from 'components/main/navLink';
 import LogoutIcon from './img/log-out-inline.svg';
@@ -28,7 +27,7 @@ import styles from './profileMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProfileMenu = ({ closePopover, closeSidebar }) => {
+export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage }) => {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
@@ -38,9 +37,7 @@ export const ProfileMenu = ({ closePopover, closeSidebar }) => {
   return (
     <>
       <NavLink
-        to={{
-          type: USER_PROFILE_PAGE,
-        }}
+        to={linkToUserProfilePage}
         className={cx('menu-item')}
         activeClassName={cx('active')}
         onClick={() => {
@@ -62,4 +59,5 @@ export const ProfileMenu = ({ closePopover, closeSidebar }) => {
 ProfileMenu.propTypes = {
   closePopover: PropTypes.func.isRequired,
   closeSidebar: PropTypes.func.isRequired,
+  linkToUserProfilePage: PropTypes.object.isRequired,
 };
