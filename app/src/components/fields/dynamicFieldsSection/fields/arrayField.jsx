@@ -71,6 +71,7 @@ export class ArrayField extends Component {
           creatable={this.creatable}
           variant={darkView ? 'dark' : 'light'}
           mobileDisabled
+          createWithoutConfirmation
         />
       </DynamicField>
     );
