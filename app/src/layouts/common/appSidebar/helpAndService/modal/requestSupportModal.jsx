@@ -102,7 +102,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     <Modal
       title={formatMessage(messages.requestService)}
       okButton={{
-        text: formatMessage(messages.sendRequest),
+        children: formatMessage(messages.sendRequest),
         onClick: () => {
           handleSubmit(onSubmit)();
         },
@@ -110,7 +110,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         attributes: { type: 'submit', form: REQUEST_FORM_ID },
         eventInfo: HELP_AND_SUPPORT_EVENTS.CLICK_SEND_REQUEST_SUPPORT_BUTTON,
       }}
-      cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
+      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={hideModal}
     >
       <form
