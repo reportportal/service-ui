@@ -45,6 +45,8 @@ import {
   UPDATE_DASHBOARD,
   UPDATE_DASHBOARD_WIDGETS,
   REMOVE_DASHBOARD_SUCCESS,
+  INCREASE_TOTAL_DASHBOARDS_LOCALLY,
+  DECREASE_TOTAL_DASHBOARDS_LOCALLY,
 } from './constants';
 import { dashboardItemsSelector, querySelector } from './selectors';
 import {
@@ -115,6 +117,7 @@ function* addDashboard({ payload: dashboard }) {
   });
 
   yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
+  yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
   yield put(
     showNotification({
       messageId: 'addDashboardSuccess',
@@ -159,6 +162,7 @@ function* removeDashboard({ payload: id }) {
       method: 'delete',
     });
     yield put(deleteDashboardSuccessAction(id));
+    yield put({ type: DECREASE_TOTAL_DASHBOARDS_LOCALLY });
     yield put(
       showNotification({
         messageId: 'deleteDashboardSuccess',
