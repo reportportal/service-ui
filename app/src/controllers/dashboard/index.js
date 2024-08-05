@@ -41,6 +41,5 @@ export {
   dashboardItemPropTypes,
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
-  NAMESPACE,
 } from './constants';
 export { dashboardSagas } from './sagas';

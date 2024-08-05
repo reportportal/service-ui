@@ -31,7 +31,6 @@ import {
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
   loadingSelector,
-  NAMESPACE,
   dashboardPaginationSelector,
 } from 'controllers/dashboard';
 import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
@@ -93,11 +92,10 @@ const messages = defineMessages({
     addDashboard: addDashboardAction,
   },
 )
+@withFilter()
 @withPagination({
   paginationSelector: dashboardPaginationSelector,
-  namespace: NAMESPACE,
 })
-@withFilter()
 @injectIntl
 @track({ page: DASHBOARD_PAGE })
 export class DashboardPage extends Component {

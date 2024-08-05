@@ -462,7 +462,7 @@
   "DashboardForm.editModalSubmitButtonText": "更新",
   "DashboardForm.editModalTitle": "编辑报告面板",
   "DashboardForm.modalCancelButtonText": "取消",
-  "DashboardHeaderButton.buttonTooltip": "已达到 300 个仪表板的上限。要创建一个新的，您需要至少删除一个之前创建的。",
+  "DashboardHeaderButton.buttonTooltip": "已达到 3000 个仪表板的上限。要创建一个新的，您需要至少删除一个之前创建的。",
   "DashboardItemPage.addNewWidget": "添加新小部件",
   "DashboardItemPage.addWidgetSuccess": "小部件已添加",
   "DashboardItemPage.dashboardEmptyText": "添加您的第一个小部件以分析统计数据",
