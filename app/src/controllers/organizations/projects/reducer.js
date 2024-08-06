@@ -19,7 +19,8 @@ import { fetchReducer } from 'controllers/fetch';
 import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { initialPaginationState, NAMESPACE, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { initialPaginationState, NAMESPACE } from './constants';
 
 export const projectFetchReducer = fetchReducer(NAMESPACE, {
   contentPath: 'items',
@@ -32,4 +33,4 @@ export const reducer = combineReducers({
   projects: projectFetchReducer,
 });
 
-export const projectsReducer = createPageScopedReducer(reducer, FETCH_ORGANIZATION_PROJECTS);
+export const projectsReducer = createPageScopedReducer(reducer, ORGANIZATION_PROJECTS_PAGE);

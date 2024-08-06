@@ -50,7 +50,6 @@ export const PaginationWrapper = ({ children, showPagination, ...paginationProps
 
 PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,
-  paginationProps: PropTypes.object.isRequired,
   children: PropTypes.node,
 };
 
