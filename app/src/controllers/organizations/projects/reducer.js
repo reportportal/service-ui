@@ -19,7 +19,7 @@ import { fetchReducer } from 'controllers/fetch';
 import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { NAMESPACE } from './constants';
+import { initialPaginationState, NAMESPACE } from './constants';
 
 export const projectFetchReducer = fetchReducer(NAMESPACE, {
   contentPath: 'items',
@@ -27,7 +27,7 @@ export const projectFetchReducer = fetchReducer(NAMESPACE, {
 });
 
 export const reducer = combineReducers({
-  pagination: alternativePaginationReducer,
+  pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   loading: loadingReducer(NAMESPACE),
   projects: projectFetchReducer,
 });

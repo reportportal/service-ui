@@ -41,3 +41,9 @@ export const DEFAULT_QUERY_PARAMS = {
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
 
 export const NAVIGATE_TO_PROJECT = 'navigateToProject';
+
+export const initialPaginationState = {
+  size: DEFAULT_LIMITATION,
+  totalElements: 0,
+  totalPages: 0,
+};

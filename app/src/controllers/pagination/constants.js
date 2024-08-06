@@ -25,9 +25,3 @@ export const DEFAULT_PAGINATION = {
   [PAGE_KEY]: 1,
   [SIZE_KEY]: DEFAULT_PAGE_SIZE,
 };
-
-export const initialPaginationState = {
-  size: DEFAULT_PAGE_SIZE,
-  totalElements: 0,
-  totalPages: 0,
-};
