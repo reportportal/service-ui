@@ -45,7 +45,6 @@ export const OrganizationsItemContentHeaderWithTooltip = withTooltip({
   side: 'left',
   placement: 'left',
   dark: true,
-  topOffset: -15,
   leftOffset: 169,
   width: 160,
 })(({ children }) => children);
