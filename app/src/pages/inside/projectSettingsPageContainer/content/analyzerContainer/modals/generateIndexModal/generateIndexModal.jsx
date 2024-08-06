@@ -29,7 +29,7 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import styles from './generateIndexModal.scss';
 
@@ -82,15 +82,15 @@ const GenerateIndexModal = ({ data }) => {
   };
 
   const okButton = {
-    text: formatMessage(messages.generateButtonText),
+    children: formatMessage(messages.generateButtonText),
     onClick: onClickGenerate,
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={data.modalTitle || formatMessage(messages.generateIndexHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
@@ -101,7 +101,7 @@ const GenerateIndexModal = ({ data }) => {
         <p className={cx('note-title')}>{formatMessage(messages.noteBlockTitle)}</p>
         <p className={cx('note-text')}>{formatMessage(messages.noteBlockText)}</p>
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 GenerateIndexModal.propTypes = {

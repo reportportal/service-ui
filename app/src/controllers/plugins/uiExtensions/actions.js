@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,13 @@
  *  limitations under the License.
  */
 
-import {
-  EXTENSION_LOAD_FINISH,
-  EXTENSION_LOAD_START,
-  FETCH_EXTENSIONS_METADATA_SUCCESS,
-  UPDATE_EXTENSION_METADATA,
-} from './constants';
+import { FETCH_EXTENSION_MANIFESTS_SUCCESS, UPDATE_EXTENSION_MANIFEST } from './constants';
 
-export const extensionLoadStartAction = () => ({
-  type: EXTENSION_LOAD_START,
+export const fetchExtensionManifestsSuccessAction = (extensionManifests) => ({
+  type: FETCH_EXTENSION_MANIFESTS_SUCCESS,
+  payload: extensionManifests,
 });
-export const extensionLoadFinishAction = () => ({
-  type: EXTENSION_LOAD_FINISH,
-});
-
-export const fetchExtensionsMetadataSuccessAction = (extensionsMetadata) => ({
-  type: FETCH_EXTENSIONS_METADATA_SUCCESS,
-  payload: extensionsMetadata,
-});
-export const updateExtensionMetadataAction = (extensionMetadata) => ({
-  type: UPDATE_EXTENSION_METADATA,
-  payload: extensionMetadata,
+export const updateExtensionManifestAction = (extensionManifest) => ({
+  type: UPDATE_EXTENSION_MANIFEST,
+  payload: extensionManifest,
 });

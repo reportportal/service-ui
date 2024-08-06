@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { userRolesSelector } from 'controllers/pages';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import {
@@ -26,6 +26,7 @@ import {
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
   ORGANIZATIONS_PAGE,
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
@@ -33,7 +34,10 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';
-import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
+import {
+  activeOrganizationNameSelector,
+  activeOrganizationSelector,
+} from 'controllers/organizations/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
@@ -42,7 +46,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
-  const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const { slug: organizationSlug } = useSelector(activeOrganizationSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
@@ -107,6 +111,10 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   };
 
   const link = { type: ORGANIZATIONS_PAGE };
+  const linkToUserProfilePage = {
+    type: USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+    payload: { organizationSlug },
+  };
   const titles = {
     shortTitle: `${organizationName[0]}${organizationName[organizationName.length - 1]}`,
     topTitle: formatMessage(messages.allOrganizations),
@@ -124,6 +132,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      isExtendedNav
     />
   );
 
@@ -132,6 +141,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       createMainBlock={createMainBlock}
       items={getSidebarItems()}
       isOpenOrganizationPopover={isOpenOrganizationPopover}
+      linkToUserProfilePage={linkToUserProfilePage}
     />
   );
 };

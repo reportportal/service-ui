@@ -31,6 +31,7 @@ export const DropdownOption = React.forwardRef((props, ref) => {
     highlightHovered,
     onMouseEnter,
   } = props;
+
   const onChangeHandler = () => onChange?.(value);
 
   return (
@@ -41,7 +42,7 @@ export const DropdownOption = React.forwardRef((props, ref) => {
         hidden,
         hover: highlightHovered,
       })}
-      title={(disabled && title) || undefined}
+      title={title}
       onClick={onChangeHandler}
       ref={ref}
       onMouseEnter={onMouseEnter}

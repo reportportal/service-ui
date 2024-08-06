@@ -17,17 +17,6 @@
 import PropTypes from 'prop-types';
 import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
 
-/* TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
-and within next major version release */
-const oldExtensionType = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  title: PropTypes.string,
-  component: PropTypes.func.isRequired,
-});
-
-/* New plugins mechanism related code below */
-
 const embeddedExtensionType = PropTypes.shape({
   name: PropTypes.string.isRequired,
   title: PropTypes.string,
@@ -51,8 +40,4 @@ const standaloneExtensionType = PropTypes.shape({
   }),
 });
 
-export const extensionType = PropTypes.oneOfType([
-  oldExtensionType,
-  embeddedExtensionType,
-  standaloneExtensionType,
-]);
+export const extensionType = PropTypes.oneOfType([embeddedExtensionType, standaloneExtensionType]);

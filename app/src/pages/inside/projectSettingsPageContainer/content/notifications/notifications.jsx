@@ -34,7 +34,7 @@ import { notificationPluginsSelector } from 'controllers/plugins/selectors';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { Toggle } from 'componentLibrary/toggle';
+import { Toggle } from '@reportportal/ui-kit';
 import { FieldElement, FormattedDescription } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';

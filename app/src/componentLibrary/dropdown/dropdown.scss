@@ -109,7 +109,9 @@
   margin-top: 5px;
   padding: 8px 0;
   display: none;
-  width: 100%;
+  width: max-content;
+  max-width: 384px;
+  min-width: 240px;
   min-height: 10px;
   background: $backgroundColor;
   box-shadow: $BOX_SHADOW--modal-window;
@@ -189,6 +191,11 @@
   &.select-list {
     @include select-list($COLOR--bg-000);
   }
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .dark {

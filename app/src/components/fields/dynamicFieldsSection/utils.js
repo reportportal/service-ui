@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { omit } from 'common/utils/omit';
 import {
   ARRAY_TYPE,
   DROPDOWN_TYPE,
@@ -25,6 +26,7 @@ import {
   MULTIPLE_AUTOCOMPLETE_TYPE,
   CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
   MULTILINE_TEXT_TYPE,
+  VALUE_NONE,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -42,9 +44,15 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
     if (!field?.definedValues?.length) {
       return field;
     }
+    const isNoneValueExist = field.definedValues.some(
+      (item) => item[VALUE_NAME_KEY] === VALUE_NONE,
+    );
+    if (!field.required && field.fieldType !== ARRAY_TYPE && !isNoneValueExist) {
+      field.definedValues.unshift({ [VALUE_NAME_KEY]: VALUE_NONE });
+    }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
-    if (!value?.length) {
+    if (!value?.length && field.fieldType !== ARRAY_TYPE) {
       value = [definedValues[0][defaultOptionValueKey]];
     }
     return { ...field, definedValues, value };
@@ -53,7 +61,7 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
 export const mergeFields = (savedFields, fetchedFields) =>
   fetchedFields.map((field) => {
     const savedField = savedFields.find((item) => item.id === field.id);
-    return savedField ? { ...field, ...savedField } : field;
+    return savedField ? { ...field, ...omit(savedField, ['definedValues']) } : field;
   });
 
 export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldKey) => {
@@ -87,4 +95,14 @@ export const getFieldComponent = (field) => {
   }
 
   return FIELDS_MAP[fieldType];
+};
+
+export const removeNoneValues = (inputObj) => {
+  const obj = { ...inputObj };
+  Object.keys(obj).forEach((key) => {
+    if (Array.isArray(obj[key])) {
+      obj[key] = obj[key].filter((item) => item !== VALUE_NONE);
+    }
+  });
+  return obj;
 };

@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-.modal-footer {
-  position: relative;
+.no-project-assignments {
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--darkmode-gray-150;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.tooltip {
   width: 100%;
-  margin-top: 16px;
 }
 
-.buttons-block {
-  float: right;
-  white-space: nowrap;
-}
-
-.button-container {
-  display: inline-block;
-  min-width: 70px;
-  margin-right: 10px;
-
-  &:last-child {
-    margin-right: 0;
+// TODO: Remove after adding the middle arrow position in the Tooltip component
+.custom {
+  div:last-child {
+    top: 15px !important;
   }
 }

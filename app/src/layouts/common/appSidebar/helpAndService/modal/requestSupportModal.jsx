@@ -20,7 +20,7 @@ import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Checkbox } from '@reportportal/ui-kit';
+import { Checkbox, Modal } from '@reportportal/ui-kit';
 import { commonValidators } from 'common/utils/validation';
 import { userEmailSelector } from 'controllers/user';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -29,7 +29,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
 import { FieldText } from 'componentLibrary/fieldText';
-import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
@@ -100,10 +99,10 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.requestService)}
       okButton={{
-        text: formatMessage(messages.sendRequest),
+        children: formatMessage(messages.sendRequest),
         onClick: () => {
           handleSubmit(onSubmit)();
         },
@@ -111,7 +110,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         attributes: { type: 'submit', form: REQUEST_FORM_ID },
         eventInfo: HELP_AND_SUPPORT_EVENTS.CLICK_SEND_REQUEST_SUPPORT_BUTTON,
       }}
-      cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
+      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={hideModal}
     >
       <form
@@ -181,7 +180,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
           </Checkbox>
         </div>
       </form>
-    </ModalLayout>
+    </Modal>
   );
 };
 RequestSupport.propTypes = {

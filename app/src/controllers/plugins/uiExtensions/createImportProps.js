@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,13 @@ import {
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader, Button, Checkbox } from '@reportportal/ui-kit';
+import {
+  BubblesLoader,
+  Button,
+  Checkbox,
+  Toggle,
+  Modal as ModalLayoutComponent,
+} from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -173,7 +179,6 @@ import {
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
-import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import {
   FieldElement,
@@ -181,7 +186,6 @@ import {
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
-import { Toggle } from 'componentLibrary/toggle';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
@@ -223,7 +227,7 @@ const INPUTS = {
   WithAsyncLoading,
 };
 
-// TODO: in the future these components and other stuff will be shared via WMF
+// TODO: share these components and other stuff via WMF and ui-kit library
 export const createImportProps = (pluginName) => ({
   lib: {
     React,

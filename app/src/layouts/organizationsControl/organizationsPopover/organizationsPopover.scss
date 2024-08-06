@@ -69,3 +69,12 @@
 .active {
   color: $COLOR--darkmode-topaz-text;
 }
+
+.organizations-assignments {
+  height: 36px;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 8px 16px;
+  color: $COLOR--darkmode-gray-150;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}

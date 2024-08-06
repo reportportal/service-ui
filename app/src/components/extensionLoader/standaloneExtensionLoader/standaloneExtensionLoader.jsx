@@ -21,7 +21,6 @@ import { userInfoSelector } from 'controllers/user';
 import { projectInfoSelector } from 'controllers/project';
 import { extensionType } from '../extensionTypes';
 
-// http://localhost:3000/#superadmin_personal/plugin/BrowserKube
 // TODO: add loader while loading the iframe
 // TODO: configure sandbox for iframe
 function StandaloneExtensionLoader({ extension, userInfo, projectInfo }) {

@@ -54,10 +54,19 @@ import {
   clearPageStateAction,
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-  USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
   userAssignedSelector,
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATION_MEMBERS_PAGE,
+  ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATIONS_PAGE,
+  USER_PROFILE_PAGE,
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -95,12 +104,6 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import {
-  ORGANIZATION_PROJECTS_PAGE,
-  ORGANIZATION_MEMBERS_PAGE,
-  ORGANIZATION_SETTINGS_PAGE,
-  ORGANIZATIONS_PAGE,
-} from 'controllers/pages/constants';
-import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
 } from 'controllers/organizations/organization/actionCreators';
@@ -127,12 +130,33 @@ const routesMap = {
 
   ALL_ORGANIZATIONS_PAGE: redirectRoute('/', () => ({ type: ORGANIZATIONS_PAGE })),
   ORGANIZATIONS_PAGE: redirectRoute('/organizations', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
+
+  [USER_PROFILE_PAGE]: redirectRoute('/userProfile', () => ({
     type: USER_PROFILE_SUB_PAGE,
     payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
   })),
 
   [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+
+  [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: redirectRoute(
+    '/organizations/:organizationSlug/userProfile',
+    ({ organizationSlug }) => ({
+      type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+      payload: { organizationSlug, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    }),
+  ),
+
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+
+  [USER_PROFILE_PAGE_PROJECT_LEVEL]: redirectRoute(
+    '/organizations/:organizationSlug/projects/:projectSlug/userProfile',
+    (payload) => ({
+      type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+      payload: { ...payload, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    }),
+  ),
+
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 
@@ -145,7 +169,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/organizations/projects/organizations/:organizationSlug?/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
+    path: `/organizations/projects/organizations/:organizationSlug/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -173,7 +197,7 @@ const routesMap = {
   [PLUGINS_TAB_PAGE]: `/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
 
   [ORGANIZATION_PROJECTS_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects',
+    path: '/organizations/:organizationSlug/projects',
     thunk: (dispatch, getState) => {
       const {
         location: { payload },
@@ -183,15 +207,15 @@ const routesMap = {
   },
 
   [ORGANIZATION_MEMBERS_PAGE]: {
-    path: '/organizations/:organizationSlug?/members',
+    path: '/organizations/:organizationSlug/members',
   },
 
   [ORGANIZATION_SETTINGS_PAGE]: {
-    path: '/organizations/:organizationSlug?/settings',
+    path: '/organizations/:organizationSlug/settings',
   },
 
   [PROJECT_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug',
+    path: '/organizations/:organizationSlug/projects/:projectSlug',
     thunk: (dispatch, getState) => {
       dispatch(
         redirect({
@@ -202,7 +226,7 @@ const routesMap = {
     },
   },
   [PROJECT_DASHBOARD_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/dashboard',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard',
     thunk: (dispatch) => {
       dispatch(
         fetchDashboardsAction({
@@ -213,19 +237,19 @@ const routesMap = {
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/dashboard/:dashboardId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard/:dashboardId',
     thunk: (dispatch) => {
       dispatch(fetchDashboardAction());
     },
   },
   [PROJECT_DASHBOARD_PRINT_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/dashboard/:dashboardId/print',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard/:dashboardId/print',
     thunk: (dispatch) => {
       dispatch(fetchDashboardAction());
     },
   },
   [LAUNCHES_PAGE]: redirectRoute(
-    '/organizations/:organizationSlug?/projects/:projectSlug/launches',
+    '/organizations/:organizationSlug/projects/:projectSlug/launches',
     (payload, getState) => ({
       type: PROJECT_LAUNCHES_PAGE,
       payload: { ...payload, filterId: launchDistinctSelector(getState()) },
@@ -235,7 +259,7 @@ const routesMap = {
     },
   ),
   [PROJECT_LAUNCHES_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/launches/:filterId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
@@ -244,20 +268,20 @@ const routesMap = {
   },
   [HISTORY_PAGE]: {
     path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
+      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
     },
   },
   [UNIQUE_ERRORS_PAGE]: {
     path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
+      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
       dispatch(fetchClustersAction());
     },
   },
   PROJECT_FILTERS_PAGE: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/filters',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/filters',
     thunk: (dispatch, getState, { action }) => {
       const location = action.meta?.location || {};
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
@@ -265,7 +289,7 @@ const routesMap = {
   },
   [PROJECT_LOG_PAGE]: {
     path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
+      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
@@ -273,14 +297,14 @@ const routesMap = {
   },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
     path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
+      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_PAGE]: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/userdebug/:filterId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(setLevelAction(''));
@@ -289,28 +313,27 @@ const routesMap = {
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
     path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
+      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());
     },
   },
   PROJECT_MEMBERS_PAGE: {
-    path: '/organizations/:organizationSlug?/projects/:projectSlug/members',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
   PROJECT_SETTINGS_PAGE: redirectRoute(
-    '/organizations/:organizationSlug?/projects/:projectSlug/settings',
+    '/organizations/:organizationSlug/projects/:projectSlug/settings',
     (payload) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
       payload: { ...payload, settingsTab: GENERAL },
     }),
   ),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/organizations/:organizationSlug?/projects/:projectSlug/settings/:settingsTab/:subTab*`,
-  PROJECT_SANDBOX_PAGE: '/organizations/:organizationSlug?/projects/:projectSlug/sandbox',
+  [PROJECT_SETTINGS_TAB_PAGE]: `/organizations/:organizationSlug/projects/:projectSlug/settings/:settingsTab/:subTab*`,
+  PROJECT_SANDBOX_PAGE: '/organizations/:organizationSlug/projects/:projectSlug/sandbox',
   [TEST_ITEM_PAGE]: {
-    path:
-      '/organizations/:organizationSlug?/projects/:projectSlug/launches/:filterId/:testItemIds+',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchTestItemsAction());

@@ -32,6 +32,7 @@ import {
   PROJECT_SETTINGS_PAGE,
   PROJECT_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
+  USER_PROFILE_PAGE_PROJECT_LEVEL,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -148,6 +149,10 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   };
 
   const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };
+  const linkToUserProfilePage = {
+    type: USER_PROFILE_PAGE_PROJECT_LEVEL,
+    payload: { organizationSlug, projectSlug },
+  };
   const titles = {
     shortTitle: `${projectName[0]}${projectName[projectName.length - 1]}`,
     topTitle: `${formatMessage(messages.organization)}: ${organizationName}`,
@@ -165,6 +170,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      isExtendedNav
     />
   );
 
@@ -173,6 +179,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       createMainBlock={createMainBlock}
       items={getSidebarItems()}
       isOpenOrganizationPopover={isOpenOrganizationPopover}
+      linkToUserProfilePage={linkToUserProfilePage}
     />
   );
 };

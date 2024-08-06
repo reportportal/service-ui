@@ -66,11 +66,7 @@ export const AttributeListFormField = ({
 
   return (
     <>
-      <Checkbox
-        value={shown}
-        onChange={attributeControlHandler}
-        data-automation-id={'showAttributesCheckbox'}
-      >
+      <Checkbox value={shown} onChange={attributeControlHandler}>
         {formatMessage(messages.attributes)}
       </Checkbox>
       <div className={cx('description')}>

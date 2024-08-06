@@ -18,11 +18,21 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
-import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import { referenceDictionary } from 'common/utils';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import styles from './socialsBlock.scss';
 
 const cx = classNames.bind(styles);
+
+const socials = {
+  github: 'GitHub',
+  facebook: 'Facebook',
+  twitter: 'Twitter',
+  youtube: 'YouTube',
+  linkedin: 'LinkedIn',
+  slack: 'Slack',
+  mail: 'mail',
+};
 
 @track()
 export class SocialsBlock extends Component {
@@ -37,7 +47,7 @@ export class SocialsBlock extends Component {
     return (
       <div className={cx('socials-block')}>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_GITHUB_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.github))}
           href={referenceDictionary.rpGitHub}
           target="_blank"
           className={cx('social-link', 'gh-icon')}
@@ -45,7 +55,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_FACEBOOK_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.facebook))}
           href={referenceDictionary.rpFacebook}
           target="_blank"
           className={cx('social-link', 'fb-icon')}
@@ -53,7 +63,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_TWEETER_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.twitter))}
           href={referenceDictionary.rpTwitter}
           target="_blank"
           className={cx('social-link', 'tw-icon')}
@@ -61,7 +71,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_YOUTUBE_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.youtube))}
           href={referenceDictionary.rpYoutube}
           target="_blank"
           className={cx('social-link', 'yt-icon')}
@@ -69,7 +79,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_LINKEDIN_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.linkedin))}
           href={referenceDictionary.rpLinkedin}
           target="_blank"
           className={cx('social-link', 'linkedin-icon')}
@@ -77,7 +87,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_SLACK_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.slack))}
           href={referenceDictionary.rpSlack}
           target="_blank"
           className={cx('social-link', 'slk-icon')}
@@ -85,7 +95,7 @@ export class SocialsBlock extends Component {
           {}
         </a>
         <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_MAIL_ICON)}
+          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.mail))}
           href={referenceDictionary.rpEmail}
           target="_blank"
           className={cx('social-link', 'mail-icon')}

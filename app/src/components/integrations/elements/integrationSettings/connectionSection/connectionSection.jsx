@@ -201,7 +201,7 @@ export class ConnectionSection extends Component {
                   blocked: blocked && availableProjectIntegrations.length,
                 })}
               >
-                <h1>{name}</h1>
+                <h1 title={name}>{name}</h1>
               </div>
               <div
                 className={cx('connection-block', {
