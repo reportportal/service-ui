@@ -146,7 +146,7 @@ export const ProjectsListTable = ({
     </div>
   ) : (
     <PaginationWrapper
-      showPagination={pageCount > 1}
+      showPagination={projects.length > 0}
       tableProps={{
         data,
         primaryColumn,
@@ -177,8 +177,8 @@ ProjectsListTable.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,
+  activePage: PropTypes.number,
   captions: PropTypes.object.isRequired,
-  activePage: PropTypes.number.isRequired,
   itemCount: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
@@ -187,6 +187,7 @@ ProjectsListTable.propTypes = {
 
 ProjectsListTable.defaultProps = {
   projects: [],
+  activePage: 1,
   pageSize: DEFAULT_PROJECTS_LIMITATION,
 };
 

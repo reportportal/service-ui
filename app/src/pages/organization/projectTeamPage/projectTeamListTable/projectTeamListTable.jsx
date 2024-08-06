@@ -159,7 +159,7 @@ const ProjectTeamListTableWrapped = ({
 
   return (
     <PaginationWrapper
-      showPagination={pageCount > 1}
+      showPagination={members.length > 0}
       tableProps={{
         data,
         primaryColumn,
@@ -190,8 +190,8 @@ ProjectTeamListTableWrapped.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,
+  activePage: PropTypes.number,
   captions: PropTypes.object.isRequired,
-  activePage: PropTypes.number.isRequired,
   itemCount: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
@@ -201,6 +201,7 @@ ProjectTeamListTableWrapped.propTypes = {
 ProjectTeamListTableWrapped.defaultProps = {
   members: [],
   pageSize: DEFAULT_PAGE_SIZE,
+  activePage: 1,
 };
 
 export const ProjectTeamListTable = withSortingURL({
