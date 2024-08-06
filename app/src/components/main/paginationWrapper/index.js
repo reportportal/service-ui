@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-export const MERGE_PAGINATION = 'pagination/mergePagination';
-export const CHANGE_PAGE = 'pagination/changePage';
-export const CHANGE_SIZE = 'pagination/changeSize';
-export const PAGE_KEY = 'page.page';
-export const SIZE_KEY = 'page.size';
-
-export const DEFAULT_PAGE_SIZE = 50;
-export const DEFAULT_PAGINATION = {
-  [PAGE_KEY]: 1,
-  [SIZE_KEY]: DEFAULT_PAGE_SIZE,
-};
-
-export const PROJECTS_DROPDOWN_OPTIONS = [10, 20, 50, 100];
-export const PROJECT_TEAM_DROPDOWN_OPTIONS = [20, 50, 100, 300];
+export { PaginationWrapper } from './paginationWrapper';

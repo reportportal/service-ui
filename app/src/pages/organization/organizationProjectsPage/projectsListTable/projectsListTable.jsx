@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, MeatballMenuIcon, Pagination, Popover, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -31,11 +31,12 @@ import {
 } from 'controllers/organizations/projects/selectors';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import {
-  DEFAULT_PROJECTS_PAGE_SIZE,
+  DEFAULT_PROJECTS_LIMITATION,
   DEFAULT_SORT_COLUMN,
   SORTING_KEY,
 } from 'controllers/organizations/projects/constants';
-import { withPagination } from 'controllers/pagination';
+import { PROJECTS_DROPDOWN_OPTIONS, withPagination } from 'controllers/pagination';
+import { PaginationWrapper } from 'components/main/paginationWrapper';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
@@ -144,33 +145,30 @@ export const ProjectsListTable = ({
       <BubblesLoader />
     </div>
   ) : (
-    <div className={cx('with-pagination-container')}>
-      <Table
-        data={data}
-        primaryColumn={primaryColumn}
-        fixedColumns={fixedColumns}
-        sortingDirection={sortingDirection.toLowerCase()}
-        sortingColumn={primaryColumn}
-        sortableColumns={primaryColumn.key}
-        rowActionMenu={rowActionMenu}
-        className={cx('projects-list-table')}
-        onChangeSorting={onTableColumnSort}
-      />
-      {pageCount > 1 && (
-        <div className={cx('with-pagination')}>
-          <Pagination
-            pageSize={pageSize}
-            activePage={activePage}
-            totalItems={itemCount}
-            totalPages={pageCount}
-            pageSizeOptions={[10, 20, 50, 100]}
-            changePage={onChangePage}
-            changePageSize={onChangePageSize}
-            captions={captions}
-          />
-        </div>
-      )}
-    </div>
+    <PaginationWrapper
+      showPagination={pageCount > 1}
+      tableProps={{
+        data,
+        primaryColumn,
+        fixedColumns,
+        rowActionMenu,
+        className: cx('projects-list-table'),
+        sortingColumn: primaryColumn,
+        sortingDirection: sortingDirection.toLowerCase(),
+        onChangeSorting: onTableColumnSort,
+        sortableColumns: primaryColumn.key,
+      }}
+      paginationProps={{
+        pageSize,
+        activePage,
+        totalItems: itemCount,
+        totalPages: pageCount,
+        pageSizeOptions: PROJECTS_DROPDOWN_OPTIONS,
+        changePage: onChangePage,
+        changePageSize: onChangePageSize,
+        captions,
+      }}
+    />
   );
 };
 
@@ -189,7 +187,7 @@ ProjectsListTable.propTypes = {
 
 ProjectsListTable.defaultProps = {
   projects: [],
-  pageSize: DEFAULT_PROJECTS_PAGE_SIZE,
+  pageSize: DEFAULT_PROJECTS_LIMITATION,
 };
 
 export const ProjectsListTableWrapper = withSortingURL({

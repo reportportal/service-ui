@@ -28,11 +28,10 @@ export {
 } from './selectors';
 export { projectsSagas } from './sagas';
 export {
-  DEFAULT_LIMITATION,
+  DEFAULT_PROJECTS_LIMITATION,
   DEFAULT_OFFSET,
   DEFAULT_SORT_COLUMN,
   DEFAULT_QUERY_PARAMS,
   FETCH_ORGANIZATION_PROJECTS,
   SORTING_KEY,
-  DEFAULT_PROJECTS_PAGE_SIZE,
 } from './constants';

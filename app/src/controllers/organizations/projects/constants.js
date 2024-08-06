@@ -18,15 +18,14 @@ import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
 export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
 export const NAMESPACE = 'projects';
-export const DEFAULT_LIMITATION = 300;
+export const DEFAULT_PROJECTS_LIMITATION = 20;
 export const DEFAULT_OFFSET = 0;
 export const DEFAULT_SORT_COLUMN = 'name';
-export const DEFAULT_PROJECTS_PAGE_SIZE = 20;
 
 export const SORTING_KEY = 'order';
 
 export const DEFAULT_QUERY_PARAMS = {
-  limit: DEFAULT_LIMITATION,
+  limit: DEFAULT_PROJECTS_LIMITATION,
   offset: DEFAULT_OFFSET,
   order: SORTING_ASC,
   sort: DEFAULT_SORT_COLUMN,
