@@ -1075,7 +1075,7 @@
   "IssuesChartWrapper.noDataMessage": "Няма запускаў",
   "ItemInfo.RetryTooltip": "У запуску ёсць тэставыя элементы з паўторным спробамі",
   "JiraConnectionFormFields.authorizedByTitle": "Аўтарызавана па імені карыстальніка",
-  "JiraConnectionFormFields.passwordLabel": "Пароль у САХ",
+  "JiraConnectionFormFields.passwordLabel": "Пароль у САХ або маркер API",
   "JiraConnectionFormFields.usernameLabel": "Імя карыстальніка ў САХ",
   "JobInfoSection.commands": "Каманды",
   "JobInfoSection.logs": "Прагледзець Журнал",
