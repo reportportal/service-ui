@@ -147,15 +147,13 @@ export const ProjectsListTable = ({
   ) : (
     <PaginationWrapper
       showPagination={projects.length > 0}
-      paginationProps={{
-        pageSize,
-        activePage,
-        totalItems: itemCount,
-        totalPages: pageCount,
-        pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS,
-        changePage: onChangePage,
-        changePageSize: onChangePageSize,
-      }}
+      pageSize={pageSize}
+      activePage={activePage}
+      totalItems={itemCount}
+      totalPages={pageCount}
+      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
+      changePage={onChangePage}
+      changePageSize={onChangePageSize}
     >
       <Table
         data={data}
