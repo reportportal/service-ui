@@ -28,3 +28,9 @@ export const DEFAULT_PAGINATION = {
 
 export const PROJECTS_DROPDOWN_OPTIONS = [10, 20, 50, 100];
 export const PROJECT_TEAM_DROPDOWN_OPTIONS = [20, 50, 100, 300];
+
+export const initialPaginationState = {
+  size: DEFAULT_PAGE_SIZE,
+  totalElements: 0,
+  totalPages: 0,
+};

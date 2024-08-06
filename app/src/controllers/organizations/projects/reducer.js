@@ -16,11 +16,11 @@
 
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { paginationReducer } from 'controllers/pagination';
+import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
-import { NAMESPACE, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS } from './constants';
 
 export const projectFetchReducer = fetchReducer(FETCH_ORGANIZATION_PROJECTS, {
   contentPath: 'items',
@@ -28,8 +28,8 @@ export const projectFetchReducer = fetchReducer(FETCH_ORGANIZATION_PROJECTS, {
 });
 
 export const reducer = combineReducers({
-  pagination: paginationReducer(NAMESPACE),
-  loading: loadingReducer(NAMESPACE),
+  pagination: alternativePaginationReducer,
+  loading: loadingReducer(FETCH_ORGANIZATION_PROJECTS),
   projects: projectFetchReducer,
 });
 

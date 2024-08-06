@@ -15,7 +15,7 @@
  */
 
 export { withPagination } from './withPagination';
-export { paginationReducer } from './reducer';
+export { paginationReducer, alternativePaginationReducer } from './reducer';
 export { defaultPaginationSelector } from './selectors';
 export {
   SIZE_KEY,

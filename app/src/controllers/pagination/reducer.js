@@ -14,7 +14,24 @@
  * limitations under the License.
  */
 
-import { fetchReducer } from 'controllers/fetch';
+import { FETCH_SUCCESS, fetchReducer } from 'controllers/fetch';
+import { initialPaginationState } from './constants';
 
 export const paginationReducer = (namespace, initialState = {}) =>
   fetchReducer(namespace, { contentPath: 'page', initialState });
+
+export const alternativePaginationReducer = (state = initialPaginationState, { type, payload }) => {
+  switch (type) {
+    case FETCH_SUCCESS: {
+      return {
+        ...state,
+        size: payload.limit,
+        totalElements: payload.total_count,
+        totalPages: Math.ceil(payload.total_count / payload.limit),
+      };
+    }
+
+    default:
+      return state;
+  }
+};
