@@ -31,6 +31,8 @@ import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import {
   DEFAULT_PAGE_SIZE,
+  DEFAULT_PAGINATION,
+  PAGE_KEY,
   PROJECT_TEAM_DROPDOWN_OPTIONS,
   withPagination,
 } from 'controllers/pagination';
@@ -201,7 +203,7 @@ ProjectTeamListTableWrapped.propTypes = {
 ProjectTeamListTableWrapped.defaultProps = {
   members: [],
   pageSize: DEFAULT_PAGE_SIZE,
-  activePage: 1,
+  activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
 
 export const ProjectTeamListTable = withSortingURL({

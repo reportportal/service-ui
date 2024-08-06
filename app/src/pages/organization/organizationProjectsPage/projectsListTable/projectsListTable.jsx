@@ -35,7 +35,12 @@ import {
   DEFAULT_SORT_COLUMN,
   SORTING_KEY,
 } from 'controllers/organizations/projects/constants';
-import { PROJECTS_DROPDOWN_OPTIONS, withPagination } from 'controllers/pagination';
+import {
+  DEFAULT_PAGINATION,
+  PAGE_KEY,
+  PROJECTS_DROPDOWN_OPTIONS,
+  withPagination,
+} from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
@@ -187,7 +192,7 @@ ProjectsListTable.propTypes = {
 
 ProjectsListTable.defaultProps = {
   projects: [],
-  activePage: 1,
+  activePage: DEFAULT_PAGINATION[PAGE_KEY],
   pageSize: DEFAULT_PROJECTS_LIMITATION,
 };
 
