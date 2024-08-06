@@ -23,7 +23,7 @@ export const messages = defineMessages({
   },
   passwordLabel: {
     id: 'JiraConnectionFormFields.passwordLabel',
-    defaultMessage: 'BTS password',
+    defaultMessage: 'BTS password or API Token',
   },
   authorizedByTitle: {
     id: 'JiraConnectionFormFields.authorizedByTitle',

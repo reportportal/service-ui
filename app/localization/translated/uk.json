@@ -1075,7 +1075,7 @@
   "IssuesChartWrapper.noDataMessage": "Запусків Немає",
   "ItemInfo.RetryTooltip": "У запуску є тестові елементи з повторними спробами",
   "JiraConnectionFormFields.authorizedByTitle": "Авторизовано по імені користувача",
-  "JiraConnectionFormFields.passwordLabel": "В СОД Пароль",
+  "JiraConnectionFormFields.passwordLabel": "В СОД Пароль або маркер API",
   "JiraConnectionFormFields.usernameLabel": "Ім’я користувача СОД",
   "JobInfoSection.commands": "Команди",
   "JobInfoSection.logs": "Переглянути Журнал",

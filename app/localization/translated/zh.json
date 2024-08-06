@@ -1075,7 +1075,7 @@
   "IssuesChartWrapper.noDataMessage": "没有运行测试任务",
   "ItemInfo.RetryTooltip": "测试任务中存在触发重试的测试用例",
   "JiraConnectionFormFields.authorizedByTitle": "由用户名授权",
-  "JiraConnectionFormFields.passwordLabel": "BTS密码",
+  "JiraConnectionFormFields.passwordLabel": "BTS密码或 API 令牌",
   "JiraConnectionFormFields.usernameLabel": "BTS用户名",
   "JobInfoSection.commands": "指令",
   "JobInfoSection.logs": "查看日志",

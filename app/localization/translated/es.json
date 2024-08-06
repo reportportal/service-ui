@@ -1075,7 +1075,7 @@
   "IssuesChartWrapper.noDataMessage": "No hay ejecuciones",
   "ItemInfo.RetryTooltip": "La ejecución tiene elementos de prueba con reintentos",
   "JiraConnectionFormFields.authorizedByTitle": "Autorizado por nombre de usuario",
-  "JiraConnectionFormFields.passwordLabel": "Contraseña en BTS",
+  "JiraConnectionFormFields.passwordLabel": "Contraseña en BTS o token API",
   "JiraConnectionFormFields.usernameLabel": "Nombre de usuario en BTS",
   "JobInfoSection.commands": "Comandos",
   "JobInfoSection.logs": "Ver registro",
