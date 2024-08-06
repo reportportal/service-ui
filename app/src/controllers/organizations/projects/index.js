@@ -28,7 +28,8 @@ export {
 } from './selectors';
 export { projectsSagas } from './sagas';
 export {
-  DEFAULT_PROJECTS_LIMITATION,
+  DEFAULT_LIMITATION,
+  DEFAULT_PAGE_SIZE_OPTIONS,
   DEFAULT_OFFSET,
   DEFAULT_SORT_COLUMN,
   DEFAULT_QUERY_PARAMS,

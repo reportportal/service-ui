@@ -16,12 +16,10 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils/connectRouter';
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector } from 'controllers/user';
-import { messages } from './messages';
 import { defaultPaginationSelector, totalElementsSelector, totalPagesSelector } from './selectors';
 import { PAGE_KEY, SIZE_KEY } from './constants';
 
@@ -51,12 +49,10 @@ export const withPagination = ({
     namespace: namespaceSelector ? namespaceSelector(state) : namespace,
     userId: userIdSelector(state),
   }))
-  @injectIntl
   class PaginationWrapper extends Component {
     static displayName = `withPagination(${WrappedComponent.displayName || WrappedComponent.name})`;
 
     static propTypes = {
-      intl: PropTypes.object.isRequired,
       filter: PropTypes.string,
       page: PropTypes.number,
       size: PropTypes.number,
@@ -117,15 +113,7 @@ export const withPagination = ({
     calculateFieldName = () => `${this.props.namespace}PageSize`;
 
     render() {
-      const {
-        intl,
-        page,
-        size,
-        totalElements,
-        totalPages,
-        updatePagination,
-        ...restProps
-      } = this.props;
+      const { page, size, totalElements, totalPages, updatePagination, ...restProps } = this.props;
 
       return (
         <WrappedComponent
@@ -135,14 +123,6 @@ export const withPagination = ({
           pageSize={this.getPageSize()}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
-          captions={{
-            items: intl.formatMessage(messages.items),
-            of: intl.formatMessage(messages.of),
-            page: intl.formatMessage(messages.page),
-            goTo: intl.formatMessage(messages.goToPage),
-            goAction: intl.formatMessage(messages.go),
-            perPage: intl.formatMessage(messages.perPage),
-          }}
           {...restProps}
         />
       );

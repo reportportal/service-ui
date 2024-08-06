@@ -21,11 +21,11 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
+import { DEFAULT_PAGE_SIZE_OPTIONS, DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
@@ -33,7 +33,6 @@ import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
   PAGE_KEY,
-  PROJECT_TEAM_DROPDOWN_OPTIONS,
   withPagination,
 } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
@@ -52,7 +51,6 @@ const ProjectTeamListTableWrapped = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-  captions,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -162,28 +160,28 @@ const ProjectTeamListTableWrapped = ({
   return (
     <PaginationWrapper
       showPagination={members.length > 0}
-      tableProps={{
-        data,
-        primaryColumn,
-        fixedColumns,
-        rowActionMenu: canSeeRowActionMenu(userRoles) ? rowActionMenu : null,
-        className: cx('project-team-list-table'),
-        sortingColumn: primaryColumn,
-        sortingDirection: sortingDirection.toLowerCase(),
-        onChangeSorting: onTableSorting,
-        sortableColumns: primaryColumn.key,
-      }}
       paginationProps={{
         pageSize,
         activePage,
         totalItems: itemCount,
         totalPages: pageCount,
-        pageSizeOptions: PROJECT_TEAM_DROPDOWN_OPTIONS,
+        pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS,
         changePage: onChangePage,
         changePageSize: onChangePageSize,
-        captions,
       }}
-    />
+    >
+      <Table
+        data={data}
+        primaryColumn={primaryColumn}
+        fixedColumns={fixedColumns}
+        rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
+        className={cx('project-team-list-table')}
+        sortingColumn={primaryColumn}
+        sortingDirection={sortingDirection.toLowerCase()}
+        onChangeSorting={onTableSorting}
+        sortableColumns={primaryColumn.key}
+      />
+    </PaginationWrapper>
   );
 };
 
@@ -193,7 +191,6 @@ ProjectTeamListTableWrapped.propTypes = {
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,
   activePage: PropTypes.number,
-  captions: PropTypes.object.isRequired,
   itemCount: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,

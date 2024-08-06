@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { BubblesLoader, MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -31,16 +31,12 @@ import {
 } from 'controllers/organizations/projects/selectors';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import {
-  DEFAULT_PROJECTS_LIMITATION,
+  DEFAULT_PAGE_SIZE_OPTIONS,
+  DEFAULT_LIMITATION,
   DEFAULT_SORT_COLUMN,
   SORTING_KEY,
 } from 'controllers/organizations/projects/constants';
-import {
-  DEFAULT_PAGINATION,
-  PAGE_KEY,
-  PROJECTS_DROPDOWN_OPTIONS,
-  withPagination,
-} from 'controllers/pagination';
+import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
@@ -58,7 +54,6 @@ export const ProjectsListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-  captions,
 }) => {
   const { formatMessage } = useIntl();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
@@ -152,28 +147,28 @@ export const ProjectsListTable = ({
   ) : (
     <PaginationWrapper
       showPagination={projects.length > 0}
-      tableProps={{
-        data,
-        primaryColumn,
-        fixedColumns,
-        rowActionMenu,
-        className: cx('projects-list-table'),
-        sortingColumn: primaryColumn,
-        sortingDirection: sortingDirection.toLowerCase(),
-        onChangeSorting: onTableColumnSort,
-        sortableColumns: primaryColumn.key,
-      }}
       paginationProps={{
         pageSize,
         activePage,
         totalItems: itemCount,
         totalPages: pageCount,
-        pageSizeOptions: PROJECTS_DROPDOWN_OPTIONS,
+        pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS,
         changePage: onChangePage,
         changePageSize: onChangePageSize,
-        captions,
       }}
-    />
+    >
+      <Table
+        data={data}
+        primaryColumn={primaryColumn}
+        fixedColumns={fixedColumns}
+        sortingDirection={sortingDirection.toLowerCase()}
+        sortingColumn={primaryColumn}
+        sortableColumns={primaryColumn.key}
+        rowActionMenu={rowActionMenu}
+        className={cx('projects-list-table')}
+        onChangeSorting={onTableColumnSort}
+      />
+    </PaginationWrapper>
   );
 };
 
@@ -183,7 +178,6 @@ ProjectsListTable.propTypes = {
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,
   activePage: PropTypes.number,
-  captions: PropTypes.object.isRequired,
   itemCount: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
@@ -193,7 +187,7 @@ ProjectsListTable.propTypes = {
 ProjectsListTable.defaultProps = {
   projects: [],
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
-  pageSize: DEFAULT_PROJECTS_LIMITATION,
+  pageSize: DEFAULT_LIMITATION,
 };
 
 export const ProjectsListTableWrapper = withSortingURL({

@@ -14,26 +14,47 @@
  * limitations under the License.
  */
 
-import { Pagination, Table } from '@reportportal/ui-kit';
+import { useIntl } from 'react-intl';
+import { Pagination } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { messages } from './messages';
 import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationWrapper = ({ showPagination, tableProps, paginationProps }) => (
-  <div className={cx('pagination-wrapper-container')}>
-    <Table {...tableProps} />
-    {showPagination && (
-      <div className={cx('pagination-wrapper')}>
-        <Pagination {...paginationProps} />
-      </div>
-    )}
-  </div>
-);
+export const PaginationWrapper = ({ children, showPagination, paginationProps }) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <div className={cx('pagination-wrapper')}>
+      {children}
+      {showPagination && (
+        <div className={cx('pagination')}>
+          <Pagination
+            {...paginationProps}
+            captions={{
+              items: formatMessage(messages.items),
+              of: formatMessage(messages.of),
+              page: formatMessage(messages.page),
+              goTo: formatMessage(messages.goToPage),
+              goAction: formatMessage(messages.go),
+              perPage: formatMessage(messages.perPage),
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,
   tableProps: PropTypes.object.isRequired,
   paginationProps: PropTypes.object.isRequired,
+  children: PropTypes.node,
+};
+
+PaginationWrapper.defaultProps = {
+  children: null,
 };

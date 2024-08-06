@@ -18,27 +18,27 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   items: {
-    id: 'WithPagination.items',
+    id: 'PaginationWrapper.items',
     defaultMessage: 'items',
   },
   of: {
-    id: 'WithPagination.of',
+    id: 'PaginationWrapper.of',
     defaultMessage: 'of',
   },
   page: {
-    id: 'WithPagination.page',
+    id: 'PaginationWrapper.page',
     defaultMessage: 'Page',
   },
   goToPage: {
-    id: 'WithPagination.goToPage',
+    id: 'PaginationWrapper.goToPage',
     defaultMessage: 'Go to page',
   },
   go: {
-    id: 'WithPagination.go',
+    id: 'PaginationWrapper.go',
     defaultMessage: 'Go',
   },
   perPage: {
-    id: 'WithPagination.perPage',
+    id: 'PaginationWrapper.perPage',
     defaultMessage: 'per page',
   },
 });

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-.pagination-wrapper-container {
+.pagination-wrapper {
   position: relative;
 }
 
-.pagination-wrapper {
+.pagination {
   width: calc(100% - 60px);
   margin: 0 30px;
   background-color: $COLOR--bg-100;

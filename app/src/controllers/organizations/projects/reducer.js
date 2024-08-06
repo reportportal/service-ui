@@ -19,18 +19,17 @@ import { fetchReducer } from 'controllers/fetch';
 import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
-import { FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { NAMESPACE } from './constants';
 
-export const projectFetchReducer = fetchReducer(FETCH_ORGANIZATION_PROJECTS, {
+export const projectFetchReducer = fetchReducer(NAMESPACE, {
   contentPath: 'items',
   initialState: [],
 });
 
 export const reducer = combineReducers({
   pagination: alternativePaginationReducer,
-  loading: loadingReducer(FETCH_ORGANIZATION_PROJECTS),
+  loading: loadingReducer(NAMESPACE),
   projects: projectFetchReducer,
 });
 
-export const projectsReducer = createPageScopedReducer(reducer, ORGANIZATION_PROJECTS_PAGE);
+export const projectsReducer = createPageScopedReducer(reducer, NAMESPACE);

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+import { createSelector } from 'reselect';
 import { createQueryParametersSelector } from 'controllers/pages';
-import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/organizations/projects/constants';
 import { SORTING_ASC } from 'controllers/sorting';
 import { getAlternativePaginationAndSortParams, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { createSelector } from 'reselect';
-import { DEFAULT_PAGINATION } from 'controllers/instance/projects';
+import { SORTING_KEY, DEFAULT_PAGINATION } from './constants';
 import { organizationSelector } from '../organization/selectors';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
@@ -46,7 +45,6 @@ export const createOrganizationProjectsParametersSelector = ({
 
 export const querySelector = createOrganizationProjectsParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
-  defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
 });

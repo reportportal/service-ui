@@ -17,17 +17,13 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
 
-  yield put(
-    fetchDataAction(FETCH_ORGANIZATION_PROJECTS)(
-      URLS.organizationProjects(organizationId, { ...query }),
-    ),
-  );
+  yield put(fetchDataAction(NAMESPACE)(URLS.organizationProjects(organizationId, { ...query })));
 }
 
 function* watchFetchProjects() {

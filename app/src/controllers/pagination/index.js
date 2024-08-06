@@ -17,12 +17,5 @@
 export { withPagination } from './withPagination';
 export { paginationReducer, alternativePaginationReducer } from './reducer';
 export { defaultPaginationSelector } from './selectors';
-export {
-  SIZE_KEY,
-  PAGE_KEY,
-  DEFAULT_PAGINATION,
-  DEFAULT_PAGE_SIZE,
-  PROJECTS_DROPDOWN_OPTIONS,
-  PROJECT_TEAM_DROPDOWN_OPTIONS,
-} from './constants';
+export { SIZE_KEY, PAGE_KEY, DEFAULT_PAGINATION, DEFAULT_PAGE_SIZE } from './constants';
 export { getAlternativePaginationAndSortParams } from './utils';
