@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
-import { USER } from 'common/constants/userObjectTypes';
+import { parseSortingString } from 'controllers/sorting/utils';
 
-export const FETCH_MEMBERS = 'fetchMembers';
-export const NAMESPACE = 'members';
-export const DEFAULT_SORTING = formatSortingString([USER], SORTING_ASC);
-export const DEFAULT_SORT_COLUMN = 'fullName';
-export const DEFAULT_PAGE_SIZE_OPTIONS = [20, 50, 100, 300];
+export const getAlternativePaginationAndSortParams = (sort, limit, pageNumber) => {
+  const { direction: order, fields } = parseSortingString(sort);
+
+  return {
+    limit: Number(limit),
+    sort: fields.join(','),
+    offset: (pageNumber - 1) * limit,
+    order,
+  };
+};

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { createSelector } from 'reselect';
 import { createQueryParametersSelector } from 'controllers/pages';
-import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/organizations/projects/constants';
 import { SORTING_ASC } from 'controllers/sorting';
+import { getAlternativePaginationAndSortParams, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_KEY, DEFAULT_PAGINATION } from './constants';
 import { organizationSelector } from '../organization/selectors';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
@@ -25,8 +27,24 @@ export const projectsPaginationSelector = (state) => domainSelector(state).pagin
 export const projectsSelector = (state) => domainSelector(state).projects;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
-export const querySelector = createQueryParametersSelector({
-  defaultFields: [DEFAULT_SORT_COLUMN],
+export const createOrganizationProjectsParametersSelector = ({
+  defaultPagination,
+  defaultSorting,
+  sortingKey,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber }) => {
+      return getAlternativePaginationAndSortParams(sort, limit, pageNumber);
+    },
+  );
+
+export const querySelector = createOrganizationProjectsParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
 });

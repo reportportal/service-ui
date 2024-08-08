@@ -16,30 +16,15 @@
 
 import { combineReducers } from 'redux';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { FETCH_SUCCESS, fetchReducer } from 'controllers/fetch';
+import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
-import { NAMESPACE, initialPaginationState } from './constants';
-
-const paginationReducer = (state = initialPaginationState, { type, payload }) => {
-  switch (type) {
-    case FETCH_SUCCESS: {
-      return {
-        ...state,
-        size: payload.limit,
-        totalElements: payload.total_count,
-        totalPages: Math.ceil(payload.total_count / payload.limit),
-      };
-    }
-
-    default:
-      return state;
-  }
-};
+import { alternativePaginationReducer } from 'controllers/pagination';
+import { initialPaginationState, NAMESPACE } from './constants';
 
 const reducer = combineReducers({
   events: fetchReducer(NAMESPACE, { contentPath: 'items' }),
-  pagination: paginationReducer,
+  pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   loading: loadingReducer(NAMESPACE),
 });
 

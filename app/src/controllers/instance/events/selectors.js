@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import {
+  DEFAULT_PAGINATION,
+  getAlternativePaginationAndSortParams,
+  PAGE_KEY,
+  SIZE_KEY,
+} from 'controllers/pagination';
 import { createSelector } from 'reselect';
 import { createQueryParametersSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import { SORTING_KEY } from 'controllers/sorting';
 import { administrateDomainSelector } from '../selectors';
 import { DEFAULT_SORTING } from './constants';
-import { getAppliedFilters, getAlternativePaginationAndSortParams } from './utils';
+import { getAppliedFilters } from './utils';
 
 const domainSelector = (state) => administrateDomainSelector(state).events || {};
 

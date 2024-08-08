@@ -114,6 +114,7 @@ export const withPagination = ({
 
     render() {
       const { page, size, totalElements, totalPages, updatePagination, ...restProps } = this.props;
+
       return (
         <WrappedComponent
           activePage={page}

@@ -30,15 +30,31 @@ import {
   projectsPaginationSelector,
 } from 'controllers/organizations/projects/selectors';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/organizations/projects/constants';
-import { withPagination } from 'controllers/pagination';
+import {
+  DEFAULT_PAGE_SIZE_OPTIONS,
+  DEFAULT_LIMITATION,
+  DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
+} from 'controllers/organizations/projects/constants';
+import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
+import { PaginationWrapper } from 'components/main/paginationWrapper';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting }) => {
+export const ProjectsListTable = ({
+  projects,
+  sortingDirection,
+  onChangeSorting,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+}) => {
   const { formatMessage } = useIntl();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const loadingState = useSelector(loadingSelector);
@@ -129,17 +145,28 @@ export const ProjectsListTable = ({ projects, sortingDirection, onChangeSorting 
       <BubblesLoader />
     </div>
   ) : (
-    <Table
-      data={data}
-      primaryColumn={primaryColumn}
-      fixedColumns={fixedColumns}
-      sortingDirection={sortingDirection.toLowerCase()}
-      sortingColumn={primaryColumn}
-      sortableColumns={primaryColumn.key}
-      rowActionMenu={rowActionMenu}
-      className={cx('projects-list-table')}
-      onChangeSorting={onTableColumnSort}
-    />
+    <PaginationWrapper
+      showPagination={projects.length > 0}
+      pageSize={pageSize}
+      activePage={activePage}
+      totalItems={itemCount}
+      totalPages={pageCount}
+      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
+      changePage={onChangePage}
+      changePageSize={onChangePageSize}
+    >
+      <Table
+        data={data}
+        primaryColumn={primaryColumn}
+        fixedColumns={fixedColumns}
+        sortingDirection={sortingDirection.toLowerCase()}
+        sortingColumn={primaryColumn}
+        sortableColumns={primaryColumn.key}
+        rowActionMenu={rowActionMenu}
+        className={cx('projects-list-table')}
+        onChangeSorting={onTableColumnSort}
+      />
+    </PaginationWrapper>
   );
 };
 
@@ -147,10 +174,18 @@ ProjectsListTable.propTypes = {
   projects: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  pageSize: PropTypes.number,
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  onChangePageSize: PropTypes.func.isRequired,
 };
 
 ProjectsListTable.defaultProps = {
   projects: [],
+  activePage: DEFAULT_PAGINATION[PAGE_KEY],
+  pageSize: DEFAULT_LIMITATION,
 };
 
 export const ProjectsListTableWrapper = withSortingURL({

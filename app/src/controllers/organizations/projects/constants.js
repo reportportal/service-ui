@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
 export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
 export const NAMESPACE = 'projects';
-export const DEFAULT_LIMITATION = 300;
+export const DEFAULT_LIMITATION = 20;
 export const DEFAULT_OFFSET = 0;
 export const DEFAULT_SORT_COLUMN = 'name';
+export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
+
+export const DEFAULT_PAGINATION = {
+  [PAGE_KEY]: 1,
+  [SIZE_KEY]: DEFAULT_LIMITATION,
+};
 
 export const SORTING_KEY = 'order';
 
@@ -34,3 +41,9 @@ export const DEFAULT_QUERY_PARAMS = {
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
 
 export const NAVIGATE_TO_PROJECT = 'navigateToProject';
+
+export const initialPaginationState = {
+  size: DEFAULT_LIMITATION,
+  totalElements: 0,
+  totalPages: 0,
+};

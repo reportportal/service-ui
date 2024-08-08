@@ -22,7 +22,6 @@ import {
   ENTITY_SUBJECT_TYPE,
   reMappedOperationValuesMap,
 } from 'components/filterEntities/constants';
-import { parseSortingString } from 'controllers/sorting/utils';
 
 export const getAppliedFilters = (filters, projectKey) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
@@ -59,14 +58,4 @@ export const getAppliedFilters = (filters, projectKey) => {
   });
 
   return { search_criterias: [...appliedFilters, projectIdFilterParam] };
-};
-
-export const getAlternativePaginationAndSortParams = (sort, limit, pageNumber) => {
-  const { direction: order, fields } = parseSortingString(sort);
-  return {
-    limit: Number(limit),
-    sort: fields.join(','),
-    offset: (pageNumber - 1) * limit,
-    order,
-  };
 };

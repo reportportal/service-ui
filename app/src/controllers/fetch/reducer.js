@@ -23,7 +23,7 @@ const computeInitialState = (options) => {
   return options.initialState;
 };
 
-export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
+export const fetchReducer = (namespace, options = DEFAULT_OPTIONS, payloadConverter) => (
   state = computeInitialState(options),
   { type = '', payload = {}, meta = {}, concat = false },
 ) => {
@@ -32,11 +32,15 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   }
   const contentPath = options.contentPath || DEFAULT_OPTIONS.contentPath;
   switch (type) {
-    case FETCH_SUCCESS:
+    case FETCH_SUCCESS: {
       if (options.getFirst && payload[contentPath] instanceof Array) {
         return payload[contentPath][0] || null;
+      } else {
+        const selectedPayload =
+          contentPath && payload[contentPath] ? payload[contentPath] : payload;
+        return payloadConverter ? payloadConverter(selectedPayload) : selectedPayload;
       }
-      return contentPath && payload[contentPath] ? payload[contentPath] : payload;
+    }
     case CONCAT_FETCH_SUCCESS: {
       const data = contentPath ? payload[contentPath] : payload;
 

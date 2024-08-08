@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,31 @@
  * limitations under the License.
  */
 
-export {
-  fetchOrganizationProjectsAction,
-  navigateToProjectAction,
-  navigateToProjectSectionAction,
-} from './actionCreators';
-export { projectsReducer } from './reducer';
-export {
-  projectsPaginationSelector,
-  projectsSelector,
-  loadingSelector,
-  querySelector,
-} from './selectors';
-export { projectsSagas } from './sagas';
-export {
-  DEFAULT_LIMITATION,
-  DEFAULT_PAGE_SIZE_OPTIONS,
-  DEFAULT_OFFSET,
-  DEFAULT_SORT_COLUMN,
-  DEFAULT_QUERY_PARAMS,
-  FETCH_ORGANIZATION_PROJECTS,
-  SORTING_KEY,
-} from './constants';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  items: {
+    id: 'PaginationWrapper.items',
+    defaultMessage: 'items',
+  },
+  of: {
+    id: 'PaginationWrapper.of',
+    defaultMessage: 'of',
+  },
+  page: {
+    id: 'PaginationWrapper.page',
+    defaultMessage: 'Page',
+  },
+  goToPage: {
+    id: 'PaginationWrapper.goToPage',
+    defaultMessage: 'Go to page',
+  },
+  go: {
+    id: 'PaginationWrapper.go',
+    defaultMessage: 'Go',
+  },
+  perPage: {
+    id: 'PaginationWrapper.perPage',
+    defaultMessage: 'per page',
+  },
+});
