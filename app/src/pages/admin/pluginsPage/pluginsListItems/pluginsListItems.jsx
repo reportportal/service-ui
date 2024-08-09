@@ -56,7 +56,7 @@ const pluginTitle = defineMessages({
   },
   [IMPORT_GROUP_TYPE]: {
     id: 'PluginsList.import',
-    defaultMessage: 'Import Launches',
+    defaultMessage: 'Launches Import',
   },
   [OTHER_GROUP_TYPE]: {
     id: 'PluginsList.other',
