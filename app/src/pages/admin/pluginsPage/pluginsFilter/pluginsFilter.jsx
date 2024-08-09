@@ -20,6 +20,7 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PLUGIN_LABELS } from 'common/constants/pluginsGroupTypes';
 import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
@@ -30,8 +31,9 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
 
   const changeFilterItem = (e) => {
     e.preventDefault();
-    trackEvent(PLUGINS_PAGE_EVENTS.navigatedInPluginsFilterList(e.currentTarget.innerText));
-    onFilterChange(e.currentTarget.id);
+    const { id } = e.currentTarget;
+    trackEvent(PLUGINS_PAGE_EVENTS.navigatedInPluginsFilterList(PLUGIN_LABELS[id]));
+    onFilterChange(id);
   };
 
   const generateItems = () => (
