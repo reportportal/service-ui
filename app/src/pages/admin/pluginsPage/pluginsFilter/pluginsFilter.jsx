@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PLUGIN_LABELS } from 'common/constants/pluginsGroupTypes';
 import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
@@ -32,11 +31,11 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
   const changeFilterItem = (e) => {
     e.preventDefault();
     const { id } = e.currentTarget;
-    trackEvent(PLUGINS_PAGE_EVENTS.navigatedInPluginsFilterList(PLUGIN_LABELS[id]));
+    trackEvent(PLUGINS_PAGE_EVENTS.navigatedInPluginsFilterList(id));
     onFilterChange(id);
   };
 
-  const generateItems = () => (
+  return (
     <ul className={cx('plugins-filter-list')}>
       {getFilterItems().map((item) => (
         <li key={item.value} className={cx('plugins-filter-item')}>
@@ -51,8 +50,6 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
       ))}
     </ul>
   );
-
-  return <Fragment>{generateItems()}</Fragment>;
 };
 
 PluginsFilter.propTypes = {

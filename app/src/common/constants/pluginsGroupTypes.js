@@ -21,13 +21,3 @@ export const BTS_GROUP_TYPE = 'BTS';
 export const ANALYZER_GROUP_TYPE = 'ANALYZER';
 export const IMPORT_GROUP_TYPE = 'IMPORT';
 export const OTHER_GROUP_TYPE = 'OTHER';
-
-export const PLUGIN_LABELS = {
-  [ALL_GROUP_TYPE]: 'All',
-  [NOTIFICATION_GROUP_TYPE]: 'Notifications',
-  [AUTHORIZATION_GROUP_TYPE]: 'Authorization',
-  [BTS_GROUP_TYPE]: 'Bug Tracking Systems',
-  [ANALYZER_GROUP_TYPE]: 'Analyzer',
-  [IMPORT_GROUP_TYPE]: 'Launches Import',
-  [OTHER_GROUP_TYPE]: 'Other',
-};
