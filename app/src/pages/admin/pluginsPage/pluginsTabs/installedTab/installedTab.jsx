@@ -149,6 +149,9 @@ export class InstalledTab extends Component {
         title: formatMessage(messages.enablePluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.ENABLE),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        eventsInfo: {
+          confirmBtn: PLUGINS_PAGE_EVENTS.clickEnablePlugin(pluginName),
+        },
       },
     });
   };
@@ -167,6 +170,9 @@ export class InstalledTab extends Component {
         title: formatMessage(messages.disablePluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.DISABLE),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        eventsInfo: {
+          confirmBtn: PLUGINS_PAGE_EVENTS.clickDisablePlugin(pluginName),
+        },
       },
     });
   };
