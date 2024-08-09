@@ -131,11 +131,6 @@ export const PLUGINS_PAGE_EVENTS = {
     action: 'Click on Btn Cancel on Modal "Uninstall Plugin"',
     label: 'Close Modal Uninstall Plugin',
   },
-  // OK_BTN_UNINSTALL_PLUGIN_MODAL: {
-  //   category: PLUGINS_MODAL,
-  //   action: 'Click on Btn Uninstall on Modal "Uninstall Plugin"',
-  //   label: 'Uninstall Plugin',
-  // },
   clickSaveEditAuthorizationBtn: getClickSaveBtnEditAuthorizationEvent(PLUGINS_MODAL),
   clickDeleteBtnRemoveIntegration: getClickDeleteBtnRemoveIntegrationEvent(PLUGINS_MODAL),
   pluginInstanceItemClick: getPluginInstanceItemClickEvent(PLUGINS_PAGE),
