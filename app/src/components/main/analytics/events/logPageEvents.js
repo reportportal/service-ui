@@ -145,6 +145,11 @@ export const LOG_PAGE_EVENTS = {
     icon_name: `${viewMode}_mode`,
     status: isActive ? 'on' : 'off',
   }),
+  getClickOnLogMicrosecondPrecisionEvent: (isActive) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'microseconds',
+    switcher: isActive ? 'on' : 'off',
+  }),
   CLICK_JUMP_TO_ERROR_LOG: {
     ...basicLogPageClickEventParameters,
     place: 'stack_trace',

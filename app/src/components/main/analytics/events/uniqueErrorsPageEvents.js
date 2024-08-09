@@ -74,6 +74,10 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     ...basicUniqueErrorsPageClickEventParameters,
     icon_name: 'expand_error',
   },
+  CLICK_MATCHED_TESTS_HEADER_CELL: {
+    ...basicUniqueErrorsPageClickEventParameters,
+    icon_name: 'matched_tests',
+  },
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(UNIQUE_ERRORS_PAGE),
   getChangeItemStatusEvent: getChangeItemStatusEventCreator(UNIQUE_ERRORS_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(UNIQUE_ERRORS_PAGE),
