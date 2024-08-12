@@ -1510,6 +1510,8 @@
   "NotificationsEnableForm.toggleNotificationsLabel": "Автоматические уведомления по электронной почте",
   "NotificationsEnableForm.toggleNotificationsNote": "Отправлять уведомления по электронной почте о завершении запуска",
   "NotificationsEnableForm.typeDescription": "Выберите список получателей {type} для каждого правила для отправки уведомлений, связанных с запуском.",
+  "NotificationsEnableForm.unableToConfigure": "Почему я не могу настроить его?",
+  "NotificationsEnableForm.unableToConfigureDescription": "Подробнее о ролях и разрешениях",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Настройки уведомлений были успешно обновлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Выберите не меньше одного элемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерии для виджета",
