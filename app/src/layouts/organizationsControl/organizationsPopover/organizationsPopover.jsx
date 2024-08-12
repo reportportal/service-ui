@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
+import Parser from 'html-react-parser';
+import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
@@ -24,6 +27,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
 import { OrganizationsItem } from './organizationsItem';
+import SearchIcon from '../img/search-icon-inline.svg';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
@@ -38,22 +42,74 @@ export const messages = defineMessages({
     id: 'OrganizationsControl.assignmentsList',
     defaultMessage: 'Assignments list',
   },
+  search: {
+    id: 'OrganizationsControl.search',
+    defaultMessage: 'Search',
+  },
+  noResultsFound: {
+    id: 'OrganizationsControl.noResultsFound',
+    defaultMessage: 'No results found',
+  },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
+export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const [valueSearch, setValueSearch] = useState('');
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
+
+  const filteredProjects = useMemo(
+    () =>
+      availableProjects.reduce((acc, { organizationSlug, organizationName, projects }) => {
+        const isOrganization = organizationName.includes(valueSearch);
+        const searchProjects = projects.filter(({ projectName }) =>
+          projectName.includes(valueSearch),
+        );
+
+        return isOrganization || searchProjects.length > 0
+          ? [
+              ...acc,
+              {
+                organizationSlug,
+                organizationName,
+                projects: searchProjects,
+              },
+            ]
+          : acc;
+      }, []),
+    [valueSearch, availableProjects],
+  );
 
   const onClose = () => {
     closeSidebar();
     closePopover();
   };
 
+  const handleChange = (event) => {
+    setValueSearch(event.target.value);
+  };
+
+  const handleClear = () => {
+    setValueSearch('');
+  };
+
   return (
     <div className={cx('organizations-popover')}>
+      <div className={cx('organizations-search')}>
+        <ThemeProvider theme={variant}>
+          <FieldText
+            startIcon={Parser(SearchIcon)}
+            placeholder={formatMessage(messages.search)}
+            defaultWidth={false}
+            value={valueSearch}
+            onChange={handleChange}
+            onClear={handleClear}
+            clearable
+          />
+        </ThemeProvider>
+      </div>
       {availableProjects.length > 0 && (
         <>
           <div className={cx('all-organizations')}>
@@ -69,9 +125,11 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           <div className={cx('divider')} />
         </>
       )}
-      <div className={cx('organizations-assignments')}>
-        {formatMessage(messages.assignmentsList)}
-      </div>
+      {filteredProjects.length > 0 && (
+        <div className={cx('organizations-assignments')}>
+          {formatMessage(messages.assignmentsList)}
+        </div>
+      )}
       <ScrollWrapper
         autoHide
         autoHeight
@@ -79,18 +137,25 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         hideTracksWhenNotNeeded
         className={cx('scroll-wrapper')}
       >
-        {availableProjects.map(({ organizationName, organizationSlug, projects }) => (
-          <OrganizationsItem
-            organizationName={organizationName}
-            organizationSlug={organizationSlug}
-            projects={projects}
-            onClick={onClose}
-            isOpen={currentOrganization === organizationSlug}
-            isActive={currentOrganization === organizationSlug && !projectSlug}
-            currentProject={projectSlug}
-            key={`${organizationSlug}-${projectSlug}`}
-          />
-        ))}
+        {filteredProjects.length > 0 ? (
+          filteredProjects.map(({ organizationName, organizationSlug, projects }) => (
+            <OrganizationsItem
+              organizationName={organizationName}
+              organizationSlug={organizationSlug}
+              projects={projects}
+              onClick={onClose}
+              isOpen={currentOrganization === organizationSlug}
+              isActive={currentOrganization === organizationSlug && !projectSlug}
+              currentProject={projectSlug}
+              key={`${organizationSlug}-${projectSlug}`}
+              isAllOpen={currentOrganization === organizationSlug || !!valueSearch}
+            />
+          ))
+        ) : (
+          <div className={cx('organizations-empty-state')}>
+            {formatMessage(messages.noResultsFound)}
+          </div>
+        )}
       </ScrollWrapper>
     </div>
   );
@@ -99,4 +164,5 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
 OrganizationsPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
+  variant: PropTypes.oneOf(['light', 'dark']),
 };

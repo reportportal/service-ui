@@ -1533,6 +1533,8 @@
   "OrganizationsItem.open": "открыть",
   "OrganizationsPopover.allOrganizations": "Все организации",
   "OrganizationsControl.assignmentsList": "Назначенный список",
+  "OrganizationsControl.noResultsFound": "Никаких результатов найдено не было",
+  "OrganizationsControl.search": "Поиск",
   "OverallStatisticsControls.ContentFieldsValidationError": "Выберите не меньше одного элемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерии для виджета",
   "OverallStatisticsControls.ItemsFieldLabel": "Элементы",

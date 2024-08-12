@@ -1533,6 +1533,8 @@
   "OrganizationsItem.open": "відкрити",
   "OrganizationsPopover.allOrganizations": "Всі організації",
   "OrganizationsControl.assignmentsList": "Призначений список",
+  "OrganizationsControl.noResultsFound": "Ніяких результатів знайдено не було",
+  "OrganizationsControl.search": "Пошук",
   "OverallStatisticsControls.ContentFieldsValidationError": "Виберіть не менше одного елемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерії для віджету",
   "OverallStatisticsControls.ItemsFieldLabel": "Елементи",

@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
@@ -45,6 +45,7 @@ export const OrganizationsItem = ({
   isActive,
   onClick,
   currentProject,
+  isAllOpen,
 }) => {
   const { formatMessage } = useIntl();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
@@ -60,6 +61,10 @@ export const OrganizationsItem = ({
       organizationItemRef.current.scrollIntoView({ block: 'end' });
     }
   }, [isActive]);
+
+  useEffect(() => {
+    setIsCollapsed(isAllOpen);
+  }, [isAllOpen]);
 
   const onShowOpenButton = () => {
     setIsShowOpenButton(true);
@@ -168,6 +173,7 @@ OrganizationsItem.propTypes = {
   organizationSlug: PropTypes.string.isRequired,
   projects: PropTypes.array.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  isAllOpen: PropTypes.bool.isRequired,
   isActive: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   currentProject: PropTypes.string.isRequired,
