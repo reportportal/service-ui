@@ -51,4 +51,5 @@ export const docsReferences = {
     'https://reportportal.io/docs/reportportal-configuration/HowToGetAnAccessTokenInReportPortal/#2-authorization-with-users-api-key-for-agents',
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',
   pluginsDocs: 'https://reportportal.io/docs/plugins/',
+  projectConfigurationDocs: 'https://reportportal.io/docs/configuration/ProjectConfiguration',
 };

@@ -47,7 +47,7 @@ export const LoginBlock = () => {
   return (
     <>
       <PageBlockContainer header={messages.welcome} hint={messages.login}>
-        {!isEmptyObject(externalAuth) ? (
+        {isEmptyObject(externalAuth) ? (
           <>
             <ExternalLoginBlock externalAuth={externalAuth} />
             <div className={cx('separator')}>

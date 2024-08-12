@@ -107,7 +107,7 @@ export const Notifications = () => {
           rules={notificationRulesByTypes[item.name] || []}
         />
       ))}
-      <NotificationsFooter />
+      <NotificationsFooter isReadOnly={isReadOnly} />
     </SettingsPageContent>
   );
 };

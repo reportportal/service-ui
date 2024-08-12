@@ -29,13 +29,14 @@ import { useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { docsReferences } from 'common/utils';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import PropTypes from 'prop-types';
 import { messages } from '../messages';
 import styles from './footer.scss';
 import { HelpPanel } from '../helpPanel';
 
 const cx = classNames.bind(styles);
 
-export const NotificationsFooter = () => {
+export const NotificationsFooter = ({ isReadOnly }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(activeProjectSelector);
 
@@ -66,9 +67,24 @@ export const NotificationsFooter = () => {
     },
   ];
 
+  if (isReadOnly) {
+    footerItems.unshift({
+      title: formatMessage(messages.unableToConfigure),
+      mainIcon: discoverPluginsIcon,
+      link: docsReferences.projectConfigurationDocs,
+      description: formatMessage(messages.unableToConfigureDescription),
+      openIcon: openInNewTabIcon,
+      event: PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_PROJECT_CONFIGURATION_LINK,
+    });
+  }
+
   return (
     <div className={cx('footer')}>
       <HelpPanel items={footerItems} />
     </div>
   );
+};
+
+NotificationsFooter.propTypes = {
+  isReadOnly: PropTypes.bool,
 };
