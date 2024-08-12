@@ -1510,6 +1510,8 @@
   "NotificationsEnableForm.toggleNotificationsLabel": "Аўтаматычныя апавяшчэнні па электроннай пошце",
   "NotificationsEnableForm.toggleNotificationsNote": "Адпраўляць апавяшчэнні па электроннай пошце аб заканчэнні запуску",
   "NotificationsEnableForm.typeDescription": "Выберыце {type} спіс атрымальнікаў для кожнага правіла, каб адпраўляць апавяшчэнні аб запуску ",
+  "NotificationsEnableForm.unableToConfigure": "Чаму я не магу яго наладзіць?",
+  "NotificationsEnableForm.unableToConfigureDescription": "Даведайцеся больш пра ролі і дазволы",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налады апавяшчэнняў былі паспяхова абноўлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Абярыце па меншай меры адзін элемент",
   "OverallStatisticsControls.CriteriaFieldLabel": "Крытэрыі для віджэта",

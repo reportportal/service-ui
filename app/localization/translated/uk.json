@@ -1510,6 +1510,8 @@
   "NotificationsEnableForm.toggleNotificationsLabel": "Автоматичне сповіщення електронною поштою",
   "NotificationsEnableForm.toggleNotificationsNote": "Надсилайте сповіщення електронною поштою про завершення запуску",
   "NotificationsEnableForm.typeDescription": "Виберіть {type} список одержувачів для кожного правила, щоб надсилати сповіщення про запуск ",
+  "NotificationsEnableForm.unableToConfigure": "Чому я не можу це налаштувати?",
+  "NotificationsEnableForm.unableToConfigureDescription": "Докладніше про ролі та дозволи",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налаштування сповіщень були успішно оновлені!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Виберіть не менше одного елемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерії для віджету",

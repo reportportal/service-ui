@@ -132,6 +132,14 @@ export const messages = defineMessages({
     defaultMessage:
       'Select {type} recipients list for every rule to send launch related notifications ',
   },
+  unableToConfigure: {
+    id: 'NotificationsEnableForm.unableToConfigure',
+    defaultMessage: "Why can't I configure it?",
+  },
+  unableToConfigureDescription: {
+    id: 'NotificationsEnableForm.unableToConfigureDescription',
+    defaultMessage: 'Learn more about roles and permissions',
+  },
   discoverPlugins: {
     id: 'NotificationsEnableForm.discoverPlugins',
     defaultMessage: 'Discover plugins',
