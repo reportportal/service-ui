@@ -75,6 +75,7 @@ export const NotificationsFooter = ({ isReadOnly }) => {
       description: formatMessage(messages.unableToConfigureDescription),
       openIcon: openInNewTabIcon,
       event: PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_PROJECT_CONFIGURATION_LINK,
+      automationId: 'whyCannotConfigureLink',
     });
   }
 
@@ -83,6 +84,10 @@ export const NotificationsFooter = ({ isReadOnly }) => {
       <HelpPanel items={footerItems} />
     </div>
   );
+};
+
+NotificationsFooter.defaultProps = {
+  isReadOnly: false,
 };
 
 NotificationsFooter.propTypes = {
