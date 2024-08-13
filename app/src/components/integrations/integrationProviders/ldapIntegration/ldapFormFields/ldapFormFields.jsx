@@ -313,6 +313,7 @@ export class LdapFormFields extends Component {
     { value: 'LDAP_SHA', label: 'LDAP_SHA' },
     { value: 'MD4', label: 'MD4' },
     { value: 'MD5', label: 'MD5' },
+    { value: 'PBKDF2', label: 'PBKDF2' },
   ];
 
   render() {
