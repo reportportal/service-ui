@@ -314,8 +314,8 @@ export class LdapFormFields extends Component {
     { value: 'MD4', label: 'MD4' },
     { value: 'MD5', label: 'MD5' },
     { value: 'PBKDF2', label: 'PBKDF2-SHA1' },
-    { value: 'PBKDF2-SHA256', label: 'PBKDF2-SHA256' },
-    { value: 'PBKDF2-SHA512', label: 'PBKDF2-SHA512' },
+    { value: 'PBKDF2WithHmacSHA256', label: 'PBKDF2-SHA256' },
+    { value: 'PBKDF2WithHmacSHA512', label: 'PBKDF2-SHA512' },
   ];
 
   render() {
