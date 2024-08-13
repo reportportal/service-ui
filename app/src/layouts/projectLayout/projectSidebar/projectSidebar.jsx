@@ -33,6 +33,7 @@ import {
   PROJECT_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
+  ALL_ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -148,6 +149,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
+  const linkToAllOrganization = { type: ALL_ORGANIZATIONS_PAGE };
   const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };
   const linkToUserProfilePage = {
     type: USER_PROFILE_PAGE_PROJECT_LEVEL,
@@ -168,6 +170,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
+      linkToAllOrganization={linkToAllOrganization}
       link={link}
       titles={titles}
       isExtendedNav

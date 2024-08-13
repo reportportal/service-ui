@@ -21,7 +21,6 @@ import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
 import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
@@ -40,7 +39,7 @@ export const messages = defineMessages({
   },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
+export const OrganizationsPopover = ({ closePopover, closeSidebar, linkToAllOrganization }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
@@ -58,7 +57,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         <>
           <div className={cx('all-organizations')}>
             <NavLink
-              to={{ type: ALL_ORGANIZATIONS_PAGE }}
+              to={linkToAllOrganization}
               className={cx('all-organizations-link')}
               onClick={onClose}
               activeClassName={cx('active')}
@@ -99,4 +98,5 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
 OrganizationsPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
+  linkToAllOrganization: PropTypes.object.isRequired,
 };

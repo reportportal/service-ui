@@ -29,6 +29,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ORGANIZATIONS_PAGE,
   USER_PROFILE_PAGE,
+  ALL_ORGANIZATIONS_PAGE_INSTANCE_LEVEL,
 } from 'controllers/pages/constants';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import {
@@ -116,6 +117,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
+  const linkToAllOrganization = { type: ALL_ORGANIZATIONS_PAGE_INSTANCE_LEVEL };
   const link = { type: ORGANIZATIONS_PAGE };
   const linkToUserProfilePage = { type: USER_PROFILE_PAGE };
   const titles = {
@@ -135,6 +137,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       }}
       link={link}
       titles={titles}
+      linkToAllOrganization={linkToAllOrganization}
     />
   );
 

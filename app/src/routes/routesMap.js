@@ -128,7 +128,10 @@ const routesMap = {
   [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
 
-  ALL_ORGANIZATIONS_PAGE: redirectRoute('/', () => ({ type: ORGANIZATIONS_PAGE })),
+  ALL_ORGANIZATIONS_PAGE_INSTANCE_LEVEL: redirectRoute('/', () => ({ type: ORGANIZATIONS_PAGE })),
+  ALL_ORGANIZATIONS_PAGE: redirectRoute('/allOrganizations', () => ({
+    type: ORGANIZATIONS_PAGE,
+  })),
   ORGANIZATIONS_PAGE: redirectRoute('/organizations', () => ({ type: PROJECTS_PAGE })),
 
   [USER_PROFILE_PAGE]: redirectRoute('/userProfile', () => ({
