@@ -40,6 +40,7 @@ import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { uniqueErrorGridCellComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { omit } from 'common/utils';
 import { modifyColumnsFunc } from './utils';
 import styles from './clusterItemsGridRow.scss';
 
@@ -164,7 +165,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
                     onEditItem={onEditItem}
                     onEditDefect={onEditDefect}
                     onStatusUpdate={() => dispatch(reloadClustersAction())}
-                    events={UNIQUE_ERRORS_PAGE_EVENTS}
+                    events={omit(UNIQUE_ERRORS_PAGE_EVENTS, ['MAKE_DECISION_MODAL_EVENTS'])}
                   />
                   {totalPages > currentPage && (
                     <div
