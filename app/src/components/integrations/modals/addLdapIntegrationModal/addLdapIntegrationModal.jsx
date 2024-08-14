@@ -131,7 +131,6 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
 };
 AddLdapIntegrationModal.propTypes = {
   data: PropTypes.object,
-  handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired,
 };

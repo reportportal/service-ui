@@ -180,7 +180,6 @@ TwoStepsFooter.propTypes = {
 };
 TwoStepsFooter.defaultProps = {
   isEdit: false,
-  onForceConfirmChange: () => {},
   onDiscard: () => {},
   forceConfirm: false,
   closeModal: false,
