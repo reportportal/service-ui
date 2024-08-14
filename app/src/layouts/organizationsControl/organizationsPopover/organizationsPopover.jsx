@@ -63,9 +63,9 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) =>
   const filteredProjects = useMemo(
     () =>
       availableProjects.reduce((acc, { organizationSlug, organizationName, projects }) => {
-        const isOrganization = organizationName.includes(valueSearch);
+        const isOrganization = organizationName.toLowerCase().includes(valueSearch.toLowerCase());
         const searchProjects = projects.filter(({ projectName }) =>
-          projectName.includes(valueSearch),
+          projectName.toLowerCase().includes(valueSearch.toLowerCase()),
         );
 
         return isOrganization || searchProjects.length > 0
