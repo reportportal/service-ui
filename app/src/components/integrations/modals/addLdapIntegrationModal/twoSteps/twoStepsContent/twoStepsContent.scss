@@ -1,0 +1,65 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+div:has(> .two-steps-content) {
+  width: 100%;
+}
+
+.two-steps-content {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  min-height: 440px;
+}
+
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  width: 232px;
+  padding: 24px 16px;
+  background-color: $COLOR--bg-000;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(55, 67, 98, 0.10);
+}
+
+.step {
+  margin-right: auto;
+  color: $COLOR--almost-black;
+  font-size: 15px;
+  line-height: 24px;
+
+
+  &.active {
+    color: $COLOR--topaz-pressed;
+  }
+}
+
+.content {
+  width: 360px;
+
+  > :nth-child(n) {
+    padding-right: 0;
+  }
+
+  > :first-child {
+    padding-top: 4px;
+  }
+}
+
+.scrollbars {
+  width: 376px !important;
+}

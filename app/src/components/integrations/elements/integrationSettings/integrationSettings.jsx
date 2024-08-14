@@ -22,6 +22,7 @@ import { useTracking } from 'react-tracking';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LDAP } from 'common/constants/pluginNames';
 import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import {
@@ -131,6 +132,7 @@ export const IntegrationSettings = (props) => {
     isGlobal,
   } = props;
   const pluginName = data.integrationType?.name;
+  const isLdap = pluginName === LDAP;
 
   return (
     <div className={cx('integration-settings')}>
@@ -149,17 +151,19 @@ export const IntegrationSettings = (props) => {
             isGlobal={isGlobal}
             isEditable={isEditable}
           />
-          <IntegrationForm
-            form={formKey}
-            data={data}
-            connected={connected}
-            pluginName={pluginName}
-            isGlobal={isGlobal}
-            onSubmit={onUpdate}
-            formFieldsComponent={formFieldsComponent}
-            isEmptyConfiguration={isEmptyConfiguration}
-            isEditable={isEditable}
-          />
+          {!isLdap && (
+            <IntegrationForm
+              form={formKey}
+              data={data}
+              connected={connected}
+              pluginName={pluginName}
+              isGlobal={isGlobal}
+              onSubmit={onUpdate}
+              formFieldsComponent={formFieldsComponent}
+              isEmptyConfiguration={isEmptyConfiguration}
+              isEditable={isEditable}
+            />
+          )}
         </>
       )}
     </div>

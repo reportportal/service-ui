@@ -19,17 +19,17 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
+import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations/formFieldComponentsMap';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
-import { useTracking } from 'react-tracking';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addIntegrationModal.scss';
 
@@ -79,8 +79,12 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   };
 
   const onSubmit = (newData) => {
-    if (isGlobal && !customProps.editAuthMode) {
-      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
+    if (isGlobal) {
+      if (!customProps.editAuthMode) {
+        trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
+      } else {
+        trackEvent(PLUGINS_PAGE_EVENTS.clickEditGlobalIntegration(data.instanceType));
+      }
     }
 
     onConfirm(newData, metaData);
