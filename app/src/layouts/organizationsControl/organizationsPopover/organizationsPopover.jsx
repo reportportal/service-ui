@@ -17,8 +17,7 @@
 import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
-import Parser from 'html-react-parser';
-import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
+import { FieldText, SearchIcon, ThemeProvider } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
@@ -26,8 +25,8 @@ import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { OrganizationsItem } from './organizationsItem';
-import SearchIcon from '../img/search-icon-inline.svg';
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
@@ -42,17 +41,9 @@ export const messages = defineMessages({
     id: 'OrganizationsControl.assignmentsList',
     defaultMessage: 'Assignments list',
   },
-  search: {
-    id: 'OrganizationsControl.search',
-    defaultMessage: 'Search',
-  },
-  noResultsFound: {
-    id: 'OrganizationsControl.noResultsFound',
-    defaultMessage: 'No results found',
-  },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) => {
+export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
@@ -98,10 +89,10 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) =>
   return (
     <div className={cx('organizations-popover')}>
       <div className={cx('organizations-search')}>
-        <ThemeProvider theme={variant}>
+        <ThemeProvider theme="dark">
           <FieldText
-            startIcon={Parser(SearchIcon)}
-            placeholder={formatMessage(messages.search)}
+            startIcon=<SearchIcon />
+            placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
             defaultWidth={false}
             value={valueSearch}
             onChange={handleChange}
@@ -153,7 +144,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) =>
           ))
         ) : (
           <div className={cx('organizations-empty-state')}>
-            {formatMessage(messages.noResultsFound)}
+            {formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
           </div>
         )}
       </ScrollWrapper>
@@ -164,5 +155,4 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, variant }) =>
 OrganizationsPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
-  variant: PropTypes.oneOf(['light', 'dark']),
 };
