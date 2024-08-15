@@ -127,6 +127,7 @@
   }
 
   // TODO: Remove this section. This approach will be replaced with the integration of the UI-Kit dropdown component.
+  /* stylelint-disable-next-line selector-max-attribute */
   [class*='modal-window'] & {
     max-width: 100%;
   }
