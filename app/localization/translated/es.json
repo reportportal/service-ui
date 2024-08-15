@@ -1524,8 +1524,6 @@
   "OrganizationsItem.open": "open",
   "OrganizationsPopover.allOrganizations": "All organizatoins",
   "OrganizationsControl.assignmentsList": "Assignments list",
-  "OrganizationsControl.noResultsFound": "No results found",
-  "OrganizationsControl.search": "Search",
   "OverallStatisticsControls.ContentFieldsValidationError": "Seleccione al menos un elemento",
   "OverallStatisticsControls.CriteriaFieldLabel": "Criterios para el widget",
   "OverallStatisticsControls.ItemsFieldLabel": "Elementos",

@@ -1533,8 +1533,6 @@
   "OrganizationsItem.open": "адкрыць",
   "OrganizationsPopover.allOrganizations": "Усе арганізацыі",
   "OrganizationsControl.assignmentsList": "Прызначаны спіс",
-  "OrganizationsControl.noResultsFound": "Ніякіх вынікаў знойдзена не было",
-  "OrganizationsControl.search": "Пошук",
   "OverallStatisticsControls.ContentFieldsValidationError": "Абярыце па меншай меры адзін элемент",
   "OverallStatisticsControls.CriteriaFieldLabel": "Крытэрыі для віджэта",
   "OverallStatisticsControls.ItemsFieldLabel": "Элементы",

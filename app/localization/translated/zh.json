@@ -1533,8 +1533,6 @@
   "OrganizationsItem.open": "open",
   "OrganizationsPopover.allOrganizations": "All organizations",
   "OrganizationsControl.assignmentsList": "Assignments list",
-  "OrganizationsControl.noResultsFound": "No results found",
-  "OrganizationsControl.search": "Search",
   "OverallStatisticsControls.ContentFieldsValidationError": "您必须选中至少一个测试项",
   "OverallStatisticsControls.CriteriaFieldLabel": "小部件的标准",
   "OverallStatisticsControls.ItemsFieldLabel": "测试项",

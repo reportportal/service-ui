@@ -91,7 +91,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
       <div className={cx('organizations-search')}>
         <ThemeProvider theme="dark">
           <FieldText
-            startIcon=<SearchIcon />
+            startIcon={<SearchIcon />}
             placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
             defaultWidth={false}
             value={valueSearch}

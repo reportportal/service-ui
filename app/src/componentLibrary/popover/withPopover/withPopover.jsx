@@ -27,7 +27,6 @@ export const withPopover = ({
   ContentComponent,
   popoverWrapperClassName,
   tabIndex,
-  variant,
   ...popoverConfig
 }) => (WrappedComponent) => ({ isOpenPopover, togglePopover, ...props }) => {
   const parentRef = useRef();
@@ -61,8 +60,8 @@ export const withPopover = ({
         <WrappedComponent isPopoverOpen={isPopoverOpened} {...props} />
       </button>
       {isPopoverOpened && (
-        <Popover onClose={onClose} parentRef={parentRef} variant={variant} {...popoverConfig}>
-          <ContentComponent closePopover={onClose} variant={variant} {...props} />
+        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
+          <ContentComponent closePopover={onClose} {...props} />
         </Popover>
       )}
     </div>
