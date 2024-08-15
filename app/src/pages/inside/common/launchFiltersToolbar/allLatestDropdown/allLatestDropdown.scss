@@ -96,8 +96,6 @@
   top: -1px;
   display: inline-block;
   padding: 0 10px;
-  width: 10px;
-  height: 10px;
   line-height: 8px;
   &.active {
     svg {
@@ -106,6 +104,7 @@
   }
 
   svg {
+    width: 10px;
     fill: $COLOR--gray-47;
   }
 
