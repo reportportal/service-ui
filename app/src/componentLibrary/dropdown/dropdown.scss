@@ -111,7 +111,7 @@
   display: none;
   width: max-content;
   max-width: 384px;
-  min-width: 240px;
+  min-width: 100%;
   min-height: 10px;
   background: $backgroundColor;
   box-shadow: $BOX_SHADOW--modal-window;
@@ -124,6 +124,11 @@
     &:focus-visible {
       outline: none;
     }
+  }
+
+  // TODO: Remove this section. This approach will be replaced with the integration of the UI-Kit dropdown component.
+  [class*='modal-window'] & {
+    max-width: 100%;
   }
 }
 
