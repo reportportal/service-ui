@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
+import { FieldText, SearchIcon, ThemeProvider } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
@@ -23,6 +25,7 @@ import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
@@ -45,15 +48,59 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const [valueSearch, setValueSearch] = useState('');
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
+
+  const filteredProjects = useMemo(
+    () =>
+      availableProjects.reduce((acc, { organizationSlug, organizationName, projects }) => {
+        const isOrganization = organizationName.toLowerCase().includes(valueSearch.toLowerCase());
+        const searchProjects = projects.filter(({ projectName }) =>
+          projectName.toLowerCase().includes(valueSearch.toLowerCase()),
+        );
+
+        return isOrganization || searchProjects.length > 0
+          ? [
+              ...acc,
+              {
+                organizationSlug,
+                organizationName,
+                projects: searchProjects,
+              },
+            ]
+          : acc;
+      }, []),
+    [valueSearch, availableProjects],
+  );
 
   const onClose = () => {
     closeSidebar();
     closePopover();
   };
 
+  const handleChange = (event) => {
+    setValueSearch(event.target.value);
+  };
+
+  const handleClear = () => {
+    setValueSearch('');
+  };
+
   return (
     <div className={cx('organizations-popover')}>
+      <div className={cx('organizations-search')}>
+        <ThemeProvider theme="dark">
+          <FieldText
+            startIcon={<SearchIcon />}
+            placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
+            defaultWidth={false}
+            value={valueSearch}
+            onChange={handleChange}
+            onClear={handleClear}
+            clearable
+          />
+        </ThemeProvider>
+      </div>
       {availableProjects.length > 0 && (
         <>
           <div className={cx('all-organizations')}>
@@ -69,9 +116,11 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           <div className={cx('divider')} />
         </>
       )}
-      <div className={cx('organizations-assignments')}>
-        {formatMessage(messages.assignmentsList)}
-      </div>
+      {filteredProjects.length > 0 && (
+        <div className={cx('organizations-assignments')}>
+          {formatMessage(messages.assignmentsList)}
+        </div>
+      )}
       <ScrollWrapper
         autoHide
         autoHeight
@@ -79,18 +128,25 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         hideTracksWhenNotNeeded
         className={cx('scroll-wrapper')}
       >
-        {availableProjects.map(({ organizationName, organizationSlug, projects }) => (
-          <OrganizationsItem
-            organizationName={organizationName}
-            organizationSlug={organizationSlug}
-            projects={projects}
-            onClick={onClose}
-            isOpen={currentOrganization === organizationSlug}
-            isActive={currentOrganization === organizationSlug && !projectSlug}
-            currentProject={projectSlug}
-            key={`${organizationSlug}-${projectSlug}`}
-          />
-        ))}
+        {filteredProjects.length > 0 ? (
+          filteredProjects.map(({ organizationName, organizationSlug, projects }) => (
+            <OrganizationsItem
+              organizationName={organizationName}
+              organizationSlug={organizationSlug}
+              projects={projects}
+              onClick={onClose}
+              isOpen={currentOrganization === organizationSlug}
+              isActive={currentOrganization === organizationSlug && !projectSlug}
+              currentProject={projectSlug}
+              key={`${organizationSlug}-${projectSlug}`}
+              isAllOpen={currentOrganization === organizationSlug || !!valueSearch}
+            />
+          ))
+        ) : (
+          <div className={cx('organizations-empty-state')}>
+            {formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          </div>
+        )}
       </ScrollWrapper>
     </div>
   );

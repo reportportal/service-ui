@@ -78,3 +78,15 @@
   color: $COLOR--darkmode-gray-150;
   font-family: $FONT-ROBOTO-MEDIUM;
 }
+
+.organizations-empty-state {
+  width: 300px;
+  height: 100px;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--darkmode-gray-150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
