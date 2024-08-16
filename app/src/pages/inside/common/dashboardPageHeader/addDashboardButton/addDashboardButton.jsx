@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   buttonTooltip: {
     id: 'DashboardHeaderButton.buttonTooltip',
-    defaultMessage: `The limit of 300 dashboards has been reached. To create a new one you need to delete at least one created previously`,
+    defaultMessage: `The limit of 3000 dashboards has been reached. To create a new one you need to delete at least one created previously`,
   },
 });
 

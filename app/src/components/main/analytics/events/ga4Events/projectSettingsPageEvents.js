@@ -143,6 +143,11 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     element_name: 'all_notifications',
   }),
 
+  CLICK_PROJECT_CONFIGURATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    link_name: 'project_configuration',
+  },
+
   CLICK_DISCOVER_PLUGINS_LINK: {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     link_name: 'discover_plugins',

@@ -161,10 +161,12 @@ const AddEditDefectTypeModal = ({
     onClick: () => {
       handleSubmit(submitActions)();
     },
+    'data-automation-id': 'submitButton',
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   const normalizeColor = (currentColor) => {

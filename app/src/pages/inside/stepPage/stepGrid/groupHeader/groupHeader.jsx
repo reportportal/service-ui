@@ -60,6 +60,7 @@ export const GroupHeader = connect((state) => ({
     pathNames = [newLaunchPathName, ...pathNames];
     sliceIndexBegin = 1;
   }
+  const itemLaunchId = isTestItemsList ? data[0].launchId : launchId || data[0].launchId;
 
   return (
     <div className={cx('group-header-row')}>
@@ -72,7 +73,7 @@ export const GroupHeader = connect((state) => ({
               to={createLink(
                 projectSlug,
                 filterId,
-                launchId || data[0].launchId,
+                itemLaunchId,
                 array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
                 organizationSlug,
               )}

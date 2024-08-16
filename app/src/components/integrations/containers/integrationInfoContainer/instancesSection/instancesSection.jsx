@@ -222,7 +222,7 @@ export class InstancesSection extends Component {
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
         eventsInfo: {
-          confirmBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UNINSTALL_PLUGIN_MODAL,
+          confirmBtn: PLUGINS_PAGE_EVENTS.clickConfirmUninstallPlugin(instanceType),
           closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
         },

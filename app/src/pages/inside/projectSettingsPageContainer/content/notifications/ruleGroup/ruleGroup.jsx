@@ -288,7 +288,6 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 disabled={isReadOnly}
                 value={isPluginNotificationsEnabled}
                 onChange={(e) => togglePluginNotificationsEnabled(e.target.checked)}
-                data-automation-id="enabledToggle"
               >
                 <span className={cx('name-wrapper')}>
                   <i className={cx('capitalized')}>{pluginName}</i>

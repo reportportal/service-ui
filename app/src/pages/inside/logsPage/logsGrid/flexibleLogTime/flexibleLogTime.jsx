@@ -16,6 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { dateFormat, getMicroSeconds } from 'common/utils/timeDateUtils';
 import { LOG_TIME_FORMAT_ABSOLUTE, LOG_TIME_FORMAT_EXTENDED } from 'controllers/user/constants';
@@ -23,18 +24,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLogTimeFormatAction, userIdSelector } from 'controllers/user';
 import { logTimeFormatSelector } from 'controllers/user/selectors';
 import { setLogTimeFormatInStorage } from 'controllers/log/storageUtils';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './flexibleLogTime.scss';
 
 const cx = classNames.bind(styles);
 
 export const FlexibleLogTime = ({ time }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const logTimeFormat = useSelector(logTimeFormatSelector);
   const userId = useSelector(userIdSelector);
 
   const isAbsolute = () => logTimeFormat === LOG_TIME_FORMAT_ABSOLUTE;
   const toggleFormat = () => {
-    const format = isAbsolute() ? LOG_TIME_FORMAT_EXTENDED : LOG_TIME_FORMAT_ABSOLUTE;
+    const hasAbsoluteState = isAbsolute();
+    const format = hasAbsoluteState ? LOG_TIME_FORMAT_EXTENDED : LOG_TIME_FORMAT_ABSOLUTE;
+    trackEvent(LOG_PAGE_EVENTS.getClickOnLogMicrosecondPrecisionEvent(hasAbsoluteState));
     dispatch(setLogTimeFormatAction(format));
     setLogTimeFormatInStorage(userId, format);
   };

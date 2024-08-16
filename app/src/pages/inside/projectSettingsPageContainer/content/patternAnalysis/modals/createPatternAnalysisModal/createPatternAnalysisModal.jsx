@@ -55,9 +55,11 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSave)(),
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   return (
@@ -68,7 +70,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       footerNode={
-        <FieldProvider name="enabled" format={(value) => !!value} dataAutomationId="enabledToggle">
+        <FieldProvider name="enabled" format={(value) => !!value}>
           <Toggle className={cx('toggle')}>
             {formatMessage(messages.createPatternModalToggle)}
           </Toggle>

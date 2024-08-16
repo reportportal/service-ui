@@ -33,6 +33,7 @@ export {
   dashboardFullScreenModeSelector,
   loadingSelector,
   totalDashboardsSelector,
+  dashboardPaginationSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,
