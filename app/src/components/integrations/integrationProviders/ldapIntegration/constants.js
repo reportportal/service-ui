@@ -35,10 +35,8 @@ export const PHOTO_KEY = 'photo';
 export const LDAP_PREFIX = 'ldap://';
 export const LDAPS_PREFIX = 'ldaps://';
 
-export const FULL_NAME = 'FULL_NAME';
-
 export const DEFAULT_FORM_CONFIG = {
   [PASSWORD_ENCODER_TYPE_KEY]: '',
-  [NAME_TYPE_KEY]: FULL_NAME,
+  [NAME_TYPE_KEY]: FULL_NAME_KEY,
   [URL_KEY]: LDAP_PREFIX,
 };

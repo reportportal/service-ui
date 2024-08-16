@@ -23,11 +23,11 @@ import { defineMessages, useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
-import { FULL_NAME } from 'components/integrations/integrationProviders/ldapIntegration/constants';
+import { FULL_NAME_KEY } from 'components/integrations/integrationProviders/ldapIntegration/constants';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TwoStepsContent } from './twoSteps/twoStepsContent';
-import { createTwoStepsFooter } from './twoSteps/twoStepsFooter';
+import { TwoStepsFooter } from './twoSteps/twoStepsFooter';
 
 const messages = defineMessages({
   createLdapTitle: {
@@ -62,16 +62,18 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
     setMetaData({ ...metaData, ...newMetaData });
   };
 
-  const isEdit = customProps.editAuthMode;
+  const isEdit = customProps.isEdit;
 
   const onSubmit = (newData) => {
     if (stepNumber === 1 && !forceConfirm) {
       setStepNumber(2);
     } else if (isEdit) {
-      trackEvent(PLUGINS_PAGE_EVENTS.clickEditLdapIntegration(newData.nameType === FULL_NAME));
+      trackEvent(PLUGINS_PAGE_EVENTS.clickEditLdapIntegration(newData.nameType === FULL_NAME_KEY));
       onConfirm(newData, () => setCloseModal(true), metaData);
     } else {
-      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateLdapIntegration(newData.nameType === FULL_NAME));
+      trackEvent(
+        PLUGINS_PAGE_EVENTS.clickCreateLdapIntegration(newData.nameType === FULL_NAME_KEY),
+      );
       onConfirm(newData, metaData);
     }
   };
@@ -101,16 +103,19 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
       title={formatMessage(isEdit ? editTitle : createTitle)}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
-      CustomFooter={createTwoStepsFooter(
-        stepNumber,
-        setStepNumber,
-        onStepChange,
-        onDiscard,
-        isEdit,
-        setForceConfirm,
-        handleSubmit,
-        forceConfirm,
-        closeModal,
+      createFooter={(closeModalHandler) => (
+        <TwoStepsFooter
+          stepNumber={stepNumber}
+          onStepNumberChange={setStepNumber}
+          onStepChange={onStepChange}
+          onDiscard={onDiscard}
+          isEdit={isEdit}
+          onForceConfirmChange={setForceConfirm}
+          handleSubmit={handleSubmit}
+          forceConfirm={forceConfirm}
+          closeModal={closeModal}
+          closeHandler={closeModalHandler}
+        />
       )}
       size={'large'}
     >

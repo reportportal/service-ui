@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -46,10 +46,9 @@ import {
   NAME_TYPE_KEY,
   FIRST_NAME_KEY,
   LAST_NAME_KEY,
-  FULL_NAME,
   FIRST_AND_LAST_NAME_KEY,
 } from '../constants';
-import { InputConditional } from './inputConditional';
+import { FieldTextConditional } from './fieldTextConditional';
 import styles from './ldapFormFields.scss';
 
 const cx = classNames.bind(styles);
@@ -120,71 +119,107 @@ const messages = defineMessages({
     id: 'LdapFormFields.photoAttributeLabel',
     defaultMessage: 'Photo attribute',
   },
+  fullName: {
+    id: 'LdapFormFields.fullName',
+    defaultMessage: 'Full name',
+  },
+  firstAndLastName: {
+    id: 'LdapFormFields.firstAndLastName',
+    defaultMessage: 'First & last name',
+  },
 });
 
 const urlValidator = bindMessageToValidator(validate.ldapUrl, 'requiredFieldHint');
 
-@connect((state) => ({
-  passwordEncoderType: integrationFormValueSelector(state, PASSWORD_ENCODER_TYPE_KEY),
-  nameType: integrationFormValueSelector(state, NAME_TYPE_KEY),
-}))
-@injectIntl
-export class LdapFormFields extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
-    stepNumber: PropTypes.number.isRequired,
-    disabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
-    initialData: PropTypes.object,
-    passwordEncoderType: PropTypes.string,
-    nameType: PropTypes.string,
-    updateMetaData: PropTypes.func,
-  };
+const LdapFormFieldsComponent = ({
+  initialize,
+  change,
+  stepNumber,
+  disabled,
+  lineAlign,
+  initialData,
+  passwordEncoderType,
+  nameType,
+  updateMetaData,
+}) => {
+  const { formatMessage } = useIntl();
 
-  static defaultProps = {
-    disabled: false,
-    lineAlign: false,
-    initialData: DEFAULT_FORM_CONFIG,
-    passwordEncoderType: '',
-    nameType: FULL_NAME,
-    updateMetaData: () => {},
-  };
-
-  componentDidMount() {
-    const { initialData, initialize } = this.props;
-    const data = isEmptyObject(initialData)
-      ? DEFAULT_FORM_CONFIG
-      : {
+  useEffect(() => {
+    const data = !isEmptyObject(initialData)
+      ? {
           [PASSWORD_ENCODER_TYPE_KEY]: '',
           [NAME_TYPE_KEY]:
             initialData[FIRST_NAME_KEY] || initialData[LAST_NAME_KEY]
               ? FIRST_AND_LAST_NAME_KEY
               : FULL_NAME_KEY,
           ...initialData,
-        };
+        }
+      : DEFAULT_FORM_CONFIG;
 
     initialize(data);
-    this.props.updateMetaData({
+    updateMetaData({
       [SECRET_FIELDS_KEY]: [MANAGER_PASSWORD_KEY, PASSWORD_ATTRIBUTE_KEY],
     });
-  }
+  }, []);
 
-  onChangePasswordEncoderType = (event, value) => {
+  const onChangePasswordEncoderType = (event, value) => {
     if (!value) {
-      this.props.change(PASSWORD_ATTRIBUTE_KEY, '');
+      change(PASSWORD_ATTRIBUTE_KEY, '');
     }
   };
 
-  onChangeNameType = () => {
-    this.props.change(FULL_NAME_KEY, '');
-    this.props.change(FIRST_NAME_KEY, '');
-    this.props.change(LAST_NAME_KEY, '');
+  const onChangeNameType = () => {
+    change(FULL_NAME_KEY, '');
+    change(FIRST_NAME_KEY, '');
+    change(LAST_NAME_KEY, '');
   };
 
-  getFieldsConfig = () => {
-    const { passwordEncoderType, nameType, stepNumber } = this.props;
+  const urlConditions = [
+    {
+      value: LDAPS_PREFIX,
+      label: LDAPS_PREFIX,
+    },
+    {
+      value: LDAP_PREFIX,
+      label: LDAP_PREFIX,
+    },
+  ];
+
+  const nameOptions = [
+    { value: FULL_NAME_KEY, label: formatMessage(messages.fullName) },
+    { value: FIRST_AND_LAST_NAME_KEY, label: formatMessage(messages.firstAndLastName) },
+  ];
+
+  const formatConditionalValue = (fullValue) => {
+    let formattedValue = {
+      value: '',
+      condition: urlConditions[0].value,
+    };
+    if (fullValue) {
+      const [condition, value] = fullValue.split('//');
+      formattedValue = {
+        value,
+        condition: `${condition}//`,
+      };
+    }
+    return formattedValue;
+  };
+
+  const parseConditionalValue = (value) => value && `${value.condition}${value.value}`;
+
+  const passwordEncoderOptions = [
+    { value: '', label: 'NO' },
+    { value: 'PLAIN', label: 'PLAIN' },
+    { value: 'SHA', label: 'SHA' },
+    { value: 'LDAP_SHA', label: 'LDAP_SHA' },
+    { value: 'MD4', label: 'MD4' },
+    { value: 'MD5', label: 'MD5' },
+    { value: 'PBKDF2', label: 'PBKDF2_SHA1' },
+    { value: 'PBKDF2_SHA256', label: 'PBKDF2_SHA256' },
+    { value: 'PBKDF2_SHA512', label: 'PBKDF2_SHA512' },
+  ];
+
+  const getFieldsConfig = () => {
     const defaultField = <FieldText maxLength="128" defaultWidth={false} />;
     const maxField = <FieldText maxLength="256" defaultWidth={false} />;
 
@@ -193,14 +228,14 @@ export class LdapFormFields extends Component {
         fieldProps: {
           name: URL_KEY,
           validate: urlValidator,
-          format: this.formatConditionalValue,
-          parse: this.parseConditionalValue,
+          format: formatConditionalValue,
+          parse: parseConditionalValue,
           required: true,
         },
         label: messages.urlLabel,
         children: (
           <FieldErrorHint>
-            <InputConditional conditions={this.urlConditions} placeholder={'example.com'} />
+            <FieldTextConditional conditions={urlConditions} placeholder={'example.com'} />
           </FieldErrorHint>
         ),
       },
@@ -260,13 +295,11 @@ export class LdapFormFields extends Component {
         fieldProps: {
           name: PASSWORD_ENCODER_TYPE_KEY,
           format: String,
-          onChange: this.onChangePasswordEncoderType,
+          onChange: onChangePasswordEncoderType,
           placeholder: 'NO',
         },
         label: messages.passwordEncoderTypeLabel,
-        children: (
-          <Dropdown options={this.passwordEncoderOptions} defaultWidth={false} mobileDisabled />
-        ),
+        children: <Dropdown options={passwordEncoderOptions} defaultWidth={false} mobileDisabled />,
       },
     ];
 
@@ -284,10 +317,10 @@ export class LdapFormFields extends Component {
         fieldProps: {
           name: NAME_TYPE_KEY,
           format: String,
-          onChange: this.onChangeNameType,
+          onChange: onChangeNameType,
         },
         label: messages.nameTypeLabel,
-        children: <Dropdown options={this.nameOptions} defaultWidth={false} mobileDisabled />,
+        children: <Dropdown options={nameOptions} defaultWidth={false} mobileDisabled />,
       },
       {
         fieldProps: {
@@ -350,74 +383,45 @@ export class LdapFormFields extends Component {
     }
   };
 
-  formatConditionalValue = (fullValue) => {
-    let formattedValue = {
-      value: '',
-      condition: this.urlConditions[0].value,
-    };
-    if (fullValue) {
-      const [condition, value] = fullValue.split('//');
-      formattedValue = {
-        value,
-        condition: `${condition}//`,
-      };
-    }
-    return formattedValue;
-  };
+  const fields = getFieldsConfig();
 
-  parseConditionalValue = (value) => value && `${value.condition}${value.value}`;
-
-  urlConditions = [
-    {
-      value: LDAPS_PREFIX,
-      label: LDAPS_PREFIX,
-    },
-    {
-      value: LDAP_PREFIX,
-      label: LDAP_PREFIX,
-    },
-  ];
-
-  passwordEncoderOptions = [
-    { value: '', label: 'NO' },
-    { value: 'PLAIN', label: 'PLAIN' },
-    { value: 'SHA', label: 'SHA' },
-    { value: 'LDAP_SHA', label: 'LDAP_SHA' },
-    { value: 'MD4', label: 'MD4' },
-    { value: 'MD5', label: 'MD5' },
-    { value: 'PBKDF2', label: 'PBKDF2_SHA1' },
-    { value: 'PBKDF2_SHA256', label: 'PBKDF2_SHA256' },
-    { value: 'PBKDF2_SHA512', label: 'PBKDF2_SHA512' },
-  ];
-
-  nameOptions = [
-    { value: FULL_NAME_KEY, label: 'Full name' },
-    { value: FIRST_AND_LAST_NAME_KEY, label: 'First & last name' },
-  ];
-
-  render() {
-    const {
-      intl: { formatMessage },
-      disabled,
-      lineAlign,
-    } = this.props;
-    const fields = this.getFieldsConfig();
-
-    return (
-      <Fragment>
-        {fields.map((item) => (
-          <IntegrationFormField
-            key={item.fieldProps.name}
-            disabled={disabled}
-            lineAlign={lineAlign}
-            label={formatMessage(item.label)}
-            formFieldContainerClassName={cx('field')}
-            {...item.fieldProps}
-          >
-            {item.children}
-          </IntegrationFormField>
-        ))}
-      </Fragment>
-    );
-  }
-}
+  return (
+    <Fragment>
+      {fields.map((item) => (
+        <IntegrationFormField
+          key={item.fieldProps.name}
+          disabled={disabled}
+          lineAlign={lineAlign}
+          label={formatMessage(item.label)}
+          formFieldContainerClassName={cx('field')}
+          {...item.fieldProps}
+        >
+          {item.children}
+        </IntegrationFormField>
+      ))}
+    </Fragment>
+  );
+};
+LdapFormFieldsComponent.propTypes = {
+  initialize: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  stepNumber: PropTypes.number.isRequired,
+  disabled: PropTypes.bool,
+  lineAlign: PropTypes.bool,
+  initialData: PropTypes.object,
+  passwordEncoderType: PropTypes.string,
+  nameType: PropTypes.string,
+  updateMetaData: PropTypes.func,
+};
+LdapFormFieldsComponent.defaultProps = {
+  disabled: false,
+  lineAlign: false,
+  initialData: DEFAULT_FORM_CONFIG,
+  passwordEncoderType: '',
+  nameType: FULL_NAME_KEY,
+  updateMetaData: () => {},
+};
+export const LdapFormFields = connect((state) => ({
+  passwordEncoderType: integrationFormValueSelector(state, PASSWORD_ENCODER_TYPE_KEY),
+  nameType: integrationFormValueSelector(state, NAME_TYPE_KEY),
+}))(LdapFormFieldsComponent);

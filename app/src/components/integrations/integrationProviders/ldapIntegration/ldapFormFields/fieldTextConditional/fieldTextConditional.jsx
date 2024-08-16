@@ -24,17 +24,16 @@ import {
   CONDITION_NOT_CNT,
   CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
-import styles from './inputConditional.scss';
+import styles from './fieldTextConditional.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputConditional = ({
+export const FieldTextConditional = ({
   value,
   placeholder,
   disabled,
   error,
   touched,
-  inputClassName,
   onChange,
   conditions,
 }) => {
@@ -48,14 +47,14 @@ export const InputConditional = ({
   };
 
   return (
-    <div className={cx('input-conditional')}>
+    <div className={cx('field-text-conditional')}>
       <Dropdown
         options={conditions}
         onChange={(condition) => onClickConditionItem(condition)}
         value={value.condition}
         className={cx('dropdown')}
       />
-      <div className={cx('input-wrapper', inputClassName)}>
+      <div className={cx('input-wrapper')}>
         <FieldText
           value={value.value}
           error={error}
@@ -69,7 +68,7 @@ export const InputConditional = ({
     </div>
   );
 };
-InputConditional.propTypes = {
+FieldTextConditional.propTypes = {
   value: PropTypes.shape({
     value: PropTypes.string,
     condition: PropTypes.string,
@@ -84,17 +83,15 @@ InputConditional.propTypes = {
       }),
     ]),
   ),
-  inputClassName: PropTypes.string,
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
   touched: PropTypes.bool,
   error: PropTypes.string,
   onChange: PropTypes.func,
 };
-InputConditional.defaultProps = {
+FieldTextConditional.defaultProps = {
   value: {},
   placeholder: '',
-  inputClassName: '',
   disabled: false,
   touched: false,
   error: '',

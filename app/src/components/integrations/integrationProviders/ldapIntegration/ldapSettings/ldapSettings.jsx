@@ -33,7 +33,7 @@ export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => 
           isGlobal,
           initialData: data.integrationParameters,
           customProps: {
-            editAuthMode: true,
+            isEdit: true,
           },
         },
       }),

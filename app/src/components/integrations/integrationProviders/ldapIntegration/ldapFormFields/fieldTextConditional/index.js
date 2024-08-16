@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { InputConditional } from './inputConditional';
+export { FieldTextConditional } from './fieldTextConditional';

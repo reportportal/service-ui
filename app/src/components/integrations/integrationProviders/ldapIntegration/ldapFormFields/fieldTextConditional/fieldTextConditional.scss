@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.input-conditional {
+.field-text-conditional {
   width: 100%;
 }
 
@@ -27,8 +27,5 @@
 .dropdown {
   display: inline-block;
   width: 98px;
-
-  & > div {
-    min-width: 98px;
-  }
+  height: 36px;
 }

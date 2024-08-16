@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { createTwoStepsFooter } from './twoStepsFooter';
+export { TwoStepsFooter } from './twoStepsFooter';

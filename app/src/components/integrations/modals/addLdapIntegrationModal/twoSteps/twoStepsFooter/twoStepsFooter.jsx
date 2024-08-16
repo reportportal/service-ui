@@ -52,33 +52,6 @@ const messages = defineMessages({
   },
 });
 
-export const createTwoStepsFooter = (
-  stepNumber,
-  onStepNumberChange,
-  onStepChange,
-  onDiscard,
-  isEdit,
-  onForceConfirmChange,
-  handleSubmit,
-  forceConfirm,
-  closeModal,
-) => {
-  return (closeHandler) => (
-    <TwoStepsFooter
-      stepNumber={stepNumber}
-      onStepNumberChange={onStepNumberChange}
-      onStepChange={onStepChange}
-      onDiscard={onDiscard}
-      isEdit={isEdit}
-      onForceConfirmChange={onForceConfirmChange}
-      handleSubmit={handleSubmit}
-      forceConfirm={forceConfirm}
-      closeModal={closeModal}
-      closeHandler={closeHandler.closeHandler}
-    />
-  );
-};
-
 export const TwoStepsFooter = ({
   stepNumber,
   onStepNumberChange,
