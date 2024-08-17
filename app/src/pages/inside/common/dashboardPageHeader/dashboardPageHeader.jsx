@@ -48,7 +48,7 @@ const messages = defineMessages({
 });
 
 const DASHBOARD_PAGE_ITEM_VALUE = 'All';
-const DASHBOARDS_LIMIT = 300;
+const DASHBOARDS_LIMIT = 3000;
 
 @connect((state) => ({
   slugs: urlOrganizationAndProjectSelector(state),

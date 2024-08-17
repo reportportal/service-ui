@@ -14,49 +14,46 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export class PluginsFilter extends Component {
-  static propTypes = {
-    filterItems: PropTypes.array.isRequired,
-    onFilterChange: PropTypes.func.isRequired,
-    activeItem: PropTypes.string.isRequired,
-  };
+export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
+  const { trackEvent } = useTracking();
+  const getFilterItems = () => getPluginsFilter(filterItems);
 
-  getFilterItems = () => getPluginsFilter(this.props.filterItems);
-
-  changeFilterItem = (e) => {
+  const changeFilterItem = (e) => {
     e.preventDefault();
-    this.props.onFilterChange(e.currentTarget.id);
+    const { id } = e.currentTarget;
+    trackEvent(PLUGINS_PAGE_EVENTS.navigatedInPluginsFilterList(id));
+    onFilterChange(id);
   };
 
-  generateItems = () => {
-    const { activeItem } = this.props;
+  return (
+    <ul className={cx('plugins-filter-list')}>
+      {getFilterItems().map((item) => (
+        <li key={item.value} className={cx('plugins-filter-item')}>
+          <button
+            className={cx('plugins-filter-button', { active: activeItem === item.value })}
+            onClick={changeFilterItem}
+            id={item.value}
+          >
+            {item.label}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
-    return (
-      <ul className={cx('plugins-filter-list')}>
-        {this.getFilterItems().map((item) => (
-          <li key={item.value} className={cx('plugins-filter-item')}>
-            <button
-              className={cx('plugins-filter-button', { active: activeItem === item.value })}
-              onClick={this.changeFilterItem}
-              id={item.value}
-            >
-              {item.label}
-            </button>
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  render() {
-    return <Fragment>{this.generateItems()}</Fragment>;
-  }
-}
+PluginsFilter.propTypes = {
+  filterItems: PropTypes.array.isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+  activeItem: PropTypes.string.isRequired,
+};

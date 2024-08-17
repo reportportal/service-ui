@@ -288,10 +288,12 @@ const AddEditNotificationModal = ({
     onClick: () => {
       handleSubmit(submitActions)();
     },
+    'data-automation-id': 'submitButton',
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
@@ -327,9 +329,7 @@ const AddEditNotificationModal = ({
       scrollable
       footerNode={
         <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
-          <Toggle className={cx('toggle')} data-automation-id="enabledToggle">
-            {formatMessage(messages.active)}
-          </Toggle>
+          <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
         </FieldProvider>
       }
     >

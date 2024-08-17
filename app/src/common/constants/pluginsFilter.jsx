@@ -44,7 +44,7 @@ const PLUGINS_FILTER_LIST = [
   },
   {
     value: IMPORT_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Import Launches'} />,
+    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
   },
   {
     value: NOTIFICATION_GROUP_TYPE,

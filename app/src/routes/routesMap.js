@@ -94,7 +94,6 @@ import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/instance/projects';
 import { fetchOrganizationsAction } from 'controllers/organizations';
 import { startSetViewMode } from 'controllers/instance/projects/actionCreators';
-import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
@@ -228,11 +227,7 @@ const routesMap = {
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard',
     thunk: (dispatch) => {
-      dispatch(
-        fetchDashboardsAction({
-          [SIZE_KEY]: 300,
-        }),
-      );
+      dispatch(fetchDashboardsAction());
       dispatch(changeVisibilityTypeAction());
     },
   },

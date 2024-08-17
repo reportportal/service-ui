@@ -77,6 +77,28 @@ export const PLUGINS_PAGE_EVENTS = {
     element_name: 'add_integration',
     type: normalizeEventParameter(type),
   }),
+  navigatedInPluginsFilterList: (filterName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: normalizeEventParameter(filterName),
+  }),
+  clickConfirmUninstallPlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'uninstall',
+    modal: 'uninstall_plugin',
+    type: normalizeEventParameter(pluginName),
+  }),
+  clickDisablePlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'disable',
+    modal: 'disable_plugin',
+    type: normalizeEventParameter(pluginName),
+  }),
+  clickEnablePlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'enable',
+    modal: 'enable_plugin',
+    type: normalizeEventParameter(pluginName),
+  }),
   // GA 3
   CANCEL_BTN_UPLOAD_MODAL: {
     category: PLUGINS_MODAL,
@@ -108,11 +130,6 @@ export const PLUGINS_PAGE_EVENTS = {
     category: PLUGINS_MODAL,
     action: 'Click on Btn Cancel on Modal "Uninstall Plugin"',
     label: 'Close Modal Uninstall Plugin',
-  },
-  OK_BTN_UNINSTALL_PLUGIN_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Uninstall on Modal "Uninstall Plugin"',
-    label: 'Uninstall Plugin',
   },
   clickSaveEditAuthorizationBtn: getClickSaveBtnEditAuthorizationEvent(PLUGINS_MODAL),
   clickDeleteBtnRemoveIntegration: getClickDeleteBtnRemoveIntegrationEvent(PLUGINS_MODAL),

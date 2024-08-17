@@ -39,11 +39,8 @@ export const URLS = {
     `${urlBase}data/${projectKey}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
-  dashboards: (projectKey) =>
-    `${urlBase}${projectKey}/dashboard${getQueryParams({
-      'page.page': 1,
-      'page.size': 300,
-    })}`,
+  dashboards: (projectKey, params) =>
+    `${urlBase}${projectKey}/dashboard${getQueryParams({ ...params })}`,
 
   widget: (projectKey, widgetId = '') => `${urlBase}${projectKey}/widget/${widgetId}`,
   widgetMultilevel: (projectKey, widgetId, params) =>
@@ -297,6 +294,8 @@ export const URLS = {
     `${urlBase}integration/${projectKey}/all/${type}`,
   testIntegrationConnection: (projectKey, integrationId) =>
     `${urlBase}integration/${projectKey}/${integrationId}/connection/test`,
+  testGlobalIntegrationConnection: (integrationId) =>
+    `${urlBase}integration/${integrationId}/connection/test`,
   pluginFileImport: (projectKey, pluginName) =>
     `${urlBase}plugin/${projectKey}/${pluginName}/import`,
 
