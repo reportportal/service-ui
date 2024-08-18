@@ -21,9 +21,18 @@ import styles from './integrationFormField.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationFormField = ({ lineAlign, children, ...rest }) => (
+export const IntegrationFormField = ({
+  lineAlign,
+  children,
+  formFieldContainerClassName,
+  ...rest
+}) => (
   <FormField
-    containerClassName={cx('form-field-container', { 'line-align': lineAlign })}
+    containerClassName={cx(
+      'form-field-container',
+      { 'line-align': lineAlign },
+      formFieldContainerClassName,
+    )}
     fieldWrapperClassName={cx('form-field-wrapper')}
     labelClassName={cx('label')}
     {...rest}
@@ -35,8 +44,10 @@ export const IntegrationFormField = ({ lineAlign, children, ...rest }) => (
 IntegrationFormField.propTypes = {
   children: PropTypes.node.isRequired,
   lineAlign: PropTypes.bool,
+  formFieldContainerClassName: PropTypes.string,
 };
 
 IntegrationFormField.defaultProps = {
   lineAlign: false,
+  formFieldContainerClassName: '',
 };

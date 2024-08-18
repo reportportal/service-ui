@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-.field {
-  padding-right: 0;
+.field-text-conditional {
+  width: 100%;
+}
+
+.input-wrapper {
+  margin-left: 4px;
+  width: 258px;
+  display: inline-grid;
+}
+
+.dropdown {
+  display: inline-block;
+  width: 98px;
+  height: 36px;
 }
