@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
-import { loadingSelector, membersSelector } from 'controllers/members';
+import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { showModalAction } from 'controllers/modal';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
@@ -32,12 +33,26 @@ import styles from './projectTeamPage.scss';
 const cx = classNames.bind(styles);
 
 export const ProjectTeamPage = () => {
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canInviteInternalUser(userRoles);
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
   const isEmptyMembers = members.length === 0;
+
+  const onInvite = () => {
+    dispatch(fetchMembersAction());
+  };
+
+  const showInviteUserModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'inviteUserModal',
+        data: { onInvite },
+      }),
+    );
+  };
 
   const getEmptyPageState = () =>
     isMembersLoading ? (
@@ -51,6 +66,7 @@ export const ProjectTeamPage = () => {
         label={formatMessage(messages.noUsers)}
         description={formatMessage(messages.description)}
         buttonTitle={formatMessage(messages.inviteUser)}
+        onClick={showInviteUserModal}
       />
     );
 
@@ -61,6 +77,7 @@ export const ProjectTeamPage = () => {
           hasPermission={hasPermission}
           title={formatMessage(messages.title)}
           isNotEmpty={!isEmptyMembers}
+          showInviteUserModal={showInviteUserModal}
         />
         {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
       </div>

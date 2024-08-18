@@ -56,26 +56,5 @@
 }
 
 .button {
-  background-color: $COLOR--topaz;
-  border: 1px solid $COLOR--topaz;
-  color: $COLOR--white-two;
-  height: 36px;
-  padding: 7px 16px;
   margin-top: 16px;
-  min-width: 120px;
-
-  &:hover:not(.disabled),
-  &:focus:not(.disabled) {
-    border: 1px solid $COLOR--topaz-hover-2;
-    background-color: $COLOR--topaz-hover-2;
-    color: $COLOR--white-two;
-
-    svg * {
-      fill: $COLOR--white-two;
-    }
-  }
-
-  svg * {
-    fill: $COLOR--white-two;
-  }
 }

@@ -27,7 +27,7 @@ import styles from './projectTeamPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty }) => {
+export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUserModal }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -42,7 +42,7 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty }) => {
                 <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
               </div>
               {hasPermission && (
-                <Button variant={'text'} customClassName={cx('button')}>
+                <Button variant={'ghost'} onClick={showInviteUserModal}>
                   {formatMessage(messages.inviteUser)}
                 </Button>
               )}
@@ -57,6 +57,7 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty }) => {
 ProjectTeamPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
   isNotEmpty: PropTypes.bool,
+  showInviteUserModal: PropTypes.func.isRequired,
 };
 
 ProjectTeamPageHeader.defaultProps = {
