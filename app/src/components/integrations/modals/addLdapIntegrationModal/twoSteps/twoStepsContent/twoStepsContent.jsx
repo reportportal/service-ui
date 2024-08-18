@@ -57,7 +57,7 @@ const TwoStepsContent = ({
           </Button>
         ))}
       </div>
-      <Scrollbars
+      <Scrollbars // TODO will be replaced with new Scroll component in the future
         className={cx('scrollbars')}
         autoHeight
         autoHeightMax={contentMaxHeight}
