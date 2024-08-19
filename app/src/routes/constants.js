@@ -90,11 +90,6 @@ export const pageRendering = {
   [USER_PROFILE_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   API_PAGE: { component: ApiPage, layout: ProjectLayout },
-  ORGANIZATIONS_PAGE: {
-    component: ProjectsPage,
-    layout: InstanceLayout,
-    rawContent: true,
-  },
   ORGANIZATION_PROJECTS_PAGE: {
     component: OrganizationProjectsPage,
     layout: OrganizationLayout,

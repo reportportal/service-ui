@@ -19,7 +19,11 @@ import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
-import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
+import {
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+  PROJECTS_PAGE,
+} from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import { OrganizationsItem } from './organizationsItem';
@@ -39,7 +43,7 @@ export const messages = defineMessages({
   },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeSidebar, linkToAllOrganization }) => {
+export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
@@ -57,7 +61,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, linkToAllOrga
         <>
           <div className={cx('all-organizations')}>
             <NavLink
-              to={linkToAllOrganization}
+              to={{ type: PROJECTS_PAGE }}
               className={cx('all-organizations-link')}
               onClick={onClose}
               activeClassName={cx('active')}
@@ -98,5 +102,4 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar, linkToAllOrga
 OrganizationsPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   closePopover: PropTypes.func.isRequired,
-  linkToAllOrganization: PropTypes.object.isRequired,
 };

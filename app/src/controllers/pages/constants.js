@@ -22,8 +22,6 @@ export const CLEAR_PAGE_STATE = 'clearPageStateAction';
 // undefined page
 export const NO_PAGE = undefined;
 // admin
-export const ORGANIZATIONS_PAGE = 'ORGANIZATIONS_PAGE';
-export const ALL_ORGANIZATIONS_PAGE = 'ALL_ORGANIZATIONS_PAGE';
 export const PROJECTS_PAGE = 'PROJECTS_PAGE';
 export const PROJECT_DETAILS_PAGE = 'PROJECT_DETAILS_PAGE';
 export const ALL_USERS_PAGE = 'ALL_USERS_PAGE';
@@ -73,7 +71,6 @@ export const PROJECT_PLUGIN_PAGE = 'PROJECT_PLUGIN_PAGE';
 
 export const pageNames = {
   [NOT_FOUND]: NOT_FOUND,
-  ORGANIZATIONS_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
@@ -115,7 +112,6 @@ export const pageNames = {
 };
 
 export const adminPageNames = {
-  [ORGANIZATIONS_PAGE]: ORGANIZATIONS_PAGE,
   [PROJECTS_PAGE]: PROJECTS_PAGE,
   [PROJECT_DETAILS_PAGE]: PROJECT_DETAILS_PAGE,
   [ALL_USERS_PAGE]: ALL_USERS_PAGE,
