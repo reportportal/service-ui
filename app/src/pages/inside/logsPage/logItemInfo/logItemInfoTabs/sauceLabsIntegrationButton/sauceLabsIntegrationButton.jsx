@@ -16,8 +16,8 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
-import SauceLabsActiveIcon from 'common/img/plugins/sauce-labs-active.png';
+import Parser from 'html-react-parser';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import styles from './sauceLabsIntegrationButton.scss';
@@ -29,12 +29,9 @@ export const SauceLabsIntegrationButton = ({ active, onClick }) => {
 
   return (
     <button className={cx('sauce-labs-integration-button', { active })} onClick={onClick}>
-      <img
-        className={cx('sauce-labs-integration-button--icon')}
-        src={active ? SauceLabsActiveIcon : SauceLabsIcon}
-        alt={title}
-        title={title}
-      />
+      <i className={cx('sauce-labs-integration-button--icon', { active })} title={title}>
+        {Parser(SauceLabsIcon)}
+      </i>
       <div className={cx('sauce-labs-integration-button--label')}>{title}</div>
     </button>
   );
