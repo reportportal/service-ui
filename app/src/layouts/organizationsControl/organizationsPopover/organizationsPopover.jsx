@@ -21,9 +21,12 @@ import { FieldText, SearchIcon, ThemeProvider } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { availableProjectsSelector } from 'controllers/user';
-import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
+import {
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+  PROJECTS_PAGE,
+} from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { ALL_ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { OrganizationsItem } from './organizationsItem';
@@ -107,7 +110,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         <>
           <div className={cx('all-organizations')}>
             <NavLink
-              to={{ type: ALL_ORGANIZATIONS_PAGE }}
+              to={{ type: PROJECTS_PAGE }}
               className={cx('all-organizations-link')}
               onClick={onClose}
               activeClassName={cx('active')}

@@ -27,7 +27,6 @@ import {
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-  ORGANIZATIONS_PAGE,
   USER_PROFILE_PAGE,
 } from 'controllers/pages/constants';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
@@ -116,7 +115,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
-  const link = { type: ORGANIZATIONS_PAGE };
+  const link = { type: PROJECTS_PAGE };
   const linkToUserProfilePage = { type: USER_PROFILE_PAGE };
   const titles = {
     shortTitle: formatMessage(messages.all),
