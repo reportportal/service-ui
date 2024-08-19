@@ -93,6 +93,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           <FieldText
             startIcon={<SearchIcon />}
             placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
+            className={cx('field-text')}
             defaultWidth={false}
             value={valueSearch}
             onChange={handleChange}
