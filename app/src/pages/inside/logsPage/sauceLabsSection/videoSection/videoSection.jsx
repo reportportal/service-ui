@@ -64,7 +64,7 @@ export class VideoSection extends Component {
     controls: true,
     inactivityTimeout: 2000,
     liveui: true,
-    poster: 'https://cdn1.saucelabs.com/web-ui/images/assets/70c6f06fe089b68f008ac6bc9aff8b8a.png',
+    poster: 'https://cdn1.saucelabs.com/web-ui/images/assets/f4d082e962afaa66fe72.png',
     sources: [
       {
         src: `${this.props.jobInfo.video_url}?auth=${this.props.authToken}`,

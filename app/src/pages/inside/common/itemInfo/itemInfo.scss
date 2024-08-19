@@ -23,6 +23,7 @@
     }
   }
 }
+
 .main-info {
   display: inline-block;
   max-width: calc(30vw);
@@ -45,6 +46,7 @@
     max-width: 432px;
   }
 }
+
 .name-link {
   padding-right: 5px;
   font-family: $FONT-SEMIBOLD;
@@ -56,12 +58,15 @@
     font-size: 16px;
   }
 }
+
 .name {
   display: inline;
 }
+
 .edit-number-box {
   white-space: nowrap;
 }
+
 .number {
   margin-right: 5px;
   white-space: nowrap;
@@ -94,6 +99,7 @@
     background-color: $COLOR--booger;
   }
 }
+
 .edit-icon {
   display: inline-block;
   visibility: hidden;
@@ -108,6 +114,7 @@
     fill: $COLOR--black-2;
   }
 }
+
 .mobile-start-time {
   display: none;
   margin-right: 15px;
@@ -125,12 +132,14 @@
     vertical-align: top;
   }
 }
+
 .additional-info {
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
+
 .duration-block {
   margin-right: 20px;
 
@@ -138,11 +147,13 @@
     margin-right: 15px;
   }
 }
+
 .item-description {
   width: 100%;
   margin-top: 10px;
   word-break: break-word;
 }
+
 .mobile-info {
   display: none;
   color: $COLOR--charcoal-grey;
@@ -197,10 +208,13 @@
 }
 
 .sauce-labs-label {
-  width: 15px;
-  height: 15px;
   margin-right: 5px;
   vertical-align: middle;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 
 @keyframes auto-analyze-blink {
