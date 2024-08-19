@@ -1053,6 +1053,7 @@
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Добавить интеграцию проекта",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "Интеграции не настроены. Вы можете вручную настроить интеграцию для этого проекта.",
   "IntegrationsDescription.noGlobalIntegrationsMessage": "Нет Интеграций",
+  "IntegrationsDescription.projectIntegrationAddLimited": "Можно создать только одну интеграцию проекта",
   "IntegrationsDescription.projectIntegrationReset": "Сброс к глобальным интеграциям",
   "IntegrationsDescription.projectIntegrationResetDescription": "Вы уверены, что хотите сбросить настройки к Глобальным Интеграциям? Все ваши пректные интеграции будут удалены без возможности восстановления.",
   "IntegrationsDescription.projectIntegrationText": "Интеграции проекта создаются для каждого проекта",
