@@ -1053,6 +1053,7 @@
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Додати інтеграцію проекту",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "Інтеграції не налаштовані. Ви можете вручну настроїти інтеграцію для цього проекту.",
   "IntegrationsDescription.noGlobalIntegrationsMessage": "Ніяких Iнтеграцій",
+  "IntegrationsDescription.projectIntegrationAddLimited": "Можна створити лише одну інтеграцію проекту",
   "IntegrationsDescription.projectIntegrationReset": "Скидання до глобальних інтеграцій",
   "IntegrationsDescription.projectIntegrationResetDescription": "Ви впевнені, що хочете скинути налаштування до Глобальних Інтеграцій? Всі ваші проектні інтеграції будуть видалені без можливості відновлення.",
   "IntegrationsDescription.projectIntegrationText": "Інтеграції проекту створюються для кожного проекту",

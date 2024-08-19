@@ -1053,6 +1053,7 @@
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Agregar integración de proyecto",
   "IntegrationsDescription.noGlobalIntegrationsDescription": "Las integraciones no están configuradas. Puedes configurar manualmente una integración para este proyecto.",
   "IntegrationsDescription.noGlobalIntegrationsMessage": "No hay integraciones",
+  "IntegrationsDescription.projectIntegrationAddLimited": "Only one Project Integration can be created",
   "IntegrationsDescription.projectIntegrationReset": "Restablecer a integraciones globales",
   "IntegrationsDescription.projectIntegrationResetDescription": "¿Estás seguro de que deseas restablecer la configuración a las Integraciones Globales? Todas tus integraciones de proyecto se eliminarán sin posibilidad de recuperación.",
   "IntegrationsDescription.projectIntegrationText": "Las integraciones de proyecto se crean específicamente para cada proyecto.",
