@@ -20,9 +20,11 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
+import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
+import { Checkbox, Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
+import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
@@ -30,46 +32,47 @@ import { urlProjectSlugSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { withModal, ModalLayout, ModalField } from 'components/main/modal';
+import { withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { showModalAction } from 'controllers/modal';
+import { hideModalAction, showModalAction } from 'controllers/modal';
 import { areUserSuggestionsAllowedSelector } from 'controllers/appInfo';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
-import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { projectKeySelector } from 'controllers/project';
+import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { InputUserSearch, makeOptions } from 'components/inputs/inputUserSearch';
 import { Input } from 'components/inputs/input';
+import { withTooltip } from 'componentLibrary/tooltip';
+import HintIcon from './img/hint-inline.svg';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
-const LABEL_WIDTH = 105;
 
 const messages = defineMessages({
   headerInviteUserModal: {
     id: 'InviteUserModal.headerInviteUserModal',
-    defaultMessage: 'Invite user',
+    defaultMessage: 'Invite user to',
+  },
+  canEditProject: {
+    id: 'InviteUserModal.canEditProject',
+    defaultMessage: 'Can edit the Project',
   },
   description: {
     id: 'InviteUserModal.description',
-    defaultMessage: 'Invite user to the project',
+    defaultMessage:
+      'Please note, users new to the organization will join it with “Member” role, whereas existing users will maintain their current organizational role.',
   },
-  loginOrEmailLabel: {
-    id: 'InviteUserModal.loginOrEmailLabel',
-    defaultMessage: 'Login or email',
+  nameOrEmailLabel: {
+    id: 'InviteUserModal.nameOrEmailLabel',
+    defaultMessage: 'Name or email',
   },
   emailLabel: {
     id: 'InviteUserModal.emailLabel',
     defaultMessage: 'Email',
   },
-  role: {
-    id: 'InviteUserModal.role',
-    defaultMessage: 'Project role',
-  },
   inputPlaceholder: {
     id: 'InviteUserModal.inputPlaceholder',
-    defaultMessage: 'Enter login or email',
+    defaultMessage: 'Enter full name or email (e.g. example@mail.com)',
   },
   memberWasInvited: {
     id: 'InviteUserModal.memberWasInvited',
@@ -80,7 +83,37 @@ const messages = defineMessages({
     defaultMessage:
       'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
   },
+  hintMessage: {
+    id: 'InviteUserModal.hintMessage',
+    defaultMessage:
+      "By default, invited users receive 'View only' permissions. Users with 'Can edit' permissions can modify the project and all its data (report launches, change defect types, etc.).",
+  },
 });
+
+const Tooltip = ({ formatMessage }) => (
+  <div className={cx('tooltip')}>{formatMessage(messages.hintMessage)}</div>
+);
+
+Tooltip.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+};
+
+const IconShow = () => {
+  return <i className={cx('icon')}>{Parser(HintIcon)}</i>;
+};
+
+const ShowWithTooltip = withTooltip({
+  ContentComponent: Tooltip,
+  tooltipWrapperClassName: cx('tooltip-wrapper'),
+  customClassName: cx('custom-tooltip'),
+  side: 'top',
+  arrowPosition: 'middle',
+  width: 264,
+})(IconShow);
+
+ShowWithTooltip.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+};
 
 const inviteFormSelector = formValueSelector('inviteUserForm');
 
@@ -91,17 +124,19 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
     selectedProject: ownProps.data.isProjectSelector
       ? inviteFormSelector(state, 'project')
       : urlProjectSlugSelector(state),
+    projectName: projectNameSelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
     projectKey: projectKeySelector(state),
     initialValues: {
-      role: DEFAULT_PROJECT_ROLE,
+      canEdit: false,
       project: urlProjectSlugSelector(state),
     },
     areUserSuggestionsAllowed: areUserSuggestionsAllowedSelector(state),
   }),
   {
     showModalAction,
+    hideModalAction,
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
@@ -125,6 +160,7 @@ export class InviteUserModal extends Component {
     }).isRequired,
     handleSubmit: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    hideModalAction: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
@@ -135,6 +171,7 @@ export class InviteUserModal extends Component {
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
     areUserSuggestionsAllowed: PropTypes.bool.isRequired,
+    projectName: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -226,7 +263,7 @@ export class InviteUserModal extends Component {
       });
   };
 
-  inviteUserAndCloseModal = (closeModal) => async (data) => {
+  inviteUserAndCloseModal = async (data) => {
     const {
       selectedProject,
       areUserSuggestionsAllowed,
@@ -234,6 +271,7 @@ export class InviteUserModal extends Component {
     } = this.props;
     const userData = {
       ...data,
+      role: data.canEdit ? EDITOR : VIEWER,
     };
 
     if (!(isProjectSelector || areUserSuggestionsAllowed)) {
@@ -259,9 +297,10 @@ export class InviteUserModal extends Component {
         data: { email: res.email, link: res.backLink },
       });
     } else {
-      closeModal();
+      this.props.hideModalAction();
     }
   };
+
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
 
   filterProject = (value) => !(value && this.props.selectedUser?.assignedProjects?.[value]);
@@ -273,37 +312,44 @@ export class InviteUserModal extends Component {
       isAdmin,
       data: { isProjectSelector },
       projectKey,
+      projectName,
       areUserSuggestionsAllowed,
     } = this.props;
 
     const okButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
-      onClick: (closeModal) => {
-        handleSubmit(this.inviteUserAndCloseModal(closeModal))();
+      children: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
+      onClick: () => {
+        handleSubmit(this.inviteUserAndCloseModal)();
       },
       eventInfo: MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL,
+      'data-automation-id': 'submitButton',
     };
+
     const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      children: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       eventInfo: MEMBERS_PAGE_EVENTS.CANCEL_BTN_INVITE_USER_MODAL,
+      'data-automation-id': 'cancelButton',
     };
+
     return (
-      <ModalLayout
-        title={intl.formatMessage(messages.headerInviteUserModal)}
+      <Modal
+        title={`${intl.formatMessage(messages.headerInviteUserModal)} "${projectName}"`}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={MEMBERS_PAGE_EVENTS.CLOSE_ICON_INVITE_USER_MODAL}
+        onClose={this.props.hideModalAction}
+        size="large"
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
           {isProjectSelector || areUserSuggestionsAllowed ? (
             <ModalField
-              label={intl.formatMessage(messages.loginOrEmailLabel)}
-              labelWidth={LABEL_WIDTH}
+              label={intl.formatMessage(messages.nameOrEmailLabel)}
+              className={cx('label')}
+              noMinHeight
             >
               <FieldProvider name="user" format={this.formatUser}>
-                <FieldErrorHint>
+                <FieldErrorHint active>
                   <InputUserSearch
                     isAdmin={isAdmin}
                     placeholder={intl.formatMessage(messages.inputPlaceholder)}
@@ -313,7 +359,7 @@ export class InviteUserModal extends Component {
               </FieldProvider>
             </ModalField>
           ) : (
-            <ModalField label={intl.formatMessage(messages.emailLabel)} labelWidth={LABEL_WIDTH}>
+            <ModalField label={intl.formatMessage(messages.emailLabel)}>
               <FieldProvider name="email" type="email">
                 <FieldErrorHint>
                   <Input maxLength={'128'} placeholder={intl.formatMessage(messages.emailLabel)} />
@@ -322,7 +368,7 @@ export class InviteUserModal extends Component {
             </ModalField>
           )}
           {isProjectSelector && (
-            <ModalField label="Project" name="project" labelWidth={LABEL_WIDTH}>
+            <ModalField label="Project" name="project">
               <FieldProvider name="project" dumbOnBlur>
                 <AsyncAutocomplete
                   minLength={1}
@@ -332,13 +378,18 @@ export class InviteUserModal extends Component {
               </FieldProvider>
             </ModalField>
           )}
-          <ModalField label={intl.formatMessage(messages.role)} labelWidth={LABEL_WIDTH}>
-            <FieldProvider name="role">
-              <InputDropdown options={ROLES_MAP} />
-            </FieldProvider>
+          <ModalField className={cx('modal-field')}>
+            <div className={cx('checkbox-wrapper')}>
+              <FieldProvider name="canEdit" format={Boolean}>
+                <Checkbox className={cx('can-edit')}>
+                  {intl.formatMessage(messages.canEditProject)}
+                </Checkbox>
+              </FieldProvider>
+              <ShowWithTooltip formatMessage={intl.formatMessage} />
+            </div>
           </ModalField>
         </form>
-      </ModalLayout>
+      </Modal>
     );
   }
 }

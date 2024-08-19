@@ -21,7 +21,6 @@ export const MEMBER = 'MEMBER';
 export const CUSTOMER = 'CUSTOMER';
 export const OPERATOR = 'OPERATOR';
 export const PROJECT_ROLES = [CUSTOMER, OPERATOR, MEMBER, PROJECT_MANAGER];
-export const DEFAULT_PROJECT_ROLE = MEMBER;
 
 export const MANAGER = 'MANAGER';
 export const EDITOR = 'EDITOR';

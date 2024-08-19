@@ -15,14 +15,73 @@
  */
 
 .modal-description {
-  padding: 10px;
-  font-size: 12px;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  color: $COLOR--gray-47;
+  padding: 0;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--almost-black;
   background-color: $COLOR--white-four;
 }
+
 .invite-form {
-  margin-top: 20px;
-  margin-right: 80px;
+  margin-top: 16px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+
+  &:first-child {
+    width: 100%;
+
+    span {
+      font-family: $FONT-ROBOTO-MEDIUM;
+      line-height: 20px;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.can-edit {
+  &:last-child span {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-REGULAR;
+  }
+}
+
+.icon {
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.custom-tooltip {
+  width: 264px;
+}
+
+.tooltip {
+  width: 232px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.tooltip-wrapper {
+  height: 16px;
+  width: 16px;
+}
+
+.modal-field {
+  padding: 0;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    span:last-child {
+      font-weight: 400;
+    }
+  }
 }
