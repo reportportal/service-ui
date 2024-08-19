@@ -28,6 +28,7 @@ import { createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { FormattedDescription } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { useTracking } from 'react-tracking';
+import { EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -47,6 +48,8 @@ export const IntegrationHeader = (props) => {
     breadcrumbs,
   } = props;
 
+  const isProjectIntegrationAddLimited =
+    [EMAIL, SAUCE_LABS].includes(name) && availableProjectIntegrations.length > 0;
   const { documentationLink = '' } = details;
   const analyticsData = withButton ? 'integrations' : 'no_integrations';
 
@@ -100,9 +103,13 @@ export const IntegrationHeader = (props) => {
         {withButton && (
           <div className={cx('buttons-section')}>
             <Button
-              disabled={!isAbleToClick}
+              disabled={!isAbleToClick || isProjectIntegrationAddLimited}
               onClick={onAddProjectIntegration}
               data-automation-id="addProjectIntegrationButton"
+              title={
+                isProjectIntegrationAddLimited &&
+                formatMessage(messages.projectIntegrationAddLimited)
+              }
             >
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
