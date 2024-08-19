@@ -43,7 +43,7 @@
   &:focus {
     color: $COLOR--charcoal-grey;
 
-    svg, svg * {
+    svg * {
       fill: $COLOR--charcoal-grey;
     }
   }
@@ -52,7 +52,7 @@
   &.active:hover {
     color: $COLOR--topaz;
 
-    svg, svg * {
+    svg * {
       fill: $COLOR--topaz;
     }
   }
