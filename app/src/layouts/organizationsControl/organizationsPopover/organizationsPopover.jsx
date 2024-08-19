@@ -97,6 +97,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
             value={valueSearch}
             onChange={handleChange}
             onClear={handleClear}
+            maxLength={256}
             clearable
           />
         </ThemeProvider>
