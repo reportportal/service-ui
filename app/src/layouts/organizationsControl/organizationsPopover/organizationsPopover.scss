@@ -90,3 +90,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.organizations-search {
+  padding: 4px 8px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+
+    .field-text {
+      border: 1px solid $COLOR--darkmode-gray-500;
+      background-color: $COLOR--darkmode-gray-500;
+
+      svg path {
+        fill: $COLOR--white-two;
+      }
+    }
+  }
+}
