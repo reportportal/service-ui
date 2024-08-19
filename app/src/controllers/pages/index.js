@@ -51,7 +51,6 @@ export { updatePagePropertiesAction, clearPageStateAction } from './actionCreato
 export {
   NO_PAGE,
   ALL_ORGANIZATIONS_PAGE,
-  ALL_ORGANIZATIONS_PAGE_INSTANCE_LEVEL,
   ORGANIZATIONS_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,

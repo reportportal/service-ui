@@ -27,7 +27,6 @@ import {
   ORGANIZATION_SETTINGS_PAGE,
   ORGANIZATIONS_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
-  ALL_ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
@@ -111,7 +110,6 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
-  const linkToAllOrganization = { type: ALL_ORGANIZATIONS_PAGE };
   const link = { type: ORGANIZATIONS_PAGE };
   const linkToUserProfilePage = {
     type: USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
@@ -132,7 +130,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
       }}
-      linkToAllOrganization={linkToAllOrganization}
+      linkToAllOrganization={link}
       link={link}
       titles={titles}
       isExtendedNav
