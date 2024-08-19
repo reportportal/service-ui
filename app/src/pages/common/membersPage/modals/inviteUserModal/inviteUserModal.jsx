@@ -129,7 +129,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
     isAdmin: isAdminSelector(state),
     projectKey: projectKeySelector(state),
     initialValues: {
-      role: false,
+      canEdit: false,
       project: urlProjectSlugSelector(state),
     },
     areUserSuggestionsAllowed: areUserSuggestionsAllowedSelector(state),
@@ -271,7 +271,7 @@ export class InviteUserModal extends Component {
     } = this.props;
     const userData = {
       ...data,
-      role: data.role ? EDITOR : VIEWER,
+      role: data.canEdit ? EDITOR : VIEWER,
     };
 
     if (!(isProjectSelector || areUserSuggestionsAllowed)) {
@@ -380,7 +380,7 @@ export class InviteUserModal extends Component {
           )}
           <ModalField className={cx('modal-field')}>
             <div className={cx('checkbox-wrapper')}>
-              <FieldProvider name="role" format={Boolean}>
+              <FieldProvider name="canEdit" format={Boolean}>
                 <Checkbox className={cx('can-edit')}>
                   {intl.formatMessage(messages.canEditProject)}
                 </Checkbox>
