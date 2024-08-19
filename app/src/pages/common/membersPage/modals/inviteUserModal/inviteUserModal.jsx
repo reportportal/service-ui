@@ -322,11 +322,13 @@ export class InviteUserModal extends Component {
         handleSubmit(this.inviteUserAndCloseModal)();
       },
       eventInfo: MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL,
+      'data-automation-id': 'submitButton',
     };
 
     const cancelButton = {
       children: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       eventInfo: MEMBERS_PAGE_EVENTS.CANCEL_BTN_INVITE_USER_MODAL,
+      'data-automation-id': 'cancelButton',
     };
 
     return (
