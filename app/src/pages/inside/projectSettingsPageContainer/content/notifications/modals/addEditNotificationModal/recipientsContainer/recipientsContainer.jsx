@@ -41,8 +41,12 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
   const activeProject = useSelector(projectIdSelector);
   const [recipientsWithError, setRecipientsWithError] = useState([]);
 
+  const emailValidation = (email) => {
+    return regex(/[.@]/)(email);
+  };
+
   const getEmailValidationError = (v) => {
-    if (regex(/[.@]/)(v)) {
+    if (emailValidation(v)) {
       return !validate.email(v) && 'error';
     }
     return false;
@@ -54,7 +58,7 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
       return emailValidationErrorType;
     }
 
-    const hasError = !projectInfo.users.some((user) => user.login === v);
+    const hasError = !emailValidation(v) && !projectInfo.users.some((user) => user.login === v);
     if (hasError) {
       !recipientsWithError.includes(v) && setRecipientsWithError([...recipientsWithError, v]);
       return 'error';
