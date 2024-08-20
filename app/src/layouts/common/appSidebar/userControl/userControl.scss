@@ -46,6 +46,7 @@
   color: $COLOR--darkmode-gray-100;
   width: 280px;
   padding: 0px 16px;
+  box-sizing: border-box;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
