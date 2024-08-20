@@ -78,6 +78,7 @@
   "AddEditNotificationCaseModal.title": "{actionType} Правило нотифікації",
   "AddEditNotificationModal.nameLabel": "Назва правила",
   "AddEditNotificationModal.namePlaceholder": "Назва правила",
+  "AddEditNotificationModal.recipientsError": "Будь ласка, введіть існуюче ім'я користувача у вашому проекті або дійсну адресу електронної пошти",
   "AddEditNotificationModal.recipientsPlaceholder": "Ім'я користувача/електронна пошта",
   "AddEditNotificationModal.ruleNameHint": "Поле обов’язкове. Розмір назви правила має бути від «1» до «55» символів",
   "AddFilter.filterName": "Ім’я фільтру",
