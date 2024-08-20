@@ -78,6 +78,7 @@
   "AddEditNotificationCaseModal.title": "{actionType} Правила апавяшчэння",
   "AddEditNotificationModal.nameLabel": "Імя правіла",
   "AddEditNotificationModal.namePlaceholder": "Назва правіла",
+  "AddEditNotificationModal.recipientsError": "Калі ласка, увядзіце існуючае імя карыстальніка ў вашым праекце або сапраўдны адрас электроннай пошты",
   "AddEditNotificationModal.recipientsPlaceholder": "Імя карыстальніка/адрас электроннай пошты",
   "AddEditNotificationModal.ruleNameHint": "Пале для запаўнення абавязковае. Імя правіла павінна мець памер ад «1» да «55» сімвалаў",
   "AddFilter.filterName": "Назва Фільтра",

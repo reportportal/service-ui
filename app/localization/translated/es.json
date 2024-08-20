@@ -78,6 +78,7 @@
   "AddEditNotificationCaseModal.title": "{actionType} Regla de notificación",
   "AddEditNotificationModal.nameLabel": "Nombre de la regla",
   "AddEditNotificationModal.namePlaceholder": "Nombre de la regla",
+  "AddEditNotificationModal.recipientsError": "Please enter existent user name on your project or valid email",
   "AddEditNotificationModal.recipientsPlaceholder": "Nombre de usuario/correo electrónico",
   "AddEditNotificationModal.ruleNameHint": "Campo obligatorio. El nombre de la regla debe tener entre 1 y 55 caracteres",
   "AddFilter.filterName": "Nombre del filtro",

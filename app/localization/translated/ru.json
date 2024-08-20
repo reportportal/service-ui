@@ -78,6 +78,7 @@
   "AddEditNotificationCaseModal.title": "{actionType} Правило уведомления",
   "AddEditNotificationModal.nameLabel": "Имя правила",
   "AddEditNotificationModal.namePlaceholder": "Имя правила",
+  "AddEditNotificationModal.recipientsError": "Пожалуйста, введите существующее имя пользователя в вашем проекте или действительный адрес электронной почты",
   "AddEditNotificationModal.recipientsPlaceholder": "Имя пользователя/электронная почта",
   "AddEditNotificationModal.ruleNameHint": "Поле, обязательное для заполнения. Имя правила должно иметь размер от «1» до «55» символов",
   "AddFilter.filterName": "Имя фильтра",

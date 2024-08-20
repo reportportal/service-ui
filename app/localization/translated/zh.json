@@ -78,6 +78,7 @@
   "AddEditNotificationCaseModal.title": "{actionType}通知规则",
   "AddEditNotificationModal.nameLabel": "规则名称",
   "AddEditNotificationModal.namePlaceholder": "请输入规则名称",
+  "AddEditNotificationModal.recipientsError": "Please enter existent user name on your project or valid email",
   "AddEditNotificationModal.recipientsPlaceholder": "用户名/电子邮件",
   "AddEditNotificationModal.ruleNameHint": "此项为必填项且规则的名字长度限定在1~55个字符。",
   "AddFilter.filterName": "过滤器名称",
