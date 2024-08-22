@@ -40,7 +40,7 @@ export const EmptyPageState = ({
         <Button
           variant={'primary'}
           className={cx('button')}
-          startIcon={Parser(startIcon)}
+          startIcon={startIcon}
           onClick={onClick}
         >
           {buttonTitle}

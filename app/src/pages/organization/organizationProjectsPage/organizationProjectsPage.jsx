@@ -18,12 +18,11 @@ import { useSelector } from 'react-redux';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { loadingSelector, projectsSelector } from 'controllers/organizations/projects/selectors';
 import { activeOrganizationLoadingSelector } from 'controllers/organizations/organization/selectors';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import PlusIcon from 'common/img/plus-button-inline.svg';
 import { userRolesSelector } from 'controllers/pages';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
@@ -63,7 +62,7 @@ export const OrganizationProjectsPage = () => {
                 hasPermission={hasPermission}
                 label={label}
                 description={description}
-                startIcon={PlusIcon}
+                startIcon={<PlusIcon />}
                 buttonTitle={buttonTitle}
                 emptyIcon={EmptyIcon}
               />
