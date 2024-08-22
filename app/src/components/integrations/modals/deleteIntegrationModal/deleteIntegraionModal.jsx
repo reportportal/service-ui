@@ -38,9 +38,11 @@ const DeleteIntegrationModal = ({ data }) => {
       : formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: onDelete,
     variant: 'danger',
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   return (
