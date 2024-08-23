@@ -1206,7 +1206,7 @@
   "LdapFormFields.passwordAttributeLabel": "密码属性",
   "LdapFormFields.passwordEncoderTypeLabel": "密码编码器类型",
   "LdapFormFields.photoAttributeLabel": "照片属性",
-  "LdapFormFields.urlLabel": "Url",
+  "LdapFormFields.urlLabel": "URL",
   "LdapFormFields.userDnPatternLabel": "用户标识（DN）模板",
   "LdapFormFields.userSearchFilterLabel": "用户搜索过滤器",
   "LinkIssueModal.addIssueButtonTitle": "添加新问题",
