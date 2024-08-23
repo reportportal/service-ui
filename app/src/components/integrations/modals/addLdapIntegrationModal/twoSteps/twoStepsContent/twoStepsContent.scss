@@ -18,7 +18,6 @@
   display: flex;
   flex-direction: row;
   gap: 32px;
-  min-height: 440px;
 }
 
 .step-list {
@@ -44,7 +43,7 @@
 }
 
 .content {
-  width: 360px;
+  width: 344px;
 
   > :nth-child(n) {
     padding-right: 0;

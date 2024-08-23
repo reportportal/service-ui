@@ -57,7 +57,7 @@ const integrationFormValueSelector = formValueSelector(INTEGRATION_FORM);
 const messages = defineMessages({
   urlLabel: {
     id: 'LdapFormFields.urlLabel',
-    defaultMessage: 'Url',
+    defaultMessage: 'URL',
   },
   baseDnLabel: {
     id: 'LdapFormFields.baseDnLabel',
