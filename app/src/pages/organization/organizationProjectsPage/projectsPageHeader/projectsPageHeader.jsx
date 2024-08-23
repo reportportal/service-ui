@@ -19,12 +19,11 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { Button } from '@reportportal/ui-kit';
+import { Button, PlusIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { PROJECTS_PAGE } from 'controllers/pages';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
-import plusIcon from 'common/img/plus-button-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organizations/organization';
 import userIcon from './img/user-inline.svg';
@@ -83,7 +82,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
             </div>
           )}
           {isNotEmpty && hasPermission && (
-            <Button variant={'text'} customClassName={cx('button')} startIcon={plusIcon}>
+            <Button variant={'ghost'} icon={<PlusIcon />}>
               {formatMessage(messages.createProject)}
             </Button>
           )}

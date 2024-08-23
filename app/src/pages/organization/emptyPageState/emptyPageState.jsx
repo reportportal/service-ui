@@ -26,7 +26,7 @@ export const EmptyPageState = ({
   hasPermission,
   label,
   description,
-  startIcon,
+  icon,
   buttonTitle,
   emptyIcon,
   onClick,
@@ -37,12 +37,7 @@ export const EmptyPageState = ({
       <span className={cx('label')}>{label}</span>
       <p className={cx('description')}>{description}</p>
       {hasPermission && (
-        <Button
-          variant={'primary'}
-          className={cx('button')}
-          startIcon={startIcon}
-          onClick={onClick}
-        >
+        <Button variant={'primary'} className={cx('button')} icon={icon} onClick={onClick}>
           {buttonTitle}
         </Button>
       )}
@@ -55,7 +50,7 @@ EmptyPageState.propTypes = {
   label: PropTypes.string,
   description: PropTypes.string,
   buttonTitle: PropTypes.string,
-  startIcon: PropTypes.element,
+  icon: PropTypes.element,
   onClick: PropTypes.func,
   emptyIcon: PropTypes.element.isRequired,
 };
@@ -65,6 +60,6 @@ EmptyPageState.defaultProps = {
   label: '',
   description: '',
   buttonTitle: '',
-  startIcon: null,
+  icon: null,
   onClick: () => {},
 };
