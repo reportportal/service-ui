@@ -82,7 +82,7 @@ export const ProjectsPageHeader = ({ hasPermission }) => {
             </div>
           )}
           {isNotEmpty && hasPermission && (
-            <Button variant={'ghost'} startIcon={<PlusIcon />}>
+            <Button variant={'ghost'} icon={<PlusIcon />}>
               {formatMessage(messages.createProject)}
             </Button>
           )}

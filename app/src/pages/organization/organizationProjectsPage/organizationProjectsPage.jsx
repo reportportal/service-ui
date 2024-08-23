@@ -62,7 +62,7 @@ export const OrganizationProjectsPage = () => {
                 hasPermission={hasPermission}
                 label={label}
                 description={description}
-                startIcon={<PlusIcon />}
+                icon={<PlusIcon />}
                 buttonTitle={buttonTitle}
                 emptyIcon={EmptyIcon}
               />
