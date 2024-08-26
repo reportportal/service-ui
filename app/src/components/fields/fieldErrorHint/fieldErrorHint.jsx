@@ -175,14 +175,18 @@ const messages = defineMessages({
     id: 'DefectTypesTab.defectShortNameHint',
     defaultMessage: "Defect Type abbreviation should have size from '1' to '4' characters",
   },
+  projectNamePatternHint: {
+    id: 'ProjectsPage.projectNamePatternHint',
+    defaultMessage:
+      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot or space',
+  },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
-    defaultMessage:
-      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)',
+    defaultMessage: "Project name should have size from '3' to '60' characters",
   },
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
-    defaultMessage: 'Project with the same name already exists in system',
+    defaultMessage: 'Project with the same name already exists in this organization',
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { commonValidators } from 'common/utils/validation/index';
 import * as validate from './validate';
 import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
@@ -70,6 +71,16 @@ export const createRuleNameValidator = (notifications, notificationId) =>
     bindMessageToValidator(
       validate.createNameUniqueValidator(notificationId, notifications),
       'ruleNameDuplicateHint',
+    ),
+  ]);
+export const createProjectNameValidator = (projects, projectId) =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.projectNameLength, 'projectNameLengthHint'),
+    bindMessageToValidator(validate.projectNamePattern, 'projectNamePatternHint'),
+    bindMessageToValidator(
+      validate.createNameUniqueValidator(projectId, projects),
+      'projectDuplicateHint',
     ),
   ]);
 
