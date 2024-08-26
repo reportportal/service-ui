@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
+import { fetch } from 'common/utils';
+import { hideModalAction } from 'controllers/modal';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { ERROR_CODES } from 'controllers/instance/projects/constants';
+import { activeOrganizationIdSelector } from '../organization/selectors';
+import { fetchOrganizationProjectsAction } from './actionCreators';
 import { querySelector } from './selectors';
+import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
@@ -30,6 +36,49 @@ function* watchFetchProjects() {
   yield takeEvery(FETCH_ORGANIZATION_PROJECTS, fetchOrganizationProjects);
 }
 
+function* createProject({ payload: { newProjectName: projectName } }) {
+  const organizationId = yield select(activeOrganizationIdSelector);
+  try {
+    yield call(fetch, URLS.organizationProject(organizationId), {
+      method: 'post',
+      data: {
+        name: projectName,
+      },
+    });
+    yield put(fetchOrganizationProjectsAction(organizationId));
+    yield put(hideModalAction());
+    yield put(
+      showNotification({
+        messageId: 'addProjectSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+        values: { name: projectName },
+      }),
+    );
+  } catch (err) {
+    if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
+      yield put(
+        showNotification({
+          messageId: 'projectExists',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { name: projectName },
+        }),
+      );
+    } else {
+      yield put(
+        showNotification({
+          messageId: 'failureDefault',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { error: err.message },
+        }),
+      );
+    }
+  }
+}
+
+function* watchCreateProject() {
+  yield takeEvery(CREATE_PROJECT, createProject);
+}
+
 export function* projectsSagas() {
-  yield all([watchFetchProjects()]);
+  yield all([watchFetchProjects(), watchCreateProject()]);
 }
