@@ -14,97 +14,76 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { Input } from 'components/inputs/input';
-import { validate, bindMessageToValidator, validateAsync } from 'common/utils/validation';
-import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { SectionHeader } from 'components/main/sectionHeader';
+import { commonValidators } from 'common/utils/validation';
+import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { Modal } from '@reportportal/ui-kit';
+import { FieldText } from 'componentLibrary/fieldText';
+import { hideModalAction } from 'controllers/modal';
+import { useDispatch } from 'react-redux';
 import { messages } from '../messages';
 
-const LABEL_WIDTH = 105;
+const PROJECT_NAME_FIELD = 'projectName';
+export const AddProjectModal = ({ data = {}, handleSubmit, invalid }) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { onSubmit } = data;
 
-@withModal('addProjectModal')
-@injectIntl
-@reduxForm({
-  form: 'addProjectForm',
-  validate: ({ projectName }) => ({
-    projectName: bindMessageToValidator(validate.projectName, 'projectNameLengthHint')(projectName),
-  }),
-  asyncValidate: ({ projectName }) => validateAsync.projectNameUnique(projectName),
-  asyncChangeFields: ['projectName'],
-  asyncBlurFields: ['projectName'], // validate on blur in case of copy-paste value
-})
-export class AddProjectModal extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    data: PropTypes.object,
-    dirty: PropTypes.bool,
-    handleSubmit: PropTypes.func,
+  const onCreateProject = ({ projectName }) => {
+    onSubmit(projectName);
   };
+  const hideModal = () => dispatch(hideModalAction());
 
-  static defaultProps = {
-    data: {},
-    dirty: false,
-    handleSubmit: () => {},
-  };
+  return (
+    <Modal
+      title={formatMessage(messages.addProject)}
+      okButton={{
+        children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+        onClick: () => {
+          handleSubmit(onCreateProject)();
+        },
+        disabled: invalid,
+      }}
+      cancelButton={{
+        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      }}
+      onClose={hideModal}
+    >
+      <FieldProvider name={PROJECT_NAME_FIELD}>
+        <FieldErrorHint provideHint={false}>
+          <FieldText
+            label={'Name'}
+            defaultWidth={false}
+            placeholder={'Enter project’s name'}
+            maxLength={Infinity}
+          />
+        </FieldErrorHint>
+      </FieldProvider>
+    </Modal>
+  );
+};
 
-  getCloseConfirmationConfig = () => {
-    if (!this.props.dirty) {
-      return null;
-    }
-    return {
-      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
-    };
-  };
+AddProjectModal.propTypes = {
+  data: PropTypes.object,
+  dirty: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  invalid: PropTypes.bool,
+};
 
-  render() {
-    const {
-      intl,
-      data: { onSubmit, eventsInfo },
-      handleSubmit,
-    } = this.props;
-    return (
-      <ModalLayout
-        title={intl.formatMessage(messages.addProject)}
-        okButton={{
-          text: intl.formatMessage(COMMON_LOCALE_KEYS.ADD),
-          danger: false,
-          onClick: () => {
-            handleSubmit((values) => {
-              onSubmit(values);
-            })();
-          },
-          eventInfo: eventsInfo.addBtn,
-        }}
-        cancelButton={{
-          text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-          eventInfo: eventsInfo.cancelBtn,
-        }}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
-      >
-        <form>
-          <ModalField>
-            <SectionHeader text={intl.formatMessage(messages.addProjectTitle)} />
-          </ModalField>
-          <ModalField
-            label={intl.formatMessage(messages.projectNameLabel)}
-            labelWidth={LABEL_WIDTH}
-          >
-            <FieldProvider name="projectName" type="text">
-              <FieldErrorHint>
-                <Input maxLength="256" />
-              </FieldErrorHint>
-            </FieldProvider>
-          </ModalField>
-        </form>
-      </ModalLayout>
-    );
-  }
-}
+export default withModal('addProjectModal')(
+  reduxForm({
+    form: 'addProjectForm',
+    validate: ({ projectName }, { data: { projects } }) => {
+      const trimmedProjectName = projectName?.trim();
+      return {
+        projectName: commonValidators.createProjectNameValidator(projects)(trimmedProjectName),
+      };
+    },
+  })(AddProjectModal),
+);
