@@ -58,9 +58,9 @@ export const AddProjectModal = ({ data = {}, handleSubmit, invalid }) => {
       <FieldProvider name={PROJECT_NAME_FIELD}>
         <FieldErrorHint provideHint={false}>
           <FieldText
-            label={'Name'}
+            label={formatMessage(messages.projectNameLabel)}
             defaultWidth={false}
-            placeholder={'Enter project’s name'}
+            placeholder={formatMessage(messages.projectNamePlaceholder)}
             maxLength={Infinity}
           />
         </FieldErrorHint>
