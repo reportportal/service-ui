@@ -42,7 +42,9 @@ const messages = defineMessages({
   userCol: { id: 'EventsGrid.userCol', defaultMessage: 'User' },
   actionCol: { id: 'EventsGrid.actionCol', defaultMessage: 'Action' },
   objectTypeCol: { id: 'EventsGrid.objectTypeCol', defaultMessage: 'Object Type' },
+  objectTypeColShort: { id: 'EventsGrid.objectTypeColShort', defaultMessage: 'Type' },
   objectNameCol: { id: 'EventsGrid.objectNameCol', defaultMessage: 'Object Name' },
+  objectNameColShort: { id: 'EventsGrid.objectNameColShort', defaultMessage: 'Name' },
   oldValueCol: { id: 'EventsGrid.oldValueCol', defaultMessage: 'Old Value' },
   newValueCol: { id: 'EventsGrid.newValueCol', defaultMessage: 'New Value' },
 });
@@ -193,6 +195,7 @@ export class EventsGrid extends PureComponent {
       id: ENTITY_EVENTS_OBJECT_TYPE,
       title: {
         full: this.props.intl.formatMessage(messages.objectTypeCol),
+        short: this.props.intl.formatMessage(messages.objectTypeColShort),
       },
       sortable: true,
       component: ObjectTypeColumn,
@@ -204,6 +207,7 @@ export class EventsGrid extends PureComponent {
       id: ENTITY_OBJECT_NAME,
       title: {
         full: this.props.intl.formatMessage(messages.objectNameCol),
+        short: this.props.intl.formatMessage(messages.objectNameColShort),
       },
       sortable: true,
       component: ObjectNameColumn,
@@ -243,6 +247,9 @@ export class EventsGrid extends PureComponent {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
+          headerClassName={cx('events-grid-header')}
+          gridRowClassName={cx('events-grid-row')}
+          className={cx('events-grid')}
         />
         {!data.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
