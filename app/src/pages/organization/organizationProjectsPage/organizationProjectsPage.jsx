@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -24,6 +24,8 @@ import { loadingSelector, projectsSelector } from 'controllers/organizations/pro
 import { activeOrganizationLoadingSelector } from 'controllers/organizations/organization/selectors';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { userRolesSelector } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
+import { createProjectAction } from 'controllers/organizations/projects/actionCreators';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -34,6 +36,7 @@ import styles from './organizationProjectsPage.scss';
 const cx = classNames.bind(styles);
 
 export const OrganizationProjectsPage = () => {
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateProject(userRoles);
@@ -47,6 +50,28 @@ export const OrganizationProjectsPage = () => {
   const projects = useSelector(projectsSelector);
   const isProjectsEmpty = !projectsLoading && projects.length === 0;
 
+  const showCreateProjectModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'addProjectModal',
+        data: {
+          onSubmit: (newProjectName) => {
+            dispatch(
+              createProjectAction({
+                newProjectName,
+              }),
+            );
+          },
+          projects: projects.map((project) => ({
+            name: project.name,
+            id: project.id,
+            slug: project.slug,
+          })),
+        },
+      }),
+    );
+  };
+
   return (
     <ScrollWrapper autoHeightMax={100}>
       <div className={cx('organization-projects-container')}>
@@ -56,7 +81,10 @@ export const OrganizationProjectsPage = () => {
           </div>
         ) : (
           <>
-            <ProjectsPageHeader hasPermission={hasPermission} />
+            <ProjectsPageHeader
+              hasPermission={hasPermission}
+              onCreateProject={showCreateProjectModal}
+            />
             {isProjectsEmpty ? (
               <EmptyPageState
                 hasPermission={hasPermission}
@@ -65,6 +93,7 @@ export const OrganizationProjectsPage = () => {
                 icon={<PlusIcon />}
                 buttonTitle={buttonTitle}
                 emptyIcon={EmptyIcon}
+                onClick={showCreateProjectModal}
               />
             ) : (
               <ProjectsListTableWrapper projects={projects} />

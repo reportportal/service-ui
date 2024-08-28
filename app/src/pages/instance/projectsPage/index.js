@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { AddProjectModal } from './modals/addProjectModal';
+export { AddProjectModal } from 'pages/organization/organizationProjectsPage/modals/addProjectModal';
 export { ProjectsPage } from './projectsPage';

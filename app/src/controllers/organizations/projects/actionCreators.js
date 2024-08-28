@@ -15,7 +15,7 @@
  */
 
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
-import { FETCH_ORGANIZATION_PROJECTS, NAVIGATE_TO_PROJECT } from './constants';
+import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, NAVIGATE_TO_PROJECT } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
   return {
@@ -23,6 +23,11 @@ export const fetchOrganizationProjectsAction = (params) => {
     payload: params,
   };
 };
+
+export const createProjectAction = (project) => ({
+  type: CREATE_PROJECT,
+  payload: project,
+});
 
 export const navigateToProjectAction = (project) => ({
   type: NAVIGATE_TO_PROJECT,

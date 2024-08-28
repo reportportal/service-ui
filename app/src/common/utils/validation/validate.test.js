@@ -303,17 +303,20 @@ describe('validate.defectTypeShortName', () => {
 
 describe('validate.projectName', () => {
   test('validation should be correct', () => {
-    expect(validate.projectName('abc')).toBe(true);
+    expect(validate.projectNameLength('abc')).toBe(true);
   });
   test('Validation should not be correct', () => {
-    expect(validate.projectName(undefined)).toBe(false);
-    expect(validate.projectName('')).toBe(false);
-    expect(validate.projectName('  ')).toBe(false);
-    expect(validate.projectName('project test')).toBe(false);
-    expect(validate.projectName('проект')).toBe(false);
-    const textLonger256 =
+    expect(validate.projectNamePattern(undefined)).toBe(false);
+    expect(validate.projectNamePattern('')).toBe(false);
+    expect(validate.projectNamePattern('  ')).toBe(false);
+    expect(validate.projectNamePattern('project test')).toBe(true);
+    expect(validate.projectNamePattern('project-test')).toBe(true);
+    expect(validate.projectNamePattern('project_test')).toBe(true);
+    expect(validate.projectNamePattern('project.test')).toBe(true);
+    expect(validate.projectNamePattern('проект')).toBe(false);
+    const textLonger60 =
       'this_is_very_long_text_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    expect(validate.projectName(textLonger256)).toBe(false);
+    expect(validate.projectNameLength(textLonger60)).toBe(false);
   });
 });
 
