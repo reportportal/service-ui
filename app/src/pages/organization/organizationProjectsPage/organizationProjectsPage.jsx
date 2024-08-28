@@ -72,7 +72,7 @@ export const OrganizationProjectsPage = () => {
     );
   };
 
-  const getEmptyPageState = () => {
+  const getEmptyPageState = () =>
     organizationLoading ? (
       <div className={cx('loader')}>
         <BubblesLoader />
@@ -88,7 +88,6 @@ export const OrganizationProjectsPage = () => {
         onClick={showCreateProjectModal}
       />
     );
-  };
 
   return (
     <ScrollWrapper autoHeightMax={100}>
