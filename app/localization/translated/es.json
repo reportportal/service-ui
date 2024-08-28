@@ -1746,7 +1746,7 @@
   "ProjectsPage.projectLengthHint": "Nombre del proyecto",
   "ProjectsPage.projectNameLabel": "Nombre",
   "ProjectsPage.projectNameLengthHint": "Project name should have size from '3' to '60' characters",
-  "ProjectsPage.projectNamePatternHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot, space",
+  "ProjectsPage.projectNamePatternHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted",
   "ProjectsPage.projectNamePlaceholder": "Enter project’s name",
   "ProjectsPage.searchPlaceholder": "Buscar por nombre",
   "ProjectsPage.sortBy": "Ordenar por",

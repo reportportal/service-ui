@@ -1759,7 +1759,7 @@
   "ProjectsPage.projectLengthHint": "Имя проекта",
   "ProjectsPage.projectNameLabel": "Имя",
   "ProjectsPage.projectNameLengthHint": "Название проекта должно иметь длину от 3 до 60 символов",
-  "ProjectsPage.projectNamePatternHint": "Название проекта может содержать только латинские символы, цифры, дефис, подчеркивание, точку, пробел",
+  "ProjectsPage.projectNamePatternHint": "Название проекта может содержать только латинские символы, цифры, дефис, подчеркивание, точку. Пробел допускается",
   "ProjectsPage.projectNamePlaceholder": "Введите название проекта",
   "ProjectsPage.searchPlaceholder": "Поиск по названию",
   "ProjectsPage.sortBy": "Сортировать по",

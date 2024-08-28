@@ -1759,7 +1759,7 @@
   "ProjectsPage.projectLengthHint": "Ім’я проекту",
   "ProjectsPage.projectNameLabel": "Ім’я",
   "ProjectsPage.projectNameLengthHint": "Назва проекту має мати розмір від 3 до 60 символів",
-  "ProjectsPage.projectNamePatternHint": "Назва проекту може містити лише латиницю, цифри, дефіс, підкреслення, крапку, пробіл",
+  "ProjectsPage.projectNamePatternHint": "Назва проекту може містити лише латиницю, цифри, дефіс, підкреслення, крапку. Пробіл допускається" ,
   "ProjectsPage.projectNamePlaceholder": "Введіть назву проекту",
   "ProjectsPage.searchPlaceholder": "Пошук по назві",
   "ProjectsPage.sortBy": "Сортувати по",

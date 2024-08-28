@@ -178,7 +178,7 @@ const messages = defineMessages({
   projectNamePatternHint: {
     id: 'ProjectsPage.projectNamePatternHint',
     defaultMessage:
-      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot, space',
+      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted',
   },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',

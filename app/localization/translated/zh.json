@@ -1759,7 +1759,7 @@
   "ProjectsPage.projectLengthHint": "项目名称",
   "ProjectsPage.projectNameLabel": "名称",
   "ProjectsPage.projectNameLengthHint": "Project name should have size from '3' to '60' characters",
-  "ProjectsPage.projectNamePatternHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot, space",
+  "ProjectsPage.projectNamePatternHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted",
   "ProjectsPage.projectNamePlaceholder": "Enter project’s name",
   "ProjectsPage.searchPlaceholder": "按名称搜索",
   "ProjectsPage.sortBy": "排序依据",
