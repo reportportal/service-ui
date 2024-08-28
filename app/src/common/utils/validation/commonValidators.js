@@ -73,15 +73,11 @@ export const createRuleNameValidator = (notifications, notificationId) =>
       'ruleNameDuplicateHint',
     ),
   ]);
-export const createProjectNameValidator = (projects, projectId) =>
+export const createProjectNameValidator = () =>
   composeBoundValidators([
     commonValidators.requiredField,
     bindMessageToValidator(validate.projectNameLength, 'projectNameLengthHint'),
     bindMessageToValidator(validate.projectNamePattern, 'projectNamePatternHint'),
-    bindMessageToValidator(
-      validate.createNameUniqueValidator(projectId, projects),
-      'projectDuplicateHint',
-    ),
   ]);
 
 export const createDescriptionValidator = bindMessageToValidator(

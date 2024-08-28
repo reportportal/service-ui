@@ -75,10 +75,10 @@ AddProjectModal.propTypes = {
 export default withModal('addProjectModal')(
   reduxForm({
     form: 'addProjectForm',
-    validate: ({ projectName }, { data: { projects } }) => {
+    validate: ({ projectName }) => {
       const trimmedProjectName = projectName?.trim();
       return {
-        projectName: commonValidators.createProjectNameValidator(projects)(trimmedProjectName),
+        projectName: commonValidators.createProjectNameValidator()(trimmedProjectName),
       };
     },
   })(AddProjectModal),
