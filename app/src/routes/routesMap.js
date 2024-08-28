@@ -31,6 +31,7 @@ import {
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
+  PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   PROJECT_USERDEBUG_PAGE,
@@ -264,6 +265,7 @@ const routesMap = {
     payload: { ...payload, settingsTab: GENERAL },
   })),
   [PROJECT_SETTINGS_TAB_PAGE]: `/:projectId/settings/:settingsTab/:subTab*`,
+  [PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE]: `/:projectId/settings/:settingsTab\\?subPage=:subPage*`,
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
