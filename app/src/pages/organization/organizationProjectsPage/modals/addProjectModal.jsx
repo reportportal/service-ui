@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Modal } from '@reportportal/ui-kit';
-import { FieldText } from 'componentLibrary/fieldText';
+import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { messages } from '../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
-export const AddProjectModal = ({ data = {}, handleSubmit, invalid }) => {
+export const AddProjectModal = ({ data = {}, handleSubmit }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
@@ -48,7 +47,6 @@ export const AddProjectModal = ({ data = {}, handleSubmit, invalid }) => {
         onClick: () => {
           handleSubmit(onCreateProject)();
         },
-        disabled: invalid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -71,9 +69,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, invalid }) => {
 
 AddProjectModal.propTypes = {
   data: PropTypes.object,
-  dirty: PropTypes.bool,
   handleSubmit: PropTypes.func,
-  invalid: PropTypes.bool,
 };
 
 export default withModal('addProjectModal')(

@@ -39,7 +39,7 @@ function* watchFetchProjects() {
 function* createProject({ payload: { newProjectName: projectName } }) {
   const organizationId = yield select(activeOrganizationIdSelector);
   try {
-    yield call(fetch, URLS.organizationProject(organizationId), {
+    yield call(fetch, URLS.organizationProjects(organizationId), {
       method: 'post',
       data: {
         name: projectName,

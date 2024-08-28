@@ -33,7 +33,7 @@ import projectsIcon from './img/projects-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsPageHeader = ({ hasPermission, showCreateProjectModal }) => {
+export const ProjectsPageHeader = ({ hasPermission, onCreateProject }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
@@ -82,7 +82,7 @@ export const ProjectsPageHeader = ({ hasPermission, showCreateProjectModal }) =>
             </div>
           )}
           {isNotEmpty && hasPermission && (
-            <Button variant={'ghost'} icon={<PlusIcon />} onClick={showCreateProjectModal}>
+            <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateProject}>
               {formatMessage(messages.createProject)}
             </Button>
           )}
@@ -94,7 +94,7 @@ export const ProjectsPageHeader = ({ hasPermission, showCreateProjectModal }) =>
 
 ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
-  showCreateProjectModal: PropTypes.func.isRequired,
+  onCreateProject: PropTypes.func.isRequired,
 };
 
 ProjectsPageHeader.defaultProps = {

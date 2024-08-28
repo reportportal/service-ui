@@ -83,7 +83,7 @@ export const OrganizationProjectsPage = () => {
           <>
             <ProjectsPageHeader
               hasPermission={hasPermission}
-              showCreateProjectModal={showCreateProjectModal}
+              onCreateProject={showCreateProjectModal}
             />
             {isProjectsEmpty ? (
               <EmptyPageState

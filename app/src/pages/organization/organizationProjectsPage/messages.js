@@ -66,4 +66,16 @@ export const messages = defineMessages({
     id: 'OrganizationProjectsTableColumn.lastLaunch',
     defaultMessage: 'Last launch date',
   },
+  addProject: {
+    id: 'ProjectsPage.addProject',
+    defaultMessage: 'Create Project',
+  },
+  projectNameLabel: {
+    id: 'ProjectsPage.projectNameLabel',
+    defaultMessage: 'Name',
+  },
+  projectNamePlaceholder: {
+    id: 'ProjectsPage.projectNamePlaceholder',
+    defaultMessage: 'Enter project’s name',
+  },
 });
