@@ -14,37 +14,74 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { regex } from 'common/utils/validation/validatorHelpers';
 import { validate } from 'common/utils/validation';
 import { projectKeySelector } from 'controllers/project';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
+import { projectInfoSelector } from 'controllers/project/selectors';
+import PropTypes from 'prop-types';
 
 const messages = defineMessages({
   recipientsPlaceholder: {
     id: 'AddEditNotificationModal.recipientsPlaceholder',
     defaultMessage: 'User name/Email',
   },
+  recipientsError: {
+    id: 'AddEditNotificationModal.recipientsError',
+    defaultMessage: 'Please enter existent user name on your project or valid email',
+  },
 });
 
-export const RecipientsContainer = ({ ...rest }) => {
+const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
 
+  const [recipientsWithError, setRecipientsWithError] = useState([]);
+
+  const emailValidation = (email) => {
+    return regex(/[.@]/)(email);
+  };
+
   const getEmailValidationError = (v) => {
-    if (regex(/[.@]/)(v)) {
+    if (emailValidation(v)) {
       return !validate.email(v) && 'error';
     }
     return false;
   };
+
+  const getValidationError = (v) => {
+    const emailValidationErrorType = getEmailValidationError(v);
+    if (emailValidationErrorType) {
+      return emailValidationErrorType;
+    }
+
+    const hasError = !emailValidation(v) && !projectInfo.users.some((user) => user.login === v);
+    if (hasError) {
+      !recipientsWithError.includes(v) && setRecipientsWithError([...recipientsWithError, v]);
+      return 'error';
+    } else {
+      const currentRecipientsWithError = recipientsWithError.filter((login) => login !== v);
+      currentRecipientsWithError.length !== recipientsWithError.length &&
+        setRecipientsWithError(currentRecipientsWithError);
+      return false;
+    }
+  };
+
+  const clearItemsError = () => {
+    setRecipientsWithError([]);
+  };
+
   const parseEmailsString = (string) => {
     const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
     const emails = Array.from(string.matchAll(re), (m) => m[1]);
     return [...new Set(emails)];
   };
+
+  const recipientsError = recipientsWithError.length ? formatMessage(messages.recipientsError) : '';
 
   return (
     <AsyncMultipleAutocomplete
@@ -54,10 +91,21 @@ export const RecipientsContainer = ({ ...rest }) => {
       creatable
       editable
       createWithoutConfirmation
-      getItemValidationErrorType={getEmailValidationError}
-      getAdditionalCreationCondition={regex(/[.@]/)}
+      getItemValidationErrorType={getValidationError}
+      clearItemsError={clearItemsError}
       parseInputValueFn={parseEmailsString}
+      error={error || recipientsError}
       {...rest}
     />
   );
 };
+RecipientsContainerComponent.propTypes = {
+  projectInfo: PropTypes.object.isRequired,
+  error: PropTypes.string,
+};
+RecipientsContainerComponent.defaultProps = {
+  error: '',
+};
+export const RecipientsContainer = connect((state) => ({
+  projectInfo: projectInfoSelector(state),
+}))(RecipientsContainerComponent);

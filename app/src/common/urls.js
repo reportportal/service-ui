@@ -97,7 +97,7 @@ export const URLS = {
     `${urlBase}${projectKey}/item/suggest/cluster/${clusterId}`,
   choiceSuggestedItems: (projectKey) => `${urlBase}${projectKey}/item/suggest/choice`,
   launchNameSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/launch/names?filter.cnt.name=${searchTerm}`,
+    `${urlBase}${projectKey}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
   launchesExistingNames: (projectKey) => `${urlBase}${projectKey}/launch/names`,
   launchOwnersSearch: (projectKey) => (searchTerm = '') =>
     `${urlBase}${projectKey}/launch/owners?filter.cnt.user=${searchTerm}`,

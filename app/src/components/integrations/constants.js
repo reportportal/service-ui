@@ -18,7 +18,7 @@ import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs.svg';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
