@@ -69,7 +69,6 @@ import {
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
-  PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE,
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
@@ -308,7 +307,6 @@ export const createImportProps = (pluginName) => ({
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
     PROJECT_SETTINGS_TAB_PAGE,
-    PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE,
     DEFECT_TYPES_SEQUENCE,
     TO_INVESTIGATE,
     STATS_PB_TOTAL,

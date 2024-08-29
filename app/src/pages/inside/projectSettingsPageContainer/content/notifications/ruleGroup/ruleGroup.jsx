@@ -44,7 +44,7 @@ import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE } from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
@@ -320,11 +320,15 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 {isUpdateSettingAvailable && (
                   <LinkComponent
                     to={{
-                      type: PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE,
+                      type: PROJECT_SETTINGS_TAB_PAGE,
                       payload: {
                         projectId: activeProject,
                         settingsTab: INTEGRATIONS,
-                        subPage: 'email',
+                      },
+                      meta: {
+                        query: {
+                          subPage: 'email',
+                        },
                       },
                     }}
                     icon={arrowRightIcon}

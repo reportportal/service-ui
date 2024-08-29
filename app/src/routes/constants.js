@@ -95,11 +95,6 @@ export const pageRendering = {
     layout: AppLayout,
     rawContent: true,
   },
-  PROJECT_SETTINGS_TAB_PAGE_WITH_SUBPAGE: {
-    component: ProjectSettingsPageContainer,
-    layout: AppLayout,
-    rawContent: true,
-  },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
