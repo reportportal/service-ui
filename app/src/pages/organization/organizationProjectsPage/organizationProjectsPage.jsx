@@ -92,13 +92,11 @@ export const OrganizationProjectsPage = () => {
   return (
     <ScrollWrapper autoHeightMax={100}>
       <div className={cx('organization-projects-container')}>
-        <>
-          <ProjectsPageHeader
-            hasPermission={hasPermission}
-            onCreateProject={showCreateProjectModal}
-          />
-          {isProjectsEmpty ? getEmptyPageState() : <ProjectsListTableWrapper projects={projects} />}
-        </>
+        <ProjectsPageHeader
+          hasPermission={hasPermission}
+          onCreateProject={showCreateProjectModal}
+        />
+        {isProjectsEmpty ? getEmptyPageState() : <ProjectsListTableWrapper projects={projects} />}
       </div>
     </ScrollWrapper>
   );
