@@ -86,7 +86,11 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
         <div>{formatMessage(messages.currentVersion)}</div>
       </div>
       {calculateServices().map((service) => (
-        <VersionService service={service} content={formatMessage(messages.update)} />
+        <VersionService
+          service={service}
+          content={formatMessage(messages.update)}
+          key={service.linkTo}
+        />
       ))}
     </Modal>
   );
