@@ -65,7 +65,6 @@
 }
 
 .hex-color-presets {
-  width: 100%;
   display: flex;
   padding: 0 16px;
   flex-wrap: wrap;
@@ -90,8 +89,7 @@
 }
 
 .hex-color-input-wrapper {
-  width: 100%;
-  display: inline-flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 21px 20px 24px;
