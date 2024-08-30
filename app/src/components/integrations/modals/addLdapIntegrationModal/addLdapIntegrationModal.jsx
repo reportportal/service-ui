@@ -103,6 +103,7 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
       title={formatMessage(isEdit ? editTitle : createTitle)}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
       createFooter={(closeModalHandler) => (
         <TwoStepsFooter
           stepNumber={stepNumber}
