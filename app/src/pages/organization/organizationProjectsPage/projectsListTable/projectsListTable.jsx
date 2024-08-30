@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -25,10 +25,7 @@ import {
   prepareActiveOrganizationProjectsAction,
 } from 'controllers/organizations/organization';
 import { AbsRelTime } from 'components/main/absRelTime';
-import {
-  loadingSelector,
-  projectsPaginationSelector,
-} from 'controllers/organizations/projects/selectors';
+import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import {
   DEFAULT_PAGE_SIZE_OPTIONS,
@@ -57,7 +54,6 @@ export const ProjectsListTable = ({
 }) => {
   const { formatMessage } = useIntl();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
-  const loadingState = useSelector(loadingSelector);
   const dispatch = useDispatch();
   const onTableColumnSort = ({ key }) => {
     onChangeSorting(key);
@@ -140,11 +136,7 @@ export const ProjectsListTable = ({
     </Popover>
   );
 
-  return loadingState ? (
-    <div className={cx('loader')}>
-      <BubblesLoader />
-    </div>
-  ) : (
+  return (
     <PaginationWrapper
       showPagination={projects.length > 0}
       pageSize={pageSize}

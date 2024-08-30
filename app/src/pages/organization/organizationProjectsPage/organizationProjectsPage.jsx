@@ -72,34 +72,31 @@ export const OrganizationProjectsPage = () => {
     );
   };
 
+  const getEmptyPageState = () =>
+    organizationLoading ? (
+      <div className={cx('loader')}>
+        <BubblesLoader />
+      </div>
+    ) : (
+      <EmptyPageState
+        hasPermission={hasPermission}
+        label={label}
+        description={description}
+        icon={<PlusIcon />}
+        buttonTitle={buttonTitle}
+        emptyIcon={EmptyIcon}
+        onClick={showCreateProjectModal}
+      />
+    );
+
   return (
     <ScrollWrapper autoHeightMax={100}>
       <div className={cx('organization-projects-container')}>
-        {organizationLoading ? (
-          <div className={cx('loader')}>
-            <BubblesLoader />
-          </div>
-        ) : (
-          <>
-            <ProjectsPageHeader
-              hasPermission={hasPermission}
-              onCreateProject={showCreateProjectModal}
-            />
-            {isProjectsEmpty ? (
-              <EmptyPageState
-                hasPermission={hasPermission}
-                label={label}
-                description={description}
-                icon={<PlusIcon />}
-                buttonTitle={buttonTitle}
-                emptyIcon={EmptyIcon}
-                onClick={showCreateProjectModal}
-              />
-            ) : (
-              <ProjectsListTableWrapper projects={projects} />
-            )}
-          </>
-        )}
+        <ProjectsPageHeader
+          hasPermission={hasPermission}
+          onCreateProject={showCreateProjectModal}
+        />
+        {isProjectsEmpty ? getEmptyPageState() : <ProjectsListTableWrapper projects={projects} />}
       </div>
     </ScrollWrapper>
   );
