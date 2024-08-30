@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-export { FAQContent } from './FAQContent';
-export { RequestSupportModal } from '../modals/requestSupportModal';
-export { VersionsOfConnectedServicesModal } from '../modals/versionsOfConnectedServicesModal';
+export { VersionService } from './versionService';

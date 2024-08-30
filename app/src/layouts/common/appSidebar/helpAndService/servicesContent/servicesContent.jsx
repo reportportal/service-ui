@@ -16,9 +16,13 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { API_PAGE } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
+import { useEffect, useState } from 'react';
+import fetchJsonp from 'fetch-jsonp';
 import { LinkItem } from '../linkItem';
 import { FAQWithPopover } from '../index';
 import styles from './servicesContent.scss';
@@ -27,7 +31,9 @@ import { messages } from '../../messages';
 const cx = classNames.bind(styles);
 
 export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOpen }) => {
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const [latestServiceVersions, setLatestServiceVersions] = useState({});
 
   const currentYear = new Date().getFullYear();
 
@@ -59,6 +65,27 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
     },
   ];
 
+  useEffect(() => {
+    fetchJsonp('https://status.reportportal.io/versions', {
+      jsonpCallback: 'jsonp',
+    })
+      .then((res) => res.json())
+      .then((latestVersions) => setLatestServiceVersions(latestVersions));
+  }, []);
+
+  const openModal = () => {
+    closePopover();
+    closeSidebar();
+    dispatch(
+      showModalAction({
+        id: 'versionsOfConnectedServicesModal',
+        data: {
+          latestServiceVersions,
+        },
+      }),
+    );
+  };
+
   return (
     <>
       <FAQWithPopover
@@ -83,8 +110,11 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
           key={contentItem.linkTo.type || contentItem.linkTo}
         />
       ))}
-
-      <p className={cx('menu-item', 'with-divider')}>{formatMessage(messages.servicesVersions)}</p>
+      <LinkItem
+        className={cx('menu-item', 'with-divider')}
+        onClick={openModal}
+        content={formatMessage(messages.servicesVersions)}
+      />
       <p className={cx('menu-item', 'rights')}>{formatMessage(messages.rights, { currentYear })}</p>
     </>
   );
