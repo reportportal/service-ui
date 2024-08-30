@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-.field {
-  padding-right: 0;
-}
+import AddLdapIntegrationModal from './addLdapIntegrationModal';
+
+export { AddLdapIntegrationModal };

@@ -15,20 +15,44 @@
  */
 
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { IntegrationSettings } from 'components/integrations/elements';
+import { showModalAction } from 'controllers/modal';
 import { LdapFormFields } from '../ldapFormFields';
 
-export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
-  <IntegrationSettings
-    data={data}
-    onUpdate={onUpdate}
-    goToPreviousPage={goToPreviousPage}
-    isGlobal={isGlobal}
-    formFieldsComponent={LdapFormFields}
-    preventTestConnection
-  />
-);
+export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => {
+  const dispatch = useDispatch();
 
+  const openEditModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'addLdapIntegrationModal',
+        data: {
+          onConfirm: onUpdate,
+          instanceType: data.name,
+          isGlobal,
+          initialData: data.integrationParameters,
+          customProps: {
+            isEdit: true,
+          },
+        },
+      }),
+    );
+  };
+
+  return (
+    <IntegrationSettings
+      data={data}
+      onUpdate={onUpdate}
+      goToPreviousPage={goToPreviousPage}
+      isGlobal={isGlobal}
+      formFieldsComponent={LdapFormFields}
+      preventTestConnection
+      isEditable
+      editAuthConfig={{ onClick: openEditModal }}
+    />
+  );
+};
 LdapSettings.propTypes = {
   data: PropTypes.object.isRequired,
   goToPreviousPage: PropTypes.func.isRequired,

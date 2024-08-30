@@ -39,7 +39,7 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
 import StarIcon from 'common/img/star-inline.svg';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -122,12 +122,9 @@ export class ItemInfo extends Component {
     const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
     if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
       return (
-        <img
-          className={cx('sauce-labs-label')}
-          src={SauceLabsIcon}
-          alt={PLUGIN_NAME_TITLES[SAUCE_LABS]}
-          title={PLUGIN_NAME_TITLES[SAUCE_LABS]}
-        />
+        <i className={cx('sauce-labs-label')} title={PLUGIN_NAME_TITLES[SAUCE_LABS]}>
+          {Parser(SauceLabsIcon)}
+        </i>
       );
     }
     return null;

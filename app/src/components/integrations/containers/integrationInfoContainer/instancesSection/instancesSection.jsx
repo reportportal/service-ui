@@ -42,6 +42,7 @@ import {
   isPluginBuiltin,
 } from 'components/integrations/utils';
 import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
+import { LDAP } from 'common/constants/pluginNames';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -251,8 +252,10 @@ export class InstancesSection extends Component {
   showAddIntegrationModal = () => {
     const { instanceType, pluginDetails, isGlobal } = this.props;
 
+    const isLdap = instanceType === LDAP;
+
     this.props.showModalAction({
-      id: 'addIntegrationModal',
+      id: isLdap ? 'addLdapIntegrationModal' : 'addIntegrationModal',
       data: {
         onConfirm: this.createIntegration,
         instanceType,

@@ -14,53 +14,75 @@
  * limitations under the License.
  */
 
+@mixin responsive-ellipsis($breakpoint) {
+  @media (max-width: $breakpoint) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .time-col {
   width: 10%;
   height: 70px;
   vertical-align: top;
   font-size: 12px;
 }
+
 .user-col {
   width: 10%;
   vertical-align: top;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
-  @media (max-width: $SCREEN_XS_MAX) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  @include responsive-ellipsis($SCREEN_XS_MAX);
 }
+
 .action-col {
   width: 20%;
   vertical-align: top;
   font-size: 13px;
+  @include responsive-ellipsis($SCREEN_XS_MAX);
 }
+
 .object-type-col {
   width: 15%;
   vertical-align: top;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
-  @media (max-width: $SCREEN_XS_MAX) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  @include responsive-ellipsis($SCREEN_XS_MAX);
 }
+
 .object-name-col {
   width: 15%;
   vertical-align: top;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
-  @media (max-width: $SCREEN_XS_MAX) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  @include responsive-ellipsis($SCREEN_XS_MAX);
 }
+
 .value-col {
   width: 15%;
   vertical-align: top;
   font-size: 13px;
 }
+
 .value-field {
   font-family: $FONT-SEMIBOLD;
+}
+
+.events-grid-header,
+.events-grid-row {
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: table-row;
+    > :nth-last-child(-n+2) {
+      max-width: 0;
+      display: none;
+    }
+  }
+}
+
+.events-grid {
+  @media (max-width: $SCREEN_SM_MAX) {
+    table-layout: fixed;
+  }
 }

@@ -42,11 +42,19 @@
   &:hover,
   &:focus {
     color: $COLOR--charcoal-grey;
+
+    svg * {
+      fill: $COLOR--charcoal-grey;
+    }
   }
 
   &.active,
   &.active:hover {
     color: $COLOR--topaz;
+
+    svg * {
+      fill: $COLOR--topaz;
+    }
   }
 
   &--icon {

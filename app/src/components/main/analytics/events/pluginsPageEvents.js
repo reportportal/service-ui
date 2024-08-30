@@ -72,6 +72,26 @@ export const PLUGINS_PAGE_EVENTS = {
     modal: 'create_global_integration',
     type: normalizeEventParameter(type),
   }),
+  clickEditGlobalIntegration: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'save',
+    modal: 'edit_global_integration',
+    type: normalizeEventParameter(type),
+  }),
+  clickCreateLdapIntegration: (isFullName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'button_create',
+    modal: 'create_global_integration',
+    type: 'ldap',
+    condition: isFullName ? 'full_name' : 'first_last_name',
+  }),
+  clickEditLdapIntegration: (isFullName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'save',
+    modal: 'edit_global_integration',
+    type: 'ldap',
+    condition: isFullName ? 'full_name' : 'first_last_name',
+  }),
   integrationAddClickEvent: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'add_integration',
