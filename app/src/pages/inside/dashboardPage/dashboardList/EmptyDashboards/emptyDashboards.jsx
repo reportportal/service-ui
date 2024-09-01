@@ -39,6 +39,10 @@ const messages = defineMessages({
     id: 'DashboardEmptyResults.currentUserDashboardsText',
     defaultMessage: 'Add your first dashboard to analyse statistics',
   },
+  currentUserDashboardsTextViewer: {
+    id: 'DashboardEmptyResults.currentUserDashboardsTextViewer',
+    defaultMessage: 'Dashboards will appear here once created by your team',
+  },
   currentUserDashboardsActionText: {
     id: 'DashboardEmptyResults.currentUserDashboardsActionText',
     defaultMessage: 'Add New Dashboard',
@@ -83,6 +87,7 @@ export class EmptyDashboards extends Component {
 
   render() {
     const { intl, filter, userRoles } = this.props;
+    const isWorkWithDashboard = canWorkWithDashboard(userRoles);
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
@@ -94,17 +99,17 @@ export class EmptyDashboards extends Component {
           {intl.formatMessage(messages.currentUserDashboardsHeadline)}
         </p>
         <p className={cx('empty-dashboard-text')}>
-          {intl.formatMessage(messages.currentUserDashboardsText)}
+          {isWorkWithDashboard
+            ? intl.formatMessage(messages.currentUserDashboardsText)
+            : intl.formatMessage(messages.currentUserDashboardsTextViewer)}
         </p>
-        <div className={cx('empty-dashboard-content')}>
-          <GhostButton
-            icon={AddDashboardIcon}
-            onClick={this.handleAddDashboardAction}
-            disabled={!canWorkWithDashboard(userRoles)}
-          >
-            {intl.formatMessage(messages.currentUserDashboardsActionText)}
-          </GhostButton>
-        </div>
+        {isWorkWithDashboard && (
+          <div className={cx('empty-dashboard-content')}>
+            <GhostButton icon={AddDashboardIcon} onClick={this.handleAddDashboardAction}>
+              {intl.formatMessage(messages.currentUserDashboardsActionText)}
+            </GhostButton>
+          </div>
+        )}
       </div>
     );
   }

@@ -21,7 +21,7 @@ import { useTracking } from 'react-tracking';
 import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { canSeeMembers } from 'common/utils/permissions';
+import { canSeeMembers, canWorkWithFilters } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
   PROJECT_DASHBOARD_PAGE,
@@ -95,13 +95,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug Mode'} />,
       },
-      {
+    ];
+
+    if (canWorkWithFilters(userRoles)) {
+      sidebarItems.push({
         onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
-      },
-    ];
+      });
+    }
 
     if (canSeeMembers(userRoles)) {
       sidebarItems.push({

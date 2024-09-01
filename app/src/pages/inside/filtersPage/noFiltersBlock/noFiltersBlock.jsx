@@ -74,37 +74,37 @@ export class NoFiltersBlock extends PureComponent {
           <div className={cx('title')}>
             <FormattedMessage id={'NoFiltersBlock.title'} defaultMessage={'There are no filters'} />
           </div>
-          <div className={cx('message')}>
-            <FormattedMessage
-              id={'NoFiltersBlock.message'}
-              defaultMessage={'You can create your first filter on the '}
-            />
-            <Link
-              className={cx('link')}
-              to={{
-                type: PROJECT_LAUNCHES_PAGE,
-                payload: {
-                  projectSlug,
-                  filterId: ALL,
-                  organizationSlug,
-                },
-              }}
-            >
-              <FormattedMessage id={'NoFiltersBlock.link'} defaultMessage={'Launch Page'} />
-            </Link>
-          </div>
-          <div className={cx('or')}>
-            <FormattedMessage id={'NoFiltersBlock.or'} defaultMessage={'or'} />
-          </div>
-          <div className={cx('button')}>
-            <GhostButton
-              icon={AddFilterIcon}
-              onClick={this.onClickAddFilter}
-              disabled={!canWorkWithFilters(userRoles)}
-            >
-              <FormattedMessage id={'NoFiltersBlock.Button'} defaultMessage={'Add filter'} />
-            </GhostButton>
-          </div>
+          {canWorkWithFilters(userRoles) && (
+            <>
+              <div className={cx('message')}>
+                <FormattedMessage
+                  id={'NoFiltersBlock.message'}
+                  defaultMessage={'You can create your first filter on the '}
+                />
+                <Link
+                  className={cx('link')}
+                  to={{
+                    type: PROJECT_LAUNCHES_PAGE,
+                    payload: {
+                      projectSlug,
+                      filterId: ALL,
+                      organizationSlug,
+                    },
+                  }}
+                >
+                  <FormattedMessage id={'NoFiltersBlock.link'} defaultMessage={'Launch Page'} />
+                </Link>
+              </div>
+              <div className={cx('or')}>
+                <FormattedMessage id={'NoFiltersBlock.or'} defaultMessage={'or'} />
+              </div>
+              <div className={cx('button')}>
+                <GhostButton icon={AddFilterIcon} onClick={this.onClickAddFilter}>
+                  <FormattedMessage id={'NoFiltersBlock.Button'} defaultMessage={'Add filter'} />
+                </GhostButton>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );

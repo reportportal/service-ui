@@ -106,13 +106,11 @@ export class FilterPageToolbar extends React.Component {
           </FieldProvider>
         </div>
         <div className={cx('label')}>{formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton
-          icon={AddFilterIcon}
-          onClick={onAddFilter}
-          disabled={!canWorkWithFilters(userRoles)}
-        >
-          {formatMessage(messages.addFilter)}
-        </GhostButton>
+        {canWorkWithFilters(userRoles) && (
+          <GhostButton icon={AddFilterIcon} onClick={onAddFilter}>
+            {formatMessage(messages.addFilter)}
+          </GhostButton>
+        )}
       </div>
     );
   }

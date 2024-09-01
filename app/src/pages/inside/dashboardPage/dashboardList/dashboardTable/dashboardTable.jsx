@@ -100,9 +100,7 @@ export class DashboardTable extends Component {
       slugs: { organizationSlug, projectSlug },
     } = this.props;
 
-    const disabled = !canWorkWithDashboard(userRoles);
-
-    return [
+    const columns = [
       {
         title: {
           full: intl.formatMessage(messages.dashboardName),
@@ -131,31 +129,36 @@ export class DashboardTable extends Component {
         formatter: (value) => value.owner,
         component: OwnerColumn,
       },
-      {
-        title: {
-          full: intl.formatMessage(messages.edit),
-          short: intl.formatMessage(messages.edit),
-        },
-        component: EditColumn,
-        customProps: {
-          onEdit: onEditItem,
-          disabled,
-        },
-        align: ALIGN_CENTER,
-      },
-      {
-        title: {
-          full: intl.formatMessage(messages.deleteDashboard),
-          short: intl.formatMessage(messages.deleteDashboard),
-        },
-        component: DeleteColumn,
-        customProps: {
-          onDelete: onDeleteItem,
-          disabled,
-        },
-        align: ALIGN_CENTER,
-      },
     ];
+
+    if (canWorkWithDashboard(userRoles)) {
+      columns.push(
+        {
+          title: {
+            full: intl.formatMessage(messages.edit),
+            short: intl.formatMessage(messages.edit),
+          },
+          component: EditColumn,
+          customProps: {
+            onEdit: onEditItem,
+          },
+          align: ALIGN_CENTER,
+        },
+        {
+          title: {
+            full: intl.formatMessage(messages.deleteDashboard),
+            short: intl.formatMessage(messages.deleteDashboard),
+          },
+          component: DeleteColumn,
+          customProps: {
+            onDelete: onDeleteItem,
+          },
+          align: ALIGN_CENTER,
+        },
+      );
+    }
+
+    return columns;
   }
 
   render() {

@@ -188,7 +188,7 @@ export class FilterGrid extends Component {
     const { userRoles } = this.props;
     const editable = canWorkWithFilters(userRoles);
 
-    return [
+    const columns = [
       {
         id: 'name',
         title: {
@@ -245,7 +245,10 @@ export class FilterGrid extends Component {
           readOnly: !editable,
         },
       },
-      {
+    ];
+
+    if (editable) {
+      columns.push({
         id: 'delete',
         title: {
           full: this.props.intl.formatMessage(messages.deleteCol),
@@ -259,8 +262,10 @@ export class FilterGrid extends Component {
           },
           disabled: !editable,
         },
-      },
-    ];
+      });
+    }
+
+    return columns;
   };
 
   render() {

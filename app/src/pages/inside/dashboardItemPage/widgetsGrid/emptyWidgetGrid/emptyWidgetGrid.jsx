@@ -36,6 +36,10 @@ const messages = defineMessages({
     id: 'DashboardItemPage.dashboardEmptyText',
     defaultMessage: 'Add your first widget to analyse statistics',
   },
+  dashboardEmptyTextViewer: {
+    id: 'DashboardItemPage.dashboardEmptyTextViewer',
+    defaultMessage: 'Widgets will appear here once created by your team',
+  },
   notMyDashboardEmptyHeader: {
     id: 'DashboardItemPage.notMyDashboardEmptyHeader',
     defaultMessage: 'There are no widgets on this dashboard',
@@ -62,6 +66,7 @@ export class EmptyWidgetGrid extends Component {
 
   render() {
     const { action, intl, isDisable, userRoles } = this.props;
+    const isWorkWithDashboard = canWorkWithWidgets(userRoles);
 
     return (
       <div className={cx('empty-widget')}>
@@ -72,17 +77,17 @@ export class EmptyWidgetGrid extends Component {
         {!isDisable && (
           <Fragment>
             <p className={cx('empty-widget-text')}>
-              {intl.formatMessage(messages.dashboardEmptyText)}
+              {isWorkWithDashboard
+                ? intl.formatMessage(messages.dashboardEmptyText)
+                : intl.formatMessage(messages.dashboardEmptyTextViewer)}
             </p>
-            <div className={cx('empty-widget-content')}>
-              <GhostButton
-                icon={AddDashboardIcon}
-                onClick={action}
-                disabled={!canWorkWithWidgets(userRoles)}
-              >
-                {intl.formatMessage(messages.addNewWidget)}
-              </GhostButton>
-            </div>
+            {isWorkWithDashboard && (
+              <div className={cx('empty-widget-content')}>
+                <GhostButton icon={AddDashboardIcon} onClick={action}>
+                  {intl.formatMessage(messages.addNewWidget)}
+                </GhostButton>
+              </div>
+            )}
           </Fragment>
         )}
       </div>
