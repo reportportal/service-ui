@@ -260,7 +260,6 @@ export class FilterGrid extends Component {
             this.props.onDelete(filter);
             this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
           },
-          disabled: !editable,
         },
       });
     }
