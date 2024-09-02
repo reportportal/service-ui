@@ -33,14 +33,14 @@ export const resetOldCondition = (entity, oldEntity, key, predefinedPrefixKey) =
 
 export const collectFilterEntities = (query = {}, predefinedPrefixKey = PREDEFINED_FILTER_PREFIX) =>
   Object.keys(query).reduce((result, key) => {
-    if (key.indexOf(predefinedPrefixKey) === 0) {
+    if (key.startsWith(predefinedPrefixKey)) {
       const [, filterName] = key.split('.');
       return {
         ...result,
         [filterName]: { value: query[key] || null },
       };
     }
-    if (key.indexOf(FILTER_PREFIX) !== 0) {
+    if (!key.startsWith(FILTER_PREFIX)) {
       return result;
     }
     const [, condition, filterName] = key.split('.');
@@ -59,7 +59,11 @@ const isConditionChangeWithEmptyValue = (entity = {}, oldEntity = {}) => {
   return isEmptyValue(entityValue) && isEmptyValue(oldEntityValue);
 };
 
-export const createFilterQuery = (entities = {}, oldEntities = {}, predefinedPrefixKey) => {
+export const createFilterQuery = (
+  entities = {},
+  oldEntities = {},
+  predefinedPrefixKey = PREDEFINED_FILTER_PREFIX,
+) => {
   const mergedEntities = { ...oldEntities, ...entities };
   const keys = Object.keys(mergedEntities);
   const initialQuery = {};
