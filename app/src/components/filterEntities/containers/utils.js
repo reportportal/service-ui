@@ -19,23 +19,21 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 const FILTER_PREFIX = 'filter.';
 const PREDEFINED_FILTER_PREFIX = 'predefinedFilter.';
 
-const getFilterKey = (entity, key) =>
-  entity.condition
-    ? `${FILTER_PREFIX}${entity.condition}.${key}`
-    : `${PREDEFINED_FILTER_PREFIX}${key}`;
+const getFilterKey = (entity, key, predefinedPrefixKey = PREDEFINED_FILTER_PREFIX) =>
+  entity.condition ? `${FILTER_PREFIX}${entity.condition}.${key}` : `${predefinedPrefixKey}${key}`;
 
-export const resetOldCondition = (entity, oldEntity, key) => {
+export const resetOldCondition = (entity, oldEntity, key, predefinedPrefixKey) => {
   if (entity && oldEntity) {
     if (entity.condition !== oldEntity.condition) {
-      return { [getFilterKey(oldEntity, key)]: null };
+      return { [getFilterKey(oldEntity, key, predefinedPrefixKey)]: null };
     }
   }
   return {};
 };
 
-export const collectFilterEntities = (query = {}) =>
+export const collectFilterEntities = (query = {}, predefinedPrefixKey = PREDEFINED_FILTER_PREFIX) =>
   Object.keys(query).reduce((result, key) => {
-    if (key.indexOf(PREDEFINED_FILTER_PREFIX) === 0) {
+    if (key.indexOf(predefinedPrefixKey) === 0) {
       const [, filterName] = key.split('.');
       return {
         ...result,
@@ -61,7 +59,7 @@ const isConditionChangeWithEmptyValue = (entity = {}, oldEntity = {}) => {
   return isEmptyValue(entityValue) && isEmptyValue(oldEntityValue);
 };
 
-export const createFilterQuery = (entities = {}, oldEntities = {}) => {
+export const createFilterQuery = (entities = {}, oldEntities = {}, predefinedPrefixKey) => {
   const mergedEntities = { ...oldEntities, ...entities };
   const keys = Object.keys(mergedEntities);
   const initialQuery = {};
@@ -72,14 +70,14 @@ export const createFilterQuery = (entities = {}, oldEntities = {}) => {
       return res;
     }
     if (!entity && oldEntity) {
-      return { ...res, [getFilterKey(oldEntity, key)]: null };
+      return { ...res, [getFilterKey(oldEntity, key, predefinedPrefixKey)]: null };
     }
 
     const resetOldConditions = resetOldCondition(entity, oldEntity, key);
     const filterValue = !isEmptyValue(entity.value) ? entity.value : null;
     return {
       ...res,
-      [getFilterKey(entity, key)]: filterValue,
+      [getFilterKey(entity, key, predefinedPrefixKey)]: filterValue,
       ...resetOldConditions,
     };
   }, initialQuery);

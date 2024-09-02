@@ -14,54 +14,66 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { connectRouter, debounce, isEmptyObject } from 'common/utils';
 import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
+import { SEARCH_PREFIX } from 'controllers/organizations/projects/constants';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
-@connectRouter(
-  (query) => ({
-    entities: collectFilterEntities(query),
-    defaultPagination: defaultPaginationSelector(),
-  }),
-  {
-    updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
-  },
-)
-export class FilterEntitiesURLContainer extends Component {
-  static propTypes = {
-    entities: PropTypes.object,
-    updateFilters: PropTypes.func,
-    render: PropTypes.func.isRequired,
-    debounced: PropTypes.bool,
-    defaultPagination: PropTypes.any.isRequired,
-  };
+const FilterEntitiesURL = ({
+  entities = {},
+  updateFilters = () => {},
+  render,
+  debounceTime = 1000,
+  defaultPagination,
+  prefixQueryKey,
+}) => {
+  const handleChange = useCallback(
+    (newEntities) => {
+      if (isEqual(newEntities, entities)) {
+        return;
+      }
+      const filterQuery = createFilterQuery(newEntities, entities, prefixQueryKey);
+      if (!isEmptyObject(filterQuery)) {
+        updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
+      }
+    },
+    [entities, defaultPagination, prefixQueryKey, updateFilters],
+  );
 
-  static defaultProps = {
-    entities: {},
-    updateFilters: () => {},
-    debounced: true,
-  };
-  handleChange = (entities) => {
-    if (isEqual(entities, this.props.entities)) {
-      return;
-    }
-    const { defaultPagination } = this.props;
-    const filterQuery = createFilterQuery(entities, this.props.entities);
-    if (!isEmptyObject(filterQuery)) {
-      this.props.updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
-    }
-  };
+  const debouncedHandleChange = useCallback(debounce(handleChange, debounceTime), [
+    handleChange,
+    debounceTime,
+  ]);
 
-  debouncedHandleChange = debounce(this.handleChange, 1000);
+  return render({
+    entities,
+    onChange: debounceTime ? debouncedHandleChange : handleChange,
+  });
+};
 
-  render() {
-    const { render, entities, debounced } = this.props;
-    return render({
-      entities,
-      onChange: debounced ? this.debouncedHandleChange : this.handleChange,
-    });
-  }
-}
+FilterEntitiesURL.propTypes = {
+  entities: PropTypes.object,
+  updateFilters: PropTypes.func,
+  render: PropTypes.func.isRequired,
+  debounceTime: PropTypes.number,
+  defaultPagination: PropTypes.any.isRequired,
+  prefixQueryKey: PropTypes.string,
+};
+
+const createFilterEntitiesURLContainer = (prefixQueryKey) =>
+  connectRouter(
+    (query) => ({
+      entities: collectFilterEntities(query, prefixQueryKey),
+      defaultPagination: defaultPaginationSelector(),
+    }),
+    {
+      updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
+    },
+  )(FilterEntitiesURL);
+
+export const FilterEntitiesURLContainer = createFilterEntitiesURLContainer();
+
+export const SearchEntitiesURLContainer = createFilterEntitiesURLContainer(SEARCH_PREFIX);

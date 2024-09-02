@@ -26,9 +26,11 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organizations/projects/actionCreators';
+import { useState } from 'react';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
+import NoResultsIcon from './img/no-results-icon-inline.svg';
 import { messages } from './messages';
 import { ProjectsListTableWrapper } from './projectsListTable';
 import styles from './organizationProjectsPage.scss';
@@ -49,6 +51,7 @@ export const OrganizationProjectsPage = () => {
 
   const projects = useSelector(projectsSelector);
   const isProjectsEmpty = !projectsLoading && projects.length === 0;
+  const [searchValue, setSearchValue] = useState(null);
 
   const showCreateProjectModal = () => {
     dispatch(
@@ -72,12 +75,15 @@ export const OrganizationProjectsPage = () => {
     );
   };
 
-  const getEmptyPageState = () =>
-    organizationLoading ? (
-      <div className={cx('loader')}>
-        <BubblesLoader />
-      </div>
-    ) : (
+  const getEmptyPageState = () => {
+    if (organizationLoading || projectsLoading) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+    return searchValue === null ? (
       <EmptyPageState
         hasPermission={hasPermission}
         label={label}
@@ -87,7 +93,15 @@ export const OrganizationProjectsPage = () => {
         emptyIcon={EmptyIcon}
         onClick={showCreateProjectModal}
       />
+    ) : (
+      <EmptyPageState
+        label={formatMessage(messages.noResultsLabel)}
+        description={formatMessage(messages.noResultsDescription)}
+        emptyIcon={NoResultsIcon}
+        hasPermission={false}
+      />
     );
+  };
 
   return (
     <ScrollWrapper autoHeightMax={100}>
@@ -95,6 +109,8 @@ export const OrganizationProjectsPage = () => {
         <ProjectsPageHeader
           hasPermission={hasPermission}
           onCreateProject={showCreateProjectModal}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
         {isProjectsEmpty ? getEmptyPageState() : <ProjectsListTableWrapper projects={projects} />}
       </div>

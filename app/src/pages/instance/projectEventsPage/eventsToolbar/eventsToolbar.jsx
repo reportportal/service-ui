@@ -37,7 +37,7 @@ export const EventsToolbar = () => {
   return (
     <div className={cx('events-toolbar')}>
       <FilterEntitiesURLContainer
-        debounced={false}
+        debounceTime={0}
         render={({ entities, onChange }) => (
           <InputFilter
             id={ACTIVITIES}

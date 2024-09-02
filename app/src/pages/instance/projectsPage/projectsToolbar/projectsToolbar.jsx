@@ -195,7 +195,7 @@ export class ProjectsToolbar extends Component {
       <div className={cx('toolbar')}>
         <div className={cx('search')}>
           <FilterEntitiesURLContainer
-            debounced={false}
+            debounceTime={0}
             render={({ entities, onChange }) => (
               <InputFilter
                 id={PROJECTS}

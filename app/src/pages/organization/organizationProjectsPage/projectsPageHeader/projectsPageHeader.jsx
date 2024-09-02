@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { Button, FieldText, PlusIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { PROJECTS_PAGE } from 'controllers/pages';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organizations/organization';
-import userIcon from './img/user-inline.svg';
-import { messages } from '../messages';
-import styles from './projectsPageHeader.scss';
+import { SearchEntitiesURLContainer } from 'components/filterEntities/containers';
+import { SEARCH_FIELD, SEARCH_PREFIX } from 'controllers/organizations/projects/constants';
 import projectsIcon from './img/projects-inline.svg';
+import styles from './projectsPageHeader.scss';
+import { messages } from '../messages';
+import userIcon from './img/user-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsPageHeader = ({ hasPermission, onCreateProject }) => {
+export const ProjectsPageHeader = ({
+  hasPermission,
+  onCreateProject,
+  searchValue,
+  setSearchValue,
+}) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
@@ -50,6 +56,17 @@ export const ProjectsPageHeader = ({ hasPermission, onCreateProject }) => {
       title: organizationName,
     },
   ];
+
+  const handleSearchChange = (e, onChange) => {
+    const newValue = e.target.value;
+    setSearchValue(newValue);
+    onChange({ [SEARCH_FIELD]: { value: newValue } });
+  };
+
+  const handleSearchClear = (onChange) => {
+    setSearchValue('');
+    onChange({ [SEARCH_FIELD]: { value: '' } });
+  };
 
   return (
     <div className={cx('projects-page-header-container')}>
@@ -77,7 +94,25 @@ export const ProjectsPageHeader = ({ hasPermission, onCreateProject }) => {
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
-              <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
+              <SearchEntitiesURLContainer
+                debounceTime={300}
+                prefixQueryKey={SEARCH_PREFIX}
+                render={({ entities, onChange }) => {
+                  const value = searchValue ?? entities[SEARCH_FIELD]?.value ?? '';
+                  if (searchValue === null && entities[SEARCH_FIELD]?.value)
+                    setSearchValue(entities[SEARCH_FIELD]?.value);
+                  return (
+                    <FieldText
+                      id={SEARCH_FIELD}
+                      value={value}
+                      onChange={(e) => handleSearchChange(e, onChange)}
+                      onClear={() => handleSearchClear(onChange)}
+                      clearable
+                      startIcon={Parser(searchIcon)}
+                    />
+                  );
+                }}
+              />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
             </div>
           )}
@@ -95,6 +130,8 @@ export const ProjectsPageHeader = ({ hasPermission, onCreateProject }) => {
 ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
   onCreateProject: PropTypes.func.isRequired,
+  searchValue: PropTypes.string || null,
+  setSearchValue: PropTypes.func.isRequired,
 };
 
 ProjectsPageHeader.defaultProps = {
