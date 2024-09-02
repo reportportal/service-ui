@@ -332,6 +332,8 @@ export class DashboardItemPage extends Component {
       userRoles,
     } = this.props;
 
+    const isWorkWithWidgets = canWorkWithWidgets(userRoles);
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
@@ -341,24 +343,26 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                <GhostButton
-                  icon={AddWidgetIcon}
-                  onClick={this.showWidgetWizard}
-                  disabled={!canWorkWithWidgets(userRoles)}
-                >
-                  {formatMessage(messages.addNewWidget)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                    {formatMessage(messages.addNewWidget)}
+                  </GhostButton>
+                )}
               </div>
               <div className={cx('buttons-block')}>
-                <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                  {formatMessage(messages.editDashboard)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                    {formatMessage(messages.editDashboard)}
+                  </GhostButton>
+                )}
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-                <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                  {formatMessage(messages.delete)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                    {formatMessage(messages.delete)}
+                  </GhostButton>
+                )}
                 <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,

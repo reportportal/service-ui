@@ -133,9 +133,8 @@ export class DashboardPageHeader extends Component {
 
   render() {
     const { activeItemId, isLoading, totalDashboards, userRoles } = this.props;
-
     const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
-    const disabled = isLoading || isAboveLimit || !canWorkWithDashboard(userRoles);
+    const disabled = isLoading || isAboveLimit;
 
     return (
       <div className={cx('dashboard-page-header')}>
@@ -145,7 +144,7 @@ export class DashboardPageHeader extends Component {
             value={activeItemId || DASHBOARD_PAGE_ITEM_VALUE}
           />
         </div>
-        <AddDashboardButton disabled={disabled} />
+        {canWorkWithDashboard(userRoles) && <AddDashboardButton disabled={disabled} />}
       </div>
     );
   }
