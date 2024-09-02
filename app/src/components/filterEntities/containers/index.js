@@ -16,4 +16,3 @@
 
 export { FilterEntitiesContainer } from './filterEntitiesContainer';
 export { FilterEntitiesURLContainer } from './filterEntitiesURLContainer';
-export { SearchEntitiesURLContainer } from './filterEntitiesURLContainer';

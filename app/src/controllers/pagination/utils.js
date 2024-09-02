@@ -16,14 +16,13 @@
 
 import { parseSortingString } from 'controllers/sorting/utils';
 
-export const getAlternativePaginationAndSortParams = (sort, limit, pageNumber, name) => {
+export const getAlternativePaginationAndSortParams = (sort, limit, pageNumber) => {
   const { direction: order, fields } = parseSortingString(sort);
 
   return {
     limit: Number(limit),
     sort: fields.join(','),
     offset: (pageNumber - 1) * limit,
-    name,
     order,
   };
 };

@@ -78,10 +78,6 @@ export const messages = defineMessages({
     id: 'ProjectsPage.projectNamePlaceholder',
     defaultMessage: 'Enter project’s name',
   },
-  noResultsLabel: {
-    id: 'ProjectsPage.noResultsLabel',
-    defaultMessage: 'No results found',
-  },
   noResultsDescription: {
     id: 'ProjectsPage.noResultsDescription',
     defaultMessage:

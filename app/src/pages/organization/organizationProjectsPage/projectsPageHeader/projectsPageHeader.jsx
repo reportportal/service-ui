@@ -18,15 +18,17 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { Button, FieldText, PlusIcon } from '@reportportal/ui-kit';
+import { Button, PlusIcon, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { PROJECTS_PAGE } from 'controllers/pages';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organizations/organization';
-import { SearchEntitiesURLContainer } from 'components/filterEntities/containers';
-import { SEARCH_FIELD, SEARCH_PREFIX } from 'controllers/organizations/projects/constants';
+import { SEARCH_KEY } from 'controllers/organizations/projects/constants';
+import { loadingSelector } from 'controllers/organizations/projects';
+import { useEffect, useState } from 'react';
+import { withFilter } from 'controllers/filter';
 import projectsIcon from './img/projects-inline.svg';
 import styles from './projectsPageHeader.scss';
 import { messages } from '../messages';
@@ -34,7 +36,9 @@ import userIcon from './img/user-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsPageHeader = ({
+export const ProjectsPageHeaderWrapped = ({
+  filter,
+  onFilterChange,
   hasPermission,
   onCreateProject,
   searchValue,
@@ -46,6 +50,8 @@ export const ProjectsPageHeader = ({
   const projectsCount = organization?.relationships?.projects?.meta.count;
   const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = projectsCount > 0;
+  const projectsLoading = useSelector(loadingSelector);
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   const breadcrumbs = [
     {
@@ -60,13 +66,17 @@ export const ProjectsPageHeader = ({
   const handleSearchChange = (e, onChange) => {
     const newValue = e.target.value;
     setSearchValue(newValue);
-    onChange({ [SEARCH_FIELD]: { value: newValue } });
+    onChange(newValue);
   };
 
   const handleSearchClear = (onChange) => {
     setSearchValue('');
-    onChange({ [SEARCH_FIELD]: { value: '' } });
+    onChange('');
   };
+
+  useEffect(() => {
+    if (searchValue === null && filter) setSearchValue(filter);
+  }, []);
 
   return (
     <div className={cx('projects-page-header-container')}>
@@ -94,24 +104,16 @@ export const ProjectsPageHeader = ({
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
-              <SearchEntitiesURLContainer
-                debounceTime={300}
-                prefixQueryKey={SEARCH_PREFIX}
-                render={({ entities, onChange }) => {
-                  const value = searchValue ?? entities[SEARCH_FIELD]?.value ?? '';
-                  if (searchValue === null && entities[SEARCH_FIELD]?.value)
-                    setSearchValue(entities[SEARCH_FIELD]?.value);
-                  return (
-                    <FieldText
-                      id={SEARCH_FIELD}
-                      value={value}
-                      onChange={(e) => handleSearchChange(e, onChange)}
-                      onClear={() => handleSearchClear(onChange)}
-                      clearable
-                      startIcon={Parser(searchIcon)}
-                    />
-                  );
-                }}
+              <FieldText
+                value={searchValue ?? filter ?? ''}
+                onChange={(e) => handleSearchChange(e, onFilterChange)}
+                onClear={() => handleSearchClear(onFilterChange)}
+                onFocus={() => setIsSearchActive(true)}
+                onBlur={() => setIsSearchActive(false)}
+                loading={isSearchActive && projectsLoading}
+                startIcon={Parser(searchIcon)}
+                collapsible
+                clearable
               />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
             </div>
@@ -127,13 +129,16 @@ export const ProjectsPageHeader = ({
   );
 };
 
-ProjectsPageHeader.propTypes = {
+ProjectsPageHeaderWrapped.propTypes = {
   hasPermission: PropTypes.bool,
   onCreateProject: PropTypes.func.isRequired,
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
+  filter: PropTypes.string,
+  onFilterChange: PropTypes.func.isRequired,
 };
 
-ProjectsPageHeader.defaultProps = {
+ProjectsPageHeaderWrapped.defaultProps = {
   hasPermission: false,
 };
+export const ProjectsPageHeader = withFilter({ filterKey: SEARCH_KEY })(ProjectsPageHeaderWrapped);

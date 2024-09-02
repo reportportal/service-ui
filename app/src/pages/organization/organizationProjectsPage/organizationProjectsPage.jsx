@@ -27,6 +27,7 @@ import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organizations/projects/actionCreators';
 import { useState } from 'react';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import { EmptyPageState } from '../emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -95,7 +96,7 @@ export const OrganizationProjectsPage = () => {
       />
     ) : (
       <EmptyPageState
-        label={formatMessage(messages.noResultsLabel)}
+        label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
         description={formatMessage(messages.noResultsDescription)}
         emptyIcon={NoResultsIcon}
         hasPermission={false}

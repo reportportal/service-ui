@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { connectRouter, debounce, isEmptyObject } from 'common/utils';
 import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
-import { SEARCH_PREFIX } from 'controllers/organizations/projects/constants';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
 const FilterEntitiesURL = ({
@@ -75,5 +74,3 @@ const createFilterEntitiesURLContainer = (prefixQueryKey) =>
   )(FilterEntitiesURL);
 
 export const FilterEntitiesURLContainer = createFilterEntitiesURLContainer();
-
-export const SearchEntitiesURLContainer = createFilterEntitiesURLContainer(SEARCH_PREFIX);
