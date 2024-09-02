@@ -102,6 +102,36 @@ export const messages = defineMessages({
     id: 'Sidebar.footer.servicesVersions',
     defaultMessage: 'Versions of connected services',
   },
+  titleServicesVersionsModal: {
+    id: 'Sidebar.footer.titleServicesVersionsModal',
+    defaultMessage: 'Check the availability status and versions of various ReportPortal services:',
+  },
+  serviceName: {
+    id: 'Sidebar.footer.serviceName',
+    defaultMessage: 'Service name',
+  },
+  currentVersion: {
+    id: 'Sidebar.footer.currentVersion',
+    defaultMessage: 'Current version',
+  },
+  serviceIsUnavailable: {
+    id: 'Sidebar.footer.serviceIsUnavailable',
+    defaultMessage: 'Service is unavailable',
+  },
+  serviceIsUnavailableDescription: {
+    id: 'Sidebar.footer.serviceIsUnavailableDescription',
+    defaultMessage:
+      'Please, reach out to your system admin for assistance. You can also refer to our Documentation to check the deployment correctness or our Slack channel for community advice.',
+  },
+  serviceIsOutdated: {
+    id: 'Sidebar.footer.serviceIsOutdated',
+    defaultMessage: 'Service is outdated',
+  },
+  serviceIsOutdatedDescription: {
+    id: 'Sidebar.footer.serviceIsOutdatedDescription',
+    defaultMessage:
+      'Please, update to the latest version for enhanced features and improved security',
+  },
   privacyPolicy: {
     id: 'AppSidebar.privacyPolicy',
     defaultMessage: 'Privacy Policy',

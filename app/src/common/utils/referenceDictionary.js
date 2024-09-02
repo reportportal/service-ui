@@ -68,3 +68,12 @@ export const faqDictionary = {
   pricingOptions: 'https://reportportal.io/pricing/saas',
   rpEmailRequestSupport: 'mailto:support@reportportal.io?subject=Support Request from RP instance',
 };
+
+export const servicesUpdate = {
+  api: 'https://github.com/reportportal/service-api/releases',
+  uat: 'https://github.com/reportportal/service-authorization/releases',
+  index: 'https://github.com/reportportal/service-index/releases',
+  jobs: 'https://github.com/reportportal/service-jobs/releases',
+  ui: 'https://github.com/reportportal/service-ui/releases',
+  analyzer: 'https://github.com/reportportal/service-auto-analyzer/releases',
+};

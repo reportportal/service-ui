@@ -32,8 +32,8 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
-import { messages } from '../../messages';
-import { LinkItem } from '../linkItem';
+import { messages } from '../../../messages';
+import { LinkItem } from '../../linkItem';
 import styles from './requestSupportModal.scss';
 
 const cx = classNames.bind(styles);

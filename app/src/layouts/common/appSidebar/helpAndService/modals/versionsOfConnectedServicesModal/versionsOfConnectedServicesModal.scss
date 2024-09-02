@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
-export { FAQContent } from './FAQContent';
-export { RequestSupportModal } from '../modals/requestSupportModal';
-export { VersionsOfConnectedServicesModal } from '../modals/versionsOfConnectedServicesModal';
+.title {
+  margin-bottom: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--e-400;
+  height: 32px;
+  border-bottom: 1px solid $COLOR--e-100;
+}
+
+.service-name {
+  width: 272px;
+}
