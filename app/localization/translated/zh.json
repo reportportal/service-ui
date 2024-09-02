@@ -702,7 +702,6 @@
   "EventActions.unassignUser": "取消分配用户",
   "EventActions.unlinkIssue": "取消已关联的问题",
   "EventActions.unmarkLaunchAsImportant": "Unmark as launch as Important",
-  "EventActions.update": "Update",
   "EventActions.updateAnalyzer": "更新分析器",
   "EventActions.updateAutoPatternAnalysisSettings": "更新模式分析设置",
   "EventActions.updateDashboard": "更新报告面板",

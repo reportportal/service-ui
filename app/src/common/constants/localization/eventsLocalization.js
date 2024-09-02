@@ -58,7 +58,6 @@ import {
   GENERATE_INDEX,
   DELETE_INDEX,
   UPDATE_ITEM,
-  UPDATE,
   ANALYZE_ITEM,
   LINK_ISSUE_AA,
   CREATE_PATTERN,
@@ -211,10 +210,6 @@ export const actionMessages = defineMessages({
   [UPDATE_ITEM]: {
     id: 'EventActions.updateItem',
     defaultMessage: 'Update item',
-  },
-  [UPDATE]: {
-    id: 'EventActions.update',
-    defaultMessage: 'Update',
   },
   [ANALYZE_ITEM]: {
     id: 'EventActions.analyzeItem',

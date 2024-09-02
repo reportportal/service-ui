@@ -702,7 +702,6 @@
   "EventActions.unassignUser": "Отменить назначение пользователя",
   "EventActions.unlinkIssue": "Открепление ошибки",
   "EventActions.unmarkLaunchAsImportant": "Снять отметку важно",
-  "EventActions.update": "Обновление",
   "EventActions.updateAnalyzer": "Обновление автоанализа",
   "EventActions.updateAutoPatternAnalysisSettings": "Обновить настройки Pattern-Analysis",
   "EventActions.updateDashboard": "Oбновление панели управления",

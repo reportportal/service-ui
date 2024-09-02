@@ -701,7 +701,6 @@
   "EventActions.unassignUser": "Desasignar usuario",
   "EventActions.unlinkIssue": "Desvincular error",
   "EventActions.unmarkLaunchAsImportant": "Desmarcar ejecución como importante",
-  "EventActions.update": "Update",
   "EventActions.updateAnalyzer": "Actualizar autoanálisis",
   "EventActions.updateAutoPatternAnalysisSettings": "Actualizar configuración del análisis de patrones",
   "EventActions.updateDashboard": "Actualizar panel de control",

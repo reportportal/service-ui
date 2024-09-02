@@ -702,7 +702,6 @@
   "EventActions.unassignUser": "Адмяніць прызначэнне карыстальніка",
   "EventActions.unlinkIssue": "Адвязка праблемы",
   "EventActions.unmarkLaunchAsImportant": "Зняць пазнаку запуску як важнага",
-  "EventActions.update": "Абнаўленне",
   "EventActions.updateAnalyzer": "Абнаўленне автоанализа",
   "EventActions.updateAutoPatternAnalysisSettings": "Абнавіць налады Pattern-Analysis",
   "EventActions.updateDashboard": "Абнаўленне панэлі кіравання",

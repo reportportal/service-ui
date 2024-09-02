@@ -24,8 +24,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { appInfoSelector } from 'controllers/appInfo';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { servicesUpdate } from 'common/utils/referenceDictionary';
-import { actionMessages } from 'common/constants/localization/eventsLocalization';
-import { UPDATE } from 'common/constants/actionTypes';
 import { messages } from '../../../messages';
 import { ServiceVersion } from './serviceVersion';
 import styles from './versionsOfConnectedServicesModal.scss';
@@ -90,7 +88,7 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
       {calculateServices().map((service) => (
         <ServiceVersion
           service={service}
-          content={formatMessage(actionMessages[UPDATE])}
+          content={formatMessage(COMMON_LOCALE_KEYS.UPDATE)}
           key={service.linkTo}
         />
       ))}

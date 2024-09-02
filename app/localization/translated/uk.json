@@ -702,7 +702,6 @@
   "EventActions.unassignUser": "Скасувати призначення користувача",
   "EventActions.unlinkIssue": "Відкріплення помилки",
   "EventActions.unmarkLaunchAsImportant": "Зняти позначку запуску як важливого",
-  "EventActions.update": "Оновлення",
   "EventActions.updateAnalyzer": "Оновлення автоанализа",
   "EventActions.updateAutoPatternAnalysisSettings": "Оновити параметри Pattern-Analysis",
   "EventActions.updateDashboard": "Оновлення панелі управління",
