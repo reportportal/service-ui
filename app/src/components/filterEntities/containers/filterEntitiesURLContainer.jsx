@@ -25,6 +25,7 @@ const FilterEntitiesURL = ({
   entities = {},
   updateFilters = () => {},
   render,
+  debounced = true,
   debounceTime = 1000,
   defaultPagination,
   prefixQueryKey,
@@ -49,7 +50,7 @@ const FilterEntitiesURL = ({
 
   return render({
     entities,
-    onChange: debounceTime ? debouncedHandleChange : handleChange,
+    onChange: debounced && debounceTime ? debouncedHandleChange : handleChange,
   });
 };
 
@@ -57,6 +58,7 @@ FilterEntitiesURL.propTypes = {
   entities: PropTypes.object,
   updateFilters: PropTypes.func,
   render: PropTypes.func.isRequired,
+  debounced: PropTypes.bool,
   debounceTime: PropTypes.number,
   defaultPagination: PropTypes.any.isRequired,
   prefixQueryKey: PropTypes.string,
