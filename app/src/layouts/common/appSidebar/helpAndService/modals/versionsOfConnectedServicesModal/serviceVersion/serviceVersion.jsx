@@ -25,7 +25,7 @@ import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import VectorIcon from 'common/img/newIcons/vector-inline.svg';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 import { messages } from 'layouts/common/appSidebar/messages';
-import styles from './versionService.scss';
+import styles from './serviceVersion.scss';
 
 const cx = classNames.bind(styles);
 
@@ -87,13 +87,13 @@ VectorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-export const VersionService = ({ service, content }) => {
+export const ServiceVersion = ({ service, content }) => {
   const { formatMessage } = useIntl();
   const { name, version, linkTo, isNewVersion } = service;
   const isError = !version;
 
   return (
-    <div className={cx('service')}>
+    <div className={cx('service-version')}>
       <div className={cx('name', { update: isNewVersion, error: isError })}>
         {name}
         {isError ? <ErrorWithTooltip formatMessage={formatMessage} /> : null}
@@ -107,7 +107,7 @@ export const VersionService = ({ service, content }) => {
   );
 };
 
-VersionService.propTypes = {
+ServiceVersion.propTypes = {
   service: PropTypes.object.isRequired,
   content: PropTypes.string.isRequired,
 };

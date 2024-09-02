@@ -48,6 +48,7 @@ export const DELETE_DEFECT = 'deleteDefect';
 export const START_IMPORT = 'startImport';
 export const FINISH_IMPORT = 'finishImport';
 export const UPDATE_ITEM = 'updateItem';
+export const UPDATE = 'update';
 export const LINK_ISSUE_AA = 'linkIssueAa';
 export const ANALYZE_ITEM = 'analyzeItem';
 export const CREATE_PATTERN = 'createPattern';

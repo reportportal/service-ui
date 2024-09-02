@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { VersionService } from './versionService';
+export { ServiceVersion } from './serviceVersion';

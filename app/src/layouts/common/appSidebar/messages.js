@@ -114,10 +114,6 @@ export const messages = defineMessages({
     id: 'Sidebar.footer.currentVersion',
     defaultMessage: 'Current version',
   },
-  update: {
-    id: 'Sidebar.footer.update',
-    defaultMessage: 'Update',
-  },
   serviceIsUnavailable: {
     id: 'Sidebar.footer.serviceIsUnavailable',
     defaultMessage: 'Service is unavailable',
