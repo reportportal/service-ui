@@ -1767,6 +1767,7 @@
   "ProjectsPage.deleteProjectsCount": "{count} элементов выбрано",
   "ProjectsPage.deleteSuccess": "Проект был успешно удалён",
   "ProjectsPage.deleteSuccessMultiple": "Проекты были успешно удалены",
+  "ProjectsPage.noResultsDescription": "Ваши критерии поиска или фильтра не дали никаких результатов. Попробуйте другие ключевые слова или измените настройки фильтра.",
   "ProjectsPage.projectDuplicateHint": "Проект с данным наименованием уже существует в этой организации",
   "ProjectsPage.projectExists": "Проект ''{name}'' уже существует",
   "ProjectsPage.projectLengthHint": "Имя проекта",

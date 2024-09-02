@@ -1767,6 +1767,7 @@
   "ProjectsPage.deleteProjectsCount": "{count} элементаў абрана",
   "ProjectsPage.deleteSuccess": "Праект быў паспяхова выдалены",
   "ProjectsPage.deleteSuccessMultiple": "Праекты быў паспяхова выдалены",
+  "ProjectsPage.noResultsDescription": "Вашым крытэрам пошуку або фільтра не знойдзена ніводнага выніку. Калі ласка, паспрабуйце іншыя ключавыя словы або змяніце налады фільтра.",
   "ProjectsPage.projectDuplicateHint": "Праект з дадзеным найменнем ўжо існуе ў сістэме",
   "ProjectsPage.projectExists": "Праект ''{name}'' ўжо існуе",
   "ProjectsPage.projectLengthHint": "Назва праекта",

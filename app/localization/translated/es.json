@@ -1754,6 +1754,7 @@
   "ProjectsPage.deleteProjectsCount": "{count} elementos seleccionados",
   "ProjectsPage.deleteSuccess": "El proyecto ha sido eliminado exitosamente",
   "ProjectsPage.deleteSuccessMultiple": "Los proyectos han sido eliminados exitosamente",
+  "ProjectsPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   "ProjectsPage.projectDuplicateHint": "Ya existe un proyecto con este nombre en el esta organización",
   "ProjectsPage.projectExists": "El proyecto ''{name}'' ya existe",
   "ProjectsPage.projectLengthHint": "Nombre del proyecto",
