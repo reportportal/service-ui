@@ -110,8 +110,10 @@ export const ProjectsPageHeaderWrapped = ({
                 onClear={() => handleSearchClear(onFilterChange)}
                 onFocus={() => setIsSearchActive(true)}
                 onBlur={() => setIsSearchActive(false)}
+                placeholder={formatMessage(messages.searchPlaceholder)}
                 loading={isSearchActive && projectsLoading}
                 startIcon={Parser(searchIcon)}
+                className={cx('search-input')}
                 collapsible
                 clearable
               />

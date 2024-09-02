@@ -86,7 +86,7 @@
   gap: 24px;
   padding: 12px 32px 0 0;
 
-  .details-item{
+  .details-item {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -94,14 +94,18 @@
     line-height: 20px;
     font-family: $FONT-ROBOTO-REGULAR;
 
-    b{
+    b {
       margin-left: -4px;
       font-family: $FONT-ROBOTO-BOLD;
     }
   }
 
   .details-item-icon, svg {
-      width: 16px;
-      height: 16px;
-    }
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.search-input {
+  overflow: hidden;
 }
