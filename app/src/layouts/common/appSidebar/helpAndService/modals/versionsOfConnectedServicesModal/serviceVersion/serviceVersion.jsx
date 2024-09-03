@@ -31,7 +31,7 @@ const cx = classNames.bind(styles);
 
 const ErrorTooltip = ({ formatMessage }) => (
   <>
-    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsOutdated)}</div>
+    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
     <div className={cx('tooltip-description')}>
       {formatMessage(messages.serviceIsUnavailableDescription)}
     </div>
@@ -60,7 +60,7 @@ ErrorWithTooltip.propTypes = {
 
 const VectorTooltip = ({ formatMessage }) => (
   <>
-    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
+    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsOutdated)}</div>
     <div className={cx('tooltip-description')}>
       {formatMessage(messages.serviceIsOutdatedDescription)}
     </div>
