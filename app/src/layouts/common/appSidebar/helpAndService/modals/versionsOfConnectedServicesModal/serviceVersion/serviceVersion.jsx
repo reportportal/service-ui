@@ -33,7 +33,7 @@ const ErrorTooltip = ({ formatMessage }) => (
   <>
     <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsOutdated)}</div>
     <div className={cx('tooltip-description')}>
-      {formatMessage(messages.serviceIsOutdatedDescription)}
+      {formatMessage(messages.serviceIsUnavailableDescription)}
     </div>
   </>
 );
@@ -62,7 +62,7 @@ const VectorTooltip = ({ formatMessage }) => (
   <>
     <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
     <div className={cx('tooltip-description')}>
-      {formatMessage(messages.serviceIsUnavailableDescription)}
+      {formatMessage(messages.serviceIsOutdatedDescription)}
     </div>
   </>
 );
