@@ -66,8 +66,9 @@ export class AttachmentVideoModal extends Component {
           <div className={cx('attachment-video-wrapper')}>
             <a className={cx('attachment-video')}>
               <video controls className={cx('video-item')}>
+                <track kind="captions" src="captions.vtt" srcLang="en" label="English" default />
                 <source src={video} type="video/mp4" />
-                  Your browser does not support the video tag.
+                Your browser does not support the video tag.
               </video>
             </a>
           </div>
