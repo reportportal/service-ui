@@ -1,0 +1,94 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.attachment-video-modal {
+  max-width: 1000px;
+  width: 1000px;
+  margin-left: -500px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: auto;
+    margin-left: 0;
+  }
+}
+
+.attachment-modal-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.attachment-video-wrapper {
+  display: table;
+  text-align: center;
+}
+
+.attachment-video {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.video-item {
+  max-width: 100%;
+}
+
+// .attachment-video-modal {
+//   max-width: 1000px;
+//   width: 100%;
+//   margin-left: auto;
+//   margin-right: auto;
+
+//   @media (max-width: $SCREEN_XS_MAX) {
+//     width: 100%;
+//     margin: 0;
+//   }
+// }
+
+// .attachment-modal-content-wrapper {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   max-width: 100%;
+//   max-height: 80vh; /* Limit height to 80% of viewport height */
+//   overflow: hidden;
+// }
+
+// .attachment-video-wrapper {
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .attachment-video {
+//   display: block;
+//   max-width: 100%;
+//   max-height: 100%;
+// }
+
+// .attachment-video video {
+//   max-width: 100%;
+//   max-height: 100%;
+//   object-fit: contain;
+// }
+
+// .video-item {
+//   max-width: 100%;
+//   height: auto;
+// }
