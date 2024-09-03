@@ -50,7 +50,7 @@ const FilterEntitiesURL = ({
 
   return render({
     entities,
-    onChange: debounced && debounceTime ? debouncedHandleChange : handleChange,
+    onChange: debounced ? debouncedHandleChange : handleChange,
   });
 };
 

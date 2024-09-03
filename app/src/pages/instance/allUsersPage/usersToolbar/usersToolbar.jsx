@@ -77,7 +77,7 @@ export class UsersToolbar extends PureComponent {
       <div className={cx('users-toolbar')}>
         <div className={cx('entities-wrapper')}>
           <FilterEntitiesURLContainer
-            debounceTime={0}
+            debounced={false}
             render={({ entities, onChange }) => (
               <InputFilter
                 id={USERS}
