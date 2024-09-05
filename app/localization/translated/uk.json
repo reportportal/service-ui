@@ -1104,6 +1104,8 @@
   "LaunchDurationControls.ItemsValidationError": "Кількість елементів приймає значення від '1' до '600'",
   "LaunchExecutionAndIssueStatistics.launchNameText": "Ім’я запуску:",
   "LaunchFiltersToolbar.addFilter": "Фільтр Додати",
+  "LaunchFiltersToolbar.clearFilter": "Очистити фільтр",
+  "LaunchFiltersToolbar.filter": "Фільтр",
   "LaunchFiltersToolbar.saveFilterSuccess": "Збережений Фільтр",
   "LaunchFiltersToolbar.updateFilterSuccess": "Оновлено Фільтр",
   "LaunchFinishForceDialog.finishForceLaunchText": "Ви впевнені, що хочете завершити запуск? Всі дані будуть втрачені.",

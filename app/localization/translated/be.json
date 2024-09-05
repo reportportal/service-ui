@@ -1104,6 +1104,8 @@
   "LaunchDurationControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",
   "LaunchExecutionAndIssueStatistics.launchNameText": "Імя запуску:",
   "LaunchFiltersToolbar.addFilter": "Дадаць фільтр",
+  "LaunchFiltersToolbar.clearFilter": "Ачысціць фільтр",
+  "LaunchFiltersToolbar.filter": "Фільтр",
   "LaunchFiltersToolbar.saveFilterSuccess": "Фільтр захаваны",
   "LaunchFiltersToolbar.updateFilterSuccess": "Фільтр абноўлены",
   "LaunchFinishForceDialog.finishForceLaunchText": "Вы ўпэўнены, што жадаеце завяршыць запуск? Усе дадзеныя будуць страчаны.",

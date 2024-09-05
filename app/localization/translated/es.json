@@ -1103,6 +1103,8 @@
   "LaunchDurationControls.ItemsValidationError": "La cantidad de elementos debe ser entre '1' y '600'",
   "LaunchExecutionAndIssueStatistics.launchNameText": "Nombre de la ejecución:",
   "LaunchFiltersToolbar.addFilter": "Agregar filtro",
+  "LaunchFiltersToolbar.clearFilter": "Clear filter",
+  "LaunchFiltersToolbar.filter": "Filter",
   "LaunchFiltersToolbar.saveFilterSuccess": "Filtro guardado",
   "LaunchFiltersToolbar.updateFilterSuccess": "Filtro actualizado",
   "LaunchFinishForceDialog.finishForceLaunchText": "¿Estás seguro de que deseas finalizar la ejecución? Se perderán todos los datos.",
