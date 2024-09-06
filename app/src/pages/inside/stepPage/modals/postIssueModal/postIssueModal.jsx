@@ -38,6 +38,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
   removeNoneValues,
+  isJiraCloudsAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -279,7 +280,7 @@ export class PostIssueModal extends Component {
       getBtsIntegrationBackLink,
       data: { items },
     } = this.props;
-
+    const pluginName = this.state.pluginName;
     const fields = this.state.fields.map((field) => {
       const isAutocomplete =
         field.fieldType === AUTOCOMPLETE_TYPE ||
@@ -290,7 +291,13 @@ export class PostIssueModal extends Component {
       if (!Array.isArray(formFieldData)) {
         preparedFormFieldData = formFieldData ? [formFieldData] : [];
       }
-      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
+      return {
+        ...field,
+        [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData,
+        ...(isJiraCloudsAssigneeField(pluginName, field) && {
+          value: preparedFormFieldData.map((item) => item.id),
+        }),
+      };
     });
     const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
@@ -438,7 +445,7 @@ export class PostIssueModal extends Component {
       projectName: projectInfo.projectName,
       pluginName,
     };
-
+    console.log(fields);
     return (
       <DarkModalLayout
         headerTitle={formatMessage(messages.postIssue)}
