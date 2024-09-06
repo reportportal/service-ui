@@ -109,7 +109,7 @@ export const removeNoneValues = (inputObj) => {
   return obj;
 };
 
-export const isJiraCloudsAssigneeField = (pluginName, field) => {
+export const isJiraCloudAssigneeField = (pluginName, field) => {
   const isJiraCloud = pluginName === JIRA_CLOUD;
   const isAssigneeField = field.fieldName?.toLowerCase() === ASSIGNEE_FIELD_NAME.toLowerCase();
   return isJiraCloud && isAssigneeField;

@@ -38,7 +38,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
   removeNoneValues,
-  isJiraCloudsAssigneeField,
+  isJiraCloudAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -294,7 +294,7 @@ export class PostIssueModal extends Component {
       return {
         ...field,
         [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData,
-        ...(isJiraCloudsAssigneeField(pluginName, field) && {
+        ...(isJiraCloudAssigneeField(pluginName, field) && {
           value: preparedFormFieldData.map((item) => item.id),
         }),
       };
@@ -445,7 +445,7 @@ export class PostIssueModal extends Component {
       projectName: projectInfo.projectName,
       pluginName,
     };
-    console.log(fields);
+
     return (
       <DarkModalLayout
         headerTitle={formatMessage(messages.postIssue)}

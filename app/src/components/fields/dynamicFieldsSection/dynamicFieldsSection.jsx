@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { dynamicFieldShape } from './dynamicFieldShape';
-import { getFieldComponent, isJiraCloudsAssigneeField } from './utils';
+import { getFieldComponent, isJiraCloudAssigneeField } from './utils';
 import { AUTOCOMPLETE_TYPE, VALUE_ID_KEY, VALUE_NAME_KEY } from './constants';
 import styles from './dynamicFieldsSection.scss';
 
@@ -67,7 +67,7 @@ export class DynamicFieldsSection extends Component {
       const { pluginName } = integrationInfo;
       const FieldComponent = getFieldComponent({
         ...field,
-        ...(isJiraCloudsAssigneeField(pluginName, field) && { fieldType: AUTOCOMPLETE_TYPE }),
+        ...(isJiraCloudAssigneeField(pluginName, field) && { fieldType: AUTOCOMPLETE_TYPE }),
       });
 
       return (
