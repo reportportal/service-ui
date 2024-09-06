@@ -41,12 +41,12 @@ export const FiltersActionBar = ({
   sortingString,
 }) => {
   const userRoles = useSelector(userRolesSelector);
-  const isWorkWithFilters = canWorkWithFilters(userRoles);
+  const hasFilterPermissions = canWorkWithFilters(userRoles);
 
   return (
     <div className={cx('filters-action-bar')}>
       <div className={cx('info-section')}>
-        {isWorkWithFilters && unsaved && (
+        {hasFilterPermissions && unsaved && (
           <div className={cx('unsaved-message')}>
             <span className={cx('asterisk')}>*</span>
             <FormattedMessage
@@ -58,7 +58,7 @@ export const FiltersActionBar = ({
       </div>
       <div className={cx('controls-section')}>
         <FiltersSorting filter={filter} sortingString={sortingString} onChange={onChangeSorting} />
-        {isWorkWithFilters && (
+        {hasFilterPermissions && (
           <FilterControls
             cloneDisabled={cloneDisabled}
             editDisabled={editDisabled}

@@ -227,8 +227,8 @@ export class LaunchFiltersToolbar extends Component {
   isDiscardDisabled = () => !this.isFilterDirty();
   isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
 
-  getFilterMessage = (isWorkWithFilters) => {
-    if (isWorkWithFilters) {
+  getFilterMessage = (hasFilterPermissions) => {
+    if (hasFilterPermissions) {
       return <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />;
     }
 
@@ -239,8 +239,8 @@ export class LaunchFiltersToolbar extends Component {
     );
   };
 
-  getFilterIcon = (isWorkWithFilters) => {
-    if (isWorkWithFilters) {
+  getFilterIcon = (hasFilterPermissions) => {
+    if (hasFilterPermissions) {
       return AddFilterIcon;
     }
 
@@ -269,7 +269,7 @@ export class LaunchFiltersToolbar extends Component {
       intl,
     } = this.props;
 
-    const isWorkWithFilters = canWorkWithFilters(userRoles);
+    const hasFilterPermissions = canWorkWithFilters(userRoles);
 
     return (
       <div className={cx('launch-filters-toolbar')}>
@@ -285,13 +285,13 @@ export class LaunchFiltersToolbar extends Component {
           <div className={cx('separator')} />
           <div className={cx('add-filter-button')}>
             <GhostButton
-              icon={this.getFilterIcon(isWorkWithFilters)}
+              icon={this.getFilterIcon(hasFilterPermissions)}
               onClick={this.handleFilterCreate}
             >
-              {this.getFilterMessage(isWorkWithFilters)}
+              {this.getFilterMessage(hasFilterPermissions)}
             </GhostButton>
           </div>
-          {isWorkWithFilters && (
+          {hasFilterPermissions && (
             <div className={cx('filter-tickets-container')}>
               <FilterList
                 filters={filters}
@@ -311,7 +311,7 @@ export class LaunchFiltersToolbar extends Component {
         {this.state.expanded &&
           !level &&
           !!activeFilter &&
-          (isWorkWithFilters || this.state.isFilterCreate) && (
+          (hasFilterPermissions || this.state.isFilterCreate) && (
             <div className={cx('filter-controls-container')}>
               <div className={cx('filter-entities-container')}>
                 <EntitiesGroup
