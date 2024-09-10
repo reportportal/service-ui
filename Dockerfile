@@ -1,6 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM --platform=$BUILDPLATFORM alpine:3.18 AS generate-build-info
+FROM --platform=$BUILDPLATFORM alpine:3.20.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
