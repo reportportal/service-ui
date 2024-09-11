@@ -312,16 +312,24 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
           </div>
         </div>
       )}
-
       <div className={cx('defect-type')}>
         {isDefectTypeVisible && (
           <>
             {expanded ? null : (
               <div className={cx('collapsed-info')}>
-                <span className={cx('expand-more')} onClick={toggleExpanded}>
+                <button
+                  className={cx('expand-more')}
+                  onClick={toggleExpanded}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      toggleExpanded();
+                    }
+                  }}
+                >
                   <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
                   {formatMessage(messages.more)}
-                </span>
+                </button>
                 <span className={cx('issues-info', 'with-separator')}>
                   <span className={cx('icon')}>{Parser(BugIcon)}</span>
                   {logItem.issue.externalSystemIssues.length}
@@ -370,10 +378,19 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
           </div>
         )}
         {expanded && logItem.issue && (
-          <span className={cx('expand-more', 'collapse')} onClick={toggleExpanded}>
+          <button
+            className={cx('expand-more', 'collapse')}
+            onClick={toggleExpanded}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                toggleExpanded();
+              }
+            }}
+          >
             <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
             {formatMessage(messages.showLess)}
-          </span>
+          </button>
         )}
       </div>
     </div>
@@ -388,6 +405,4 @@ DefectDetails.propTypes = {
 
 DefectDetails.defaultProps = {
   logItem: null,
-  isBtsPluginsExist: false,
-  enabledBtsPlugins: [],
 };
