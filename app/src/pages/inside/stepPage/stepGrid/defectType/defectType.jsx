@@ -25,6 +25,9 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { canManageBTSIssues, canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
+import { useSelector } from 'react-redux';
+import { userRolesSelector } from 'controllers/pages';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';
@@ -72,6 +75,9 @@ PALabel.propTypes = {
 
 export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, disabled }) => {
   const { trackEvent } = useTracking();
+  const userRoles = useSelector(userRolesSelector);
+  const canUnlinkIssue = canManageBTSIssues(userRoles);
+  const canChangeDefectTypes = canWorkWithDefectTypes(userRoles);
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const onClickEdit = (event) => {
     event && trackEvent(event);
@@ -92,18 +98,29 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
-            onClick={disabled ? null : () => onClickEdit(events.onEditEvent?.(eventData))}
+            onClick={
+              disabled || canChangeDefectTypes
+                ? null
+                : () => onClickEdit(events.onEditEvent?.(eventData))
+            }
           />
         )}
-        <div
-          className={cx('edit-icon')}
-          onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
-        >
-          {Parser(PencilIcon)}
-        </div>
+        {canChangeDefectTypes && (
+          <div
+            className={cx('edit-icon')}
+            onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
+          >
+            {Parser(PencilIcon)}
+          </div>
+        )}
       </div>
       <div className={cx('issues')}>
-        <IssueList issues={issue.externalSystemIssues} onClick={onClickIssue} onRemove={onRemove} />
+        <IssueList
+          issues={issue.externalSystemIssues}
+          onClick={onClickIssue}
+          onRemove={onRemove}
+          readOnly={!canUnlinkIssue}
+        />
       </div>
       <div className={cx('comment')}>
         <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={90}>

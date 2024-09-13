@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
-import track from 'react-tracking';
+import { useEffect, useState } from 'react';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
@@ -36,254 +36,215 @@ import {
 } from 'controllers/suite';
 import { SUITE_PAGE, SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { userIdSelector } from 'controllers/user';
 import {
   namespaceSelector,
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { prevTestItemSelector } from 'controllers/pages';
+import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { canManageTestItemsActions } from 'common/utils/permissions/permissions';
 
-@connect(
-  (state) => ({
-    debugMode: debugModeSelector(state),
-    userId: userIdSelector(state),
-    suites: suitesSelector(state),
-    selectedSuites: selectedSuitesSelector(state),
-    parentItem: parentItemSelector(state),
-    loading: loadingSelector(state),
-    validationErrors: validationErrorsSelector(state),
-    highlightItemId: prevTestItemSelector(state),
-  }),
-  {
-    toggleSuiteSelectionAction,
-    unselectAllSuitesAction,
-    toggleAllSuitesAction,
-    selectSuitesAction,
-    fetchTestItemsAction,
-  },
-)
-@withSortingURL({
+export const SuitesPageWrapped = ({
+  deleteItems,
+  onEditItem,
+  onEditItems,
+  activePage,
+  itemCount,
+  pageCount,
+  pageSize,
+  sortingColumn,
+  sortingDirection,
+  onChangePage,
+  onChangePageSize,
+  onChangeSorting,
+  onFilterAdd,
+  onFilterRemove,
+  onFilterValidate,
+  onFilterChange,
+  filterErrors,
+  filterEntities,
+}) => {
+  const { trackEvent } = useTracking({ page: SUITE_PAGE });
+
+  const [highlightedRowId, setHighlightedRowId] = useState(null);
+  const [isGridRowHighlighted, setIsGridRowHighlighted] = useState(false);
+  const debugMode = useSelector(debugModeSelector);
+  const suites = useSelector(suitesSelector);
+  const selectedSuites = useSelector(selectedSuitesSelector);
+  const parentItem = useSelector(parentItemSelector);
+  const loading = useSelector(loadingSelector);
+  const validationErrors = useSelector(validationErrorsSelector);
+  const highlightItemId = useSelector(prevTestItemSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const canSelectItems = canManageTestItemsActions(userRoles);
+  const dispatch = useDispatch();
+  const onHighlightRow = (rowId) => {
+    setHighlightedRowId(rowId);
+    setIsGridRowHighlighted(true);
+  };
+
+  const onGridRowHighlighted = () => {
+    setIsGridRowHighlighted(false);
+  };
+
+  const handleAllSuitesSelection = () => {
+    if (suites.length !== selectedSuites.length) {
+      trackEvent(SUITES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
+    dispatch(toggleAllSuitesAction(suites));
+  };
+
+  const handleOneItemSelection = (value) => {
+    if (!selectedSuites.includes(value)) {
+      trackEvent(SUITES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
+    dispatch(toggleSuiteSelectionAction(value));
+  };
+
+  const handleItemsSelection = (items) => {
+    dispatch(selectSuitesAction(items));
+  };
+  const handleRefresh = () => {
+    dispatch(fetchTestItemsAction());
+  };
+  const unselectAllItems = () => {
+    trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
+    dispatch(unselectAllSuitesAction());
+  };
+
+  const unselectItem = (item) => {
+    trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
+    dispatch(toggleSuiteSelectionAction(item));
+  };
+
+  const rowHighlightingConfig = {
+    onGridRowHighlighted,
+    isGridRowHighlighted,
+    highlightedRowId,
+  };
+
+  useEffect(() => {
+    if (highlightItemId) {
+      onHighlightRow(highlightItemId);
+    }
+  }, [highlightItemId]);
+
+  useEffect(() => {
+    return () => {
+      if (selectedSuites.length > 0) {
+        unselectAllSuitesAction();
+      }
+    };
+  }, [selectedSuites, unselectAllSuitesAction]);
+
+  return (
+    <PageLayout>
+      <PageSection>
+        <SuiteTestToolbar
+          onDelete={() => deleteItems(selectedSuites)}
+          onEditItems={() => onEditItems(selectedSuites)}
+          errors={validationErrors}
+          selectedItems={selectedSuites}
+          onUnselect={unselectItem}
+          onUnselectAll={unselectAllItems}
+          onProceedValidItems={() => trackEvent(SUITES_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
+          parentItem={parentItem}
+          onRefresh={handleRefresh}
+          debugMode={debugMode}
+          events={SUITES_PAGE_EVENTS}
+          filterErrors={filterErrors}
+          onFilterChange={onFilterChange}
+          onFilterValidate={onFilterValidate}
+          onFilterRemove={onFilterRemove}
+          onFilterAdd={onFilterAdd}
+          filterEntities={filterEntities}
+        />
+        <LaunchSuiteGrid
+          data={suites}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          selectedItems={selectedSuites}
+          onItemSelect={handleOneItemSelection}
+          onAllItemsSelect={handleAllSuitesSelection}
+          onItemsSelect={handleItemsSelection}
+          loading={loading}
+          events={SUITES_PAGE_EVENTS}
+          onFilterClick={onFilterAdd}
+          onEditItem={onEditItem}
+          rowHighlightingConfig={rowHighlightingConfig}
+          selectable={canSelectItems}
+        />
+        {!!pageCount && !loading && (
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        )}
+      </PageSection>
+    </PageLayout>
+  );
+};
+
+SuitesPageWrapped.propTypes = {
+  deleteItems: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onEditItems: PropTypes.func,
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number,
+  pageCount: PropTypes.number,
+  pageSize: PropTypes.number,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangePage: PropTypes.func,
+  onChangePageSize: PropTypes.func,
+  onChangeSorting: PropTypes.func,
+  validationErrors: PropTypes.object,
+  onFilterAdd: PropTypes.func,
+  onFilterRemove: PropTypes.func,
+  onFilterValidate: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  filterErrors: PropTypes.object,
+  filterEntities: PropTypes.array,
+  highlightItemId: PropTypes.number,
+};
+
+SuitesPageWrapped.defaultProps = {
+  deleteItems: () => {},
+  onEditItem: () => {},
+  onEditItems: () => {},
+  activePage: DEFAULT_PAGINATION[PAGE_KEY],
+  itemCount: null,
+  pageCount: null,
+  pageSize: DEFAULT_PAGINATION[SIZE_KEY],
+  sortingColumn: null,
+  sortingDirection: null,
+  onChangePage: () => {},
+  onChangePageSize: () => {},
+  onChangeSorting: () => {},
+  validationErrors: {},
+  onFilterAdd: () => {},
+  onFilterRemove: () => {},
+  onFilterValidate: () => {},
+  onFilterChange: () => {},
+  filterErrors: {},
+  filterEntities: [],
+  highlightItemId: null,
+};
+
+export const SuitesPage = withSortingURL({
   defaultFields: [ENTITY_START_TIME],
   defaultDirection: SORTING_ASC,
   namespaceSelector,
-})
-@withPagination({
-  paginationSelector: suitePaginationSelector,
-  namespaceSelector,
-})
-@track({ page: SUITE_PAGE })
-export class SuitesPage extends Component {
-  static propTypes = {
-    debugMode: PropTypes.bool.isRequired,
-    deleteItems: PropTypes.func,
-    onEditItem: PropTypes.func,
-    onEditItems: PropTypes.func,
-    suites: PropTypes.arrayOf(PropTypes.object),
-    selectedSuites: PropTypes.arrayOf(PropTypes.object),
-    activePage: PropTypes.number,
-    itemCount: PropTypes.number,
-    pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
-    sortingColumn: PropTypes.string,
-    sortingDirection: PropTypes.string,
-    fetchTestItemsAction: PropTypes.func,
-    onChangePage: PropTypes.func,
-    onChangePageSize: PropTypes.func,
-    onChangeSorting: PropTypes.func,
-    toggleSuiteSelectionAction: PropTypes.func,
-    unselectAllSuitesAction: PropTypes.func,
-    toggleAllSuitesAction: PropTypes.func,
-    selectSuitesAction: PropTypes.func,
-    parentItem: PropTypes.object,
-    loading: PropTypes.bool,
-    validationErrors: PropTypes.object,
-    onFilterAdd: PropTypes.func,
-    onFilterRemove: PropTypes.func,
-    onFilterValidate: PropTypes.func,
-    onFilterChange: PropTypes.func,
-    filterErrors: PropTypes.object,
-    filterEntities: PropTypes.array,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    highlightItemId: PropTypes.number,
-  };
-
-  static defaultProps = {
-    deleteItems: () => {},
-    onEditItem: () => {},
-    onEditItems: () => {},
-    suites: [],
-    selectedSuites: [],
-    activePage: DEFAULT_PAGINATION[PAGE_KEY],
-    itemCount: null,
-    pageCount: null,
-    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
-    sortingColumn: null,
-    sortingDirection: null,
-    fetchTestItemsAction: () => {},
-    onChangePage: () => {},
-    onChangePageSize: () => {},
-    onChangeSorting: () => {},
-    toggleSuiteSelectionAction: () => {},
-    unselectAllSuitesAction: () => {},
-    toggleAllSuitesAction: () => {},
-    selectSuitesAction: () => {},
-    parentItem: null,
-    loading: false,
-    validationErrors: {},
-    onFilterAdd: () => {},
-    onFilterRemove: () => {},
-    onFilterValidate: () => {},
-    onFilterChange: () => {},
-    filterErrors: {},
-    filterEntities: [],
-    highlightItemId: null,
-  };
-
-  state = {
-    highlightedRowId: null,
-    isGridRowHighlighted: false,
-    isSauceLabsIntegrationView: false,
-  };
-
-  componentDidMount() {
-    const { highlightItemId } = this.props;
-    if (highlightItemId) {
-      this.onHighlightRow(highlightItemId);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.selectedSuites.length > 0) {
-      this.props.unselectAllSuitesAction();
-    }
-  }
-
-  onHighlightRow = (highlightedRowId) => {
-    this.setState({
-      highlightedRowId,
-      isGridRowHighlighted: true,
-    });
-  };
-
-  onGridRowHighlighted = () => {
-    this.setState({
-      isGridRowHighlighted: false,
-    });
-  };
-
-  handleAllSuitesSelection = () => {
-    if (this.props.suites.length !== this.props.selectedSuites.length) {
-      this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
-    }
-    this.props.toggleAllSuitesAction(this.props.suites);
-  };
-
-  handleOneItemSelection = (value) => {
-    if (!this.props.selectedSuites.includes(value)) {
-      this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
-    }
-    this.props.toggleSuiteSelectionAction(value);
-  };
-
-  unselectAllItems = () => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
-    this.props.unselectAllSuitesAction();
-  };
-
-  unselectItem = (item) => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
-    this.props.toggleSuiteSelectionAction(item);
-  };
-
-  render() {
-    const {
-      suites,
-      activePage,
-      itemCount,
-      pageCount,
-      pageSize,
-      onChangePage,
-      onChangePageSize,
-      sortingColumn,
-      sortingDirection,
-      onChangeSorting,
-      selectedSuites,
-      parentItem,
-      loading,
-      debugMode,
-      deleteItems,
-      onEditItem,
-      onEditItems,
-      onFilterAdd,
-      onFilterRemove,
-      onFilterValidate,
-      onFilterChange,
-      filterErrors,
-      filterEntities,
-      tracking,
-    } = this.props;
-
-    const rowHighlightingConfig = {
-      onGridRowHighlighted: this.onGridRowHighlighted,
-      isGridRowHighlighted: this.state.isGridRowHighlighted,
-      highlightedRowId: this.state.highlightedRowId,
-    };
-
-    return (
-      <PageLayout>
-        <PageSection>
-          <SuiteTestToolbar
-            onDelete={() => deleteItems(selectedSuites)}
-            onEditItems={() => onEditItems(selectedSuites)}
-            errors={this.props.validationErrors}
-            selectedItems={selectedSuites}
-            onUnselect={this.unselectItem}
-            onUnselectAll={this.unselectAllItems}
-            onProceedValidItems={() => tracking.trackEvent(SUITES_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
-            parentItem={parentItem}
-            onRefresh={this.props.fetchTestItemsAction}
-            debugMode={debugMode}
-            events={SUITES_PAGE_EVENTS}
-            filterErrors={filterErrors}
-            onFilterChange={onFilterChange}
-            onFilterValidate={onFilterValidate}
-            onFilterRemove={onFilterRemove}
-            onFilterAdd={onFilterAdd}
-            filterEntities={filterEntities}
-          />
-          <LaunchSuiteGrid
-            data={suites}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-            selectedItems={selectedSuites}
-            onItemSelect={this.handleOneItemSelection}
-            onAllItemsSelect={this.handleAllSuitesSelection}
-            onItemsSelect={this.props.selectSuitesAction}
-            loading={loading}
-            events={SUITES_PAGE_EVENTS}
-            onFilterClick={onFilterAdd}
-            onEditItem={onEditItem}
-            rowHighlightingConfig={rowHighlightingConfig}
-          />
-          {!!pageCount && !loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
-        </PageSection>
-      </PageLayout>
-    );
-  }
-}
+})(
+  withPagination({
+    paginationSelector: suitePaginationSelector,
+    namespaceSelector,
+  })(SuitesPageWrapped),
+);
