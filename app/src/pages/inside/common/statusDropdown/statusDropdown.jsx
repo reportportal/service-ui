@@ -147,12 +147,8 @@ export class StatusDropdown extends Component {
     const { status, withIndicator, disabled, readOnly } = this.props;
     return (
       <div className={cx('status-dropdown')}>
-        {readOnly ? (
-          <TestItemStatus
-            status={status}
-            withIndicator={withIndicator}
-            className={cx('defined-status')}
-          />
+        {readOnly && withIndicator ? (
+          <TestItemStatus status={status} className={cx('defined-status')} />
         ) : (
           <InputDropdown
             options={this.generateOptions(status)}
@@ -168,6 +164,7 @@ export class StatusDropdown extends Component {
               opened: (withIndicator && cx('opened')) || '',
             }}
             disabled={disabled}
+            readOnly={readOnly}
             mobileDisabled
           />
         )}
