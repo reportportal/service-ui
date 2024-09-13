@@ -134,10 +134,10 @@ export const SuitesPageWrapped = ({
   useEffect(() => {
     return () => {
       if (selectedSuites.length > 0) {
-        unselectAllSuitesAction();
+        dispatch(unselectAllSuitesAction());
       }
     };
-  }, [selectedSuites, unselectAllSuitesAction]);
+  }, [selectedSuites, dispatch]);
 
   return (
     <PageLayout>
@@ -205,14 +205,12 @@ SuitesPageWrapped.propTypes = {
   onChangePage: PropTypes.func,
   onChangePageSize: PropTypes.func,
   onChangeSorting: PropTypes.func,
-  validationErrors: PropTypes.object,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
   onFilterValidate: PropTypes.func,
   onFilterChange: PropTypes.func,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
-  highlightItemId: PropTypes.number,
 };
 
 SuitesPageWrapped.defaultProps = {
@@ -228,14 +226,12 @@ SuitesPageWrapped.defaultProps = {
   onChangePage: () => {},
   onChangePageSize: () => {},
   onChangeSorting: () => {},
-  validationErrors: {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},
   onFilterValidate: () => {},
   onFilterChange: () => {},
   filterErrors: {},
   filterEntities: [],
-  highlightItemId: null,
 };
 
 export const SuitesPage = withSortingURL({
