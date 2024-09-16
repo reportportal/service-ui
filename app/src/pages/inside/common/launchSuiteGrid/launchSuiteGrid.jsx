@@ -284,7 +284,7 @@ export const LaunchSuiteGrid = React.memo(
       [onFilterClick],
     );
 
-    const getColumns = useMemo(() => {
+    const columns = useMemo(() => {
       const hamburgerColumn = {
         component: HamburgerColumn,
         customProps: {
@@ -296,7 +296,7 @@ export const LaunchSuiteGrid = React.memo(
         },
       };
 
-      const columns = [
+      const baseColumns = [
         {
           id: ENTITY_NAME,
           title: {
@@ -445,10 +445,10 @@ export const LaunchSuiteGrid = React.memo(
       ];
 
       if (withHamburger) {
-        columns.unshift(hamburgerColumn);
+        baseColumns.unshift(hamburgerColumn);
       }
 
-      return columns;
+      return baseColumns;
     }, [
       events,
       withHamburger,
@@ -470,7 +470,7 @@ export const LaunchSuiteGrid = React.memo(
     return (
       <>
         <Grid
-          columns={getColumns}
+          columns={columns}
           data={data}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}

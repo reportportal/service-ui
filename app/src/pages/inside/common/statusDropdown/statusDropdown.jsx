@@ -131,10 +131,7 @@ export class StatusDropdown extends Component {
     return STATUS_TYPES.map((item) => ({
       label: withIndicator ? (
         <span className={cx('status-container')}>
-          <TestItemStatus
-            status={formatStatus(intl.formatMessage, item)}
-            withIndicator={withIndicator}
-          />
+          <TestItemStatus status={formatStatus(intl.formatMessage, item)} />
         </span>
       ) : (
         formatStatus(intl.formatMessage, item)

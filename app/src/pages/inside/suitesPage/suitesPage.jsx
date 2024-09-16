@@ -44,8 +44,9 @@ import {
 } from 'controllers/testItem';
 import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
-import { canManageTestItemsActions } from 'common/utils/permissions/permissions';
+import { canWorkWithTests } from 'common/utils/permissions/permissions';
 
+// TODO: Refactor to avoid duplication
 export const SuitesPageWrapped = ({
   deleteItems,
   onEditItem,
@@ -78,8 +79,10 @@ export const SuitesPageWrapped = ({
   const validationErrors = useSelector(validationErrorsSelector);
   const highlightItemId = useSelector(prevTestItemSelector);
   const userRoles = useSelector(userRolesSelector);
-  const canSelectItems = canManageTestItemsActions(userRoles);
+  const canManageTests = canWorkWithTests(userRoles);
   const dispatch = useDispatch();
+
+  // TODO - extract highlighting into custom hook
   const onHighlightRow = (rowId) => {
     setHighlightedRowId(rowId);
     setIsGridRowHighlighted(true);
@@ -175,7 +178,7 @@ export const SuitesPageWrapped = ({
           onFilterClick={onFilterAdd}
           onEditItem={onEditItem}
           rowHighlightingConfig={rowHighlightingConfig}
-          selectable={canSelectItems}
+          selectable={canManageTests}
         />
         {!!pageCount && !loading && (
           <PaginationToolbar
