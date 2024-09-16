@@ -39,7 +39,7 @@ import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { pageEventsMap } from 'components/main/analytics';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { canManageTestItemsActions } from 'common/utils/permissions/permissions';
+import { canWorkWithTests } from 'common/utils/permissions/permissions';
 import styles from './testItemActionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -73,7 +73,7 @@ export const TestItemActionPanel = ({
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const hasAccessToActions = canManageTestItemsActions(userRoles);
+  const hasAccessToActions = canWorkWithTests(userRoles);
   const onClickRefresh = () => {
     trackEvent(pageEventsMap[level].CLICK_REFRESH_BTN);
     onRefresh();

@@ -38,7 +38,6 @@ import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import {
   canBulkEditItems,
-  canManageTestItemsActions,
   canWorkWithDefectTypes,
   canWorkWithTests,
 } from 'common/utils/permissions/permissions';
@@ -203,7 +202,7 @@ export const StepGrid = ({
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
-  const canSelectItems = canManageTestItemsActions(userRoles);
+  const canManageTests = canWorkWithTests(userRoles);
 
   const handleAttributeFilterClick = (attribute) => {
     onFilterClick(
@@ -329,7 +328,7 @@ export const StepGrid = ({
         onToggleSelectAll={onAllItemsSelect}
         onItemsSelect={onItemsSelect}
         selectedItems={selectedItems}
-        selectable={canSelectItems}
+        selectable={canManageTests}
         rowClassMapper={highlightFailedItems}
         loading={loading}
         groupHeader={GroupHeader}

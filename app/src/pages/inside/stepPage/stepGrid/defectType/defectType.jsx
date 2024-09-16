@@ -99,7 +99,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
           <DefectTypeItem
             type={issue.issueType}
             onClick={
-              disabled || canChangeDefectTypes
+              disabled || !canChangeDefectTypes
                 ? null
                 : () => onClickEdit(events.onEditEvent?.(eventData))
             }

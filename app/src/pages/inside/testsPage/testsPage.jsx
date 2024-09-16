@@ -44,8 +44,9 @@ import {
 } from 'controllers/testItem';
 import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
-import { canManageTestItemsActions } from 'common/utils/permissions/permissions';
+import { canWorkWithTests } from 'common/utils/permissions/permissions';
 
+// TODO: Refactor to avoid duplication
 export const TestsPageWrapped = ({
   deleteItems,
   onEditItem,
@@ -78,9 +79,10 @@ export const TestsPageWrapped = ({
   const loading = useSelector(loadingSelector);
   const highlightItemId = useSelector(prevTestItemSelector);
   const userRoles = useSelector(userRolesSelector);
-  const canSelectItems = canManageTestItemsActions(userRoles);
+  const canManageTests = canWorkWithTests(userRoles);
   const dispatch = useDispatch();
 
+  // TODO - extract highlighting into custom hook
   const onHighlightRow = (rowId) => {
     setHighlightedRowId(rowId);
     setIsGridRowHighlighted(true);
@@ -92,14 +94,14 @@ export const TestsPageWrapped = ({
 
   const handleAllTestsSelection = () => {
     if (tests.length !== selectedTests.length) {
-      trackEvent({ event: TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS });
+      trackEvent(TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
     }
     dispatch(toggleAllTestsAction(tests));
   };
 
   const handleOneItemSelection = (value) => {
     if (!selectedTests.includes(value)) {
-      trackEvent({ event: TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM });
+      trackEvent(TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
     }
     dispatch(toggleTestSelectionAction(value));
   };
@@ -109,12 +111,12 @@ export const TestsPageWrapped = ({
   };
 
   const unselectAllItems = () => {
-    trackEvent({ event: TESTS_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS });
+    trackEvent(TESTS_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
     dispatch(unselectAllTestsAction());
   };
 
   const unselectItem = (item) => {
-    trackEvent({ event: TESTS_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM });
+    trackEvent(TESTS_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
     dispatch(toggleTestSelectionAction(item));
   };
 
@@ -150,7 +152,7 @@ export const TestsPageWrapped = ({
           parentItem={parentItem}
           onUnselect={unselectItem}
           onUnselectAll={unselectAllItems}
-          onProceedValidItems={() => trackEvent({ event: TESTS_PAGE_EVENTS.PROCEED_VALID_ITEMS })}
+          onProceedValidItems={() => trackEvent(TESTS_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
           onRefresh={handleRefresh}
           debugMode={debugMode}
           errors={validationErrors}
@@ -178,7 +180,7 @@ export const TestsPageWrapped = ({
           onFilterClick={onFilterAdd}
           onEditItem={onEditItem}
           rowHighlightingConfig={rowHighlightingConfig}
-          selectable={canSelectItems}
+          selectable={canManageTests}
         />
         {!!pageCount && !loading && (
           <PaginationToolbar
