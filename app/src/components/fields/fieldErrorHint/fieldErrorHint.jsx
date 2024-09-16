@@ -186,7 +186,7 @@ const messages = defineMessages({
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',
-    defaultMessage: 'Integration name should have a size from 1 to 55 characters',
+    defaultMessage: 'Integration name should have size from 1 to 55 characters',
   },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',
