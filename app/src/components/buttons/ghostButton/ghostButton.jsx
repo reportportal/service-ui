@@ -42,6 +42,7 @@ export const GhostButton = ({
   style,
   transparentBackground,
   appearance,
+  preventParser,
 }) => {
   const classes = cx('ghost-button', {
     disabled,
@@ -70,7 +71,7 @@ export const GhostButton = ({
     >
       {icon && (
         <i className={cx('icon', { 'only-icon': !children, 'icon-at-right': iconAtRight })}>
-          {Parser(icon)}
+          {preventParser ? icon : Parser(icon)}
         </i>
       )}
       {children && <span className={cx('text')}>{children}</span>}
@@ -99,6 +100,7 @@ GhostButton.propTypes = {
   strokedIcon: PropTypes.bool,
   transparentBackground: PropTypes.bool,
   appearance: PropTypes.string,
+  preventParser: PropTypes.bool,
 };
 
 GhostButton.defaultProps = {
@@ -122,4 +124,5 @@ GhostButton.defaultProps = {
   strokedIcon: false,
   transparentBackground: false,
   appearance: '',
+  preventParser: false,
 };

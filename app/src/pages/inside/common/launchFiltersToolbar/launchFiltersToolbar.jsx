@@ -37,7 +37,7 @@ import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import FilterIcon from 'common/img/newIcons/filter-inline.svg';
-import ClearIcon from 'common/img/newIcons/clear-inline.svg';
+import { ClearIcon } from '@reportportal/ui-kit';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
@@ -244,7 +244,7 @@ export class LaunchFiltersToolbar extends Component {
       return AddFilterIcon;
     }
 
-    return this.state.isFilterCreate ? ClearIcon : FilterIcon;
+    return this.state.isFilterCreate ? <ClearIcon /> : FilterIcon;
   };
 
   render() {
@@ -287,6 +287,7 @@ export class LaunchFiltersToolbar extends Component {
             <GhostButton
               icon={this.getFilterIcon(hasFilterPermissions)}
               onClick={this.handleFilterCreate}
+              preventParser={this.state.isFilterCreate}
             >
               {this.getFilterMessage(hasFilterPermissions)}
             </GhostButton>
