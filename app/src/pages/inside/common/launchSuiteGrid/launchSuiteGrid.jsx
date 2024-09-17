@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { PureComponent, Fragment } from 'react';
-import track from 'react-tracking';
-import { injectIntl } from 'react-intl';
+import React, { useCallback, useMemo } from 'react';
+import { useTracking } from 'react-tracking';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import {
@@ -50,6 +50,9 @@ import {
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
 import { formatAttribute } from 'common/utils/attributeUtils';
+import { useSelector } from 'react-redux';
+import { canBulkEditItems } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
@@ -66,18 +69,19 @@ HamburgerColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const NameColumn = ({ className, ...rest }) => (
+const NameColumn = ({ className, customProps: { hideEdit }, ...rest }) => (
   <>
     <td rowSpan={2} className={cx('name-col', className)}>
-      <ItemInfo {...rest} hideDescription />
+      <ItemInfo hideEdit={hideEdit} {...rest} hideDescription />
     </td>
     <div className={cx('name-col-mobile', className)}>
-      <ItemInfo {...rest} />
+      <ItemInfo hideEdit={hideEdit} {...rest} />
     </div>
   </>
 );
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  customProps: PropTypes.object,
 };
 
 const StartTimeColumn = ({ className, ...rest }) => (
@@ -215,308 +219,264 @@ TiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-@injectIntl
-@track()
-export class LaunchSuiteGrid extends PureComponent {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    data: PropTypes.array,
-    sortingColumn: PropTypes.string,
-    sortingDirection: PropTypes.string,
-    onChangeSorting: PropTypes.func,
-    onDeleteItem: PropTypes.func,
-    onMove: PropTypes.func,
-    onEditItem: PropTypes.func,
-    onForceFinish: PropTypes.func,
-    selectedItems: PropTypes.arrayOf(PropTypes.object),
-    onItemSelect: PropTypes.func,
-    onItemsSelect: PropTypes.func,
-    onAllItemsSelect: PropTypes.func,
-    withHamburger: PropTypes.bool,
-    loading: PropTypes.bool,
-    onFilterClick: PropTypes.func,
-    events: PropTypes.object,
-    onAnalysis: PropTypes.func,
-    onPatternAnalysis: PropTypes.func,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: PropTypes.func,
-      isGridRowHighlighted: PropTypes.bool,
-      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
-    noItemsBlock: PropTypes.element,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-  static defaultProps = {
-    data: [],
-    sortingColumn: null,
-    sortingDirection: null,
-    onChangeSorting: () => {},
-    onDeleteItem: () => {},
-    onMove: () => {},
-    onEditItem: () => {},
-    onForceFinish: () => {},
-    selectedItems: [],
-    onItemSelect: () => {},
-    onItemsSelect: () => {},
-    onAllItemsSelect: () => {},
-    withHamburger: false,
-    loading: false,
-    onFilterClick: () => {},
-    events: {},
-    onAnalysis: () => {},
-    onPatternAnalysis: () => {},
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: () => {},
-      isGridRowHighlighted: false,
-      highlightedRowId: null,
-    }),
-    noItemsBlock: null,
-  };
+export const LaunchSuiteGrid = React.memo(
+  ({
+    data,
+    sortingColumn,
+    sortingDirection,
+    onChangeSorting,
+    onDeleteItem,
+    onMove,
+    onEditItem,
+    onForceFinish,
+    selectable,
+    selectedItems = [],
+    onItemSelect,
+    onItemsSelect,
+    onAllItemsSelect,
+    withHamburger,
+    loading,
+    onFilterClick,
+    events,
+    onAnalysis,
+    onPatternAnalysis,
+    rowHighlightingConfig,
+    noItemsBlock,
+  }) => {
+    const { formatMessage } = useIntl();
+    const { trackEvent } = useTracking();
+    const userRoles = useSelector(userRolesSelector);
 
-  getColumns() {
-    const {
+    const handleAttributeFilterClick = useCallback(
+      (attribute) => {
+        onFilterClick(
+          [
+            {
+              id: ENTITY_ATTRIBUTE,
+              value: {
+                filteringField: ENTITY_ATTRIBUTE,
+                condition: CONDITION_HAS,
+                value: formatAttribute(attribute),
+              },
+            },
+          ],
+          true,
+        );
+
+        if (events.CLICK_ATTRIBUTES) {
+          trackEvent(events.CLICK_ATTRIBUTES);
+        }
+      },
+      [onFilterClick, events, trackEvent],
+    );
+
+    const handleOwnerFilterClick = useCallback(
+      (owner) => {
+        onFilterClick({
+          id: ENTITY_USER,
+          value: {
+            filteringField: ENTITY_NAME,
+            condition: CONDITION_IN,
+            value: owner || '',
+          },
+        });
+      },
+      [onFilterClick],
+    );
+
+    const columns = useMemo(() => {
+      const hamburgerColumn = {
+        component: HamburgerColumn,
+        customProps: {
+          onDeleteItem,
+          onMove,
+          onForceFinish,
+          onAnalysis,
+          onPatternAnalysis,
+        },
+      };
+
+      const baseColumns = [
+        {
+          id: ENTITY_NAME,
+          title: {
+            full: 'name',
+            short: 'name',
+          },
+          maxHeight: 170,
+          component: NameColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.NAME_FILTER,
+          customProps: {
+            onEditItem,
+            onClickAttribute: handleAttributeFilterClick,
+            onOwnerClick: handleOwnerFilterClick,
+            events,
+            withExtensions: withHamburger,
+            hideEdit: !canBulkEditItems(userRoles),
+          },
+          sortingEventInfo: events.NAME_SORTING,
+        },
+        {
+          id: ENTITY_START_TIME,
+          title: {
+            full: 'start time',
+            short: 'start',
+          },
+          component: StartTimeColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.START_TIME_FILTER,
+          sortingEventInfo: events.START_TIME_SORTING,
+        },
+        {
+          id: STATS_TOTAL,
+          title: {
+            full: 'total',
+            short: 'ttl',
+          },
+          component: TotalColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.TOTAL_FILTER,
+          sortingEventInfo: events.TOTAL_SORTING,
+        },
+        {
+          id: STATS_PASSED,
+          title: {
+            full: 'passed',
+            short: 'ps',
+          },
+          component: PassedColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.PASSED_FILTER,
+          sortingEventInfo: events.PASSED_SORTING,
+        },
+        {
+          id: STATS_FAILED,
+          title: {
+            full: 'failed',
+            short: 'fl',
+          },
+          component: FailedColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.FAILED_FILTER,
+          sortingEventInfo: events.FAILED_SORTING,
+        },
+        {
+          id: STATS_SKIPPED,
+          title: {
+            full: 'skipped',
+            short: 'skp',
+          },
+          component: SkippedColumn,
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.SKIPPED_FILTER,
+          sortingEventInfo: events.SKIPPED_SORTING,
+        },
+        {
+          id: STATS_PB_TOTAL,
+          title: {
+            full: 'product bug',
+            short: 'product bug',
+          },
+          component: PbColumn,
+          customProps: {
+            abbreviation: 'pb',
+            events,
+          },
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.PB_FILTER,
+          sortingEventInfo: events.PB_SORTING,
+        },
+        {
+          id: STATS_AB_TOTAL,
+          title: {
+            full: 'auto bug',
+            short: 'auto bug',
+          },
+          component: AbColumn,
+          customProps: {
+            abbreviation: 'ab',
+            events,
+          },
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.AB_FILTER,
+          sortingEventInfo: events.AB_SORTING,
+        },
+        {
+          id: STATS_SI_TOTAL,
+          title: {
+            full: 'system issue',
+            short: 'system issue',
+          },
+          component: SiColumn,
+          customProps: {
+            abbreviation: 'si',
+            events,
+          },
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.SI_FILTER,
+          sortingEventInfo: events.SI_SORTING,
+        },
+        {
+          id: STATS_TI_TOTAL,
+          title: {
+            full: 'to investigate',
+            short: 'to invest',
+          },
+          component: TiColumn,
+          customProps: {
+            abbreviation: 'ti',
+            events,
+          },
+          sortable: true,
+          withFilter: true,
+          filterEventInfo: events.TI_FILTER,
+          sortingEventInfo: events.TI_SORTING,
+        },
+      ];
+
+      if (withHamburger) {
+        baseColumns.unshift(hamburgerColumn);
+      }
+
+      return baseColumns;
+    }, [
       events,
       withHamburger,
-      onEditItem,
       onDeleteItem,
       onMove,
       onForceFinish,
       onAnalysis,
       onPatternAnalysis,
-    } = this.props;
-    const hamburgerColumn = {
-      component: HamburgerColumn,
-      customProps: {
-        onDeleteItem,
-        onMove,
-        onForceFinish,
-        onAnalysis,
-        onPatternAnalysis,
-      },
-    };
-    const columns = [
-      {
-        id: ENTITY_NAME,
-        title: {
-          full: 'name',
-          short: 'name',
-        },
-        maxHeight: 170,
-        component: NameColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.NAME_FILTER,
-        customProps: {
-          onEditItem,
-          onClickAttribute: this.handleAttributeFilterClick,
-          onOwnerClick: this.handleOwnerFilterClick,
-          events,
-          withExtensions: withHamburger, // Use extensions for launch level only
-        },
-        sortingEventInfo: events.NAME_SORTING,
-      },
-      {
-        id: ENTITY_START_TIME,
-        title: {
-          full: 'start time',
-          short: 'start',
-        },
-        component: StartTimeColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.START_TIME_FILTER,
-        sortingEventInfo: events.START_TIME_SORTING,
-      },
-      {
-        id: STATS_TOTAL,
-        title: {
-          full: 'total',
-          short: 'ttl',
-        },
-        component: TotalColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.TOTAL_FILTER,
-        sortingEventInfo: events.TOTAL_SORTING,
-      },
-      {
-        id: STATS_PASSED,
-        title: {
-          full: 'passed',
-          short: 'ps',
-        },
-        component: PassedColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.PASSED_FILTER,
-        sortingEventInfo: events.PASSED_SORTING,
-      },
-      {
-        id: STATS_FAILED,
-        title: {
-          full: 'failed',
-          short: 'fl',
-        },
-        component: FailedColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.FAILED_FILTER,
-        sortingEventInfo: events.FAILED_SORTING,
-      },
-      {
-        id: STATS_SKIPPED,
-        title: {
-          full: 'skipped',
-          short: 'skp',
-        },
-        component: SkippedColumn,
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.SKIPPED_FILTER,
-        sortingEventInfo: events.SKIPPED_SORTING,
-      },
-      {
-        id: STATS_PB_TOTAL,
-        title: {
-          full: 'product bug',
-          short: 'product bug',
-        },
-        component: PbColumn,
-        customProps: {
-          abbreviation: 'pb',
-          events,
-        },
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.PB_FILTER,
-        sortingEventInfo: events.PB_SORTING,
-      },
-      {
-        id: STATS_AB_TOTAL,
-        title: {
-          full: 'auto bug',
-          short: 'auto bug',
-        },
-        component: AbColumn,
-        customProps: {
-          abbreviation: 'ab',
-          events,
-        },
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.AB_FILTER,
-        sortingEventInfo: events.AB_SORTING,
-      },
-      {
-        id: STATS_SI_TOTAL,
-        title: {
-          full: 'system issue',
-          short: 'system issue',
-        },
-        component: SiColumn,
-        customProps: {
-          abbreviation: 'si',
-          events,
-        },
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.SI_FILTER,
-        sortingEventInfo: events.SI_SORTING,
-      },
-      {
-        id: STATS_TI_TOTAL,
-        title: {
-          full: 'to investigate',
-          short: 'to invest',
-        },
-        component: TiColumn,
-        customProps: {
-          abbreviation: 'ti',
-          events,
-        },
-        sortable: true,
-        withFilter: true,
-        filterEventInfo: events.TI_FILTER,
-        sortingEventInfo: events.TI_SORTING,
-      },
-    ];
-    if (withHamburger) {
-      columns.splice(0, 0, hamburgerColumn);
-    }
-    return columns;
-  }
+      onEditItem,
+    ]);
 
-  handleAttributeFilterClick = (attribute) => {
-    const { tracking, events, onFilterClick } = this.props;
-
-    onFilterClick(
-      [
-        {
-          id: ENTITY_ATTRIBUTE,
-          value: {
-            filteringField: ENTITY_ATTRIBUTE,
-            condition: CONDITION_HAS,
-            value: formatAttribute(attribute),
-          },
-        },
-      ],
-      true,
-    );
-
-    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES);
-  };
-
-  handleOwnerFilterClick = (owner) =>
-    this.props.onFilterClick({
-      id: ENTITY_USER,
-      value: {
-        filteringField: ENTITY_NAME,
-        condition: CONDITION_IN,
-        value: owner || '',
-      },
-    });
-
-  renderNoItemsBlock = () => {
-    const {
-      intl: { formatMessage },
-      noItemsBlock,
-    } = this.props;
-
-    if (noItemsBlock) {
-      return noItemsBlock;
-    }
-
-    return <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />;
-  };
-
-  render() {
-    const {
-      data,
-      onChangeSorting,
-      sortingColumn,
-      sortingDirection,
-      selectedItems,
-      onItemSelect,
-      onItemsSelect,
-      onAllItemsSelect,
-      loading,
-      onFilterClick,
-      rowHighlightingConfig,
-    } = this.props;
+    const renderNoItemsBlock = useCallback(() => {
+      if (noItemsBlock) {
+        return noItemsBlock;
+      }
+      return <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />;
+    }, [noItemsBlock, formatMessage]);
 
     return (
-      <Fragment>
+      <>
         <Grid
-          columns={this.getColumns()}
+          columns={columns}
           data={data}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           selectedItems={selectedItems}
-          selectable
+          selectable={selectable}
           onToggleSelection={onItemSelect}
           onItemsSelect={onItemsSelect}
           onToggleSelectAll={onAllItemsSelect}
@@ -525,8 +485,64 @@ export class LaunchSuiteGrid extends PureComponent {
           rowHighlightingConfig={rowHighlightingConfig}
           descriptionConfig={{ colSpan: 9, className: cx('description') }}
         />
-        {!data.length && !loading && this.renderNoItemsBlock()}
-      </Fragment>
+        {!data.length && !loading && renderNoItemsBlock()}
+      </>
     );
-  }
-}
+  },
+);
+
+LaunchSuiteGrid.propTypes = {
+  data: PropTypes.array,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
+  onDeleteItem: PropTypes.func,
+  onMove: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onForceFinish: PropTypes.func,
+  selectable: PropTypes.bool,
+  selectedItems: PropTypes.arrayOf(PropTypes.object),
+  onItemSelect: PropTypes.func,
+  onItemsSelect: PropTypes.func,
+  onAllItemsSelect: PropTypes.func,
+  withHamburger: PropTypes.bool,
+  loading: PropTypes.bool,
+  onFilterClick: PropTypes.func,
+  events: PropTypes.object,
+  onAnalysis: PropTypes.func,
+  onPatternAnalysis: PropTypes.func,
+  rowHighlightingConfig: PropTypes.shape({
+    onGridRowHighlighted: PropTypes.func,
+    isGridRowHighlighted: PropTypes.bool,
+    highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }),
+  noItemsBlock: PropTypes.element,
+};
+
+LaunchSuiteGrid.defaultProps = {
+  data: [],
+  sortingColumn: null,
+  sortingDirection: null,
+  onChangeSorting: () => {},
+  onDeleteItem: () => {},
+  onMove: () => {},
+  onEditItem: () => {},
+  onForceFinish: () => {},
+  selectable: true,
+  selectedItems: [],
+  onItemSelect: () => {},
+  onItemsSelect: () => {},
+  onAllItemsSelect: () => {},
+  withHamburger: false,
+  loading: false,
+  onFilterClick: () => {},
+  events: {},
+  onAnalysis: () => {},
+  onPatternAnalysis: () => {},
+  rowHighlightingConfig: {
+    onGridRowHighlighted: () => {},
+    isGridRowHighlighted: false,
+    highlightedRowId: null,
+  },
+  noItemsBlock: null,
+};

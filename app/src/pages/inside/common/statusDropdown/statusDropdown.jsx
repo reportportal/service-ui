@@ -65,6 +65,7 @@ export class StatusDropdown extends Component {
     onChange: PropTypes.func,
     withIndicator: PropTypes.bool,
     disabled: PropTypes.bool,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -75,6 +76,7 @@ export class StatusDropdown extends Component {
     onChange: () => {},
     withIndicator: false,
     disabled: false,
+    readOnly: false,
   };
 
   updateItem = (newStatus) => {
@@ -129,10 +131,7 @@ export class StatusDropdown extends Component {
     return STATUS_TYPES.map((item) => ({
       label: withIndicator ? (
         <span className={cx('status-container')}>
-          <TestItemStatus
-            status={formatStatus(intl.formatMessage, item)}
-            withIndicator={withIndicator}
-          />
+          <TestItemStatus status={formatStatus(intl.formatMessage, item)} />
         </span>
       ) : (
         formatStatus(intl.formatMessage, item)
@@ -142,25 +141,30 @@ export class StatusDropdown extends Component {
   };
 
   render() {
-    const { status, withIndicator, disabled } = this.props;
+    const { status, withIndicator, disabled, readOnly } = this.props;
     return (
       <div className={cx('status-dropdown')}>
-        <InputDropdown
-          options={this.generateOptions(status)}
-          value={status}
-          onChange={this.updateItem}
-          customClasses={{
-            dropdown: cx('dropdown'),
-            selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
-            arrow: cx('arrow'),
-            value: cx('value'),
-            selectList: cx('select-list'),
-            dropdownOption: (withIndicator && cx('dropdown-option')) || '',
-            opened: (withIndicator && cx('opened')) || '',
-          }}
-          disabled={disabled}
-          mobileDisabled
-        />
+        {readOnly && withIndicator ? (
+          <TestItemStatus status={status} className={cx('defined-status')} />
+        ) : (
+          <InputDropdown
+            options={this.generateOptions(status)}
+            value={status}
+            onChange={this.updateItem}
+            customClasses={{
+              dropdown: cx('dropdown'),
+              selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
+              arrow: cx('arrow'),
+              value: cx('value'),
+              selectList: cx('select-list'),
+              dropdownOption: (withIndicator && cx('dropdown-option')) || '',
+              opened: (withIndicator && cx('opened')) || '',
+            }}
+            disabled={disabled}
+            readOnly={readOnly}
+            mobileDisabled
+          />
+        )}
       </div>
     );
   }

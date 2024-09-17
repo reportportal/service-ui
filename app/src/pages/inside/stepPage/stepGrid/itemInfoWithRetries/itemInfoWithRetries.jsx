@@ -36,10 +36,12 @@ export class ItemInfoWithRetries extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    hideEdit: PropTypes.bool,
   };
 
   static defaultProps = {
     expanded: false,
+    hideEdit: false,
   };
 
   constructor(props) {

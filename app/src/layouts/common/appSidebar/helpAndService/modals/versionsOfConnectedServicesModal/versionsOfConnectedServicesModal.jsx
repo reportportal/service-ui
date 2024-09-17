@@ -50,7 +50,7 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
     Object.keys(versionsServicesNames).forEach((serviceKey) => {
       const serviceValue = appInfo[serviceKey];
       const currentVersion = serviceValue?.build?.version;
-      const latestVersion = latestServiceVersions[serviceValue.build.repo];
+      const latestVersion = latestServiceVersions[serviceValue?.build?.repo];
 
       versionsServices.push({
         name: versionsServicesNames[serviceKey],

@@ -38,8 +38,8 @@ export const createOrganizationProjectsParametersSelector = ({
       defaultSorting,
       sortingKey,
     }),
-    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber }) => {
-      return getAlternativePaginationAndSortParams(sort, limit, pageNumber);
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
     },
   );
 

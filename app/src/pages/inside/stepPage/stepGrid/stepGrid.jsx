@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
-import track from 'react-tracking';
+import React, { useMemo } from 'react';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -36,10 +36,13 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
-import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
+import {
+  canBulkEditItems,
+  canWorkWithDefectTypes,
+  canWorkWithTests,
+} from 'common/utils/permissions/permissions';
 import { userRolesSelector } from 'controllers/pages';
-import { userRolesType } from 'common/constants/projectRoles';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -68,6 +71,7 @@ MethodTypeColumn.defaultProps = {
 const NameColumn = ({ className, customProps, ...rest }) => (
   <div className={cx('name-col', className, customProps.className)}>
     <ItemInfoWithRetries
+      hideEdit={customProps.hideEdit}
       {...rest}
       customProps={{
         ...customProps,
@@ -85,7 +89,7 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc, disabled } }) => {
+const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc, readOnly } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -96,7 +100,7 @@ const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc, di
         description={description}
         onChange={onChange}
         fetchFunc={fetchFunc}
-        disabled={disabled}
+        readOnly={readOnly}
       />
     </div>
   );
@@ -108,7 +112,7 @@ StatusColumn.propTypes = {
     formatMessage: PropTypes.func.isRequired,
     onChange: PropTypes.func,
     fetchFunc: PropTypes.func,
-    disabled: PropTypes.bool,
+    readOnly: PropTypes.bool,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -175,178 +179,32 @@ PredefinedFilterSwitcherCell.defaultProps = {
   className: null,
 };
 
-@connect((state) => ({
-  userRoles: userRolesSelector(state),
-}))
-@injectIntl
-@track()
-export class StepGrid extends Component {
-  static propTypes = {
-    data: PropTypes.array,
-    intl: PropTypes.object.isRequired,
-    selectedItems: PropTypes.array,
-    onItemSelect: PropTypes.func,
-    onItemsSelect: PropTypes.func,
-    onAllItemsSelect: PropTypes.func,
-    loading: PropTypes.bool,
-    listView: PropTypes.bool,
-    onFilterClick: PropTypes.func,
-    onEditDefect: PropTypes.func,
-    onUnlinkSingleTicket: PropTypes.func,
-    events: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    onEditItem: PropTypes.func,
-    onChangeSorting: PropTypes.func,
-    sortingColumn: PropTypes.string,
-    sortingDirection: PropTypes.string,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: PropTypes.func,
-      isGridRowHighlighted: PropTypes.bool,
-      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
-    onStatusUpdate: PropTypes.func.isRequired,
-    modifyColumnsFunc: PropTypes.func,
-    userRoles: userRolesType,
-  };
+export const StepGrid = ({
+  data,
+  selectedItems,
+  onItemSelect,
+  onItemsSelect,
+  onAllItemsSelect,
+  loading,
+  listView,
+  onFilterClick,
+  onEditDefect,
+  onUnlinkSingleTicket,
+  events,
+  onEditItem,
+  onChangeSorting,
+  sortingColumn,
+  sortingDirection,
+  rowHighlightingConfig,
+  onStatusUpdate,
+  modifyColumnsFunc,
+}) => {
+  const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
+  const canManageTests = canWorkWithTests(userRoles);
 
-  static defaultProps = {
-    data: [],
-    selectedItems: [],
-    onItemSelect: () => {},
-    onItemsSelect: () => {},
-    onAllItemsSelect: () => {},
-    loading: false,
-    listView: false,
-    onFilterClick: () => {},
-    onEditDefect: () => {},
-    onUnlinkSingleTicket: () => {},
-    onEditItem: () => {},
-    events: {},
-    onChangeSorting: () => {},
-    sortingColumn: null,
-    sortingDirection: null,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: () => {},
-      isGridRowHighlighted: false,
-      highlightedRowId: null,
-    }),
-    modifyColumnsFunc: null,
-    userRoles: {},
-  };
-
-  constructor(props) {
-    super(props);
-    const {
-      intl: { formatMessage },
-      tracking,
-      events,
-      onUnlinkSingleTicket,
-      onEditItem,
-      onEditDefect,
-      onStatusUpdate,
-      modifyColumnsFunc,
-      userRoles,
-    } = props;
-    this.columns = [
-      {
-        id: 'predefinedFilterSwitcher',
-        title: {
-          component: PredefinedFilterSwitcherCell,
-        },
-        formatter: () => {},
-      },
-      {
-        id: ENTITY_METHOD_TYPE,
-        title: {
-          full: 'method type',
-        },
-        sortable: true,
-        component: MethodTypeColumn,
-        customProps: {
-          formatMessage,
-        },
-        withFilter: true,
-        filterEventInfo: events.METHOD_TYPE_FILTER,
-        sortingEventInfo: events.METHOD_TYPE_SORTING,
-      },
-      {
-        id: 'name',
-        title: {
-          full: 'name',
-        },
-        sortable: true,
-        component: NameColumn,
-        maxHeight: 170,
-        customProps: {
-          onEditItem,
-          onClickAttribute: this.handleAttributeFilterClick,
-          events,
-        },
-        withFilter: true,
-        filterEventInfo: events.NAME_FILTER,
-        sortingEventInfo: events.NAME_SORTING,
-      },
-      {
-        id: ENTITY_STATUS,
-        title: {
-          full: 'status',
-        },
-        sortable: true,
-        component: StatusColumn,
-        customProps: {
-          formatMessage,
-          onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
-          fetchFunc: onStatusUpdate,
-          disabled: !canWorkWithTests(userRoles),
-        },
-        withFilter: true,
-        filterEventInfo: events.STATUS_FILTER,
-        sortingEventInfo: events.STATUS_SORTING,
-      },
-      {
-        id: ENTITY_START_TIME,
-        title: {
-          full: 'start time',
-        },
-        sortable: true,
-        component: StartTimeColumn,
-        withFilter: true,
-        filterEventInfo: events.START_TIME_FILTER,
-        sortingEventInfo: events.START_TIME_SORTING,
-      },
-      {
-        id: ENTITY_DEFECT_TYPE,
-        title: {
-          full: 'defect type',
-        },
-        sortable: false,
-        component: DefectTypeColumn,
-        customProps: {
-          onEdit: (data) => {
-            onEditDefect(data);
-          },
-          onUnlinkSingleTicket,
-          events: {
-            onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,
-            onClickIssueTicketEvent: events.onClickIssueTicketEvent,
-          },
-          disabled: !canWorkWithDefectTypes(userRoles),
-        },
-        withFilter: true,
-        filterEventInfo: events.DEFECT_TYPE_FILTER,
-      },
-    ];
-    if (modifyColumnsFunc) {
-      this.columns = modifyColumnsFunc(this.columns);
-    }
-  }
-
-  handleAttributeFilterClick = (attribute) => {
-    const { tracking, events, onFilterClick } = this.props;
-
+  const handleAttributeFilterClick = (attribute) => {
     onFilterClick(
       [
         {
@@ -361,55 +219,180 @@ export class StepGrid extends Component {
       true,
     );
 
-    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES);
+    if (events.CLICK_ATTRIBUTES) {
+      trackEvent(events.CLICK_ATTRIBUTES);
+    }
   };
 
-  highlightFailedItems = (value) => ({
-    [cx('failed')]: value.status === FAILED,
+  const highlightFailedItems = (value) => ({
+    failed: value.status === FAILED,
   });
 
-  render() {
-    const {
-      intl: { formatMessage },
-      data,
-      onItemSelect,
-      onItemsSelect,
-      onAllItemsSelect,
-      selectedItems,
-      loading,
-      listView,
-      onFilterClick,
-      onChangeSorting,
-      sortingColumn,
-      sortingDirection,
-      rowHighlightingConfig,
-    } = this.props;
+  const columns = useMemo(() => {
+    const baseColumns = [
+      {
+        id: 'predefinedFilterSwitcher',
+        title: {
+          component: PredefinedFilterSwitcherCell,
+        },
+        formatter: () => {},
+      },
+      {
+        id: ENTITY_METHOD_TYPE,
+        title: { full: 'method type' },
+        sortable: true,
+        component: MethodTypeColumn,
+        customProps: { formatMessage },
+        withFilter: true,
+        filterEventInfo: events.METHOD_TYPE_FILTER,
+        sortingEventInfo: events.METHOD_TYPE_SORTING,
+      },
+      {
+        id: 'name',
+        title: { full: 'name' },
+        sortable: true,
+        component: NameColumn,
+        maxHeight: 170,
+        customProps: {
+          onEditItem,
+          onClickAttribute: handleAttributeFilterClick,
+          events,
+          hideEdit: !canBulkEditItems(userRoles),
+        },
+        withFilter: true,
+        filterEventInfo: events.NAME_FILTER,
+        sortingEventInfo: events.NAME_SORTING,
+      },
+      {
+        id: ENTITY_STATUS,
+        title: { full: 'status' },
+        sortable: true,
+        component: StatusColumn,
+        customProps: {
+          formatMessage,
+          onChange: (status) => trackEvent(events.getChangeItemStatusEvent(status)),
+          fetchFunc: onStatusUpdate,
+          readOnly: !canWorkWithTests(userRoles),
+        },
+        withFilter: true,
+        filterEventInfo: events.STATUS_FILTER,
+        sortingEventInfo: events.STATUS_SORTING,
+      },
+      {
+        id: ENTITY_START_TIME,
+        title: { full: 'start time' },
+        sortable: true,
+        component: StartTimeColumn,
+        withFilter: true,
+        filterEventInfo: events.START_TIME_FILTER,
+        sortingEventInfo: events.START_TIME_SORTING,
+      },
+      {
+        id: ENTITY_DEFECT_TYPE,
+        title: { full: 'defect type' },
+        sortable: false,
+        component: DefectTypeColumn,
+        customProps: {
+          onEdit: onEditDefect,
+          onUnlinkSingleTicket,
+          events: {
+            onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,
+            onClickIssueTicketEvent: events.onClickIssueTicketEvent,
+          },
+          disabled: !canWorkWithDefectTypes(userRoles),
+        },
+        withFilter: true,
+        filterEventInfo: events.DEFECT_TYPE_FILTER,
+      },
+    ];
 
-    return (
-      <Fragment>
-        <Grid
-          columns={this.columns}
-          data={data}
-          onToggleSelection={onItemSelect}
-          onToggleSelectAll={onAllItemsSelect}
-          onItemsSelect={onItemsSelect}
-          selectedItems={selectedItems}
-          selectable
-          rowClassMapper={this.highlightFailedItems}
-          loading={loading}
-          groupHeader={GroupHeader}
-          groupFunction={groupItemsByParent}
-          grouped={listView}
-          onFilterClick={onFilterClick}
-          onChangeSorting={onChangeSorting}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          rowHighlightingConfig={rowHighlightingConfig}
-        />
-        {!data.length && !loading && (
-          <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
-        )}
-      </Fragment>
-    );
-  }
-}
+    return modifyColumnsFunc ? modifyColumnsFunc(baseColumns) : baseColumns;
+  }, [
+    formatMessage,
+    events,
+    onEditItem,
+    onEditDefect,
+    onUnlinkSingleTicket,
+    onStatusUpdate,
+    modifyColumnsFunc,
+    userRoles,
+    trackEvent,
+  ]);
+
+  return (
+    <>
+      <Grid
+        columns={columns}
+        data={data}
+        onToggleSelection={onItemSelect}
+        onToggleSelectAll={onAllItemsSelect}
+        onItemsSelect={onItemsSelect}
+        selectedItems={selectedItems}
+        selectable={canManageTests}
+        rowClassMapper={highlightFailedItems}
+        loading={loading}
+        groupHeader={GroupHeader}
+        groupFunction={groupItemsByParent}
+        grouped={listView}
+        onFilterClick={onFilterClick}
+        onChangeSorting={onChangeSorting}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        rowHighlightingConfig={rowHighlightingConfig}
+      />
+      {!data.length && !loading && (
+        <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+      )}
+    </>
+  );
+};
+
+StepGrid.propTypes = {
+  data: PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  selectedItems: PropTypes.array,
+  onItemSelect: PropTypes.func,
+  onItemsSelect: PropTypes.func,
+  onAllItemsSelect: PropTypes.func,
+  loading: PropTypes.bool,
+  listView: PropTypes.bool,
+  onFilterClick: PropTypes.func,
+  onEditDefect: PropTypes.func,
+  onUnlinkSingleTicket: PropTypes.func,
+  events: PropTypes.object,
+  onEditItem: PropTypes.func,
+  onChangeSorting: PropTypes.func,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  rowHighlightingConfig: PropTypes.shape({
+    onGridRowHighlighted: PropTypes.func,
+    isGridRowHighlighted: PropTypes.bool,
+    highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }),
+  onStatusUpdate: PropTypes.func.isRequired,
+  modifyColumnsFunc: PropTypes.func,
+};
+
+StepGrid.defaultProps = {
+  data: [],
+  selectedItems: [],
+  onItemSelect: () => {},
+  onItemsSelect: () => {},
+  onAllItemsSelect: () => {},
+  loading: false,
+  listView: false,
+  onFilterClick: () => {},
+  onEditDefect: () => {},
+  onUnlinkSingleTicket: () => {},
+  onEditItem: () => {},
+  events: {},
+  onChangeSorting: () => {},
+  sortingColumn: null,
+  sortingDirection: null,
+  rowHighlightingConfig: {
+    onGridRowHighlighted: () => {},
+    isGridRowHighlighted: false,
+    highlightedRowId: null,
+  },
+  modifyColumnsFunc: null,
+};

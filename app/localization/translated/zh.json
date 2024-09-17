@@ -1771,6 +1771,7 @@
   "ProjectsPage.deleteProjectsCount": "已选择{count}项",
   "ProjectsPage.deleteSuccess": "项目删除成功",
   "ProjectsPage.deleteSuccessMultiple": "已选项目删除成功",
+  "ProjectsPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   "ProjectsPage.projectDuplicateHint": "Project with the same name already exists in this organization",
   "ProjectsPage.projectExists": "项目“{name}”已存在",
   "ProjectsPage.projectLengthHint": "项目名称",
