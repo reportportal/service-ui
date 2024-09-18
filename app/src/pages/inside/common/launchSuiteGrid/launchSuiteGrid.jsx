@@ -50,9 +50,6 @@ import {
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
 import { formatAttribute } from 'common/utils/attributeUtils';
-import { useSelector } from 'react-redux';
-import { canBulkEditItems } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
@@ -69,13 +66,13 @@ HamburgerColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const NameColumn = ({ className, customProps: { hideEdit }, ...rest }) => (
+const NameColumn = ({ className, ...rest }) => (
   <>
     <td rowSpan={2} className={cx('name-col', className)}>
-      <ItemInfo hideEdit={hideEdit} {...rest} hideDescription />
+      <ItemInfo {...rest} hideDescription />
     </td>
     <div className={cx('name-col-mobile', className)}>
-      <ItemInfo hideEdit={hideEdit} {...rest} />
+      <ItemInfo {...rest} />
     </div>
   </>
 );
@@ -245,7 +242,6 @@ export const LaunchSuiteGrid = React.memo(
   }) => {
     const { formatMessage } = useIntl();
     const { trackEvent } = useTracking();
-    const userRoles = useSelector(userRolesSelector);
 
     const handleAttributeFilterClick = useCallback(
       (attribute) => {
@@ -314,7 +310,6 @@ export const LaunchSuiteGrid = React.memo(
             onOwnerClick: handleOwnerFilterClick,
             events,
             withExtensions: withHamburger,
-            hideEdit: !canBulkEditItems(userRoles),
           },
           sortingEventInfo: events.NAME_SORTING,
         },
