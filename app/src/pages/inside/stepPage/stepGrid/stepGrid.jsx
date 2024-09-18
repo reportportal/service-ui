@@ -36,11 +36,7 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
-import {
-  canBulkEditItems,
-  canWorkWithDefectTypes,
-  canWorkWithTests,
-} from 'common/utils/permissions/permissions';
+import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { useSelector } from 'react-redux';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
@@ -71,7 +67,6 @@ MethodTypeColumn.defaultProps = {
 const NameColumn = ({ className, customProps, ...rest }) => (
   <div className={cx('name-col', className, customProps.className)}>
     <ItemInfoWithRetries
-      hideEdit={customProps.hideEdit}
       {...rest}
       customProps={{
         ...customProps,
@@ -225,7 +220,7 @@ export const StepGrid = ({
   };
 
   const highlightFailedItems = (value) => ({
-    failed: value.status === FAILED,
+    [cx('failed')]: value.status === FAILED,
   });
 
   const columns = useMemo(() => {
@@ -257,7 +252,6 @@ export const StepGrid = ({
           onEditItem,
           onClickAttribute: handleAttributeFilterClick,
           events,
-          hideEdit: !canBulkEditItems(userRoles),
         },
         withFilter: true,
         filterEventInfo: events.NAME_FILTER,
