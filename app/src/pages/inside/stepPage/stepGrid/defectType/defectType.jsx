@@ -98,6 +98,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
+            className={cx({ readonly: disabled || !canChangeDefectTypes })}
             onClick={
               disabled || !canChangeDefectTypes
                 ? null
