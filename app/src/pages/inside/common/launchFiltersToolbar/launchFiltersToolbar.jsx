@@ -143,10 +143,12 @@ export class LaunchFiltersToolbar extends Component {
     tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('clone'));
   };
 
-  handleFilterCreate = () => {
+  handleFilterCreate = (hasFilterPermissions) => {
     const { createFilter, tracking } = this.props;
-    this.setState({ isFilterCreate: !this.state.isFilterCreate });
     createFilter();
+    if (!hasFilterPermissions) {
+      this.setState({ isFilterCreate: !this.state.isFilterCreate });
+    }
     tracking.trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
   };
 
@@ -286,8 +288,8 @@ export class LaunchFiltersToolbar extends Component {
           <div className={cx('add-filter-button')}>
             <GhostButton
               icon={this.getFilterIcon(hasFilterPermissions)}
-              onClick={this.handleFilterCreate}
-              preventParser={this.state.isFilterCreate}
+              onClick={() => this.handleFilterCreate(hasFilterPermissions)}
+              preventIconParsing={this.state.isFilterCreate}
             >
               {this.getFilterMessage(hasFilterPermissions)}
             </GhostButton>
