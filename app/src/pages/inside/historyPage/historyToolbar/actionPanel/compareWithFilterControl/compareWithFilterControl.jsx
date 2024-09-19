@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Popper, Reference } from 'react-popper';
 import track from 'react-tracking';
-import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { debounce } from 'common/utils';
 import CompareIcon from 'common/img/compare-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -49,8 +48,6 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    userId: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
     selectedFilter: filterForCompareSelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
@@ -68,7 +65,6 @@ export class CompareWithFilterControl extends Component {
     intl: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     fetchFiltersConcatAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -77,7 +73,6 @@ export class CompareWithFilterControl extends Component {
     selectedFilter: PropTypes.object,
     filters: PropTypes.array,
     disabled: PropTypes.bool,
-    userId: PropTypes.string,
     onChangeActiveFilter: PropTypes.func,
   };
 
@@ -85,8 +80,6 @@ export class CompareWithFilterControl extends Component {
     selectedFilter: null,
     filters: [],
     disabled: false,
-    userId: '',
-    editable: false,
     onChangeActiveFilter: () => {},
   };
 

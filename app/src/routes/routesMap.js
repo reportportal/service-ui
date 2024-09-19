@@ -55,6 +55,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
+  PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -82,7 +83,6 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
-import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
@@ -173,11 +173,7 @@ const routesMap = {
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/:projectId/dashboard',
     thunk: (dispatch) => {
-      dispatch(
-        fetchDashboardsAction({
-          [SIZE_KEY]: 300,
-        }),
-      );
+      dispatch(fetchDashboardsAction());
       dispatch(changeVisibilityTypeAction());
     },
   },
@@ -226,7 +222,7 @@ const routesMap = {
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
     thunk: (dispatch, getState, { action }) => {
-      const location = (action.meta || {}).location || {};
+      const location = action.meta?.location || {};
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },
@@ -277,6 +273,7 @@ const routesMap = {
     },
   },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage/:pluginRoute*',
+  [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

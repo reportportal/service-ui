@@ -72,10 +72,52 @@ export const PLUGINS_PAGE_EVENTS = {
     modal: 'create_global_integration',
     type: normalizeEventParameter(type),
   }),
+  clickEditGlobalIntegration: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'save',
+    modal: 'edit_global_integration',
+    type: normalizeEventParameter(type),
+  }),
+  clickCreateLdapIntegration: (isFullName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'button_create',
+    modal: 'create_global_integration',
+    type: 'ldap',
+    condition: isFullName ? 'full_name' : 'first_last_name',
+  }),
+  clickEditLdapIntegration: (isFullName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'save',
+    modal: 'edit_global_integration',
+    type: 'ldap',
+    condition: isFullName ? 'full_name' : 'first_last_name',
+  }),
   integrationAddClickEvent: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'add_integration',
     type: normalizeEventParameter(type),
+  }),
+  navigatedInPluginsFilterList: (filterName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: normalizeEventParameter(filterName),
+  }),
+  clickConfirmUninstallPlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'uninstall',
+    modal: 'uninstall_plugin',
+    type: normalizeEventParameter(pluginName),
+  }),
+  clickDisablePlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'disable',
+    modal: 'disable_plugin',
+    type: normalizeEventParameter(pluginName),
+  }),
+  clickEnablePlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'enable',
+    modal: 'enable_plugin',
+    type: normalizeEventParameter(pluginName),
   }),
   // GA 3
   CANCEL_BTN_UPLOAD_MODAL: {
@@ -108,11 +150,6 @@ export const PLUGINS_PAGE_EVENTS = {
     category: PLUGINS_MODAL,
     action: 'Click on Btn Cancel on Modal "Uninstall Plugin"',
     label: 'Close Modal Uninstall Plugin',
-  },
-  OK_BTN_UNINSTALL_PLUGIN_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Uninstall on Modal "Uninstall Plugin"',
-    label: 'Uninstall Plugin',
   },
   clickSaveEditAuthorizationBtn: getClickSaveBtnEditAuthorizationEvent(PLUGINS_MODAL),
   clickDeleteBtnRemoveIntegration: getClickDeleteBtnRemoveIntegrationEvent(PLUGINS_MODAL),

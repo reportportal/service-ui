@@ -19,4 +19,5 @@ export { MoveToDebugModal, LaunchCompareModal, LaunchAnalysisModal } from './mod
 export { DeleteItemsModal } from 'pages/inside/common/modals/deleteItemsModal';
 export { EditItemModal } from 'pages/inside/common/modals/editItemModal';
 export { EditItemsModal } from 'pages/inside/common/modals/editItemsModal';
-export { ImportModal } from 'pages/common/modals/importModal';
+export { ImportLaunchModal } from 'pages/inside/launchesPage/modals/importLaunchModal';
+export { UploadPluginModal } from 'pages/admin/pluginsPage/modals/uploadPluginModal';

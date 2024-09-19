@@ -140,8 +140,8 @@ export class AllLatestDropdown extends Component {
     const { value } = this.props;
     const options = this.getOptions();
     const currentOption = options.find((option) => option.value === value);
-    const label = currentOption && currentOption.label;
-    const shortLabel = currentOption && currentOption.shortLabel;
+    const label = currentOption?.label;
+    const shortLabel = currentOption?.shortLabel;
     return (
       <div ref={this.nodeRef} className={cx('all-latest-dropdown', { active: this.isActive() })}>
         <div className={cx('selected-value')}>

@@ -63,10 +63,17 @@ export const IntegrationCollectionItem = ({
     openIntegration(item);
   };
   return (
-    <li onClick={itemClickHandler} role="row" className={cx('instances-list-item', { disabled })}>
+    <li
+      onClick={itemClickHandler}
+      role="row"
+      className={cx('instances-list-item', { disabled })}
+      data-automation-id="listItem"
+    >
       <div className={cx('item-data')}>
         <div className={cx('general-info')}>
-          <h4 className={cx('integration-name')}>{title}</h4>
+          <h4 className={cx('integration-name')} title={title}>
+            {title}
+          </h4>
           {!connected && (
             <span className={cx('connection-error-message')}>
               {formatMessage(messages.ConnectionErrorMessage)}
@@ -78,7 +85,9 @@ export const IntegrationCollectionItem = ({
         </span>
       </div>
 
-      <div className={cx('arrow-control')}>{Parser(ArrowIcon)}</div>
+      <div className={cx('arrow-control')} data-automation-id="openIntegraionIcon">
+        {Parser(ArrowIcon)}
+      </div>
     </li>
   );
 };

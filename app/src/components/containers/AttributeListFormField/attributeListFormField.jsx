@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import styles from './attributeListFormField.scss';
 
@@ -66,11 +66,7 @@ export const AttributeListFormField = ({
 
   return (
     <>
-      <Checkbox
-        value={shown}
-        onChange={attributeControlHandler}
-        dataAutomationId={'showAttributesCheckbox'}
-      >
+      <Checkbox value={shown} onChange={attributeControlHandler}>
         {formatMessage(messages.attributes)}
       </Checkbox>
       <div className={cx('description')}>

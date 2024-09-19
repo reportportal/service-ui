@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
 export const CustomColumn = ({ className, value }, name, { formatMessage }) => {
   return (
     <div className={cx('custom-column-col', className)} title={value.customColumn}>
-      {!!(value.customColumn && value.customColumn.length) && (
+      {!!value.customColumn?.length && (
         <Fragment>
           <span className={cx('mobile-hint')}>{formatMessage(hintMessages.customColumnHint)}</span>
           <span className={cx('custom-column-item')}>{value.customColumn.join(', ')}</span>

@@ -44,8 +44,8 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
     cancelToken = null;
 
     componentWillUnmount() {
-      this.cancelToken && this.cancelToken();
-      this.cancelDebounce && this.cancelDebounce();
+      this.cancelToken?.();
+      this.cancelDebounce?.();
     }
 
     debouncedFetch = debounce((inputValue) => {

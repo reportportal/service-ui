@@ -42,33 +42,32 @@ export class Breadcrumbs extends PureComponent {
 
     return (
       <ul className={cx('breadcrumbs')}>
-        {actualBreadcrumbs &&
-          actualBreadcrumbs.map((item, i) => (
-            <li className={cx('item', { active: item.isActive })} key={item.key}>
-              {!item.isStatic && !item.isActive ? (
-                <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
-                  <span className={cx('link-key')} title={item.key}>
-                    {item.key}
-                  </span>
-                  <span className={cx('link-value')}>
-                    <span
-                      className={cx('link-color')}
-                      style={{ backgroundColor: item.additionalProperties.color }}
-                    />
-                    <span className={cx('link-value-name')} title={item.additionalProperties.value}>
-                      {item.additionalProperties.value}
-                    </span>
-                    <span>{`, ${item.additionalProperties.passingRate}%`}</span>
-                  </span>
-                </a>
-              ) : (
-                <span className={cx('item-name')} title={item.key}>
+        {actualBreadcrumbs?.map((item, i) => (
+          <li className={cx('item', { active: item.isActive })} key={item.key}>
+            {!item.isStatic && !item.isActive ? (
+              <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
+                <span className={cx('link-key')} title={item.key}>
                   {item.key}
                 </span>
-              )}
-              {i + 1 < actualBreadcrumbs.length && <span className={cx('icon')} />}
-            </li>
-          ))}
+                <span className={cx('link-value')}>
+                  <span
+                    className={cx('link-color')}
+                    style={{ backgroundColor: item.additionalProperties.color }}
+                  />
+                  <span className={cx('link-value-name')} title={item.additionalProperties.value}>
+                    {item.additionalProperties.value}
+                  </span>
+                  <span>{`, ${item.additionalProperties.passingRate}%`}</span>
+                </span>
+              </a>
+            ) : (
+              <span className={cx('item-name')} title={item.key}>
+                {item.key}
+              </span>
+            )}
+            {i + 1 < actualBreadcrumbs.length && <span className={cx('icon')} />}
+          </li>
+        ))}
       </ul>
     );
   }

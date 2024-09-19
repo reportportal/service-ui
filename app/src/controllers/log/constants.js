@@ -28,6 +28,7 @@ export const DEFAULT_HISTORY_DEPTH = 12;
 export const HISTORY_DEPTH_LIMIT = 30;
 export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
+export const LOG_TIME_FORMAT_STORAGE_KEY = 'logTimeFormat';
 export const LOG_LEVEL_FILTER_KEY = 'filter.gte.level';
 export const LOG_STATUS_FILTER_KEY = 'filter.in.status';
 export const WITH_ATTACHMENTS_FILTER_KEY = 'filter.ex.binaryContent';

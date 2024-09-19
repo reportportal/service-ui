@@ -116,7 +116,7 @@ export class LaunchAnalysisModal extends Component {
         PREVIOUS_LAUNCH,
         CURRENT_AND_THE_SAME_NAME,
       ]).isRequired,
-    }).isRequired,
+    }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

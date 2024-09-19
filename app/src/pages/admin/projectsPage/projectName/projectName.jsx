@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
@@ -24,30 +23,25 @@ import { connect } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/administrate/projects';
-import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { assignedProjectsSelector } from 'controllers/user';
 import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 @connect(
   (state, ownProps) => ({
     isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
   }),
   {
     navigateToProject: navigateToProjectAction,
-    showModal: showModalAction,
   },
 )
 @track()
 export class ProjectName extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
     navigateToProject: PropTypes.func.isRequired,
-    showModal: PropTypes.func.isRequired,
     isAssigned: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

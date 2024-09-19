@@ -47,7 +47,6 @@ export class InfoLineListView extends Component {
   };
   static defaultProps = {
     compositeAttributes: '',
-    currentUser: '',
     data: {},
   };
 
@@ -60,7 +59,7 @@ export class InfoLineListView extends Component {
 
     return (
       <div className={cx('info-line', 'info-line--list-view')}>
-        {data && data.name && (
+        {data?.name && (
           <div className={cx('filter-holder')}>
             <span>{formatMessage(messages.filter)}</span>
             <span className={cx('filter-holder-name')} title={data.name}>

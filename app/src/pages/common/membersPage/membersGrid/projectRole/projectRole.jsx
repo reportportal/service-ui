@@ -29,7 +29,6 @@ import { projectIdSelector } from 'controllers/pages';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  isAdminSelector,
   userIdSelector,
 } from 'controllers/user';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -57,7 +56,6 @@ const messages = defineMessages({
   (state) => ({
     currentUser: userIdSelector(state),
     projectId: projectIdSelector(state),
-    isAdmin: isAdminSelector(state),
     canChangeRole: canChangeUserRole(
       userAccountRoleSelector(state),
       activeProjectRoleSelector(state),
@@ -76,7 +74,6 @@ export class ProjectRole extends Component {
     userId: PropTypes.string,
     currentUser: PropTypes.string,
     canChangeRole: PropTypes.bool,
-    isAdmin: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -90,7 +87,6 @@ export class ProjectRole extends Component {
     currentUser: '',
     showNotification: () => {},
     canChangeRole: false,
-    isAdmin: false,
   };
   state = {
     currentRole: this.getUserRole(),
@@ -104,7 +100,7 @@ export class ProjectRole extends Component {
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
-    fetch(URLS.project(this.props.projectId), {
+    fetch(URLS.projectByName(this.props.projectId), {
       method: 'put',
       data: param,
     })
@@ -126,7 +122,7 @@ export class ProjectRole extends Component {
   };
   getUserRole() {
     const { assignedProjects, projectId } = this.props;
-    return assignedProjects[projectId] && assignedProjects[projectId].projectRole;
+    return assignedProjects[projectId]?.projectRole;
   }
   render() {
     this.getUserRole();

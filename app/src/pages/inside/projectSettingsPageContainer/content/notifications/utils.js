@@ -15,6 +15,7 @@
  */
 
 import { OWNER } from 'common/constants/permissions';
+import { EMAIL } from 'common/constants/pluginNames';
 
 export const convertNotificationCaseForSubmission = (obj) => {
   const {
@@ -27,15 +28,43 @@ export const convertNotificationCaseForSubmission = (obj) => {
     attributes = [],
     enabled = true,
     attributesOperator,
+    type,
+    ruleDetails,
   } = obj;
+  const dynamicField =
+    type === EMAIL
+      ? { recipients: informOwner ? [...recipients, OWNER] : recipients }
+      : { ruleDetails };
   return {
     id,
     ruleName,
-    recipients: informOwner ? [...recipients, OWNER] : recipients,
+    ...dynamicField,
     sendCase,
     launchNames,
     attributes,
     enabled,
     attributesOperator,
+    type,
   };
+};
+
+export const isInternalLink = (to) => {
+  return typeof to === 'object' && to.type;
+};
+
+export const flatRule = (notification) => {
+  return { ...notification, ...notification?.ruleDetails };
+};
+
+export const toCamelCase = (sentence) => {
+  const words = sentence.split(/[\s,.!?]+/);
+  return words
+    .map((word, index) => {
+      if (index === 0) {
+        return word.toLowerCase();
+      } else {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+    })
+    .join('');
 };

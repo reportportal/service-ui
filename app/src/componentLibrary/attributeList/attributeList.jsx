@@ -18,9 +18,10 @@ import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import Parser from 'html-react-parser';
 import { notSystemAttributePredicate } from 'common/utils/attributeUtils';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { EditableAttribute } from './editableAttribute';
@@ -321,11 +322,11 @@ export const AttributeList = ({
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
             refCallback={addNewAttButtonRefCb}
-            customClassName={cx('button-focused')}
-            startIcon={PlusIcon}
+            className={cx('button-focused')}
+            icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
-            dataAutomationId={'addAttributeButton'}
+            data-automation-id={'addAttributeButton'}
           >
             {newAttrMessage || (
               <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
@@ -338,15 +339,12 @@ export const AttributeList = ({
 };
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
-  editedAttribute: PropTypes.object,
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
   maxLength: PropTypes.number,
   customClass: PropTypes.string,
   onChange: PropTypes.func,
-  onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
-  onRemove: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
   showButton: PropTypes.bool,
@@ -357,16 +355,11 @@ AttributeList.propTypes = {
 };
 AttributeList.defaultProps = {
   attributes: [],
-  editedAttribute: null,
   disabled: false,
-  keyURLCreator: null,
-  valueURLCreator: null,
   newAttrMessage: '',
   maxLength: Infinity,
   customClass: '',
   onChange: () => {},
-  onRemove: () => {},
-  onEdit: () => {},
   onAddNew: () => {},
   getURIKey: () => {},
   getURIValue: () => {},

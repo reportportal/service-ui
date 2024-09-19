@@ -16,7 +16,7 @@
 
 import { EXECUTE_GROUP_OPERATION } from './constants';
 
-export const validateItems = (items = [], validator, state) =>
+export const validateItems = (validator, state, items = []) =>
   items.reduce((acc, item) => {
     const error = validator(item, items, state);
     if (error) {

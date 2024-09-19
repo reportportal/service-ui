@@ -21,18 +21,14 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 export class ChartJS extends PureComponent {
   static propTypes = {
-    data: PropTypes.object,
     chartData: PropTypes.object.isRequired,
     chartOptions: PropTypes.object.isRequired,
-    config: PropTypes.object,
     onChartElementClick: PropTypes.func,
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
-    data: {},
-    config: {},
     onChartElementClick: null,
   };
 

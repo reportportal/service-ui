@@ -19,17 +19,17 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
+import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations/formFieldComponentsMap';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
-import { useTracking } from 'react-tracking';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addIntegrationModal.scss';
 
@@ -79,21 +79,27 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   };
 
   const onSubmit = (newData) => {
-    if (isGlobal && !customProps.editAuthMode) {
-      trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
+    if (isGlobal) {
+      if (!customProps.editAuthMode) {
+        trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
+      } else {
+        trackEvent(PLUGINS_PAGE_EVENTS.clickEditGlobalIntegration(data.instanceType));
+      }
     }
 
     onConfirm(newData, metaData);
   };
 
   const okButton = {
-    text: customProps.editAuthMode
+    children: customProps.editAuthMode
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   const createTitle = isGlobal ? messages.createGlobalTitle : messages.createProjectTitle;
@@ -106,12 +112,13 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     (integrationFieldsExtension && ExtensionLoader);
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
     >
       {data.hasWarningMessage && (
         <SystemMessage
@@ -132,7 +139,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
           {...customProps}
         />
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 AddIntegrationModal.propTypes = {

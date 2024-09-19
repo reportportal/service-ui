@@ -103,58 +103,97 @@ export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
-  CLICK_SAVE_BUTTON_IN_MODAL: ({ modalName, status, number, type, switcher }) => ({
+  CLICK_SAVE_BUTTON_IN_MODAL: ({
+    modalName,
+    status,
+    number,
+    type,
+    switcher,
+    ruleId,
+    communicationChanelName,
+  }) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
     status: getStatus(status),
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
+    icon_name: ruleId,
+    condition: communicationChanelName,
     ...(number !== undefined && { number }),
   }),
 
-  CLICK_CHECKBOX_AUTO_NOTIFICATIONS: (status) => ({
-    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
-    element_name: 'checkbox_auto_email_notifications',
-    status: getStatus(status),
-  }),
-
-  SWITCH_NOTIFICATION_RULE: (switcher) => ({
+  SWITCH_NOTIFICATION_RULE: (communicationChanelName, ruleId, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     switcher: getSwitcher(switcher),
+    condition: communicationChanelName,
+    element_name: 'rule',
+    icon_name: ruleId,
   }),
 
-  clickDocumentationLink: (place) => ({
+  SWITCH_PLUGIN_NOTIFICATIONS: (communicationChanelName, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
-    ...(place && { place }),
-    link_name: 'documentation',
+    switcher: getSwitcher(switcher),
+    element_name: `${communicationChanelName}_notifications`,
   }),
 
-  CLICK_CREATE_RULE_BUTTON: {
+  SWITCH_ALL_NOTIFICATIONS: (switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
-    element_name: 'button_create_rule',
+    switcher: getSwitcher(switcher),
+    element_name: 'all_notifications',
+  }),
+
+  CLICK_PROJECT_CONFIGURATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    link_name: 'project_configuration',
   },
 
-  CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS: {
+  CLICK_DISCOVER_PLUGINS_LINK: {
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    link_name: 'discover_plugins',
+  },
+
+  CLICK_INTEGRATION_SETTINGS_LINK: {
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    element_name: 'integration_settings',
+  },
+
+  CLICK_CONFIGURE_INTEGRATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    element_name: 'configure_integration',
+    condition: 'email',
+  },
+
+  CLICK_CREATE_RULE_BUTTON: (communicationChanelName) => ({
+    ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
+    element_name: 'button_create_rule',
+    condition: communicationChanelName,
+  }),
+
+  CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'notifications_name',
     status: 'open',
-  },
+    condition: communicationChanelName,
+  }),
 
-  CLICK_ICON_EDIT_NOTIFICATIONS: {
+  CLICK_ICON_EDIT_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_edit',
-  },
+    condition: communicationChanelName,
+  }),
 
-  CLICK_ICON_DUPLICATE_NOTIFICATIONS: {
+  CLICK_ICON_DUPLICATE_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_duplicate',
-  },
+    condition: communicationChanelName,
+  }),
 
-  CLICK_ICON_DELETE_NOTIFICATIONS: {
+  CLICK_ICON_DELETE_NOTIFICATIONS: (communicationChanelName) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_delete',
-  },
+    condition: communicationChanelName,
+  }),
 };
 
 export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {

@@ -16,19 +16,16 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { dynamicFieldShape } from './dynamicFieldShape';
-import { getFieldComponent } from './utils';
-import { VALUE_ID_KEY, VALUE_NAME_KEY } from './constants';
+import { getFieldComponent, isJiraCloudAssigneeField } from './utils';
+import { AUTOCOMPLETE_TYPE, VALUE_ID_KEY, VALUE_NAME_KEY } from './constants';
 import styles from './dynamicFieldsSection.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class DynamicFieldsSection extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     fields: PropTypes.arrayOf(dynamicFieldShape),
     withValidation: PropTypes.bool,
     customBlockCreator: PropTypes.func,
@@ -67,7 +64,11 @@ export class DynamicFieldsSection extends Component {
     } = this.props;
 
     return fields.map((field) => {
-      const FieldComponent = getFieldComponent(field);
+      const { pluginName } = integrationInfo;
+      const FieldComponent = getFieldComponent({
+        ...field,
+        ...(isJiraCloudAssigneeField(pluginName, field) && { fieldType: AUTOCOMPLETE_TYPE }),
+      });
 
       return (
         <FieldComponent

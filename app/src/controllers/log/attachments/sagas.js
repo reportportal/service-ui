@@ -149,7 +149,7 @@ function* openAttachmentInBrowser({ payload: id }) {
   const projectId = yield select(activeProjectSelector);
   const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
 
-  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+  if (window.navigator?.msSaveOrOpenBlob) {
     window.navigator.msSaveOrOpenBlob(data);
   } else {
     const url = URL.createObjectURL(data);

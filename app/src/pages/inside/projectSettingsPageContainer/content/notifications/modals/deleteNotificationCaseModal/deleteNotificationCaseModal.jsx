@@ -19,15 +19,16 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
+import { capitalizeWord } from '../util';
 
 const messages = defineMessages({
   title: {
     id: 'DeleteNotificationCaseModal.title',
-    defaultMessage: 'Delete Notification Rule',
+    defaultMessage: 'Delete {pluginType} Notification Rule',
   },
   message: {
     id: 'DeleteNotificationModal.message',
@@ -35,27 +36,29 @@ const messages = defineMessages({
   },
 });
 
-const DeleteNotificationCaseModal = ({ data: { onSave } }) => {
+const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   return (
-    <ModalLayout
-      title={formatMessage(messages.title)}
+    <Modal
+      title={formatMessage(messages.title, { pluginType: capitalizeWord(type) })}
       okButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        danger: true,
+        children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        variant: 'danger',
         onClick: () => {
           onSave();
         },
+        'data-automation-id': 'submitButton',
       }}
       cancelButton={{
-        text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        'data-automation-id': 'cancelButton',
       }}
       onClose={() => dispatch(hideModalAction())}
     >
       <div>{Parser(formatMessage(messages.message))}</div>
-    </ModalLayout>
+    </Modal>
   );
 };
 DeleteNotificationCaseModal.propTypes = {

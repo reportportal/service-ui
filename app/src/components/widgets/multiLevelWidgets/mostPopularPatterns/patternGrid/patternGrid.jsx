@@ -98,8 +98,8 @@ export class PatternGrid extends Component {
     ];
   };
 
-  getDataByAttribute = (data = [], attribute) =>
-    (data.find((group) => group.attributeValue === attribute) || {}).patterns;
+  getDataByAttribute = (attribute, data = []) =>
+    data.find((group) => group.attributeValue === attribute)?.patterns;
 
   renderHeader = (columns) => (
     <thead>
@@ -141,7 +141,7 @@ export class PatternGrid extends Component {
       selectedAttribute,
     } = this.props;
     const columns = this.getColumns();
-    const data = this.getDataByAttribute(result, selectedAttribute);
+    const data = this.getDataByAttribute(selectedAttribute, result);
 
     return (
       <Fragment>

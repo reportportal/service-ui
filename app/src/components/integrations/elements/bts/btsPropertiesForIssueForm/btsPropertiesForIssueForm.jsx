@@ -20,8 +20,8 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { projectIdSelector } from 'controllers/pages';
 import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -114,7 +114,6 @@ export class BtsPropertiesForIssueForm extends Component {
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
     initialize: PropTypes.func,
-    change: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
     isGlobal: PropTypes.bool,
@@ -137,7 +136,6 @@ export class BtsPropertiesForIssueForm extends Component {
     updateMetaData: () => {},
     showNotification: () => {},
     initialize: () => {},
-    change: () => {},
   };
 
   constructor(props) {
@@ -212,11 +210,8 @@ export class BtsPropertiesForIssueForm extends Component {
       .then((issueTypes) => {
         const { defectFormFields } = this.props.initialData;
         let selectedIssueTypeValue = [];
-        if (defectFormFields && defectFormFields.length) {
-          selectedIssueTypeValue =
-            (defectFormFields.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY) || {})
-              .value || [];
-        }
+        selectedIssueTypeValue =
+          defectFormFields?.find((item) => item.fieldType === ISSUE_TYPE_FIELD_KEY)?.value || [];
         selectedIssueTypeValue = selectedIssueTypeValue[0] || issueTypes[0];
         this.changeIssueTypeConfig(issueTypes, selectedIssueTypeValue);
         return this.updateFields(selectedIssueTypeValue);
@@ -226,7 +221,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   getAvailabilityControl = (field) => {
     return (
-      <div className={cx('checkbox-wrapper')}>
+      <div className={cx('checkbox-wrapper')} data-automation-id="enableBTSFieldCheckbox">
         <InputWithEye
           onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
           value={field.checked}
@@ -298,12 +293,13 @@ export class BtsPropertiesForIssueForm extends Component {
 
   updateFields = (issueTypeValue) =>
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
-      const { defectFormFields } = this.props.initialData;
+      let { defectFormFields = [] } = this.props.initialData;
+      defectFormFields = normalizeFieldsWithOptions(defectFormFields, this.defaultOptionValueKey);
       let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
 
       let checkedFieldsIds = {};
 
-      if (defectFormFields && defectFormFields.length) {
+      if (defectFormFields?.length) {
         const savedIssueType = defectFormFields.find(
           (item) => item.fieldType === ISSUE_TYPE_FIELD_KEY,
         );
@@ -330,17 +326,16 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchFieldsSet = (issueTypeValue) => {
     const {
-      pluginDetails: details,
+      pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
       projectName,
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
     const requestParams = {};
     let url;
 
@@ -372,17 +367,16 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchIssueTypes = () => {
     const {
-      pluginDetails: details,
+      pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
       projectName,
       projectInfo,
     } = this.props;
     const project = projectName || projectInfo.projectName;
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      : false;
     const requestParams = {};
     let url;
 
@@ -421,26 +415,29 @@ export class BtsPropertiesForIssueForm extends Component {
     return (
       <div className={cx('bts-properties-for-issue-form')}>
         {loading && !this.state.issueType ? (
-          <BubblesPreloader customClassName={cx('center')} />
+          <BubblesLoader className={cx('center')} />
         ) : (
           <Fragment>
             {!disabled && (
               <Fragment>
-                <FieldElement
-                  label="Issue Type"
-                  disabled={loading}
-                  withoutProvider
-                  description={intl.formatMessage(messages.availableIssueTypesHeader)}
-                >
-                  <FieldErrorHint provideHint={false}>
-                    <Dropdown
-                      value={this.state.issueType}
-                      onChange={this.handleIssueTypeChange}
-                      options={this.issueTypeDropdownOptions}
-                      defaultWidth={false}
-                    />
-                  </FieldErrorHint>
-                </FieldElement>
+                {this.issueTypeDropdownOptions?.length > 0 && (
+                  <FieldElement
+                    label="Issue Type"
+                    disabled={loading}
+                    withoutProvider
+                    description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                    dataAutomationId="issueTypeField"
+                  >
+                    <FieldErrorHint provideHint={false}>
+                      <Dropdown
+                        value={this.state.issueType}
+                        onChange={this.handleIssueTypeChange}
+                        options={this.issueTypeDropdownOptions}
+                        defaultWidth={false}
+                      />
+                    </FieldErrorHint>
+                  </FieldElement>
+                )}
                 <div className={cx('default-property-block')}>
                   <h4 className={cx('default-properties-title')}>
                     {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
@@ -455,7 +452,7 @@ export class BtsPropertiesForIssueForm extends Component {
               </Fragment>
             )}
             {loading ? (
-              <BubblesPreloader customClassName={cx('center')} />
+              <BubblesLoader className={cx('center')} />
             ) : (
               <Fragment>
                 <DynamicFieldsSection

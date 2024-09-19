@@ -29,7 +29,6 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
 import {
   activeProjectRoleSelector,
   userIdSelector,
@@ -40,6 +39,7 @@ import { enabledPattersSelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -63,7 +63,7 @@ const messages = defineMessages({
   },
   noPermissions: {
     id: 'Hamburger.noPermissions',
-    defaultMessage: 'You are not a launch owner',
+    defaultMessage: 'You are not a Launch owner',
   },
   launchInProgress: {
     id: 'Hamburger.launchInProgress',
@@ -76,6 +76,14 @@ const messages = defineMessages({
   uniqueErrorAnalysis: {
     id: 'Hamburger.uniqueErrorAnalysis',
     defaultMessage: 'Unique Error analysis',
+  },
+  markAsImportant: {
+    id: 'Hamburger.markAsImportant',
+    defaultMessage: 'Mark as Important',
+  },
+  unmarkAsImportant: {
+    id: 'Hamburger.unmarkAsImportant',
+    defaultMessage: 'Unmark as Important',
   },
   uniqueErrorAnalysisIsInProgress: {
     id: 'Hamburger.uniqueErrorAnalysisIsInProgress',
@@ -103,8 +111,6 @@ const messages = defineMessages({
   }),
   {
     showModal: showModalAction,
-    showNotification,
-    showDefaultErrorNotification,
     updateLaunchLocallyAction,
   },
 )
@@ -114,7 +120,6 @@ export class Hamburger extends Component {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
-    onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     customProps: PropTypes.object,
@@ -125,20 +130,15 @@ export class Hamburger extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     showModal: PropTypes.func,
-    showNotification: PropTypes.func,
-    showDefaultErrorNotification: PropTypes.func,
     updateLaunchLocallyAction: PropTypes.func,
     analyzerExtensions: PropTypes.array,
   };
 
   static defaultProps = {
-    onAction: () => {},
     customProps: {},
     accountRole: '',
     enabledPatterns: [],
     showModal: () => {},
-    showNotification: () => {},
-    showDefaultErrorNotification: () => {},
     updateLaunchLocallyAction: () => {},
     analyzerExtensions: [],
   };
@@ -240,6 +240,20 @@ export class Hamburger extends Component {
     });
   };
 
+  changeImportantState = (retentionType) => {
+    this.props.showModal({
+      id:
+        retentionType === RETENTION_POLICY.IMPORTANT
+          ? 'unmarkAsImportantModal'
+          : 'markAsImportantModal',
+      data: {
+        activeProject: this.props.projectId,
+        launch: this.props.launch,
+        onSuccess: (data) => this.props.updateLaunchLocallyAction(data),
+      },
+    });
+  };
+
   getClusterTitle = () => {
     const { launch, intl, analyzerExtensions } = this.props;
 
@@ -269,6 +283,11 @@ export class Hamburger extends Component {
     } = this.props;
 
     const clusterTitle = this.getClusterTitle();
+    const canUpdateImportant = canDeleteLaunch(
+      accountRole,
+      projectRole,
+      this.props.userId === this.props.launch.owner,
+    );
 
     return (
       <div className={cx('hamburger')}>
@@ -334,6 +353,23 @@ export class Hamburger extends Component {
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                 customProps.onForceFinish(launch);
+              }}
+            />
+            <HamburgerMenuItem
+              disabled={!canUpdateImportant}
+              title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
+              text={intl.formatMessage(
+                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                  ? messages.unmarkAsImportant
+                  : messages.markAsImportant,
+              )}
+              onClick={() => {
+                tracking.trackEvent(
+                  launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                    ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                    : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                );
+                this.changeImportantState(launch.retentionPolicy);
               }}
             />
             {launch.mode === 'DEFAULT' && (

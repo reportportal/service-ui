@@ -72,10 +72,8 @@ const messages = defineMessages({
 export class RegistrationForm extends Component {
   static propTypes = {
     submitForm: PropTypes.func,
-    reset: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    autofill: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     email: PropTypes.string,
     loading: PropTypes.bool,

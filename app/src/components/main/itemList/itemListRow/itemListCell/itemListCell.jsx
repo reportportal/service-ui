@@ -30,7 +30,6 @@ export const ItemListCell = ({ component: Component, align, bold, withIcon, form
 ItemListCell.propTypes = {
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   value: PropTypes.object,
-  label: PropTypes.string,
   formatter: PropTypes.func,
   align: PropTypes.string,
   withIcon: PropTypes.bool,
@@ -39,7 +38,6 @@ ItemListCell.propTypes = {
 ItemListCell.defaultProps = {
   component: null,
   value: null,
-  label: null,
   formatter: defaultFormatter,
   align: null,
   withIcon: false,

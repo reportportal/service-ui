@@ -100,7 +100,6 @@ export class AnalyticsTab extends Component {
   };
 
   static defaultProps = {
-    change: () => {},
     showNotification: () => {},
     fetchInfo: () => {},
     analyticsEnabled: false,

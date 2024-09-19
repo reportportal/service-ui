@@ -34,9 +34,9 @@ import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { WIDGETS_EVENTS } from 'analyticsEvents/dashbordsPageEvents';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
-import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -79,7 +79,6 @@ export class SimpleWidget extends Component {
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
@@ -96,7 +95,6 @@ export class SimpleWidget extends Component {
 
   static defaultProps = {
     onDelete: () => {},
-    switchDraggable: () => {},
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
@@ -155,7 +153,7 @@ export class SimpleWidget extends Component {
     }
   };
 
-  getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
+  getWidgetOptions = () => this.state.widget.contentParameters?.widgetOptions || {};
 
   getWidgetNode = (node) => {
     this.node = node;
@@ -301,7 +299,7 @@ export class SimpleWidget extends Component {
 
   showEditWidgetModal = () => {
     const modalId = 'editWidgetModal';
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_EDIT_WIDGET_ICON);
     this.props.showModalAction({
       id: modalId,
       data: {
@@ -328,30 +326,32 @@ export class SimpleWidget extends Component {
           clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
           selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
           selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
-          ratioBasedOnChange: WIDGETS_EVENTS.CLICK_ON_RATIO_BASED_OPTION_IN_PASSING_RATE_CHARTS(
-            modalId,
-          ),
         },
       },
     });
   };
 
   refreshWidget = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.fetchWidget();
   };
 
   showDeleteWidgetModal = () => {
     const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
 
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
+    tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_DELETE_WIDGET_ICON);
     const onConfirm = () => {
-      const { widgetId, activeDashboardId } = this.props;
+      const { widgetId, activeDashboardId, widgetType } = this.props;
       const {
-        widget: { id, widgetType },
+        widget: { id },
       } = this.state;
+
       onDelete(widgetId);
       if (isAnalyticsEnabled) {
+        tracking.trackEvent(
+          WIDGETS_EVENTS.clickOnDeleteWidgetButton(widgetType, activeDashboardId),
+        );
+
         provideEcGA({
           eventName: 'remove_from_cart',
           baseEventParameters,
@@ -408,14 +408,8 @@ export class SimpleWidget extends Component {
       description: widget.description,
       type: widget.widgetType,
       meta: [widgetOptions.viewMode],
-      lastRefresh:
-        widget.contentParameters &&
-        widget.contentParameters.widgetOptions &&
-        widget.contentParameters.widgetOptions.lastRefresh,
-      state:
-        widget.contentParameters &&
-        widget.contentParameters.widgetOptions &&
-        widget.contentParameters.widgetOptions.state,
+      lastRefresh: widget.contentParameters?.widgetOptions?.lastRefresh,
+      state: widget.contentParameters?.widgetOptions?.state,
     };
     if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
       headerData.meta.push(widgetOptions.latest || true);

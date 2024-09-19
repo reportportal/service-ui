@@ -37,10 +37,12 @@ import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
+  removeNoneValues,
+  isJiraCloudAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
@@ -105,7 +107,7 @@ const messages = defineMessages({
   },
   postIssueSuccess: {
     id: 'PostIssueModal.postIssueSuccess',
-    defaultMessage: 'Ticket has been created.',
+    defaultMessage: 'Ticket has been created successfully',
   },
   postIssueForTheTest: {
     id: 'PostIssueModal.postIssueForTheTest',
@@ -152,7 +154,6 @@ export class PostIssueModal extends Component {
     showNotification: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
     getBtsIntegrationBackLink: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     postIssueExtensions: PropTypes.array,
@@ -160,7 +161,7 @@ export class PostIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
-    }).isRequired,
+    }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -259,7 +260,7 @@ export class PostIssueModal extends Component {
     },
   ];
 
-  initIntegrationFields = (defectFormFields = [], pluginName) => {
+  initIntegrationFields = (defectFormFields = [], pluginName = '') => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
     const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
       item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
@@ -274,31 +275,38 @@ export class PostIssueModal extends Component {
   };
 
   prepareDataToSend = (formData) => {
+    const refinedData = removeNoneValues(formData);
     const {
       getBtsIntegrationBackLink,
       data: { items },
     } = this.props;
-
+    const pluginName = this.state.pluginName;
     const fields = this.state.fields.map((field) => {
       const isAutocomplete =
         field.fieldType === AUTOCOMPLETE_TYPE ||
         field.fieldType === MULTIPLE_AUTOCOMPLETE_TYPE ||
         field.fieldType === CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE;
-      const formFieldData = formData[field.id];
+      const formFieldData = refinedData[field.id];
       let preparedFormFieldData = formFieldData;
       if (!Array.isArray(formFieldData)) {
         preparedFormFieldData = formFieldData ? [formFieldData] : [];
       }
-      return { ...field, [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData };
+      return {
+        ...field,
+        [isAutocomplete ? 'namedValue' : 'value']: preparedFormFieldData,
+        ...(isJiraCloudAssigneeField(pluginName, field) && {
+          value: preparedFormFieldData.map((item) => item.id),
+        }),
+      };
     });
     const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
     );
     const data = {
-      [INCLUDE_COMMENTS_KEY]: formData[INCLUDE_COMMENTS_KEY],
-      [INCLUDE_ATTACHMENTS_KEY]: formData[INCLUDE_ATTACHMENTS_KEY],
-      [INCLUDE_LOGS_KEY]: formData[INCLUDE_LOGS_KEY],
+      [INCLUDE_COMMENTS_KEY]: refinedData[INCLUDE_COMMENTS_KEY],
+      [INCLUDE_ATTACHMENTS_KEY]: refinedData[INCLUDE_ATTACHMENTS_KEY],
+      [INCLUDE_LOGS_KEY]: refinedData[INCLUDE_LOGS_KEY],
       logQuantity: LOG_QUANTITY,
       item: items[0].id,
       fields,
@@ -321,12 +329,13 @@ export class PostIssueModal extends Component {
     const { pluginName, integrationId } = this.state;
     const {
       integrationParameters: { project: btsProject, url: btsUrl },
-      integrationType: { details },
+      integrationType: {
+        details: { allowedCommands },
+      },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-    const isCommandAvailable =
-      details &&
-      details.allowedCommands &&
-      details.allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1;
+    const isCommandAvailable = allowedCommands
+      ? allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1
+      : false;
     const requestParams = { data, method: 'POST' };
     let url = URLS.btsIntegrationPostTicket(activeProject, integrationId);
 
@@ -381,10 +390,10 @@ export class PostIssueModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         this.props.hideScreenLockAction();
         this.props.showNotification({
-          message: formatMessage(messages.postIssueFailed),
+          message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
           type: NOTIFICATION_TYPES.ERROR,
         });
       });

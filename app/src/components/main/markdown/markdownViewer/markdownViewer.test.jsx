@@ -49,47 +49,77 @@ describe('MarkdownViewer', () => {
   });
   test('unordered lists are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={unorderedListMock} />);
-    expect(wrapper.find('.markdown-viewer').children()).toHaveLength(1);
+    expect(
+      wrapper
+        .find('.markdown-viewer')
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string'),
+    ).toHaveLength(1);
     expect(
       wrapper
         .find('.markdown-viewer')
         .childAt(0)
+        .filterWhere((n) => typeof n.type() === 'string')
         .type(),
     ).toEqual('ul');
-    expect(wrapper.find('.markdown-viewer ul').children()).toHaveLength(3);
     expect(
       wrapper
         .find('.markdown-viewer ul')
-        .childAt(0)
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string'),
+    ).toHaveLength(3);
+    expect(
+      wrapper
+        .find('.markdown-viewer ul')
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string')
+        .at(0)
         .type(),
     ).toEqual('li');
     expect(
       wrapper
         .find('.markdown-viewer ul')
-        .childAt(0)
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string')
+        .at(0)
         .html(),
     ).toEqual('<li>Generic list item</li>');
   });
   test('ordered lists are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={orderedListMock} />);
-    expect(wrapper.find('.markdown-viewer').children()).toHaveLength(1);
     expect(
       wrapper
         .find('.markdown-viewer')
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string'),
+    ).toHaveLength(1);
+    expect(
+      wrapper
+        .find('.markdown-viewer')
+        .filterWhere((n) => typeof n.type() === 'string')
         .childAt(0)
         .type(),
     ).toEqual('ol');
-    expect(wrapper.find('.markdown-viewer ol').children()).toHaveLength(3);
     expect(
       wrapper
         .find('.markdown-viewer ol')
-        .childAt(0)
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string'),
+    ).toHaveLength(3);
+    expect(
+      wrapper
+        .find('.markdown-viewer ol')
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string')
+        .at(0)
         .type(),
     ).toEqual('li');
     expect(
       wrapper
         .find('.markdown-viewer ol')
-        .childAt(0)
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string')
+        .at(0)
         .html(),
     ).toEqual('<li>Numbered list item</li>');
   });
@@ -108,7 +138,9 @@ describe('MarkdownViewer', () => {
     expect(
       wrapper
         .find('.markdown-viewer blockquote')
-        .childAt(0)
+        .children()
+        .filterWhere((n) => typeof n.type() === 'string')
+        .at(0)
         .html(),
     ).toEqual('<p>This is a quote.</p>');
   });

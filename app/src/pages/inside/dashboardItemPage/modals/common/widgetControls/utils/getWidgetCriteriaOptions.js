@@ -56,6 +56,8 @@ import {
   CHANGE_ROLE,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -100,6 +102,14 @@ const messages = defineMessages({
   [DELETE_LAUNCH]: {
     id: 'WidgetCriteriaOption.delete_launch',
     defaultMessage: 'Delete launch',
+  },
+  [MARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'WidgetCriteriaOption.markLaunchAsImportant',
+    defaultMessage: 'Mark launch as important',
+  },
+  [UNMARK_LAUNCH_AS_IMPORTANT]: {
+    id: 'WidgetCriteriaOption.unmarkLaunchAsImportant',
+    defaultMessage: 'Unmark launch as important',
   },
   [ACTIONS_WITH_ISSUES]: {
     id: 'WidgetCriteriaOption.issues_actions',
@@ -254,6 +264,8 @@ const getUserActionOptions = (formatMessage) => [
   { value: START_LAUNCH, label: formatMessage(messages[START_LAUNCH]) },
   { value: FINISH_LAUNCH, label: formatMessage(messages[FINISH_LAUNCH]) },
   { value: DELETE_LAUNCH, label: formatMessage(messages[DELETE_LAUNCH]) },
+  { value: MARK_LAUNCH_AS_IMPORTANT, label: formatMessage(messages[MARK_LAUNCH_AS_IMPORTANT]) },
+  { value: UNMARK_LAUNCH_AS_IMPORTANT, label: formatMessage(messages[UNMARK_LAUNCH_AS_IMPORTANT]) },
   { value: ACTIONS_WITH_ISSUES, label: formatMessage(messages[ACTIONS_WITH_ISSUES]) },
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
@@ -326,7 +338,7 @@ export const getWidgetCriteriaOptions = (optionGroups, formatMessage, meta) => {
         break;
       case DEFECT_TYPES_GROUPS_OPTIONS:
         options = options.concat(
-          meta && meta.withoutNoDefect
+          meta?.withoutNoDefect
             ? getDefectTypesGroupsOptions(formatMessage).slice(0, -1)
             : getDefectTypesGroupsOptions(formatMessage),
         );

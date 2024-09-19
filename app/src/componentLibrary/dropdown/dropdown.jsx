@@ -129,7 +129,7 @@ export const Dropdown = ({
 
   const getDisplayedValue = () => {
     if (!value && value !== false) return placeholder;
-    let displayedValue = (value && value.label) || value;
+    let displayedValue = value?.label || value;
     options.forEach((option) => {
       if (option.value === value) {
         displayedValue = option.label;
@@ -167,23 +167,26 @@ export const Dropdown = ({
     }
   };
 
-  const renderOptions = () =>
-    options.map((option, index) => (
-      <DropdownOption
-        key={option.value}
-        {...getItemProps({
-          item: option,
-          index,
-          selected: option.value === (selectedItem?.value ?? selectedItem),
-          variant,
-          option,
-          highlightHovered: highlightedIndex === index && eventName !== EVENT_NAME.ON_CLICK,
-          render: renderOption,
-          onChange: option.disabled ? null : () => handleChange(option),
-          onMouseEnter: () => setHighlightedIndex(index),
-        })}
-      />
-    ));
+  const renderOptions = () => (
+    <div className={cx('options-container')}>
+      {options.map((option, index) => (
+        <DropdownOption
+          key={option.value}
+          {...getItemProps({
+            item: option,
+            index,
+            selected: option.value === (selectedItem?.value ?? selectedItem),
+            variant,
+            option: { title: option.label, ...option },
+            highlightHovered: highlightedIndex === index && eventName !== EVENT_NAME.ON_CLICK,
+            render: renderOption,
+            onChange: option.disabled ? null : () => handleChange(option),
+            onMouseEnter: () => setHighlightedIndex(index),
+          })}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <Manager>

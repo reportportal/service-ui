@@ -368,7 +368,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.componentHealthCheckTable'}
         defaultMessage={
-          'Shows the detailed statistics of the application components which are indicated by the specified attributes. As far the widget contains complicated queries, the widget can be rendering some time (~10 min)'
+          'Shows the detailed statistics of the application components which are indicated by the specified attributes with an ability to exclude Skipped tests from the statistics. As far the widget contains complicated queries, the widget can be rendering some time (~ 10 min)'
         }
       />
     ),

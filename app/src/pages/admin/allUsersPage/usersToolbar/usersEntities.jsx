@@ -95,8 +95,6 @@ export class UsersEntities extends Component {
   };
 
   static defaultProps = {
-    loading: false,
-    events: [],
     filterValues: {},
   };
   getEntities = () => {

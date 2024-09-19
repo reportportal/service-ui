@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ export {
   isPostIssueActionAvailable,
   isAuthorizationPlugin,
   isPluginSwitchable,
-  isPluginSupportsCommonCommand,
 } from './utils';
+export { isPluginSupportsCommonCommand } from './uiExtensions/utils';
 export {
   pluginsSelector,
   pluginByNameSelector,
@@ -53,6 +53,8 @@ export {
   isEmailIntegrationAvailableSelector,
   isBtsPluginsExistSelector,
   enabledBtsPluginsSelector,
+  enabledImportPluginsSelector,
+  isImportPluginsAvailableSelector,
   globalIntegrationsSelector,
   pluginsLoadingSelector,
 } from './selectors';
@@ -60,8 +62,6 @@ export { pluginSagas } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
-  uiExtensionPagesSelector,
-  extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,

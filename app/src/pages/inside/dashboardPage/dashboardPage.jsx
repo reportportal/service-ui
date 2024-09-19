@@ -31,8 +31,12 @@ import {
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
   loadingSelector,
+  dashboardPaginationSelector,
 } from 'controllers/dashboard';
+import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -89,6 +93,9 @@ const messages = defineMessages({
   },
 )
 @withFilter()
+@withPagination({
+  paginationSelector: dashboardPaginationSelector,
+})
 @injectIntl
 @track({ page: DASHBOARD_PAGE })
 export class DashboardPage extends Component {
@@ -109,6 +116,12 @@ export class DashboardPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     loading: PropTypes.bool,
+    pageCount: PropTypes.number,
+    activePage: PropTypes.number,
+    itemCount: PropTypes.number,
+    pageSize: PropTypes.number,
+    onChangePage: PropTypes.func,
+    onChangePageSize: PropTypes.func,
   };
 
   static defaultProps = {
@@ -123,6 +136,12 @@ export class DashboardPage extends Component {
     onFilterChange: () => {},
     changeVisibilityType: () => {},
     loading: false,
+    pageCount: null,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
+    itemCount: null,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
+    onChangePage: () => {},
+    onChangePageSize: () => {},
   };
 
   onDeleteDashboardItem = (item) => {
@@ -133,6 +152,8 @@ export class DashboardPage extends Component {
       deleteDashboard,
       tracking,
     } = this.props;
+    const { id } = item;
+
     const warning = item.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
@@ -149,7 +170,7 @@ export class DashboardPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
-          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
       },
     });
@@ -164,12 +185,6 @@ export class DashboardPage extends Component {
         dashboardItem: item,
         onSubmit: editDashboard,
         type: 'edit',
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
-        },
       },
     });
   };
@@ -183,12 +198,6 @@ export class DashboardPage extends Component {
       data: {
         onSubmit: addDashboard,
         type: 'add',
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-          submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
-        },
       },
     });
   };
@@ -209,17 +218,25 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter, dashboardItems, loading } = this.props;
-    const eventsInfo = {
-      closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
-      changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
-      cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
-      submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
-    };
+    const {
+      gridType,
+      userInfo,
+      onFilterChange,
+      filter,
+      dashboardItems,
+      loading,
+      pageCount,
+      activePage,
+      itemCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
+    } = this.props;
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader eventsInfo={eventsInfo} />
+          <DashboardPageHeader />
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar
@@ -240,6 +257,16 @@ export class DashboardPage extends Component {
             onAddItem={this.onAddDashboardItem}
             filter={filter}
           />
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );

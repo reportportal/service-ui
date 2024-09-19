@@ -26,12 +26,17 @@ export const PASSWORD_ATTRIBUTE_KEY = 'passwordAttribute';
 export const URL_KEY = 'url';
 export const BASE_DN_KEY = 'baseDn';
 export const EMAIL_KEY = 'email';
+export const NAME_TYPE_KEY = 'nameType';
 export const FULL_NAME_KEY = 'fullName';
+export const FIRST_AND_LAST_NAME_KEY = 'firstAndLastName';
+export const FIRST_NAME_KEY = 'firstName';
+export const LAST_NAME_KEY = 'lastName';
 export const PHOTO_KEY = 'photo';
 export const LDAP_PREFIX = 'ldap://';
 export const LDAPS_PREFIX = 'ldaps://';
 
 export const DEFAULT_FORM_CONFIG = {
   [PASSWORD_ENCODER_TYPE_KEY]: '',
+  [NAME_TYPE_KEY]: FULL_NAME_KEY,
   [URL_KEY]: LDAP_PREFIX,
 };

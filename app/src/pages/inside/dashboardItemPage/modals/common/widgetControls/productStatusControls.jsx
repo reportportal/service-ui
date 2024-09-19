@@ -94,7 +94,7 @@ const BASE_COLUMNS_ORDER = [
 ];
 const validators = {
   filters: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.FiltersValidationError),
+    !value?.length && formatMessage(messages.FiltersValidationError),
   customColumns: (value = []) =>
     new Set(value.map((item) => item.name)).size !== value.length
       ? 'customColumnsDuplicationHint'
@@ -160,7 +160,7 @@ export class ProductStatusControls extends Component {
     }));
 
   parseCustomColumns = (values) =>
-    values.map((item) => ({ ...item, value: (item.value && item.value.value) || '' }));
+    values.map((item) => ({ ...item, value: item.value?.value || '' }));
 
   render() {
     const {

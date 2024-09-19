@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import {
   DELETE_API_KEY_SUCCESS,
   ADD_API_KEY_SUCCESS,
   DELETE_USER_ACCOUNT,
+  SET_LOG_TIME_FORMAT,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -91,6 +92,10 @@ export const fetchUserAction = () => ({ type: FETCH_USER });
 
 export const setStartTimeFormatAction = (format) => ({
   type: SET_START_TIME_FORMAT,
+  payload: format,
+});
+export const setLogTimeFormatAction = (format) => ({
+  type: SET_LOG_TIME_FORMAT,
   payload: format,
 });
 

@@ -152,7 +152,6 @@ export class ComponentHealthCheckTable extends Component {
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    container: PropTypes.instanceOf(Element).isRequired,
     project: PropTypes.string.isRequired,
   };
 
@@ -179,7 +178,7 @@ export class ComponentHealthCheckTable extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const newActiveAttributes = getNewActiveAttributes(
       activeBreadcrumbs[id].key,
       activeBreadcrumbs[id].additionalProperties.value,
@@ -214,7 +213,7 @@ export class ComponentHealthCheckTable extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
     const additionalProperties = {
       value,
@@ -251,9 +250,7 @@ export class ComponentHealthCheckTable extends Component {
       });
   };
 
-  getCustomColumn = () =>
-    this.props.widget.contentParameters &&
-    this.props.widget.contentParameters.widgetOptions.customColumn;
+  getCustomColumn = () => this.props.widget.contentParameters?.widgetOptions.customColumn;
 
   getContentResult = () =>
     !isEmptyObject(this.props.widget.content) && [
@@ -262,16 +259,12 @@ export class ComponentHealthCheckTable extends Component {
     ];
 
   getPassingRateValue = () =>
-    Number(
-      this.props.widget.contentParameters &&
-        this.props.widget.contentParameters.widgetOptions.minPassingRate,
-    );
+    Number(this.props.widget.contentParameters?.widgetOptions.minPassingRate);
 
   getCompositeAttributes = (value) => {
     const { activeBreadcrumbId, activeAttributes } = this.state;
     const { widget } = this.props;
-    const attributes =
-      widget.contentParameters && widget.contentParameters.widgetOptions.attributeKeys;
+    const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
     const compositeAttributes = getNewActiveAttributes(
       getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
       value,
@@ -286,7 +279,7 @@ export class ComponentHealthCheckTable extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
 
     return (
@@ -304,20 +297,25 @@ export class ComponentHealthCheckTable extends Component {
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
-      isLatest: widget.contentParameters && widget.contentParameters.widgetOptions.latest,
+      isLatest: widget.contentParameters?.widgetOptions.latest,
       linkPayload: {
         projectId: project,
-        filterId: widget.appliedFilters[0] && widget.appliedFilters[0].id,
+        filterId: widget.appliedFilters[0]?.id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
       },
       getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,
       isClickableAttribute: this.isClickableAttribute(),
+      excludeSkipped: widget.contentParameters?.widgetOptions.excludeSkipped,
     };
     const customColumn = this.getCustomColumn();
 
     return COLUMNS_SEQUENCE.reduce((columns, item) => {
       if (!customColumn && item === CUSTOM_COLUMN) {
+        return columns;
+      }
+
+      if (widget.contentParameters?.widgetOptions.excludeSkipped && item === STATS_SKIPPED) {
         return columns;
       }
 
@@ -340,8 +338,8 @@ export class ComponentHealthCheckTable extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const state = contentParameters && contentParameters.widgetOptions.state;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const state = contentParameters?.widgetOptions.state;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
     const columns = this.getColumns();
     const data = this.getContentResult();

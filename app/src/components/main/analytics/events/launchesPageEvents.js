@@ -132,6 +132,14 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicLaunchMenuClickEventParameters,
     element_name: 'unique_error_analysis',
   },
+  CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU: {
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'mark_as_important',
+  },
+  CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU: {
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'unmark_as_important',
+  },
   CLICK_ANALYSIS_LAUNCH_MENU: {
     ...basicLaunchMenuClickEventParameters,
     element_name: 'analysis',
@@ -268,11 +276,46 @@ export const LAUNCHES_MODAL_EVENTS = {
   getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
     LAUNCHES_PAGE,
   ),
-  OK_BTN_IMPORT_MODAL: {
+  getOkBtnImportModal: (selectedPluginName) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'import_launch',
     element_name: 'import',
+    type: selectedPluginName,
+  }),
+  CLICK_MARK_AS_IMPORTANT_BTN_MODAL: {
+    ...basicClickEventParametersLaunchPage,
+    modal: 'mark_as_important',
+    element_name: 'mark_as_important',
   },
+  CLICK_UNMARK_AS_IMPORTANT_BTN_MODAL: {
+    ...basicClickEventParametersLaunchPage,
+    modal: 'unmark_as_important',
+    element_name: 'unmark_as_important',
+  },
+  getClickDeleteWithImportantLaunchesBtnModalEvent: (isBulk) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'delete_launch',
+    element_name: 'delete_with_important_launches',
+    condition: isBulk ? 'bulk' : 'single',
+  }),
+  getClickDeleteImportantLaunchesBtnModalEvent: (isBulk) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'delete_launch',
+    element_name: isBulk ? 'delete_important_launches' : 'delete_important_launch',
+    condition: isBulk ? 'bulk' : 'single',
+  }),
+  getClickDeleteRegularLaunchesBtnModalEvent: (isBulk) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'delete_launch',
+    element_name: 'delete_only_regular',
+    condition: isBulk ? 'bulk' : 'single',
+  }),
+  getClickDeleteLaunchesBtnModalEvent: (isBulk) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'delete_launch',
+    element_name: 'delete',
+    condition: isBulk ? 'bulk' : 'single',
+  }),
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),

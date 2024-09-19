@@ -47,7 +47,7 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: `${name} #${number}`,
-    startTime: Number(startTime),
+    startTime: new Date(startTime).getTime(),
     itemCases: `${value} ${formatMessage(messages.cases)}`,
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(statusLocalization[FAILED]) },

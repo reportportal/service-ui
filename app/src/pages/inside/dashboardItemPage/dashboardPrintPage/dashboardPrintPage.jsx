@@ -62,11 +62,7 @@ export class DashboardPrintPage extends Component {
     }).isRequired,
   };
 
-  static defaultProps = {
-    currentDashboard: {},
-  };
-
-  getDashboardName = () => (this.props.dashboard && this.props.dashboard.name) || '';
+  getDashboardName = () => this.props.dashboard?.name || '';
 
   printPage = () => window.print();
 

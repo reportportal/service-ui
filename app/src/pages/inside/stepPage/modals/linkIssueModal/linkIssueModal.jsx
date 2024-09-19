@@ -30,7 +30,6 @@ import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { fetch } from 'common/utils/fetch';
 import { updateSessionItem } from 'common/utils/storageUtils';
-import { RALLY } from 'common/constants/pluginNames';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -61,12 +60,10 @@ const messages = defineMessages({
 @reduxForm({
   form: 'linkIssueForm',
   validate: ({ issues }) => ({
-    issues:
-      issues &&
-      issues.map((issue) => ({
-        issueLink: bindMessageToValidator(validate.url, 'urlHint')(issue.issueLink),
-        issueId: bindMessageToValidator(validate.issueId, 'issueIdHint')(issue.issueId),
-      })),
+    issues: issues?.map((issue) => ({
+      issueLink: bindMessageToValidator(validate.url, 'urlHint')(issue.issueLink),
+      issueId: bindMessageToValidator(validate.issueId, 'issueIdHint')(issue.issueId),
+    })),
   }),
 })
 @connect(
@@ -97,7 +94,7 @@ export class LinkIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
-    }).isRequired,
+    }),
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
     tracking: PropTypes.shape({
@@ -274,7 +271,6 @@ export class LinkIssueModal extends Component {
             change={change}
             component={LinkIssueFields}
             addEventInfo={eventsInfo.addNewIssue}
-            withAutocomplete={pluginName !== RALLY}
           />
         </form>
       </DarkModalLayout>

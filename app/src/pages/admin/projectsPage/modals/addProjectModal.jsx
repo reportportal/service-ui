@@ -46,14 +46,12 @@ export class AddProjectModal extends Component {
     data: PropTypes.object,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func,
-    change: PropTypes.func,
   };
 
   static defaultProps = {
     data: {},
     dirty: false,
     handleSubmit: () => {},
-    change: () => {},
   };
 
   getCloseConfirmationConfig = () => {

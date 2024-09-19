@@ -78,7 +78,6 @@ export class UniqueErrorsAnalyzeModal extends Component {
     handleSubmit: () => {},
     showNotification: () => {},
     showDefaultErrorNotification: () => {},
-    events: {},
   };
 
   onSubmit = ({ removeNumbers }) => {

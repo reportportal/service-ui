@@ -44,7 +44,7 @@ import {
 } from 'controllers/log/nestedSteps/actionCreators';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { FAILED } from 'common/constants/testStatuses';
-import { ERROR } from 'common/constants/logLevels';
+import { ERROR, FATAL } from 'common/constants/logLevels';
 import {
   fetchErrorLogs,
   clearLogPageStackTrace,
@@ -130,6 +130,9 @@ function* fetchAllErrorLogs({
   excludeLogContent = true,
   level,
 }) {
+  const logMessages = yield select(logItemsSelector);
+  const requiresErrorLogLocation = logMessages.some((log) => [ERROR, FATAL].includes(log.level));
+
   const { id } = logItem;
   const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   let retryId = null;
@@ -139,18 +142,20 @@ function* fetchAllErrorLogs({
   }
   let cancelRequest = () => {};
   try {
-    yield put(
-      fetchDataAction(namespace)(
-        URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
-        {
-          params: { ...query, excludeLogContent },
-          abort: (cancelFunc) => {
-            cancelRequest = cancelFunc;
+    if (logViewMode === DETAILED_LOG_VIEW && requiresErrorLogLocation) {
+      yield put(
+        fetchDataAction(namespace)(
+          URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
+          {
+            params: { ...query, excludeLogContent },
+            abort: (cancelFunc) => {
+              cancelRequest = cancelFunc;
+            },
           },
-        },
-      ),
-    );
-    yield take(createFetchPredicate(namespace));
+        ),
+      );
+      yield take(createFetchPredicate(namespace));
+    }
   } catch (err) {
     yield handleError(err);
   } finally {
@@ -286,7 +291,7 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
     }
   }
 
-  yield callback && callback();
+  yield callback?.();
 }
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
@@ -310,7 +315,7 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
     const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
     yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
   }
-  callback && callback();
+  callback?.();
 }
 
 function* fetchDetailsLog() {

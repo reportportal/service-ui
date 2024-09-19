@@ -83,7 +83,6 @@ export class RolesRow extends Component {
     createNew: PropTypes.bool,
     userId: PropTypes.string,
     entryType: PropTypes.string,
-    accountType: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -98,7 +97,6 @@ export class RolesRow extends Component {
     createNew: false,
     entryType: '',
     userId: '',
-    accountType: '',
   };
   constructor(props) {
     super(props);
@@ -165,11 +163,13 @@ export class RolesRow extends Component {
         ? intl.formatMessage(messages.unAssignFromPersonalProject)
         : intl.formatMessage(messages.unAssignFromProject);
       const Tooltip = () => <TextTooltip tooltipContent={tooltipMessage} />;
+      const disable = this.isPersonalProject();
+      const componentClickHandler = !disable ? clickHandler : null;
       const WrappedComponent = () => (
         <IconComponent
           different={different}
-          disable={this.isPersonalProject()}
-          clickHandler={!this.isPersonalProject() ? clickHandler : null}
+          disable={disable}
+          clickHandler={componentClickHandler}
           icon={CrossIcon}
         />
       );

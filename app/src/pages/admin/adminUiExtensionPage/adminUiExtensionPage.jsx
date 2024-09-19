@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,53 @@
  *  limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import classNames from 'classnames/bind';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
-import { pluginPageSelector } from 'controllers/pages';
-import { UiExtensionPage } from 'pages/common/uiExtensionPage';
+import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
+import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { PageHeader, PageLayout, PageSection } from 'layouts/pageLayout';
+import { ExtensionLoader } from 'components/extensionLoader';
+import styles from './adminUiExtensionPage.scss';
 
-const AdminExtensionPage = ({ extensions, activePluginPage }) => (
-  <UiExtensionPage extensions={extensions} activePluginPage={activePluginPage} />
-);
-AdminExtensionPage.propTypes = {
-  extensions: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      title: PropTypes.string,
-      component: PropTypes.func,
-    }),
-  ),
-  activePluginPage: PropTypes.string,
-};
-AdminExtensionPage.defaultProps = {
-  extensions: [],
-  activePluginPage: null,
-};
+const cx = classNames.bind(styles);
 
-export const AdminUiExtensionPage = connect((state) => ({
-  extensions: uiExtensionAdminPagesSelector(state),
-  activePluginPage: pluginPageSelector(state),
-}))(AdminExtensionPage);
+export const AdminUiExtensionPage = () => {
+  const extension = useActivePluginPageExtension(uiExtensionAdminPagesSelector);
+  const [headerNodes, setHeaderNodes] = useState({});
+
+  let pageLayout = null;
+
+  if (extension) {
+    if (extension.newLayout) {
+      pageLayout = (
+        <>
+          <div className={cx('header')}>
+            <Header titleNode={headerNodes.titleNode} title={extension.title || extension.name}>
+              {headerNodes.children}
+            </Header>
+          </div>
+          <PageSection>
+            <ExtensionLoader
+              extension={extension}
+              setHeaderNodes={setHeaderNodes}
+              withPreloader
+              silentOnError={false}
+            />
+          </PageSection>
+        </>
+      );
+    } else {
+      pageLayout = (
+        <PageLayout>
+          <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />
+          <PageSection>
+            <ExtensionLoader extension={extension} silentOnError={false} withPreloader />
+          </PageSection>
+        </PageLayout>
+      );
+    }
+  }
+
+  return pageLayout;
+};

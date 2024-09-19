@@ -35,15 +35,12 @@ export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
 
   dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
-  dataUserPhoto: (activeProject, id, loadThumbnail) =>
-    `${urlBase}data/${activeProject}/userphoto${getQueryParams({ id, loadThumbnail })}`,
+  dataUserPhoto: (activeProject, login, loadThumbnail) =>
+    `${urlBase}data/${activeProject}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams({
-      'page.page': 1,
-      'page.size': 300,
-    })}`,
+  dashboards: (activeProject, params) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams({ ...params })}`,
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
   widgetMultilevel: (activeProject, widgetId, params) =>
@@ -100,14 +97,16 @@ export const URLS = {
     `${urlBase}${activeProject}/item/suggest/cluster/${clusterId}`,
   choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
+    `${urlBase}${activeProject}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
   launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
-  launches: (activeProject) => `${urlBase}${activeProject}/launch`,
+  launches: (activeProject, ids = []) => `${urlBase}${activeProject}/launch?ids=${ids.join(',')}`,
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
+  singleLaunchUpdate: (activeProject, launchId) =>
+    `${urlBase}${activeProject}/launch/${launchId}/update`,
   launchesInfo: (activeProject) => `${urlBase}${activeProject}/launch/info`,
   launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesItemsUpdate: (activeProject, id, type) =>
@@ -128,16 +127,16 @@ export const URLS = {
   apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
 
-  project: (activeProject) => `${urlBase}project/${activeProject}`,
-  addProject: () => `${urlBase}project`,
+  projectByName: (activeProject) => `${urlBase}project/${activeProject}`,
+  project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
   projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
   projectDeleteDefectType: (activeProject, id) =>
     `${urlBase}${activeProject}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
-  projectPreferences: (activeProject, userId, filterId = '') =>
-    `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,
+  projectPreferences: (activeProject, filterId = '') =>
+    `${urlBase}project/${activeProject}/preference/${filterId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
   projectUserSearchUser: (activeProject) => (searchTerm) =>
     `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
@@ -237,7 +236,7 @@ export const URLS = {
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
-  users: () => `${urlCommonBase}users`,
+  users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlCommonBase}users/registration`,
   userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,
@@ -292,6 +291,10 @@ export const URLS = {
     `${urlBase}integration/${projectId}/all/${type}`,
   testIntegrationConnection: (projectId, integrationId) =>
     `${urlBase}integration/${projectId}/${integrationId}/connection/test`,
+  testGlobalIntegrationConnection: (integrationId) =>
+    `${urlBase}integration/${integrationId}/connection/test`,
+  pluginFileImport: (projectName, pluginName) =>
+    `${urlBase}plugin/${projectName}/${pluginName}/import`,
 
   btsIntegrationIssueTypes: (projectId, integrationId) =>
     `${urlBase}bts/${projectId}/${integrationId}/issue_types`,

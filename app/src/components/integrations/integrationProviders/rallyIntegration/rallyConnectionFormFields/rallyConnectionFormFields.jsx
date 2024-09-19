@@ -37,9 +37,7 @@ export class RallyConnectionFormFields extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     editAuthMode: PropTypes.bool,
     updateMetaData: PropTypes.func,
@@ -47,8 +45,6 @@ export class RallyConnectionFormFields extends Component {
 
   static defaultProps = {
     disabled: false,
-    authEnabled: false,
-    lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
     editAuthMode: false,
     updateMetaData: () => {},
@@ -77,14 +73,14 @@ export class RallyConnectionFormFields extends Component {
       <Fragment>
         <FieldElement
           name="integrationName"
-          validate={commonValidators.requiredField}
+          validate={commonValidators.btsIntegrationName}
           disabled={disabled}
           label={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
           className={cx('fields')}
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -108,7 +104,7 @@ export class RallyConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement

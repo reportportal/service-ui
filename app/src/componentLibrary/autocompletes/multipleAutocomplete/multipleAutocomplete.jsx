@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
@@ -45,6 +45,7 @@ export const MultipleAutocomplete = ({
   createWithoutConfirmation,
   options,
   getItemValidationErrorType,
+  clearItemsError,
   creatable,
   editable,
   getAdditionalCreationCondition,
@@ -61,8 +62,12 @@ export const MultipleAutocomplete = ({
   const placeholderIfEmptyField = value.length === 0 && !disabled ? placeholder : '';
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    clearItemsError();
+  }, [value]);
+
   const handleChange = (...args) => {
-    updatePosition && updatePosition();
+    updatePosition?.();
     onChange(...args);
   };
   const getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({
@@ -266,6 +271,7 @@ MultipleAutocomplete.propTypes = {
   customClass: PropTypes.string,
   createWithoutConfirmation: PropTypes.bool,
   getItemValidationErrorType: PropTypes.func,
+  clearItemsError: PropTypes.func,
   getAdditionalCreationCondition: PropTypes.func,
   highlightUnStoredItem: PropTypes.bool,
   parseInputValueFn: PropTypes.func,
@@ -301,6 +307,7 @@ MultipleAutocomplete.defaultProps = {
   customClass: '',
   createWithoutConfirmation: false,
   getItemValidationErrorType: null,
+  clearItemsError: () => {},
   getAdditionalCreationCondition: () => true,
   highlightUnStoredItem: false,
   parseInputValueFn: null,

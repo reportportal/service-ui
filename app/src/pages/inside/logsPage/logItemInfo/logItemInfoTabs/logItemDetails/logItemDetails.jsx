@@ -83,8 +83,8 @@ export class LogItemDetails extends Component {
                 status={logItem.status}
                 itemNumber={logItem.number}
                 timing={{
-                  start: logItem.startTime,
-                  end: logItem.endTime,
+                  start: new Date(logItem.startTime).getTime(),
+                  end: new Date(logItem.endTime).getTime(),
                   approxTime: logItem.approximateDuration,
                 }}
               />

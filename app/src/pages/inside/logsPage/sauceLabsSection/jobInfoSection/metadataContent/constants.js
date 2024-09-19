@@ -64,7 +64,7 @@ export const METADATA_FIELDS_CONFIG = [
   },
   {
     key: TAGS,
-    dataFormatter: (data) => (data && data.length ? JSON.stringify(data) : '-'),
+    dataFormatter: (data) => (data?.length ? JSON.stringify(data) : '-'),
     message: 'Tags',
   },
   {

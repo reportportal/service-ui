@@ -163,9 +163,9 @@ export class LaunchFiltersContainer extends Component {
 
   getSortingParams = () => {
     const { activeFilter } = this.props;
-    if (activeFilter && activeFilter.orders && activeFilter.orders.length > 0) {
+    if (activeFilter?.orders?.length > 0) {
       const currentOrder =
-        activeFilter.orders.find((v) => v.sortingColumn !== ENTITY_NUMBER) ||
+        activeFilter.orders.find((order) => order.sortingColumn !== ENTITY_NUMBER) ||
         activeFilter.orders[0];
       const { sortingColumn, isAsc } = currentOrder;
       return {

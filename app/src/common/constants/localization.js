@@ -15,6 +15,12 @@
  */
 
 import { defineMessages } from 'react-intl';
+import PropTypes from 'prop-types';
+
+export const intlMessageType = PropTypes.shape({
+  defaultMessage: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+});
 
 export const COMMON_LOCALE_KEYS = defineMessages({
   DELETE: {

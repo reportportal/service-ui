@@ -59,7 +59,7 @@ const messages = defineMessages({
     id: 'HistoryLineItemTooltip.bts',
     defaultMessage: 'BTS Links Included',
   },
-  lauchName: {
+  launchName: {
     id: 'HistoryLineItemTooltip.launchName',
     defaultMessage: 'Launch Name',
   },
@@ -76,10 +76,6 @@ export class HistoryLineItemTooltip extends Component {
     activeProject: PropTypes.string.isRequired,
     updateLaunchAttributes: PropTypes.func,
     includeAllLaunches: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    updateHistoryItemLaunchAttributes: () => {},
   };
 
   state = {
@@ -163,14 +159,14 @@ export class HistoryLineItemTooltip extends Component {
         </span>
         {includeAllLaunches && (
           <div className={cx('launch-name-block')}>
-            <span className={cx('title')}>{formatMessage(messages.lauchName)}:</span>
+            <span className={cx('title')}>{formatMessage(messages.launchName)}:</span>
             <span className={cx('launch-name-value')}>
               {pathNames.launchPathName.name} #{pathNames.launchPathName.number}
             </span>
           </div>
         )}
         {this.renderAttributes()}
-        {issue && issue.issueType && (
+        {issue?.issueType && (
           <div className={cx('defect-type-block')}>
             <span className={cx('title')}>{formatMessage(messages.defectType)}</span>
             <DefectTypeItem
@@ -184,7 +180,7 @@ export class HistoryLineItemTooltip extends Component {
         {status !== NOT_FOUND && status !== IN_PROGRESS && (
           <div className={cx('duration-block')}>
             <span className={cx('title')}>{formatMessage(messages.duration)}</span>
-            {getDuration(startTime, endTime, true)}
+            {getDuration(new Date(startTime).getTime(), new Date(endTime).getTime(), true)}
             {growthDuration && (
               <span className={cx('growth-duration')}>
                 <Triangles growthDuration={growthDuration} />
@@ -193,21 +189,18 @@ export class HistoryLineItemTooltip extends Component {
             )}
           </div>
         )}
-        {issue && issue.comment && (
+        {issue?.comment && (
           <div className={cx('defect-asset', 'comment')}>
             <span className={cx('icon')}>{Parser(CommentIcon)}</span>
             {formatMessage(messages.comment)}
           </div>
         )}
-        {issue &&
-          issue.issueType &&
-          issue.externalSystemIssues &&
-          !!issue.externalSystemIssues.length && (
-            <div className={cx('defect-asset')}>
-              <span className={cx('icon')}>{Parser(BugIcon)}</span>
-              {formatMessage(messages.bts)}
-            </div>
-          )}
+        {issue?.issueType && issue.externalSystemIssues && !!issue.externalSystemIssues.length && (
+          <div className={cx('defect-asset')}>
+            <span className={cx('icon')}>{Parser(BugIcon)}</span>
+            {formatMessage(messages.bts)}
+          </div>
+        )}
       </div>
     );
   }

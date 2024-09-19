@@ -83,7 +83,7 @@ export const FieldNumber = ({
     return width > MAX_WIDTH_CH ? `${MAX_WIDTH_CH}ch` : `${width || DEFAULT_WIDTH_CH}ch`;
   }, [placeholderValue, postfix, value]);
   const handleInputFieldClick = () => {
-    if (inputRef && inputRef.current && inputRef.current.focus) {
+    if (inputRef?.current?.focus) {
       inputRef.current.focus();
     }
     onFocus();

@@ -27,7 +27,10 @@ import styles from './itemInfoToolTip.scss';
 const cx = classNames.bind(styles);
 
 export const ItemInfoToolTip = ({ data }) => {
-  const { value: startTime, unit } = getRelativeUnits(data.startTime);
+  const start = new Date(data.startTime).getTime();
+  const end = new Date(data.endTime).getTime();
+  const { value: startTime, unit } = getRelativeUnits(start);
+
   return (
     <div className={cx('info-tooltip-wrapper')}>
       <div className={cx('title-block')}>
@@ -36,8 +39,8 @@ export const ItemInfoToolTip = ({ data }) => {
       <div className={cx('info-block')}>
         <DurationBlock
           timing={{
-            start: data.startTime,
-            end: data.endTime,
+            start,
+            end,
           }}
         />
         <span className={cx('separator')} />

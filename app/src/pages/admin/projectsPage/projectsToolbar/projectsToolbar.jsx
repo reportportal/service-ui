@@ -125,11 +125,8 @@ export class ProjectsToolbar extends Component {
 
     this.props.showScreenLockAction();
 
-    fetch(URLS.project(''), {
+    fetch(URLS.project(ids), {
       method: 'delete',
-      data: {
-        ids,
-      },
     })
       .then(() => {
         this.props.unselectAllProjectsAction();

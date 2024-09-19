@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -28,6 +28,7 @@ import { createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { FormattedDescription } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { useTracking } from 'react-tracking';
+import { EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -47,6 +48,8 @@ export const IntegrationHeader = (props) => {
     breadcrumbs,
   } = props;
 
+  const isProjectIntegrationAddLimited =
+    [EMAIL, SAUCE_LABS].includes(name) && availableProjectIntegrations.length > 0;
   const { documentationLink = '' } = details;
   const analyticsData = withButton ? 'integrations' : 'no_integrations';
 
@@ -59,7 +62,7 @@ export const IntegrationHeader = (props) => {
       {PLUGIN_DESCRIPTIONS_MAP[name]}{' '}
       <FormattedDescription
         content={formatMessage(messages.linkToDocumentation, {
-          a: (link) => createExternalLink(link, documentationLink),
+          a: (link) => createExternalLink(link, documentationLink, 'documentationLink'),
         })}
         event={PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(analyticsData, name)}
       />
@@ -72,6 +75,7 @@ export const IntegrationHeader = (props) => {
         target="_blank"
         rel="noreferrer noopener"
         href={documentationLink}
+        data-automation-id="documentationLink"
       >
         Documentation
       </a>
@@ -98,12 +102,24 @@ export const IntegrationHeader = (props) => {
         </div>
         {withButton && (
           <div className={cx('buttons-section')}>
-            <Button disabled={!isAbleToClick} onClick={onAddProjectIntegration}>
+            <Button
+              disabled={!isAbleToClick || isProjectIntegrationAddLimited}
+              onClick={onAddProjectIntegration}
+              data-automation-id="addProjectIntegrationButton"
+              title={
+                isProjectIntegrationAddLimited &&
+                formatMessage(messages.projectIntegrationAddLimited)
+              }
+            >
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
             {availableProjectIntegrations.length > 0 && isAbleToClick && (
-              <Button onClick={onResetProjectIntegration} variant="ghost">
-                {formatMessage(messages.resetToGlobalIntegrationsButton)}
+              <Button
+                onClick={onResetProjectIntegration}
+                variant="ghost"
+                data-automation-id="resetToGlobalIntegrationsButton"
+              >
+                {formatMessage(messages.projectIntegrationReset)}
               </Button>
             )}
           </div>
@@ -113,7 +129,6 @@ export const IntegrationHeader = (props) => {
   );
 };
 IntegrationHeader.propTypes = {
-  goBackHandler: PropTypes.func,
   data: PropTypes.shape({
     creationDate: PropTypes.number,
     enabled: PropTypes.bool,
@@ -141,7 +156,6 @@ IntegrationHeader.propTypes = {
   ),
 };
 IntegrationHeader.defaultProps = {
-  goBackHandler: () => {},
   onAddProjectIntegration: () => {},
   onResetProjectIntegration: () => {},
   withButton: false,

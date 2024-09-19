@@ -22,16 +22,9 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import {
-  EXCLUDING_SKIPPED,
-  TOTAL_TEST_CASES,
-  FORM_GROUP_CONTROL,
-  passingRateOptionMessages,
-} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import track from 'react-tracking';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
-import { widgetTypesMessages } from '../messages';
+import { TogglerControl, TagsControl, CheckboxControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
 
@@ -48,11 +41,15 @@ const messages = defineMessages({
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
     defaultMessage: 'You must select at least one item',
   },
+  excludeSkipped: {
+    id: 'PassingRatePerLaunchControls.excludeSkipped',
+    defaultMessage: 'Exclude Skipped tests from statistics',
+  },
 });
 
 const validators = {
   launchNames: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
+    !value?.length && formatMessage(messages.LaunchNamesValidationError),
 };
 
 @track()
@@ -88,37 +85,18 @@ export class PassingRatePerLaunchControls extends Component {
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           launchNameFilter: false,
-          includeSkipped: true,
+          excludeSkipped: false,
         },
       },
       filters: [],
     });
   }
 
-  handleIncludeSkippedChange = (includeSkipped) => {
-    const {
-      eventsInfo: { ratioBasedOnChange },
-      tracking: { trackEvent },
-      widgetType,
-    } = this.props;
-
-    const eventType = includeSkipped
-      ? 'total_test_cases'
-      : passingRateOptionMessages[EXCLUDING_SKIPPED].defaultMessage;
-
-    trackEvent(ratioBasedOnChange(widgetTypesMessages[widgetType].defaultMessage, eventType));
-  };
-
   render() {
     const {
       intl: { formatMessage },
       activeProject,
     } = this.props;
-
-    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-      label: formatMessage(passingRateOptionMessages[option]),
-      value: `${option === TOTAL_TEST_CASES}`,
-    }));
 
     return (
       <Fragment>
@@ -143,14 +121,8 @@ export class PassingRatePerLaunchControls extends Component {
             )}
           />
         </FieldProvider>
-        <FieldProvider
-          onChange={this.handleIncludeSkippedChange}
-          name="contentParameters.widgetOptions.includeSkipped"
-        >
-          <RadioGroupControl
-            options={options}
-            fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
-          />
+        <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+          <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
         </FieldProvider>
       </Fragment>
     );

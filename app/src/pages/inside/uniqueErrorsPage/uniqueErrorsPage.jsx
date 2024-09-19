@@ -18,18 +18,14 @@ import React, { Component } from 'react';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import {
-  deleteTestItemsAction,
-  launchSelector,
-  namespaceSelector,
-  parentItemSelector,
-} from 'controllers/testItem';
+import { deleteTestItemsAction, launchSelector, parentItemSelector } from 'controllers/testItem';
 import {
   clustersSelector,
   fetchClustersAction,
   loadingSelector,
   pageLoadingSelector,
   uniqueErrorsPaginationSelector,
+  NAMESPACE,
 } from 'controllers/uniqueErrors';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -37,9 +33,7 @@ import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controll
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { UniqueErrorsGrid } from 'pages/inside/uniqueErrorsPage/uniqueErrorsGrid';
 import {
-  selectClusterItemsAction,
   selectedClusterItemsSelector,
-  toggleAllClusterItemsAction,
   toggleClusterItemSelectionAction,
   unselectAllClusterItemsAction,
   validationErrorsSelector,
@@ -98,9 +92,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
   }),
   {
     toggleClusterItemSelectionAction,
-    selectClusterItemsAction,
     unselectAllClusterItemsAction,
-    toggleAllClusterItemsAction,
     showModalAction,
     onUnlinkIssue: unlinkIssueAction,
     deleteClusterItemsAction,
@@ -112,7 +104,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
 )
 @withPagination({
   paginationSelector: uniqueErrorsPaginationSelector,
-  namespaceSelector,
+  namespace: NAMESPACE,
 })
 @injectIntl
 @track({ page: UNIQUE_ERRORS_PAGE })
@@ -133,9 +125,7 @@ export class UniqueErrorsPage extends Component {
     onChangePageSize: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     toggleClusterItemSelectionAction: PropTypes.func,
-    selectClusterItemsAction: PropTypes.func,
     unselectAllClusterItemsAction: PropTypes.func,
-    toggleAllClusterItemsAction: PropTypes.func,
     showModalAction: PropTypes.func,
     validationErrors: PropTypes.object,
     deleteTestItemsAction: PropTypes.func,
@@ -162,9 +152,7 @@ export class UniqueErrorsPage extends Component {
     onChangePageSize: () => {},
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     toggleClusterItemSelectionAction: PropTypes.func,
-    selectClusterItemsAction: PropTypes.func,
     unselectAllClusterItemsAction: PropTypes.func,
-    toggleAllClusterItemsAction: PropTypes.func,
     showModalAction: PropTypes.func,
     validationErrors: {},
     deleteTestItemsAction: () => {},
@@ -215,14 +203,14 @@ export class UniqueErrorsPage extends Component {
   };
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
-    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const items = eventData?.id ? [eventData] : selectedItems;
 
     tracking.trackEvent(
       UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
           ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        eventData && eventData.id ? '' : 'actions',
+        eventData?.id ? '' : 'actions',
       ),
     );
     this.props.editDefectsAction(items, {
@@ -249,7 +237,9 @@ export class UniqueErrorsPage extends Component {
     ];
     this.props.onUnlinkIssue(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+      },
     });
   };
   deleteItems = () => {

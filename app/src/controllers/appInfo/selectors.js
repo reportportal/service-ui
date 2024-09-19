@@ -18,6 +18,7 @@ import { createSelector } from 'reselect';
 import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
+  enabledPattersSelector,
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
@@ -60,7 +61,7 @@ export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
 export const flushDataInSelector = (state) =>
-  (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;
+  apiJobsSelector(state).flushingDataTrigger?.triggersIn || null;
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
@@ -76,6 +77,8 @@ export const baseEventParametersSelector = createSelector(
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
   isAdminSelector,
+  analyzerExtensionsSelector,
+  enabledPattersSelector,
   (
     instanceId,
     buildVersion,
@@ -84,13 +87,17 @@ export const baseEventParametersSelector = createSelector(
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    analyzerExtensions,
+    enabledPatterns,
   ) => ({
     instanceId,
     buildVersion,
     userId,
     isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
+    isPatternAnalyzerEnabled:
+      !!enabledPatterns.length && String(isPatternAnalyzerEnabled) === 'true',
     projectInfoId,
     isAdmin,
+    isAnalyzerAvailable: !!analyzerExtensions.length,
   }),
 );

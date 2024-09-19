@@ -45,7 +45,7 @@ const messages = defineMessages({
 });
 
 const DASHBOARD_PAGE_ITEM_VALUE = 'All';
-const DASHBOARDS_LIMIT = 300;
+const DASHBOARDS_LIMIT = 3000;
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
@@ -61,7 +61,6 @@ export class DashboardPageHeader extends Component {
     projectId: PropTypes.string.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
-    eventsInfo: PropTypes.object,
     isLoading: PropTypes.bool,
     totalDashboards: PropTypes.number,
   };
@@ -69,7 +68,6 @@ export class DashboardPageHeader extends Component {
   static defaultProps = {
     activeItemId: '',
     dashboardsToDisplay: [],
-    eventsInfo: {},
     isLoading: true,
     totalDashboards: 0,
   };
@@ -113,7 +111,7 @@ export class DashboardPageHeader extends Component {
     );
 
   render() {
-    const { activeItemId, eventsInfo, isLoading, totalDashboards } = this.props;
+    const { activeItemId, isLoading, totalDashboards } = this.props;
 
     const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
     const disabled = isLoading || isAboveLimit;
@@ -126,7 +124,7 @@ export class DashboardPageHeader extends Component {
             value={activeItemId || DASHBOARD_PAGE_ITEM_VALUE}
           />
         </div>
-        <AddDashboardButton disabled={disabled} eventsInfo={eventsInfo} />
+        <AddDashboardButton disabled={disabled} />
       </div>
     );
   }

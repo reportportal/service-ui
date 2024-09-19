@@ -39,7 +39,7 @@ export const userName = composeValidators([
 ]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
-export const launchDescription = maxLength(1024);
+export const launchDescription = maxLength(2048);
 export const dashboardName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const createDashboardNameUniqueValidator = (dashboardItems, dashboardItem) => (name) =>
   !dashboardItems.some((dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id);
@@ -53,6 +53,8 @@ export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)])
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
+export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
+export const btsPassword = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const ruleNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createNameUniqueValidator = (itemId, items) => (newName) =>

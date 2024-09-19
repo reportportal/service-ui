@@ -130,7 +130,6 @@ ItemsListBody.propTypes = {
   selectedItems: PropTypes.array,
   setItems: PropTypes.func,
   showErrorLogs: PropTypes.bool,
-  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   eventsInfo: PropTypes.object,
   onShowErrorLogsChange: PropTypes.func,
 };
@@ -140,7 +139,6 @@ ItemsListBody.defaultProps = {
   selectedItems: [],
   setItems: () => {},
   showErrorLogs: false,
-  optionValue: '',
   eventsInfo: {},
   onShowErrorLogsChange: () => {},
 };

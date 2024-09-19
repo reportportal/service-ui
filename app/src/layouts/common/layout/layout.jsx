@@ -29,7 +29,7 @@ export class Layout extends Component {
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
     rawContent: PropTypes.bool,
-    isAdminExtensionPage: PropTypes.bool,
+    isExtensionPage: PropTypes.bool,
   };
   static defaultProps = {
     children: null,
@@ -37,7 +37,7 @@ export class Layout extends Component {
     Header: null,
     Sidebar: null,
     rawContent: false,
-    isAdminExtensionPage: false,
+    isExtensionPage: false,
   };
 
   state = {
@@ -126,7 +126,7 @@ export class Layout extends Component {
                   {header}
                   <div
                     className={cx('page-container', {
-                      'extension-page-container': this.props.isAdminExtensionPage,
+                      'extension-page-container': this.props.isExtensionPage,
                     })}
                   >
                     {children}

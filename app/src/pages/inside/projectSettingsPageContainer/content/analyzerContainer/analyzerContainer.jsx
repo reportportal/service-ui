@@ -109,7 +109,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     };
 
     try {
-      await fetch(URLS.project(projectId), { method: 'put', data });
+      await fetch(URLS.projectByName(projectId), { method: 'put', data });
       dispatch(
         showNotification({
           message: formatMessage(messages.updateSuccessNotification),

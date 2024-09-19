@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
@@ -79,6 +79,7 @@ export class ModalLayout extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    CustomFooter: PropTypes.node,
   };
   static defaultProps = {
     className: '',
@@ -90,18 +91,16 @@ export class ModalLayout extends Component {
     okButton: null,
     cancelButton: null,
     customButton: null,
-    stopOutsideClose: false,
     closeConfirmation: null,
     closeIconEventInfo: {},
     renderHeaderElements: () => {},
     renderFooterElements: () => {},
+    CustomFooter: null,
   };
   state = {
     shown: false,
     closeConfirmed: false,
-    showConfirmation: !!(
-      this.props.closeConfirmation && this.props.closeConfirmation.confirmSubmit
-    ),
+    showConfirmation: !!this.props.closeConfirmation?.confirmSubmit,
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -122,8 +121,7 @@ export class ModalLayout extends Component {
       (e.ctrlKey && e.keyCode === ENTER_KEY_CODE) ||
       (e.metaKey && e.keyCode === ENTER_KEY_CODE)
     ) {
-      (okButton && okButton.onClick && okButton.onClick(this.closeModalWithOk)) ||
-        (customButton && customButton.onClick && customButton.onClick(this.closeModalWithOk));
+      okButton?.onClick?.(this.closeModalWithOk) || customButton?.onClick?.(this.closeModalWithOk);
     }
   };
   onClickModal = (e) => {
@@ -154,7 +152,7 @@ export class ModalLayout extends Component {
 
   closeModalWithOk = () => {
     const { closeConfirmation } = this.props;
-    if (closeConfirmation && closeConfirmation.confirmSubmit) {
+    if (closeConfirmation?.confirmSubmit) {
       this.closeModalWithConfirmation();
     } else {
       this.setState({ shown: false });
@@ -176,7 +174,7 @@ export class ModalLayout extends Component {
     const { closeConfirmedCallback, withCheckbox } = this.props.closeConfirmation;
 
     if (withCheckbox && closeConfirmed) {
-      closeConfirmedCallback && closeConfirmedCallback();
+      closeConfirmedCallback?.();
       this.setState({ shown: false });
       return;
     }
@@ -195,6 +193,7 @@ export class ModalLayout extends Component {
       children,
       closeConfirmation,
       renderFooterElements,
+      CustomFooter,
     } = this.props;
     const footerProps = {
       warningMessage,
@@ -203,21 +202,19 @@ export class ModalLayout extends Component {
       cancelButton,
       customButton,
       renderFooterElements,
-      confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
-      confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
-      confirmationWarningClassName:
-        closeConfirmation && closeConfirmation.confirmationWarningClassName,
+      confirmationMessage: closeConfirmation?.confirmationMessage,
+      confirmationWarning: closeConfirmation?.confirmationWarning,
+      confirmationWarningClassName: closeConfirmation?.confirmationWarningClassName,
       showConfirmation: this.state.showConfirmation,
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
-      confirmWithCheckbox: closeConfirmation && closeConfirmation.withCheckbox,
+      confirmWithCheckbox: closeConfirmation?.withCheckbox,
       submitConfirmed: !(
-        closeConfirmation &&
-        closeConfirmation.withCheckbox &&
-        closeConfirmation.confirmSubmit &&
+        closeConfirmation?.withCheckbox &&
+        closeConfirmation?.confirmSubmit &&
         !this.state.closeConfirmed
       ),
-      confirmEvent: closeConfirmation && closeConfirmation.eventInfo,
+      confirmEvent: closeConfirmation?.eventInfo,
     };
 
     return (
@@ -247,12 +244,20 @@ export class ModalLayout extends Component {
                       {status !== 'exited' ? children : null}
                     </ModalContent>
 
-                    <ModalFooter
-                      {...footerProps}
-                      onClickOk={this.closeModalWithOk}
-                      closeHandler={this.onClickCancelButton}
-                      className={this.props.className}
-                    />
+                    {CustomFooter ? (
+                      <CustomFooter
+                        {...footerProps}
+                        onClickOk={this.closeModalWithOk}
+                        closeHandler={this.onClickCancelButton}
+                      />
+                    ) : (
+                      <ModalFooter
+                        {...footerProps}
+                        onClickOk={this.closeModalWithOk}
+                        closeHandler={this.onClickCancelButton}
+                        className={this.props.className}
+                      />
+                    )}
                   </div>
                 )}
               </CSSTransition>

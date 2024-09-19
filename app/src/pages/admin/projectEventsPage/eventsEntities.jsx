@@ -83,6 +83,8 @@ import {
   IMPORT as EVENT_ACTIONS_IMPORT,
   START_IMPORT,
   FINISH_IMPORT,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -142,8 +144,6 @@ export class EventsEntities extends Component {
   };
 
   static defaultProps = {
-    loading: false,
-    events: [],
     filterValues: {},
   };
 
@@ -246,6 +246,14 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[DELETE_LAUNCH]),
               value: DELETE_LAUNCH,
+            },
+            {
+              label: intl.formatMessage(actionMessages[MARK_LAUNCH_AS_IMPORTANT]),
+              value: MARK_LAUNCH_AS_IMPORTANT,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UNMARK_LAUNCH_AS_IMPORTANT]),
+              value: UNMARK_LAUNCH_AS_IMPORTANT,
             },
             {
               label: intl.formatMessage(actionMessages[UPDATE_PROJECT]),

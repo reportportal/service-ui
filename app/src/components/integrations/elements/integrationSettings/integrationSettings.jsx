@@ -19,8 +19,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LDAP } from 'common/constants/pluginNames';
 import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import {
@@ -35,7 +37,6 @@ import {
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { redirect } from 'redux-first-router';
 import { INTEGRATION_FORM } from './integrationForm/constants';
@@ -80,7 +81,12 @@ export const IntegrationSettings = (props) => {
   const testIntegrationConnection = useCallback(() => {
     if ('id' in props.data && !props.preventTestConnection) {
       setLoading(true);
-      fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
+      const { isGlobal } = props;
+      const fetchConnection = isGlobal
+        ? fetch(URLS.testGlobalIntegrationConnection(props.data.id))
+        : fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id));
+
+      fetchConnection
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -126,11 +132,12 @@ export const IntegrationSettings = (props) => {
     isGlobal,
   } = props;
   const pluginName = data.integrationType?.name;
+  const isLdap = pluginName === LDAP;
 
   return (
     <div className={cx('integration-settings')}>
       {loading ? (
-        <BubblesPreloader customClassName={cx('center')} />
+        <BubblesLoader className={cx('center')} />
       ) : (
         <>
           <ConnectionSection
@@ -144,17 +151,19 @@ export const IntegrationSettings = (props) => {
             isGlobal={isGlobal}
             isEditable={isEditable}
           />
-          <IntegrationForm
-            form={formKey}
-            data={data}
-            connected={connected}
-            pluginName={pluginName}
-            isGlobal={isGlobal}
-            onSubmit={onUpdate}
-            formFieldsComponent={formFieldsComponent}
-            isEmptyConfiguration={isEmptyConfiguration}
-            isEditable={isEditable}
-          />
+          {!isLdap && (
+            <IntegrationForm
+              form={formKey}
+              data={data}
+              connected={connected}
+              pluginName={pluginName}
+              isGlobal={isGlobal}
+              onSubmit={onUpdate}
+              formFieldsComponent={formFieldsComponent}
+              isEmptyConfiguration={isEmptyConfiguration}
+              isEditable={isEditable}
+            />
+          )}
         </>
       )}
     </div>

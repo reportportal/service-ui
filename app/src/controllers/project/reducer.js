@@ -38,7 +38,10 @@ import {
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
 } from './constants';
 
-export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
+export const projectInfoReducer = (
+  state = PROJECT_INFO_INITIAL_STATE,
+  { type = '', payload = {} },
+) => {
   switch (type) {
     case FETCH_PROJECT_SUCCESS:
       return { ...state, ...payload };
@@ -48,7 +51,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         configuration: {
           ...state.configuration,
           attributes: {
-            ...((state.configuration && state.configuration.attributes) || {}),
+            ...(state.configuration?.attributes || {}),
             ...payload,
           },
         },
@@ -128,7 +131,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
 
 export const projectPreferencesReducer = (
   state = PROJECT_PREFERENCES_INITIAL_STATE,
-  { type, payload, meta: { oldId } = {} },
+  { type = '', payload = {}, meta: { oldId } = {} },
 ) => {
   switch (type) {
     case FETCH_PROJECT_PREFERENCES_SUCCESS:
@@ -144,7 +147,7 @@ export const projectPreferencesReducer = (
   }
 };
 
-export const projectInfoLoadingReducer = (state = false, { type }) => {
+export const projectInfoLoadingReducer = (state = false, { type = '' }) => {
   switch (type) {
     case FETCH_PROJECT:
       return true;

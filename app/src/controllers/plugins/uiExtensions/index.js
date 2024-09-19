@@ -1,9 +1,7 @@
-export { fetchUiExtensions, fetchExtensionsMetadata } from './sagas';
+export { fetchExtensionManifests, fetchExtensionManifest } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
-  uiExtensionPagesSelector,
-  extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionAdminSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
@@ -19,5 +17,6 @@ export {
   makeDecisionDefectTypeAddonSelector,
   logStackTraceAddonSelector,
   testItemDetailsAddonSelector,
+  uiExtensionProjectPagesSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

@@ -21,39 +21,4 @@ export const LOGIN_PAGE_EVENTS = {
     action: 'Click on News Link on Page Login',
     label: link,
   }),
-  CLICK_GITHUB_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Github on Welcome screen',
-    label: 'Transition to Github',
-  },
-  CLICK_FACEBOOK_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Facebook on Welcome screen',
-    label: 'Transition to Facebook',
-  },
-  CLICK_TWEETER_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Tweeter on Welcome screen',
-    label: 'Transition to Tweeter',
-  },
-  CLICK_YOUTUBE_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon YouTube on Welcome screen',
-    label: 'Transition to YouTube',
-  },
-  CLICK_LINKEDIN_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Linkedin on Welcome screen',
-    label: 'Transition to Linkedin',
-  },
-  CLICK_SLACK_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Slack on Welcome screen',
-    label: 'Transition to Slack',
-  },
-  CLICK_MAIL_ICON: {
-    category: LOGIN_PAGE,
-    action: 'Click on Icon Mail on Welcome screen',
-    label: 'Arise Mail window',
-  },
 };

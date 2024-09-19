@@ -77,6 +77,7 @@ export class FilterAdd extends Component {
     valid: PropTypes.bool.isRequired,
     name: PropTypes.string,
     eventsInfo: PropTypes.object,
+    activeProject: PropTypes.string.isRequired,
   };
 
   static defaultProps = {

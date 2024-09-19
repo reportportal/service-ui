@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
+import { destroy, getFormInitialValues, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { activeProjectSelector } from 'controllers/user';
@@ -31,10 +31,17 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
-import { prepareWidgetDataForSubmit } from '../common/utils';
+import {
+  getCreatedWidgetLevelsCount,
+  getIsExcludeSkipped,
+  getModifiedFieldsLabels,
+  prepareWidgetDataForSubmit,
+} from '../common/utils';
 import { FORM_APPEARANCE_MODE_LOCKED } from '../common/widgetControls/controls/filtersControl/common/constants';
 import styles from './editWidgetModal.scss';
 
@@ -56,6 +63,8 @@ const messages = defineMessages({
   (state) => ({
     projectId: activeProjectSelector(state),
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
+    initiallyFilledWidgetSettings: getFormInitialValues(WIDGET_WIZARD_FORM)(state),
+    activeDashboardId: activeDashboardIdSelector(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
     valid: isValid(WIDGET_WIZARD_FORM)(state),
   }),
@@ -78,12 +87,15 @@ export class EditWidgetModal extends Component {
     dirty: PropTypes.bool.isRequired,
     valid: PropTypes.bool.isRequired,
     widgetSettings: PropTypes.object,
+    activeDashboardId: PropTypes.number,
+    initiallyFilledWidgetSettings: PropTypes.object,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       widget: PropTypes.object,
       eventsInfo: PropTypes.object,
     }),
     projectId: PropTypes.string,
+    eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -97,6 +109,7 @@ export class EditWidgetModal extends Component {
     },
     widgetSettings: {},
     projectId: '',
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -133,18 +146,23 @@ export class EditWidgetModal extends Component {
 
   onSave = (closeModal) => {
     const {
+      tracking: { trackEvent },
       data: { onConfirm, widget },
       intl: { formatMessage },
       widgetSettings,
       projectId,
+      initiallyFilledWidgetSettings,
+      activeDashboardId,
     } = this.props;
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
+    const { widgetType, contentParameters, filterIds } = data;
+
     const isForceUpdateNeeded =
-      !isEqual(widget.contentParameters, data.contentParameters) ||
+      !isEqual(widget.contentParameters, contentParameters) ||
       !isEqual(
         widget.appliedFilters.map((filter) => filter.id.toString()),
-        data.filterIds,
+        filterIds,
       );
 
     this.props.showScreenLockAction();
@@ -153,6 +171,24 @@ export class EditWidgetModal extends Component {
       data,
     })
       .then(() => {
+        const { name } = data;
+        trackEvent(
+          WIDGETS_EVENTS.clickOnSaveWidget({
+            type: widgetType,
+            dashboardId: activeDashboardId,
+            modifiedFields: getModifiedFieldsLabels(
+              initiallyFilledWidgetSettings?.contentParameters,
+              data?.contentParameters,
+            ),
+            isWidgetNameChanged: name !== initiallyFilledWidgetSettings?.name,
+            isWidgetDescriptionChanged:
+              data?.description !== initiallyFilledWidgetSettings?.description,
+            levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
+            isExcludeSkippedTests: getIsExcludeSkipped(widgetType, data),
+            isEditModal: true,
+          }),
+        );
+
         this.props.hideScreenLockAction();
         closeModal();
         onConfirm(isForceUpdateNeeded);
@@ -191,14 +227,14 @@ export class EditWidgetModal extends Component {
   };
 
   preprocessInputData = (data) => {
-    if (this.widgetInfo && this.widgetInfo.convertInput) {
+    if (this.widgetInfo?.convertInput) {
       return this.widgetInfo.convertInput(data);
     }
     return data;
   };
 
   preprocessOutputData = (data) => {
-    if (this.widgetInfo && this.widgetInfo.convertOutput) {
+    if (this.widgetInfo?.convertOutput) {
       return this.widgetInfo.convertOutput(data);
     }
     return data;

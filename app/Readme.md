@@ -4,13 +4,13 @@
 
 ## Installation
 
-For local development, you need a [node.js](https://nodejs.org)(minimum required version 12, recommended - 14).
+For local development, you need a [node.js](https://nodejs.org)(version 20 is recommended).
 
 To launch the development environment, follow these steps:
 
 1.  open console from the project root
 2.  run the command `cd app`
-3.  run the command `npm install`
+3.  run the command `npm install --legacy-peer-deps`
 4.  to proxy requests to the server, create `.env` file in `app` folder
 
     ```

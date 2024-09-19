@@ -47,6 +47,8 @@ import {
   CHANGE_ROLE,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
+  MARK_LAUNCH_AS_IMPORTANT,
+  UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
@@ -123,7 +125,7 @@ export class ProjectActivity extends Component {
   };
 
   getDayKey = (lastModified) => {
-    const date = new Date(parseFloat(lastModified));
+    const date = new Date(lastModified);
     const dateWoTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return Date.parse(dateWoTime);
   };
@@ -133,7 +135,7 @@ export class ProjectActivity extends Component {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).valueOf();
     const yesterday = new Date(today - 86400000).valueOf();
-    const dt = new Date(parseFloat(dateKey));
+    const dt = new Date(dateKey);
     if (dateKey === today) {
       return intl.formatMessage(COMMON_LOCALE_KEYS.today);
     } else if (dateKey === yesterday) {
@@ -179,6 +181,8 @@ export class ProjectActivity extends Component {
       case START_LAUNCH:
       case FINISH_LAUNCH:
       case DELETE_LAUNCH:
+      case MARK_LAUNCH_AS_IMPORTANT:
+      case UNMARK_LAUNCH_AS_IMPORTANT:
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
         return activity.objectType === UPDATE_NOTIFICATIONS ? (
@@ -223,7 +227,7 @@ export class ProjectActivity extends Component {
               {ActivityComponent}
               <AbsRelTime
                 setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}
-                startTime={+activity.lastModified}
+                startTime={new Date(activity.lastModified).getTime()}
                 customClass={cx('time')}
               />
             </div>

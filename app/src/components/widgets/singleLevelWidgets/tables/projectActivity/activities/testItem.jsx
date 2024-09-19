@@ -129,11 +129,7 @@ export class TestItem extends Component {
           ? intl.formatMessage(messages.fromItem)
           : intl.formatMessage(messages.toItem)}
         <Link
-          to={getTestItemPageLink(
-            activity.projectName,
-            pathToTestItem,
-            this.state.testItem && this.state.testItem.type,
-          )}
+          to={getTestItemPageLink(activity.projectName, pathToTestItem, this.state.testItem?.type)}
           className={cx('link')}
           target="_blank"
         >

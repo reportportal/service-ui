@@ -17,6 +17,7 @@
 export const LABEL_WIDTH = 140;
 
 export const RULE_NAME_FIELD_KEY = 'ruleName';
+export const RULE_DETAILS_FIELD_KEY = 'ruleDetails';
 export const RECIPIENTS_FIELD_KEY = 'recipients';
 export const INFORM_OWNER_FIELD_KEY = 'informOwner';
 export const SEND_CASE_FIELD_KEY = 'sendCase';
@@ -24,6 +25,8 @@ export const LAUNCH_NAMES_FIELD_KEY = 'launchNames';
 export const ATTRIBUTES_FIELD_KEY = 'attributes';
 export const ENABLED_FIELD_KEY = 'enabled';
 export const ATTRIBUTES_OPERATOR_FIELD_KEY = 'attributesOperator';
+export const FIELD_TYPE_TEXT = 'text';
+export const FIELD_TYPE_MULTILINE_TEXT = 'multilineText';
 
 export const LAUNCH_CASES = {
   ALWAYS: 'always',

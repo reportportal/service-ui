@@ -64,6 +64,12 @@
     }
   }
 
+  &.color-white {
+    background-color: $COLOR--topaz;
+    border-color: $COLOR--topaz;
+    color: $COLOR--white-two;
+  }
+
   &.color-red {
     color: $COLOR--tomato;
     vertical-align: middle;

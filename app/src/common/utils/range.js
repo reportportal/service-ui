@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export function range(start = 0, stop, step = 1) {
+export function range(start = 0, stop = 0, step = 1) {
   if (arguments.length <= 1) {
     stop = start; // eslint-disable-line
   }

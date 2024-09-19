@@ -94,6 +94,7 @@ const getClickOnApplyBulkEventCreator = (place) => (
   issueActionType,
   items,
   issueType,
+  linkName,
 ) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
     place,
@@ -105,6 +106,7 @@ const getClickOnApplyBulkEventCreator = (place) => (
     element_name: getMakeDecisionElementName(issueActionType),
     switcher: getSwitchedDefectTypes(items, issueType),
     type: ISSUE_TYPE_MAP[issueActionType] || undefined,
+    link_name: linkName,
   };
 };
 

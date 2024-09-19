@@ -29,8 +29,7 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
   const item = modalState.suggestChoice;
   const { logs, suggestRs } = item;
 
-  const defectFromTIGroup =
-    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const defectFromTIGroup = itemData.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const onClickExternalLinkEvent = () => {
     trackEvent(eventsInfo.getClickItemLinkEvent(defectFromTIGroup, 'ml_suggestions'));
@@ -62,7 +61,6 @@ MachineLearningSuggestions.propTypes = {
   eventsInfo: PropTypes.object,
 };
 MachineLearningSuggestions.defaultProps = {
-  items: [],
   itemData: {},
   eventsInfo: {},
 };

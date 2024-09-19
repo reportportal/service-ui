@@ -93,7 +93,6 @@ export class ProjectEntities extends Component {
   };
 
   static defaultProps = {
-    loading: false,
     filterValues: {},
   };
   getEntities = () => {

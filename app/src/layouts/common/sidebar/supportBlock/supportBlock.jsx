@@ -59,7 +59,7 @@ export const SupportBlock = ({ options }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (!wrapperRef?.current?.contains(event.target)) {
         setModalShown(false);
       }
     };

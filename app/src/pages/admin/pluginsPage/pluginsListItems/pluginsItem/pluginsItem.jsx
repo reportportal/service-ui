@@ -49,7 +49,6 @@ export class PluginsItem extends Component {
     onToggleActive: PropTypes.func.isRequired,
     showToggleConfirmationModal: PropTypes.func.isRequired,
     toggleable: PropTypes.bool,
-    showNotification: PropTypes.func,
     onClick: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -59,7 +58,6 @@ export class PluginsItem extends Component {
 
   static defaultProps = {
     toggleable: true,
-    showNotification: () => {},
     onClick: () => {},
   };
 

@@ -98,7 +98,7 @@ export class EntitiesSelector extends Component {
                   <div
                     key={entity.id}
                     className={cx('entity-item', {
-                      'sub-item': entity.meta && entity.meta.subItem,
+                      'sub-item': entity.meta?.subItem,
                     })}
                   >
                     <InputCheckbox
@@ -106,7 +106,7 @@ export class EntitiesSelector extends Component {
                       value={entity.active}
                       onChange={this.handleChange(entity)}
                     >
-                      {(entity.meta && entity.meta.longName) || entity.title}
+                      {entity.meta?.longName || entity.title}
                     </InputCheckbox>
                   </div>
                 ),

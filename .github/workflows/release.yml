@@ -26,14 +26,14 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: '14.19.1'
+          node-version: '20.11.0'
 
       - name: JS Build
         env:
           NODE_OPTIONS: '--max_old_space_size=2048'
 
         run: |
-          npm --prefix ${{ env.UI_BUILD_REACT }} ci
+          npm --prefix ${{ env.UI_BUILD_REACT }} ci --legacy-peer-deps
           npm --prefix ${{ env.UI_BUILD_REACT }} run lint
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
@@ -58,7 +58,7 @@ jobs:
       - name: Tag release
         id: tagRelease
         run: |
-          git tag -a v${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
+          git tag -a ${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
           git push --tags
 
       - name: Create Release
@@ -67,7 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.event.inputs.version }}
+          tag_name: ${{ github.event.inputs.version }}
           release_name: Release ${{ github.event.inputs.version }}
           draft: false
           prerelease: false

@@ -20,3 +20,5 @@ export { LaunchMergeModal } from './launchMergeModal';
 export { LaunchFinishForceModal } from './launchFinishForceModal';
 export { LaunchAnalysisModal } from './launchAnalysisModal';
 export { LaunchPatternAnalysisModal } from './launchPatternAnalysisModal';
+export { ImportLaunchModal } from './importLaunchModal';
+export { DeleteLaunchModal } from './deleteLaunchModal';

@@ -179,7 +179,6 @@ export const DefectTypeRow = ({
 };
 DefectTypeRow.propTypes = {
   data: defectTypeShape,
-  parentType: defectTypeShape.isRequired,
   group: PropTypes.arrayOf(defectTypeShape),
   isPossibleUpdateSettings: PropTypes.bool.isRequired,
 };

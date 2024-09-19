@@ -45,7 +45,6 @@ export class WidgetTypeSelector extends Component {
     intl: PropTypes.object.isRequired,
     value: PropTypes.string,
     widgets: PropTypes.array,
-    onChange: PropTypes.func.isRequired,
     initializeWizardForm: PropTypes.func.isRequired,
     touched: PropTypes.bool.isRequired,
     error: PropTypes.string,

@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import { createHashHistory } from 'history';
@@ -27,6 +27,7 @@ import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 import 'c3/c3.css';
+import '@reportportal/ui-kit/dist/style.css';
 
 import { initPluginRegistration } from 'controllers/plugins/uiExtensions/registerPlugin';
 
@@ -55,11 +56,10 @@ const { store, initialDispatch } = configureStore(queryParseHistory, window.REDU
 initPluginRegistration(store);
 
 const rerenderApp = (TheApp) => {
-  render(
+  createRoot(document.querySelector('#app')).render(
     <Provider store={store}>
       <TheApp initialDispatch={initialDispatch} />
     </Provider>,
-    document.querySelector('#app'),
   );
 };
 

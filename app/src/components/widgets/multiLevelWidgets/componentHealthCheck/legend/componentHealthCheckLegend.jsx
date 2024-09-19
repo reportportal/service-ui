@@ -17,17 +17,14 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { ComponentHealthCheckColorScheme } from './componentHealthCheckColorScheme';
 import styles from './componentHealthCheckLegend.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class ComponentHealthCheckLegend extends PureComponent {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     breadcrumbs: PropTypes.array,
     activeBreadcrumbs: PropTypes.array,
     onClickBreadcrumbs: PropTypes.func,

@@ -39,7 +39,6 @@ export class FiltersItem extends PureComponent {
   static defaultProps = {
     search: '',
     activeFilterId: '',
-    item: {},
     editable: false,
     onEdit: () => {},
   };

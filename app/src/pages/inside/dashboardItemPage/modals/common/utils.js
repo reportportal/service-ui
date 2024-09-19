@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
+import equal from 'fast-deep-equal';
+import {
+  COMPONENT_HEALTH_CHECK,
+  COMPONENT_HEALTH_CHECK_TABLE,
+  CUMULATIVE_TREND,
+} from 'common/constants/widgetTypes';
 import { DEFAULT_WIDGET_CONFIG, CUMULATIVE_TREND_CHART_WIDGET_CONFIG } from './constants';
 
 export const isWidgetDataAvailable = (data) => data.content && Object.keys(data.content).length;
@@ -47,4 +52,55 @@ export const getUpdatedWidgetsList = (oldWidgets, newWidget) => {
   newWidgets.unshift(newWidget);
 
   return newWidgets;
+};
+
+const compareFields = (defaultValues, changedValues, parentKey = '') => {
+  const modifiedFields = [];
+
+  Object.keys(defaultValues).forEach((key) => {
+    const fullKey = parentKey ? `${parentKey}.${key}` : key;
+
+    if (
+      defaultValues[key] &&
+      typeof defaultValues[key] === 'object' &&
+      !Array.isArray(defaultValues[key])
+    ) {
+      const nestedDifferences = compareFields(
+        defaultValues[key],
+        changedValues[key] || {},
+        fullKey,
+      );
+      modifiedFields.push(...nestedDifferences);
+    } else if (!equal(defaultValues[key], changedValues[key])) {
+      modifiedFields.push(fullKey);
+    }
+  });
+
+  return modifiedFields;
+};
+
+export const getModifiedFieldsLabels = (defaultFormValues, changedFormValues) => {
+  return compareFields(
+    { contentParameters: defaultFormValues },
+    { contentParameters: changedFormValues },
+  );
+};
+
+export const getCreatedWidgetLevelsCount = (widgetType, data) => {
+  if (
+    ![CUMULATIVE_TREND, COMPONENT_HEALTH_CHECK, COMPONENT_HEALTH_CHECK_TABLE].includes(widgetType)
+  )
+    return null;
+  const {
+    contentParameters: { widgetOptions },
+  } = data;
+  return widgetOptions.attributes?.length || widgetOptions.attributeKeys?.length || 1;
+};
+
+export const getIsExcludeSkipped = (widgetType, data) => {
+  if (![COMPONENT_HEALTH_CHECK, COMPONENT_HEALTH_CHECK_TABLE].includes(widgetType)) return null;
+  const {
+    contentParameters: { widgetOptions },
+  } = data;
+  return widgetOptions.excludeSkipped.toString();
 };

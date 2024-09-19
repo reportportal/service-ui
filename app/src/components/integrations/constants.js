@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs.svg';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
+// Constants for plugins that do not provide UI extensions in their bundles
 export const PLUGIN_NAME_TITLES = {
   [JIRA]: 'JIRA Server',
   [RALLY]: 'RALLY',

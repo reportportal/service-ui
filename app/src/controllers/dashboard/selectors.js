@@ -41,3 +41,5 @@ export const totalDashboardsSelector = (state) =>
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
 export const querySelector = createQueryParametersSelector();
+
+export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
@@ -27,13 +27,16 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from 'controllers/uniqueErrors';
 import { querySelector } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
+const MATCHED_TESTS_COLUMN_ID = 'matchedTests';
 
-export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
+export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }) => {
   const { formatMessage } = useIntl();
   const query = useSelector(querySelector);
   const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
@@ -60,15 +63,36 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
     },
   ];
 
-  if (extensions.length) {
-    extensions.forEach((extension) => {
-      columns.push({
+  const memoizedExtensionsColumns = useMemo(() => {
+    if (!extensions.length) return [];
+
+    return extensions.map((extension) => {
+      const MemoizedComponent = (params) => (
+        <div className={cx('extension-col')}>
+          <ExtensionLoader extension={extension} {...params} />
+        </div>
+      );
+
+      return {
         title: {
-          component: (params) => <ExtensionLoader extension={extension} {...params} />,
+          component: MemoizedComponent,
         },
-      });
+      };
     });
-  }
+  }, [extensions]);
+
+  columns.push(...memoizedExtensionsColumns, {
+    id: MATCHED_TESTS_COLUMN_ID,
+    title: {
+      full: 'MATCHED TESTS',
+    },
+    activeSorting: true,
+    sortable: true,
+    customProps: {
+      gridHeaderCellStyles: cx('matched-header'),
+    },
+    sortingEventInfo: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_MATCHED_TESTS_HEADER_CELL,
+  });
 
   return (
     <>
@@ -95,13 +119,19 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
     </>
   );
 };
-UniqueErrorsGrid.propTypes = {
+UniqueErrorsGridWrapped.propTypes = {
   parentLaunch: PropTypes.object,
   data: PropTypes.array,
   loading: PropTypes.bool,
 };
-UniqueErrorsGrid.defaultProps = {
+UniqueErrorsGridWrapped.defaultProps = {
   parentLaunch: {},
   data: [],
   loading: false,
 };
+
+export const UniqueErrorsGrid = withSortingURL({
+  defaultFields: [MATCHED_TESTS_COLUMN_ID],
+  defaultDirection: SORTING_DESC,
+  namespace: NAMESPACE,
+})(UniqueErrorsGridWrapped);

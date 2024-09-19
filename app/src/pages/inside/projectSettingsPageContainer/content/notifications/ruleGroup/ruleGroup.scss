@@ -1,0 +1,81 @@
+.rule-section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  height: 44px;
+  margin-bottom: 24px;
+
+  .disabled-plugin {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 12px;
+    line-height: 20px;
+    color: $COLOR--almost-black;
+    margin-top: 4px;
+    display: flex;
+    gap: 8px;
+
+    p {
+      margin-top: 4px;
+    }
+
+    & .icon > svg {
+      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .integrate-configurations {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: $COLOR--almost-black;
+  }
+}
+
+.add-rule {
+  width: 141px;
+  height: 36px;
+  padding: 7px 0px 7px 64px;
+  margin-top: 6px;
+}
+
+.rule-section-layout {
+  margin-top: 26px;
+}
+
+.capitalized {
+  text-transform: capitalize;
+}
+
+.info-tooltip {
+  font-size: 11px;
+  gap: 8px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  line-height: 16px;
+}
+
+.notifications-container {
+  margin-top: 24px;
+  width: 100%;
+  max-width: initial;
+}
+
+.rule-group-list {
+  max-width: initial;
+}
+
+.name-wrapper {
+  flex: 1;
+  width: 0;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+  color: $COLOR--almost-black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

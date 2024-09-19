@@ -63,7 +63,7 @@ export class ServiceVersionsBlockWithData extends Component {
 
     Object.keys(appInfo).forEach((serviceKey) => {
       const serviceValue = appInfo[serviceKey];
-      if (!(serviceValue && serviceValue.build)) return false;
+      if (!serviceValue?.build) return false;
 
       const currentVersion = serviceValue.build.version;
 

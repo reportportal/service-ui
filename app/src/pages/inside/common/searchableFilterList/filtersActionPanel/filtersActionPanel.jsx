@@ -50,10 +50,10 @@ export class FiltersActionPanel extends Component {
     intl: PropTypes.object,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     filter: PropTypes.string,
-    filters: PropTypes.array,
     invalid: PropTypes.bool,
     customBlock: PropTypes.node,
     change: PropTypes.func,
+    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -61,9 +61,9 @@ export class FiltersActionPanel extends Component {
     invalid: false,
     filter: null,
     value: null,
-    filters: [],
     customBlock: null,
     change: () => {},
+    onFilterChange: () => {},
   };
 
   componentDidMount() {

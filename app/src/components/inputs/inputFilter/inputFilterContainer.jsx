@@ -22,13 +22,13 @@ import { filterValueShape } from 'components/filterEntities';
 import { debounce } from 'common/utils/debounce';
 import { InputFilter } from './inputFilter';
 
-const parseFilterString = (value = '', key) => ({
+const parseFilterString = (key, value = '') => ({
   [key]: {
     value,
   },
 });
 
-const formatFilterString = (filterString = {}, key) =>
+const formatFilterString = (key, filterString = {}) =>
   filterString[key] ? filterString[key].value : '';
 
 export class InputFilterContainer extends Component {
@@ -55,7 +55,7 @@ export class InputFilterContainer extends Component {
       return {
         values: props.filterValues,
         prevValues: props.filterValues,
-        filterString: formatFilterString(props.filterValues, id),
+        filterString: formatFilterString(id, props.filterValues),
       };
     }
     return null;
@@ -69,7 +69,7 @@ export class InputFilterContainer extends Component {
 
   debouncedChangeHandler = debounce((value) => {
     const { id } = this.props;
-    return this.props.onChange({ ...this.props.filterValues, ...parseFilterString(value, id) });
+    return this.props.onChange({ ...this.props.filterValues, ...parseFilterString(id, value) });
   }, 1000);
 
   handleFilterChange = (values) => {

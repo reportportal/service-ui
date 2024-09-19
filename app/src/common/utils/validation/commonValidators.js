@@ -43,6 +43,7 @@ export const btsIntegrationName = bindMessageToValidator(
 );
 export const btsProjectKey = bindMessageToValidator(validate.btsProject, 'btsProjectKeyHint');
 export const btsProjectId = bindMessageToValidator(validate.btsProject, 'btsProjectIdHint');
+export const btsBoardId = bindMessageToValidator(validate.btsProject, 'btsBoardIdHint');
 
 export const email = bindMessageToValidator(validate.requiredEmail, 'emailHint');
 export const login = bindMessageToValidator(validate.login, 'loginHint');

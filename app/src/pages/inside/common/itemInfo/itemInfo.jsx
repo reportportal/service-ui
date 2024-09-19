@@ -30,6 +30,7 @@ import {
 } from 'controllers/plugins';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -37,7 +38,8 @@ import { getSauceLabsConfig } from 'components/integrations/integrationProviders
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
+import StarIcon from 'common/img/star-inline.svg';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -81,7 +83,6 @@ export class ItemInfo extends Component {
     customProps: PropTypes.object,
     isStepLevel: PropTypes.bool,
     hideEdit: PropTypes.bool,
-    widgetView: PropTypes.bool,
     extensions: PropTypes.arrayOf(extensionType),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -103,7 +104,6 @@ export class ItemInfo extends Component {
     },
     isStepLevel: false,
     hideEdit: false,
-    widgetView: false,
     onClickRetries: () => {},
     refFunction: null,
     extensions: [],
@@ -122,12 +122,9 @@ export class ItemInfo extends Component {
     const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
     if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
       return (
-        <img
-          className={cx('sauce-labs-label')}
-          src={SauceLabsIcon}
-          alt={PLUGIN_NAME_TITLES[SAUCE_LABS]}
-          title={PLUGIN_NAME_TITLES[SAUCE_LABS]}
-        />
+        <i className={cx('sauce-labs-label')} title={PLUGIN_NAME_TITLES[SAUCE_LABS]}>
+          {Parser(SauceLabsIcon)}
+        </i>
       );
     }
     return null;
@@ -147,13 +144,15 @@ export class ItemInfo extends Component {
       hideDescription,
     } = this.props;
 
-    const autoAnalysisLabel =
-      value.analysing &&
-      value.analysing.find(
-        (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
-      );
-    const patternAnalyzingLabel =
-      value.analysing && value.analysing.find((item) => item === ANALYZER_TYPES.PATTERN_ANALYSER);
+    const startTime = new Date(value.startTime).getTime();
+    const endTime = new Date(value.endTime).getTime();
+
+    const autoAnalysisLabel = value.analysing?.find(
+      (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
+    );
+    const patternAnalyzingLabel = value.analysing?.find(
+      (item) => item === ANALYZER_TYPES.PATTERN_ANALYSER,
+    );
 
     const onNameClick = () => {
       const { events } = customProps;
@@ -198,6 +197,12 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
+          {value.retentionPolicy === RETENTION_POLICY.IMPORTANT && (
+            <span className={cx('retention-policy')}>
+              <div className={cx('star-icon')}>{Parser(StarIcon)}</div>
+              Important
+            </span>
+          )}
           {value.status !== IN_PROGRESS &&
             customProps.withExtensions &&
             extensions.map((extension) => (
@@ -208,23 +213,21 @@ export class ItemInfo extends Component {
                 withPreloader
               />
             ))}
-          {value.startTime && (
+          {!!startTime && (
             <span className={cx('duration-block')}>
               <DurationBlock
                 type={value.type}
                 status={value.status}
                 itemNumber={value.number}
                 timing={{
-                  start: value.startTime,
-                  end: value.endTime,
+                  start: startTime,
+                  end: endTime,
                   approxTime: value.approximateDuration,
                 }}
               />
             </span>
           )}
-          {value.startTime && (
-            <div className={cx('mobile-start-time')}>{fromNowFormat(value.startTime)}</div>
-          )}
+          {!!startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}
           {value.hasRetries && (
             <div className={cx('retry-icon')} title={intl.formatMessage(messages.retryTooltip)}>
               {Parser(RetryIcon)}
@@ -232,7 +235,7 @@ export class ItemInfo extends Component {
           )}
           {value.owner && <OwnerBlock owner={value.owner} onClick={customProps.onOwnerClick} />}
           {isStepLevel && this.renderSauceLabsLabel()}
-          {value.attributes && !!value.attributes.length && (
+          {!!value.attributes?.length && (
             <AttributesBlock
               attributes={value.attributes}
               onClickAttribute={customProps.onClickAttribute}

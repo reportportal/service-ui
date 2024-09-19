@@ -181,7 +181,7 @@ export class DefectDetails extends Component {
 
   isDefectTypeVisible = () => {
     const { logItem } = this.props;
-    return logItem.issue && logItem.issue.issueType;
+    return logItem.issue?.issueType;
   };
 
   handleLinkIssue = () => {
@@ -411,6 +411,7 @@ export class DefectDetails extends Component {
           {!debugMode && (
             <div className={cx('make-decision-action')}>
               <GhostButton
+                color="white"
                 disabled={!logItem.issue}
                 onClick={this.handleEditDefect}
                 title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}

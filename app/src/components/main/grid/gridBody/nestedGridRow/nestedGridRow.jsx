@@ -119,7 +119,7 @@ export const NestedGridRow = track()(
 
     const calculateFirstRowIdOnLoadPreviousClick = (contentItems) => {
       const isStep = (item) => 'hasContent' in item;
-      setItemIntoViewId((contentItems.find((item) => !isStep(item)) || {}).id);
+      setItemIntoViewId(contentItems.find((item) => !isStep(item))?.id);
     };
 
     const scrollToPreviousViewAndResetRef = () => {

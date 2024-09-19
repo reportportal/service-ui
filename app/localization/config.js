@@ -17,5 +17,5 @@
 export const config = {
   messagesDirectory: 'localization/messages',
   translationsDirectory: 'localization/translated/',
-  languages: ['uk', 'ru', 'be', 'zh'],
+  languages: ['uk', 'ru', 'be', 'zh', 'es'],
 };

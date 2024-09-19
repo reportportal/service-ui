@@ -25,7 +25,7 @@ import {
   SET_ACTIVE_ATTACHMENT_ACTION,
 } from './constants';
 
-export const logsWithAttachmentsReducer = (state = [], { type }) => {
+export const logsWithAttachmentsReducer = (state = [], { type = '' }) => {
   switch (type) {
     case CLEAR_ATTACHMENTS_ACTION:
       return [];
@@ -34,7 +34,7 @@ export const logsWithAttachmentsReducer = (state = [], { type }) => {
   }
 };
 
-export const attachmentsPaginationReducer = (state = {}, { type }) => {
+export const attachmentsPaginationReducer = (state = {}, { type = '' }) => {
   switch (type) {
     case CLEAR_ATTACHMENTS_ACTION:
       return {};
@@ -43,7 +43,7 @@ export const attachmentsPaginationReducer = (state = {}, { type }) => {
   }
 };
 
-export const activeAttachmentReducer = (state = 0, { type, payload }) => {
+export const activeAttachmentReducer = (state = 0, { type = '', payload = {} }) => {
   switch (type) {
     case SET_ACTIVE_ATTACHMENT_ACTION:
       return payload;

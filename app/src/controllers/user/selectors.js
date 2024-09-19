@@ -18,7 +18,7 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
 import { INTERNAL } from 'common/constants/accountType';
 import { projectInfoSelector } from 'controllers/project/selectors';
-import { START_TIME_FORMAT_RELATIVE } from './constants';
+import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
@@ -32,13 +32,15 @@ export const photoIdSelector = (state) => userInfoSelector(state).photoId;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;
+export const logTimeFormatSelector = (state) =>
+  settingsSelector(state).logTimeFormat || START_TIME_FORMAT_ABSOLUTE;
 export const photoTimeStampSelector = (state) => settingsSelector(state).photoTimeStamp || null;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {
   const activeProject = activeProjectSelector(state);
   const assignedProject = assignedProjectsSelector(state)[activeProject];
-  return assignedProject && assignedProject.projectRole;
+  return assignedProject?.projectRole;
 };
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
 

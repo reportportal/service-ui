@@ -23,7 +23,6 @@ const parseRelaxed = (value) => {
 export const normalizeAndParse = (value) => {
   const regex = /{.*}$/;
   const substitutions = { '=': ':', "'": '"' };
-  const normalized =
-    (value && value.match(regex)[0].replace(/[=']/g, (char) => substitutions[char])) || '{}';
+  const normalized = value?.match(regex)[0].replace(/[=']/g, (char) => substitutions[char]) || '{}';
   return parseRelaxed(normalized);
 };

@@ -178,8 +178,8 @@ export const breadcrumbsSelector = createSelector(
   ) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
-    const filterId = (filter && filter.id) || filterCategory;
-    const filterName = (filter && filter.name) || FILTER_TITLES[filterCategory];
+    const filterId = filter?.id || filterCategory;
+    const filterName = filter?.name || FILTER_TITLES[filterCategory];
     const descriptors = [
       {
         id: filterId,
@@ -247,7 +247,7 @@ export const breadcrumbsSelector = createSelector(
             payload: {
               projectId,
               filterId,
-              testItemIds: testItemIdsArray && testItemIdsArray.slice(0, i + 1).join('/'),
+              testItemIds: testItemIdsArray?.slice(0, i + 1).join('/'),
             },
             meta: {
               query: itemQuery,
@@ -262,35 +262,34 @@ export const breadcrumbsSelector = createSelector(
 );
 
 export const nameLinkSelector = (state, ownProps) => {
-  const ownLinkParams = ownProps.ownLinkParams;
-  const payload = (ownLinkParams && ownLinkParams.payload) || payloadSelector(state);
-  let testItemIds = (ownLinkParams && ownLinkParams.testItemIds) || testItemIdsSelector(state);
+  const { ownLinkParams, itemId, uniqueId } = ownProps;
+  const payload = ownLinkParams?.payload || payloadSelector(state);
+  let testItemIds = ownLinkParams?.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
-  const testItem =
-    (ownLinkParams && ownLinkParams.testItem) || testItemSelector(state, ownProps.itemId);
-  const hasChildren = testItem && testItem.hasChildren;
-  const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, hasChildren);
+  const testItem = ownLinkParams?.testItem || testItemSelector(state, itemId);
+  const hasChildren = testItem?.hasChildren;
+  const page = ownLinkParams?.page || getNextPage(isDebugMode, hasChildren);
   if (testItem) {
     const testItemPath = testItem.path.split('.').slice(0, -1);
     testItemIds = [testItem.launchId, ...testItemPath].join('/');
   }
 
-  if (ownProps.uniqueId) {
+  if (uniqueId) {
     query = {
       ...query,
-      'filter.eq.uniqueId': ownProps.uniqueId,
+      'filter.eq.uniqueId': uniqueId,
     };
   }
 
-  if (ownLinkParams && ownLinkParams.testItem && ownLinkParams.testItem.clusterId) {
+  if (ownLinkParams?.testItem?.clusterId) {
     query = {
       ...query,
       clusterId: ownLinkParams.testItem.clusterId,
     };
   }
 
-  return createLink(testItemIds, ownProps.itemId, payload, query, page);
+  return createLink(testItemIds, itemId, payload, query, page);
 };
 
 export const statisticsLinkSelector = createSelector(
@@ -300,47 +299,60 @@ export const statisticsLinkSelector = createSelector(
   debugModeSelector,
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
-    const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
-    const launchesLimit = ownProps.launchesLimit;
-    const providerType = ownProps.providerType;
+    const {
+      launchesLimit,
+      providerType,
+      isLatest,
+      ownLinkParams,
+      itemId,
+      keepFilterParams,
+      attributeKey,
+      attributeValue,
+      compositeAttribute,
+      levelAttribute,
+      baselineLaunchId,
+      launchId,
+      statuses,
+      startTime,
+      types,
+    } = ownProps;
+    const linkPayload = ownLinkParams?.payload || payload;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
-    const isLatest = ownProps.isLatest;
-    const page =
-      (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
+    const page = ownLinkParams?.page || getNextPage(isDebugMode, true);
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
-      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+      levelIndex = !itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
     }
     const queryNamespace = getQueryNamespace(levelIndex);
     const params = {
-      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      ...(keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
-      'filter.has.attributeKey': ownProps.attributeKey,
-      'filter.has.attributeValue': ownProps.attributeValue,
-      'filter.has.compositeAttribute': ownProps.compositeAttribute,
-      'filter.has.levelAttribute': ownProps.levelAttribute,
+      'filter.has.attributeKey': attributeKey,
+      'filter.has.attributeValue': attributeValue,
+      'filter.has.compositeAttribute': compositeAttribute,
+      'filter.has.levelAttribute': levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
-      ...(ownProps.baselineLaunchId && { baselineLaunchId: ownProps.baselineLaunchId }),
-      ...(ownProps.launchId && { launchId: ownProps.launchId }),
+      ...(baselineLaunchId && { baselineLaunchId }),
+      ...(launchId && { launchId }),
     };
-    if (ownProps.statuses) {
-      params['filter.in.status'] = ownProps.statuses.join(',');
+    if (statuses) {
+      params['filter.in.status'] = statuses.join(',');
     }
-    if (ownProps.startTime) {
-      params['filter.btw.startTime'] = ownProps.startTime.join(',');
+    if (startTime) {
+      params['filter.btw.startTime'] = startTime.join(',');
     }
-    if (ownProps.types === null) {
+    if (types === null) {
       delete params['filter.in.type'];
     }
 
     return createLink(
       testItemIds,
-      ownProps.itemId,
+      itemId,
       linkPayload,
       {
         ...query,
@@ -358,54 +370,65 @@ export const defectLinkSelector = createSelector(
   debugModeSelector,
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
-    const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
-    const launchesLimit = ownProps.launchesLimit;
-    const providerType = ownProps.providerType;
+    const {
+      ownLinkParams,
+      launchesLimit,
+      providerType,
+      isLatest,
+      itemId,
+      keepFilterParams,
+      defects,
+      attributeKey,
+      attributeValue,
+      levelAttribute,
+      compositeAttribute,
+      filterType,
+      filterTypes,
+      startTime,
+    } = ownProps;
+    const linkPayload = ownLinkParams?.payload || payload;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
-    const isLatest = ownProps.isLatest;
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
-      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+      levelIndex = !itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
     }
     let nextPage;
-    if (ownProps.itemId) {
+    if (itemId) {
       nextPage = getNextPage(isDebugMode, true);
     } else {
       nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
     }
-    const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
+    const page = ownLinkParams?.page || nextPage;
     const queryNamespace = getQueryNamespace(levelIndex);
     const params = {
-      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      ...(keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
-      'filter.in.issueType': getDefectsString(ownProps.defects),
-      'filter.has.attributeKey': ownProps.attributeKey,
-      'filter.has.attributeValue': ownProps.attributeValue,
-      'filter.has.levelAttribute': ownProps.levelAttribute,
+      'filter.in.issueType': getDefectsString(defects),
+      'filter.has.attributeKey': attributeKey,
+      'filter.has.attributeValue': attributeValue,
+      'filter.has.levelAttribute': levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
     };
 
-    if (ownProps.compositeAttribute) {
-      params['filter.has.compositeAttribute'] = ownProps.compositeAttribute;
+    if (compositeAttribute) {
+      params['filter.has.compositeAttribute'] = compositeAttribute;
     }
 
-    if (ownProps.filterType) {
-      params['filter.in.type'] = ownProps.filterTypes
-        ? [...ownProps.filterTypes, LEVEL_STEP].join(',')
-        : LEVEL_STEP;
+    if (filterType) {
+      params['filter.in.type'] = filterTypes ? [...filterTypes, LEVEL_STEP].join(',') : LEVEL_STEP;
     }
 
-    if (ownProps.startTime) {
-      params['filter.btw.startTime'] = ownProps.startTime.join(',');
+    if (startTime) {
+      params['filter.btw.startTime'] = startTime.join(',');
     }
 
     return createLink(
       testItemIds,
-      ownProps.itemId,
+      itemId,
       linkPayload,
       {
         ...query,

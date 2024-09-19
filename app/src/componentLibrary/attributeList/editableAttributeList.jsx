@@ -81,7 +81,6 @@ EditableAttributeList.propTypes = {
 
 EditableAttributeList.defaultProps = {
   attributes: [],
-  value: [],
   disabled: false,
   newAttrMessage: '',
   onChange: () => {},

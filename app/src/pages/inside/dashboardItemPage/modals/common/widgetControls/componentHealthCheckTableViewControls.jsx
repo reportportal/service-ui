@@ -16,6 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -36,6 +37,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
+  CheckboxControl,
   FiltersControl,
   InputControl,
   AttributesFieldArrayControl,
@@ -80,6 +82,10 @@ const messages = defineMessages({
     defaultMessage:
       'Enter an attribute key whose unique value will be used for combine tests into groups',
   },
+  excludeSkipped: {
+    id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
+    defaultMessage: 'Exclude Skipped tests from statistics',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -100,6 +106,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@track()
 @injectIntl
 export class ComponentHealthCheckTableViewControls extends Component {
   static propTypes = {
@@ -110,6 +117,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -133,6 +143,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
             asc: false,
             sortingColumn: WIDGET_OPTIONS.SORT.PASSING_RATE,
           },
+          excludeSkipped: false,
         },
       },
     });
@@ -140,10 +151,10 @@ export class ComponentHealthCheckTableViewControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
-  formatSortingValue = (value) => value && value.sortingColumn;
+  formatSortingValue = (value) => value?.sortingColumn;
 
   parseSortingValue = (value) => {
     const sortObj = this.getSortObj();
@@ -158,19 +169,16 @@ export class ComponentHealthCheckTableViewControls extends Component {
     );
   };
 
-  getSortObj = () =>
-    this.props.widgetSettings.contentParameters &&
-    this.props.widgetSettings.contentParameters.widgetOptions.sort;
+  getSortObj = () => this.props.widgetSettings.contentParameters?.widgetOptions.sort;
 
   getItemAttributeKeysAllSearchURL = () => {
     const {
       activeProject,
       widgetSettings: { contentParameters, filters },
     } = this.props;
-    const filterId = filters && filters.length && filters[0].value;
+    const filterId = filters?.length && filters[0].value;
     const isLatest =
-      (contentParameters && contentParameters.widgetOptions.latest) ||
-      MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
+      contentParameters?.widgetOptions.latest || MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
     return URLS.itemAttributeKeysAllSearch(
       activeProject,
@@ -227,6 +235,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
                   )}
                 />
               </FieldProvider>
+              <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+                <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
+              </FieldProvider>
               <FieldProvider
                 name="contentParameters.widgetOptions.minPassingRate"
                 validate={passingRateValidator(formatMessage)}
@@ -272,8 +283,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
               name="contentParameters.widgetOptions.sort"
             >
               <SortingControl
-                sortingColumn={sortObj && sortObj.sortingColumn}
-                sortingDirection={sortObj && sortObj.asc}
+                sortingColumn={sortObj?.sortingColumn}
+                sortingDirection={sortObj?.asc}
               />
             </FieldProvider>
           </Fragment>

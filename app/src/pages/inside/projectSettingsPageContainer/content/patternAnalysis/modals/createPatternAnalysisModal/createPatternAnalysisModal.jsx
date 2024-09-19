@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal, Toggle } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { PATTERN_TYPES, REGEX_PATTERN } from 'common/constants/patternTypes';
 import { commonValidators } from 'common/utils/validation';
@@ -29,7 +29,6 @@ import { formValueSelector, reduxForm } from 'redux-form';
 import { FieldProvider } from 'components/fields';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldText } from 'componentLibrary/fieldText';
-import { Toggle } from 'componentLibrary/toggle';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { RegExEditor } from 'components/inputs/regExEditor';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -54,22 +53,24 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
   const { formatMessage } = useIntl();
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSave)(),
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={data.modalTitle || formatMessage(messages.createPatternModalHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       footerNode={
-        <FieldProvider name="enabled" format={(value) => !!value} dataAutomationId="enabledToggle">
+        <FieldProvider name="enabled" format={(value) => !!value}>
           <Toggle className={cx('toggle')}>
             {formatMessage(messages.createPatternModalToggle)}
           </Toggle>
@@ -89,7 +90,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
         </FieldProvider>
         <FieldElement
           name="type"
-          type="text"
           label={formatMessage(messages.createPatternModalType)}
           className={cx('dropdown')}
           dataAutomationId="patternTypeField"
@@ -99,7 +99,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
         <FieldElement
           label={formatMessage(messages.createPatternModalCondition)}
           name="value"
-          type="text"
           isRequired
           dataAutomationId="patternConditionField"
         >
@@ -112,7 +111,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           </FieldErrorHint>
         </FieldElement>
       </div>
-    </ModalLayout>
+    </Modal>
   );
 };
 CreatePatternAnalysisModal.propTypes = {

@@ -94,19 +94,19 @@ export class FilterOptions extends Component {
     const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()].find(
       (item) => item.locator === locator,
     );
-    return (currentDefectType && currentDefectType.longName) || locator;
+    return currentDefectType?.longName || locator;
   };
 
-  fotmatTime = (time) => moment(time).format(TIME_DATE_FORMAT);
+  formatTime = (time) => moment(time).format(TIME_DATE_FORMAT);
 
   startTimeOption = (entity) => {
     const { intl } = this.props;
     const time = parseDateTimeRange(entity);
     const dynamic = time.dynamic ? intl.formatMessage(messages.dynamic) : '';
     const optionName = intl.formatMessage(messages[entity.filteringField]);
-    const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
+    const condition = `${this.formatTime(time.start)} ${intl.formatMessage(
       messages.to,
-    )} ${this.fotmatTime(time.end)} ${dynamic}`;
+    )} ${this.formatTime(time.end)} ${dynamic}`;
     return `${optionName} ${intl.formatMessage(messages.from)} ${condition}`;
   };
 

@@ -42,6 +42,7 @@ import {
   isPluginBuiltin,
 } from 'components/integrations/utils';
 import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
+import { LDAP } from 'common/constants/pluginNames';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -108,7 +109,7 @@ const messages = defineMessages({
   uninstallPluginNote: {
     id: 'InstancesSection.uninstallPluginNote',
     defaultMessage:
-      'Remove this plugin from the reportportal and revoke all access and authorizations.',
+      'Remove this plugin from the ReportPortal and revoke all access and authorizations.',
   },
 });
 
@@ -168,8 +169,7 @@ export class InstancesSection extends Component {
     super(props);
     const { instanceType, pluginDetails } = props;
     this.multiple =
-      isIntegrationSupportsMultipleInstances(instanceType) ||
-      (pluginDetails && pluginDetails.metadata && pluginDetails.metadata.multiple);
+      isIntegrationSupportsMultipleInstances(instanceType) || pluginDetails?.metadata?.multiple;
     this.builtin = isPluginBuiltin(instanceType);
   }
 
@@ -227,7 +227,7 @@ export class InstancesSection extends Component {
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
         eventsInfo: {
-          confirmBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UNINSTALL_PLUGIN_MODAL,
+          confirmBtn: PLUGINS_PAGE_EVENTS.clickConfirmUninstallPlugin(instanceType),
           closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
         },
@@ -256,8 +256,10 @@ export class InstancesSection extends Component {
   showAddIntegrationModal = () => {
     const { instanceType, pluginDetails, isGlobal } = this.props;
 
+    const isLdap = instanceType === LDAP;
+
     this.props.showModalAction({
-      id: 'addIntegrationModal',
+      id: isLdap ? 'addLdapIntegrationModal' : 'addIntegrationModal',
       data: {
         onConfirm: this.createIntegration,
         instanceType,

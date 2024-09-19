@@ -19,8 +19,7 @@ export const getNewActiveAttributes = (key, value, activeAttributes) => {
     key,
     value,
   };
-  const activeAttributeIndex =
-    activeAttributes && activeAttributes.findIndex((item) => item.key === key);
+  const activeAttributeIndex = activeAttributes?.findIndex((item) => item.key === key);
 
   if (activeAttributeIndex !== -1) {
     return activeAttributes.slice(0, activeAttributeIndex);
@@ -51,37 +50,34 @@ export const getNewActiveBreadcrumbs = (
 ) => {
   const actualBreadcrumbs = activeBreadcrumbs || getBreadcrumbs(attributes, activeBreadcrumbId);
 
-  return (
-    actualBreadcrumbs &&
-    actualBreadcrumbs.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          isStatic: true,
-          isActive: true,
-          additionalProperties: null,
-        };
-      }
+  return actualBreadcrumbs?.map((item) => {
+    if (item.id === id) {
+      return {
+        ...item,
+        isStatic: true,
+        isActive: true,
+        additionalProperties: null,
+      };
+    }
 
-      if (additionalProperties && item.id === id - 1) {
-        return {
-          ...item,
-          isStatic: false,
-          isActive: false,
-          additionalProperties,
-        };
-      }
+    if (additionalProperties && item.id === id - 1) {
+      return {
+        ...item,
+        isStatic: false,
+        isActive: false,
+        additionalProperties,
+      };
+    }
 
-      if (!additionalProperties && item.id > id) {
-        return {
-          ...item,
-          isStatic: true,
-          isActive: false,
-          additionalProperties: null,
-        };
-      }
+    if (!additionalProperties && item.id > id) {
+      return {
+        ...item,
+        isStatic: true,
+        isActive: false,
+        additionalProperties: null,
+      };
+    }
 
-      return item;
-    })
-  );
+    return item;
+  });
 };

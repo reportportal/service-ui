@@ -36,7 +36,6 @@ export const InstancesListItem = ({ title, creator, creationInfo, onClick, disab
 );
 
 InstancesListItem.propTypes = {
-  data: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   creationInfo: PropTypes.string.isRequired,

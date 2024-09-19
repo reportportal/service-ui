@@ -44,7 +44,6 @@ import {
   unlinkIssueAction,
   proceedWithValidItemsAction,
 } from 'controllers/uniqueErrors/clusterItems';
-import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 
 import styles from './uniqueErrorsActionPanel.scss';
@@ -68,7 +67,6 @@ const cx = classNames.bind(styles);
     onUnlinkIssue: unlinkIssueAction,
     onPostIssue: postIssueAction,
     proceedWithValidItems: proceedWithValidItemsAction,
-    showModalAction,
     ignoreInAutoAnalysisAction,
     includeInAutoAnalysisAction,
   },
@@ -100,7 +98,6 @@ export class UniqueErrorsActionPanel extends Component {
     proceedWithValidItems: PropTypes.func,
     projectRole: PropTypes.string.isRequired,
     selectedItems: PropTypes.array,
-    showModalAction: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     unselectAndFetchItems: PropTypes.func,
     tracking: PropTypes.shape({
@@ -131,7 +128,6 @@ export class UniqueErrorsActionPanel extends Component {
     restorePath: () => {},
     proceedWithValidItems: () => {},
     selectedItems: [],
-    showModalAction: () => {},
     showBreadcrumbs: true,
     unselectAndFetchItems: () => {},
   };

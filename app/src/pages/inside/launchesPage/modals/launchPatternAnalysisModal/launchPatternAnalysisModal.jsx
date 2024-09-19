@@ -73,7 +73,7 @@ export class LaunchPatternAnalysisModal extends Component {
     data: PropTypes.shape({
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,
-    }).isRequired,
+    }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

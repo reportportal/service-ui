@@ -47,8 +47,6 @@ export const RefineFiltersPanel = ({
   </div>
 );
 RefineFiltersPanel.propTypes = {
-  entitiesComponent: PropTypes.func,
-  updateFilters: PropTypes.func,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
   onFilterValidate: PropTypes.func,
@@ -58,8 +56,6 @@ RefineFiltersPanel.propTypes = {
   events: PropTypes.object,
 };
 RefineFiltersPanel.defaultProps = {
-  entitiesComponent: null,
-  updateFilters: () => {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},
   onFilterValidate: () => {},

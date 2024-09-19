@@ -59,7 +59,7 @@ import {
   ENTITY_DEFECT_COMMENT,
   ENTITY_BTS_ISSUES,
   ENTITY_IGNORE_ANALYZER,
-  ENTITY_AUTOANALYZE,
+  ENTITY_AUTO_ANALYZED,
   CONDITION_EQ,
   ENTITY_PATTERN_NAME,
   ENTITY_RETRY,
@@ -343,7 +343,7 @@ export class StepLevelEntities extends Component {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     const options = getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => ({
       ...option,
-      value: option.meta && option.meta.subItem ? option.locator : option.typeRef,
+      value: option.meta?.subItem ? option.locator : option.typeRef,
     }));
     return {
       id: ENTITY_DEFECT_TYPE,
@@ -573,13 +573,13 @@ export class StepLevelEntities extends Component {
         },
       },
       {
-        id: ENTITY_AUTOANALYZE,
+        id: ENTITY_AUTO_ANALYZED,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_AUTOANALYZE, {
+        value: this.bindDefaultValue(ENTITY_AUTO_ANALYZED, {
           condition: CONDITION_EQ,
         }),
         title: intl.formatMessage(messages.AnalyseTitle),
-        active: visibleFilters.includes(ENTITY_AUTOANALYZE),
+        active: visibleFilters.includes(ENTITY_AUTO_ANALYZED),
         removable: true,
         customProps: {
           options: [

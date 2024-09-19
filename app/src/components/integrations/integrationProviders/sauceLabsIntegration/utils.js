@@ -30,9 +30,8 @@ const getIntegrationDataCenter = (integrations = []) => {
   return dataCenter;
 };
 
-export const getSauceLabsConfig = (attributes = [], integrations) => {
-  const slidItem =
-    attributes && attributes.find((item) => item.key === SAUCE_LABS_ID_ATTRIBUTE_KEY);
+export const getSauceLabsConfig = (attributes = [], integrations = undefined) => {
+  const slidItem = attributes?.find((item) => item.key === SAUCE_LABS_ID_ATTRIBUTE_KEY);
   if (slidItem) {
     const sldcItem = attributes.find((item) => item.key === SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY);
     const dataCenter = sldcItem ? sldcItem.value : getIntegrationDataCenter(integrations);

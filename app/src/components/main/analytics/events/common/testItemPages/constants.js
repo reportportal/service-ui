@@ -29,7 +29,7 @@ import {
   ENTITY_RETRY,
   ENTITY_STATUS,
   ENTITY_NEW_FAILURE,
-  ENTITY_AUTOANALYZE,
+  ENTITY_AUTO_ANALYZED,
   ENTITY_BTS_ISSUES,
 } from 'components/filterEntities/constants';
 import { POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
@@ -49,7 +49,7 @@ export const FILTER_ENTITY_ID_TO_TYPE_MAP = {
   [ENTITY_STATUS]: 'status',
   [ENTITY_DEFECT_TYPE]: 'defect_type',
   [ENTITY_DEFECT_COMMENT]: 'defect_comment',
-  [ENTITY_AUTOANALYZE]: 'analyzed_by_rp',
+  [ENTITY_AUTO_ANALYZED]: 'analyzed_by_rp',
   [ENTITY_PATTERN_NAME]: 'pattern_name',
   [ENTITY_IGNORE_ANALYZER]: 'ignore_in_aa',
   [ENTITY_BTS_ISSUES]: 'issue_in_bts',

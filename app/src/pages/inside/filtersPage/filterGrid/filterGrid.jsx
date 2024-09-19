@@ -134,11 +134,9 @@ export class FilterGrid extends Component {
     intl: PropTypes.object.isRequired,
     userFilters: PropTypes.arrayOf(PropTypes.object),
     onEdit: PropTypes.func,
-    userId: PropTypes.string,
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     onDelete: PropTypes.func,
-    accountRole: PropTypes.string,
     loading: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -153,9 +151,7 @@ export class FilterGrid extends Component {
     onEdit: () => {},
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
-    userId: '',
     onDelete: () => {},
-    accountRole: '',
     loading: false,
     activeProject: null,
   };

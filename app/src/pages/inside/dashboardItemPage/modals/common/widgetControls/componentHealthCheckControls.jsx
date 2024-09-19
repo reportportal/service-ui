@@ -16,6 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -34,6 +35,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
+  CheckboxControl,
   FiltersControl,
   InputControl,
   AttributesFieldArrayControl,
@@ -65,6 +67,10 @@ const messages = defineMessages({
     defaultMessage:
       'Enter an attribute key whose unique value will be used for combine tests into groups',
   },
+  excludeSkipped: {
+    id: 'ComponentHealthCheckControls.excludeSkipped',
+    defaultMessage: 'Exclude Skipped tests from statistics',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -85,6 +91,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@track()
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -95,6 +102,9 @@ export class ComponentHealthCheckControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -113,6 +123,7 @@ export class ComponentHealthCheckControls extends Component {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
           attributeKeys: [],
+          excludeSkipped: false,
         },
       },
     });
@@ -120,7 +131,7 @@ export class ComponentHealthCheckControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatFilterValue = (value) => value && value[0];
+  formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
@@ -128,10 +139,9 @@ export class ComponentHealthCheckControls extends Component {
       activeProject,
       widgetSettings: { contentParameters, filters },
     } = this.props;
-    const filterId = filters && filters.length && filters[0].value;
+    const filterId = filters?.length && filters[0].value;
     const isLatest =
-      (contentParameters && contentParameters.widgetOptions.latest) ||
-      MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
+      contentParameters?.widgetOptions.latest || MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
     return (
       <AttributesFieldArrayControl
@@ -178,6 +188,9 @@ export class ComponentHealthCheckControls extends Component {
                   formatMessage,
                 )}
               />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+              <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
             </FieldProvider>
             <FieldProvider
               name="contentParameters.widgetOptions.minPassingRate"

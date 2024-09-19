@@ -53,6 +53,8 @@ export const FETCH_PROJECT_NOTIFICATIONS = 'fetchProjectNotification';
 export const FETCH_PROJECT_NOTIFICATIONS_SUCCESS = 'fetchProjectNotificationSuccess';
 export const UPDATE_NOTIFICATION_STATE = 'updateNotificationState';
 export const NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY = 'notifications.enabled';
+export const NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY = (pluginName) =>
+  `notifications.${pluginName}.enabled`;
 export const UPDATE_PROJECT_NOTIFICATION = 'updateProjectNotification';
 export const UPDATE_PROJECT_NOTIFICATION_SUCCESS = 'updateProjectNotificationSuccess';
 export const DELETE_PROJECT_NOTIFICATION = 'deleteProjectNotification';

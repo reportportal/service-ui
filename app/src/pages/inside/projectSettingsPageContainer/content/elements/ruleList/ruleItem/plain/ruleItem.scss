@@ -25,6 +25,7 @@
 .container {
   display: flex;
   flex: 1;
+  max-width: calc(100% - 32px);
 
   &.preview-container {
     justify-content: flex-end;
@@ -36,7 +37,7 @@
 }
 
 .panel-wrapper {
-  width: 100%;
+  width: calc(100% - 48px);
   background: $COLOR--bg-000;
   box-shadow: 0 1px 3px $COLOR--item-shadow;
   border-radius: 4px;

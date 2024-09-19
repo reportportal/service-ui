@@ -109,7 +109,9 @@
   margin-top: 5px;
   padding: 8px 0;
   display: none;
-  width: 100%;
+  width: max-content;
+  max-width: 384px;
+  min-width: 100%;
   min-height: 10px;
   background: $backgroundColor;
   box-shadow: $BOX_SHADOW--modal-window;
@@ -122,6 +124,12 @@
     &:focus-visible {
       outline: none;
     }
+  }
+
+  // TODO: Remove this section. This approach will be replaced with the integration of the UI-Kit dropdown component.
+  /* stylelint-disable-next-line selector-max-attribute */
+  [class*='modal-window'] & {
+    max-width: 100%;
   }
 }
 
@@ -191,9 +199,18 @@
   }
 }
 
+.options-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .dark {
   &.dropdown {
-    @include dropdown( $COLOR--darkmode-gray-200, $COLOR--darkmode-bg-solid-96, $COLOR--darkmode-gray-150);
+    @include dropdown(
+      $COLOR--darkmode-gray-200,
+      $COLOR--darkmode-bg-solid-96,
+      $COLOR--darkmode-gray-150
+    );
     @include hover-state($COLOR--darkmode-gray-150, $COLOR--darkmode-gray-150);
     @include active-state($COLOR--darkmode-topaz-focused, $COLOR--bg-000);
 

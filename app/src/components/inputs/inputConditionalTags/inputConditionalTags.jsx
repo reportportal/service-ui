@@ -46,8 +46,6 @@ export class InputConditionalTags extends Component {
     placeholder: PropTypes.string,
     getURI: PropTypes.func.isRequired,
     onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
   };
 
   static defaultProps = {
@@ -55,8 +53,6 @@ export class InputConditionalTags extends Component {
     inputProps: {},
     placeholder: '',
     onChange: () => {},
-    onFocus: () => {},
-    onBlur: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
   };
   state = {
@@ -124,27 +120,24 @@ export class InputConditionalTags extends Component {
         />
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
-            <span className={cx('condition-selected')}>
-              {selectedCondition && selectedCondition.shortLabel}
-            </span>
+            <span className={cx('condition-selected')}>{selectedCondition?.shortLabel}</span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {inputConditions &&
-              inputConditions.map((condition) => (
-                <div
-                  key={condition.value}
-                  className={cx('condition', {
-                    active: condition.value === value.condition,
-                    disabled: condition.disabled,
-                  })}
-                  onClick={() => {
-                    !condition.disabled && this.onClickConditionItem(condition);
-                  }}
-                >
-                  {condition.label}
-                </div>
-              ))}
+            {inputConditions?.map((condition) => (
+              <div
+                key={condition.value}
+                className={cx('condition', {
+                  active: condition.value === value.condition,
+                  disabled: condition.disabled,
+                })}
+                onClick={() => {
+                  !condition.disabled && this.onClickConditionItem(condition);
+                }}
+              >
+                {condition.label}
+              </div>
+            ))}
           </div>
         </div>
       </div>

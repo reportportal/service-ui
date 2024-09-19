@@ -67,7 +67,7 @@ function* watchSetViewMode() {
 
 function* addProject({ payload: projectName }) {
   try {
-    yield call(fetch, URLS.addProject(), {
+    yield call(fetch, URLS.project(), {
       method: 'post',
       data: {
         entryType: PROJECT_TYPE_INTERNAL,
@@ -116,7 +116,7 @@ function* watchAddProject() {
 
 function* deleteProject({ payload: project }) {
   try {
-    yield call(fetch, URLS.project(project.id), {
+    yield call(fetch, URLS.project([project.id]), {
       method: 'delete',
     });
   } catch (err) {

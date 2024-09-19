@@ -201,7 +201,7 @@ export class ConnectionSection extends Component {
                   blocked: blocked && availableProjectIntegrations.length,
                 })}
               >
-                <h1>{name}</h1>
+                <h1 title={name}>{name}</h1>
               </div>
               <div
                 className={cx('connection-block', {
@@ -220,18 +220,26 @@ export class ConnectionSection extends Component {
             <p className={cx('created-date-block')}>
               {creator} on {moment(creationDate).format('ll')}
             </p>
-            {editAuthConfig && editAuthConfig.content}
+            {editAuthConfig?.content}
           </div>
           {isEditable && (
             <div className={cx('buttons-block')}>
               {editAuthConfig && !blocked && (
-                <button onClick={this.onEditAuth} className={cx('action-button')}>
+                <button
+                  onClick={this.onEditAuth}
+                  className={cx('action-button')}
+                  data-automation-id="editIntegrationIcon"
+                >
                   {Parser(PencilIcon)}
                 </button>
               )}
 
               {!blocked && (
-                <button onClick={this.removeIntegrationHandler} className={cx('action-button')}>
+                <button
+                  onClick={this.removeIntegrationHandler}
+                  className={cx('action-button')}
+                  data-automation-id="deleteIntegrationIcon"
+                >
                   {Parser(TrashBin)}
                 </button>
               )}

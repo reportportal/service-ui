@@ -21,9 +21,10 @@ import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from 'componentLibrary/button';
+import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -94,7 +95,11 @@ export class IntegrationForm extends Component {
   };
 
   submitIntegration = (formData) => {
-    this.props.onSubmit(formData, this.submitIntegrationSuccess, this.state.metaData);
+    this.props.onSubmit(
+      removeNoneValues(formData),
+      this.submitIntegrationSuccess,
+      this.state.metaData,
+    );
     this.props.tracking.trackEvent(
       (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClickSubmit(
         this.props.data.integrationType.name,
@@ -136,6 +141,7 @@ export class IntegrationForm extends Component {
         className={cx('integration-form', {
           'configuration-not-specified-view': isConfigurationNotSpecified,
         })}
+        data-automation-id="fieldsConfigurationForm"
       >
         {!shouldFieldsBeHidden && (
           <>
@@ -166,7 +172,11 @@ export class IntegrationForm extends Component {
             {!blocked && isEditable && (
               <div className={cx('controls-block')}>
                 {disabled ? (
-                  <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>
+                  <Button
+                    onClick={this.toggleDisabled}
+                    disabled={shouldFieldsBeHidden}
+                    data-automation-id="editConfigurationButton"
+                  >
                     {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   </Button>
                 ) : (
@@ -175,6 +185,7 @@ export class IntegrationForm extends Component {
                       <Button
                         onClick={handleSubmit(this.submitIntegration)}
                         disabled={shouldFieldsBeHidden}
+                        data-automation-id="submitConfigurationButton"
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
                       </Button>
@@ -186,6 +197,7 @@ export class IntegrationForm extends Component {
                           variant="ghost"
                           onClick={this.toggleDisabled}
                           disabled={shouldFieldsBeHidden}
+                          data-automation-id="cancelConfigurationButton"
                         >
                           {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
                         </Button>

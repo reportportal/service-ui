@@ -68,7 +68,7 @@ const messages = defineMessages({
   },
   launchDescriptionHint: {
     id: 'LaunchMergeModal.launchDescriptionHint',
-    defaultMessage: 'Description should have size not more than 1024 symbols.',
+    defaultMessage: 'Description should have size not more than 2048 symbols.',
   },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',
@@ -149,7 +149,7 @@ const messages = defineMessages({
   },
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
-    defaultMessage: 'This field is required',
+    defaultMessage: 'Field is required',
   },
   shortRequiredFieldHint: {
     id: 'Common.shortRequiredFieldHint',
@@ -186,7 +186,7 @@ const messages = defineMessages({
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',
-    defaultMessage: 'Integration name should have size from 1 to 55',
+    defaultMessage: 'Integration name should have size from 1 to 55 characters',
   },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',
@@ -196,9 +196,21 @@ const messages = defineMessages({
     id: 'BtsCommonMessages.btsProjectKeyHint',
     defaultMessage: 'Project key should have size from 1 to 55',
   },
+  btsBoardIdHint: {
+    id: 'BtsCommonMessages.btsBoardIdHint',
+    defaultMessage: 'Board ID should have size from 1 to 55 characters',
+  },
   btsProjectIdHint: {
     id: 'BtsCommonMessages.btsProjectIdHint',
     defaultMessage: 'Project ID should have size from 1 to 55',
+  },
+  btsUserNameHint: {
+    id: 'BtsCommonMessages.btsUserNameHint',
+    defaultMessage: 'Username should have size from 1 to 55',
+  },
+  btsPasswordHint: {
+    id: 'BtsCommonMessages.btsPasswordHint',
+    defaultMessage: 'Password should have size from 1 to 55',
   },
   portFieldHint: {
     id: 'EmailFormFields.portFieldHint',
@@ -214,7 +226,7 @@ const messages = defineMessages({
   },
   ruleNameDuplicateHint: {
     id: 'Notifications.ruleNameDuplicateHint',
-    defaultMessage: 'Rule with the same name already exist on the project',
+    defaultMessage: 'Rule with the same name already exists for this communication channel',
   },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',

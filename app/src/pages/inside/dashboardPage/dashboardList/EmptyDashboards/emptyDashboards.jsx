@@ -20,6 +20,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
+import { DASHBOARD_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import track from 'react-tracking';
 import styles from './emptyDashboards.scss';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 
@@ -43,12 +45,17 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 export class EmptyDashboards extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     filter: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -56,8 +63,17 @@ export class EmptyDashboards extends Component {
     filter: '',
   };
 
+  handleAddDashboardAction = () => {
+    const {
+      action,
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(DASHBOARD_EVENTS.CLICK_ON_ADD_NEW_DASHBOARD_BTN);
+    action();
+  };
+
   render() {
-    const { action, intl, filter } = this.props;
+    const { intl, filter } = this.props;
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
@@ -72,7 +88,7 @@ export class EmptyDashboards extends Component {
           {intl.formatMessage(messages.currentUserDashboardsText)}
         </p>
         <div className={cx('empty-dashboard-content')}>
-          <GhostButton icon={AddDashboardIcon} onClick={action}>
+          <GhostButton icon={AddDashboardIcon} onClick={this.handleAddDashboardAction}>
             {intl.formatMessage(messages.currentUserDashboardsActionText)}
           </GhostButton>
         </div>

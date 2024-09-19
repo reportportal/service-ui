@@ -28,7 +28,7 @@ import {
 } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Checkbox } from 'componentLibrary/checkbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldText } from 'componentLibrary/fieldText';
@@ -96,14 +96,12 @@ export class EmailFormFields extends Component {
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
     authEnabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     authEnabled: false,
-    lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
   };
 
@@ -182,14 +180,16 @@ export class EmailFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={5} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
           name={USERNAME_KEY}
           label={formatMessage(messages.usernameLabel)}
+          validate={commonValidators.email}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />

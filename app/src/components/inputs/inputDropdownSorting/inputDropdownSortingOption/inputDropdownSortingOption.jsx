@@ -30,7 +30,7 @@ export const DropdownSortingOption = ({
   value,
 }) => {
   const onChangeHandler = () => {
-    onChange && onChange(value);
+    onChange?.(value);
   };
   return (
     <div

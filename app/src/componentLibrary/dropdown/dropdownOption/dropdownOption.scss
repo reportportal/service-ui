@@ -16,8 +16,6 @@
 
 @mixin dropdown-option($color) {
   display: inline-block;
-  width: 100%;
-  padding: 9px 12px 7px;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   color: $color;
@@ -77,7 +75,11 @@
 .dark {
   &.dropdown-option {
     @include dropdown-option($COLOR--darkmode-gray-100);
-    @include hover-state($COLOR--darkmode-bg-solid-98, $COLOR--darkmode-topaz-focused, $COLOR--bg-000);
+    @include hover-state(
+      $COLOR--darkmode-bg-solid-98,
+      $COLOR--darkmode-topaz-focused,
+      $COLOR--bg-000
+    );
     @include active-state($COLOR--darkmode-topaz-pressed);
 
     &.selected {
@@ -96,9 +98,11 @@
 }
 
 .single-option {
-  display: flex;
-  align-items: center;
   height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 9px 12px 7px;
 }
 
 .sub-option {

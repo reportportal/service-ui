@@ -74,7 +74,6 @@ export class ComponentHealthCheck extends Component {
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
   };
@@ -102,7 +101,7 @@ export class ComponentHealthCheck extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const newActiveAttributes = getNewActiveAttributes(
       activeBreadcrumbs[id].key,
       activeBreadcrumbs[id].additionalProperties.value,
@@ -137,7 +136,7 @@ export class ComponentHealthCheck extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
     const additionalProperties = {
       value,
@@ -177,15 +176,16 @@ export class ComponentHealthCheck extends Component {
   getSpecificTestListLink = (value) => {
     const { widget, getStatisticsLink } = this.props;
     const { activeBreadcrumbId, activeAttributes } = this.state;
-    const attributes =
-      widget.contentParameters && widget.contentParameters.widgetOptions.attributeKeys;
+    const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId];
     const compositeAttributes =
       breadcrumbs && getNewActiveAttributes(breadcrumbs.key, value, activeAttributes);
     const link = getStatisticsLink({
-      statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
+      statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED].filter(
+        (status) => !(widget.contentParameters?.widgetOptions.excludeSkipped && status === SKIPPED),
+      ),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-      compositeAttribute: compositeAttributes && compositeAttributes.map(formatAttribute).join(','),
+      compositeAttribute: compositeAttributes?.map(formatAttribute).join(','),
       isLatest: widget.contentParameters.widgetOptions.latest,
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
@@ -263,7 +263,7 @@ export class ComponentHealthCheck extends Component {
     const {
       widget: { contentParameters },
     } = this.props;
-    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const attributes = contentParameters?.widgetOptions.attributeKeys;
     const groupItems = this.getGroupItems();
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
     const isClickableGroupItem =

@@ -23,7 +23,7 @@ import GA4 from 'react-ga4';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { normalizeDimensionValue, getAppVersion } from './utils';
+import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
@@ -44,16 +44,18 @@ export const analyticsEventObserver = ReactObserver();
       isPatternAnalyzerEnabled,
       projectInfoId,
       isAdmin,
+      isAnalyzerAvailable,
     } = baseEventParameters;
 
     if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
-        uid: `${userId}|${instanceId}`,
-        auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
-        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
+        auto_analysis:
+          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
+        uid: `${userId}|${instanceId}`,
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };

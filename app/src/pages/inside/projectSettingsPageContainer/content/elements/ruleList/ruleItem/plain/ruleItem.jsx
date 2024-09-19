@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { Toggle } from 'componentLibrary/toggle';
+import { Toggle } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
@@ -33,6 +33,7 @@ export const RuleItem = ({
   onClick,
   onRuleNameClick,
   isPreview,
+  className,
 }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
@@ -58,7 +59,7 @@ export const RuleItem = ({
 
   return (
     <div
-      className={cx('container', { 'preview-container': isPreview })}
+      className={cx('container', { 'preview-container': isPreview }, className)}
       data-automation-id="listItem"
     >
       {!isPreview && (
@@ -67,7 +68,6 @@ export const RuleItem = ({
             value={enabled}
             onChange={(e) => onToggleActive(e.target.checked)}
             disabled={disabled}
-            dataAutomationId="enabledToggle"
           />
         </span>
       )}
@@ -113,5 +113,9 @@ export const RuleItem = ({
   );
 };
 
-RuleItem.propTypes = { ...ruleItemPropTypes, isPreview: PropTypes.bool };
-RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false };
+RuleItem.propTypes = {
+  ...ruleItemPropTypes,
+  isPreview: PropTypes.bool,
+  className: PropTypes.string,
+};
+RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false, className: '' };

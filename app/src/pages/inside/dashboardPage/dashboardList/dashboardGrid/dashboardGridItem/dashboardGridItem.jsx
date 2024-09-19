@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -28,7 +27,6 @@ import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
 }))
@@ -40,7 +38,6 @@ export class DashboardGridItem extends Component {
 
   static propTypes = {
     projectId: PropTypes.string.isRequired,
-    intl: PropTypes.object.isRequired,
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
@@ -52,7 +49,6 @@ export class DashboardGridItem extends Component {
   };
 
   static defaultProps = {
-    action: () => {},
     item: {},
     onEdit: () => {},
     onDelete: () => {},

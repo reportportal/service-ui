@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { ModalLayout } from 'componentLibrary/modal';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { messages } from './messages';
 
@@ -29,23 +29,25 @@ const DeletePatternRuleModal = ({ data }) => {
   const { formatMessage } = useIntl();
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: data.onDelete,
-    danger: true,
+    variant: 'danger',
+    'data-automation-id': 'submitButton',
   };
   const cancelButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
   };
 
   return (
-    <ModalLayout
+    <Modal
       title={formatMessage(messages.deletePattern)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
       {formatMessage(messages.deletePatternMsg)}
-    </ModalLayout>
+    </Modal>
   );
 };
 DeletePatternRuleModal.propTypes = {

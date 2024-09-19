@@ -26,12 +26,15 @@ import {
   SET_API_KEYS,
   ADD_API_KEY_SUCCESS,
   DELETE_API_KEY_SUCCESS,
+  SET_LOG_TIME_FORMAT,
 } from './constants';
 
-export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
+export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type = '', payload = {} }) => {
   switch (type) {
     case SET_START_TIME_FORMAT:
       return { ...state, startTimeFormat: payload };
+    case SET_LOG_TIME_FORMAT:
+      return { ...state, logTimeFormat: payload };
     case SET_PHOTO_TIME_STAMP:
       return { ...state, photoTimeStamp: payload };
     default:
@@ -39,7 +42,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
   }
 };
 
-export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
+export const userAssignedProjectReducer = (state = {}, { type = '', payload = {} }) => {
   switch (type) {
     case ASSIGN_TO_PROJECT_SUCCESS: {
       const { projectName, projectRole, entryType } = payload;
@@ -69,7 +72,7 @@ export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
   }
 };
 
-export const userInfoReducer = (state = {}, { type, payload }) => {
+export const userInfoReducer = (state = {}, { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_USER_SUCCESS:
       return payload;
@@ -84,7 +87,7 @@ export const userInfoReducer = (state = {}, { type, payload }) => {
   }
 };
 
-export const activeProjectReducer = (state = '', { type, payload }) => {
+export const activeProjectReducer = (state = '', { type = '', payload = {} }) => {
   switch (type) {
     case SET_ACTIVE_PROJECT:
       return payload;

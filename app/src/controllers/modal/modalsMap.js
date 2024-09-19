@@ -20,8 +20,8 @@ export const addModal = (modalName, component) => {
   modalsMap[modalName] = component;
 };
 export const getModal = (modal) => {
-  const SavedModal = modal && modal.id && modalsMap[modal.id];
-  const ExplicitModal = modal && modal.component ? () => modal.component : null;
+  const SavedModal = modal?.id && modalsMap[modal.id];
+  const ExplicitModal = modal?.component ? () => modal.component : null;
 
   return SavedModal || ExplicitModal;
 };

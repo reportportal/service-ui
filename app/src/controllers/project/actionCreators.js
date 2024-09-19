@@ -169,9 +169,9 @@ export const fetchProjectNotificationsSuccessAction = (notifications) => ({
   payload: notifications,
 });
 
-export const addProjectNotificationAction = (notification) => ({
+export const addProjectNotificationAction = (notification, triggerAddingEvent = () => {}) => ({
   type: ADD_PROJECT_NOTIFICATION,
-  payload: notification,
+  payload: { notification, triggerAddingEvent },
 });
 
 export const addProjectNotificationSuccessAction = (notification) => ({
@@ -179,9 +179,9 @@ export const addProjectNotificationSuccessAction = (notification) => ({
   payload: notification,
 });
 
-export const updateNotificationStateAction = (notificationState) => ({
+export const updateNotificationStateAction = (notificationState, pluginName) => ({
   type: UPDATE_NOTIFICATION_STATE,
-  payload: notificationState,
+  payload: { notificationState, pluginName },
 });
 
 export const updateProjectNotificationAction = (notification) => ({

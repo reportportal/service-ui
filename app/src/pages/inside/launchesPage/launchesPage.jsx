@@ -20,7 +20,6 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
-import DOMPurify from 'dompurify';
 import {
   LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
@@ -33,7 +32,6 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { projectConfigSelector } from 'controllers/project';
@@ -60,7 +58,7 @@ import {
   loadingSelector,
   NAMESPACE,
   toggleAllLaunchesAction,
-  deleteItemsAction,
+  deleteLaunchesAction,
   updateLaunchLocallyAction,
   updateLaunchesLocallyAction,
 } from 'controllers/launch';
@@ -77,33 +75,6 @@ import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
 
 const messages = defineMessages({
-  deleteModalHeader: {
-    id: 'LaunchesPage.deleteModalHeader',
-    defaultMessage: 'Delete launch',
-  },
-  deleteModalMultipleHeader: {
-    id: 'LaunchesPage.deleteModalMultipleHeader',
-    defaultMessage: 'Delete launches',
-  },
-  deleteModalContent: {
-    id: 'LaunchesPage.deleteModalContent',
-    defaultMessage:
-      "Are you sure you want to delete launch <b>''{name}''</b>? It will no longer exist.",
-  },
-  deleteModalMultipleContent: {
-    id: 'LaunchesPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure you want to delete launches? They will no longer exist.',
-  },
-  warning: {
-    id: 'LaunchesPage.warning',
-    defaultMessage:
-      'You are going to delete not your own launch. This may affect other users information on the project.',
-  },
-  warningMultiple: {
-    id: 'LaunchesPage.warningMultiple',
-    defaultMessage:
-      'You are going to delete not your own launches. This may affect other users information on the project.',
-  },
   success: {
     id: 'LaunchesPage.success',
     defaultMessage: 'Launch was deleted',
@@ -131,32 +102,6 @@ const messages = defineMessages({
   addWidgetSuccess: {
     id: 'LaunchesPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
-  },
-  modalTitle: {
-    id: 'LaunchesPage.modalTitle',
-    defaultMessage: 'Import Launch',
-  },
-  importButton: {
-    id: 'LaunchesPage.importButton',
-    defaultMessage: 'Import',
-  },
-  importTip: {
-    id: 'LaunchesPage.tip',
-    defaultMessage:
-      'Drop <b>.xml</b> or <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
-  },
-  noteMessage: {
-    id: 'LaunchesPage.noteMessage',
-    defaultMessage:
-      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
-  },
-  importConfirmationWarning: {
-    id: 'LaunchesPage.importConfirmationWarning',
-    defaultMessage: 'Are you sure you want to interrupt import launches?',
-  },
-  incorrectFileSize: {
-    id: 'LaunchesPage.incorrectFileSize',
-    defaultMessage: 'File size is more than 32 Mb',
   },
 });
 
@@ -187,7 +132,7 @@ const messages = defineMessages({
     moveLaunchesAction,
     fetchLaunchesAction,
     toggleAllLaunchesAction,
-    deleteItemsAction,
+    deleteLaunchesAction,
     showNotification,
     showScreenLockAction,
     hideScreenLockAction,
@@ -233,7 +178,7 @@ export class LaunchesPage extends Component {
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
-    deleteItemsAction: PropTypes.func,
+    deleteLaunchesAction: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -269,7 +214,7 @@ export class LaunchesPage extends Component {
     lastOperation: {},
     loading: false,
     fetchLaunchesAction: () => {},
-    deleteItemsAction: () => {},
+    deleteLaunchesAction: () => {},
     highlightItemId: null,
     isDemoInstance: false,
   };
@@ -502,16 +447,10 @@ export class LaunchesPage extends Component {
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_MODAL_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
-    );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject), {
+    fetch(URLS.launches(this.props.activeProject, ids), {
       method: 'delete',
-      data: {
-        ids,
-      },
     })
       .then(() => {
         this.unselectAndFetchLaunches();
@@ -536,41 +475,18 @@ export class LaunchesPage extends Component {
       });
   };
 
-  isNotAllOwnLaunches = (launches) => {
-    const { userId } = this.props;
-    return launches.some((launch) => launch.owner !== userId);
-  };
-
   deleteItems = (launches) => {
-    const { intl, userId } = this.props;
+    const { userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
-    const warning =
-      this.isNotAllOwnLaunches(selectedLaunches) &&
-      (selectedLaunches.length === 1
-        ? intl.formatMessage(messages.warning)
-        : intl.formatMessage(messages.warningMultiple));
 
-    this.props.deleteItemsAction(selectedLaunches, {
-      onConfirm: this.confirmDeleteItems,
-      header:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.deleteModalHeader)
-          : intl.formatMessage(messages.deleteModalMultipleHeader),
-      mainContent:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, {
-              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-              name: selectedLaunches[0].name,
-            })
-          : intl.formatMessage(messages.deleteModalMultipleContent),
+    this.props.deleteLaunchesAction(selectedLaunches, {
+      confirmDeleteLaunches: this.confirmDeleteItems,
       userId,
-      warning,
-      eventsInfo: {},
     });
   };
 
   finishForceLaunches = (eventData) => {
-    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    const launches = eventData?.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
       eventsInfo: {
@@ -642,29 +558,11 @@ export class LaunchesPage extends Component {
   };
 
   openImportModal = () => {
-    const {
-      intl: { formatMessage },
-      activeProject,
-    } = this.props;
-
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
-      id: 'importModal',
+      id: 'importLaunchModal',
       data: {
-        type: MODAL_TYPE_IMPORT_LAUNCH,
         onImport: this.props.fetchLaunchesAction,
-        title: formatMessage(messages.modalTitle),
-        importButton: formatMessage(messages.importButton),
-        tip: formatMessage(messages.importTip),
-        incorrectFileSize: formatMessage(messages.incorrectFileSize),
-        noteMessage: formatMessage(messages.noteMessage),
-        importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
-        url: URLS.launchImport(activeProject),
-        eventsInfo: {
-          okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
-        },
       },
     });
   };
@@ -708,13 +606,18 @@ export class LaunchesPage extends Component {
   };
 
   mergeLaunches = () => {
-    this.props.mergeLaunchesAction(this.props.selectedLaunches, {
+    const launches = this.props.selectedLaunches.map((launch) => ({
+      ...launch,
+      startTime: new Date(launch.startTime).getTime(),
+      endTime: new Date(launch.endTime).getTime(),
+    }));
+    this.props.mergeLaunchesAction(launches, {
       fetchFunc: this.unselectAndResetPage,
     });
   };
 
   moveLaunches = (eventData) => {
-    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    const launches = eventData?.id ? [eventData] : this.props.selectedLaunches;
 
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,

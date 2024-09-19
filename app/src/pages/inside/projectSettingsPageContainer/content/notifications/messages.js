@@ -88,7 +88,7 @@ export const messages = defineMessages({
   },
   noItemsMessage: {
     id: 'NoCasesBlock.noItemsMessage',
-    defaultMessage: 'No Email Notification Rules',
+    defaultMessage: 'No {ruleName} notification rules yet',
   },
   notificationsInfo: {
     id: 'NoCasesBlock.notificationsInfo',
@@ -97,6 +97,10 @@ export const messages = defineMessages({
   create: {
     id: 'AddNewCaseButton.addNewRuleButton',
     defaultMessage: 'Create Rule',
+  },
+  addRule: {
+    id: 'AddNewCaseButton.addRule',
+    defaultMessage: 'Add Rule',
   },
   notConfiguredNotificationTooltip: {
     id: 'ButtonTooltip.notConfiguredNotificationTooltip',
@@ -108,7 +112,7 @@ export const messages = defineMessages({
   },
   toggleNote: {
     id: 'NotificationsEnableForm.toggleNotificationsNote',
-    defaultMessage: 'Send email notifications on launch finish',
+    defaultMessage: 'Toggle to enable or disable all notifications for the application.',
   },
   title: {
     id: 'NotificationsEnableForm.title',
@@ -117,6 +121,55 @@ export const messages = defineMessages({
   tabDescription: {
     id: 'NotificationsEnableForm.tabDescription',
     defaultMessage:
-      'Create Email Notification rules and enable Auto Email Notifications to receive emails on a launch finish event. More information about E-mail Notifications you can read in <a>Documentation</a>',
+      'Manage your launch related notifications for different communication channels: Email, Slack, etc. ',
+  },
+  allNotifications: {
+    id: 'NotificationsEnableForm.allNotifications',
+    defaultMessage: 'All notifications',
+  },
+  typeDescription: {
+    id: 'NotificationsEnableForm.typeDescription',
+    defaultMessage:
+      'Select {type} recipients list for every rule to send launch related notifications ',
+  },
+  unableToConfigure: {
+    id: 'NotificationsEnableForm.unableToConfigure',
+    defaultMessage: "Why can't I configure it?",
+  },
+  unableToConfigureDescription: {
+    id: 'NotificationsEnableForm.unableToConfigureDescription',
+    defaultMessage: 'Learn more about roles and permissions',
+  },
+  discoverPlugins: {
+    id: 'NotificationsEnableForm.discoverPlugins',
+    defaultMessage: 'Discover plugins',
+  },
+  discoverPluginsDescription: {
+    id: 'NotificationsEnableForm.discoverPluginsDescription',
+    defaultMessage: 'Learn more about available plugins to extend notifying functionality',
+  },
+  integrationSettings: {
+    id: 'NotificationsEnableForm.integrationSettings',
+    defaultMessage: 'Integration settings',
+  },
+  integrationSettingsDescription: {
+    id: 'NotificationsEnableForm.integrationSettingsDescription',
+    defaultMessage: 'Configure the connection of plugins with servers',
+  },
+  disabledPlugin: {
+    id: 'NotificationsEnableForm.disabledPlugin',
+    defaultMessage: 'server is disabled',
+  },
+  disabledContactInfo: {
+    id: 'NotificationsEnableForm.disabledContactInfo',
+    defaultMessage: 'Please contact your instance administrator for assistance in setting it up.',
+  },
+  notConfiguredIntegration: {
+    id: 'NotificationsEnableForm.notConfiguredIntegration',
+    defaultMessage: 'Integration is not configured yet',
+  },
+  configureIntegration: {
+    id: 'NotificationsEnableForm.configureIntegration',
+    defaultMessage: 'Configure Integration',
   },
 });
