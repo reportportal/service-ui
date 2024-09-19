@@ -1104,6 +1104,8 @@
   "LaunchDurationControls.ItemsValidationError": "测试项的数量应为1到600个",
   "LaunchExecutionAndIssueStatistics.launchNameText": "测试任务名：",
   "LaunchFiltersToolbar.addFilter": "添加过滤器",
+  "LaunchFiltersToolbar.clearFilter": "Clear filter",
+  "LaunchFiltersToolbar.filter": "Filter",
   "LaunchFiltersToolbar.saveFilterSuccess": "过滤器已保存",
   "LaunchFiltersToolbar.updateFilterSuccess": "过滤器已更新",
   "LaunchFinishForceDialog.finishForceLaunchText": "您确定要终止该测试任务吗？所有数据都将丢失。",
