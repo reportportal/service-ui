@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import classNames from 'classnames/bind';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { track } from 'react-tracking';
-import { injectIntl } from 'react-intl';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
@@ -29,124 +29,112 @@ import { loadingSelector } from 'controllers/uniqueErrors';
 import { fetchParentLaunchSuccessAction } from 'controllers/testItem/actionCreators';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { canWorkWithTests } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { RP_CLUSTER_LAST_RUN } from '../constants';
 import { messages } from '../messages';
 import styles from './emptyUniqueErrors.scss';
 
 const cx = classNames.bind(styles);
 
-@track()
-@injectIntl
-@connect(
-  (state) => ({
-    loading: loadingSelector(state),
-  }),
-  {
-    showModal: showModalAction,
-    fetchParentLaunchSuccessAction,
-  },
-)
-export class EmptyUniqueErrors extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    showModal: PropTypes.func,
-    parentLaunch: PropTypes.object,
-    loading: PropTypes.bool,
-    fetchParentLaunchSuccessAction: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
+export const EmptyUniqueErrors = ({ parentLaunch }) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const loading = useSelector(loadingSelector);
+  const dispatch = useDispatch();
+  const userRoles = useSelector(userRolesSelector);
 
-  static defaultProps = {
-    showModal: () => {},
-    parentLaunch: {},
-    loading: false,
-  };
+  const { status, metadata, analysing } = parentLaunch;
+  const clusterActive = analysing?.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
+  const disabled = status === IN_PROGRESS;
+  const lastRunAnalysis = metadata?.[RP_CLUSTER_LAST_RUN];
+  const canManageItems = canWorkWithTests(userRoles);
 
-  openModal = () => {
-    const { tracking } = this.props;
-    this.props.showModal({
-      id: 'uniqueErrorsAnalyzeModal',
-      data: {
-        launch: this.props.parentLaunch,
-        updateLaunchLocally: (data) => this.props.fetchParentLaunchSuccessAction(data),
-        events: UNIQUE_ERRORS_PAGE_EVENTS,
-      },
-    });
-    UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON &&
-      tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON);
-  };
-
-  getBody = () => {
-    const {
-      parentLaunch: { status, metadata, analysing },
-      intl: { formatMessage },
-    } = this.props;
-    const clusterActive = analysing?.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
-    const disabled = status === IN_PROGRESS;
-    const lastRunAnalysis = metadata?.[RP_CLUSTER_LAST_RUN];
-
-    if (clusterActive) {
-      return (
-        <>
-          <div className={cx('empty-unique-errors-loader')}>
-            <BubblesLoader />
-          </div>
-          <p className={cx('empty-unique-errors-text')}>
-            {formatMessage(messages.inProgressAnalysisText)}
-          </p>
-          <div className={cx('empty-unique-errors-btn')}>
-            <GhostButton disabled>{formatMessage(messages.inProgressUniqueErrBtn)}</GhostButton>
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <p className={cx('empty-unique-errors-headline')}>
-            {lastRunAnalysis
-              ? formatMessage(messages.noUniqueErrHeadline)
-              : formatMessage(messages.noUniqueErrRunHeadline)}
-          </p>
-
-          <p className={cx('empty-unique-errors-text')}>
-            {lastRunAnalysis
-              ? formatMessage(messages.rerunAnalysisText)
-              : formatMessage(messages.emptyUniqueErrText)}
-          </p>
-
-          <div className={cx('empty-unique-errors-btn')}>
-            <GhostButton
-              onClick={this.openModal}
-              disabled={disabled}
-              title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
-            >
-              {formatMessage(messages.emptyUniqueErrBtn)}
-            </GhostButton>
-          </div>
-        </>
-      );
-    }
-  };
-
-  render() {
-    const { loading } = this.props;
-
-    return (
-      <>
-        {loading ? (
-          <SpinningPreloader />
-        ) : (
-          <div className={cx('empty-unique-errors')}>
-            <div className={cx('empty-unique-errors-content')}>
-              <div className={cx('empty-unique-errors-img')} />
-              {this.getBody()}
-            </div>
-          </div>
-        )}
-      </>
+  const openModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'uniqueErrorsAnalyzeModal',
+        data: {
+          launch: parentLaunch,
+          updateLaunchLocally: (data) => dispatch(fetchParentLaunchSuccessAction(data)),
+          events: UNIQUE_ERRORS_PAGE_EVENTS,
+        },
+      }),
     );
-  }
-}
+    UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON &&
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON);
+  };
+
+  return (
+    <>
+      {loading ? (
+        <SpinningPreloader />
+      ) : (
+        <div className={cx('empty-unique-errors')}>
+          <div className={cx('empty-unique-errors-content')}>
+            <div className={cx('empty-unique-errors-img')} />
+            {clusterActive ? (
+              <>
+                <div className={cx('empty-unique-errors-loader')}>
+                  <BubblesLoader />
+                </div>
+                <p className={cx('empty-unique-errors-text')}>
+                  {formatMessage(messages.inProgressAnalysisText)}
+                </p>
+                <div className={cx('empty-unique-errors-btn')}>
+                  <GhostButton disabled>
+                    {formatMessage(messages.inProgressUniqueErrBtn)}
+                  </GhostButton>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className={cx('empty-unique-errors-headline')}>
+                  {canManageItems
+                    ? formatMessage(
+                        lastRunAnalysis
+                          ? messages.noUniqueErrHeadline
+                          : messages.noUniqueErrRunHeadline,
+                      )
+                    : formatMessage(messages.noUniqueErrYetHeadline)}
+                </p>
+
+                <p className={cx('empty-unique-errors-text')}>
+                  {canManageItems
+                    ? formatMessage(
+                        lastRunAnalysis ? messages.rerunAnalysisText : messages.emptyUniqueErrText,
+                      )
+                    : formatMessage(messages.emptyUniqueErrTextViewer)}
+                </p>
+
+                {canManageItems && (
+                  <div className={cx('empty-unique-errors-btn')}>
+                    <GhostButton
+                      onClick={openModal}
+                      disabled={disabled}
+                      title={
+                        disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null
+                      }
+                    >
+                      {formatMessage(messages.emptyUniqueErrBtn)}
+                    </GhostButton>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+EmptyUniqueErrors.propTypes = {
+  showModal: PropTypes.func,
+  parentLaunch: PropTypes.object,
+};
+
+EmptyUniqueErrors.defaultProps = {
+  showModal: () => {},
+  parentLaunch: {},
+};

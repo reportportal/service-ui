@@ -29,6 +29,15 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErr.button',
     defaultMessage: 'Run Unique Error Analysis',
   },
+  noUniqueErrYetHeadline: {
+    id: 'EmptyUniqueErr.noUniqueErrYetHeadline',
+    defaultMessage: 'No Unique Errors Yet',
+  },
+  emptyUniqueErrTextViewer: {
+    id: 'EmptyUniqueErr.emptyUniqueErrTextViewer',
+    defaultMessage:
+      'Unique errors will appear here once unique error analysis has been run by your team',
+  },
   noUniqueErrHeadline: {
     id: 'EmptyUniqueErr.noUniqueErrHeadline',
     defaultMessage: 'No Unique Errors',
