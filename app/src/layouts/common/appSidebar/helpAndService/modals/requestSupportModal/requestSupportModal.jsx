@@ -33,7 +33,7 @@ import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
 import { useTracking } from 'react-tracking';
-import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndServiceVersionsEvents';
+import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { messages } from '../../../messages';
 import { LinkItem } from '../../linkItem';
 import styles from './requestSupportModal.scss';

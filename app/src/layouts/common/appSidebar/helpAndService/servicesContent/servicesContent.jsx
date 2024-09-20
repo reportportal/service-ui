@@ -24,7 +24,7 @@ import { referenceDictionary } from 'common/utils';
 import { useEffect, useState } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import { useTracking } from 'react-tracking';
-import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndServiceVersionsEvents';
+import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { LinkItem } from '../linkItem';
 import { FAQWithPopover } from '../index';
 import styles from './servicesContent.scss';
