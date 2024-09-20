@@ -32,6 +32,8 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';
+import { useTracking } from 'react-tracking';
+import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'components/main/analytics/events/ga4Events/helpAndServiceVersionsEvents';
 import { messages } from '../../../messages';
 import { LinkItem } from '../../linkItem';
 import styles from './requestSupportModal.scss';
@@ -42,6 +44,7 @@ const REQUEST_FORM_ID = 'requestFormId';
 
 const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const email = useSelector(userEmailSelector);
   const [iframe, setIframe] = useState(null);
@@ -65,6 +68,8 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = () => {
+    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.CLICK_SEND_REQUEST_SERVICE_BUTTON);
+
     iframe.onload = () => {
       dispatch(
         showNotification({

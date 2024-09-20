@@ -24,7 +24,7 @@ import { showModalAction } from 'controllers/modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
 import { faqDictionary } from 'common/utils/referenceDictionary';
-import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
+import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { useTracking } from 'react-tracking';
 import { setFAQOpenStatusTrue } from '../../utils';
 import { messages } from '../../messages';
@@ -42,6 +42,8 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   useEffect(() => {
     onOpen(true);
     setFAQOpenStatusTrue(userId);
+    const faqTitle = messages.FAQ.defaultMessage;
+    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(faqTitle));
   }, []);
 
   const FAQContentItems = [
@@ -82,7 +84,7 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
         id: 'requestSupportModal',
       }),
     );
-    trackEvent(HELP_AND_SUPPORT_EVENTS.CLICK_REQUEST_SUPPORT_BUTTON);
+    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.CLICK_REQUEST_PROFESSIONAL_SERVICE);
   };
 
   const furtherAssistanceLinks = {
@@ -91,6 +93,10 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
         link={faqDictionary.rpEmailRequestSupport}
         content={formatMessage(messages.supportTeam)}
         icon={OpenIcon}
+        onClick={() => {
+          const linkName = messages.supportTeam.defaultMessage;
+          trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickFAQItem(linkName));
+        }}
         className={cx('inline-ref')}
       />
     ),
@@ -100,6 +106,10 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
         content={formatMessage(messages.slackChannel)}
         className={cx('inline-ref')}
         icon={OpenIcon}
+        onClick={() => {
+          const linkName = messages.slackChannel.defaultMessage;
+          trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickFAQItem(linkName));
+        }}
       />
     ),
   };
@@ -114,6 +124,8 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
           onClick={() => {
             closePopover();
             closeSidebar();
+            const question = contentItem.message.defaultMessage;
+            trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickFAQItem(question));
           }}
           key={contentItem.linkTo}
         />
