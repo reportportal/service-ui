@@ -65,76 +65,71 @@ export const EmptyUniqueErrors = ({ parentLaunch }) => {
       trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_RUN_BUTTON);
   };
 
+  const getHeadlineMessage = () => {
+    if (!canManageItems) {
+      return formatMessage(messages.noUniqueErrYetHeadline);
+    }
+    return lastRunAnalysis
+      ? formatMessage(messages.noUniqueErrHeadline)
+      : formatMessage(messages.noUniqueErrRunHeadline);
+  };
+
+  const getTextMessage = () => {
+    if (!canManageItems) {
+      return formatMessage(messages.emptyUniqueErrTextViewer);
+    }
+    return lastRunAnalysis
+      ? formatMessage(messages.rerunAnalysisText)
+      : formatMessage(messages.emptyUniqueErrText);
+  };
+
+  if (loading) {
+    return <SpinningPreloader />;
+  }
+
   return (
-    <>
-      {loading ? (
-        <SpinningPreloader />
-      ) : (
-        <div className={cx('empty-unique-errors')}>
-          <div className={cx('empty-unique-errors-content')}>
-            <div className={cx('empty-unique-errors-img')} />
-            {clusterActive ? (
-              <>
-                <div className={cx('empty-unique-errors-loader')}>
-                  <BubblesLoader />
-                </div>
-                <p className={cx('empty-unique-errors-text')}>
-                  {formatMessage(messages.inProgressAnalysisText)}
-                </p>
-                <div className={cx('empty-unique-errors-btn')}>
-                  <GhostButton disabled>
-                    {formatMessage(messages.inProgressUniqueErrBtn)}
-                  </GhostButton>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className={cx('empty-unique-errors-headline')}>
-                  {canManageItems
-                    ? formatMessage(
-                        lastRunAnalysis
-                          ? messages.noUniqueErrHeadline
-                          : messages.noUniqueErrRunHeadline,
-                      )
-                    : formatMessage(messages.noUniqueErrYetHeadline)}
-                </p>
+    <div className={cx('empty-unique-errors')}>
+      <div className={cx('empty-unique-errors-content')}>
+        <div className={cx('empty-unique-errors-img')} />
+        {clusterActive ? (
+          <>
+            <div className={cx('empty-unique-errors-loader')}>
+              <BubblesLoader />
+            </div>
+            <p className={cx('empty-unique-errors-text')}>
+              {formatMessage(messages.inProgressAnalysisText)}
+            </p>
+            <div className={cx('empty-unique-errors-btn')}>
+              <GhostButton disabled>{formatMessage(messages.inProgressUniqueErrBtn)}</GhostButton>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className={cx('empty-unique-errors-headline')}>{getHeadlineMessage()}</p>
+            <p className={cx('empty-unique-errors-text')}>{getTextMessage()}</p>
 
-                <p className={cx('empty-unique-errors-text')}>
-                  {canManageItems
-                    ? formatMessage(
-                        lastRunAnalysis ? messages.rerunAnalysisText : messages.emptyUniqueErrText,
-                      )
-                    : formatMessage(messages.emptyUniqueErrTextViewer)}
-                </p>
-
-                {canManageItems && (
-                  <div className={cx('empty-unique-errors-btn')}>
-                    <GhostButton
-                      onClick={openModal}
-                      disabled={disabled}
-                      title={
-                        disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null
-                      }
-                    >
-                      {formatMessage(messages.emptyUniqueErrBtn)}
-                    </GhostButton>
-                  </div>
-                )}
-              </>
+            {canManageItems && (
+              <div className={cx('empty-unique-errors-btn')}>
+                <GhostButton
+                  onClick={openModal}
+                  disabled={disabled}
+                  title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
+                >
+                  {formatMessage(messages.emptyUniqueErrBtn)}
+                </GhostButton>
+              </div>
             )}
-          </div>
-        </div>
-      )}
-    </>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 
 EmptyUniqueErrors.propTypes = {
-  showModal: PropTypes.func,
   parentLaunch: PropTypes.object,
 };
 
 EmptyUniqueErrors.defaultProps = {
-  showModal: () => {},
   parentLaunch: {},
 };
