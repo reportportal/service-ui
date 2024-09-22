@@ -35,9 +35,8 @@ import { urlOrganizationAndProjectSelector, PROJECT_LAUNCHES_PAGE } from 'contro
 import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants';
 import { launchDistinctSelector } from 'controllers/launch/selectors';
 import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
-
 import { omit } from 'common/utils/omit';
-import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
+import { NEW_FILTER_PREFIX, CUSTOM_FILTER } from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
 import {
   NAMESPACE,
@@ -63,6 +62,7 @@ import {
   removeFilterAction,
   setPageLoadingAction,
   createFilterFromParsedQueryAction,
+  removeLaunchesFilterAction,
 } from './actionCreators';
 
 function* fetchFilters() {
@@ -127,24 +127,32 @@ function* resetFilter({ payload: filterId }) {
   yield put(updateFilterSuccessAction(savedFilter));
 }
 
-function* createFilter({ payload: filter = {}, meta = {} }) {
+function* createFilter({ payload = {}, meta = {} }) {
+  const { hasFilterPermissions, isRemoveCustomFilter, ...filter } = payload;
   const launchFilters = yield select(launchFiltersSelector);
   const userId = yield select(userIdSelector);
   const lastNewFilterId = launchFilters.reduce(
     (acc, launchFilter) => (launchFilter.id < acc ? launchFilter.id : acc),
     0,
   );
+
+  const filterName = hasFilterPermissions
+    ? `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`
+    : 'Custom filter';
+
   const newFilter = {
     ...DEFAULT_FILTER,
     ...filter,
-    id: lastNewFilterId - 1,
-    name: filter.name
-      ? `${COPY_PREFIX} ${filter.name}`
-      : `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
+    id: hasFilterPermissions ? lastNewFilterId - 1 : CUSTOM_FILTER,
+    name: filter.name ? `${COPY_PREFIX} ${filter.name}` : filterName,
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
   yield put(changeActiveFilterAction(newFilter.id, meta));
+
+  if (isRemoveCustomFilter) {
+    yield put(removeLaunchesFilterAction(CUSTOM_FILTER));
+  }
 }
 
 function* saveNewFilter({ payload: filter }) {

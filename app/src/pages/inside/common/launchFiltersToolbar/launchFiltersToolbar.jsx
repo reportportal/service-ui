@@ -145,7 +145,10 @@ export class LaunchFiltersToolbar extends Component {
 
   handleFilterCreate = (hasFilterPermissions) => {
     const { createFilter, tracking } = this.props;
-    createFilter();
+    createFilter({
+      hasFilterPermissions,
+      isRemoveCustomFilter: !hasFilterPermissions && this.state.isFilterCreate,
+    });
     if (!hasFilterPermissions) {
       this.setState({ isFilterCreate: !this.state.isFilterCreate });
     }
