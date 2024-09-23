@@ -36,7 +36,11 @@ import { FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project/constants
 import { launchDistinctSelector } from 'controllers/launch/selectors';
 import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { omit } from 'common/utils/omit';
-import { NEW_FILTER_PREFIX, CUSTOM_FILTER } from 'common/constants/reservedFilterIds';
+import {
+  NEW_FILTER_PREFIX,
+  CUSTOM_FILTER,
+  CUSTOM_FILTER_ID,
+} from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
 import {
   NAMESPACE,
@@ -138,12 +142,12 @@ function* createFilter({ payload = {}, meta = {} }) {
 
   const filterName = hasFilterPermissions
     ? `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`
-    : 'Custom filter';
+    : CUSTOM_FILTER;
 
   const newFilter = {
     ...DEFAULT_FILTER,
     ...filter,
-    id: hasFilterPermissions ? lastNewFilterId - 1 : CUSTOM_FILTER,
+    id: hasFilterPermissions ? lastNewFilterId - 1 : CUSTOM_FILTER_ID,
     name: filter.name ? `${COPY_PREFIX} ${filter.name}` : filterName,
     owner: userId,
   };
@@ -151,7 +155,7 @@ function* createFilter({ payload = {}, meta = {} }) {
   yield put(changeActiveFilterAction(newFilter.id, meta));
 
   if (isRemoveCustomFilter) {
-    yield put(removeLaunchesFilterAction(CUSTOM_FILTER));
+    yield put(removeLaunchesFilterAction(CUSTOM_FILTER_ID));
   }
 }
 
