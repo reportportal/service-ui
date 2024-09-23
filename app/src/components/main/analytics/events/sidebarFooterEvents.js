@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { normalizeEventString } from 'components/main/analytics';
 import { getBasicClickEventParameters } from './common/ga4Utils';
 
 const SIDEBAR = 'sidebar';
@@ -29,6 +30,16 @@ export const SIDEBAR_EVENTS = {
     ...basicEventParameters,
     icon_name: 'launches',
   },
+  CLICK_PRIVACY_POLICY_LINK: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    icon_name: 'privacy_policy',
+  },
+  onClickUpdateLink: (type) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    element_name: 'update',
+    type: normalizeEventString(type),
+  }),
+
   // GA3 events
   CLICK_MEMBERS_BTN: {
     category: SIDEBAR,

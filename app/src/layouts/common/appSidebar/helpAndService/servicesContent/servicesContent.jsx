@@ -23,6 +23,8 @@ import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
 import { useEffect, useState } from 'react';
 import fetchJsonp from 'fetch-jsonp';
+import { useTracking } from 'react-tracking';
+import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { LinkItem } from '../linkItem';
 import { FAQWithPopover } from '../index';
 import styles from './servicesContent.scss';
@@ -33,6 +35,7 @@ const cx = classNames.bind(styles);
 export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOpen }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [latestServiceVersions, setLatestServiceVersions] = useState({});
 
   const currentYear = new Date().getFullYear();
@@ -84,6 +87,8 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
         },
       }),
     );
+    const linkName = messages.servicesVersions.defaultMessage;
+    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(linkName));
   };
 
   return (
@@ -103,6 +108,8 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
           onClick={() => {
             closePopover();
             closeSidebar();
+            const linkName = contentItem.message.defaultMessage;
+            trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(linkName));
           }}
           className={cx('menu-item')}
           isInternal={contentItem.isInternal}

@@ -23,6 +23,8 @@ import Parser from 'html-react-parser';
 import { useSelector } from 'react-redux';
 import { Sidebar } from 'componentLibrary/sidebar';
 import { userIdSelector } from 'controllers/user';
+import { useTracking } from 'react-tracking';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { getFAQOpenStatus } from './utils';
 import { ServiceWithPopover } from './helpAndService';
 import LogoLeftIcon from './img/logo-icon-inline.svg';
@@ -41,6 +43,7 @@ export const AppSidebar = ({
   linkToUserProfilePage,
 }) => {
   const userId = useSelector(userIdSelector);
+  const { trackEvent } = useTracking();
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
 
   const { formatMessage } = useIntl();
@@ -60,6 +63,7 @@ export const AppSidebar = ({
         <a
           className={cx('policy-block-link')}
           href={referenceDictionary.rpEpamPolicy}
+          onClick={() => trackEvent(SIDEBAR_EVENTS.CLICK_PRIVACY_POLICY_LINK)}
           target="_blank"
         >
           {formatMessage(messages.privacyPolicy)}

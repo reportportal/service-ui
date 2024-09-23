@@ -25,6 +25,8 @@ import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import VectorIcon from 'common/img/newIcons/vector-inline.svg';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 import { messages } from 'layouts/common/appSidebar/messages';
+import { useTracking } from 'react-tracking';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import styles from './serviceVersion.scss';
 
 const cx = classNames.bind(styles);
@@ -89,6 +91,7 @@ VectorWithTooltip.propTypes = {
 
 export const ServiceVersion = ({ service, content }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { name, version, linkTo, isNewVersion } = service;
   const isError = !version;
 
@@ -101,7 +104,13 @@ export const ServiceVersion = ({ service, content }) => {
       </div>
       {version && <div className={cx('version', { update: isNewVersion })}>{version}</div>}
       {linkTo && version && isNewVersion && (
-        <LinkItem link={linkTo} content={content} className={cx('link')} icon={OpenIcon} />
+        <LinkItem
+          link={linkTo}
+          content={content}
+          className={cx('link')}
+          icon={OpenIcon}
+          onClick={() => trackEvent(SIDEBAR_EVENTS.onClickUpdateLink(name))}
+        />
       )}
     </div>
   );
