@@ -170,6 +170,7 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
       cancelButton={cancelButton}
       warningMessage={warning}
       CustomFooter={selectedImportantLaunches.length > 0 ? CustomFooter : null}
+      contentClassName={cx('delete-launch-modal-content')}
     >
       <p className={cx('message')}>{Parser(DOMPurify.sanitize(getMainContent()))}</p>
     </ModalLayout>

@@ -1,5 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
+
 FROM alpine:3.20.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
