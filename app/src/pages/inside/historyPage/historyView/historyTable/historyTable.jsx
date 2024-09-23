@@ -32,11 +32,12 @@ import {
   HISTORY_BASE_DEFAULT_VALUE,
 } from 'controllers/itemsHistory';
 import { nameLinkSelector } from 'controllers/testItem';
-import { PROJECT_LOG_PAGE } from 'controllers/pages';
+import { PROJECT_LOG_PAGE, userRolesSelector } from 'controllers/pages';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { defectTypesSelector } from 'controllers/project';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { canWorkWithTests } from 'common/utils/permissions';
 import { ItemNameBlock } from './itemNameBlock';
 import { EmptyHistoryItem } from './emptyHistoryItem';
 import { HistoryItem } from './historyItem';
@@ -72,6 +73,7 @@ const messages = defineMessages({
     totalItemsCount: totalItemsCountSelector(state),
     selectedFilter: filterForCompareSelector(state),
     defectTypes: defectTypesSelector(state),
+    userRoles: userRolesSelector(state),
     link: (ownProps) => nameLinkSelector(state, ownProps),
   }),
   {
@@ -94,6 +96,7 @@ export class HistoryTable extends Component {
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     withGroupOperations: PropTypes.bool,
     fetchItemsHistoryAction: PropTypes.func,
+    userRoles: PropTypes.object,
     link: PropTypes.func,
     navigate: PropTypes.func,
     onSelectItem: PropTypes.func,
@@ -140,7 +143,9 @@ export class HistoryTable extends Component {
       withGroupOperations,
       defectTypes,
       historyBase,
+      userRoles,
     } = this.props;
+    const canManageTestItems = canWorkWithTests(userRoles);
     switch (historyItem.status) {
       case NOT_FOUND:
       case RESETED:
@@ -176,7 +181,7 @@ export class HistoryTable extends Component {
               defectTypes={defectTypes}
               onSelectItem={onSelectItem}
               selectedItems={selectedItems}
-              selectable={withGroupOperations && !historyItem.isFilterItem}
+              selectable={canManageTestItems && withGroupOperations && !historyItem.isFilterItem}
               singleDefectView={withGroupOperations}
             />
           </HistoryCell>
