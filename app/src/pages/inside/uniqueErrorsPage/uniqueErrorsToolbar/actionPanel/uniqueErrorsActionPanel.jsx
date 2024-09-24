@@ -45,7 +45,8 @@ import {
   proceedWithValidItemsAction,
 } from 'controllers/uniqueErrors/clusterItems';
 import { userAccountRoleSelector } from 'controllers/user';
-import { activeProjectRoleSelector } from 'controllers/pages';
+import { activeProjectRoleSelector, userRolesSelector } from 'controllers/pages';
+import { canWorkWithTests } from 'common/utils/permissions';
 import styles from './uniqueErrorsActionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +60,7 @@ const cx = classNames.bind(styles);
     lastOperation: lastOperationSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -97,6 +99,7 @@ export class UniqueErrorsActionPanel extends Component {
     restorePath: PropTypes.func,
     proceedWithValidItems: PropTypes.func,
     projectRole: PropTypes.string.isRequired,
+    userRoles: PropTypes.object,
     selectedItems: PropTypes.array,
     showBreadcrumbs: PropTypes.bool,
     unselectAndFetchItems: PropTypes.func,
@@ -248,8 +251,10 @@ export class UniqueErrorsActionPanel extends Component {
       selectedItems,
       hasErrors,
       hasValidItems,
+      userRoles,
     } = this.props;
     const itemsActionDescriptors = this.getItemsActionDescriptors();
+    const canManageItems = canWorkWithTests(userRoles);
 
     return (
       <div
@@ -277,14 +282,16 @@ export class UniqueErrorsActionPanel extends Component {
         )}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
-          <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostMenuButton
-              title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-              items={itemsActionDescriptors}
-              disabled={!selectedItems.length}
-              onClick={this.onClickActionsButton}
-            />
-          </div>
+          {canManageItems && (
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostMenuButton
+                title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+                items={itemsActionDescriptors}
+                disabled={!selectedItems.length}
+                onClick={this.onClickActionsButton}
+              />
+            </div>
+          )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={this.onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
