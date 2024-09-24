@@ -29,6 +29,7 @@ import {
   saveNewFilterAction,
   changeActiveFilterAction,
   dirtyFilterIdsSelector,
+  removeLaunchesFilterAction,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
@@ -42,6 +43,7 @@ import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
+import { CUSTOM_FILTER_ID } from 'common/constants/reservedFilterIds';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -68,6 +70,7 @@ const cx = classNames.bind(styles);
     saveNewFilter: saveNewFilterAction,
     changeLaunchDistinct: changeLaunchDistinctAction,
     redirectToLaunches: changeActiveFilterAction,
+    removeLaunchesFilter: removeLaunchesFilterAction,
   },
 )
 export class LaunchFiltersToolbar extends Component {
@@ -102,6 +105,7 @@ export class LaunchFiltersToolbar extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     userRoles: userRolesType,
+    removeLaunchesFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -144,12 +148,17 @@ export class LaunchFiltersToolbar extends Component {
   };
 
   handleFilterCreate = (hasFilterPermissions) => {
-    const { createFilter, tracking } = this.props;
-    createFilter({
-      hasFilterPermissions,
-      isRemoveCustomFilter: !hasFilterPermissions && this.state.isFilterCreate,
-    });
-    if (!hasFilterPermissions) {
+    const { createFilter, removeLaunchesFilter, tracking } = this.props;
+
+    if (hasFilterPermissions) {
+      createFilter();
+    } else {
+      if (this.state.isFilterCreate) {
+        removeLaunchesFilter(CUSTOM_FILTER_ID);
+      } else {
+        createFilter();
+      }
+
       this.setState({ isFilterCreate: !this.state.isFilterCreate });
     }
     tracking.trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);

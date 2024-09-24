@@ -17,5 +17,5 @@
 export const ALL = 'all';
 export const LATEST = 'latest';
 export const NEW_FILTER_PREFIX = 'New_filter';
-export const CUSTOM_FILTER_ID = '-1';
+export const CUSTOM_FILTER_ID = -1;
 export const CUSTOM_FILTER = 'Custom filter';
