@@ -31,6 +31,8 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
+import { userRolesSelector } from 'controllers/pages';
+import { canWorkWithFilters } from 'common/utils/permissions';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -417,7 +419,11 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
     const project = yield call(fetch, URLS.projectByName(projectKey));
     yield put(fetchProjectSuccessAction(project));
     yield put(setProjectIntegrationsAction(project.integrations));
-    if (!fetchInfoOnly) {
+
+    const userRoles = yield select(userRolesSelector);
+    const hasFilterPermissions = canWorkWithFilters(userRoles);
+
+    if (!fetchInfoOnly && hasFilterPermissions) {
       yield put(fetchProjectPreferencesAction(project.projectKey));
     }
   } catch (error) {
