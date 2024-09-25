@@ -25,7 +25,7 @@ import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
-export const LinkComponent = ({ to, children, icon, className, event, automationId }) => {
+export const LinkComponent = ({ to, children, icon, className, event, automationId, target }) => {
   const { trackEvent } = useTracking();
   const handleLinkTracking = () => {
     trackEvent(event);
@@ -35,7 +35,7 @@ export const LinkComponent = ({ to, children, icon, className, event, automation
       to={to}
       onClick={handleLinkTracking}
       className={cx(className)}
-      target={'_blank'}
+      target={target}
       data-automation-id={automationId}
     >
       {children}
@@ -46,7 +46,7 @@ export const LinkComponent = ({ to, children, icon, className, event, automation
       onClick={handleLinkTracking}
       href={to}
       className={cx(className)}
-      target={'_blank'}
+      target={target}
       rel="noopener noreferrer"
       data-automation-id={automationId}
     >
@@ -69,9 +69,11 @@ LinkComponent.propTypes = {
   event: PropTypes.object,
   className: PropTypes.string,
   automationId: PropTypes.string,
+  target: PropTypes.oneOf(['_blank', '_self', '_parent', '_top']),
 };
 LinkComponent.defaultProps = {
   className: 'link-item-wrapper',
   icon: null,
   automationId: null,
+  target: '_blank',
 };

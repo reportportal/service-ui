@@ -13,8 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+.delete-launch-modal-content {
+  padding: 15px 10px;
+}
 
 .message {
+  line-height: 24px;
+
   b {
     font-family: $FONT-SEMIBOLD;
   }
