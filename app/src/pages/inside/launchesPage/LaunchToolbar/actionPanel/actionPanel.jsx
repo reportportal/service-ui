@@ -232,8 +232,9 @@ export class ActionPanel extends Component {
   };
 
   isShowWidgetButton = () => {
-    const { activeFilterId } = this.props;
-    return Number.isInteger(activeFilterId);
+    const { activeFilterId, userRoles } = this.props;
+
+    return Number.isInteger(activeFilterId) && canWorkWithWidgets(userRoles);
   };
 
   renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
@@ -252,7 +253,6 @@ export class ActionPanel extends Component {
       restorePath,
       onAddNewWidget,
       finishedLaunchesCount,
-      userRoles,
       isImportPluginsAvailable,
     } = this.props;
     const actionDescriptors = this.createActionDescriptors();
@@ -293,11 +293,7 @@ export class ActionPanel extends Component {
           )}
           {this.isShowWidgetButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton
-                icon={AddWidgetIcon}
-                onClick={onAddNewWidget}
-                disabled={!canWorkWithWidgets(userRoles)}
-              >
+              <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
                 <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
               </GhostButton>
             </div>
