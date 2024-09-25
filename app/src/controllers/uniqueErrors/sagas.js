@@ -17,12 +17,7 @@
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-import {
-  fetchParentItems,
-  fetchParentLaunch,
-  launchSelector,
-  queryParametersSelector,
-} from 'controllers/testItem';
+import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
   launchIdSelector,
@@ -36,6 +31,7 @@ import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import { locationSelector } from 'controllers/pages/selectors';
+import { queryParametersSelector } from './selectors';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
