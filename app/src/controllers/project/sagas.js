@@ -419,7 +419,11 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
     const project = yield call(fetch, URLS.projectByName(projectKey));
     yield put(fetchProjectSuccessAction(project));
     yield put(setProjectIntegrationsAction(project.integrations));
-    if (!fetchInfoOnly) {
+
+    const userRoles = yield select(userRolesSelector);
+    const hasFilterPermissions = canWorkWithFilters(userRoles);
+
+    if (!fetchInfoOnly && hasFilterPermissions) {
       yield put(fetchProjectPreferencesAction(project.projectKey));
     }
   } catch (error) {
@@ -432,15 +436,9 @@ function* watchFetchProject() {
 }
 
 function* fetchProjectPreferences({ payload: projectKey }) {
-  const userRoles = yield select(userRolesSelector);
-  const hasFilterPermissions = canWorkWithFilters(userRoles);
-
   const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
   yield put(fetchProjectPreferencesSuccessAction(preferences));
-
-  if (hasFilterPermissions) {
-    yield put(fetchUserFiltersSuccessAction(preferences.filters));
-  }
+  yield put(fetchUserFiltersSuccessAction(preferences.filters));
 }
 
 function* watchFetchProjectPreferences() {
