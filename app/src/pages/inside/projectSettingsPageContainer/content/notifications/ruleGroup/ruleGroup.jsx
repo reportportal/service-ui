@@ -319,11 +319,16 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                       payload: {
                         projectId: activeProject,
                         settingsTab: INTEGRATIONS,
-                        subTab: 'email',
+                      },
+                      meta: {
+                        query: {
+                          subPage: 'email',
+                        },
                       },
                     }}
                     icon={arrowRightIcon}
                     event={PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CONFIGURE_INTEGRATION_LINK}
+                    target="_self"
                   >
                     {formatMessage(messages.configureIntegration)}
                   </LinkComponent>
