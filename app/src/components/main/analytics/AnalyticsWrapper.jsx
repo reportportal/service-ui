@@ -45,6 +45,7 @@ export const analyticsEventObserver = ReactObserver();
       projectInfoId,
       isAdmin,
       isAnalyzerAvailable,
+      organizationId,
     } = baseEventParameters;
 
     if ('place' in data) {
@@ -55,6 +56,7 @@ export const analyticsEventObserver = ReactObserver();
           getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
+        organization_id: `${organizationId}|${instanceId}`,
         uid: `${userId}|${instanceId}`,
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),

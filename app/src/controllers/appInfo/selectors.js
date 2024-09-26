@@ -22,6 +22,7 @@ import {
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organizations/organization/selectors';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -79,6 +80,7 @@ export const baseEventParametersSelector = createSelector(
   isAdminSelector,
   analyzerExtensionsSelector,
   enabledPattersSelector,
+  activeOrganizationIdSelector,
   (
     instanceId,
     buildVersion,
@@ -89,6 +91,7 @@ export const baseEventParametersSelector = createSelector(
     isAdmin,
     analyzerExtensions,
     enabledPatterns,
+    organizationId,
   ) => ({
     instanceId,
     buildVersion,
@@ -99,5 +102,6 @@ export const baseEventParametersSelector = createSelector(
     projectInfoId,
     isAdmin,
     isAnalyzerAvailable: !!analyzerExtensions.length,
+    organizationId,
   }),
 );

@@ -47,12 +47,14 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    organizationId,
   } = baseEventParameters;
 
   const eventParameters = {
     instanceID: instanceId,
     version: getAppVersion(buildVersion),
     uid: `${userId}|${instanceId}`,
+    organization_id: `${organizationId}|${instanceId}`,
     auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
