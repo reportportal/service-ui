@@ -66,6 +66,7 @@ import {
   USER_PROFILE_SUB_PAGE,
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -190,6 +191,13 @@ const routesMap = {
     },
   ),
   [PLUGINS_TAB_PAGE]: `/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
+
+  [ORGANIZATIONS_PAGE]: {
+    path: '/organizations',
+    thunk: (dispatch) => {
+      dispatch(fetchOrganizationsAction());
+    },
+  },
 
   [ORGANIZATION_PROJECTS_PAGE]: {
     path: '/organizations/:organizationSlug/projects',

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-export const organizationsSelector = (state) => state.organizations || {};
-
-export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
-
-export const organizationsListLoadingSelector = (state) => organizationsSelector(state).listLoading;
-
-export const organizationsListPaginationSelector = (state) =>
-  organizationsSelector(state).pagination;
+.organizations-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-top: 24px;
+}

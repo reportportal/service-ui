@@ -28,6 +28,7 @@ import {
   PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import {
@@ -60,7 +61,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     const sidebarItems = [
       {
         onClick: () => onClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
-        link: { type: PROJECTS_PAGE },
+        link: { type: ORGANIZATIONS_PAGE },
         icon: OrganizationsIcon,
         message: (
           <FormattedMessage id={'InstanceSidebar.organizations'} defaultMessage={'Organizations'} />

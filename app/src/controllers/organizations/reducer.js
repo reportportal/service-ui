@@ -17,11 +17,13 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
+import { alternativePaginationReducer } from 'controllers/pagination';
 import { organizationReducer } from 'controllers/organizations/organization/reducer';
-import { NAMESPACE } from './constants';
+import { initialPaginationState, NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({
   list: fetchReducer(NAMESPACE, { contentPath: 'items' }),
   listLoading: loadingReducer(NAMESPACE),
+  pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   organization: organizationReducer,
 });

@@ -41,7 +41,7 @@ NameColumn.defaultProps = {
 
 export const ProjectTypeColumn = ({ className, value }) => (
   <div className={cx('projects-col', 'project-type-col', className)}>
-    {value.entryType.toLowerCase()}
+    {value.entryType?.toLowerCase()}
   </div>
 );
 ProjectTypeColumn.propTypes = {

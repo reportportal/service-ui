@@ -65,6 +65,7 @@ import { ProjectTeamPage } from 'pages/organization/projectTeamPage';
 import { ProjectLayout } from 'layouts/projectLayout';
 import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
+import { OrganizationsPage } from 'pages/instance/organizationsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -90,6 +91,11 @@ export const pageRendering = {
   [USER_PROFILE_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   API_PAGE: { component: ApiPage, layout: ProjectLayout },
+  ORGANIZATIONS_PAGE: {
+    component: OrganizationsPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
   ORGANIZATION_PROJECTS_PAGE: {
     component: OrganizationProjectsPage,
     layout: OrganizationLayout,

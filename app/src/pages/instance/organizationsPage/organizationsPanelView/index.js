@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-export const organizationsSelector = (state) => state.organizations || {};
-
-export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
-
-export const organizationsListLoadingSelector = (state) => organizationsSelector(state).listLoading;
-
-export const organizationsListPaginationSelector = (state) =>
-  organizationsSelector(state).pagination;
+export { OrganizationsPanelView } from './organizationsPanelView';
