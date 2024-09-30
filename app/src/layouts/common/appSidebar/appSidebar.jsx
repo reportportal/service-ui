@@ -36,6 +36,8 @@ import styles from './appSidebar.scss';
 
 const cx = classNames.bind(styles);
 
+const USER_CONTROL = 'User control';
+
 export const AppSidebar = ({
   createMainBlock,
   items,
@@ -57,7 +59,7 @@ export const AppSidebar = ({
     </div>
   );
 
-  const createFooterBlock = (openSidebar, closeSidebar) => (
+  const createFooterBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
     <>
       <div className={cx('policy-block')}>
         <a
@@ -80,6 +82,13 @@ export const AppSidebar = ({
         onClick={() => {
           openSidebar();
           setIsOpenSupportPopover(!isOpenSupportPopover);
+          const isSidebarCollapsed = getIsSidebarCollapsed();
+          trackEvent(
+            SIDEBAR_EVENTS.onClickItem({
+              itemName: messages.helpAndServiceVersions.defaultMessage,
+              isSidebarCollapsed,
+            }),
+          );
         }}
       />
       <UserControlWithPopover
@@ -90,6 +99,13 @@ export const AppSidebar = ({
         onClick={() => {
           openSidebar();
           setIsOpenAvatarPopover(!isOpenAvatarPopover);
+          const isSidebarCollapsed = getIsSidebarCollapsed();
+          trackEvent(
+            SIDEBAR_EVENTS.onClickItem({
+              itemName: USER_CONTROL,
+              isSidebarCollapsed,
+            }),
+          );
         }}
       />
     </>
