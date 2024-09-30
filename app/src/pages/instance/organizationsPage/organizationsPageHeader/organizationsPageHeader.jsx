@@ -47,11 +47,9 @@ export const OrganizationsPageHeader = ({ isNotEmpty }) => {
 };
 
 OrganizationsPageHeader.propTypes = {
-  hasPermission: PropTypes.bool,
   isNotEmpty: PropTypes.bool,
 };
 
 OrganizationsPageHeader.defaultProps = {
-  hasPermission: false,
   isNotEmpty: false,
 };

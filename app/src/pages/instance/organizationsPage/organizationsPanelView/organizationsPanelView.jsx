@@ -47,7 +47,7 @@ const OrganizationsPanelViewWrapped = ({
   >
     <div className={cx('organizations-list')}>
       {organizationsList.map((organization) => (
-        <OrganizationCard organization={organization} />
+        <OrganizationCard key={organization.id} organization={organization} />
       ))}
     </div>
   </PaginationWrapper>
