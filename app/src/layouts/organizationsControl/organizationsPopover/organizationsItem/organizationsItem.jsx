@@ -21,6 +21,8 @@ import Parser from 'html-react-parser';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { useTracking } from 'react-tracking';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
@@ -48,6 +50,7 @@ export const OrganizationsItem = ({
   isAllOpen,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
   const [isShowOpenButton, setIsShowOpenButton] = useState(false);
   const [isFocusedShowOpenButton, setIsFocusedShowOpenButton] = useState(false);
@@ -99,6 +102,11 @@ export const OrganizationsItem = ({
     setIsFocusedCollapsedButton(false);
   };
 
+  const handleOpenClick = (item) => {
+    onClick(item);
+    trackEvent(SIDEBAR_EVENTS.CLICK_OPEN_ORGANIZATION_PROJECTS_BTN);
+  };
+
   const getOrganizationItemContentHeader = () => (
     <div className={cx('header-item-wrapper')}>
       <button
@@ -123,7 +131,7 @@ export const OrganizationsItem = ({
           displayed: isShowOpenButton || isFocusedCollapsedButton || isFocusedShowOpenButton,
           focus: isFocusedShowOpenButton,
         })}
-        onClick={onClick}
+        onClick={handleOpenClick}
         onFocus={onFocusOpenButton}
         onBlur={onBlurOpenButton}
       >

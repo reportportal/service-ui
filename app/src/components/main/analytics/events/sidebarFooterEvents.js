@@ -15,7 +15,7 @@
  */
 
 import { normalizeEventString } from 'components/main/analytics';
-import { getBasicClickEventParameters } from './common/ga4Utils';
+import { getBasicClickEventParameters, getBasicSearchEventParameters } from './common/ga4Utils';
 
 const SIDEBAR = 'sidebar';
 
@@ -30,14 +30,28 @@ export const SIDEBAR_EVENTS = {
     ...basicEventParameters,
     icon_name: 'launches',
   },
+  CLICK_OPEN_ORGANIZATION_PROJECTS_BTN: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'hover',
+    icon_name: 'open_project_page',
+  },
   CLICK_PRIVACY_POLICY_LINK: {
     ...getBasicClickEventParameters(SIDEBAR),
     icon_name: 'privacy_policy',
+  },
+  SEARCH_ORGANIZATION_PROJECTS: {
+    ...getBasicSearchEventParameters(SIDEBAR),
+    element_name: 'search',
   },
   onClickUpdateLink: (type) => ({
     ...getBasicClickEventParameters(SIDEBAR),
     element_name: 'update',
     type: normalizeEventString(type),
+  }),
+  onClickItem: ({ itemName, isSidebarCollapsed }) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    icon_name: normalizeEventString(itemName),
+    place: isSidebarCollapsed ? 'sidebar' : 'sidebar_hover',
   }),
 
   // GA3 events

@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { canSeeMembers, canWorkWithFilters } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -51,6 +51,8 @@ import { activeOrganizationNameSelector } from 'controllers/organizations/organi
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
+const ORGANIZATION_CONTROL = 'Organization control';
+
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -64,68 +66,72 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
-    trackEvent(eventInfo);
+    trackEvent(SIDEBAR_EVENTS.onClickItem(eventInfo));
   };
 
   const getSidebarItems = () => {
     const sidebarItems = [
       {
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.dashboards.defaultMessage, isSidebarCollapsed }),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
-        message: (
-          <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Project Dashboards'} />
-        ),
+        message: formatMessage(messages.dashboards),
       },
       {
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.launches.defaultMessage, isSidebarCollapsed }),
         link: {
           type: LAUNCHES_PAGE,
           payload: { organizationSlug, projectSlug },
         },
         icon: LaunchesIcon,
-        message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
+        message: formatMessage(messages.launches),
       },
       {
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
           payload: { projectSlug, filterId: ALL, organizationSlug },
         },
         icon: DebugIcon,
-        message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug Mode'} />,
+        message: formatMessage(messages.debugMode),
       },
     ];
 
     if (canWorkWithFilters(userRoles)) {
       sidebarItems.push({
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
-        message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+        message: formatMessage(messages.filters),
       });
     }
 
     if (canSeeMembers(userRoles)) {
       sidebarItems.push({
-        onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
         link: {
           type: PROJECT_MEMBERS_PAGE,
           payload: { organizationSlug, projectSlug },
         },
         icon: MembersIcon,
-        message: <FormattedMessage id={'Sidebar.membersBtn'} defaultMessage={'Project Team'} />,
+        message: formatMessage(messages.projectTeam),
       });
     }
 
     sidebarItems.push({
-      onClick: () => onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
+      onClick: (isSidebarCollapsed) =>
+        onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
       link: {
         type: PROJECT_SETTINGS_PAGE,
         payload: { organizationSlug, projectSlug },
       },
       icon: SettingsIcon,
-      message: <FormattedMessage id={'Sidebar.settingsBtn'} defaultMessage={'Project Settings'} />,
+      message: formatMessage(messages.projectsSettings),
     });
     projectPageExtensions.forEach(({ icon, internalRoute }) => {
       if (icon) {
@@ -162,7 +168,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     bottomTitle: projectName,
   };
 
-  const createMainBlock = (openSidebar, closeSidebar) => (
+  const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -170,6 +176,13 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       onClick={() => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
+        const isSidebarCollapsed = getIsSidebarCollapsed();
+        trackEvent(
+          SIDEBAR_EVENTS.onClickItem({
+            itemName: ORGANIZATION_CONTROL,
+            isSidebarCollapsed,
+          }),
+        );
       }}
       link={link}
       titles={titles}

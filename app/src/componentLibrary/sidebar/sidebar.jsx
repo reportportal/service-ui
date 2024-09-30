@@ -23,6 +23,8 @@ import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 
+const COLLAPSED_WIDTH = 48;
+
 export const Sidebar = ({
   logoBlock,
   createMainBlock,
@@ -56,6 +58,8 @@ export const Sidebar = ({
     }
   };
 
+  const getIsSidebarCollapsed = () => COLLAPSED_WIDTH === sidebarRef.current?.offsetWidth;
+
   return (
     <div
       ref={sidebarRef}
@@ -66,7 +70,7 @@ export const Sidebar = ({
       <aside className={cx('sidebar')}>
         {logoBlock}
         <div className={cx('main-block-wrapper')}>
-          {createMainBlock(onOpenSidebar, onCloseSidebar)}
+          {createMainBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed)}
         </div>
         {items.length > 0 && (
           <div className={cx('items-block')}>
@@ -78,7 +82,7 @@ export const Sidebar = ({
                     icon={icon}
                     link={link}
                     onClick={() => {
-                      onClick();
+                      onClick(getIsSidebarCollapsed());
                       onLeaveSidebar();
                     }}
                     message={message}
@@ -87,7 +91,9 @@ export const Sidebar = ({
             )}
           </div>
         )}
-        <div className={cx('footer-block')}>{createFooterBlock(onOpenSidebar, onCloseSidebar)}</div>
+        <div className={cx('footer-block')}>
+          {createFooterBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed)}
+        </div>
       </aside>
     </div>
   );
