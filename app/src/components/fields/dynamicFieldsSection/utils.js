@@ -15,6 +15,7 @@
  */
 
 import { omit } from 'common/utils/omit';
+import { JIRA_CLOUD } from 'pages/inside/projectSettingsPageContainer/content/integrations/integrationsList/integrationInfo/constats';
 import {
   ARRAY_TYPE,
   DROPDOWN_TYPE,
@@ -27,6 +28,7 @@ import {
   CREATABLE_MULTIPLE_AUTOCOMPLETE_TYPE,
   MULTILINE_TEXT_TYPE,
   VALUE_NONE,
+  ASSIGNEE_FIELD_NAME,
 } from './constants';
 import { FIELDS_MAP } from './dynamicFieldMap';
 
@@ -105,4 +107,10 @@ export const removeNoneValues = (inputObj) => {
     }
   });
   return obj;
+};
+
+export const isJiraCloudAssigneeField = (pluginName, field) => {
+  const isJiraCloud = pluginName === JIRA_CLOUD;
+  const isAssigneeField = field.fieldName?.toLowerCase() === ASSIGNEE_FIELD_NAME.toLowerCase();
+  return isJiraCloud && isAssigneeField;
 };

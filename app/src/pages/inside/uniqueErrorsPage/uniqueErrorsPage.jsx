@@ -237,7 +237,9 @@ export class UniqueErrorsPage extends Component {
     ];
     this.props.onUnlinkIssue(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+      },
     });
   };
   deleteItems = () => {

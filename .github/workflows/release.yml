@@ -82,11 +82,3 @@ jobs:
           asset_path: '${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}'
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
-
-      - name: Commit version
-        run: |
-          echo ${{ github.event.inputs.version }} > ${{ github.workspace }}/VERSION
-          git add ${{ github.workspace }}/VERSION
-          export CHANGED=`git status | grep VERSION | xargs`
-          [ -z "${CHANGED}" ] || git commit -m 'Commit version'
-          git push
