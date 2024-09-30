@@ -36,8 +36,8 @@ const UserControl = ({ onClick }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <div className={cx('user-block-wrapper')}>
-      <button className={cx('avatar-block')} onClick={onClick}>
+    <div className={cx('user-block-wrapper')} onClick={onClick}>
+      <button className={cx('avatar-block')}>
         <Image
           className={cx('avatar-img')}
           src={URLS.dataPhoto(photoTimeStamp, true)}
