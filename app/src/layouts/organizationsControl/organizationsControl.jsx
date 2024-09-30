@@ -34,8 +34,8 @@ export const OrganizationsControl = ({
   titles,
   isExtendedNav,
 }) => (
-  <div className={cx('organizations-control-wrapper')}>
-    <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })} onClick={onClick}>
+  <div className={cx('organizations-control-wrapper')} onClick={onClick}>
+    <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
       {titles.shortTitle}
     </button>
     <button className={cx('organizations-control')} tabIndex={-1}>

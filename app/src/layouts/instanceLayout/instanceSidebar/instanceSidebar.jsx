@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { canSeeSidebarOptions } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
@@ -29,7 +29,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_PAGE,
 } from 'controllers/pages/constants';
-import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import {
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
@@ -43,6 +43,8 @@ import PluginsIcon from 'common/img/sidebar/plugins-icon-inline.svg';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
+const ORGANIZATION_CONTROL = 'Organization control';
+
 export const InstanceSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -53,42 +55,42 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
-    trackEvent(eventInfo);
+    trackEvent(SIDEBAR_EVENTS.onClickItem(eventInfo));
   };
 
   const getSidebarItems = () => {
     const sidebarItems = [
       {
-        onClick: () => onClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.organizations.defaultMessage, isSidebarCollapsed }),
         link: { type: PROJECTS_PAGE },
         icon: OrganizationsIcon,
-        message: (
-          <FormattedMessage id={'InstanceSidebar.organizations'} defaultMessage={'Organizations'} />
-        ),
+        message: formatMessage(messages.organizations),
       },
     ];
 
     if (canSeeSidebarOptions(userRoles)) {
       sidebarItems.push(
         {
-          onClick: () => onClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({ itemName: messages.allUsers.defaultMessage, isSidebarCollapsed }),
           link: { type: ALL_USERS_PAGE },
           icon: UsersIcon,
-          message: (
-            <FormattedMessage id={'InstanceSidebar.allUsers'} defaultMessage={'All Users'} />
-          ),
+          message: formatMessage(messages.allUsers),
         },
         {
-          onClick: () => onClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({ itemName: messages.settings.defaultMessage, isSidebarCollapsed }),
           link: { type: SERVER_SETTINGS_PAGE },
           icon: SettingsIcon,
-          message: <FormattedMessage id={'InstanceSidebar.settings'} defaultMessage={'Settings'} />,
+          message: formatMessage(messages.settings),
         },
         {
-          onClick: () => onClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({ itemName: messages.plugins.defaultMessage, isSidebarCollapsed }),
           link: { type: PLUGINS_PAGE },
           icon: PluginsIcon,
-          message: <FormattedMessage id={'InstanceSidebar.plugins'} defaultMessage={'Plugins'} />,
+          message: formatMessage(messages.plugins),
         },
       );
 
@@ -96,7 +98,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
         .filter((ext) => !!ext.buttonIcon)
         .forEach((extension) =>
           sidebarItems.push({
-            onClick: () => onClickButton(),
+            onClick: onClickNavBtn,
             link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
             icon: extension.buttonIcon,
             message: extension.buttonLabel || extension.name,
@@ -123,7 +125,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     bottomTitle: null,
   };
 
-  const createMainBlock = (openSidebar, closeSidebar) => (
+  const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -131,6 +133,13 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       onClick={() => {
         openSidebar();
         setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
+        const isSidebarCollapsed = getIsSidebarCollapsed();
+        trackEvent(
+          SIDEBAR_EVENTS.onClickItem({
+            itemName: ORGANIZATION_CONTROL,
+            isSidebarCollapsed,
+          }),
+        );
       }}
       link={link}
       titles={titles}

@@ -29,4 +29,56 @@ export const messages = defineMessages({
     id: 'OrganizationsControl.allOrganizations',
     defaultMessage: 'All organizations',
   },
+  projectsSettings: {
+    id: 'Sidebar.settingsBtn',
+    defaultMessage: 'Project Settings',
+  },
+  projectTeam: {
+    id: 'Sidebar.membersBtn',
+    defaultMessage: 'Project Team',
+  },
+  filters: {
+    id: 'Sidebar.filtersBtn',
+    defaultMessage: 'Filters',
+  },
+  debugMode: {
+    id: 'Sidebar.debugBtn',
+    defaultMessage: 'Debug Mode',
+  },
+  launches: {
+    id: 'Sidebar.launchesBtn',
+    defaultMessage: 'Launches',
+  },
+  dashboards: {
+    id: 'Sidebar.dashboardsBtn',
+    defaultMessage: 'Project Dashboards',
+  },
+  organizations: {
+    id: 'InstanceSidebar.organizations',
+    defaultMessage: 'Organizations',
+  },
+  allUsers: {
+    id: 'InstanceSidebar.allUsers',
+    defaultMessage: 'All Users',
+  },
+  settings: {
+    id: 'InstanceSidebar.settings',
+    defaultMessage: 'Settings',
+  },
+  plugins: {
+    id: 'InstanceSidebar.plugins',
+    defaultMessage: 'Plugins',
+  },
+  projects: {
+    id: 'OrganizationSidebar.projectsBtn',
+    defaultMessage: 'Projects',
+  },
+  users: {
+    id: 'OrganizationSidebar.membersBtn',
+    defaultMessage: 'Organization Users',
+  },
+  organizationSettings: {
+    id: 'OrganizationSidebar.settingsBtn',
+    defaultMessage: 'Organization Settings',
+  },
 });

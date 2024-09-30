@@ -29,8 +29,8 @@ const cx = classNames.bind(styles);
 
 const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
   return (
-    <div className={cx('service-wrapper')}>
-      <button className={cx('service-block', { untouched: !isFaqTouched })} onClick={onClick}>
+    <div className={cx('service-wrapper')} onClick={onClick}>
+      <button className={cx('service-block', { untouched: !isFaqTouched })}>
         <i>{Parser(HelpIcon)}</i>
       </button>
       <button className={cx('service-control')}>

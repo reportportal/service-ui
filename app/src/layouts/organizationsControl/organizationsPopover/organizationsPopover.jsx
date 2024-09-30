@@ -29,6 +29,8 @@ import {
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { useTracking } from 'react-tracking';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
 
@@ -52,6 +54,8 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const [valueSearch, setValueSearch] = useState('');
+  const [isSearchEventTriggered, setIsSearchEventTriggered] = useState(false);
+  const { trackEvent } = useTracking();
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
 
   const filteredProjects = useMemo(
@@ -82,7 +86,13 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   };
 
   const handleChange = (event) => {
-    setValueSearch(event.target.value);
+    const value = event.target.value;
+    setValueSearch(value);
+
+    if (value.length && !isSearchEventTriggered) {
+      trackEvent(SIDEBAR_EVENTS.SEARCH_ORGANIZATION_PROJECTS);
+      setIsSearchEventTriggered(true);
+    }
   };
 
   const handleClear = () => {
