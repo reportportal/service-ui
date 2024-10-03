@@ -233,11 +233,11 @@ export const Hamburger = ({ launch, customProps }) => {
 
   return (
     <div className={cx('hamburger')}>
-      <div ref={iconRef} className={cx('hamburger-icon')} onClick={toggleMenu}>
+      <button ref={iconRef} className={cx('hamburger-icon')} onClick={toggleMenu}>
         <div className={cx('hamburger-icon-part')} />
         <div className={cx('hamburger-icon-part')} />
         <div className={cx('hamburger-icon-part')} />
-      </div>
+      </button>
       <div className={cx('hamburger-menu', { shown: isMenuShown })}>
         {canSeeActions && (
           <div className={cx('hamburger-menu-actions')}>
