@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import track from 'react-tracking';
-import { connect } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTracking } from 'react-tracking';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
 import { downloadFile } from 'common/utils/downloadFile';
@@ -33,13 +33,13 @@ import {
 } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -99,201 +99,162 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-@connect(
-  (state) => ({
-    userRoles: userRolesSelector(state),
-    projectKey: projectKeySelector(state),
-    enabledPatterns: enabledPattersSelector(state),
-    analyzerExtensions: analyzerExtensionsSelector(state),
-  }),
-  {
-    showModal: showModalAction,
-    updateLaunchLocallyAction,
-  },
-)
-@track()
-export class Hamburger extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    launch: PropTypes.object.isRequired,
-    projectKey: PropTypes.string.isRequired,
-    customProps: PropTypes.object,
-    userRoles: userRolesType,
-    enabledPatterns: PropTypes.array,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    showModal: PropTypes.func,
-    updateLaunchLocallyAction: PropTypes.func,
-    analyzerExtensions: PropTypes.array,
+export const Hamburger = ({ launch, customProps }) => {
+  const userRoles = useSelector(userRolesSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const enabledPatterns = useSelector(enabledPattersSelector);
+  const analyzerExtensions = useSelector(analyzerExtensionsSelector);
+
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+
+  const [isMenuShown, setIsMenuShown] = useState(false);
+  const [disableEventTrack, setDisableEventTrack] = useState(false);
+  const iconRef = useRef(null);
+
+  const isLaunchInProgress = launch.status === IN_PROGRESS.toUpperCase();
+
+  const onExportLaunch = (type) => {
+    downloadFile(URLS.exportLaunch(projectKey, launch.id, type));
   };
 
-  static defaultProps = {
-    customProps: {},
-    accountRole: '',
-    enabledPatterns: [],
-    showModal: () => {},
-    updateLaunchLocallyAction: () => {},
-    analyzerExtensions: [],
-  };
-
-  state = {
-    menuShown: false,
-    disableEventTrack: false,
-  };
-
-  componentDidMount() {
-    document.addEventListener('click', this.handleOutsideClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleOutsideClick, false);
-  }
-
-  onExportLaunch = (type) => {
-    downloadFile(URLS.exportLaunch(this.props.projectKey, this.props.launch.id, type));
-  };
-
-  getForceFinishTooltip = () => {
-    const { intl, userRoles } = this.props;
+  const getForceFinishTooltip = () => {
     let forceFinishTitle = '';
 
     if (!canForceFinishLaunch(userRoles)) {
-      forceFinishTitle = intl.formatMessage(messages.noPermissions);
+      forceFinishTitle = formatMessage(messages.noPermissions);
     }
-    if (!this.isInProgress()) {
-      forceFinishTitle = intl.formatMessage(messages.launchFinished);
+    if (isLaunchInProgress) {
+      forceFinishTitle = formatMessage(messages.launchFinished);
     }
     return forceFinishTitle;
   };
 
-  getMoveToDebugTooltip = () => {
-    const { intl, userRoles } = this.props;
-    return !canMoveToDebug(userRoles) ? intl.formatMessage(messages.noPermissions) : '';
+  const getMoveToDebugTooltip = () => {
+    return !canMoveToDebug(userRoles) ? formatMessage(messages.noPermissions) : '';
   };
 
-  getDeleteItemTooltip = () => {
-    if (!canDeleteLaunch(this.props.userRoles)) {
-      return this.props.intl.formatMessage(messages.notYourLaunch);
+  const getDeleteItemTooltip = () => {
+    if (!canDeleteLaunch(userRoles)) {
+      return formatMessage(messages.notYourLaunch);
     }
-    if (this.isInProgress()) {
-      return this.props.intl.formatMessage(messages.launchInProgress);
+    if (isLaunchInProgress) {
+      return formatMessage(messages.launchInProgress);
     }
     return '';
   };
 
-  isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
-
-  exportAsPDF = () => {
-    this.onExportLaunch('pdf');
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_PDF);
+  const exportAsPDF = () => {
+    onExportLaunch('pdf');
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_PDF);
   };
 
-  exportAsXLS = () => {
-    this.onExportLaunch('xls');
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_XLS);
+  const exportAsXLS = () => {
+    onExportLaunch('xls');
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_XLS);
   };
 
-  exportAsHTML = () => {
-    this.onExportLaunch('html');
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_HTML);
+  const exportAsHTML = () => {
+    onExportLaunch('html');
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_HTML);
   };
 
-  handleOutsideClick = (e) => {
-    if (this.icon && !this.icon.contains(e.target) && this.state.menuShown) {
-      this.setState({ menuShown: false });
+  const handleOutsideClick = (e) => {
+    if (iconRef.current && !iconRef.current.contains(e.target) && isMenuShown) {
+      setIsMenuShown(false);
     }
   };
 
-  toggleMenu = () => {
-    this.setState({ menuShown: !this.state.menuShown });
-    if (!this.state.disableEventTrack) {
-      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_HAMBURGER_MENU);
-      this.setState({ disableEventTrack: true });
+  const toggleMenu = () => {
+    setIsMenuShown(!isMenuShown);
+    if (!disableEventTrack) {
+      trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_HAMBURGER_MENU);
+      setDisableEventTrack(true);
     }
   };
 
-  openUniqueErrorAnalysisModal = () => {
-    this.props.showModal({
-      id: 'uniqueErrorsAnalyzeModal',
-      data: {
-        launch: this.props.launch,
-        updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
-        events: {
-          clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.getClickOnAnalyzeUniqueErrorsEvent,
+  const openUniqueErrorAnalysisModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'uniqueErrorsAnalyzeModal',
+        data: {
+          launch,
+          updateLaunchLocally: (data) => dispatch(updateLaunchLocallyAction(data)),
+          events: {
+            clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.getClickOnAnalyzeUniqueErrorsEvent,
+          },
         },
-      },
-    });
+      }),
+    );
   };
 
-  changeImportantState = (retentionType) => {
-    this.props.showModal({
-      id:
-        retentionType === RETENTION_POLICY.IMPORTANT
-          ? 'unmarkAsImportantModal'
-          : 'markAsImportantModal',
-      data: {
-        activeProject: this.props.projectKey,
-        launch: this.props.launch,
-        onSuccess: (data) => this.props.updateLaunchLocallyAction(data),
-      },
-    });
+  const changeImportantState = (retentionType) => {
+    dispatch(
+      showModalAction({
+        id:
+          retentionType === RETENTION_POLICY.IMPORTANT
+            ? 'unmarkAsImportantModal'
+            : 'markAsImportantModal',
+        data: {
+          activeProject: projectKey,
+          launch,
+          onSuccess: (data) => dispatch(updateLaunchLocallyAction(data)),
+        },
+      }),
+    );
   };
 
-  getClusterTitle = () => {
-    const { launch, intl, analyzerExtensions } = this.props;
-
+  const getClusterTitle = () => {
     const clusterActive = launch.analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
-    const isLaunchInProgress = this.isInProgress();
 
     if (clusterActive) {
-      return intl.formatMessage(messages.uniqueErrorAnalysisIsInProgress);
+      return formatMessage(messages.uniqueErrorAnalysisIsInProgress);
     } else if (isLaunchInProgress) {
-      return intl.formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
+      return formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
     } else if (!analyzerExtensions.length) {
-      return intl.formatMessage(messages.serviceAnalyzerDisabledTooltip);
+      return formatMessage(messages.serviceAnalyzerDisabledTooltip);
     } else {
       return '';
     }
   };
 
-  render() {
-    const { intl, userRoles, launch, customProps, enabledPatterns, tracking } = this.props;
+  const clusterTitle = getClusterTitle();
+  const canUpdateImportant = canDeleteLaunch(userRoles);
+  const canSeeActions = canSeeRowActionMenu(userRoles);
 
-    const clusterTitle = this.getClusterTitle();
-    const canUpdateImportant = canDeleteLaunch(userRoles);
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick, false);
 
-    return (
-      <div className={cx('hamburger')}>
-        <div
-          ref={(icon) => {
-            this.icon = icon;
-          }}
-          className={cx('hamburger-icon')}
-          onClick={this.toggleMenu}
-        >
-          <div className={cx('hamburger-icon-part')} />
-          <div className={cx('hamburger-icon-part')} />
-          <div className={cx('hamburger-icon-part')} />
-        </div>
-        <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
+    return () => {
+      document.removeEventListener('click', handleOutsideClick, false);
+    };
+  }, [handleOutsideClick]);
+
+  return (
+    <div className={cx('hamburger')}>
+      <button ref={iconRef} className={cx('hamburger-icon')} onClick={toggleMenu}>
+        <div className={cx('hamburger-icon-part')} />
+        <div className={cx('hamburger-icon-part')} />
+        <div className={cx('hamburger-icon-part')} />
+      </button>
+      <div className={cx('hamburger-menu', { shown: isMenuShown })}>
+        {canSeeActions && (
           <div className={cx('hamburger-menu-actions')}>
             {launch.mode === 'DEFAULT' ? (
               <HamburgerMenuItem
-                title={this.getMoveToDebugTooltip()}
-                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+                title={getMoveToDebugTooltip()}
+                text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
                 disabled={!canMoveToDebug(userRoles)}
                 onClick={() => {
-                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                   customProps.onMove(launch);
                 }}
               />
             ) : (
               <HamburgerMenuItem
-                text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-                title={this.getMoveToDebugTooltip()}
+                text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+                title={getMoveToDebugTooltip()}
                 disabled={!canMoveToDebug(userRoles)}
                 onClick={() => {
                   customProps.onMove(launch);
@@ -301,37 +262,37 @@ export class Hamburger extends Component {
               />
             )}
             <HamburgerMenuItem
-              text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
-              title={this.getForceFinishTooltip()}
-              disabled={!canForceFinishLaunch(userRoles) || !this.isInProgress()}
+              text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
+              title={getForceFinishTooltip()}
+              disabled={!canForceFinishLaunch(userRoles) || !isLaunchInProgress}
               onClick={() => {
-                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                 customProps.onForceFinish(launch);
               }}
             />
             <HamburgerMenuItem
               disabled={!canUpdateImportant}
-              title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
-              text={intl.formatMessage(
+              title={canUpdateImportant ? '' : formatMessage(messages.noPermissions)}
+              text={formatMessage(
                 launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
                   ? messages.unmarkAsImportant
                   : messages.markAsImportant,
               )}
               onClick={() => {
-                tracking.trackEvent(
+                trackEvent(
                   launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
                     ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
                     : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
                 );
-                this.changeImportantState(launch.retentionPolicy);
+                changeImportantState(launch.retentionPolicy);
               }}
             />
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
                 disabled={!canStartAnalysis(userRoles)}
-                text={intl.formatMessage(messages.analysis)}
+                text={formatMessage(messages.analysis)}
                 onClick={() => {
-                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
                   customProps.onAnalysis(launch);
                 }}
               />
@@ -339,55 +300,64 @@ export class Hamburger extends Component {
             <HamburgerMenuItem
               disabled={!!clusterTitle || !canStartAnalysis(userRoles)}
               title={clusterTitle}
-              text={intl.formatMessage(messages.uniqueErrorAnalysis)}
+              text={formatMessage(messages.uniqueErrorAnalysis)}
               onClick={() => {
-                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU);
-                this.openUniqueErrorAnalysisModal();
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU);
+                openUniqueErrorAnalysisModal();
               }}
             />
             <HamburgerMenuItem
-              text={intl.formatMessage(messages.patternAnalysis)}
-              title={!enabledPatterns.length && intl.formatMessage(messages.noPatternsEnabled)}
+              text={formatMessage(messages.patternAnalysis)}
+              title={!enabledPatterns.length && formatMessage(messages.noPatternsEnabled)}
               onClick={() => {
-                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
                 customProps.onPatternAnalysis(launch);
               }}
               disabled={!enabledPatterns.length || !canStartAnalysis(userRoles)}
             />
             <HamburgerMenuItem
-              text={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-              disabled={!canDeleteLaunch(userRoles) || this.isInProgress()}
+              text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+              disabled={!canDeleteLaunch(userRoles) || isLaunchInProgress}
               onClick={() => {
-                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                 customProps.onDeleteItem(launch);
               }}
-              title={this.getDeleteItemTooltip()}
+              title={getDeleteItemTooltip()}
             />
           </div>
-          <div className={cx('export-block')}>
-            <div className={cx('export-label')}>
-              <FormattedMessage id={'Hamburger.export'} defaultMessage={'Export:'} />
+        )}
+        <div className={cx('export-block')}>
+          <div className={cx('export-label')}>
+            <FormattedMessage id={'Hamburger.export'} defaultMessage={'Export:'} />
+          </div>
+          <div className={cx('export-buttons')}>
+            <div className={cx('export-button')}>
+              <GhostButton tiny onClick={exportAsPDF} disabled={isLaunchInProgress}>
+                PDF
+              </GhostButton>
             </div>
-            <div className={cx('export-buttons')}>
-              <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsPDF} disabled={this.isInProgress()}>
-                  PDF
-                </GhostButton>
-              </div>
-              <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsXLS} disabled={this.isInProgress()}>
-                  XLS
-                </GhostButton>
-              </div>
-              <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsHTML} disabled={this.isInProgress()}>
-                  HTML
-                </GhostButton>
-              </div>
+            <div className={cx('export-button')}>
+              <GhostButton tiny onClick={exportAsXLS} disabled={isLaunchInProgress}>
+                XLS
+              </GhostButton>
+            </div>
+            <div className={cx('export-button')}>
+              <GhostButton tiny onClick={exportAsHTML} disabled={isLaunchInProgress}>
+                HTML
+              </GhostButton>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Hamburger.propTypes = {
+  launch: PropTypes.object.isRequired,
+  customProps: PropTypes.object,
+};
+
+Hamburger.defaultProps = {
+  customProps: {},
+};

@@ -23,6 +23,9 @@
   width: 15px;
   height: 10px;
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
 
   &:hover {
     .hamburger-icon-part {
