@@ -50,3 +50,7 @@ export const initialPaginationState = {
   totalElements: 0,
   totalPages: 0,
 };
+
+export const ERROR_CODES = {
+  PROJECT_EXISTS: 4095,
+};

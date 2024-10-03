@@ -26,6 +26,7 @@ import { userRolesSelector } from 'controllers/pages';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
+import { ORGANIZATION_EXTERNAL_TYPE } from 'common/constants/organizationTypes';
 import UserIcon from './img/user-inline.svg';
 import ProjectsIcon from './img/projects-inline.svg';
 import LastUpdateIcon from './img/last-update-inline.svg';
@@ -36,8 +37,7 @@ import { messages } from '../../messages';
 import styles from './organizationCard.scss';
 
 const cx = classNames.bind(styles);
-const EXTERNAL_TYPE = 'EXTERNAL';
-const THREE_MONTH = 3600 * 24 * 30 * 1000;
+const THREE_MONTHS = 3600 * 24 * 30 * 1000;
 
 export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
@@ -47,7 +47,28 @@ export const OrganizationCard = ({ organization }) => {
   const projectsCount = organization.relationships.projects.meta.count;
   const lastLaunch = organization.relationships.launches.meta.last_occurred_at;
   const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunch));
-  const isOutdated = Date.now() - new Date(lastLaunch).getTime() > THREE_MONTH;
+  const isOutdated = Date.now() - new Date(lastLaunch).getTime() > THREE_MONTHS;
+
+  const cartInfo = [
+    {
+      icon: UserIcon,
+      className: cx('icon-wrapper'),
+      content: formatMessage(messages.organizationUsers),
+      bottomElement: <span>{usersCount}</span>,
+    },
+    {
+      icon: ProjectsIcon,
+      className: cx('icon-wrapper'),
+      content: formatMessage(messages.organizationProjects),
+      bottomElement: <span>{projectsCount}</span>,
+    },
+    {
+      icon: LastUpdateIcon,
+      className: cx('last-update'),
+      content: formatMessage(messages.latestLaunch),
+      bottomElement: <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />,
+    },
+  ];
 
   return (
     <div className={cx('organization-card')}>
@@ -62,7 +83,7 @@ export const OrganizationCard = ({ organization }) => {
           {organization.name}
         </NavLink>
         {hasPermission &&
-          (organization.type === EXTERNAL_TYPE ? (
+          (organization.type === ORGANIZATION_EXTERNAL_TYPE ? (
             <Tooltip
               content={formatMessage(messages.synchedOrganization)}
               placement={'top'}
@@ -85,36 +106,14 @@ export const OrganizationCard = ({ organization }) => {
       </div>
       {hasPermission && (
         <div className={cx('cart-info')}>
-          <div className={cx('icon-wrapper')}>
-            <Tooltip
-              content={formatMessage(messages.organizationUsers)}
-              placement={'top'}
-              wrapperClassName={cx('tooltip-wrapper')}
-            >
-              <i className={cx('icon')}>{Parser(UserIcon)}</i>
-            </Tooltip>
-            <span>{usersCount}</span>
-          </div>
-          <div className={cx('icon-wrapper')}>
-            <Tooltip
-              content={formatMessage(messages.organizationProjects)}
-              placement={'top'}
-              wrapperClassName={cx('tooltip-wrapper')}
-            >
-              <i className={cx('icon')}>{Parser(ProjectsIcon)}</i>
-            </Tooltip>
-            <span>{projectsCount}</span>
-          </div>
-          <div className={cx('last-update')}>
-            <Tooltip
-              content={formatMessage(messages.latestLaunch)}
-              placement={'top'}
-              wrapperClassName={cx('tooltip-wrapper')}
-            >
-              <i className={cx('icon')}>{Parser(LastUpdateIcon)}</i>
-            </Tooltip>
-            <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />
-          </div>
+          {cartInfo.map(({ icon, className, content, bottomElement }) => (
+            <div key={content} className={className}>
+              <Tooltip content={content} placement={'top'} wrapperClassName={cx('tooltip-wrapper')}>
+                <i className={cx('icon')}>{Parser(icon)}</i>
+              </Tooltip>
+              {bottomElement}
+            </div>
+          ))}
         </div>
       )}
     </div>

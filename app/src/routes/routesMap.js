@@ -37,7 +37,6 @@ import {
   PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
-  PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
@@ -91,9 +90,7 @@ import { fetchProjectDataAction } from 'controllers/instance';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { fetchProjectsAction } from 'controllers/instance/projects';
 import { fetchOrganizationsAction } from 'controllers/organizations';
-import { startSetViewMode } from 'controllers/instance/projects/actionCreators';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
@@ -156,14 +153,6 @@ const routesMap = {
 
   API_PAGE: '/api',
 
-  [PROJECTS_PAGE]: {
-    path: '/projects',
-    thunk: (dispatch) => {
-      dispatch(fetchProjectsAction());
-      dispatch(fetchOrganizationsAction());
-      dispatch(startSetViewMode());
-    },
-  },
   [PROJECT_DETAILS_PAGE]: {
     path: `/organizations/projects/organizations/:organizationSlug/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
     thunk: (dispatch) => {

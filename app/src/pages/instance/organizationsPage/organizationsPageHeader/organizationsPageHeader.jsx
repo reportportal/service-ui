@@ -26,7 +26,7 @@ import styles from './organizationsPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsPageHeader = ({ isNotEmpty }) => {
+export const OrganizationsPageHeader = ({ isEmpty }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -34,7 +34,7 @@ export const OrganizationsPageHeader = ({ isNotEmpty }) => {
       <div className={cx('header')}>
         <span className={cx('title')}>{formatMessage(messages.title)}</span>
         <div className={cx('actions')}>
-          {isNotEmpty && (
+          {!isEmpty && (
             <div className={cx('icons')}>
               <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
@@ -47,9 +47,9 @@ export const OrganizationsPageHeader = ({ isNotEmpty }) => {
 };
 
 OrganizationsPageHeader.propTypes = {
-  isNotEmpty: PropTypes.bool,
+  isEmpty: PropTypes.bool,
 };
 
 OrganizationsPageHeader.defaultProps = {
-  isNotEmpty: false,
+  isEmpty: false,
 };

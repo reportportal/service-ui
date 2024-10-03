@@ -17,7 +17,7 @@
 import { takeEvery, all, put, select, take } from 'redux-saga/effects';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
-import { PROJECTS_PAGE } from 'controllers/pages';
+import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchOrganizationProjectsAction } from 'controllers/organizations/projects';
@@ -43,7 +43,7 @@ function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
   } catch (error) {
     yield put(
       redirect({
-        type: PROJECTS_PAGE,
+        type: ORGANIZATIONS_PAGE,
       }),
     );
   }

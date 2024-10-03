@@ -68,7 +68,7 @@ export const OrganizationsPage = () => {
         <OrganizationsPageHeader
           hasPermission={hasPermission}
           title={formatMessage(messages.title)}
-          isNotEmpty={!isEmptyOrganizations}
+          isEmpty={isEmptyOrganizations}
         />
         {isEmptyOrganizations ? (
           getEmptyPageState()

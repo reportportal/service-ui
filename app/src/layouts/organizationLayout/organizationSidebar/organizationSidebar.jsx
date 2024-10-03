@@ -25,8 +25,8 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_MEMBERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
-  PROJECTS_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
@@ -107,7 +107,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
-  const link = { type: PROJECTS_PAGE };
+  const link = { type: ORGANIZATIONS_PAGE };
   const linkToUserProfilePage = {
     type: USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
     payload: { organizationSlug },

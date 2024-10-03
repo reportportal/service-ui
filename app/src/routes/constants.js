@@ -17,7 +17,6 @@
 import { NOT_FOUND } from 'redux-first-router';
 import { EmptyLayout } from 'layouts/emptyLayout';
 
-import { ProjectsPage } from 'pages/instance/projectsPage';
 import { AllUsersPage } from 'pages/instance/allUsersPage';
 import { ServerSettingsPage } from 'pages/instance/serverSettingsPage';
 import { PluginsPage } from 'pages/instance/pluginsPage';
@@ -121,13 +120,8 @@ export const pageRendering = {
   },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: ProjectLayout },
-  PROJECTS_PAGE: {
-    component: ProjectsPage,
-    layout: InstanceLayout,
-    rawContent: true,
-  },
   [PROJECT_DETAILS_PAGE]: {
-    component: ProjectsPage,
+    component: () => '!!!!!!!!!!!!!!',
     layout: InstanceLayout,
     rawContent: true,
   },

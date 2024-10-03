@@ -50,7 +50,6 @@ export { updatePagePropertiesAction, clearPageStateAction } from './actionCreato
 
 export {
   NO_PAGE,
-  PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,

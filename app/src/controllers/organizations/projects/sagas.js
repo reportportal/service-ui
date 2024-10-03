@@ -20,12 +20,11 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { ERROR_CODES } from 'controllers/instance/projects/constants';
 import { fetchOrganizationBySlugAction } from '../organization';
 import { activeOrganizationSelector } from '../organization/selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
 import { querySelector } from './selectors';
-import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
+import { CREATE_PROJECT, ERROR_CODES, FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
