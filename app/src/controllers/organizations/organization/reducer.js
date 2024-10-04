@@ -18,6 +18,7 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { queueReducers } from 'common/utils';
+import { usersReducer } from 'controllers/organizations/users/reducer';
 import { projectsReducer } from '../projects/reducer';
 import { FETCH_ORGANIZATION_BY_SLUG, SET_ACTIVE_ORGANIZATION } from './constants';
 
@@ -41,4 +42,5 @@ export const organizationReducer = combineReducers({
   ),
   organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
   projects: projectsReducer,
+  users: usersReducer,
 });

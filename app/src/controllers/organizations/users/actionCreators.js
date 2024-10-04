@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-import { organizationSelector } from '../organization/selectors';
+import { FETCH_ORGANIZATION_USERS, PREPARE_ACTIVE_ORGANIZATION_USERS } from './constants';
 
-const domainSelector = (state) => organizationSelector(state).projects || {};
+export const prepareActiveOrganizationUsersAction = (payload) => ({
+  type: PREPARE_ACTIVE_ORGANIZATION_USERS,
+  payload,
+});
 
-export const projectsPaginationSelector = (state) => domainSelector(state).pagination;
-export const projectsSelector = (state) => domainSelector(state).projects;
-export const loadingSelector = (state) => domainSelector(state).loading || false;
+export const fetchOrganizationUsersAction = (params) => {
+  return {
+    type: FETCH_ORGANIZATION_USERS,
+    payload: params,
+  };
+};

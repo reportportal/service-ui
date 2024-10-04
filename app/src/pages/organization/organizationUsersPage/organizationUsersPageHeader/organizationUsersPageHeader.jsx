@@ -20,15 +20,14 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { Button } from '@reportportal/ui-kit';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
-import styles from './projectTeamPageHeader.scss';
+import styles from './organizationUsersPageHeader.scss';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 
 const cx = classNames.bind(styles);
 
-export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUserModal }) => {
+export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal }) => {
   const { formatMessage } = useIntl();
   const HeaderActions = () => (
     <div className={cx('actions')}>
@@ -36,14 +35,11 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUse
         <>
           <div className={cx('icons')}>
             <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
-
-            <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
           </div>
-          {hasPermission && (
-            <Button variant={'ghost'} onClick={showInviteUserModal}>
-              {formatMessage(messages.inviteUser)}
-            </Button>
-          )}
+
+          <Button variant={'ghost'} onClick={showInviteUserModal}>
+            {formatMessage(messages.inviteUser)}
+          </Button>
         </>
       )}
     </div>
@@ -51,20 +47,18 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUse
 
   return (
     <MembersPageHeader
-      title={formatMessage(messages.projectTeamTitle)}
+      title={formatMessage(messages.organizationUsersTitle)}
       ActionComponent={HeaderActions}
     />
   );
 };
 
-ProjectTeamPageHeader.propTypes = {
-  hasPermission: PropTypes.bool,
+OrganizationUsersPageHeader.propTypes = {
   isNotEmpty: PropTypes.bool,
   showInviteUserModal: PropTypes.func,
 };
 
-ProjectTeamPageHeader.defaultProps = {
-  hasPermission: false,
+OrganizationUsersPageHeader.defaultProps = {
   isNotEmpty: false,
   showInviteUserModal: () => {},
 };

@@ -17,5 +17,9 @@
 export { FETCH_ORGANIZATIONS } from './constants';
 export { fetchOrganizationsAction } from './actionCreators';
 export { organizationsReducer } from './reducer';
-export { organizationsListSelector, organizationsListLoadingSelector } from './selectors';
+export {
+  organizationsListSelector,
+  organizationsListLoadingSelector,
+  querySelector,
+} from './selectors';
 export { organizationsSagas } from './sagas';

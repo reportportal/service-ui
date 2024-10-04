@@ -16,8 +16,8 @@
 
 import { organizationSelector } from '../organization/selectors';
 
-const domainSelector = (state) => organizationSelector(state).projects || {};
+const domainSelector = (state) => organizationSelector(state).users || {};
 
-export const projectsPaginationSelector = (state) => domainSelector(state).pagination;
-export const projectsSelector = (state) => domainSelector(state).projects;
+export const usersPaginationSelector = (state) => domainSelector(state).pagination;
+export const usersSelector = (state) => domainSelector(state).users;
 export const loadingSelector = (state) => domainSelector(state).loading || false;

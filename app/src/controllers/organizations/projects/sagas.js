@@ -24,7 +24,7 @@ import { ERROR_CODES } from 'controllers/instance/projects/constants';
 import { fetchOrganizationBySlugAction } from '../organization';
 import { activeOrganizationSelector } from '../organization/selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
-import { querySelector } from './selectors';
+import { querySelector } from '../selectors';
 import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, NAMESPACE } from './constants';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {

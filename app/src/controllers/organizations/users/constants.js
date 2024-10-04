@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  name: {
-    id: 'MembersListTable.name',
-    defaultMessage: 'Name',
-  },
-  lastLogin: {
-    id: 'MembersListTable.lastLogin',
-    defaultMessage: 'Last Login',
-  },
-  email: {
-    id: 'MembersListTable.email',
-    defaultMessage: 'Email',
-  },
-  permissions: {
-    id: 'MembersListTable.permissions',
-    defaultMessage: 'Permissions',
-  },
-});
+export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
+export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
+export const NAMESPACE = 'organizationUsers';

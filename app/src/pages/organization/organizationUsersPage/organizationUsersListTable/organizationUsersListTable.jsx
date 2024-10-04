@@ -16,33 +16,34 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectKeySelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
-import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
-import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
-import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
-import { messages } from '../../common/membersPage/messages';
-import styles from './projectTeamListTable.scss';
+import {
+  prepareActiveOrganizationUsersAction,
+  usersPaginationSelector,
+} from 'controllers/organizations/users';
+import { SORTING_KEY } from 'controllers/organizations/projects';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MembersListTable } from '../../common/membersPage/membersListTable';
+import { messages } from '../../common/membersPage/messages';
+import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-const ProjectTeamListTableWrapped = ({
-  members,
+const OrgTeamListTableWrapped = ({
+  users,
   onChangeSorting,
   sortingDirection,
   pageSize,
@@ -54,55 +55,51 @@ const ProjectTeamListTableWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const userRoles = useSelector(userRolesSelector);
-
+  const showPagination = users.length > 0;
   const data = useMemo(
     () =>
-      members.map(
+      users.map(
         ({
-          email,
-          fullName,
           id,
-          metadata,
-          userRole,
-          userId,
-          assignedOrganizations,
-          assignedProjects,
+          email,
+          full_name: fullName,
+          relationships,
+          instance_role: instanceRole,
+          last_login_at: lastLogin,
+          org_role: orgRole,
         }) => {
-          const organizationRole = assignedOrganizations?.[organizationSlug]?.organizationRole;
-          const projectRole = assignedProjects?.[projectSlug]?.projectRole;
-
+          const projectsCount = relationships.projects.meta.count;
           return {
             id,
             fullName: {
               content: fullName,
               component: (
                 <div className={cx('member-name-column')}>
-                  <UserAvatar
-                    className={cx('custom-user-avatar')}
-                    projectKey={activeProjectKey}
-                    userId={userId}
-                  />
                   <div className={cx('full-name')}>{fullName}</div>
+                  {instanceRole === ADMINISTRATOR && (
+                    <div className={cx('admin-badge')}>
+                      <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+                    </div>
+                  )}
                 </div>
               ),
             },
             email,
             lastLogin: {
-              content: metadata.last_login,
-              component: metadata.last_login ? (
-                <AbsRelTime startTime={metadata.last_login} customClass={cx('date')} />
+              content: lastLogin,
+              component: lastLogin ? (
+                <AbsRelTime startTime={lastLogin} customClass={cx('date')} />
               ) : (
                 <span>n/a</span>
               ),
             },
-            permissions: formatMessage(getRoleTitle(userRole, organizationRole, projectRole)),
+            permissions: orgRole,
+            projects: projectsCount,
           };
         },
       ),
-    [members, activeProjectKey, organizationSlug, projectSlug],
+    [users, organizationSlug, projectSlug],
   );
 
   const primaryColumn = {
@@ -110,30 +107,34 @@ const ProjectTeamListTableWrapped = ({
     header: formatMessage(messages.name),
   };
 
-  const fixedColumns = [];
-
-  if (canSeeEmailMembers(userRoles)) {
-    fixedColumns.push({
-      key: 'email',
-      header: formatMessage(messages.email),
-      width: 208,
-      align: 'left',
-    });
-  }
-
-  fixedColumns.push(
-    {
-      key: 'lastLogin',
-      header: formatMessage(messages.lastLogin),
-      width: 156,
-      align: 'left',
-    },
-    {
-      key: 'permissions',
-      header: formatMessage(messages.permissions),
-      width: 114,
-      align: 'left',
-    },
+  const fixedColumns = useMemo(
+    () => [
+      {
+        key: 'email',
+        header: formatMessage(messages.email),
+        width: 208,
+        align: 'left',
+      },
+      {
+        key: 'lastLogin',
+        header: formatMessage(messages.lastLogin),
+        width: 156,
+        align: 'left',
+      },
+      {
+        key: 'permissions',
+        header: formatMessage(messages.role),
+        width: 114,
+        align: 'left',
+      },
+      {
+        key: 'projects',
+        header: formatMessage(messages.projects),
+        width: 104,
+        align: 'right',
+      },
+    ],
+    [formatMessage],
   );
 
   const rowActionMenu = (
@@ -141,8 +142,7 @@ const ProjectTeamListTableWrapped = ({
       placement={'bottom-end'}
       content={
         <div className={cx('row-action-menu')}>
-          <p className={cx('add')}>Add</p>
-          <p className={cx('remove')}>Remove</p>
+          <p>Manage assignments</p>
         </div>
       }
     >
@@ -154,7 +154,7 @@ const ProjectTeamListTableWrapped = ({
 
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
-    dispatch(fetchMembersAction());
+    dispatch(prepareActiveOrganizationUsersAction());
   };
 
   return (
@@ -163,8 +163,8 @@ const ProjectTeamListTableWrapped = ({
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
-      showPagination={members.length > 0}
-      rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
+      showPagination={showPagination}
+      rowActionMenu={rowActionMenu}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}
@@ -176,8 +176,8 @@ const ProjectTeamListTableWrapped = ({
   );
 };
 
-ProjectTeamListTableWrapped.propTypes = {
-  members: PropTypes.array,
+OrgTeamListTableWrapped.propTypes = {
+  users: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,
@@ -188,17 +188,18 @@ ProjectTeamListTableWrapped.propTypes = {
   onChangePageSize: PropTypes.func.isRequired,
 };
 
-ProjectTeamListTableWrapped.defaultProps = {
-  members: [],
+OrgTeamListTableWrapped.defaultProps = {
+  users: [],
   pageSize: DEFAULT_PAGE_SIZE,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
 
-export const ProjectTeamListTable = withSortingURL({
+export const OrganizationTeamListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
 })(
   withPagination({
-    paginationSelector: membersPaginationSelector,
-  })(ProjectTeamListTableWrapped),
+    paginationSelector: usersPaginationSelector,
+  })(OrgTeamListTableWrapped),
 );

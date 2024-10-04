@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-import { organizationSelector } from '../organization/selectors';
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
 
-const domainSelector = (state) => organizationSelector(state).projects || {};
+  .icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-export const projectsPaginationSelector = (state) => domainSelector(state).pagination;
-export const projectsSelector = (state) => domainSelector(state).projects;
-export const loadingSelector = (state) => domainSelector(state).loading || false;
+    i {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.search-icon {
+        width: 40px;
+        height: 36px;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

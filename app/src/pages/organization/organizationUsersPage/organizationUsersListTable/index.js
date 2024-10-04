@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-import { organizationSelector } from '../organization/selectors';
-
-const domainSelector = (state) => organizationSelector(state).projects || {};
-
-export const projectsPaginationSelector = (state) => domainSelector(state).pagination;
-export const projectsSelector = (state) => domainSelector(state).projects;
-export const loadingSelector = (state) => domainSelector(state).loading || false;
+export { OrganizationTeamListTable } from './organizationUsersListTable';

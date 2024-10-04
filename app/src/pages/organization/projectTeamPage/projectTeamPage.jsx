@@ -19,22 +19,17 @@ import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
-import { useIntl } from 'react-intl';
-import { BubblesLoader } from '@reportportal/ui-kit';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
+import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
-import { EmptyPageState } from '../emptyPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
-import EmptyIcon from './img/empty-members-icon-inline.svg';
-import { messages } from './messages';
 import styles from './projectTeamPage.scss';
 
 const cx = classNames.bind(styles);
 
 export const ProjectTeamPage = () => {
   const dispatch = useDispatch();
-  const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canInviteInternalUser(userRoles);
   const members = useSelector(membersSelector);
@@ -54,32 +49,23 @@ export const ProjectTeamPage = () => {
     );
   };
 
-  const getEmptyPageState = () =>
-    isMembersLoading ? (
-      <div className={cx('loader')}>
-        <BubblesLoader />
-      </div>
-    ) : (
-      <EmptyPageState
-        hasPermission={hasPermission}
-        emptyIcon={EmptyIcon}
-        label={formatMessage(messages.noUsers)}
-        description={formatMessage(messages.description)}
-        buttonTitle={formatMessage(messages.inviteUser)}
-        onClick={showInviteUserModal}
-      />
-    );
-
   return (
     <ScrollWrapper autoHeightMax={100}>
       <div className={cx('project-team-page')}>
         <ProjectTeamPageHeader
           hasPermission={hasPermission}
-          title={formatMessage(messages.title)}
           isNotEmpty={!isEmptyMembers}
           showInviteUserModal={showInviteUserModal}
         />
-        {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
+        {isEmptyMembers ? (
+          <EmptyMembersPageState
+            isLoading={isMembersLoading}
+            hasPermission={hasPermission}
+            showInviteUserModal={showInviteUserModal}
+          />
+        ) : (
+          <ProjectTeamListTable members={members} />
+        )}
       </div>
     </ScrollWrapper>
   );

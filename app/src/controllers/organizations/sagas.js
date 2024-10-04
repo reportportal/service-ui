@@ -19,6 +19,7 @@ import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
 import { organizationSagas } from 'controllers/organizations/organization/sagas';
+import { usersSagas } from './users';
 import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
 import { projectsSagas } from './projects';
 
@@ -35,5 +36,5 @@ function* watchFetchOrganizations() {
 }
 
 export function* organizationsSagas() {
-  yield all([watchFetchOrganizations(), organizationSagas(), projectsSagas()]);
+  yield all([watchFetchOrganizations(), organizationSagas(), projectsSagas(), usersSagas()]);
 }

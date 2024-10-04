@@ -29,7 +29,7 @@ import { createProjectAction } from 'controllers/organizations/projects/actionCr
 import { useState } from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ProjectsPageHeader } from './projectsPageHeader';
-import { EmptyPageState } from '../emptyPageState';
+import { EmptyPageState } from '../common/emptyPageState';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import NoResultsIcon from './img/no-results-icon-inline.svg';
 import { messages } from './messages';
