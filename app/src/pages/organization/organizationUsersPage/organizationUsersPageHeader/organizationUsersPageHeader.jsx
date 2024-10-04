@@ -29,7 +29,7 @@ const cx = classNames.bind(styles);
 
 export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal }) => {
   const { formatMessage } = useIntl();
-  const HeaderActions = () => (
+  const getHeaderActions = () => (
     <div className={cx('actions')}>
       {isNotEmpty && (
         <>
@@ -48,7 +48,7 @@ export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal })
   return (
     <MembersPageHeader
       title={formatMessage(messages.organizationUsersTitle)}
-      ActionComponent={HeaderActions}
+      ActionComponent={getHeaderActions()}
     />
   );
 };

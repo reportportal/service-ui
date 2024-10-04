@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 
 export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUserModal }) => {
   const { formatMessage } = useIntl();
-  const HeaderActions = () => (
+  const getHeaderActions = () => (
     <div className={cx('actions')}>
       {isNotEmpty && (
         <>
@@ -52,7 +52,7 @@ export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUse
   return (
     <MembersPageHeader
       title={formatMessage(messages.projectTeamTitle)}
-      ActionComponent={HeaderActions}
+      ActionComponent={getHeaderActions()}
     />
   );
 };
