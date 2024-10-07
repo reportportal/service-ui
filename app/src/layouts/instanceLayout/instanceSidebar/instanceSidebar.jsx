@@ -123,6 +123,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     shortTitle: formatMessage(messages.all),
     topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: null,
+    level: 'instance',
   };
 
   const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
