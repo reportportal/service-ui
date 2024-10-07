@@ -57,7 +57,7 @@ export const OrganizationsControl = ({
                   className={cx('organization-btn')}
                   onClick={() => {
                     closeSidebar();
-                    trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.isProjectLevel));
+                    trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.level));
                   }}
                 >
                   <div className={cx('top-title')}>{titles.topTitle}</div>

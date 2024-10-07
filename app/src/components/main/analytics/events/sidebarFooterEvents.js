@@ -53,9 +53,9 @@ export const SIDEBAR_EVENTS = {
     ...getBasicSearchEventParameters(SIDEBAR),
     element_name: 'search',
   },
-  onClickLevelHigher: (isProjectLevel) => ({
+  onClickLevelHigher: (level) => ({
     ...getBasicClickEventParameters(SIDEBAR),
-    element_name: isProjectLevel ? 'organization_name' : 'all_organizations',
+    element_name: level === 'project' ? 'organization_name' : 'all_organizations',
   }),
   onClickUpdateLink: (type) => ({
     ...getBasicClickEventParameters(SIDEBAR),
