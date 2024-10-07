@@ -35,6 +35,16 @@ export const SIDEBAR_EVENTS = {
     place: 'hover',
     icon_name: 'open_project_page',
   },
+  CLICK_ALL_ORGANIZATION_PROJECTS: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'popover',
+    element_name: 'all_organization',
+  },
+  CLICK_PROJECT_NAME: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'hover',
+    element_name: 'project_name',
+  },
   CLICK_PRIVACY_POLICY_LINK: {
     ...getBasicClickEventParameters(SIDEBAR),
     icon_name: 'privacy_policy',
@@ -43,6 +53,10 @@ export const SIDEBAR_EVENTS = {
     ...getBasicSearchEventParameters(SIDEBAR),
     element_name: 'search',
   },
+  onClickLevelHigher: (isProjectLevel) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    element_name: isProjectLevel ? 'organization_name' : 'all_organizations',
+  }),
   onClickUpdateLink: (type) => ({
     ...getBasicClickEventParameters(SIDEBAR),
     element_name: 'update',

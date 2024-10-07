@@ -19,6 +19,8 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { withPopover } from 'componentLibrary/popover';
+import { useTracking } from 'react-tracking';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import ArrowLeftIcon from './img/arrow-left-inline.svg';
 import OpenPopoverIcon from './img/open-popover-inline.svg';
 import { OrganizationsPopover } from './organizationsPopover/organizationsPopover';
@@ -33,41 +35,51 @@ export const OrganizationsControl = ({
   link,
   titles,
   isExtendedNav,
-}) => (
-  <div className={cx('organizations-control-wrapper')} onClick={onClick}>
-    <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
-      {titles.shortTitle}
-    </button>
-    <button className={cx('organizations-control')} tabIndex={-1}>
-      <div>
-        <div
-          className={cx('organization-btn-wrapper', {
-            'not-extended': !isExtendedNav,
+}) => {
+  const { trackEvent } = useTracking();
+  return (
+    <div className={cx('organizations-control-wrapper')} onClick={onClick}>
+      <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
+        {titles.shortTitle}
+      </button>
+      <button className={cx('organizations-control')} tabIndex={-1}>
+        <div>
+          <div
+            className={cx('organization-btn-wrapper', {
+              'not-extended': !isExtendedNav,
+            })}
+          >
+            {isExtendedNav ? (
+              <>
+                <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
+                <Link
+                  to={link}
+                  className={cx('organization-btn')}
+                  onClick={() => {
+                    closeSidebar();
+                    trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.isProjectLevel));
+                  }}
+                >
+                  <div className={cx('top-title')}>{titles.topTitle}</div>
+                </Link>
+              </>
+            ) : (
+              <div className={cx('extended-top-title')}>{titles.topTitle}</div>
+            )}
+          </div>
+          {isExtendedNav ? <div className={cx('bottom-title')}>{titles.bottomTitle}</div> : null}
+        </div>
+        <i
+          className={cx('open-popover', {
+            action: isPopoverOpen,
           })}
         >
-          {isExtendedNav ? (
-            <>
-              <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-              <Link to={link} className={cx('organization-btn')} onClick={closeSidebar}>
-                <div className={cx('top-title')}>{titles.topTitle}</div>
-              </Link>
-            </>
-          ) : (
-            <div className={cx('extended-top-title')}>{titles.topTitle}</div>
-          )}
-        </div>
-        {isExtendedNav ? <div className={cx('bottom-title')}>{titles.bottomTitle}</div> : null}
-      </div>
-      <i
-        className={cx('open-popover', {
-          action: isPopoverOpen,
-        })}
-      >
-        {Parser(OpenPopoverIcon)}
-      </i>
-    </button>
-  </div>
-);
+          {Parser(OpenPopoverIcon)}
+        </i>
+      </button>
+    </div>
+  );
+};
 
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
