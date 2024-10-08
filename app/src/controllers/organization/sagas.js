@@ -20,7 +20,7 @@ import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { fetchOrganizationProjectsAction } from 'controllers/organizations/projects';
+import { fetchOrganizationProjectsAction } from 'controllers/organization/projects';
 import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
 

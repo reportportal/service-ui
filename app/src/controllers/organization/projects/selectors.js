@@ -19,7 +19,7 @@ import { createQueryParametersSelector } from 'controllers/pages';
 import { SORTING_ASC } from 'controllers/sorting';
 import { getAlternativePaginationAndSortParams, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY, DEFAULT_PAGINATION } from './constants';
-import { organizationSelector } from '../organization/selectors';
+import { organizationSelector } from '../selectors';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
 

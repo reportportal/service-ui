@@ -37,7 +37,7 @@ import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';
 import {
   activeOrganizationNameSelector,
   activeOrganizationSelector,
-} from 'controllers/organizations/organization';
+} from 'controllers/organization';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';

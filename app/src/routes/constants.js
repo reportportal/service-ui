@@ -43,7 +43,6 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   LAUNCHES_PAGE,
   HISTORY_PAGE,
-  PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_PLUGIN_PAGE,
@@ -120,11 +119,6 @@ export const pageRendering = {
   },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: ProjectLayout },
-  [PROJECT_DETAILS_PAGE]: {
-    component: () => '!!!!!!!!!!!!!!',
-    layout: InstanceLayout,
-    rawContent: true,
-  },
   ALL_USERS_PAGE: {
     component: AllUsersPage,
     layout: InstanceLayout,

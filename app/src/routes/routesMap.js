@@ -37,7 +37,6 @@ import {
   PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
-  PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
@@ -69,7 +68,6 @@ import {
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
-import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
@@ -86,11 +84,9 @@ import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/p
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchProjectDataAction } from 'controllers/instance';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { fetchOrganizationsAction } from 'controllers/organizations';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
@@ -99,10 +95,11 @@ import {
   PROJECT_ASSIGNMENT_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
+import { fetchOrganizationsAction } from 'controllers/instance/organizations';
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
-} from 'controllers/organizations/organization/actionCreators';
+} from 'controllers/organization';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -153,12 +150,6 @@ const routesMap = {
 
   API_PAGE: '/api',
 
-  [PROJECT_DETAILS_PAGE]: {
-    path: `/organizations/projects/organizations/:organizationSlug/projects/:projectSlug/:projectSection(${MEMBERS}|${MONITORING})?`,
-    thunk: (dispatch) => {
-      dispatch(fetchProjectDataAction());
-    },
-  },
   [ALL_USERS_PAGE]: {
     path: '/users',
     thunk: (dispatch) => dispatch(fetchAllUsersAction()),

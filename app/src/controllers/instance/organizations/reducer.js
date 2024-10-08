@@ -18,7 +18,7 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { alternativePaginationReducer } from 'controllers/pagination';
-import { organizationReducer } from 'controllers/organizations/organization/reducer';
+import { organizationReducer } from 'controllers/organization/reducer';
 import { initialPaginationState, NAMESPACE } from './constants';
 
 export const organizationsReducer = combineReducers({

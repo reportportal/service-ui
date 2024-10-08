@@ -18,7 +18,7 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { queueReducers } from 'common/utils';
-import { projectsReducer } from '../projects/reducer';
+import { projectsReducer } from './projects/reducer';
 import { FETCH_ORGANIZATION_BY_SLUG, SET_ACTIVE_ORGANIZATION } from './constants';
 
 const setActiveOrganizationReducer = (state = [], { type = '', payload = {} }) => {

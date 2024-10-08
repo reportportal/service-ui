@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, NAVIGATE_TO_PROJECT } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
@@ -32,13 +31,4 @@ export const createProjectAction = (project) => ({
 export const navigateToProjectAction = (project) => ({
   type: NAVIGATE_TO_PROJECT,
   payload: project,
-});
-
-export const navigateToProjectSectionAction = ({ organizationSlug, projectSlug }, section) => ({
-  type: PROJECT_DETAILS_PAGE,
-  payload: {
-    projectSlug,
-    projectSection: section,
-    organizationSlug,
-  },
 });

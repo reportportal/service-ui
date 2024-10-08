@@ -19,8 +19,11 @@ import PropTypes from 'prop-types';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
-import { organizationsListPaginationSelector } from 'controllers/organizations';
-import { DEFAULT_LIMITATION, DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/organizations/constants';
+import { organizationsListPaginationSelector } from 'controllers/instance/organizations';
+import {
+  DEFAULT_LIMITATION,
+  DEFAULT_PAGE_SIZE_OPTIONS,
+} from 'controllers/instance/organizations/constants';
 import styles from './organizationsPanelView.scss';
 import { OrganizationCard } from './organizationCard';
 

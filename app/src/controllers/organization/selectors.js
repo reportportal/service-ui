@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { organizationsSelector } from 'controllers/organizations/selectors';
+import { organizationsSelector } from 'controllers/instance/organizations/selectors';
 
 export const organizationSelector = (state) => organizationsSelector(state).organization || {};
 

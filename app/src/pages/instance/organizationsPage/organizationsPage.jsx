@@ -25,7 +25,7 @@ import { EmptyPageState } from 'pages/common/emptyPageState';
 import {
   organizationsListLoadingSelector,
   organizationsListSelector,
-} from 'controllers/organizations';
+} from 'controllers/instance/organizations';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { messages } from './messages';
 import styles from './organizationsPage.scss';

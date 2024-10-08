@@ -18,9 +18,9 @@ import { takeEvery, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
-import { organizationSagas } from 'controllers/organizations/organization/sagas';
+import { organizationSagas } from 'controllers/organization';
+import { projectsSagas } from 'controllers/organization/projects';
 import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
-import { projectsSagas } from './projects';
 
 function* fetchOrganizations() {
   try {
