@@ -47,7 +47,7 @@ import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
-import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
+import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 

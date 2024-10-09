@@ -122,7 +122,6 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
-
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -130,7 +129,6 @@ import { AttributeListContainer as AttributeListField } from 'components/contain
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { ProjectName } from 'pages/instance/projectsPage/projectName';
 import { debounce } from 'common/utils/debounce';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -196,6 +194,7 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 
 const BUTTONS = {
   GhostButton,

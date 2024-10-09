@@ -24,7 +24,7 @@ import { availableProjectsSelector } from 'controllers/user';
 import {
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
-  PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
@@ -120,7 +120,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         <>
           <div className={cx('all-organizations')}>
             <NavLink
-              to={{ type: PROJECTS_PAGE }}
+              to={{ type: ORGANIZATIONS_PAGE }}
               className={cx('all-organizations-link')}
               onClick={() => {
                 onClose();

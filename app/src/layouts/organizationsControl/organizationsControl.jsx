@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import Link from 'redux-first-router-link';
+import { NavLink } from 'components/main/navLink';
 import { withPopover } from 'componentLibrary/popover';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
@@ -52,7 +52,7 @@ export const OrganizationsControl = ({
             {isExtendedNav ? (
               <>
                 <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-                <Link
+                <NavLink
                   to={link}
                   className={cx('organization-btn')}
                   onClick={() => {
@@ -61,7 +61,7 @@ export const OrganizationsControl = ({
                   }}
                 >
                   <div className={cx('top-title')}>{titles.topTitle}</div>
-                </Link>
+                </NavLink>
               </>
             ) : (
               <div className={cx('extended-top-title')}>{titles.topTitle}</div>

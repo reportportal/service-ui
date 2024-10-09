@@ -22,7 +22,7 @@ import {
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
-import { activeOrganizationIdSelector } from 'controllers/organizations/organization/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organization/selectors';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,

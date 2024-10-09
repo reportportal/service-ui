@@ -25,9 +25,9 @@ import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
-  PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import {
@@ -63,7 +63,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.organizations.defaultMessage, isSidebarCollapsed }),
-        link: { type: PROJECTS_PAGE },
+        link: { type: ORGANIZATIONS_PAGE },
         icon: OrganizationsIcon,
         message: formatMessage(messages.organizations),
       },
@@ -117,7 +117,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
     return sidebarItems;
   };
 
-  const link = { type: PROJECTS_PAGE };
+  const link = { type: ORGANIZATIONS_PAGE };
   const linkToUserProfilePage = { type: USER_PROFILE_PAGE };
   const titles = {
     shortTitle: formatMessage(messages.all),
