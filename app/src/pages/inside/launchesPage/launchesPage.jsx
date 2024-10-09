@@ -62,7 +62,7 @@ import {
   updateLaunchLocallyAction,
   updateLaunchesLocallyAction,
 } from 'controllers/launch';
-import { prevTestItemSelector } from 'controllers/pages';
+import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
@@ -70,6 +70,7 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -119,6 +120,7 @@ const messages = defineMessages({
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
     projectKey: projectKeySelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -187,6 +189,7 @@ export class LaunchesPage extends Component {
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
     isDemoInstance: PropTypes.bool,
+    userRoles: PropTypes.object,
     projectKey: PropTypes.string.isRequired,
   };
 
@@ -217,6 +220,7 @@ export class LaunchesPage extends Component {
     deleteLaunchesAction: () => {},
     highlightItemId: null,
     isDemoInstance: false,
+    userRoles: {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -685,6 +689,7 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       isDemoInstance,
+      userRoles,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -694,6 +699,7 @@ export class LaunchesPage extends Component {
     };
 
     const { finishedLaunchesCount } = this.state;
+    const canManageActions = canBulkEditItems(userRoles);
 
     return (
       <FilterEntitiesContainer
@@ -768,6 +774,7 @@ export class LaunchesPage extends Component {
                 noItemsBlock={
                   isDemoInstance ? <NoItemsDemo onGenerate={this.refreshLaunch} /> : undefined
                 }
+                selectable={canManageActions || !debugMode}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

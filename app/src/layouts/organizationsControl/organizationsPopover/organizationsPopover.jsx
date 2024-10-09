@@ -122,7 +122,10 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
             <NavLink
               to={{ type: ORGANIZATIONS_PAGE }}
               className={cx('all-organizations-link')}
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                trackEvent(SIDEBAR_EVENTS.CLICK_ALL_ORGANIZATION_PROJECTS);
+              }}
               activeClassName={cx('active')}
             >
               {formatMessage(messages.allOrganizations)}
@@ -149,7 +152,10 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
               organizationName={organizationName}
               organizationSlug={organizationSlug}
               projects={projects}
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME);
+              }}
               isOpen={currentOrganization === organizationSlug}
               isActive={currentOrganization === organizationSlug && !projectSlug}
               currentProject={projectSlug}

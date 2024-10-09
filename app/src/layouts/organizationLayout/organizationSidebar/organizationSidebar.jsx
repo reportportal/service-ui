@@ -116,6 +116,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     shortTitle: `${organizationName[0]}${organizationName[organizationName.length - 1]}`,
     topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: organizationName,
+    level: 'organization',
   };
 
   const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
