@@ -35,3 +35,4 @@ export const IMAGE = 'image';
 export const JAR = 'jar';
 export const GTAR = 'gtar';
 export const KML = 'kml';
+export const MP4 = 'mp4';
