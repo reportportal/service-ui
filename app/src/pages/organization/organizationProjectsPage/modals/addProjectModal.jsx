@@ -29,11 +29,10 @@ import { useDispatch } from 'react-redux';
 import { messages } from '../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
-export const AddProjectModal = ({ data = {}, handleSubmit }) => {
+export const AddProjectModal = ({ data = {}, handleSubmit, valid }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
-
   const onCreateProject = ({ projectName }) => {
     onSubmit(projectName);
   };
@@ -43,10 +42,11 @@ export const AddProjectModal = ({ data = {}, handleSubmit }) => {
     <Modal
       title={formatMessage(messages.addProject)}
       okButton={{
-        children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+        children: formatMessage(messages.createProject),
         onClick: () => {
           handleSubmit(onCreateProject)();
         },
+        disabled: !valid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -70,6 +70,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit }) => {
 AddProjectModal.propTypes = {
   data: PropTypes.object,
   handleSubmit: PropTypes.func,
+  valid: PropTypes.bool.isRequired,
 };
 
 export default withModal('addProjectModal')(
