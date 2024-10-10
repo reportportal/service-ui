@@ -30,7 +30,7 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import CheckIcon from 'common/img/check-inline.svg';
-import { ProjectName } from 'pages/instance/projectsPage/projectName';
+import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 import styles from './rolesRow.scss';
 
 const cx = classNames.bind(styles);

@@ -24,7 +24,7 @@ import { availableProjectsSelector } from 'controllers/user';
 import {
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
-  PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
 } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
@@ -120,9 +120,12 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
         <>
           <div className={cx('all-organizations')}>
             <NavLink
-              to={{ type: PROJECTS_PAGE }}
+              to={{ type: ORGANIZATIONS_PAGE }}
               className={cx('all-organizations-link')}
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                trackEvent(SIDEBAR_EVENTS.CLICK_ALL_ORGANIZATION_PROJECTS);
+              }}
               activeClassName={cx('active')}
             >
               {formatMessage(messages.allOrganizations)}
@@ -149,7 +152,10 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
               organizationName={organizationName}
               organizationSlug={organizationSlug}
               projects={projects}
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME);
+              }}
               isOpen={currentOrganization === organizationSlug}
               isActive={currentOrganization === organizationSlug && !projectSlug}
               currentProject={projectSlug}

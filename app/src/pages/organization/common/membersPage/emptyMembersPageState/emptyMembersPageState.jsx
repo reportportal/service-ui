@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { EmptyPageState } from '../../emptyPageState';
+import { EmptyPageState } from '../../../../common/emptyPageState';
 import { messages } from '../membersPageHeader/messages';
 import EmptyIcon from './img/empty-members-icon-inline.svg';
 import styles from './emptyMembersPageState.scss';

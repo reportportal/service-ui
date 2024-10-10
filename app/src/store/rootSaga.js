@@ -30,12 +30,12 @@ import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
 import { instanceSagas } from 'controllers/instance';
 import { userSagas } from 'controllers/user';
-import { organizationsSagas } from 'controllers/organizations';
 import { projectSagas } from 'controllers/project';
 import { initialDataSagas } from 'controllers/initialData';
 import { pageSagas } from 'controllers/pages';
 import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
+import { organizationsSagas } from 'controllers/instance/organizations';
 
 const sagas = [
   notificationSagas,

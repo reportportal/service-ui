@@ -47,7 +47,7 @@ import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
-import { activeOrganizationNameSelector } from 'controllers/organizations/organization';
+import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
@@ -166,6 +166,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     shortTitle: `${projectName[0]}${projectName[projectName.length - 1]}`,
     topTitle: `${formatMessage(messages.organization)}: ${organizationName}`,
     bottomTitle: projectName,
+    level: 'project',
   };
 
   const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (

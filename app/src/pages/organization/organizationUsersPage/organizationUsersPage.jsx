@@ -15,7 +15,7 @@
  */
 
 import { useSelector } from 'react-redux';
-import { loadingSelector, usersSelector } from 'controllers/organizations/users';
+import { loadingSelector, usersSelector } from 'controllers/organization/users';
 import { OrganizationTeamListTable } from 'pages/organization/organizationUsersPage/organizationUsersListTable/organizationUsersListTable';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import classNames from 'classnames/bind';

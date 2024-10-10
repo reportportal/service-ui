@@ -37,7 +37,7 @@ import { instanceReducer } from 'controllers/instance';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
-import { organizationsReducer } from 'controllers/organizations';
+import { organizationsReducer } from 'controllers/instance/organizations';
 
 export default {
   appInfo: appInfoReducer,

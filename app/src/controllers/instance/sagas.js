@@ -20,7 +20,6 @@ import { projectSectionSelector } from 'controllers/pages';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
 import { fetchMembersAction } from 'controllers/members';
 import { FETCH_PROJECT_DATA } from './constants';
-import { projectsSagas } from './projects';
 import { allUsersSagas } from './allUsers';
 import { eventsSagas, fetchEventsAction } from './events';
 
@@ -42,5 +41,5 @@ function* watchFetchProjectData() {
 }
 
 export function* instanceSagas() {
-  yield all([eventsSagas(), watchFetchProjectData(), allUsersSagas(), projectsSagas()]);
+  yield all([eventsSagas(), watchFetchProjectData(), allUsersSagas()]);
 }

@@ -15,17 +15,13 @@
  */
 
 import { combineReducers } from 'redux';
-import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { alternativePaginationReducer } from 'controllers/pagination';
 import { initialPaginationState, NAMESPACE } from './constants';
 
-const reducer = combineReducers({
+export const eventsReducer = combineReducers({
   events: fetchReducer(NAMESPACE, { contentPath: 'items' }),
   pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   loading: loadingReducer(NAMESPACE),
 });
-
-export const eventsReducer = createPageScopedReducer(reducer, PROJECT_DETAILS_PAGE);

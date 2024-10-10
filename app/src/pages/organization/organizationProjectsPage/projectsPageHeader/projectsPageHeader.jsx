@@ -20,13 +20,13 @@ import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import { Button, PlusIcon, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
-import { PROJECTS_PAGE } from 'controllers/pages';
+import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
-import { activeOrganizationSelector } from 'controllers/organizations/organization';
-import { SEARCH_KEY } from 'controllers/organizations/projects/constants';
-import { loadingSelector } from 'controllers/organizations/projects';
+import { activeOrganizationSelector } from 'controllers/organization';
+import { SEARCH_KEY } from 'controllers/organization/projects/constants';
+import { loadingSelector } from 'controllers/organization/projects';
 import { useEffect, useState } from 'react';
 import { withFilter } from 'controllers/filter';
 import projectsIcon from './img/projects-inline.svg';
@@ -56,7 +56,7 @@ export const ProjectsPageHeaderWrapped = ({
   const breadcrumbs = [
     {
       title: formatMessage(messages.allOrganizations),
-      link: { type: PROJECTS_PAGE },
+      link: { type: ORGANIZATIONS_PAGE },
     },
     {
       title: organizationName,

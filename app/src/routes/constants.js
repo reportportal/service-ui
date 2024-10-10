@@ -17,7 +17,6 @@
 import { NOT_FOUND } from 'redux-first-router';
 import { EmptyLayout } from 'layouts/emptyLayout';
 
-import { ProjectsPage } from 'pages/instance/projectsPage';
 import { AllUsersPage } from 'pages/instance/allUsersPage';
 import { ServerSettingsPage } from 'pages/instance/serverSettingsPage';
 import { PluginsPage } from 'pages/instance/pluginsPage';
@@ -44,7 +43,6 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   LAUNCHES_PAGE,
   HISTORY_PAGE,
-  PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_PLUGIN_PAGE,
@@ -67,6 +65,7 @@ import { ProjectLayout } from 'layouts/projectLayout';
 import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
+import { OrganizationsPage } from 'pages/instance/organizationsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -97,6 +96,11 @@ export const pageRendering = {
     layout: OrganizationLayout,
     rawContent: true,
   },
+  ORGANIZATIONS_PAGE: {
+    component: OrganizationsPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
   ORGANIZATION_PROJECTS_PAGE: {
     component: OrganizationProjectsPage,
     layout: OrganizationLayout,
@@ -122,16 +126,6 @@ export const pageRendering = {
   },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: ProjectLayout },
-  PROJECTS_PAGE: {
-    component: ProjectsPage,
-    layout: InstanceLayout,
-    rawContent: true,
-  },
-  [PROJECT_DETAILS_PAGE]: {
-    component: ProjectsPage,
-    layout: InstanceLayout,
-    rawContent: true,
-  },
   ALL_USERS_PAGE: {
     component: AllUsersPage,
     layout: InstanceLayout,

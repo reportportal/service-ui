@@ -173,7 +173,9 @@ export const activeProjectRoleSelector = createSelector(
   urlProjectSlugSelector,
   assignedProjectsSelector,
   (projectSlug, assignedProjects) => {
-    const assignedProject = assignedProjects[projectSlug];
+    const assignedProject = Object.values(assignedProjects || {}).find(
+      (project) => project.projectSlug === projectSlug,
+    );
 
     return assignedProject?.projectRole;
   },

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- .projects-page-header-container {
+.projects-page-header-container {
   padding: 16px 32px;
   border-bottom: 1px solid $COLOR--e-100;
   background: $COLOR--bg-000;
@@ -100,7 +100,8 @@
     }
   }
 
-  .details-item-icon, svg {
+  .details-item-icon,
+  svg {
     width: 16px;
     height: 16px;
   }
