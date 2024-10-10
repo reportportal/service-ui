@@ -86,7 +86,7 @@ const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
     })}
     style={{ width: labelWidth || 'unset' }}
   >
-    <span>{label}</span>
+    <span className={cx('asterisk')}>{label}</span>
     {labelTip && (
       <div className={cx('modal-field-label-icon')} title={labelTip}>
         {Parser(InfoIcon)}
