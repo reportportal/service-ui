@@ -13,8 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { createSelector } from 'reselect';
+import { createQueryParametersSelector } from 'controllers/pages';
+import { getAlternativePaginationAndSortParams, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_ASC } from 'controllers/sorting';
 import { organizationsSelector } from 'controllers/instance/organizations/selectors';
+import { SORTING_KEY } from './projects';
+import { DEFAULT_PAGINATION } from './projects/constants';
 
 export const organizationSelector = (state) => organizationsSelector(state).organization || {};
 
@@ -26,3 +31,21 @@ export const activeOrganizationLoadingSelector = (state) =>
 export const activeOrganizationNameSelector = (state) => activeOrganizationSelector(state)?.name;
 
 export const activeOrganizationIdSelector = (state) => activeOrganizationSelector(state)?.id;
+
+export const createParametersSelector = ({ defaultPagination, defaultSorting, sortingKey } = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
+    },
+  );
+
+export const querySelector = createParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+});

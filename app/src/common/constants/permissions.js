@@ -106,8 +106,8 @@ export const PERMISSIONS_MAP = {
   },
   [MEMBER]: {
     [VIEWER]: {
-      [ACTIONS.SEE_SETTINGS]: true,
-      [ACTIONS.SEE_MEMBERS]: true,
+      [ACTIONS.SEE_SETTINGS]: false,
+      [ACTIONS.SEE_MEMBERS]: false,
     },
     [EDITOR]: {
       [ACTIONS.SEE_SETTINGS]: true,

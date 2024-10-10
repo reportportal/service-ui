@@ -54,6 +54,7 @@ import {
   USER_PROFILE_SUB_PAGE,
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  ORGANIZATION_USERS_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -63,6 +64,7 @@ import { ProjectTeamPage } from 'pages/organization/projectTeamPage';
 import { ProjectLayout } from 'layouts/projectLayout';
 import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
+import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
@@ -89,6 +91,11 @@ export const pageRendering = {
   [USER_PROFILE_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
   API_PAGE: { component: ApiPage, layout: ProjectLayout },
+  [ORGANIZATION_USERS_PAGE]: {
+    component: OrganizationUsersPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
   ORGANIZATIONS_PAGE: {
     component: OrganizationsPage,
     layout: InstanceLayout,

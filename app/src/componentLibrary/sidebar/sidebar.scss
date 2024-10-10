@@ -42,15 +42,20 @@
   box-sizing: border-box;
   height: 100%;
   gap: 32px;
-  background-image:
-    linear-gradient(to right, $COLOR--darkmode-gray-500 0 48px,$COLOR--darkmode-gray-450 48px 100%);
+  background-image: linear-gradient(
+    to right,
+    $COLOR--darkmode-gray-500 0 48px,
+    $COLOR--darkmode-gray-450 48px 100%
+  );
   z-index: 3;
   width: 328px;
   align-items: start;
 }
 
 @keyframes delay-overflow {
-  to { overflow: visible; }
+  to {
+    overflow: visible;
+  }
 }
 
 .items-block {
