@@ -161,6 +161,7 @@ export class InviteUserModal extends Component {
     areUserSuggestionsAllowed: PropTypes.bool.isRequired,
     projectName: PropTypes.string.isRequired,
     organizationSlug: PropTypes.string.isRequired,
+    valid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -311,6 +312,7 @@ export class InviteUserModal extends Component {
       projectName,
       areUserSuggestionsAllowed,
       selectedUser,
+      valid,
     } = this.props;
 
     const okButton = {
@@ -322,7 +324,7 @@ export class InviteUserModal extends Component {
       onClick: () => {
         handleSubmit(this.inviteUserAndCloseModal)();
       },
-      disabled: !selectedUser?.userLogin,
+      disabled: !valid,
       eventInfo: MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL,
       'data-automation-id': 'submitButton',
     };

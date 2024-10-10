@@ -73,8 +73,7 @@
   }
 
   &.error.touched {
-    border-color: $COLOR--orange-red;
-    box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
+    border: 1px solid $COLOR--red-failed-2;
   }
   &.disabled {
     background-color: $COLOR--gray-91;
