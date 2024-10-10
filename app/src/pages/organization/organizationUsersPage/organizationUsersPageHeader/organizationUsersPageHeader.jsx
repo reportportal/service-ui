@@ -16,10 +16,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { Button } from '@reportportal/ui-kit';
-import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
+import { Button, SearchIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import styles from './organizationUsersPageHeader.scss';
@@ -29,27 +27,24 @@ const cx = classNames.bind(styles);
 
 export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal }) => {
   const { formatMessage } = useIntl();
-  const getHeaderActions = () => (
-    <div className={cx('actions')}>
-      {isNotEmpty && (
-        <>
-          <div className={cx('icons')}>
-            <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
-          </div>
-
-          <Button variant={'ghost'} onClick={showInviteUserModal}>
-            {formatMessage(messages.inviteUser)}
-          </Button>
-        </>
-      )}
-    </div>
-  );
 
   return (
-    <MembersPageHeader
-      title={formatMessage(messages.organizationUsersTitle)}
-      ActionComponent={getHeaderActions()}
-    />
+    <MembersPageHeader title={formatMessage(messages.organizationUsersTitle)}>
+      <div className={cx('actions')}>
+        {isNotEmpty && (
+          <>
+            <div className={cx('icons')}>
+              <i className={cx('search-icon')}>
+                <SearchIcon />
+              </i>
+            </div>
+            <Button variant={'ghost'} onClick={showInviteUserModal}>
+              {formatMessage(messages.inviteUser)}
+            </Button>
+          </>
+        )}
+      </div>
+    </MembersPageHeader>
   );
 };
 

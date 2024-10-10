@@ -32,11 +32,12 @@
       &.search-icon {
         width: 40px;
         height: 36px;
-      }
 
-      svg {
-        width: 16px;
-        height: 16px;
+        svg, svg * {
+          width: 18px;
+          height: 18px;
+          fill: $COLOR--e-300;
+        }
       }
     }
   }

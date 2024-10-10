@@ -21,12 +21,12 @@ import styles from './membersPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersPageHeader = ({ title, ActionComponent }) => {
+export const MembersPageHeader = ({ title, children }) => {
   return (
     <div className={cx('members-page-header-container')}>
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
-        {ActionComponent && <ActionComponent />}
+        {children}
       </div>
     </div>
   );
@@ -34,9 +34,9 @@ export const MembersPageHeader = ({ title, ActionComponent }) => {
 
 MembersPageHeader.propTypes = {
   title: PropTypes.string.isRequired,
-  ActionComponent: PropTypes.func,
+  children: PropTypes.node,
 };
 
 MembersPageHeader.defaultProps = {
-  ActionComponent: null,
+  children: null,
 };
