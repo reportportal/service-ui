@@ -79,6 +79,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.invite',
     defaultMessage: 'Invite',
   },
+  INVITE_AND_ASSIGN: {
+    id: 'Common.inviteAndAssign',
+    defaultMessage: 'Invite & assign',
+  },
   OK: {
     id: 'Common.ok',
     defaultMessage: 'Ok',

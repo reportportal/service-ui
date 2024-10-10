@@ -26,17 +26,17 @@ export const InviteNewUserItem = ({ option, itemProps }) => (
     <div className={cx('invite-new-user', { active: itemProps.isActive })}>
       <div className={cx('msg-icon')} />
       <div className={cx('invite-info')}>
-        <p className={cx('user-info')}>
-          <FormattedMessage
-            id={'InputUserSearch.inviteNewUser'}
-            defaultMessage={'Invite {userEmail}'}
-            values={{ userEmail: option.userLogin }}
-          />
-        </p>
         <p className={cx('action-info')}>
           <FormattedMessage
             id={'InputUserSearch.inviteNewUserInfo'}
-            defaultMessage={'Send invite via e-mail'}
+            defaultMessage={'Send new invite via email'}
+          />
+        </p>
+        <p className={cx('user-info')}>
+          <FormattedMessage
+            id={'InputUserSearch.inviteNewUser'}
+            defaultMessage={'{userEmail}'}
+            values={{ userEmail: option.userLogin }}
           />
         </p>
       </div>

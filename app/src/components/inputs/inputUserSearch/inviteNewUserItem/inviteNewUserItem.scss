@@ -42,6 +42,7 @@
   text-overflow: ellipsis;
 }
 .action-info {
+  font-family: $FONT-ROBOTO-MEDIUM;
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
@@ -51,12 +52,12 @@
   white-space: nowrap;
 }
 .user-info {
+  font-family: $FONT-ROBOTO-REGULAR;
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
   position: relative;
   color: $COLOR--charcoal-grey;
-  font-weight: 600;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

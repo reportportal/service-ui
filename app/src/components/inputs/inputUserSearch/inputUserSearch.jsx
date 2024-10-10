@@ -44,6 +44,8 @@ export const makeOptions = (isAdmin, projectKey, projectSlug) => ({ content: opt
     isAssigned: isAdmin ? !!option.assignedProjects[projectSlug] : false,
     userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
     assignedProjects: option.assignedProjects || {},
+    assignedOrganizations: option.assignedOrganizations || {},
+    userRole: option.userRole,
   }));
 
 const parseValueToString = (option) => (option ? option.userLogin : '');
