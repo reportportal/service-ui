@@ -62,7 +62,6 @@ export function* organizationSagas() {
   yield all([
     watchFetchOrganizationProjects(),
     watchFetchOrganizationBySlug(),
-    organizationSagas(),
     projectsSagas(),
     usersSagas(),
   ]);
