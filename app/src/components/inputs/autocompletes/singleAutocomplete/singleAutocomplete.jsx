@@ -160,7 +160,7 @@ export class SingleAutocomplete extends Component {
                         className={cx('input-control-btn', { 'mobile-disabled': mobileDisabled })}
                         onClick={clearSelection}
                       >
-                        <i className={cx('cross-icon')}>
+                        <i className={cx('clear-icon')}>
                           <ClearIcon />
                         </i>
                       </button>
