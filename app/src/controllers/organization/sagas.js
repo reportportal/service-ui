@@ -20,9 +20,10 @@ import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { fetchOrganizationProjectsAction } from 'controllers/organization/projects';
+import { fetchOrganizationProjectsAction, projectsSagas } from './projects';
 import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
+import { usersSagas } from './users';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -58,5 +59,11 @@ function* watchFetchOrganizationBySlug() {
 }
 
 export function* organizationSagas() {
-  yield all([watchFetchOrganizationProjects(), watchFetchOrganizationBySlug()]);
+  yield all([
+    watchFetchOrganizationProjects(),
+    watchFetchOrganizationBySlug(),
+    organizationSagas(),
+    projectsSagas(),
+    usersSagas(),
+  ]);
 }

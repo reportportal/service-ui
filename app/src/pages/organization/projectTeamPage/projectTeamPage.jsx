@@ -55,7 +55,7 @@ export const ProjectTeamPage = () => {
         <ProjectTeamPageHeader
           hasPermission={hasPermission}
           isNotEmpty={!isEmptyMembers}
-          showInviteUserModal={showInviteUserModal}
+          onInvite={showInviteUserModal}
         />
         {isEmptyMembers ? (
           <EmptyMembersPageState

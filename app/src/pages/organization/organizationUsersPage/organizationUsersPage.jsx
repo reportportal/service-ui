@@ -24,6 +24,7 @@ import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersP
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
 
 const cx = classNames.bind(styles);
+
 export const OrganizationUsersPage = () => {
   const users = useSelector(usersSelector);
   const isUsersLoading = useSelector(loadingSelector);

@@ -25,7 +25,7 @@ import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal }) => {
+export const OrganizationUsersPageHeader = ({ isNotEmpty, onInvite }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -38,7 +38,7 @@ export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal })
                 <SearchIcon />
               </i>
             </div>
-            <Button variant={'ghost'} onClick={showInviteUserModal}>
+            <Button variant={'ghost'} onClick={onInvite}>
               {formatMessage(messages.inviteUser)}
             </Button>
           </>
@@ -50,10 +50,10 @@ export const OrganizationUsersPageHeader = ({ isNotEmpty, showInviteUserModal })
 
 OrganizationUsersPageHeader.propTypes = {
   isNotEmpty: PropTypes.bool,
-  showInviteUserModal: PropTypes.func,
+  onInvite: PropTypes.func,
 };
 
 OrganizationUsersPageHeader.defaultProps = {
   isNotEmpty: false,
-  showInviteUserModal: () => {},
+  onInvite: () => {},
 };
