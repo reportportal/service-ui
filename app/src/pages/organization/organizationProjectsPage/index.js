@@ -15,3 +15,4 @@
  */
 
 export { OrganizationProjectsPage } from './organizationProjectsPage';
+export { AddProjectModal } from 'pages/organization/organizationProjectsPage/modals';
