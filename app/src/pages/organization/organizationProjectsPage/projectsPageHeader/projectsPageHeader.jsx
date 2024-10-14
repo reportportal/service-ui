@@ -114,6 +114,7 @@ export const ProjectsPageHeaderWrapped = ({
                 loading={isSearchActive && projectsLoading}
                 startIcon={Parser(searchIcon)}
                 className={cx('search-input')}
+                maxLength={256}
                 collapsible
                 clearable
               />
