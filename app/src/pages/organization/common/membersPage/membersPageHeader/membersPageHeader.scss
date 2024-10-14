@@ -14,24 +14,29 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.members-page-header-container {
+  padding: 48px 32px 16px 32px;
+  border-bottom: 1px solid $COLOR--e-100;
+  background: $COLOR--bg-000;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
 
-export const messages = defineMessages({
-  title: {
-    id: 'ProjectTeamPage.title',
-    defaultMessage: 'Project team',
-  },
-  noUsers: {
-    id: 'ProjectTeamPage.noUsers',
-    defaultMessage: 'No users added yet',
-  },
-  description: {
-    id: 'ProjectTeamPage.description',
-    defaultMessage:
-      'User list is currently empty. To make the most out of your project, invite your team members and collaborate efficiently.',
-  },
-  inviteUser: {
-    id: 'ProjectTeamPage.inviteUser',
-    defaultMessage: 'Invite user',
-  },
-});
+.header {
+  display: flex;
+  min-height: 31px;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: $FONT-REGULAR;
+  font-size: 20px;
+  line-height: 31px;
+  color: $COLOR--almost-black;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

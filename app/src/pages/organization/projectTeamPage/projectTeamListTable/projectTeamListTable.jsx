@@ -21,11 +21,11 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_PAGE_SIZE_OPTIONS, DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
+import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
@@ -35,9 +35,9 @@ import {
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
-import { PaginationWrapper } from 'components/main/paginationWrapper';
-import { messages } from './messages';
+import { messages } from '../../common/membersPage/messages';
 import styles from './projectTeamListTable.scss';
+import { MembersListTable } from '../../common/membersPage/membersListTable';
 
 const cx = classNames.bind(styles);
 
@@ -158,28 +158,21 @@ const ProjectTeamListTableWrapped = ({
   };
 
   return (
-    <PaginationWrapper
+    <MembersListTable
+      data={data}
+      primaryColumn={primaryColumn}
+      fixedColumns={fixedColumns}
+      onTableSorting={onTableSorting}
       showPagination={members.length > 0}
+      rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
+      sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}
-      totalItems={itemCount}
-      totalPages={pageCount}
-      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
-      changePage={onChangePage}
-      changePageSize={onChangePageSize}
-    >
-      <Table
-        data={data}
-        primaryColumn={primaryColumn}
-        fixedColumns={fixedColumns}
-        rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
-        className={cx('project-team-list-table')}
-        sortingColumn={primaryColumn}
-        sortingDirection={sortingDirection.toLowerCase()}
-        onChangeSorting={onTableSorting}
-        sortableColumns={primaryColumn.key}
-      />
-    </PaginationWrapper>
+      itemCount={itemCount}
+      pageCount={pageCount}
+      onChangePage={onChangePage}
+      onChangePageSize={onChangePageSize}
+    />
   );
 };
 

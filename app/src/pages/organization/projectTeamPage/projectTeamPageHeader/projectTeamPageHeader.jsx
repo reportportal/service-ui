@@ -18,49 +18,49 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { Button } from '@reportportal/ui-kit';
-import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
+import { Button, SearchIcon } from '@reportportal/ui-kit';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
-import { messages } from '../messages';
+import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import styles from './projectTeamPageHeader.scss';
+import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 
 const cx = classNames.bind(styles);
 
-export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, showInviteUserModal }) => {
+export const ProjectTeamPageHeader = ({ hasPermission, isNotEmpty, onInvite }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className={cx('project-team-page-header-container')}>
-      <div className={cx('header')}>
-        <span className={cx('title')}>{formatMessage(messages.title)}</span>
-        <div className={cx('actions')}>
-          {isNotEmpty && (
-            <>
-              <div className={cx('icons')}>
-                <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
-                <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
-              </div>
-              {hasPermission && (
-                <Button variant={'ghost'} onClick={showInviteUserModal}>
-                  {formatMessage(messages.inviteUser)}
-                </Button>
-              )}
-            </>
-          )}
-        </div>
+    <MembersPageHeader title={formatMessage(messages.projectTeamTitle)}>
+      <div className={cx('actions')}>
+        {isNotEmpty && (
+          <>
+            <div className={cx('icons')}>
+              <i className={cx('search-icon')}>
+                <SearchIcon />
+              </i>
+              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+            </div>
+            {hasPermission && (
+              <Button variant={'ghost'} onClick={onInvite}>
+                {formatMessage(messages.inviteUser)}
+              </Button>
+            )}
+          </>
+        )}
       </div>
-    </div>
+    </MembersPageHeader>
   );
 };
 
 ProjectTeamPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
   isNotEmpty: PropTypes.bool,
-  showInviteUserModal: PropTypes.func.isRequired,
+  onInvite: PropTypes.func,
 };
 
 ProjectTeamPageHeader.defaultProps = {
   hasPermission: false,
   isNotEmpty: false,
+  onInvite: () => {},
 };

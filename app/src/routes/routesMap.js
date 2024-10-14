@@ -56,7 +56,7 @@ import {
   PROJECT_PLUGIN_PAGE,
   userAssignedSelector,
   ORGANIZATION_PROJECTS_PAGE,
-  ORGANIZATION_MEMBERS_PAGE,
+  ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
   USER_PROFILE_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
@@ -99,7 +99,8 @@ import { fetchOrganizationsAction } from 'controllers/instance/organizations';
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
-} from 'controllers/organization';
+} from 'controllers/organization/actionCreators';
+import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -189,8 +190,14 @@ const routesMap = {
     },
   },
 
-  [ORGANIZATION_MEMBERS_PAGE]: {
-    path: '/organizations/:organizationSlug/members',
+  [ORGANIZATION_USERS_PAGE]: {
+    path: '/organizations/:organizationSlug/users',
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationUsersAction(payload));
+    },
   },
 
   [ORGANIZATION_SETTINGS_PAGE]: {

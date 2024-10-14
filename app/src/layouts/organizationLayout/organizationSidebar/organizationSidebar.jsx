@@ -23,7 +23,7 @@ import { useIntl } from 'react-intl';
 import { canSeeMembers } from 'common/utils/permissions';
 import {
   ORGANIZATION_PROJECTS_PAGE,
-  ORGANIZATION_MEMBERS_PAGE,
+  ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   ORGANIZATIONS_PAGE,
@@ -74,7 +74,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
         link: {
-          type: ORGANIZATION_MEMBERS_PAGE,
+          type: ORGANIZATION_USERS_PAGE,
           payload: { organizationSlug },
         },
         icon: MembersIcon,

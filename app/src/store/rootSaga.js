@@ -36,6 +36,7 @@ import { pageSagas } from 'controllers/pages';
 import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 import { organizationsSagas } from 'controllers/instance/organizations';
+import { organizationSagas } from 'controllers/organization';
 
 const sagas = [
   notificationSagas,
@@ -54,6 +55,7 @@ const sagas = [
   instanceSagas,
   userSagas,
   organizationsSagas,
+  organizationSagas,
   projectSagas,
   initialDataSagas,
   pageSagas,
