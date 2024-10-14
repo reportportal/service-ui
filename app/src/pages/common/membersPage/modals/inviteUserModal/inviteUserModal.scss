@@ -16,6 +16,7 @@
 
 .modal-description {
   padding: 0;
+  margin-top: 16px;
   font-size: 13px;
   font-family: $FONT-ROBOTO-REGULAR;
   color: $COLOR--almost-black;
@@ -46,6 +47,18 @@
     font-size: 13px;
     font-family: $FONT-ROBOTO-REGULAR;
   }
+}
+
+.can-edit-disabled {
+  width: max-content;
+}
+
+.wrapper-class {
+  width: 16px;
+}
+
+.content-class {
+  width: 240px;
 }
 
 .icon {
