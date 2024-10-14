@@ -22,13 +22,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
-import { Checkbox, Modal } from '@reportportal/ui-kit';
+import { Checkbox, Modal, SystemMessage, Tooltip } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { EDITOR, VIEWER } from 'common/constants/projectRoles';
+import { EDITOR, MANAGER, VIEWER } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { urlProjectSlugSelector } from 'controllers/pages';
+import { urlOrganizationSlugSelector, urlProjectSlugSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -42,11 +42,13 @@ import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { InputUserSearch, makeOptions } from 'components/inputs/inputUserSearch';
 import { Input } from 'components/inputs/input';
-import { withTooltip } from 'componentLibrary/tooltip';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import HintIcon from './img/hint-inline.svg';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
+
+const INVITE_USER_FORM = 'inviteUserForm';
 
 const messages = defineMessages({
   headerInviteUserModal: {
@@ -56,6 +58,11 @@ const messages = defineMessages({
   canEditProject: {
     id: 'InviteUserModal.canEditProject',
     defaultMessage: 'Can edit the Project',
+  },
+  canEditTooltip: {
+    id: 'InviteUserModal.canEditTooltip',
+    defaultMessage:
+      'The selected user has the Manager role in organization and will have ‘Can edit’ permissions in the project by default',
   },
   description: {
     id: 'InviteUserModal.description',
@@ -88,34 +95,14 @@ const messages = defineMessages({
     defaultMessage:
       "By default, invited users receive 'View only' permissions. Users with 'Can edit' permissions can modify the project and all its data (report launches, change defect types, etc.).",
   },
+  inviteAdmin: {
+    id: 'InviteUserModal.inviteAdmin',
+    defaultMessage:
+      'Be aware that the selected user, as an Admin, has full access to all organizations and projects within the instance, regardless of specified role and permissions.',
+  },
 });
 
-const Tooltip = ({ formatMessage }) => (
-  <div className={cx('tooltip')}>{formatMessage(messages.hintMessage)}</div>
-);
-
-Tooltip.propTypes = {
-  formatMessage: PropTypes.func.isRequired,
-};
-
-const IconShow = () => {
-  return <i className={cx('icon')}>{Parser(HintIcon)}</i>;
-};
-
-const ShowWithTooltip = withTooltip({
-  ContentComponent: Tooltip,
-  tooltipWrapperClassName: cx('tooltip-wrapper'),
-  customClassName: cx('custom-tooltip'),
-  side: 'top',
-  arrowPosition: 'middle',
-  width: 264,
-})(IconShow);
-
-ShowWithTooltip.propTypes = {
-  formatMessage: PropTypes.func.isRequired,
-};
-
-const inviteFormSelector = formValueSelector('inviteUserForm');
+const inviteFormSelector = formValueSelector(INVITE_USER_FORM);
 
 @withModal('inviteUserModal')
 @injectIntl
@@ -133,6 +120,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
       project: urlProjectSlugSelector(state),
     },
     areUserSuggestionsAllowed: areUserSuggestionsAllowedSelector(state),
+    organizationSlug: urlOrganizationSlugSelector(state),
   }),
   {
     showModalAction,
@@ -143,7 +131,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
   },
 )
 @reduxForm({
-  form: 'inviteUserForm',
+  form: INVITE_USER_FORM,
   validate: ({ user, project, email }) => ({
     user: commonValidators.requiredField(user),
     project: commonValidators.requiredField(project),
@@ -172,6 +160,8 @@ export class InviteUserModal extends Component {
     dirty: PropTypes.bool,
     areUserSuggestionsAllowed: PropTypes.bool.isRequired,
     projectName: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
+    valid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -305,6 +295,13 @@ export class InviteUserModal extends Component {
 
   filterProject = (value) => !(value && this.props.selectedUser?.assignedProjects?.[value]);
 
+  canEdit = () => {
+    const { selectedUser, organizationSlug } = this.props;
+    const role = selectedUser?.assignedOrganizations?.[organizationSlug]?.organizationRole;
+
+    return selectedUser && role === MANAGER;
+  };
+
   render() {
     const {
       intl,
@@ -314,13 +311,20 @@ export class InviteUserModal extends Component {
       projectKey,
       projectName,
       areUserSuggestionsAllowed,
+      selectedUser,
+      valid,
     } = this.props;
 
     const okButton = {
-      children: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
+      children: intl.formatMessage(
+        selectedUser?.userLogin && !selectedUser?.externalUser
+          ? COMMON_LOCALE_KEYS.INVITE_AND_ASSIGN
+          : COMMON_LOCALE_KEYS.INVITE,
+      ),
       onClick: () => {
         handleSubmit(this.inviteUserAndCloseModal)();
       },
+      disabled: !valid,
       eventInfo: MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL,
       'data-automation-id': 'submitButton',
     };
@@ -340,6 +344,9 @@ export class InviteUserModal extends Component {
         size="large"
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
+        {selectedUser?.userRole === ADMINISTRATOR && (
+          <SystemMessage>{intl.formatMessage(messages.inviteAdmin)}</SystemMessage>
+        )}
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
           {isProjectSelector || areUserSuggestionsAllowed ? (
@@ -380,12 +387,36 @@ export class InviteUserModal extends Component {
           )}
           <ModalField className={cx('modal-field')}>
             <div className={cx('checkbox-wrapper')}>
-              <FieldProvider name="canEdit" format={Boolean}>
-                <Checkbox className={cx('can-edit')}>
-                  {intl.formatMessage(messages.canEditProject)}
-                </Checkbox>
-              </FieldProvider>
-              <ShowWithTooltip formatMessage={intl.formatMessage} />
+              {this.canEdit() ? (
+                <div>
+                  <Tooltip
+                    content={intl.formatMessage(messages.canEditTooltip)}
+                    placement="top"
+                    contentClassName={cx('content-class')}
+                    wrapperClassName={cx('wrapper-class')}
+                  >
+                    <Checkbox className={cx('can-edit-disabled')} disabled checked>
+                      {intl.formatMessage(messages.canEditProject)}
+                    </Checkbox>
+                  </Tooltip>
+                </div>
+              ) : (
+                <>
+                  <FieldProvider name="canEdit" format={Boolean}>
+                    <Checkbox className={cx('can-edit')}>
+                      {intl.formatMessage(messages.canEditProject)}
+                    </Checkbox>
+                  </FieldProvider>
+                  <Tooltip
+                    content={intl.formatMessage(messages.hintMessage)}
+                    placement="top"
+                    contentClassName={cx('custom-tooltip')}
+                    wrapperClassName={cx('tooltip-wrapper')}
+                  >
+                    <i className={cx('icon')}>{Parser(HintIcon)}</i>
+                  </Tooltip>
+                </>
+              )}
             </div>
           </ModalField>
         </form>
