@@ -22,7 +22,7 @@ import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userAssignedSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { setActiveOrganizationAction } from 'controllers/organizations/organization/actionCreators';
+import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,

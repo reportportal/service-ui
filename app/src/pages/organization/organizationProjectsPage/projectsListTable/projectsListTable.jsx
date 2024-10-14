@@ -20,21 +20,21 @@ import { useIntl } from 'react-intl';
 import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
+import { AbsRelTime } from 'components/main/absRelTime';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
+import { PaginationWrapper } from 'components/main/paginationWrapper';
 import {
   activeOrganizationSelector,
   prepareActiveOrganizationProjectsAction,
-} from 'controllers/organizations/organization';
-import { AbsRelTime } from 'components/main/absRelTime';
-import { projectsPaginationSelector } from 'controllers/organizations/projects/selectors';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+} from 'controllers/organization';
 import {
-  DEFAULT_PAGE_SIZE_OPTIONS,
   DEFAULT_LIMITATION,
+  DEFAULT_PAGE_SIZE_OPTIONS,
   DEFAULT_SORT_COLUMN,
+  projectsPaginationSelector,
   SORTING_KEY,
-} from 'controllers/organizations/projects/constants';
-import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
-import { PaginationWrapper } from 'components/main/paginationWrapper';
+} from 'controllers/organization/projects';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';

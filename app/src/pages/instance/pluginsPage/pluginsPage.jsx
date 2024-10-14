@@ -22,6 +22,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PLUGINS_PAGE } from 'components/main/analytics/events';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { PluginsTabs } from './pluginsTabs';
 
 const messages = defineMessages({
@@ -52,12 +53,14 @@ export class PluginsPage extends Component {
 
   render() {
     return (
-      <PageLayout>
-        <PageHeader breadcrumbs={this.breadcrumbs} />
-        <PageSection>
-          <PluginsTabs plugins={this.props.plugins} filterItems={this.getFilterItems()} />
-        </PageSection>
-      </PageLayout>
+      <ScrollWrapper>
+        <PageLayout>
+          <PageHeader breadcrumbs={this.breadcrumbs} />
+          <PageSection>
+            <PluginsTabs plugins={this.props.plugins} filterItems={this.getFilterItems()} />
+          </PageSection>
+        </PageLayout>
+      </ScrollWrapper>
     );
   }
 }
