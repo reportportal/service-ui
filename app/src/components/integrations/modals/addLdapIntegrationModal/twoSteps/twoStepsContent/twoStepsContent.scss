@@ -28,7 +28,7 @@
   padding: 24px 16px;
   background-color: $COLOR--bg-000;
   border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(55, 67, 98, 0.10);
+  box-shadow: 0 1px 3px 0 rgba(55, 67, 98, 0.1);
 }
 
 .step {
@@ -54,6 +54,7 @@
   }
 }
 
-.scrollbars { // TODO will be replaced with new Scroll component in the future
+.scrollbars {
+  // TODO will be replaced with new Scroll component in the future
   width: 376px !important;
 }

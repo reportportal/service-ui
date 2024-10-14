@@ -74,7 +74,7 @@
 .events-grid-row {
   @media (max-width: $SCREEN_SM_MAX) {
     display: table-row;
-    > :nth-last-child(-n+2) {
+    > :nth-last-child(-n + 2) {
       max-width: 0;
       display: none;
     }
