@@ -33,6 +33,7 @@ export const CLEAR_ATTACHMENTS_ACTION = 'clearAttachmentsAction';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
 export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';
+export const ATTACHMENT_VIDEO_MODAL_ID = 'attachmentVideoModal';
 export const FETCH_FIRST_ATTACHMENTS_ACTION = 'fetchFirstAttachments';
 export const SET_ACTIVE_ATTACHMENT_ACTION = 'setActiveAttachment';
 
@@ -57,6 +58,7 @@ export const FILE_PREVIEWS_MAP = {
   [FILE_TYPES.TAZ]: archive,
   [FILE_TYPES.TAR]: archive,
   [FILE_TYPES.GZIP]: archive,
+  [FILE_TYPES.MP4]: html,
 };
 
 export const FILE_PATTERNS_MAP = {
@@ -73,6 +75,7 @@ export const FILE_MODAL_IDS_MAP = {
   [FILE_TYPES.PHP]: ATTACHMENT_CODE_MODAL_ID,
   [FILE_TYPES.HAR]: ATTACHMENT_HAR_FILE_MODAL_ID,
   [FILE_TYPES.IMAGE]: ATTACHMENT_IMAGE_MODAL_ID,
+  [FILE_TYPES.MP4]: ATTACHMENT_VIDEO_MODAL_ID,
 };
 
 export const FILE_ACTIONS_MAP = {
@@ -90,6 +93,7 @@ export const FILE_ACTIONS_MAP = {
     FILE_TYPES.CSV,
     FILE_TYPES.PDF,
     FILE_TYPES.IMAGE,
+    FILE_TYPES.MP4,
   ],
   [OPEN_ATTACHMENT_IN_MODAL_ACTION]: [
     FILE_TYPES.XML,
@@ -99,6 +103,7 @@ export const FILE_ACTIONS_MAP = {
     FILE_TYPES.PHP,
     FILE_TYPES.HAR,
     FILE_TYPES.IMAGE,
+    FILE_TYPES.MP4,
   ],
 };
 

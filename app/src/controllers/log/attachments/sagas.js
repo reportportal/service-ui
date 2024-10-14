@@ -35,6 +35,7 @@ import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   ATTACHMENT_IMAGE_MODAL_ID,
+  ATTACHMENT_VIDEO_MODAL_ID,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
   DEFAULT_PAGE_SIZE,
@@ -106,6 +107,14 @@ function* openImageModalsWorker(data) {
   URL.revokeObjectURL(imageURL);
 }
 
+function* openVideoModalsWorker(data) {
+  const videoData = yield call(fetchFileData, data, { responseType: 'blob' });
+  const videoURL = URL.createObjectURL(videoData);
+  yield put(showModalAction({ id: ATTACHMENT_VIDEO_MODAL_ID, data: { video: videoURL } }));
+  yield take(HIDE_MODAL);
+  URL.revokeObjectURL(videoURL);
+}
+
 /* BINARY */
 function* openBinaryModalWorker(data) {
   const binaryData = yield call(fetchFileData, data);
@@ -123,6 +132,7 @@ function* openBinaryModalWorker(data) {
 
 const ATTACHMENT_MODAL_WORKERS = {
   [ATTACHMENT_IMAGE_MODAL_ID]: openImageModalsWorker,
+  [ATTACHMENT_VIDEO_MODAL_ID]: openVideoModalsWorker,
   [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalWorker,
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
 };
