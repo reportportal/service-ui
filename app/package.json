@@ -83,7 +83,7 @@
     "rebound": "0.1.0",
     "redux": "4.2.1",
     "redux-devtools-extension": "2.13.9",
-    "redux-first-router": "0.0.20-next",
+    "redux-first-router": "1.0.0",
     "redux-first-router-link": "2.1.1",
     "redux-form": "8.3.10",
     "redux-saga": "0.16.0",
