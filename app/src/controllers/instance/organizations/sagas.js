@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put } from 'redux-saga/effects';
+import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
+import { querySelector } from 'controllers/organization/selectors';
 import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {
   try {
-    yield put(fetchDataAction(NAMESPACE)(URLS.organizationList()));
+    const query = yield select(querySelector);
+
+    yield put(fetchDataAction(NAMESPACE)(URLS.organizationList(query)));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
