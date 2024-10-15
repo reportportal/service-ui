@@ -64,12 +64,12 @@ const OrgTeamListTableWrapped = ({
           id,
           email,
           full_name: fullName,
-          relationships,
+          stats,
           instance_role: instanceRole,
           last_login_at: lastLogin,
           org_role: orgRole,
         }) => {
-          const projectsCount = relationships.projects.meta.count;
+          const projectsCount = stats.project_stats.total_count;
           return {
             id,
             fullName: {
