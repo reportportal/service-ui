@@ -43,9 +43,9 @@ export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
   const { userRole, organizationRole } = useSelector(userRolesSelector);
   const hasPermission = userRole === ADMINISTRATOR || organizationRole === MANAGER;
-  const usersCount = organization.stats.users.meta.count;
+  const usersCount = organization.stats.user_stats.count;
   const projectsCount = organization.stats.projects.meta.count;
-  const lastLaunch = organization.stats.launches.meta.last_occurred_at;
+  const lastLaunch = organization.stats.launch_stats.last_occurred_at;
   const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunch));
   const isOutdated = Date.now() - new Date(lastLaunch).getTime() > THREE_MONTHS;
 
