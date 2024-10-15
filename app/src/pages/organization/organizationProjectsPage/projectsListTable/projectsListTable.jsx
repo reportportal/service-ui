@@ -80,8 +80,8 @@ export const ProjectsListTable = ({
               </div>
             ),
           },
-          usersCount: project.stats.user_stats.count,
-          launchesCount: project.stats.launch_stats.count,
+          usersCount: project.stats.user_stats.total_count,
+          launchesCount: project.stats.launch_stats.total_count,
           lastLaunch: {
             content: lastLaunch,
             component: lastLaunch ? (
