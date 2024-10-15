@@ -62,7 +62,7 @@ export const ProjectsListTable = ({
   const data = useMemo(
     () =>
       projects.map((project) => {
-        const lastLaunch = project.relationships.launches.meta.last_occurred_at;
+        const lastLaunch = project.stats.launch_stats.last_occurred_at;
         return {
           id: project.id,
           name: {
@@ -80,8 +80,8 @@ export const ProjectsListTable = ({
               </div>
             ),
           },
-          usersCount: project.relationships.users.meta.count,
-          launchesCount: project.relationships.launches.meta.count,
+          usersCount: project.stats.user_stats.total_count,
+          launchesCount: project.stats.launch_stats.total_count,
           lastLaunch: {
             content: lastLaunch,
             component: lastLaunch ? (
