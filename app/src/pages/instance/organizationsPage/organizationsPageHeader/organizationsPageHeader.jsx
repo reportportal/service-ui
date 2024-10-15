@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
-import { SearchField } from 'pages/organization/organizationProjectsPage/projectsPageHeader/searchField';
+import { SearchField } from 'components/fields/searchField';
 import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { messages } from '../messages';

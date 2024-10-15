@@ -25,11 +25,11 @@ import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
+import { SearchField } from 'components/fields/searchField';
 import projectsIcon from './img/projects-inline.svg';
 import styles from './projectsPageHeader.scss';
 import { messages } from '../messages';
 import userIcon from './img/user-inline.svg';
-import { SearchField } from './searchField';
 
 const cx = classNames.bind(styles);
 
