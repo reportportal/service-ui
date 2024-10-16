@@ -89,7 +89,6 @@ SearchFieldWrapped.propTypes = {
 };
 
 SearchFieldWrapped.defaultProps = {
-  hasPermission: false,
   placeholder: '',
   isLoading: false,
 };
