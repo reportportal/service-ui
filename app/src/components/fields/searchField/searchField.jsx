@@ -17,6 +17,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import { useTracking } from 'react-tracking';
 import { FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
@@ -33,13 +34,21 @@ const SearchFieldWrapped = ({
   onFilterChange,
   placeholder,
   isLoading,
+  event,
 }) => {
+  const { trackEvent } = useTracking();
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
 
   const handleSearchChange = (e) => {
     const newValue = e.target.value;
     setSearchValue(newValue);
     onFilterChange(newValue);
+
+    if (!isTouched && event) {
+      trackEvent(event);
+      setIsTouched(true);
+    }
   };
 
   const handleSearchClear = () => {
@@ -53,8 +62,12 @@ const SearchFieldWrapped = ({
     }
   }, []);
 
-  const handleBlur = () => {
+  const handleBlur = (e) => {
     setIsSearchActive(false);
+
+    if (e.target.value === '') {
+      setIsTouched(false);
+    }
   };
 
   const handleFocus = () => {
@@ -86,11 +99,13 @@ SearchFieldWrapped.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   isLoading: PropTypes.bool,
+  event: PropTypes.object,
 };
 
 SearchFieldWrapped.defaultProps = {
   placeholder: '',
   isLoading: false,
+  event: null,
 };
 
 export const SearchField = withFilter({ filterKey: SEARCH_KEY })(SearchFieldWrapped);

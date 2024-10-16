@@ -23,6 +23,7 @@ import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 
@@ -44,6 +45,7 @@ export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 placeholder={formatMessage(messages.searchPlaceholder)}
+                event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
             </div>
