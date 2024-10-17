@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2019 EPAM Systems
  *
@@ -23,14 +24,14 @@
   color: $COLOR--white;
   padding: 10px;
   background: $COLOR--topaz;
-  text-shadow: 0 1px 1px darken($COLOR--topaz, 10%);
+  text-shadow: 0 1px 1px color.adjust($COLOR--topaz, $lightness: -10%);
   &.success {
     background: $COLOR--dark-pastel-green;
-    text-shadow: 0 1px 1px darken($COLOR--dark-pastel-green, 10%);
+    text-shadow: 0 1px 1px color.adjust($COLOR--dark-pastel-green, $lightness: -10%);
   }
   &.error {
     background: $COLOR--tomato;
-    text-shadow: 0 1px 1px darken($COLOR--tomato, 10%);
+    text-shadow: 0 1px 1px color.adjust($COLOR--tomato, $lightness: -10%);
   }
   &.opacity-enter-active {
     opacity: 1;

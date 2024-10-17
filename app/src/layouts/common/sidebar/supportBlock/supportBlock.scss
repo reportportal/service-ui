@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2021 EPAM Systems
  *
@@ -113,7 +114,7 @@
   text-decoration: none;
 
   &:hover {
-    background-color: darken($COLOR--booger, 15%);
+    background-color: color.adjust($COLOR--booger, $lightness: -15%);
   }
 }
 

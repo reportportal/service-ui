@@ -35,14 +35,14 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
     .round-#{$ring + 1} {
       width: $width;
       height: $width;
-      margin-top: -$width/2;
-      margin-left: -$width/2;
+      margin-top: -$width*0.5;
+      margin-left: -$width*0.5;
       box-shadow: rgba(255, 255, 255, 0.4) 0 0 $shadow;
       @media (max-width: $SCREEN_XS_MAX) {
         width: $mobile-width;
         height: $mobile-width;
-        margin-top: -$mobile-width/2;
-        margin-left: -$mobile-width/2;
+        margin-top: -$mobile-width*0.5;
+        margin-left: -$mobile-width*0.5;
       }
     }
   }

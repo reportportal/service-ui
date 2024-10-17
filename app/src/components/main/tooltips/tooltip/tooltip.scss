@@ -91,7 +91,7 @@ $ARROW_WIDTH: 16px;
 
     &::before,
     &::after {
-      border-width: 0 $ARROW_WIDTH/2 $ARROW_HEIGHT;
+      border-width: 0 $ARROW_WIDTH*0.5 $ARROW_HEIGHT;
     }
 
     &::before {
@@ -111,7 +111,7 @@ $ARROW_WIDTH: 16px;
 
     &::before,
     &::after {
-      border-width: $ARROW_HEIGHT $ARROW_WIDTH/2 0;
+      border-width: $ARROW_HEIGHT $ARROW_WIDTH*0.5 0;
     }
 
     &::before {
@@ -131,7 +131,7 @@ $ARROW_WIDTH: 16px;
 
     &::before,
     &::after {
-      border-width: $ARROW_WIDTH/2 0 $ARROW_WIDTH/2 $ARROW_HEIGHT;
+      border-width: $ARROW_WIDTH*0.5 0 $ARROW_WIDTH*0.5 $ARROW_HEIGHT;
     }
 
     &::before {
@@ -152,7 +152,7 @@ $ARROW_WIDTH: 16px;
 
     &::before,
     &::after {
-      border-width: $ARROW_WIDTH/2 $ARROW_HEIGHT $ARROW_WIDTH/2 0;
+      border-width: $ARROW_WIDTH*0.5 $ARROW_HEIGHT $ARROW_WIDTH*0.5 0;
     }
 
     &::before {

@@ -42,14 +42,15 @@ $LEVEL_OFFSET_STEP: 20px;
   border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0;
+  background-color: $COLOR--white-two;
+  transition: background-color 0.2s ease 0s;
+
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     @include levels(false);
   }
-  background-color: $COLOR--white-two;
-  transition: background-color 0.2s ease 0s;
 }
 
 .row-cell {
