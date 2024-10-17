@@ -15,6 +15,7 @@
  */
 
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 import { userRolesSelector } from 'controllers/pages';
 import { canCreateOrganization } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
@@ -26,6 +27,8 @@ import {
   organizationsListLoadingSelector,
   organizationsListSelector,
 } from 'controllers/instance/organizations';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { messages } from './messages';
 import styles from './organizationsPage.scss';
@@ -40,14 +43,19 @@ export const OrganizationsPage = () => {
   const hasPermission = canCreateOrganization(userRoles);
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
-  const isEmptyOrganizations = organizationsList.length === 0;
+  const [searchValue, setSearchValue] = useState(null);
+  const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
 
-  const getEmptyPageState = () =>
-    isOrganizationsLoading ? (
-      <div className={cx('loader')}>
-        <BubblesLoader />
-      </div>
-    ) : (
+  const getEmptyPageState = () => {
+    if (isOrganizationsLoading) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    return searchValue === null ? (
       <EmptyPageState
         hasPermission={hasPermission}
         emptyIcon={EmptyIcon}
@@ -60,15 +68,25 @@ export const OrganizationsPage = () => {
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
       />
+    ) : (
+      <EmptyPageState
+        icon={<PlusIcon />}
+        label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+        description={formatMessage(messages.noResultsDescription)}
+        emptyIcon={NoResultsIcon}
+        hasPermission={false}
+      />
     );
+  };
 
   return (
     <ScrollWrapper autoHeightMax={100}>
       <div className={cx('organizations-page')}>
         <OrganizationsPageHeader
           hasPermission={hasPermission}
-          title={formatMessage(messages.title)}
-          isEmpty={isEmptyOrganizations}
+          isEmpty={isEmptyOrganizations && searchValue === null}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
         {isEmptyOrganizations ? (
           getEmptyPageState()

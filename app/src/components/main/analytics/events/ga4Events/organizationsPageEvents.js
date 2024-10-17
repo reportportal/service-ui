@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-export const NAMESPACE = 'admin';
-export const FETCH_PROJECT_DATA = 'fetchProjectData';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
-export const DEFAULT_SORT_COLUMN = 'name';
-export const SORTING_KEY = 'order';
+const ORGANIZATION_PAGE = 'organization';
+
+const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
+
+export const ORGANIZATION_PAGE_EVENTS = {
+  SEARCH_ORGANIZATION_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'search',
+  },
+};

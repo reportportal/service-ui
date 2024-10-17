@@ -18,16 +18,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
+import { SearchField } from 'components/fields/searchField';
+import { useSelector } from 'react-redux';
+import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsPageHeader = ({ isEmpty }) => {
+export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }) => {
   const { formatMessage } = useIntl();
+  const projectsLoading = useSelector(organizationsListLoadingSelector);
 
   return (
     <div className={cx('organizations-page-header-container')}>
@@ -36,7 +40,13 @@ export const OrganizationsPageHeader = ({ isEmpty }) => {
         <div className={cx('actions')}>
           {!isEmpty && (
             <div className={cx('icons')}>
-              <i className={cx('search-icon')}>{Parser(searchIcon)}</i>
+              <SearchField
+                isLoading={projectsLoading}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
+              />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
             </div>
           )}
@@ -48,6 +58,8 @@ export const OrganizationsPageHeader = ({ isEmpty }) => {
 
 OrganizationsPageHeader.propTypes = {
   isEmpty: PropTypes.bool,
+  searchValue: PropTypes.string || null,
+  setSearchValue: PropTypes.func.isRequired,
 };
 
 OrganizationsPageHeader.defaultProps = {

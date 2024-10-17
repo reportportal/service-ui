@@ -29,9 +29,9 @@ import { createProjectAction } from 'controllers/organization/projects/actionCre
 import { useState } from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EmptyPageState } from 'pages/common/emptyPageState';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
-import NoResultsIcon from './img/no-results-icon-inline.svg';
 import { messages } from './messages';
 import { ProjectsListTableWrapper } from './projectsListTable';
 import styles from './organizationProjectsPage.scss';

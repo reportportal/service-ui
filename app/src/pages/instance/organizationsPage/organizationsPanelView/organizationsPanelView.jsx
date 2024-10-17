@@ -24,6 +24,7 @@ import {
   DEFAULT_LIMITATION,
   DEFAULT_PAGE_SIZE_OPTIONS,
 } from 'controllers/instance/organizations/constants';
+import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/instance';
 import styles from './organizationsPanelView.scss';
 import { OrganizationCard } from './organizationCard';
 
@@ -74,6 +75,8 @@ OrganizationsPanelViewWrapped.defaultProps = {
 
 export const OrganizationsPanelView = withSortingURL({
   defaultDirection: SORTING_ASC,
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  sortingKey: SORTING_KEY,
 })(
   withPagination({
     paginationSelector: organizationsListPaginationSelector,
