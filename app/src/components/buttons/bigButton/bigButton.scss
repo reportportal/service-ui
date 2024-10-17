@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2019 EPAM Systems
  *
@@ -45,12 +46,12 @@
     border-color: $COLOR--booger;
 
     &:hover:not(.disabled) {
-      background-color: darken($COLOR--booger, 15%);
-      border-color: darken($COLOR--booger, 15%);
+      background-color: color.adjust($COLOR--booger, $lightness: -15%);
+      border-color: color.adjust($COLOR--booger, $lightness: -15%);
     }
     &:active:not(.disabled) {
-      background-color: darken($COLOR--booger, 30%);
-      border-color: darken($COLOR--booger, 30%);
+      background-color: color.adjust($COLOR--booger, $lightness: -30%);
+      border-color: color.adjust($COLOR--booger, $lightness: -30%);
     }
   }
   &.color-organish {
@@ -58,12 +59,12 @@
     border-color: $COLOR--organish;
 
     &:hover:not(.disabled) {
-      background-color: darken($COLOR--organish, 15%);
-      border-color: darken($COLOR--organish, 15%);
+      background-color: color.adjust($COLOR--organish, $lightness: -15%);
+      border-color: color.adjust($COLOR--organish, $lightness: -15%);
     }
     &:active:not(.disabled) {
-      background-color: darken($COLOR--organish, 30%);
-      border-color: darken($COLOR--organish, 30%);
+      background-color: color.adjust($COLOR--organish, $lightness: -30%);
+      border-color: color.adjust($COLOR--organish, $lightness: -30%);
     }
   }
   &.color-gray-60 {
@@ -71,12 +72,12 @@
     border-color: $COLOR--gray-60;
 
     &:hover:not(.disabled) {
-      background-color: darken($COLOR--gray-60, 15%);
-      border-color: darken($COLOR--gray-60, 15%);
+      background-color: color.adjust($COLOR--gray-60, $lightness: -15%);
+      border-color: color.adjust($COLOR--gray-60, $lightness: -15%);
     }
     &:active:not(.disabled) {
-      background-color: darken($COLOR--gray-60, 30%);
-      border-color: darken($COLOR--gray-60, 30%);
+      background-color: color.adjust($COLOR--gray-60, $lightness: -30%);
+      border-color: color.adjust($COLOR--gray-60, $lightness: -30%);
     }
   }
   &.color-tomato {
@@ -84,12 +85,12 @@
     border-color: $COLOR--tomato;
 
     &:hover:not(.disabled) {
-      background-color: darken($COLOR--tomato, 15%);
-      border-color: darken($COLOR--tomato, 15%);
+      background-color: color.adjust($COLOR--tomato, $lightness: -15%);
+      border-color: color.adjust($COLOR--tomato, $lightness: -15%);
     }
     &:active:not(.disabled) {
-      background-color: darken($COLOR--tomato, 30%);
-      border-color: darken($COLOR--tomato, 30%);
+      background-color: color.adjust($COLOR--tomato, $lightness: -30%);
+      border-color: color.adjust($COLOR--tomato, $lightness: -30%);
     }
   }
   &.color-white-two {
@@ -110,12 +111,12 @@
     border-color: $COLOR--topaz;
 
     &:hover:not(.disabled) {
-      background-color: darken($COLOR--topaz, 15%);
-      border-color: darken($COLOR--topaz, 15%);
+      background-color: color.adjust($COLOR--topaz, $lightness: -15%);
+      border-color: color.adjust($COLOR--topaz, $lightness: -15%);
     }
     &:active:not(.disabled) {
-      background-color: darken($COLOR--topaz, 30%);
-      border-color: darken($COLOR--topaz, 30%);
+      background-color: color.adjust($COLOR--topaz, $lightness: -30%);
+      border-color: color.adjust($COLOR--topaz, $lightness: -30%);
     }
   }
 }

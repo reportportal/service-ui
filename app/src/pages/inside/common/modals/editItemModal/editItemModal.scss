@@ -42,11 +42,11 @@
   justify-content: flex-start;
   white-space: pre-line;
   word-break: break-all;
+  padding-right: 10px;
 
   @supports (word-break: break-word) {
     word-break: break-word;
   }
-  padding-right: 10px;
 }
 
 .copy {
@@ -62,6 +62,7 @@
   cursor: pointer;
   vertical-align: middle;
   stroke: $COLOR--gray-60;
+
   &:hover {
     stroke: $COLOR--black-2;
   }
