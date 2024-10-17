@@ -25,6 +25,7 @@ import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
+import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -100,9 +101,10 @@ export class IntegrationForm extends Component {
       this.submitIntegrationSuccess,
       this.state.metaData,
     );
+
     this.props.tracking.trackEvent(
-      (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClickSubmit(
-        this.props.data.integrationType.name,
+      PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(
+        PLUGIN_NAME_TITLES[this.props.pluginName] || this.props.pluginName,
       ),
     );
   };
