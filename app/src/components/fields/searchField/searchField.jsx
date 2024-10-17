@@ -16,11 +16,9 @@
 
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import { useTracking } from 'react-tracking';
-import { FieldText } from '@reportportal/ui-kit';
+import { FieldText, SearchIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
-import searchIcon from 'common/img/newIcons/search-outline-inline.svg';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import styles from './searchField.scss';
@@ -83,7 +81,7 @@ const SearchFieldWrapped = ({
       onBlur={handleBlur}
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
-      startIcon={Parser(searchIcon)}
+      startIcon={<SearchIcon />}
       className={cx('search-field')}
       maxLength={256}
       collapsible
