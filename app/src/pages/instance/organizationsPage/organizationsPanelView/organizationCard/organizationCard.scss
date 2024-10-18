@@ -88,4 +88,7 @@
   color: $COLOR--almost-black;
   font-size: 13px;
   line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

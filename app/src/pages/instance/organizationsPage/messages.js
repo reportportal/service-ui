@@ -70,4 +70,8 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.searchPlaceholder',
     defaultMessage: 'Type to search by name',
   },
+  personalOrganization: {
+    id: 'OrganizationsPage.personalOrganization',
+    defaultMessage: 'Personal organization',
+  },
 });

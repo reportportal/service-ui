@@ -26,7 +26,8 @@ import { userRolesSelector } from 'controllers/pages';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
-import { ORGANIZATION_EXTERNAL_TYPE } from 'common/constants/organizationTypes';
+import { ORGANIZATION_EXTERNAL_TYPE, INTERNAL } from 'common/constants/organizationTypes';
+import { assignedOrganizationsSelector } from 'controllers/user';
 import UserIcon from './img/user-inline.svg';
 import ProjectsIcon from './img/projects-inline.svg';
 import LastUpdateIcon from './img/last-update-inline.svg';
@@ -41,8 +42,12 @@ const THREE_MONTHS = 3600 * 24 * 30 * 1000;
 
 export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
-  const { userRole, organizationRole } = useSelector(userRolesSelector);
-  const hasPermission = userRole === ADMINISTRATOR || organizationRole === MANAGER;
+  const { userRole } = useSelector(userRolesSelector);
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector);
+  const hasPermission =
+    userRole === ADMINISTRATOR ||
+    assignedOrganizations[organization.slug]?.organizationRole === MANAGER;
+
   const usersCount = organization.relationships.users.meta.count;
   const projectsCount = organization.relationships.projects.meta.count;
   const lastLaunch = organization.relationships.launches.meta.last_occurred_at;
@@ -92,7 +97,15 @@ export const OrganizationCard = ({ organization }) => {
               <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
             </Tooltip>
           ) : (
-            <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
+            organization.type !== INTERNAL && (
+              <Tooltip
+                content={formatMessage(messages.personalOrganization)}
+                placement={'top'}
+                wrapperClassName={cx('tooltip-wrapper')}
+              >
+                <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
+              </Tooltip>
+            )
           ))}
         {hasPermission && isOutdated && (
           <Tooltip
