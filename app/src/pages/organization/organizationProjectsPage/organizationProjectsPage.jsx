@@ -28,7 +28,7 @@ import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organization/projects/actionCreators';
 import { useState } from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { EmptyPageState } from 'pages/common/emptyPageState';
+import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
