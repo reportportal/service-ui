@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { EmptyPageState } from 'pages/common/emptyPageState';
+import { EmptyPageState } from 'pages/common';
 import {
   organizationsListLoadingSelector,
   organizationsListSelector,
