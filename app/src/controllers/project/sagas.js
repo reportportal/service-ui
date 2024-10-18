@@ -31,9 +31,8 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
-import { PROJECT_PAGE, userRolesSelector } from 'controllers/pages';
+import { userRolesSelector } from 'controllers/pages';
 import { canWorkWithFilters } from 'common/utils/permissions';
-import { NAVIGATE_TO_PROJECT } from 'controllers/organization/projects/constants';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -486,20 +485,6 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
-function* navigateToProject({ payload }) {
-  const { project } = payload;
-  const { organizationSlug, projectSlug } = project;
-
-  yield put({
-    type: PROJECT_PAGE,
-    payload: { organizationSlug, projectSlug },
-  });
-}
-
-function* watchNavigateToProject() {
-  yield takeEvery(NAVIGATE_TO_PROJECT, navigateToProject);
-}
-
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -520,6 +505,5 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
-    watchNavigateToProject(),
   ]);
 }

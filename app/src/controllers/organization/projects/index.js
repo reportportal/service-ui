@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { fetchOrganizationProjectsAction, navigateToProjectAction } from './actionCreators';
+export { fetchOrganizationProjectsAction } from './actionCreators';
 export { projectsReducer } from './reducer';
 export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
 export { projectsSagas } from './sagas';
