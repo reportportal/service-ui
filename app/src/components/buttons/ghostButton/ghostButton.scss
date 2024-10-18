@@ -64,7 +64,7 @@
     }
   }
 
-  &.color-white {
+  &.color-white:not(.disabled) {
     background-color: $COLOR--topaz;
     border-color: $COLOR--topaz;
     color: $COLOR--white-two;
