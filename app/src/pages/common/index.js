@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,5 @@
  * limitations under the License.
  */
 
-export { fetchOrganizationProjectsAction } from './actionCreators';
-export { projectsReducer } from './reducer';
-export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
-export { projectsSagas } from './sagas';
-export {
-  DEFAULT_LIMITATION,
-  DEFAULT_PAGE_SIZE_OPTIONS,
-  DEFAULT_OFFSET,
-  DEFAULT_SORT_COLUMN,
-  DEFAULT_QUERY_PARAMS,
-  FETCH_ORGANIZATION_PROJECTS,
-  SORTING_KEY,
-} from './constants';
+export { EmptyPageState } from './emptyPageState';
+export { ConfirmationModal } from './modals/confirmationModal';
