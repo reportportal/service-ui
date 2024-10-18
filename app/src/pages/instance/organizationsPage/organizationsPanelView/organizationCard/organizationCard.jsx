@@ -26,7 +26,10 @@ import { userRolesSelector } from 'controllers/pages';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
-import { ORGANIZATION_EXTERNAL_TYPE, INTERNAL } from 'common/constants/organizationTypes';
+import {
+  ORGANIZATION_EXTERNAL_TYPE,
+  ORGANIZATION_INTERNAL_TYPE,
+} from 'common/constants/organizationTypes';
 import { assignedOrganizationsSelector } from 'controllers/user';
 import UserIcon from './img/user-inline.svg';
 import ProjectsIcon from './img/projects-inline.svg';
@@ -97,7 +100,7 @@ export const OrganizationCard = ({ organization }) => {
               <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
             </Tooltip>
           ) : (
-            organization.type !== INTERNAL && (
+            organization.type !== ORGANIZATION_INTERNAL_TYPE && (
               <Tooltip
                 content={formatMessage(messages.personalOrganization)}
                 placement={'top'}

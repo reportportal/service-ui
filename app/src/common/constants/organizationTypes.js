@@ -15,4 +15,4 @@
  */
 
 export const ORGANIZATION_EXTERNAL_TYPE = 'EXTERNAL';
-export const INTERNAL = 'INTERNAL';
+export const ORGANIZATION_INTERNAL_TYPE = 'INTERNAL';
