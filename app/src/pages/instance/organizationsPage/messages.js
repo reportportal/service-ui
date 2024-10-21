@@ -61,6 +61,10 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.latestLaunch',
     defaultMessage: 'The latest launch execution',
   },
+  noLaunches: {
+    id: 'OrganizationsPage.noLaunches',
+    defaultMessage: 'No launches',
+  },
   noResultsDescription: {
     id: 'OrganizationsPage.noResultsDescription',
     defaultMessage:

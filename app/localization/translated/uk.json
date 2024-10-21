@@ -1562,6 +1562,7 @@
   "OrganizationsPage.createNewOrganization": "Створіть нову організацію, щоб розпочати свій шлях на порталі звітів",
   "OrganizationsPage.noOrganizationsYet": "Поки немає організацій",
   "OrganizationsPage.noOrganizationsAvailableYet": "Поки що немає доступних організацій",
+  "OrganizationsPage.noLaunches": "Ніяких запусків",
   "OrganizationsPage.noResultsDescription": "Ваші критерії пошуку чи фільтра не відповідають жодному результату. Будь ласка, спробуйте інші ключові слова або змініть налаштування фільтра.",
   "OrganizationsPage.searchPlaceholder": "Пошук по назві",
   "OrganizationsPage.synchedOrganization": "Синхронізована організація",

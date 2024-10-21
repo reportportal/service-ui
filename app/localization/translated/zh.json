@@ -1562,6 +1562,7 @@
   "OrganizationsPage.createNewOrganization": "Create a new organization to begin your ReportPortal journey",
   "OrganizationsPage.noOrganizationsYet": "No organizations yet",
   "OrganizationsPage.noOrganizationsAvailableYet": "No organizations available yet",
+  "OrganizationsPage.noLaunches": "No launches",
   "OrganizationsPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   "OrganizationsPage.searchPlaceholder": "按名称搜索",
   "OrganizationsPage.synchedOrganization": "Synched organization",

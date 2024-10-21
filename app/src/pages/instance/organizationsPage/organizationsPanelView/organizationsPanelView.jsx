@@ -49,10 +49,12 @@ const OrganizationsPanelViewWrapped = ({
     changePage={onChangePage}
     changePageSize={onChangePageSize}
   >
-    <div className={cx('organizations-list')}>
-      {organizationsList.map((organization) => (
-        <OrganizationCard key={organization.id} organization={organization} />
-      ))}
+    <div className={cx('organizations-list-wrapper')}>
+      <div className={cx('organizations-list')}>
+        {organizationsList.map((organization) => (
+          <OrganizationCard key={organization.id} organization={organization} />
+        ))}
+      </div>
     </div>
   </PaginationWrapper>
 );

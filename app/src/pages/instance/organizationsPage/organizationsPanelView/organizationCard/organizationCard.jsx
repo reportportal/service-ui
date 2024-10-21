@@ -41,7 +41,7 @@ import { messages } from '../../messages';
 import styles from './organizationCard.scss';
 
 const cx = classNames.bind(styles);
-const THREE_MONTHS = 3600 * 24 * 30 * 1000;
+const THREE_MONTHS = 1000 * 60 * 60 * 24 * 30 * 3;
 
 export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
@@ -55,7 +55,7 @@ export const OrganizationCard = ({ organization }) => {
   const projectsCount = organization.relationships.projects.meta.count;
   const lastLaunch = organization.relationships.launches.meta.last_occurred_at;
   const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunch));
-  const isOutdated = Date.now() - new Date(lastLaunch).getTime() > THREE_MONTHS;
+  const isOutdated = lastLaunch && Date.now() - new Date(lastLaunch).getTime() > THREE_MONTHS;
 
   const cartInfo = [
     {
@@ -74,7 +74,11 @@ export const OrganizationCard = ({ organization }) => {
       icon: LastUpdateIcon,
       className: cx('last-update'),
       content: formatMessage(messages.latestLaunch),
-      bottomElement: <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />,
+      bottomElement: lastLaunch ? (
+        <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />
+      ) : (
+        formatMessage(messages.noLaunches)
+      ),
     },
   ];
 
@@ -87,6 +91,7 @@ export const OrganizationCard = ({ organization }) => {
             payload: { organizationSlug: organization.slug },
           }}
           className={cx('organization-link')}
+          title={organization.name}
         >
           {organization.name}
         </NavLink>
