@@ -1562,6 +1562,7 @@
   "OrganizationsPage.createNewOrganization": "Создайте новую организацию, чтобы начать свой путь на портале отчетов",
   "OrganizationsPage.noOrganizationsYet": "Пока нет организаций",
   "OrganizationsPage.noOrganizationsAvailableYet": "Пока нет доступных организаций",
+  "OrganizationsPage.noLaunches": "Никаких запусков",
   "OrganizationsPage.noResultsDescription": "Ваши критерии поиска или фильтра не дали никаких результатов. Попробуйте другие ключевые слова или измените настройки фильтра.",
   "OrganizationsPage.searchPlaceholder": "Поиск по названию",
   "OrganizationsPage.synchedOrganization": "Синхронизированная организация",

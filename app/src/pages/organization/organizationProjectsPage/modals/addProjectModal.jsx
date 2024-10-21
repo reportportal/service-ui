@@ -42,7 +42,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }
     <Modal
       title={formatMessage(messages.addProject)}
       okButton={{
-        children: formatMessage(messages.createProject),
+        children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
         onClick: () => {
           handleSubmit(onCreateProject)();
         },

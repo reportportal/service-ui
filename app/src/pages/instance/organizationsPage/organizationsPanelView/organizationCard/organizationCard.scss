@@ -15,6 +15,8 @@
  */
 
 .organization-card {
+  width: 384px;
+  place-self: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -22,8 +24,6 @@
   box-sizing: border-box;
   height: 160px;
   border-radius: 8px;
-  min-width: 320px;
-  max-width: 400px;
   box-shadow: $BOX_SHADOW--item;
   background-color: $COLOR--white-two;
 

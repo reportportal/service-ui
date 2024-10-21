@@ -1562,6 +1562,7 @@
   "OrganizationsPage.createNewOrganization": "Стварыце новую арганізацыю, каб пачаць свой шлях на партале справаздач",
   "OrganizationsPage.noOrganizationsYet": "Пакуль няма арганізацый",
   "OrganizationsPage.noOrganizationsAvailableYet": "Пакуль няма даступных арганізацый",
+  "OrganizationsPage.noLaunches": "Ніякіх запускаў",
   "OrganizationsPage.noResultsDescription": "Вашым крытэрам пошуку або фільтра не знойдзена ніводнага выніку. Калі ласка, паспрабуйце іншыя ключавыя словы або змяніце налады фільтра.",
   "OrganizationsPage.searchPlaceholder": "Пошук па назве",
   "OrganizationsPage.synchedOrganization": "Сінхранізаваная арганізацыя",

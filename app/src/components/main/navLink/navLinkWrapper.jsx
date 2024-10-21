@@ -35,6 +35,7 @@ export class NavLinkWrapper extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     location: PropTypes.object,
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ export class NavLinkWrapper extends Component {
     onFocus: () => {},
     onBlur: () => {},
     location: null,
+    title: null,
   };
 
   /*
@@ -97,7 +99,16 @@ export class NavLinkWrapper extends Component {
   };
 
   render() {
-    const { onClick, onFocus, onBlur, children, to, className, activeClassName } = this.props;
+    const {
+      onClick,
+      onFocus,
+      onBlur,
+      children,
+      to,
+      className,
+      activeClassName,
+      title,
+    } = this.props;
 
     return (
       <NavLink
@@ -108,6 +119,7 @@ export class NavLinkWrapper extends Component {
         isActive={this.isActive}
         onFocus={onFocus}
         onBlur={onBlur}
+        title={title}
       >
         {children}
       </NavLink>
