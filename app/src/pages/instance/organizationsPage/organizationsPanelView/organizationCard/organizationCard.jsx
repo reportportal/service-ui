@@ -41,7 +41,7 @@ import { messages } from '../../messages';
 import styles from './organizationCard.scss';
 
 const cx = classNames.bind(styles);
-const THREE_MONTHS = 1000 * 60 * 60 * 24 * 30 * 3;
+const THREE_MONTHS_IN_MS = 1000 * 60 * 60 * 24 * 30 * 3;
 
 export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
@@ -53,9 +53,10 @@ export const OrganizationCard = ({ organization }) => {
 
   const usersCount = organization.relationships.users.meta.count;
   const projectsCount = organization.relationships.projects.meta.count;
-  const lastLaunch = organization.relationships.launches.meta.last_occurred_at;
-  const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunch));
-  const isOutdated = lastLaunch && Date.now() - new Date(lastLaunch).getTime() > THREE_MONTHS;
+  const lastLaunchDate = organization.relationships.launches.meta.last_occurred_at;
+  const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunchDate));
+  const isOutdated =
+    lastLaunchDate && Date.now() - new Date(lastLaunchDate).getTime() > THREE_MONTHS_IN_MS;
 
   const cartInfo = [
     {
@@ -74,7 +75,7 @@ export const OrganizationCard = ({ organization }) => {
       icon: LastUpdateIcon,
       className: cx('last-update'),
       content: formatMessage(messages.latestLaunch),
-      bottomElement: lastLaunch ? (
+      bottomElement: lastLaunchDate ? (
         <FormattedRelativeTime value={relativeTime} unit={unit} numeric="auto" />
       ) : (
         formatMessage(messages.noLaunches)
