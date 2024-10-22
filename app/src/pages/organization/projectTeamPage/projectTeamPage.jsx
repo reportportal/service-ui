@@ -50,7 +50,7 @@ export const ProjectTeamPage = () => {
   };
 
   return (
-    <ScrollWrapper autoHeightMax={100}>
+    <ScrollWrapper autoHeightMax={100} withPaginationOffset>
       <div className={cx('project-team-page')}>
         <ProjectTeamPageHeader
           hasPermission={hasPermission}

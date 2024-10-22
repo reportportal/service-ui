@@ -50,6 +50,7 @@ export class ScrollWrapper extends Component {
     thumbMinSize: PropTypes.number,
     withBackToTop: PropTypes.bool,
     withFooter: PropTypes.bool,
+    withPaginationOffset: PropTypes.bool,
     resetRequired: PropTypes.bool,
     onReset: PropTypes.func,
     className: PropTypes.string,
@@ -71,8 +72,15 @@ export class ScrollWrapper extends Component {
     renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,
     renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
     renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
-    renderView: ({ withFooter, ...props }) => (
-      <div {...props} className={cx('scrolling-content', { 'with-footer': withFooter })} />
+    renderView: ({ withFooter, withPaginationOffset, ...props }) => (
+      <div
+        {...props}
+        className={cx(
+          'scrolling-content',
+          { 'with-footer': withFooter },
+          { 'with-pagination-offset': withPaginationOffset },
+        )}
+      />
     ),
     onLazyLoad: false,
     hideTracksWhenNotNeeded: false,
@@ -165,7 +173,12 @@ export class ScrollWrapper extends Component {
     this.scrollbars.thumbHorizontal.style.opacity = '';
   };
 
-  renderView = (props) => this.props.renderView({ withFooter: this.props.withFooter, ...props });
+  renderView = (props) =>
+    this.props.renderView({
+      withFooter: this.props.withFooter,
+      withPaginationOffset: this.props.withPaginationOffset,
+      ...props,
+    });
 
   render() {
     return (

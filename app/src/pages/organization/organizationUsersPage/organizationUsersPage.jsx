@@ -31,7 +31,7 @@ export const OrganizationUsersPage = () => {
   const isEmptyUsers = users.length === 0;
 
   return (
-    <ScrollWrapper autoHeightMax={100}>
+    <ScrollWrapper autoHeightMax={100} withPaginationOffset>
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader isNotEmpty={!isEmptyUsers} />
         {isEmptyUsers ? (

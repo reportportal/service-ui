@@ -80,7 +80,7 @@ export const OrganizationsPage = () => {
   };
 
   return (
-    <ScrollWrapper autoHeightMax={100}>
+    <ScrollWrapper autoHeightMax={100} withPaginationOffset>
       <div className={cx('organizations-page')}>
         <OrganizationsPageHeader
           hasPermission={hasPermission}

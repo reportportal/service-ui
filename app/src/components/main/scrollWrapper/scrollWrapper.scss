@@ -62,6 +62,9 @@
     flex-direction: column;
     justify-content: stretch;
   }
+  &.with-pagination-offset {
+    margin-bottom: 45px !important;
+  }
   @media print {
     position: relative !important;
     max-height: none !important;
