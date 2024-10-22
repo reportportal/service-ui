@@ -31,7 +31,7 @@ import styles from './organizationsPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWitFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
 
 export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }) => {
   const { formatMessage } = useIntl();
@@ -44,7 +44,7 @@ export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }
         <div className={cx('actions')}>
           {!isEmpty && (
             <div className={cx('icons')}>
-              <SearchFieldWitFilter
+              <SearchFieldWithFilter
                 isLoading={projectsLoading}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}

@@ -17,7 +17,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { FieldText, SearchIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, FieldText, SearchIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import styles from './searchField.scss';
 
@@ -79,7 +79,11 @@ export const SearchField = ({
       onBlur={handleBlur}
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
-      startIcon={<SearchIcon />}
+      startIcon={
+        <BaseIconButton>
+          <SearchIcon />
+        </BaseIconButton>
+      }
       className={cx('search-field')}
       maxLength={256}
       collapsible

@@ -35,7 +35,7 @@ import userIcon from './img/user-inline.svg';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWitFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
 
 export const ProjectsPageHeader = ({
   hasPermission,
@@ -87,7 +87,7 @@ export const ProjectsPageHeader = ({
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
-              <SearchFieldWitFilter
+              <SearchFieldWithFilter
                 isLoading={projectsLoading}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
