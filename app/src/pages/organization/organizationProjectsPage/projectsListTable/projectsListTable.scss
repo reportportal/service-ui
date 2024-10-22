@@ -19,6 +19,7 @@
   padding: 0 32px;
   max-width: 1264px;
   box-sizing: border-box;
+  flex: 1;
 
   .date {
     font-family: inherit;
@@ -68,4 +69,9 @@
 
 .loader {
   margin: auto;
+}
+
+.projects-pagination-wrapper {
+  min-height: 100%;
+  flex: 1;
 }

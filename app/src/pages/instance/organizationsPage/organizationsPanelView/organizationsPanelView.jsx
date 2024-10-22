@@ -48,6 +48,7 @@ const OrganizationsPanelViewWrapped = ({
     pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
     changePage={onChangePage}
     changePageSize={onChangePageSize}
+    className={cx('organizations-pagination-wrapper')}
   >
     <div className={cx('organizations-list-wrapper')}>
       <div className={cx('organizations-list')}>

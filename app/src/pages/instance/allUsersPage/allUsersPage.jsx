@@ -43,6 +43,7 @@ import {
 import { userInfoSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { UsersToolbar } from './usersToolbar';
 import { AllUsersGrid } from './allUsersGrid';
 
@@ -265,36 +266,38 @@ export class AllUsersPage extends Component {
       onChangeSorting,
     } = this.props;
     return (
-      <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
-        <PageSection>
-          <UsersToolbar onDelete={this.handlerDelete} selectedUsers={selectedUsers} />
-          <AllUsersGrid
-            data={users}
-            loading={loading}
-            selectedItems={selectedUsers}
-            onToggleSelection={this.handleOneUserSelection}
-            excludeFromSelection={this.excludeFromSelection}
-            onToggleSelectAll={this.handleToggleAllUserSelection}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-          />
-          {!!pageCount && !loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
+      <ScrollWrapper autoHeightMax={100}>
+        <PageLayout>
+          <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+          <PageSection>
+            <UsersToolbar onDelete={this.handlerDelete} selectedUsers={selectedUsers} />
+            <AllUsersGrid
+              data={users}
+              loading={loading}
+              selectedItems={selectedUsers}
+              onToggleSelection={this.handleOneUserSelection}
+              excludeFromSelection={this.excludeFromSelection}
+              onToggleSelectAll={this.handleToggleAllUserSelection}
+              sortingColumn={sortingColumn}
+              sortingDirection={sortingDirection}
+              onChangeSorting={onChangeSorting}
             />
-          )}
-          {!users.length && !loading && (
-            <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
-          )}
-        </PageSection>
-      </PageLayout>
+            {!!pageCount && !loading && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
+            {!users.length && !loading && (
+              <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+            )}
+          </PageSection>
+        </PageLayout>
+      </ScrollWrapper>
     );
   }
 }
