@@ -21,6 +21,8 @@ import classNames from 'classnames/bind';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
+import { SEARCH_KEY } from 'controllers/organization/projects/constants';
+import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -28,6 +30,8 @@ import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 
 const cx = classNames.bind(styles);
+
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
 
 export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }) => {
   const { formatMessage } = useIntl();
@@ -40,7 +44,7 @@ export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }
         <div className={cx('actions')}>
           {!isEmpty && (
             <div className={cx('icons')}>
-              <SearchField
+              <SearchFieldWithFilter
                 isLoading={projectsLoading}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}

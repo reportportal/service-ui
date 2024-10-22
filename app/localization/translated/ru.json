@@ -1081,7 +1081,7 @@
   "InviteUserModal.inviteAdmin": "Имейте в виду, что выбранный пользователь, как администратор, имеет полный доступ ко всем организациям и проектам в рамках экземпляра, независимо от указанной роли и разрешений.",
   "InviteUserModal.inviteExternalMember": "Приглашение участника было успешно зарегистрировано. Подтверждающая информация будет отправлена на предоставленный электронный адрес. Срок действия: 1 день.",
   "InviteUserModal.nameOrEmailLabel": "Имя или адрес электронной почты",
-  "InviteUserModal.memberWasInvited": "Участник '<b>{name}</b>' назначен на проект",
+  "InviteUserModal.memberWasInvited": "Пользователь '<b>{name}</b>' был приглашен и успешно назначен",
   "IssueInfoTooltip.issueNotFoundDescription": "Ошибка не существует или нет соединения с СОД-интеграцией",
   "IssueInfoTooltip.issueNotFoundTitle": "Ошибок не обнаружено",
   "IssueInfoTooltip.issueStatusTitle": "Статус",

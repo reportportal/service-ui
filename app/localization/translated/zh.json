@@ -1081,7 +1081,7 @@
   "InviteUserModal.inviteAdmin": "Be aware that the selected user, as an Admin, has full access to all organizations and projects within the instance, regardless of specified role and permissions.",
   "InviteUserModal.inviteExternalMember": "会员邀请已登记。确认信息将通过提供的电子邮件发送。有效期：1天。",
   "InviteUserModal.nameOrEmailLabel": "Name or email",
-  "InviteUserModal.memberWasInvited": "成员“<b>{name}</b>”已分配至此项目",
+  "InviteUserModal.memberWasInvited": "User '<b>{name}</b>' has been invited and assigned successfully",
   "IssueInfoTooltip.issueNotFoundDescription": "问题不存在或未能连接到BTS集成",
   "IssueInfoTooltip.issueNotFoundTitle": "未找到问题",
   "IssueInfoTooltip.issueStatusTitle": "状态",

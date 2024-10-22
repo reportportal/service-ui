@@ -23,11 +23,12 @@ import { activeProjectKeySelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
+import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
+import { projectKeySelector } from 'controllers/project';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import {
   DEFAULT_PAGE_SIZE,
@@ -55,7 +56,8 @@ const ProjectTeamListTableWrapped = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectKey = useSelector(projectKeySelector);
   const userRoles = useSelector(userRolesSelector);
 
   const data = useMemo(
@@ -72,7 +74,7 @@ const ProjectTeamListTableWrapped = ({
           assignedProjects,
         }) => {
           const organizationRole = assignedOrganizations?.[organizationSlug]?.organizationRole;
-          const projectRole = assignedProjects?.[projectSlug]?.projectRole;
+          const projectRole = assignedProjects?.[projectKey]?.projectRole;
 
           return {
             id,
@@ -102,7 +104,7 @@ const ProjectTeamListTableWrapped = ({
           };
         },
       ),
-    [members, activeProjectKey, organizationSlug, projectSlug],
+    [members, activeProjectKey, organizationSlug, projectKey],
   );
 
   const primaryColumn = {

@@ -17,15 +17,13 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { FieldText, SearchIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, FieldText, SearchIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
-import { SEARCH_KEY } from 'controllers/organization/projects/constants';
-import { withFilter } from 'controllers/filter';
 import styles from './searchField.scss';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWrapped = ({
+export const SearchField = ({
   searchValue,
   setSearchValue,
   filter,
@@ -81,7 +79,11 @@ const SearchFieldWrapped = ({
       onBlur={handleBlur}
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
-      startIcon={<SearchIcon />}
+      startIcon={
+        <BaseIconButton>
+          <SearchIcon />
+        </BaseIconButton>
+      }
       className={cx('search-field')}
       maxLength={256}
       collapsible
@@ -90,7 +92,7 @@ const SearchFieldWrapped = ({
   );
 };
 
-SearchFieldWrapped.propTypes = {
+SearchField.propTypes = {
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
   filter: PropTypes.string,
@@ -100,10 +102,8 @@ SearchFieldWrapped.propTypes = {
   event: PropTypes.object,
 };
 
-SearchFieldWrapped.defaultProps = {
+SearchField.defaultProps = {
   placeholder: '',
   isLoading: false,
   event: null,
 };
-
-export const SearchField = withFilter({ filterKey: SEARCH_KEY })(SearchFieldWrapped);

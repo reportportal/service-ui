@@ -1080,7 +1080,7 @@
   "InviteUserModal.inviteAdmin": "Be aware that the selected user, as an Admin, has full access to all organizations and projects within the instance, regardless of specified role and permissions.",
   "InviteUserModal.inviteExternalMember": "La invitación del miembro se ha registrado correctamente. La información de confirmación será enviada a la dirección de correo electrónico proporcionada. Validez: 1 día.",
   "InviteUserModal.nameOrEmailLabel": "Name or email",
-  "InviteUserModal.memberWasInvited": "El miembro '<b>{name}</b>' ha sido asignado al proyecto",
+  "InviteUserModal.memberWasInvited": "User '<b>{name}</b>' has been invited and assigned successfully",
   "IssueInfoTooltip.issueNotFoundDescription": "No se encontró el error o no hay conexión con la integración de BTS.",
   "IssueInfoTooltip.issueNotFoundTitle": "Error no encontrado",
   "IssueInfoTooltip.issueStatusTitle": "Estado",

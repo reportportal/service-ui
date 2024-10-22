@@ -46,7 +46,7 @@ export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (Wrapp
 
       handleFilterChange = debounce((value) => {
         this.props.updateFilter(value || undefined);
-      }, 300);
+      }, 1000);
 
       render() {
         const { filter, updateFilter, ...rest } = this.props;

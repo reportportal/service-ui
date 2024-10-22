@@ -1081,7 +1081,7 @@
   "InviteUserModal.inviteAdmin": "Майце на ўвазе, што абраны карыстальнік, як адміністратар, мае поўны доступ да ўсіх арганізацыям і праектах у рамках асобніка, незалежна ад названай ролі і дазволаў.",
   "InviteUserModal.inviteExternalMember": "Запрашэнне ўдзельніка было паспяхова зарэгістравана. Якая пацвярджае інфармацыя будзе адпраўлена на прадстаўлены электронны адрас. Тэрмін дзеяння: 1 дзень.",
   "InviteUserModal.nameOrEmailLabel": "Імя або адрас электроннай пошты",
-  "InviteUserModal.memberWasInvited": "Удзельнік '<b>{name}</b>' прызначаны на праект",
+  "InviteUserModal.memberWasInvited": "Карыстальнік '<b>{name}</b>' быў запрошаны і паспяхова прызначаны",
   "IssueInfoTooltip.issueNotFoundDescription": "Памылка не існуе ці няма злучэння з САХ-інтэграцыяй",
   "IssueInfoTooltip.issueNotFoundTitle": "Памылка не знойдзена",
   "IssueInfoTooltip.issueStatusTitle": "Статус",
