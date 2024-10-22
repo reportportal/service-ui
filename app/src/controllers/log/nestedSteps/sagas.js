@@ -19,7 +19,10 @@ import { handleError } from 'controllers/fetch';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { omit, fetch } from 'common/utils';
-import { NEXT, ALL } from 'controllers/log/constants';
+import { ERROR, FATAL } from 'common/constants/logLevels';
+import { NEXT, ALL, DETAILED_LOG_VIEW } from '../constants';
+import { fetchErrorLogsLocation } from '../sagas';
+import { activeLogIdSelector, logViewModeSelector } from '../selectors';
 import {
   REQUEST_NESTED_STEP,
   FETCH_NESTED_STEP_ERROR,
@@ -59,6 +62,18 @@ function* fetchNestedStep({ payload = {} }) {
       },
     });
     yield put(fetchNestedStepSuccessAction({ id, ...response }));
+
+    const activeLogId = yield select(activeLogIdSelector);
+    const logViewMode = yield select(logViewModeSelector);
+    const requiresErrorLogLocation =
+      logViewMode === DETAILED_LOG_VIEW &&
+      response.content?.some((log) => [ERROR, FATAL].includes(log.level));
+
+    yield call(fetchErrorLogsLocation, {
+      activeLogId,
+      logLevel,
+      requiresErrorLogLocation,
+    });
   } catch (err) {
     yield put(fetchNestedStepErrorAction(err));
   } finally {

@@ -124,25 +124,19 @@ function* fetchLogItems(payload = {}) {
   yield take(createFetchPredicate(namespace));
 }
 
-function* fetchAllErrorLogs({
-  payload: logItem,
+export function* fetchErrorLogsLocation({
+  id,
+  level,
+  requiresErrorLogLocation,
   namespace = ERROR_LOGS_NAMESPACE,
   excludeLogContent = true,
-  level,
 }) {
-  const logMessages = yield select(logItemsSelector);
-  const requiresErrorLogLocation = logMessages.some((log) => [ERROR, FATAL].includes(log.level));
-
-  const { id } = logItem;
-  const { activeProject, query, filterLevel } = yield call(collectLogPayload);
-  let retryId = null;
-  const logViewMode = yield select(logViewModeSelector);
-  if (logViewMode === DETAILED_LOG_VIEW) {
-    retryId = yield select(activeRetryIdSelector);
-  }
   let cancelRequest = () => {};
   try {
-    if (logViewMode === DETAILED_LOG_VIEW && requiresErrorLogLocation) {
+    if (requiresErrorLogLocation) {
+      const retryId = yield select(activeRetryIdSelector);
+      const { activeProject, query, filterLevel } = yield call(collectLogPayload);
+
       yield put(
         fetchDataAction(namespace)(
           URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
@@ -163,6 +157,26 @@ function* fetchAllErrorLogs({
       cancelRequest();
     }
   }
+}
+
+function* fetchAllErrorLogs({
+  payload: logItem,
+  namespace = ERROR_LOGS_NAMESPACE,
+  excludeLogContent = true,
+  level,
+}) {
+  const logMessages = yield select(logItemsSelector);
+  const requiresErrorLogLocation = logMessages.some((log) => [ERROR, FATAL].includes(log.level));
+  const { id } = logItem;
+  const logViewMode = yield select(logViewModeSelector);
+
+  yield call(fetchErrorLogsLocation, {
+    id,
+    level,
+    namespace,
+    excludeLogContent,
+    requiresErrorLogLocation: logViewMode === DETAILED_LOG_VIEW && requiresErrorLogLocation,
+  });
 }
 
 function* fetchStackTrace({ payload: logItem }) {
