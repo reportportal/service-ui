@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeMembers } from 'common/utils/permissions';
+import { canSeeMembers, canSeeSettings } from 'common/utils/permissions';
 import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
@@ -81,21 +81,21 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.users),
       });
     }
-
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({
-          itemName: messages.organizationSettings.defaultMessage,
-          isSidebarCollapsed,
-        }),
-      link: {
-        type: ORGANIZATION_SETTINGS_PAGE,
-        payload: { organizationSlug },
-      },
-      icon: SettingsIcon,
-      message: formatMessage(messages.organizationSettings),
-    });
-
+    if (canSeeSettings(userRoles)) {
+      sidebarItems.push({
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.organizationSettings.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: ORGANIZATION_SETTINGS_PAGE,
+          payload: { organizationSlug },
+        },
+        icon: SettingsIcon,
+        message: formatMessage(messages.organizationSettings),
+      });
+    }
     sidebarExtensions.forEach((extension) =>
       sidebarItems.push({
         name: extension.name,
