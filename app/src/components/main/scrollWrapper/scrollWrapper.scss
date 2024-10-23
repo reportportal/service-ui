@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2019 EPAM Systems
  *
@@ -102,7 +103,7 @@
 
 .back-to-top-button {
   border: none;
-  color: darken($COLOR--gray-91, 25%);
+  color: color.adjust($COLOR--gray-91, $lightness: -25%);
   cursor: pointer;
   outline: none;
   background: none;

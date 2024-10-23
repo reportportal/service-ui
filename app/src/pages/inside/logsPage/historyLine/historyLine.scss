@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2019 EPAM Systems
  *
@@ -51,8 +52,8 @@
   background-color: $COLOR--white-two;
   cursor: pointer;
   &:hover {
-    background-color: lighten($COLOR--topaz, 10%);
-    border-color: lighten($COLOR--topaz, 10%);
+    background-color: color.adjust($COLOR--topaz, $lightness: 10%);
+    border-color: color.adjust($COLOR--topaz, $lightness: 10%);
     color: $COLOR--white-two;
   }
 }

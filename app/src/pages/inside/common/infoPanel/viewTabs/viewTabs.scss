@@ -1,3 +1,4 @@
+@use "sass:color";
 /*!
  * Copyright 2020 EPAM Systems
  *
@@ -49,8 +50,8 @@
     color: $COLOR--topaz;
 
     svg {
-      fill: lighten($COLOR--topaz, 10%);
-      stroke: lighten($COLOR--topaz, 10%);
+      fill: color.adjust($COLOR--topaz, $lightness: 10%);
+      stroke: color.adjust($COLOR--topaz, $lightness: 10%);
     }
   }
 
@@ -75,11 +76,11 @@
   }
 
   &:hover {
-    color: lighten($COLOR--topaz, 10%);
+    color: color.adjust($COLOR--topaz, $lightness: 10%);
 
     svg {
-      fill: lighten($COLOR--topaz, 10%);
-      stroke: lighten($COLOR--topaz, 10%);
+      fill: color.adjust($COLOR--topaz, $lightness: 10%);
+      stroke: color.adjust($COLOR--topaz, $lightness: 10%);
     }
   }
 }

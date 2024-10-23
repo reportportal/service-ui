@@ -86,7 +86,7 @@ $triangle-color: rgba($COLOR--darkmode-gray-500, 0.75);
 
     &::before,
     &::after {
-      border-width: 0 $ARROW_WIDTH/2 $ARROW_HEIGHT;
+      border-width: 0 $ARROW_WIDTH*0.5 $ARROW_HEIGHT;
     }
 
     &::before {
@@ -106,7 +106,7 @@ $triangle-color: rgba($COLOR--darkmode-gray-500, 0.75);
 
     &::before,
     &::after {
-      border-width: $ARROW_HEIGHT $ARROW_WIDTH/2 0;
+      border-width: $ARROW_HEIGHT $ARROW_WIDTH*0.5 0;
     }
 
     &::before {
@@ -126,7 +126,7 @@ $triangle-color: rgba($COLOR--darkmode-gray-500, 0.75);
 
     &::before,
     &::after {
-      border-width: $ARROW_WIDTH/2 0 $ARROW_WIDTH/2 $ARROW_HEIGHT;
+      border-width: $ARROW_WIDTH*0.5 0 $ARROW_WIDTH*0.5 $ARROW_HEIGHT;
     }
 
     &::before {
@@ -147,7 +147,7 @@ $triangle-color: rgba($COLOR--darkmode-gray-500, 0.75);
 
     &::before,
     &::after {
-      border-width: $ARROW_WIDTH/2 $ARROW_HEIGHT $ARROW_WIDTH/2 0;
+      border-width: $ARROW_WIDTH*0.5 $ARROW_HEIGHT $ARROW_WIDTH*0.5 0;
     }
 
     &::before {
