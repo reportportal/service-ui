@@ -35,6 +35,7 @@ import {
   projectsPaginationSelector,
   SORTING_KEY,
 } from 'controllers/organization/projects';
+import { NAMESPACE } from 'controllers/project/constants';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
@@ -187,5 +188,6 @@ export const ProjectsListTableWrapper = withSortingURL({
 })(
   withPagination({
     paginationSelector: projectsPaginationSelector,
+    namespace: NAMESPACE,
   })(ProjectsListTable),
 );
