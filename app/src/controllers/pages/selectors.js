@@ -211,23 +211,28 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const isManager = organizationRole === MANAGER;
   let isAssignedToTargetOrganization = false;
 
+  const id = assignedOrganizations[organizationSlug]?.organizationId;
+  const project = Object.values(assignedProjects).find(
+    (assignedProject) => assignedProject.organizationId === id,
+  );
+
   if (organizationSlug) {
     isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
   } else {
-    const organizationId = assignedProjects[projectSlug]?.organizationId || '';
+    const organizationId = project?.organizationId || '';
+
     isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
       (key) => assignedOrganizations[key]?.organizationId === organizationId,
     );
   }
 
-  const isAssignedToTargetProject =
-    projectSlug && projectSlug in assignedProjects && isAssignedToTargetOrganization;
+  const isAssignedToTargetProject = projectSlug && project && isAssignedToTargetOrganization;
 
   const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
 
   const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
 
-  const assignedProjectKey = assignedProjects?.[projectSlug]?.projectKey;
+  const assignedProjectKey = project?.projectKey;
 
   return {
     isAdmin,
