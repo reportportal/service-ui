@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,9 @@ module.exports = () => {
           test: /\.css$/,
           include: /node_modules/,
           use: [
+            // see https://github.com/webpack-contrib/css-loader?tab=readme-ov-file#recommend
             'style-loader',
-            {
-              loader: 'css-loader',
-            },
+            'css-loader',
           ],
         },
         {
@@ -50,6 +49,8 @@ module.exports = () => {
               loader: 'css-loader',
               options: {
                 modules: {
+                  namedExport: false,
+                  exportLocalsConvention: 'as-is',
                   localIdentName: '[name]__[local]--[contenthash:base64:5]',
                 },
                 importLoaders: 1,

@@ -20,6 +20,7 @@ import { PropTypes } from 'prop-types';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { ThemeProvider } from '@reportportal/ui-kit';
+import classNames from 'classnames/bind';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
 import { pageSelector, isInitialDispatchDoneSelector } from 'controllers/pages';
@@ -30,6 +31,8 @@ import { PageErrorBoundary } from 'components/containers/pageErrorBoundary';
 
 import { pageRendering } from './constants';
 import styles from './pageSwitcher.scss';
+
+const cx = classNames.bind(styles);
 
 Object.keys(pageNames).forEach((page) => {
   if (!pageRendering[page]) {
@@ -64,7 +67,7 @@ export default class PageSwitcher extends React.Component {
     const mode = process.env.NODE_ENV;
 
     return (
-      <div className={styles.pageSwitcher}>
+      <div className={cx('page-switcher')}>
         <ThemeProvider>
           <Layout rawContent={rawContent}>
             {mode === 'development' && <LocalizationSwitcher />}
