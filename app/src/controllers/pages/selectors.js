@@ -210,8 +210,11 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const isAdmin = userRole === ADMINISTRATOR;
   const isManager = organizationRole === MANAGER;
   let isAssignedToTargetOrganization = false;
-  const projectKey = `${organizationSlug}.${projectSlug}`;
-  const project = assignedProjects[projectSlug] || assignedProjects[projectKey];
+
+  const id = assignedOrganizations[organizationSlug]?.organizationId;
+  const project = Object.values(assignedProjects).find(
+    (assignedProject) => assignedProject.organizationId === id,
+  );
 
   if (organizationSlug) {
     isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
