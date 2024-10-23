@@ -31,15 +31,22 @@
   align-items: end;
 }
 
-.title {
-  font-family: $FONT-REGULAR;
-  font-size: 20px;
-  line-height: 31px;
-  color: $COLOR--almost-black;
-  text-transform: capitalize;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.main-content {
+  flex: 1 1;
+  width: 300px;
+
+  .title {
+    font-family: $FONT-REGULAR;
+    font-size: 20px;
+    line-height: 31px;
+    color: $COLOR--almost-black;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 100%;
+  }
 }
 
 .top-breadcrumbs {
