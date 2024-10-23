@@ -48,6 +48,7 @@ export const MembersListTable = ({
       pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
       changePage={onChangePage}
       changePageSize={onChangePageSize}
+      className={cx('members-pagination-wrapper')}
     >
       <Table
         data={data}

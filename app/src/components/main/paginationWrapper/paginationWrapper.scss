@@ -29,7 +29,7 @@
   width: calc(100% - 48px);
   border-top: 1px solid $COLOR--e-100;
   background-color: $COLOR--bg-100;
-  position: fixed;
+  position: sticky;
   bottom: 0;
   display: flex;
   justify-content: center;
