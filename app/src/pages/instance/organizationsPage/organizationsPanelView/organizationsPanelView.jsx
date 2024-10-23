@@ -23,6 +23,7 @@ import { organizationsListPaginationSelector } from 'controllers/instance/organi
 import {
   DEFAULT_LIMITATION,
   DEFAULT_PAGE_SIZE_OPTIONS,
+  NAMESPACE,
 } from 'controllers/instance/organizations/constants';
 import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/instance';
 import styles from './organizationsPanelView.scss';
@@ -82,5 +83,6 @@ export const OrganizationsPanelView = withSortingURL({
 })(
   withPagination({
     paginationSelector: organizationsListPaginationSelector,
+    namespace: NAMESPACE,
   })(OrganizationsPanelViewWrapped),
 );

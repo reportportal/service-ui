@@ -31,6 +31,7 @@ import {
   withPagination,
 } from 'controllers/pagination';
 import {
+  NAMESPACE,
   prepareActiveOrganizationUsersAction,
   usersPaginationSelector,
 } from 'controllers/organization/users';
@@ -201,5 +202,6 @@ export const OrganizationTeamListTable = withSortingURL({
 })(
   withPagination({
     paginationSelector: usersPaginationSelector,
+    namespace: NAMESPACE,
   })(OrgTeamListTableWrapped),
 );

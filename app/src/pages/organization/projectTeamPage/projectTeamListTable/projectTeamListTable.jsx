@@ -25,7 +25,7 @@ import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
+import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
 import { projectKeySelector } from 'controllers/project';
@@ -202,5 +202,6 @@ export const ProjectTeamListTable = withSortingURL({
 })(
   withPagination({
     paginationSelector: membersPaginationSelector,
+    namespace: NAMESPACE,
   })(ProjectTeamListTableWrapped),
 );
