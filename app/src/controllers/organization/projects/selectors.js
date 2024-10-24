@@ -15,7 +15,7 @@
  */
 
 import { SORTING_ASC } from 'controllers/sorting';
-import { createParametersSelector } from 'controllers/pagination/selectors';
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { organizationSelector } from '../selectors';
 import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 
@@ -25,7 +25,7 @@ export const projectsPaginationSelector = (state) => domainSelector(state).pagin
 export const projectsSelector = (state) => domainSelector(state).projects;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
-export const querySelector = createParametersSelector({
+export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,

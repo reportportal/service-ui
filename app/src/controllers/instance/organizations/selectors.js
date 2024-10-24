@@ -19,7 +19,7 @@ import {
   DEFAULT_PAGINATION,
   SORTING_KEY,
 } from 'controllers/instance/organizations/constants';
-import { createParametersSelector } from 'controllers/pagination/selectors';
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
 
 export const organizationsSelector = (state) => state.organizations || {};
@@ -31,7 +31,7 @@ export const organizationsListLoadingSelector = (state) => organizationsSelector
 export const organizationsListPaginationSelector = (state) =>
   organizationsSelector(state).pagination;
 
-export const querySelector = createParametersSelector({
+export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,

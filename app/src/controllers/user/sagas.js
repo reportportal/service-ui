@@ -185,7 +185,10 @@ function* fetchUserWorker() {
 
   if (!projectKey) {
     projectKey = isAssignedToTargetProject
-      ? assignedProjects[targetProjectSlug].projectKey
+      ? (
+          assignedProjects[targetProjectSlug] ||
+          assignedProjects[`${targetOrganizationSlug}.${targetProjectSlug}`]
+        ).projectKey
       : defaultProjectKey;
   }
 
