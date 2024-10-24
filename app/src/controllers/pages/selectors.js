@@ -105,6 +105,7 @@ export const prevPagePropertiesSelector = (
 
 export const createQueryParametersSelector = ({
   namespace: staticNamespace,
+  alternativeNamespace,
   defaultPagination,
   defaultSorting,
   sortingKey = SORTING_KEY,
@@ -124,10 +125,13 @@ export const createQueryParametersSelector = ({
   if (Number(queryParameters[PAGE_KEY]) < 0) {
     queryParameters[PAGE_KEY] = calculatedPagination[PAGE_KEY];
   }
-  if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && calculatedNamespace) {
+
+  const currentNamespace = calculatedNamespace || alternativeNamespace;
+
+  if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && currentNamespace) {
     const userId = userIdSelector(state);
     const userSettings = getStorageItem(`${userId}_settings`) || {};
-    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
+    queryParameters[SIZE_KEY] = userSettings[`${currentNamespace}PageSize`] || defaultPageSize;
   }
   return queryParameters;
 };

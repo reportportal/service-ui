@@ -83,6 +83,6 @@ export const OrganizationsPanelView = withSortingURL({
 })(
   withPagination({
     paginationSelector: organizationsListPaginationSelector,
-    namespace: NAMESPACE,
+    alternativeNamespace: NAMESPACE,
   })(OrganizationsPanelViewWrapped),
 );

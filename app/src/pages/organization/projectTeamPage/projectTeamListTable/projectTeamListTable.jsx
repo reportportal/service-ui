@@ -202,6 +202,6 @@ export const ProjectTeamListTable = withSortingURL({
 })(
   withPagination({
     paginationSelector: membersPaginationSelector,
-    namespace: NAMESPACE,
+    alternativeNamespace: NAMESPACE,
   })(ProjectTeamListTableWrapped),
 );

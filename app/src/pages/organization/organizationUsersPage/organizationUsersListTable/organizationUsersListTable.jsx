@@ -202,6 +202,6 @@ export const OrganizationTeamListTable = withSortingURL({
 })(
   withPagination({
     paginationSelector: usersPaginationSelector,
-    namespace: NAMESPACE,
+    alternativeNamespace: NAMESPACE,
   })(OrgTeamListTableWrapped),
 );

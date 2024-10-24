@@ -29,6 +29,7 @@ export const withPagination = ({
   paginationSelector = defaultPaginationSelector,
   namespace,
   namespaceSelector,
+  alternativeNamespace,
   offset,
 } = {}) => (WrappedComponent) => {
   const getTotalElements = totalElementsSelector(paginationSelector);
@@ -47,6 +48,7 @@ export const withPagination = ({
     totalElements: getTotalElements(state),
     totalPages: getTotalPages(state),
     namespace: namespaceSelector ? namespaceSelector(state) : namespace,
+    alternativeNamespace,
     userId: userIdSelector(state),
   }))
   class PaginationWrapper extends Component {
@@ -61,6 +63,7 @@ export const withPagination = ({
       totalElements: PropTypes.number,
       totalPages: PropTypes.number,
       namespace: PropTypes.string,
+      alternativeNamespace: PropTypes.string,
       userId: PropTypes.string.isRequired,
     };
 
@@ -84,7 +87,7 @@ export const withPagination = ({
 
     getPageSize = () => {
       const { size, userId } = this.props;
-      if (size === undefined && this.props.namespace) {
+      if (size === undefined && this.getNamespace()) {
         const userSettings = getStorageItem(`${userId}_settings`) || {};
         return userSettings[this.calculateFieldName()] || size;
       }
@@ -97,7 +100,7 @@ export const withPagination = ({
 
     changeSizeHandler = (size) => {
       const { userId } = this.props;
-      if (this.props.namespace) {
+      if (this.getNamespace()) {
         updateStorageItem(`${userId}_settings`, {
           [this.calculateFieldName()]: size,
         });
@@ -110,7 +113,9 @@ export const withPagination = ({
       this.props.updatePagination(options.page || page, options.size || this.getPageSize());
     };
 
-    calculateFieldName = () => `${this.props.namespace}PageSize`;
+    calculateFieldName = () => `${this.getNamespace()}PageSize`;
+
+    getNamespace = () => this.props.namespace || this.props.alternativeNamespace;
 
     render() {
       const { page, size, totalElements, totalPages, updatePagination, ...restProps } = this.props;

@@ -21,9 +21,10 @@ import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetchOrganizationBySlugAction } from '..';
-import { activeOrganizationSelector, querySelector } from '../selectors';
+import { activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
 import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, ERROR_CODES, NAMESPACE } from './constants';
+import { querySelector } from './selectors';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);

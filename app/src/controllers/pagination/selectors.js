@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { DEFAULT_PAGINATION } from './constants';
+import { createSelector } from 'reselect';
+import { createQueryParametersSelector } from 'controllers/pages';
+import { SORTING_KEY } from 'controllers/sorting';
+import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY } from './constants';
+import { getAlternativePaginationAndSortParams } from './utils';
 
 export const totalElementsSelector = (paginationSelector) => (state) =>
   paginationSelector(state).totalElements;
@@ -22,3 +26,21 @@ export const totalPagesSelector = (paginationSelector) => (state) =>
   paginationSelector(state).totalPages;
 
 export const defaultPaginationSelector = () => DEFAULT_PAGINATION;
+
+export const createParametersSelector = ({
+  defaultPagination,
+  defaultSorting,
+  sortingKey,
+  alternativeNamespace,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+      alternativeNamespace,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
+    },
+  );
