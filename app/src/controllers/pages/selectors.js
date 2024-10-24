@@ -29,7 +29,7 @@ import {
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
-import { getAssignedProject } from 'common/utils';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -212,7 +212,7 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const isManager = organizationRole === MANAGER;
   let isAssignedToTargetOrganization = false;
 
-  const assignedProject = getAssignedProject(
+  const assignedProject = findAssignedProjectByOrganization(
     assignedProjects,
     assignedOrganizations[organizationSlug]?.organizationId,
   );

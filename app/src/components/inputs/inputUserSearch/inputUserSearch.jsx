@@ -20,7 +20,7 @@ import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { urlOrganizationSlugSelector } from 'controllers/pages';
-import { getAssignedProject } from 'common/utils';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { InviteNewUserItem } from './inviteNewUserItem';
 import { UserItem } from './userItem';
 
@@ -38,7 +38,7 @@ const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
 export const makeOptions = (isAdmin, projectKey, organizationSlug) => ({ content: options }) =>
   options.map((option) => {
-    const isAssignedProject = !!getAssignedProject(
+    const isAssignedProject = !!findAssignedProjectByOrganization(
       option.assignedProjects,
       option.assignedOrganizations[organizationSlug]?.organizationId,
     );
