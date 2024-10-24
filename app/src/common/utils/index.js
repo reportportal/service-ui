@@ -57,3 +57,4 @@ export { createNamespacedActionPredicate } from './createNamespacedActionPredica
 export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
 export { createExternalLink } from './createExternalLink';
+export { getAssignedProject } from './getAssignedProject';

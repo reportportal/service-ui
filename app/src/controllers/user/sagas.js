@@ -23,6 +23,7 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userAssignedSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { getAssignedProject } from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -184,9 +185,12 @@ function* fetchUserWorker() {
       : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
 
   if (!projectKey) {
-    projectKey = isAssignedToTargetProject
-      ? assignedProjects[targetProjectSlug].projectKey
-      : defaultProjectKey;
+    const assignedProject = getAssignedProject(
+      assignedProjects,
+      assignedOrganizations[targetOrganizationSlug]?.organizationId,
+    );
+
+    projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
   }
 
   yield put(setActiveProjectAction(activeProject));
