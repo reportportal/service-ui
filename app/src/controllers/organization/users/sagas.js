@@ -17,7 +17,8 @@
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { all, put, select, take, takeEvery } from 'redux-saga/effects';
-import { activeOrganizationSelector, querySelector } from '../selectors';
+import { activeOrganizationSelector } from '../selectors';
+import { querySelector } from './selectors';
 import { FETCH_ORGANIZATION_BY_SLUG } from '../constants';
 import { fetchOrganizationUsersAction } from './actionCreators';
 import {

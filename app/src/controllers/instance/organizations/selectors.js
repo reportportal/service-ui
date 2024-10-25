@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
+import { SORTING_ASC } from 'controllers/sorting';
+import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY } from './constants';
+
 export const organizationsSelector = (state) => state.organizations || {};
 
 export const organizationsListSelector = (state) => organizationsSelector(state).list || [];
@@ -22,3 +26,10 @@ export const organizationsListLoadingSelector = (state) => organizationsSelector
 
 export const organizationsListPaginationSelector = (state) =>
   organizationsSelector(state).pagination;
+
+export const querySelector = createAlternativeQueryParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
+});

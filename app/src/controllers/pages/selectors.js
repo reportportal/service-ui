@@ -29,6 +29,7 @@ import {
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
+import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
@@ -132,6 +133,24 @@ export const createQueryParametersSelector = ({
   }
   return queryParameters;
 };
+
+export const createAlternativeQueryParametersSelector = ({
+  defaultPagination,
+  defaultSorting,
+  sortingKey,
+  namespace,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+      namespace,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
+    },
+  );
 
 export const launchIdSelector = (state) => {
   const testItemIds = testItemIdsArraySelector(state);
