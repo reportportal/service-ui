@@ -18,7 +18,7 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
-import { querySelector } from 'controllers/organization/selectors';
+import { querySelector } from './selectors';
 import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {

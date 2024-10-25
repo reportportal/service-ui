@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
+import { SORTING_ASC } from 'controllers/sorting';
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { organizationSelector } from '../selectors';
+import { NAMESPACE } from './constants';
+import { DEFAULT_PAGINATION, SORTING_KEY } from '../projects/constants';
 
 const domainSelector = (state) => organizationSelector(state).users || {};
 
 export const usersPaginationSelector = (state) => domainSelector(state).pagination;
 export const usersSelector = (state) => domainSelector(state).users;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
+
+export const querySelector = createAlternativeQueryParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  alternativeNamespace: NAMESPACE,
+});
