@@ -19,7 +19,8 @@ import { useSelector } from 'react-redux';
 import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
-import { urlProjectSlugSelector } from 'controllers/pages';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { InviteNewUserItem } from './inviteNewUserItem';
 import { UserItem } from './userItem';
 
@@ -35,18 +36,25 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
-export const makeOptions = (isAdmin, projectKey, projectSlug) => ({ content: options }) =>
-  options.map((option) => ({
-    userName: option.fullName || '',
-    userLogin: isAdmin ? option.userId : option.login,
-    email: option.email || '',
-    disabled: isAdmin ? !!option.assignedProjects[projectSlug] : false,
-    isAssigned: isAdmin ? !!option.assignedProjects[projectSlug] : false,
-    userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
-    assignedProjects: option.assignedProjects || {},
-    assignedOrganizations: option.assignedOrganizations || {},
-    userRole: option.userRole,
-  }));
+export const makeOptions = (isAdmin, projectKey, organizationSlug) => ({ content: options }) =>
+  options.map((option) => {
+    const isAssignedProject = !!findAssignedProjectByOrganization(
+      option.assignedProjects,
+      option.assignedOrganizations[organizationSlug]?.organizationId,
+    );
+
+    return {
+      userName: option.fullName || '',
+      userLogin: isAdmin ? option.userId : option.login,
+      email: option.email || '',
+      disabled: isAdmin ? isAssignedProject : false,
+      isAssigned: isAdmin ? isAssignedProject : false,
+      userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
+      assignedProjects: option.assignedProjects || {},
+      assignedOrganizations: option.assignedOrganizations || {},
+      userRole: option.userRole,
+    };
+  });
 
 const parseValueToString = (option) => (option ? option.userLogin : '');
 
@@ -76,7 +84,7 @@ export const InputUserSearch = ({
     error={error}
     touched={touched}
     isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlProjectSlugSelector))}
+    makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlOrganizationSlugSelector))}
     createNewOption={newOptionCreator}
     value={value}
     parseValueToString={parseValueToString}
