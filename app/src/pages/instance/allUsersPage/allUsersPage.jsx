@@ -266,7 +266,7 @@ export class AllUsersPage extends Component {
       onChangeSorting,
     } = this.props;
     return (
-      <ScrollWrapper autoHeightMax={100}>
+      <ScrollWrapper>
         <PageLayout>
           <PageHeader breadcrumbs={this.getBreadcrumbs()} />
           <PageSection>
