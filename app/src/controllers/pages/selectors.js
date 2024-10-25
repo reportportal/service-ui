@@ -30,6 +30,7 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -230,28 +231,29 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const isManager = organizationRole === MANAGER;
   let isAssignedToTargetOrganization = false;
 
-  const id = assignedOrganizations[organizationSlug]?.organizationId;
-  const project = Object.values(assignedProjects).find(
-    (assignedProject) => assignedProject.organizationId === id,
+  const assignedProject = findAssignedProjectByOrganization(
+    assignedProjects,
+    assignedOrganizations[organizationSlug]?.organizationId,
   );
 
   if (organizationSlug) {
     isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
   } else {
-    const organizationId = project?.organizationId || '';
+    const organizationId = assignedProject?.organizationId || '';
 
     isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
       (key) => assignedOrganizations[key]?.organizationId === organizationId,
     );
   }
 
-  const isAssignedToTargetProject = projectSlug && project && isAssignedToTargetOrganization;
+  const isAssignedToTargetProject =
+    projectSlug && assignedProject && isAssignedToTargetOrganization;
 
   const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
 
   const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
 
-  const assignedProjectKey = project?.projectKey;
+  const assignedProjectKey = assignedProject?.projectKey;
 
   return {
     isAdmin,

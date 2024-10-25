@@ -105,7 +105,7 @@ export const OrganizationProjectsPage = () => {
   };
 
   return (
-    <ScrollWrapper autoHeightMax={100}>
+    <ScrollWrapper>
       <div className={cx('organization-projects-container')}>
         <ProjectsPageHeader
           hasPermission={hasPermission}

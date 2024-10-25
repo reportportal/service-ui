@@ -14,23 +14,7 @@
  * limitations under the License.
  */
 
-.pagination-wrapper {
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.pagination {
-  padding: 0 32px;
-  box-sizing: border-box;
-  width: calc(100% - 48px);
-  border-top: 1px solid $COLOR--e-100;
-  background-color: $COLOR--bg-100;
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-}
+export const findAssignedProjectByOrganization = (assignedProjects, organizationId) =>
+  Object.values(assignedProjects).find(
+    (assignedProject) => assignedProject.organizationId === organizationId,
+  );

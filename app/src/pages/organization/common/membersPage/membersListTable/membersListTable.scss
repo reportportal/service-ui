@@ -19,4 +19,10 @@
   padding: 0 32px 32px 32px;
   max-width: 1264px;
   box-sizing: border-box;
+  flex: 1;
+}
+
+.members-pagination-wrapper {
+  min-height: 100%;
+  flex: 1;
 }
