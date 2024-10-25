@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+
 export const NAMESPACE = 'organizations';
 
 export const FETCH_ORGANIZATIONS = 'fetchOrganizations';
@@ -23,4 +25,9 @@ export const initialPaginationState = {
   size: DEFAULT_LIMITATION,
   totalElements: 0,
   totalPages: 0,
+};
+export const SORTING_KEY = 'order';
+export const DEFAULT_PAGINATION = {
+  [PAGE_KEY]: 1,
+  [SIZE_KEY]: DEFAULT_LIMITATION,
 };

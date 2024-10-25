@@ -21,7 +21,8 @@ import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetchOrganizationBySlugAction } from '..';
-import { activeOrganizationSelector, querySelector } from '../selectors';
+import { querySelector } from './selectors';
+import { activeOrganizationIdSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
 import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, ERROR_CODES, NAMESPACE } from './constants';
 
@@ -36,7 +37,7 @@ function* watchFetchProjects() {
 }
 
 function* createProject({ payload: { newProjectName: projectName } }) {
-  const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
+  const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationIdSelector);
   try {
     yield call(fetch, URLS.organizationProjects(organizationId), {
       method: 'post',

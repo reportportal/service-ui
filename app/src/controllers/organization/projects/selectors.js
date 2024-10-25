@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
+import { SORTING_ASC } from 'controllers/sorting';
+import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 import { organizationSelector } from '../selectors';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
@@ -21,3 +24,10 @@ const domainSelector = (state) => organizationSelector(state).projects || {};
 export const projectsPaginationSelector = (state) => domainSelector(state).pagination;
 export const projectsSelector = (state) => domainSelector(state).projects;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
+
+export const querySelector = createAlternativeQueryParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  alternativeNamespace: NAMESPACE,
+});
