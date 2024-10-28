@@ -29,10 +29,20 @@ describe('findAssignedProjectByOrganization', () => {
     superadminPersonal,
   };
   test('should find assigned project', () => {
-    expect(findAssignedProjectByOrganization(assignedProjects, 1)).toEqual(superadminPersonal);
+    expect(findAssignedProjectByOrganization(assignedProjects, 1, 'superadmin-personal')).toEqual(
+      superadminPersonal,
+    );
   });
 
   test("shouldn't find assigned project", () => {
-    expect(findAssignedProjectByOrganization(assignedProjects, 2)).toEqual(undefined);
+    expect(findAssignedProjectByOrganization(assignedProjects, 2, 'superadmin-personal')).toEqual(
+      undefined,
+    );
+  });
+
+  test("shouldn't find assigned project", () => {
+    expect(findAssignedProjectByOrganization(assignedProjects, 1, 'superadmin-personal-2')).toEqual(
+      undefined,
+    );
   });
 });

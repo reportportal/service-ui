@@ -188,6 +188,7 @@ function* fetchUserWorker() {
     const assignedProject = findAssignedProjectByOrganization(
       assignedProjects,
       assignedOrganizations[targetOrganizationSlug]?.organizationId,
+      targetProjectSlug,
     );
 
     projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
