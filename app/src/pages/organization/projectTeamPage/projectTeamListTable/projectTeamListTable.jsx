@@ -36,6 +36,7 @@ import {
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
+import { ADMIN } from 'common/utils/permissions/constants';
 import { messages } from '../../common/membersPage/messages';
 import styles from './projectTeamListTable.scss';
 import { MembersListTable } from '../../common/membersPage/membersListTable';
@@ -102,7 +103,7 @@ const ProjectTeamListTableWrapped = ({
                         </div>
                       );
 
-                      return type === 'admin' ? (
+                      return type === ADMIN ? (
                         <Tooltip
                           key={`${userId}-${type}-tooltip`}
                           content={formatMessage(messages.adminAccessInfo)}
