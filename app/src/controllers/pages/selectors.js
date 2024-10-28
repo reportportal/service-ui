@@ -234,6 +234,7 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const assignedProject = findAssignedProjectByOrganization(
     assignedProjects,
     assignedOrganizations[organizationSlug]?.organizationId,
+    projectSlug,
   );
 
   if (organizationSlug) {

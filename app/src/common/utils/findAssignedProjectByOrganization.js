@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-export const findAssignedProjectByOrganization = (assignedProjects, organizationId) =>
+export const findAssignedProjectByOrganization = (assignedProjects, organizationId, projectSlug) =>
   Object.values(assignedProjects).find(
-    (assignedProject) => assignedProject.organizationId === organizationId,
+    (assignedProject) =>
+      assignedProject.organizationId === organizationId &&
+      assignedProject.projectSlug === projectSlug,
   );
