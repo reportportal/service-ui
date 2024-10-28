@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export const ADMIN = 'admin';
-export const MANAGER = 'manager';
-export const YOU = 'you';
+export const ADMIN_TYPE = 'admin';
+export const MANAGER_TYPE = 'manager';
+export const YOU_TYPE = 'you';
