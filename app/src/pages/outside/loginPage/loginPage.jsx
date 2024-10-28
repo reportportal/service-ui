@@ -80,20 +80,38 @@ export class LoginPage extends PureComponent {
     extensions: [],
     showDefaultErrorNotification: () => {},
   };
+  /*
+   * EPMRPP-96385: Quick fix for duplicate login error notifications
+   * Includes: static shownErrors, showErrorIfNeeded, componentDidMount, componentDidUpdate
+   *
+   * Quick fix to prevent duplicate error messages that sometimes occur when inactive GitHub users
+   * try to log in. Root cause: Login page component occasionally mounts twice causing duplicate
+   * error notifications. Using a static Set to deduplicate error messages as a temporary solution.
+   *
+   * TODO: Investigate inconsistent double mounting of login page
+   */
+  static shownErrors = new Set();
+
+  showErrorIfNeeded = (error) => {
+    if (error && !LoginPage.shownErrors.has(error)) {
+      LoginPage.shownErrors.add(error);
+      this.props.showDefaultErrorNotification({
+        message: error,
+      });
+
+      setTimeout(() => {
+        LoginPage.shownErrors.delete(error);
+      }, 5000);
+    }
+  };
 
   componentDidMount() {
-    if (this.props.errorAuth) {
-      this.props.showDefaultErrorNotification({
-        message: this.props.errorAuth,
-      });
-    }
+    this.showErrorIfNeeded(this.props.errorAuth);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.errorAuth !== prevProps.errorAuth) {
-      this.props.showDefaultErrorNotification({
-        message: this.props.errorAuth,
-      });
+      this.showErrorIfNeeded(this.props.errorAuth);
     }
   }
 
