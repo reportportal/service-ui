@@ -29,5 +29,5 @@ export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
-  alternativeNamespace: NAMESPACE,
+  namespace: NAMESPACE,
 });
