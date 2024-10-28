@@ -58,3 +58,34 @@
     border-radius: 50%;
   }
 }
+
+.badges {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  gap: 8px;
+
+  .badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: $COLOR--white-two;
+    font-family: $FONT-ROBOTO-BOLD;
+    font-size: 11px;
+    line-height: 16px;
+
+    &.admin {
+      background-color: $COLOR--tag-value-text;
+    }
+
+    &.manager {
+      background-color: $COLOR--test-execution-status-passed;
+    }
+
+    &.you {
+      background-color: $COLOR--topaz-focused;
+    }
+  }
+}
