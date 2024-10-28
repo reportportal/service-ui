@@ -19,15 +19,15 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectKeySelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
-import { canSeeEmailMembers, getRoleTitle } from 'common/utils/permissions';
+import { canSeeEmailMembers, getRoleTitle, getRoleBadgesData } from 'common/utils/permissions';
 import { projectKeySelector } from 'controllers/project';
 import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
 import {
@@ -36,6 +36,7 @@ import {
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
+import { ADMIN } from 'common/utils/permissions/constants';
 import { messages } from '../../common/membersPage/messages';
 import styles from './projectTeamListTable.scss';
 import { MembersListTable } from '../../common/membersPage/membersListTable';
@@ -59,6 +60,7 @@ const ProjectTeamListTableWrapped = ({
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectKey = useSelector(projectKeySelector);
   const userRoles = useSelector(userRolesSelector);
+  const currentUserId = useSelector(userIdSelector);
 
   const data = useMemo(
     () =>
@@ -75,6 +77,11 @@ const ProjectTeamListTableWrapped = ({
         }) => {
           const organizationRole = assignedOrganizations?.[organizationSlug]?.organizationRole;
           const projectRole = assignedProjects?.[projectKey]?.projectRole;
+          const memberBadges = getRoleBadgesData(
+            userRole,
+            organizationRole,
+            currentUserId === userId,
+          );
 
           return {
             id,
@@ -88,6 +95,28 @@ const ProjectTeamListTableWrapped = ({
                     userId={userId}
                   />
                   <div className={cx('full-name')}>{fullName}</div>
+                  <div className={cx('badges')}>
+                    {memberBadges.map(({ title, type }) => {
+                      const badgeContent = (
+                        <div key={`${userId}-${type}`} className={cx('badge', type)}>
+                          {formatMessage(title)}
+                        </div>
+                      );
+
+                      return type === ADMIN ? (
+                        <Tooltip
+                          key={`${userId}-${type}-tooltip`}
+                          content={formatMessage(messages.adminAccessInfo)}
+                          placement="top"
+                          width={248}
+                        >
+                          {badgeContent}
+                        </Tooltip>
+                      ) : (
+                        badgeContent
+                      );
+                    })}
+                  </div>
                 </div>
               ),
             },

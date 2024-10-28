@@ -43,4 +43,4 @@ export {
   canSeeSidebarOptions,
   canCreateOrganization,
 } from './permissions';
-export { getRoleTitle } from './getRoleTitle';
+export { getRoleTitle, getRoleBadgesData } from './getRoleTitle';

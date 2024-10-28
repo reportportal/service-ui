@@ -16,7 +16,8 @@
 
 import { defineMessages } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { EDITOR, MANAGER } from 'common/constants/projectRoles';
+import { EDITOR } from 'common/constants/projectRoles';
+import { ADMIN, MANAGER, YOU } from './constants';
 
 const messages = defineMessages({
   adminRole: {
@@ -26,6 +27,10 @@ const messages = defineMessages({
   managerRole: {
     id: 'MembersListTable.managerRole',
     defaultMessage: 'Manager',
+  },
+  youRole: {
+    id: 'MembersListTable.youRole',
+    defaultMessage: 'You',
   },
   editorRole: {
     id: 'MembersListTable.editorRole',
@@ -49,4 +54,28 @@ export const getRoleTitle = (userRole, organizationRole, projectRole) => {
   }
 
   return messages.viewerRole;
+};
+
+export const getRoleBadgesData = (userRole, organizationRole, isCurrentLoggedInUser) => {
+  const badges = [];
+  if (userRole === ADMINISTRATOR) {
+    badges.push({
+      title: messages.adminRole,
+      type: ADMIN,
+    });
+  }
+  if (organizationRole === MANAGER) {
+    badges.push({
+      title: messages.managerRole,
+      type: MANAGER,
+    });
+  }
+  if (isCurrentLoggedInUser) {
+    badges.push({
+      title: messages.youRole,
+      type: YOU,
+    });
+  }
+
+  return badges;
 };

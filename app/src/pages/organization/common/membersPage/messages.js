@@ -41,4 +41,9 @@ export const messages = defineMessages({
     id: 'MembersListTable.projects',
     defaultMessage: 'Projects',
   },
+  adminAccessInfo: {
+    id: 'MembersListTable.adminAccessInfo',
+    defaultMessage:
+      'Admin has full access to all organizations and projects within the instance, regardless of specified role and permissions.',
+  },
 });
