@@ -35,7 +35,7 @@ import {
   projectsPaginationSelector,
   SORTING_KEY,
 } from 'controllers/organization/projects';
-import { NAMESPACE } from 'controllers/project/constants';
+import { NAMESPACE } from 'controllers/organization/projects/constants';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
