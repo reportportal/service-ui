@@ -42,13 +42,7 @@ const messages = defineMessages({
   },
 });
 
-export const getRoleTitle = (userRole, organizationRole, projectRole) => {
-  if (userRole === ADMINISTRATOR) {
-    return messages.adminRole;
-  }
-  if (organizationRole === MANAGER) {
-    return messages.managerRole;
-  }
+export const getRoleTitle = (projectRole) => {
   if (projectRole === EDITOR) {
     return messages.editorRole;
   }

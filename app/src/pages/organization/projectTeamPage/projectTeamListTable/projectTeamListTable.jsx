@@ -129,7 +129,7 @@ const ProjectTeamListTableWrapped = ({
                 <span>n/a</span>
               ),
             },
-            permissions: formatMessage(getRoleTitle(userRole, organizationRole, projectRole)),
+            permissions: formatMessage(getRoleTitle(projectRole)),
           };
         },
       ),
