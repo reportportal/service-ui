@@ -52,7 +52,7 @@ const messages = defineMessages({
   },
   rights: {
     id: 'SettingsLayout.footer.rights',
-    defaultMessage: '© Report Portal {currentYear} All rights reserved',
+    defaultMessage: '© Report Portal 2013-{currentYear} All rights reserved',
   },
   build: {
     id: 'SettingsLayout.footer.build',
