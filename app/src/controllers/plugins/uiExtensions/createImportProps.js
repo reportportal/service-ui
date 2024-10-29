@@ -77,7 +77,7 @@ import {
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
-  urlProjectSlugSelector,
+  urlOrganizationAndProjectSelector,
   querySelector,
   payloadSelector,
   activeProjectRoleSelector,
@@ -338,7 +338,7 @@ export const createImportProps = (pluginName) => ({
     pluginRouteSelector,
     payloadSelector,
     activeProjectKeySelector,
-    urlProjectSlugSelector,
+    urlOrganizationAndProjectSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
