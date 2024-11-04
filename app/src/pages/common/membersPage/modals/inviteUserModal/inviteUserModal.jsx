@@ -40,7 +40,6 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputUserSearch, makeOptions } from 'components/inputs/inputUserSearch';
-import { fetchProjectAction } from 'controllers/project/actionCreators';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -104,7 +103,6 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
-    fetchProjectAction,
   },
 )
 @reduxForm({
@@ -133,7 +131,6 @@ export class InviteUserModal extends Component {
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
     areUserSuggestionsAllowed: PropTypes.bool.isRequired,
-    fetchProjectAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -211,7 +208,6 @@ export class InviteUserModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         onInvite();
-        this.props.fetchProjectAction(selectedProject, false);
       })
       .catch((err) => {
         this.props.showNotification({
