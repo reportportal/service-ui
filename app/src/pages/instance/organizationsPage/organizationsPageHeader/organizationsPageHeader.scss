@@ -67,3 +67,17 @@
     }
   }
 }
+
+.panel-icon {
+  width: 16px;
+  height: 16px;
+  margin: 10px 12px;
+}
+
+.active {
+  &:not(.disabled, :active) {
+    svg path {
+      fill: $COLOR--topaz-pressed;
+    }
+  }
+}

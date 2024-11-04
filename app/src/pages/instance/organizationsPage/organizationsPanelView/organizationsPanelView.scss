@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-.organizations-list {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-columns: repeat(auto-fill, minmax(384px, 384px));
-  justify-content: center;
-  gap: 24px;
-  padding-top: 24px;
-  width: 100%;
-}
-
-.organizations-list-wrapper {
-  padding: 0px 96px 32px 96px;
-  width: calc(100% - 192px);
-  flex:1;
-}
-
 .organizations-pagination-wrapper {
   min-height: 100%;
   flex: 1;

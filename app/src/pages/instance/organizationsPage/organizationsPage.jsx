@@ -29,13 +29,17 @@ import {
 } from 'controllers/instance/organizations';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
+import { userIdSelector } from 'controllers/user';
 import EmptyIcon from './img/empty-organizations-inline.svg';
-import { messages } from './messages';
-import styles from './organizationsPage.scss';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
+import { messages } from './messages';
+import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);
+const PANEL_VIEW = 'PanelView';
+const TABLE_VIEW = 'TableView';
 
 export const OrganizationsPage = () => {
   const { formatMessage } = useIntl();
@@ -43,8 +47,22 @@ export const OrganizationsPage = () => {
   const hasPermission = canCreateOrganization(userRoles);
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
+  const userId = useSelector(userIdSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
+  const [isOpenTableView, setIsOpenTableView] = useState(
+    getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
+  );
+
+  const openPanelView = () => {
+    setIsOpenTableView(false);
+    updateStorageItem(`${userId}_settings`, { organizationsPanel: PANEL_VIEW });
+  };
+
+  const openTableView = () => {
+    setIsOpenTableView(true);
+    updateStorageItem(`${userId}_settings`, { organizationsPanel: TABLE_VIEW });
+  };
 
   const getEmptyPageState = () => {
     if (isOrganizationsLoading) {
@@ -87,11 +105,17 @@ export const OrganizationsPage = () => {
           isEmpty={isEmptyOrganizations && searchValue === null}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
+          openPanelView={openPanelView}
+          openTableView={openTableView}
+          isOpenTableView={isOpenTableView}
         />
         {isEmptyOrganizations ? (
           getEmptyPageState()
         ) : (
-          <OrganizationsPanelView organizationsList={organizationsList} />
+          <OrganizationsPanelView
+            organizationsList={organizationsList}
+            isOpenTableView={isOpenTableView}
+          />
         )}
       </div>
     </ScrollWrapper>

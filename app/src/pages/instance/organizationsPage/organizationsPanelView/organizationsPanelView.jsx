@@ -27,7 +27,8 @@ import {
 } from 'controllers/instance/organizations/constants';
 import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/instance';
 import styles from './organizationsPanelView.scss';
-import { OrganizationCard } from './organizationCard';
+import { OrganizationsPanels } from './organizationsPanels';
+import { OrganizationsTable } from './organizationsTable';
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +40,7 @@ const OrganizationsPanelViewWrapped = ({
   pageCount,
   onChangePage,
   onChangePageSize,
+  isOpenTableView,
 }) => (
   <PaginationWrapper
     showPagination={organizationsList.length > 0}
@@ -51,13 +53,11 @@ const OrganizationsPanelViewWrapped = ({
     changePageSize={onChangePageSize}
     className={cx('organizations-pagination-wrapper')}
   >
-    <div className={cx('organizations-list-wrapper')}>
-      <div className={cx('organizations-list')}>
-        {organizationsList.map((organization) => (
-          <OrganizationCard key={organization.id} organization={organization} />
-        ))}
-      </div>
-    </div>
+    {isOpenTableView ? (
+      <OrganizationsTable organizationsList={organizationsList} />
+    ) : (
+      <OrganizationsPanels organizationsList={organizationsList} />
+    )}
   </PaginationWrapper>
 );
 
@@ -69,6 +69,7 @@ OrganizationsPanelViewWrapped.propTypes = {
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
+  isOpenTableView: PropTypes.bool.isRequired,
 };
 
 OrganizationsPanelViewWrapped.defaultProps = {

@@ -78,4 +78,24 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.personalOrganization',
     defaultMessage: 'Personal organization',
   },
+  organizationName: {
+    id: 'OrganizationsPage.organizationName',
+    defaultMessage: 'Organization name',
+  },
+  projects: {
+    id: 'OrganizationsPage.projects',
+    defaultMessage: 'Projects',
+  },
+  users: {
+    id: 'OrganizationsPage.users',
+    defaultMessage: 'Users',
+  },
+  launches: {
+    id: 'OrganizationsPage.launches',
+    defaultMessage: 'Launches',
+  },
+  lastLaunchDate: {
+    id: 'OrganizationsPage.lastLaunchDate',
+    defaultMessage: 'Last launch date',
+  },
 });
