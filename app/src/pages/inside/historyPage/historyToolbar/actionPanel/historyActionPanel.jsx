@@ -27,6 +27,8 @@ import { isEmptyHistorySelector } from 'controllers/itemsHistory';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
+import { userRolesSelector } from 'controllers/pages';
+import { canWorkWithTests } from 'common/utils/permissions';
 import { CompareWithFilterControl } from './compareWithFilterControl';
 import styles from './historyActionPanel.scss';
 
@@ -36,6 +38,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
     isEmptyHistory: isEmptyHistorySelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -55,6 +58,7 @@ export class HistoryActionPanel extends Component {
     showBreadcrumbs: PropTypes.bool,
     isEmptyHistory: PropTypes.bool,
     parentItem: PropTypes.object,
+    userRoles: PropTypes.object,
     onRefresh: PropTypes.func,
     restorePath: PropTypes.func,
   };
@@ -86,7 +90,10 @@ export class HistoryActionPanel extends Component {
       customBlock,
       isEmptyHistory,
       parentItem,
+      userRoles,
     } = this.props;
+
+    const canManageTestItems = canWorkWithTests(userRoles);
 
     return (
       <div
@@ -106,9 +113,11 @@ export class HistoryActionPanel extends Component {
         {customBlock}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
-          <div className={cx('action-button')}>
-            <CompareWithFilterControl disabled={!showBreadcrumbs || isEmptyHistory} />
-          </div>
+          {canManageTestItems && (
+            <div className={cx('action-button')}>
+              <CompareWithFilterControl disabled={!showBreadcrumbs || isEmptyHistory} />
+            </div>
+          )}
           {!!buttons.length &&
             buttons.map((button, index) => (
               // eslint-disable-next-line react/no-array-index-key
