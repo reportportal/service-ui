@@ -26,6 +26,9 @@ import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { BaseIconButton } from '@reportportal/ui-kit';
+import PanelViewIcon from '../img/panel-view-inline.svg';
+import TableViewIcon from '../img/table-view-inline.svg';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 
@@ -33,7 +36,14 @@ const cx = classNames.bind(styles);
 
 const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
 
-export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }) => {
+export const OrganizationsPageHeader = ({
+  isEmpty,
+  searchValue,
+  setSearchValue,
+  openPanelView,
+  openTableView,
+  isOpenTableView,
+}) => {
   const { formatMessage } = useIntl();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
 
@@ -52,6 +62,20 @@ export const OrganizationsPageHeader = ({ isEmpty, searchValue, setSearchValue }
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+              <BaseIconButton
+                className={cx('panel-icon', { active: !isOpenTableView })}
+                onClick={openPanelView}
+                variant={'text'}
+              >
+                {Parser(PanelViewIcon)}
+              </BaseIconButton>
+              <BaseIconButton
+                className={cx('panel-icon', { active: isOpenTableView })}
+                onClick={openTableView}
+                variant={'text'}
+              >
+                {Parser(TableViewIcon)}
+              </BaseIconButton>
             </div>
           )}
         </div>
@@ -64,6 +88,9 @@ OrganizationsPageHeader.propTypes = {
   isEmpty: PropTypes.bool,
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
+  openPanelView: PropTypes.func.isRequired,
+  openTableView: PropTypes.func.isRequired,
+  isOpenTableView: PropTypes.bool.isRequired,
 };
 
 OrganizationsPageHeader.defaultProps = {

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-.members-list-table {
-  margin-top: 24px;
-  padding: 0 32px 32px 32px;
-  max-width: 1264px;
-  box-sizing: border-box;
-  flex: 1;
-}
-
-.members-pagination-wrapper {
-  min-height: 100%;
-  flex: 1;
-}
+export { OrganizationsPanels } from './organizationsPanels';

@@ -26,22 +26,15 @@ import { userRolesSelector } from 'controllers/pages';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
-import {
-  ORGANIZATION_EXTERNAL_TYPE,
-  ORGANIZATION_INTERNAL_TYPE,
-} from 'common/constants/organizationTypes';
 import { assignedOrganizationsSelector } from 'controllers/user';
 import UserIcon from './img/user-inline.svg';
 import ProjectsIcon from './img/projects-inline.svg';
 import LastUpdateIcon from './img/last-update-inline.svg';
-import SynchedIcon from './img/synched-organization-inline.svg';
-import OutdatedIcon from './img/outdated-inline.svg';
-import PersonalIcon from './img/personal-organization-inline.svg';
-import { messages } from '../../messages';
+import { messages } from '../../../messages';
 import styles from './organizationCard.scss';
+import { IconsBlock } from '../../iconsBlock';
 
 const cx = classNames.bind(styles);
-const THREE_MONTHS_IN_MS = 1000 * 60 * 60 * 24 * 30 * 3;
 
 export const OrganizationCard = ({ organization }) => {
   const { formatMessage } = useIntl();
@@ -55,8 +48,6 @@ export const OrganizationCard = ({ organization }) => {
   const projectsCount = organization.relationships.projects.meta.count;
   const lastLaunchDate = organization.relationships.launches.meta.last_occurred_at;
   const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunchDate));
-  const isOutdated =
-    lastLaunchDate && Date.now() - new Date(lastLaunchDate).getTime() > THREE_MONTHS_IN_MS;
 
   const cartInfo = [
     {
@@ -96,35 +87,11 @@ export const OrganizationCard = ({ organization }) => {
         >
           {organization.name}
         </NavLink>
-        {hasPermission &&
-          (organization.type === ORGANIZATION_EXTERNAL_TYPE ? (
-            <Tooltip
-              content={formatMessage(messages.synchedOrganization)}
-              placement={'top'}
-              wrapperClassName={cx('tooltip-wrapper')}
-            >
-              <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
-            </Tooltip>
-          ) : (
-            organization.type !== ORGANIZATION_INTERNAL_TYPE && (
-              <Tooltip
-                content={formatMessage(messages.personalOrganization)}
-                placement={'top'}
-                wrapperClassName={cx('tooltip-wrapper')}
-              >
-                <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
-              </Tooltip>
-            )
-          ))}
-        {hasPermission && isOutdated && (
-          <Tooltip
-            content={formatMessage(messages.lastLaunch)}
-            placement={'top'}
-            wrapperClassName={cx('tooltip-wrapper')}
-          >
-            <i className={cx('icon')}>{Parser(OutdatedIcon)}</i>
-          </Tooltip>
-        )}
+        <IconsBlock
+          lastLaunchDate={lastLaunchDate}
+          hasPermission={hasPermission}
+          organizationType={organization.type}
+        />
       </div>
       {hasPermission && (
         <div className={cx('cart-info')}>
