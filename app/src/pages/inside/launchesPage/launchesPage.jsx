@@ -562,28 +562,11 @@ export class LaunchesPage extends Component {
   };
 
   openImportModal = () => {
-    const {
-      intl: { formatMessage },
-      projectKey,
-    } = this.props;
-
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
       id: 'importLaunchModal',
       data: {
         onImport: this.props.fetchLaunchesAction,
-        title: formatMessage(messages.modalTitle),
-        importButton: formatMessage(messages.importButton),
-        tip: formatMessage(messages.importTip),
-        incorrectFileSize: formatMessage(messages.incorrectFileSize),
-        noteMessage: formatMessage(messages.noteMessage),
-        importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
-        url: URLS.launchImport(projectKey),
-        eventsInfo: {
-          okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
-        },
       },
     });
   };
