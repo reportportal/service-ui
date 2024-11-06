@@ -1793,7 +1793,7 @@
   "ProjectsPage.deleteSuccessMultiple": "Los proyectos han sido eliminados exitosamente",
   "ProjectsPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   "ProjectsPage.projectDuplicateHint": "Ya existe un proyecto con este nombre en el esta organización",
-  "ProjectsPage.projectExists": "El proyecto ''{name}'' ya existe",
+  "ProjectsPage.projectExists": "Project with the same name already exists in this organization",
   "ProjectsPage.projectLengthHint": "Nombre del proyecto",
   "ProjectsPage.projectNameLabel": "Nombre",
   "ProjectsPage.projectNameLengthHint": "Project name should have size from '3' to '60' characters",

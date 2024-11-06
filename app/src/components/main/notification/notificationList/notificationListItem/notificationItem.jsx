@@ -74,7 +74,7 @@ const messages = defineMessages({
   },
   projectExists: {
     id: 'ProjectsPage.projectExists',
-    defaultMessage: "The project ''{name}'' is already exists",
+    defaultMessage: 'Project with the same name already exists in this organization',
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
