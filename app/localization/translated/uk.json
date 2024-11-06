@@ -1796,7 +1796,7 @@
   "ProjectsPage.deleteSuccessMultiple": "Проекти були успішно видалені",
   "ProjectsPage.noResultsDescription": "Ваші критерії пошуку чи фільтра не відповідають жодному результату. Будь ласка, спробуйте інші ключові слова або змініть налаштування фільтра.",
   "ProjectsPage.projectDuplicateHint": "Проект з таким найменуванням вже існує в цій організації",
-  "ProjectsPage.projectExists": "Проект ''{name}'' вже існує",
+  "ProjectsPage.projectExists": "Проект з такою назвою вже існує в цій організації",
   "ProjectsPage.projectLengthHint": "Ім’я проекту",
   "ProjectsPage.projectNameLabel": "Ім’я",
   "ProjectsPage.projectNameLengthHint": "Назва проекту має мати розмір від 3 до 60 символів",

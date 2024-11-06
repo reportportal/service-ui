@@ -1799,7 +1799,7 @@
   "ProjectsPage.deleteSuccessMultiple": "Праекты быў паспяхова выдалены",
   "ProjectsPage.noResultsDescription": "Вашым крытэрам пошуку або фільтра не знойдзена ніводнага выніку. Калі ласка, паспрабуйце іншыя ключавыя словы або змяніце налады фільтра.",
   "ProjectsPage.projectDuplicateHint": "Праект з дадзеным найменнем ўжо існуе ў сістэме",
-  "ProjectsPage.projectExists": "Праект ''{name}'' ўжо існуе",
+  "ProjectsPage.projectExists": "Праект з такой назвай ужо існуе ў гэтай арганізацыі",
   "ProjectsPage.projectLengthHint": "Назва праекта",
   "ProjectsPage.projectNameLabel": "Імя",
   "ProjectsPage.projectNameLengthHint": "Поўнае імя можа змяшчаць толькі лацінку, лічбы, злучок, падкрэсленне, кропку. Прабел дапускаецца",

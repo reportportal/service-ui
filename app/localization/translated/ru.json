@@ -1794,7 +1794,7 @@
   "ProjectsPage.deleteSuccessMultiple": "Проекты были успешно удалены",
   "ProjectsPage.noResultsDescription": "Ваши критерии поиска или фильтра не дали никаких результатов. Попробуйте другие ключевые слова или измените настройки фильтра.",
   "ProjectsPage.projectDuplicateHint": "Проект с данным наименованием уже существует в этой организации",
-  "ProjectsPage.projectExists": "Проект ''{name}'' уже существует",
+  "ProjectsPage.projectExists": "Проект с таким названием уже существует в этой организации",
   "ProjectsPage.projectLengthHint": "Имя проекта",
   "ProjectsPage.projectNameLabel": "Имя",
   "ProjectsPage.projectNameLengthHint": "Название проекта должно иметь длину от 3 до 60 символов",
