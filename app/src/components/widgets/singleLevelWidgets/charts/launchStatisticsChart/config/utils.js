@@ -39,7 +39,11 @@ export const getConfigData = (
   });
 
   widgetData
-    .sort((a, b) => a.startTime - b.startTime)
+    .sort((a, b) => {
+      const startTimeA = new Date(a.startTime);
+      const startTimeB = new Date(b.startTime);
+      return startTimeA - startTimeB;
+    })
     .forEach((item) => {
       const currentItemData = {
         ...item,
