@@ -43,7 +43,7 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
   const [recipientsWithError, setRecipientsWithError] = useState([]);
 
   const emailValidation = (email) => {
-    return regex(/[.@]/)(email);
+    return regex(/@/)(email);
   };
 
   const getEmailValidationError = (v) => {
