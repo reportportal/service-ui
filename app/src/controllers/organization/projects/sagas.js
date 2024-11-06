@@ -61,7 +61,6 @@ function* createProject({ payload: { newProjectName: projectName } }) {
         showNotification({
           messageId: 'projectExists',
           type: NOTIFICATION_TYPES.ERROR,
-          values: { name: projectName },
         }),
       );
     } else {
