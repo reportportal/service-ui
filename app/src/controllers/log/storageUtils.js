@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getStorageItem, updateStorageItem } from 'common/utils';
+import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { MARKDOWN } from 'common/constants/logViewModes';
 import { LOG_TIME_FORMAT_ABSOLUTE } from 'controllers/user/constants';
 import {
