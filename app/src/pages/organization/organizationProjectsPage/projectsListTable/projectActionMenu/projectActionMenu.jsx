@@ -56,7 +56,7 @@ export const ProjectActionMenu = ({ details }) => {
       {
         actionLabel: formatMessage(messages.actionUnassign),
         onclick: () => {},
-        noPermissionNeeded: true,
+        hasPermission: true,
       },
       {
         actionLabel: formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -107,8 +107,7 @@ export const ProjectActionMenu = ({ details }) => {
           <div className={cx('divider')} />
           {actionsButtons.map(
             (button) =>
-              button.noPermissionNeeded ||
-              (button.hasPermission && (
+              button.hasPermission && (
                 <span
                   className={cx('action-item', button.className)}
                   onClick={button.onclick}
@@ -116,7 +115,7 @@ export const ProjectActionMenu = ({ details }) => {
                 >
                   {button.actionLabel}
                 </span>
-              )),
+              ),
           )}
         </div>
       }

@@ -29,7 +29,7 @@ export const MembersListTable = ({
   fixedColumns,
   onTableSorting,
   showPagination,
-  rowActionMenu,
+  renderRowActions,
   sortingDirection,
   pageSize,
   activePage,
@@ -54,7 +54,7 @@ export const MembersListTable = ({
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
-        rowActionMenu={rowActionMenu}
+        renderRowActions={renderRowActions}
         className={cx('members-list-table')}
         sortingColumn={primaryColumn}
         sortingDirection={sortingDirection.toLowerCase()}
@@ -71,7 +71,7 @@ MembersListTable.propTypes = {
   fixedColumns: PropTypes.array.isRequired,
   onTableSorting: PropTypes.func.isRequired,
   showPagination: PropTypes.bool.isRequired,
-  rowActionMenu: PropTypes.node,
+  renderRowActions: PropTypes.func,
   sortingDirection: PropTypes.string.isRequired,
   pageSize: PropTypes.number.isRequired,
   activePage: PropTypes.number.isRequired,

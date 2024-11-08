@@ -117,7 +117,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
     },
   ];
 
-  const rowActionMenu = (
+  const renderRowActions = () => (
     <Popover
       placement={'bottom-end'}
       content={
@@ -139,7 +139,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
-        rowActionMenu={rowActionMenu}
+        renderRowActions={renderRowActions}
         sortableColumns={[]}
       />
     </div>
