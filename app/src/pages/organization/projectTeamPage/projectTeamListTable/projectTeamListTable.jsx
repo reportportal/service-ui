@@ -167,7 +167,7 @@ const ProjectTeamListTableWrapped = ({
     },
   );
 
-  const rowActionMenu = (
+  const renderRowActions = () => (
     <Popover
       placement={'bottom-end'}
       content={
@@ -195,7 +195,7 @@ const ProjectTeamListTableWrapped = ({
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
       showPagination={members.length > 0}
-      rowActionMenu={canSeeRowActionMenu(userRoles) ? rowActionMenu : null}
+      renderRowActions={canSeeRowActionMenu(userRoles) ? renderRowActions : null}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}

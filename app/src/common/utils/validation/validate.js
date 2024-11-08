@@ -132,3 +132,5 @@ export const uniqueApiKeyName = (names) => (value) =>
   names.every((name) => name.toLowerCase() !== value.trim().toLowerCase());
 export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
+export const keywordMatcher = (keyword) => (value) =>
+  keyword.toLowerCase().trim() === value?.toLowerCase()?.trim();

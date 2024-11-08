@@ -14,43 +14,5 @@
  * limitations under the License.
  */
 
-.projects-list-table {
-  margin: 16px auto;
-  padding: 0 32px;
-  max-width: 1264px;
-  box-sizing: border-box;
-  flex: 1;
-
-  .date {
-    font-family: inherit;
-    color: inherit;
-    min-height: auto;
-  }
-}
-
-.project-name-col {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-
-  a {
-    all: inherit;
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    &:hover {
-      color: $COLOR--topaz-hover-2;
-    }
-  }
-}
-
-.loader {
-  margin: auto;
-}
-
-.projects-pagination-wrapper {
-  min-height: 100%;
-  flex: 1;
-}
+export { ProjectActionMenu } from './projectActionMenu';
+export { DeleteProjectModal } from '../../modals/deleteProjectModal';

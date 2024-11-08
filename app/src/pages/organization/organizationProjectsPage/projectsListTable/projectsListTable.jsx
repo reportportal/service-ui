@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
+import { Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -36,6 +36,7 @@ import {
   SORTING_KEY,
 } from 'controllers/organization/projects';
 import { NAMESPACE } from 'controllers/organization/projects/constants';
+import { ProjectActionMenu } from 'pages/organization/organizationProjectsPage/projectsListTable/projectActionMenu';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
 import styles from './projectsListTable.scss';
@@ -64,20 +65,20 @@ export const ProjectsListTable = ({
     () =>
       projects.map((project) => {
         const lastLaunch = project.stats.launch_stats.last_occurred_at;
+        const metaData = {
+          projectName: project.name,
+          projectSlug: project.slug,
+          projectKey: project.key,
+          projectId: project.id,
+          organizationSlug,
+        };
         return {
           id: project.id,
           name: {
             content: project.name,
             component: (
               <div className={cx('project-name-col')}>
-                <ProjectName
-                  project={{
-                    projectName: project.name,
-                    projectSlug: project.slug,
-                    projectKey: project.key,
-                    organizationSlug,
-                  }}
-                />
+                <ProjectName project={metaData} />
               </div>
             ),
           },
@@ -91,6 +92,7 @@ export const ProjectsListTable = ({
               <span>n/a</span>
             ),
           },
+          metaData,
         };
       }),
     [projects, organizationSlug],
@@ -121,22 +123,6 @@ export const ProjectsListTable = ({
     },
   ];
 
-  const rowActionMenu = (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-dropdown')}>
-          <p className={cx('rename')}>Edit</p>
-          <p className={cx('delete')}>Rename</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
-
   return (
     <PaginationWrapper
       showPagination={projects.length > 0}
@@ -156,7 +142,7 @@ export const ProjectsListTable = ({
         sortingDirection={sortingDirection.toLowerCase()}
         sortingColumn={primaryColumn}
         sortableColumns={primaryColumn.key}
-        rowActionMenu={rowActionMenu}
+        renderRowActions={(metaData) => <ProjectActionMenu details={metaData} />}
         className={cx('projects-list-table')}
         onChangeSorting={onTableColumnSort}
       />

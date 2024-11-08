@@ -264,6 +264,10 @@ const messages = defineMessages({
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',
     defaultMessage: 'The field should have size not more than 128 symbols.',
   },
+  keywordMatcherHint: {
+    id: 'DeleteProjectModal.keywordMatcherHint',
+    defaultMessage: 'The entered text does not match the required keyword',
+  },
 });
 
 @injectIntl

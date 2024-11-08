@@ -138,7 +138,7 @@ const OrgTeamListTableWrapped = ({
     [formatMessage],
   );
 
-  const rowActionMenu = (
+  const renderRowActions = () => (
     <Popover
       placement={'bottom-end'}
       content={
@@ -165,7 +165,7 @@ const OrgTeamListTableWrapped = ({
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
       showPagination={showPagination}
-      rowActionMenu={rowActionMenu}
+      renderRowActions={renderRowActions}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}

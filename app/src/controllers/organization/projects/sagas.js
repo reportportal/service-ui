@@ -24,7 +24,13 @@ import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
 import { activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
-import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS, ERROR_CODES, NAMESPACE } from './constants';
+import {
+  CREATE_PROJECT,
+  FETCH_ORGANIZATION_PROJECTS,
+  ERROR_CODES,
+  NAMESPACE,
+  DELETE_PROJECT,
+} from './constants';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
@@ -79,6 +85,37 @@ function* watchCreateProject() {
   yield takeEvery(CREATE_PROJECT, createProject);
 }
 
+function* deleteProject({ payload: { projectId, projectName } }) {
+  const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
+  try {
+    yield call(fetch, URLS.projectDelete({ organizationId, projectId }), {
+      method: 'delete',
+    });
+    yield put(fetchOrganizationBySlugAction(organizationSlug));
+    yield put(fetchOrganizationProjectsAction(organizationId));
+    yield put(hideModalAction());
+    yield put(
+      showNotification({
+        messageId: 'deleteProjectSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+        values: { name: projectName },
+      }),
+    );
+  } catch (err) {
+    const error = err.message;
+    yield put(
+      showNotification({
+        messageId: 'deleteError',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
+  }
+}
+
+function* watchDeleteProject() {
+  yield takeEvery(DELETE_PROJECT, deleteProject);
+}
 export function* projectsSagas() {
-  yield all([watchFetchProjects(), watchCreateProject()]);
+  yield all([watchFetchProjects(), watchCreateProject(), watchDeleteProject()]);
 }
