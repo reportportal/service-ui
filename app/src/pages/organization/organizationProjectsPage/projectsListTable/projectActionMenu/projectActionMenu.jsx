@@ -108,13 +108,13 @@ export const ProjectActionMenu = ({ details }) => {
           {actionsButtons.map(
             (button) =>
               button.hasPermission && (
-                <span
+                <button
                   className={cx('action-item', button.className)}
                   onClick={button.onclick}
                   key={button.actionLabel}
                 >
                   {button.actionLabel}
-                </span>
+                </button>
               ),
           )}
         </div>
