@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CREATE_PROJECT, FETCH_ORGANIZATION_PROJECTS } from './constants';
+import { CREATE_PROJECT, DELETE_PROJECT, FETCH_ORGANIZATION_PROJECTS } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
   return {
@@ -25,5 +25,10 @@ export const fetchOrganizationProjectsAction = (params) => {
 
 export const createProjectAction = (project) => ({
   type: CREATE_PROJECT,
+  payload: project,
+});
+
+export const deleteProjectAction = (project) => ({
+  type: DELETE_PROJECT,
   payload: project,
 });

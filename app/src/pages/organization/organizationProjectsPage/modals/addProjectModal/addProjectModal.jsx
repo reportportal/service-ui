@@ -26,7 +26,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
-import { messages } from '../messages';
+import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
 export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {

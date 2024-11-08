@@ -84,3 +84,6 @@ export const createDescriptionValidator = bindMessageToValidator(
   validate.descriptionField,
   'descriptionHint',
 );
+
+export const createKeywordMatcherValidator = (keyword) =>
+  bindMessageToValidator(validate.keywordMatcher(keyword), 'keywordMatcherHint');

@@ -87,4 +87,21 @@ export const messages = defineMessages({
     id: 'ProjectsPage.searchPlaceholder',
     defaultMessage: 'Type to search by name',
   },
+  actionInviteUser: {
+    id: 'OrganizationProjectsPage.actionInviteUser',
+    defaultMessage: 'Invite user',
+  },
+  actionUnassign: {
+    id: 'OrganizationProjectsPage.actionUnassign',
+    defaultMessage: 'Unassign',
+  },
+  confirmProjectNameEntry: {
+    id: 'OrganizationProjectsPage.confirmProjectNameEntry',
+    defaultMessage: 'To confirm, please enter the name of the project',
+  },
+  confirmDeleteProjectMessage: {
+    id: 'OrganizationProjectsPage.confirmDeleteProjectMessage',
+    defaultMessage:
+      'Are you sure you want to delete the "{projectName}" project? This irreversible action will delete all its data.',
+  },
 });
