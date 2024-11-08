@@ -82,8 +82,6 @@ export const DeleteProjectModal = ({ data: { onSave, projectDetails }, handleSub
 DeleteProjectModal.propTypes = {
   data: PropTypes.object,
   handleSubmit: PropTypes.func,
-  anyTouched: PropTypes.bool.isRequired,
-  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('deleteProjectModal')(
