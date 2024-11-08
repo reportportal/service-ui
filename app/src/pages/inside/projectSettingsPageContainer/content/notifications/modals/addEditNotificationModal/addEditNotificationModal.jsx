@@ -282,9 +282,9 @@ const AddEditNotificationModal = ({
 
   const okButton = {
     children:
-      actionType === MODAL_ACTION_TYPE_ADD
-        ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
-        : formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      actionType === MODAL_ACTION_TYPE_EDIT
+        ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+        : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => {
       handleSubmit(submitActions)();
     },
