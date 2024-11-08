@@ -1549,7 +1549,7 @@
   "OrganizationProjectsPage.actionInviteUser": "Запрасіць карыстальніка",
   "OrganizationProjectsPage.actionUnassign": "Адмяніць прызначэнне",
   "OrganizationProjectsPage.allOrganizations": "Усе арганізацыі",
-  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Вы ўпэўнены, што хочаце выдаліць праект \"{projectName}\"? Гэта незваротнае дзеянне прывядзе да выдалення ўсіх даных.",
+  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Вы ўпэўнены, што хочаце выдаліць праект \"{projectName}\"? Гэта незваротнае дзеянне прывядзе да выдалення ўсіх дадзеных.",
   "OrganizationProjectsPage.confirmProjectNameEntry": "Каб пацвердзіць, калі ласка, увядзіце назву праекта",
   "OrganizationProjectsPage.createProject": "Стварыць праект",
   "OrganizationProjectsPage.noProjectsListWithPermission": "Стварыце новы праект, каб пачаць сваё падарожжа ReportPortal",
