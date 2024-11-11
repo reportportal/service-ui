@@ -54,6 +54,14 @@ export const messages = defineMessages({
     id: 'OrganizationProjectsTableColumn.projectName',
     defaultMessage: 'Project name',
   },
+  team: {
+    id: 'OrganizationProjectsAction.team',
+    defaultMessage: 'Team',
+  },
+  settings: {
+    id: 'OrganizationProjectsAction.settings',
+    defaultMessage: 'Settings',
+  },
   teammates: {
     id: 'OrganizationProjectsTableColumn.teammates',
     defaultMessage: 'Teammates',

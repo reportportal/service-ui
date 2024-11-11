@@ -86,23 +86,23 @@ export const ProjectActionMenu = ({ details }) => {
         <div className={cx('action-dropdown')}>
           <Link
             to={{
-              type: 'PROJECT_SETTINGS_PAGE',
-              payload: { projectSlug, organizationSlug },
-            }}
-            className={cx('action-item')}
-            onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
-          >
-            <span>Settings</span>
-          </Link>
-          <Link
-            to={{
               type: 'PROJECT_MEMBERS_PAGE',
               payload: { projectSlug, organizationSlug },
             }}
             className={cx('action-item')}
             onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
           >
-            <span>Team</span>
+            <span>{formatMessage(messages.team)}</span>
+          </Link>
+          <Link
+            to={{
+              type: 'PROJECT_SETTINGS_PAGE',
+              payload: { projectSlug, organizationSlug },
+            }}
+            className={cx('action-item')}
+            onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
+          >
+            <span>{formatMessage(messages.settings)}</span>
           </Link>
           <div className={cx('divider')} />
           {actionsButtons.map(

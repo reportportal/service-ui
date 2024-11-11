@@ -1544,6 +1544,8 @@
   "NotificationsEnableForm.unableToConfigure": "¿Por qué no puedo configurarlo?",
   "NotificationsEnableForm.unableToConfigureDescription": "Más información sobre funciones y permisos",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "¡La configuración de notificaciones se ha actualizado correctamente!",
+  "OrganizationProjectsAction.settings": "Configuración",
+  "OrganizationProjectsAction.team": "Equipo",
   "OrganizationProjectsPage.actionInviteUser": "Invite user",
   "OrganizationProjectsPage.actionUnassign": "Unassign",
   "OrganizationProjectsPage.allOrganizations": "All organizations",
