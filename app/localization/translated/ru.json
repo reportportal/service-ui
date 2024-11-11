@@ -1541,6 +1541,8 @@
   "NotificationsEnableForm.unableToConfigure": "Почему я не могу настроить его?",
   "NotificationsEnableForm.unableToConfigureDescription": "Подробнее о ролях и разрешениях",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Настройки уведомлений были успешно обновлены!",
+  "OrganizationProjectsAction.settings": "Настройки",
+  "OrganizationProjectsAction.team": "Команда",
   "OrganizationProjectsPage.actionInviteUser": "Пригласить пользователя",
   "OrganizationProjectsPage.actionUnassign": "Отменить назначение",
   "OrganizationProjectsPage.allOrganizations": "Все организации",

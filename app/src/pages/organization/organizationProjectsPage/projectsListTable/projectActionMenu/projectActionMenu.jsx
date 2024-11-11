@@ -92,7 +92,7 @@ export const ProjectActionMenu = ({ details }) => {
             className={cx('action-item')}
             onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
           >
-            <span>Team</span>
+            <span>{formatMessage(messages.team)}</span>
           </Link>
           <Link
             to={{
@@ -102,7 +102,7 @@ export const ProjectActionMenu = ({ details }) => {
             className={cx('action-item')}
             onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
           >
-            <span>Settings</span>
+            <span>{formatMessage(messages.settings)}</span>
           </Link>
           <div className={cx('divider')} />
           {actionsButtons.map(

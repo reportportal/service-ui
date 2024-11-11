@@ -1546,6 +1546,8 @@
   "NotificationsEnableForm.unableToConfigure": "Чаму я не магу яго наладзіць?",
   "NotificationsEnableForm.unableToConfigureDescription": "Даведайцеся больш пра ролі і дазволы",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налады апавяшчэнняў былі паспяхова абноўлены!",
+  "OrganizationProjectsAction.settings": "Налады",
+  "OrganizationProjectsAction.team": "Каманда",
   "OrganizationProjectsPage.actionInviteUser": "Запрасіць карыстальніка",
   "OrganizationProjectsPage.actionUnassign": "Адмяніць прызначэнне",
   "OrganizationProjectsPage.allOrganizations": "Усе арганізацыі",

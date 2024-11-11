@@ -1543,6 +1543,8 @@
   "NotificationsEnableForm.unableToConfigure": "Чому я не можу це налаштувати?",
   "NotificationsEnableForm.unableToConfigureDescription": "Докладніше про ролі та дозволи",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налаштування сповіщень були успішно оновлені!",
+  "OrganizationProjectsAction.settings": "Налаштування",
+  "OrganizationProjectsAction.team": "Команда",
   "OrganizationProjectsPage.actionInviteUser": "Запросити користувача",
   "OrganizationProjectsPage.actionUnassign": "Скасувати призначення",
   "OrganizationProjectsPage.allOrganizations": "Всі організації",
