@@ -1900,7 +1900,7 @@
   "SettingsLayout.footer.epam": "EPAM",
   "SettingsLayout.footer.github": "在GitHub上创建我们的分支",
   "SettingsLayout.footer.privacyPolicy": "隐私政策",
-  "SettingsLayout.footer.rights": "© Report Portal 2013-{currentYear}版权所有",
+  "SettingsLayout.footer.rights": "© ReportPortal 2013-{currentYear}版权所有",
   "SettingsLayout.footer.slack": "在Slack上与我们交流",
   "SettingsPage.analyzer": "分析器",
   "SettingsPage.defect": "缺陷类型",

@@ -68,7 +68,7 @@ export const messages = defineMessages({
   },
   rights: {
     id: 'Sidebar.footer.rights',
-    defaultMessage: '© Report Portal 2013-{currentYear}. All rights reserved',
+    defaultMessage: '© ReportPortal 2013-{currentYear}. All rights reserved.',
   },
   requestService: {
     id: 'Sidebar.services.requestService',

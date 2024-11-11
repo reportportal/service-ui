@@ -96,8 +96,8 @@ export class Footer extends Component {
             <span>: {buildVersion}</span>
           </div>
           <div className={cx('footer-text')}>
-            <span> &copy; Report Portal 2013-{new Date().getFullYear()} </span>
-            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
+            <span> &copy; ReportPortal 2013-{new Date().getFullYear()}. </span>
+            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved.'} />
           </div>
         </div>
       </footer>
