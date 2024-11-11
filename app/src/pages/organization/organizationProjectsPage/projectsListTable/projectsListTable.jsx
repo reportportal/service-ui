@@ -70,6 +70,7 @@ export const ProjectsListTable = ({
           projectSlug: project.slug,
           projectKey: project.key,
           projectId: project.id,
+          projectRole: project.role,
           organizationSlug,
         };
         return {

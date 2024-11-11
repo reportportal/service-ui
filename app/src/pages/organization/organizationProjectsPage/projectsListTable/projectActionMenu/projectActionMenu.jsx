@@ -37,8 +37,16 @@ import styles from './projectActionMenu.scss';
 const cx = classNames.bind(styles);
 
 export const ProjectActionMenu = ({ details }) => {
-  const { projectName, projectKey, projectId, projectSlug, organizationSlug } = details;
-  const userRoles = useSelector(userRolesSelector);
+  const {
+    projectName,
+    projectKey,
+    projectId,
+    projectSlug,
+    projectRole,
+    organizationSlug,
+  } = details;
+  const roles = useSelector(userRolesSelector);
+  const projectUserRoles = { ...roles, projectRole };
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const actionsButtons = useMemo(() => {
@@ -46,12 +54,12 @@ export const ProjectActionMenu = ({ details }) => {
       {
         actionLabel: formatMessage(COMMON_LOCALE_KEYS.RENAME),
         onclick: () => {},
-        hasPermission: canRenameProject(userRoles),
+        hasPermission: canRenameProject(projectUserRoles),
       },
       {
         actionLabel: formatMessage(messages.actionInviteUser),
         onclick: () => {},
-        hasPermission: canInviteUserToProject(userRoles),
+        hasPermission: canInviteUserToProject(projectUserRoles),
       },
       {
         actionLabel: formatMessage(messages.actionUnassign),
@@ -74,10 +82,10 @@ export const ProjectActionMenu = ({ details }) => {
           );
         },
         className: cx('delete-button'),
-        hasPermission: canDeleteProject(userRoles),
+        hasPermission: canDeleteProject(projectUserRoles),
       },
     ];
-  }, [userRoles]);
+  }, [projectUserRoles]);
 
   return (
     <Popover
