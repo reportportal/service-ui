@@ -45,7 +45,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
         const hasPermission =
           userRole === ADMINISTRATOR || assignedOrganizations[slug]?.organizationRole === MANAGER;
 
-        return {
+        const mainColumns = {
           id,
           name: {
             content: name,
@@ -69,17 +69,29 @@ export const OrganizationsTable = ({ organizationsList }) => {
               </div>
             ),
           },
-          projectsCount: relationships.projects.meta.count,
-          usersCount: relationships.users.meta.count,
-          launchesCount: relationships.launches.meta.count,
-          lastLaunch: {
-            content: lastLaunch,
-            component: lastLaunch ? (
-              <AbsRelTime startTime={lastLaunch} customClass={cx('date')} />
-            ) : (
-              <span>n/a</span>
-            ),
-          },
+          projectsCount: '',
+          usersCount: '',
+          launchesCount: '',
+          lastLaunch: '',
+        };
+
+        return {
+          ...mainColumns,
+          ...(hasPermission
+            ? {
+                projectsCount: relationships.projects.meta.count,
+                usersCount: relationships.users.meta.count,
+                launchesCount: relationships.launches.meta.count,
+                lastLaunch: {
+                  content: lastLaunch,
+                  component: lastLaunch ? (
+                    <AbsRelTime startTime={lastLaunch} customClass={cx('date')} />
+                  ) : (
+                    <span>n/a</span>
+                  ),
+                },
+              }
+            : {}),
         };
       }),
     [organizationsList, assignedOrganizations],
