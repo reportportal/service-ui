@@ -46,10 +46,10 @@ export const ProjectActionMenu = ({ details }) => {
     organizationSlug,
   } = details;
   const roles = useSelector(userRolesSelector);
-  const projectUserRoles = { ...roles, projectRole };
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const actionsButtons = useMemo(() => {
+    const projectUserRoles = { ...roles, projectRole };
     return [
       {
         actionLabel: formatMessage(COMMON_LOCALE_KEYS.RENAME),
@@ -85,7 +85,7 @@ export const ProjectActionMenu = ({ details }) => {
         hasPermission: canDeleteProject(projectUserRoles),
       },
     ];
-  }, [projectUserRoles]);
+  }, [roles, projectRole]);
 
   return (
     <Popover
