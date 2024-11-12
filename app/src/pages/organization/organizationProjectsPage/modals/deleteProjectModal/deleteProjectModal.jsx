@@ -35,7 +35,12 @@ const cx = classNames.bind(styles);
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
 
-export const DeleteProjectModal = ({ data: { onSave, projectDetails }, handleSubmit }) => {
+export const DeleteProjectModal = ({
+  data: { onSave, projectDetails },
+  handleSubmit,
+  anyTouched,
+  invalid,
+}) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -54,6 +59,7 @@ export const DeleteProjectModal = ({ data: { onSave, projectDetails }, handleSub
           handleSubmit(handleDelete)();
         },
         variant: 'danger',
+        disabled: anyTouched && invalid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -82,6 +88,8 @@ export const DeleteProjectModal = ({ data: { onSave, projectDetails }, handleSub
 DeleteProjectModal.propTypes = {
   data: PropTypes.object,
   handleSubmit: PropTypes.func,
+  anyTouched: PropTypes.bool.isRequired,
+  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('deleteProjectModal')(

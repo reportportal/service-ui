@@ -30,6 +30,7 @@ import { useState } from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { assignedProjectsSelector } from 'controllers/user';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
@@ -51,6 +52,19 @@ export const OrganizationProjectsPage = () => {
   const buttonTitle = formatMessage(messages.createProject);
 
   const projects = useSelector(projectsSelector);
+  const assignedProjects = useSelector(assignedProjectsSelector);
+
+  const projectsWithAssignedRoles = projects.map((project) => {
+    const assignedProject = Object.values(assignedProjects || {}).find(
+      (assigned) => assigned.projectSlug === project.slug,
+    );
+
+    return {
+      ...project,
+      role: assignedProject?.projectRole,
+    };
+  });
+
   const isProjectsEmpty = !projectsLoading && projects.length === 0;
   const [searchValue, setSearchValue] = useState(null);
 
@@ -113,7 +127,11 @@ export const OrganizationProjectsPage = () => {
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        {isProjectsEmpty ? getEmptyPageState() : <ProjectsListTableWrapper projects={projects} />}
+        {isProjectsEmpty ? (
+          getEmptyPageState()
+        ) : (
+          <ProjectsListTableWrapper projects={projectsWithAssignedRoles} />
+        )}
       </div>
     </ScrollWrapper>
   );
