@@ -155,9 +155,12 @@ export class InputDropdown extends Component {
     const relatedSubOptions = this.props.options
       .filter((item) => item.groupRef === groupId)
       .map((item) => item.value);
+
     if (this.isGroupOptionSelected(groupId)) {
       this.props.onChange(
-        this.props.value.filter((item) => relatedSubOptions.indexOf(item) === -1),
+        this.props.value.filter(
+          (item) => item !== groupId && relatedSubOptions.indexOf(item) === -1,
+        ),
       );
     } else {
       this.props.onChange(
@@ -169,10 +172,10 @@ export class InputDropdown extends Component {
   };
 
   handleAllClick = () => {
-    if (this.props.value.length !== this.props.options.length) {
-      this.props.onChange(
-        this.props.options.filter((item) => !item.disabled).map((item) => item.value),
-      );
+    const filteredOptions = this.props.options.filter((item) => !item.disabled && !item.groupId);
+
+    if (this.props.value.length !== filteredOptions.length) {
+      this.props.onChange(filteredOptions.map((item) => item.value));
     } else {
       this.props.onChange([]);
     }
