@@ -29,7 +29,7 @@ export const organizationsListPaginationSelector = (state) =>
 
 export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
-  defaultDirection: SORTING_ASC,
+  defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
+  alternativeNamespace: NAMESPACE,
 });
