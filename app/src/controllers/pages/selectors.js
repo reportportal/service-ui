@@ -107,13 +107,16 @@ export const prevPagePropertiesSelector = (
 
 export const createQueryParametersSelector = ({
   namespace: staticNamespace,
+  alternativeNamespace,
   defaultPagination,
   defaultSorting,
   sortingKey = SORTING_KEY,
 } = {}) => (state, namespace) => {
-  const calculatedNamespace = staticNamespace || namespace;
+  const calculatedNamespace = staticNamespace || namespace || alternativeNamespace;
   const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
-  const query = pagePropertiesSelector(state, calculatedNamespace);
+  const query = alternativeNamespace
+    ? querySelector(state)
+    : pagePropertiesSelector(state, calculatedNamespace);
   const queryParameters = {
     ...calculatedPagination,
     [sortingKey]: defaultSorting || '',
@@ -138,14 +141,14 @@ export const createAlternativeQueryParametersSelector = ({
   defaultPagination,
   defaultSorting,
   sortingKey,
-  namespace,
+  alternativeNamespace,
 } = {}) =>
   createSelector(
     createQueryParametersSelector({
       defaultPagination,
       defaultSorting,
       sortingKey,
-      namespace,
+      alternativeNamespace,
     }),
     ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
       return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
