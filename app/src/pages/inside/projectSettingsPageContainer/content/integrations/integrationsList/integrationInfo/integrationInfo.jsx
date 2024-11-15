@@ -43,6 +43,8 @@ import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/se
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { EMAIL } from 'common/constants/pluginNames';
+import { combineNameAndEmailToFrom } from 'common/utils';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
 import { messages } from './messages';
@@ -112,10 +114,11 @@ export const IntegrationInfo = (props) => {
   };
 
   const addProjectIntegration = (formData, metaData) => {
+    const updatedFormData = pluginName === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const newData = {
       enabled: true,
-      integrationParameters: formData,
-      name: formData.integrationName || PLUGIN_NAME_TITLES[pluginName],
+      integrationParameters: updatedFormData,
+      name: updatedFormData.integrationName || PLUGIN_NAME_TITLES[pluginName],
     };
     trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(pluginName));
     dispatch(addIntegrationAction(newData, false, pluginName, openIntegration, metaData));
@@ -141,13 +144,14 @@ export const IntegrationInfo = (props) => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_ADD_PROJECT_INTEGRATION(pluginName));
   };
   const onUpdate = (formData, onConfirm, metaData) => {
+    const updatedFormData = pluginName === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const newData = {
       enabled: true,
-      integrationParameters: formData,
+      integrationParameters: updatedFormData,
     };
 
-    if (formData.integrationName) {
-      newData.name = formData.integrationName;
+    if (updatedFormData.integrationName) {
+      newData.name = updatedFormData.integrationName;
     }
 
     dispatch(
