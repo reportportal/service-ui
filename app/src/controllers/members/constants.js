@@ -21,4 +21,5 @@ export const FETCH_MEMBERS = 'fetchMembers';
 export const NAMESPACE = 'members';
 export const DEFAULT_SORTING = formatSortingString([USER], SORTING_ASC);
 export const DEFAULT_SORT_COLUMN = 'fullName';
+export const SEARCH_KEY = 'filter.cnt.fullName';
 export const DEFAULT_PAGE_SIZE_OPTIONS = [20, 50, 100, 300];

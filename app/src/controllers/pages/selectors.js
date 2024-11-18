@@ -107,16 +107,13 @@ export const prevPagePropertiesSelector = (
 
 export const createQueryParametersSelector = ({
   namespace: staticNamespace,
-  alternativeNamespace,
   defaultPagination,
   defaultSorting,
   sortingKey = SORTING_KEY,
 } = {}) => (state, namespace) => {
-  const calculatedNamespace = staticNamespace || namespace || alternativeNamespace;
+  const calculatedNamespace = staticNamespace || namespace;
   const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
-  const query = alternativeNamespace
-    ? querySelector(state)
-    : pagePropertiesSelector(state, calculatedNamespace);
+  const query = pagePropertiesSelector(state, calculatedNamespace);
   const queryParameters = {
     ...calculatedPagination,
     [sortingKey]: defaultSorting || '',
@@ -134,6 +131,7 @@ export const createQueryParametersSelector = ({
     const userSettings = getStorageItem(`${userId}_settings`) || {};
     queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
   }
+
   return queryParameters;
 };
 
@@ -141,14 +139,14 @@ export const createAlternativeQueryParametersSelector = ({
   defaultPagination,
   defaultSorting,
   sortingKey,
-  alternativeNamespace,
+  namespace,
 } = {}) =>
   createSelector(
     createQueryParametersSelector({
       defaultPagination,
       defaultSorting,
       sortingKey,
-      alternativeNamespace,
+      namespace,
     }),
     ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
       return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };

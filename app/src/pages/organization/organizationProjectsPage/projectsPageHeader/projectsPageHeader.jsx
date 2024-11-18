@@ -26,7 +26,7 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
-import { SEARCH_KEY } from 'controllers/organization/projects/constants';
+import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import projectsIcon from './img/projects-inline.svg';
 import styles from './projectsPageHeader.scss';
@@ -35,7 +35,9 @@ import userIcon from './img/user-inline.svg';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
+  SearchField,
+);
 
 export const ProjectsPageHeader = ({
   hasPermission,
