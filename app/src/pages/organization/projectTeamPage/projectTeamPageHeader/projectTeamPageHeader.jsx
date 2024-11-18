@@ -26,9 +26,10 @@ import { SearchField } from 'components/fields/searchField';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
 import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
+import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
-import styles from './projectTeamPageHeader.scss';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
+import styles from './projectTeamPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
@@ -58,6 +59,7 @@ export const ProjectTeamPageHeader = ({
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 placeholder={formatMessage(messages.searchPlaceholder)}
+                event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
               />
               <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
             </div>
