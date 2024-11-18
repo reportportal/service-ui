@@ -46,7 +46,7 @@ export const ProjectTeamPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const projectMembers = useSelector(projectMembersSelector);
-  const isNotEmptyMembers = !(projectMembers.length === 0);
+  const isNotEmptyMembers = projectMembers.length !== 0;
 
   return (
     <MembersPageHeader title={formatMessage(messages.projectTeamTitle)}>
