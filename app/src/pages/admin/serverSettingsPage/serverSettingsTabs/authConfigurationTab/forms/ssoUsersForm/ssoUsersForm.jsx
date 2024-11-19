@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -25,7 +24,7 @@ import { SectionHeader } from 'components/main/sectionHeader';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { ENABLED_KEY } from 'pages/admin/serverSettingsPage/common/constants';
-import { ssoUsersOnlySelector } from 'controllers/appInfo';
+import { ssoUsersOnlySelector, fetchAppInfoAction } from 'controllers/appInfo';
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
 import './ssoUsersForm.scss';
 
@@ -42,8 +41,12 @@ const localMessages = defineMessages({
   },
 });
 
-function SsoUsersFormComponent({ initialize, enabled }) {
+function SsoUsersFormComponent({ initialize, enabled, fetchAppInfo }) {
   const { formatMessage } = useIntl();
+
+  React.useEffect(() => {
+    fetchAppInfo();
+  }, [fetchAppInfo]);
 
   React.useEffect(() => {
     initialize({ [ENABLED_KEY]: enabled });
@@ -99,6 +102,7 @@ function SsoUsersFormComponent({ initialize, enabled }) {
 SsoUsersFormComponent.propTypes = {
   enabled: PropTypes.bool,
   initialize: PropTypes.func.isRequired,
+  fetchAppInfo: PropTypes.func.isRequired,
 };
 
 SsoUsersFormComponent.defaultProps = {
@@ -109,9 +113,13 @@ const mapStateToProps = (state) => ({
   enabled: ssoUsersOnlySelector(state),
 });
 
+const mapDispatchToProps = {
+  fetchAppInfo: fetchAppInfoAction,
+};
+
 const ReduxWrappedForm = reduxForm({
   form: 'SsoUsersForm',
   enableReinitialize: true,
 })(SsoUsersFormComponent);
 
-export const SsoUsersForm = connect(mapStateToProps)(ReduxWrappedForm);
+export const SsoUsersForm = connect(mapStateToProps, mapDispatchToProps)(ReduxWrappedForm);
