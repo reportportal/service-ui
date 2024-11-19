@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -44,11 +45,11 @@ const localMessages = defineMessages({
 function SsoUsersFormComponent({ initialize, enabled, fetchAppInfo }) {
   const { formatMessage } = useIntl();
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchAppInfo();
   }, [fetchAppInfo]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     initialize({ [ENABLED_KEY]: enabled });
   }, [initialize, enabled]);
 
