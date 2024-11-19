@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-.sso-users-form {
-  :global(.custom-text-wrapper) {
+:global {
+  .custom-text-wrapper {
     width: 100%;
     max-width: 700px;
     padding-left: 0;
   }
 
-  :global(.form-field) {
+  .form-field {
     align-items: flex-start;
   }
 
-  :global(.custom-span-class) {
+  .custom-span-class {
     display: block;
     font-size: 12px;
     line-height: 1.5;
     color: $COLOR--gray-60;
-    margin-top: 13px;
     margin-left: 9px;
     width: 300px;
+  }
+
+  .enabled-description {
+    margin-top: 0;
+  }
+
+  .disabled-description {
+    margin-top: 13px;
   }
 }
