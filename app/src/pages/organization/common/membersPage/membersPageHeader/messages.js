@@ -38,4 +38,13 @@ export const messages = defineMessages({
     id: 'ProjectTeamPage.inviteUser',
     defaultMessage: 'Invite user',
   },
+  searchPlaceholder: {
+    id: 'ProjectTeamPage.searchPlaceholder',
+    defaultMessage: 'Type to search by name',
+  },
+  noResultsDescription: {
+    id: 'ProjectTeamPage.noResultsDescription',
+    defaultMessage:
+      "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
+  },
 });

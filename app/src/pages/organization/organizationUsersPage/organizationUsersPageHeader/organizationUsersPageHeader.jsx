@@ -17,16 +17,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button, SearchIcon } from '@reportportal/ui-kit';
+import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
+import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
+import { SearchField } from 'components/fields/searchField';
+import { withFilter } from 'controllers/filter';
+import { useSelector } from 'react-redux';
+import { activeOrganizationSelector } from 'controllers/organization';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import styles from './organizationUsersPageHeader.scss';
-import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationUsersPageHeader = ({ isNotEmpty, onInvite }) => {
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
+  SearchField,
+);
+
+export const OrganizationUsersPageHeader = ({
+  onInvite,
+  isUsersLoading,
+  searchValue,
+  setSearchValue,
+}) => {
   const { formatMessage } = useIntl();
+  const organization = useSelector(activeOrganizationSelector);
+  const usersCount = organization?.relationships?.users?.meta.count;
+  const isNotEmpty = usersCount > 0;
 
   return (
     <MembersPageHeader title={formatMessage(messages.organizationUsersTitle)}>
@@ -34,9 +52,13 @@ export const OrganizationUsersPageHeader = ({ isNotEmpty, onInvite }) => {
         {isNotEmpty && (
           <>
             <div className={cx('icons')}>
-              <i className={cx('search-icon')}>
-                <SearchIcon />
-              </i>
+              <SearchFieldWithFilter
+                isLoading={isUsersLoading}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_USERS_FIELD}
+              />
             </div>
             <Button variant={'ghost'} onClick={onInvite}>
               {formatMessage(messages.inviteUser)}
@@ -49,11 +71,12 @@ export const OrganizationUsersPageHeader = ({ isNotEmpty, onInvite }) => {
 };
 
 OrganizationUsersPageHeader.propTypes = {
-  isNotEmpty: PropTypes.bool,
+  isUsersLoading: PropTypes.bool.isRequired,
+  searchValue: PropTypes.string.isRequired,
+  setSearchValue: PropTypes.func.isRequired,
   onInvite: PropTypes.func,
 };
 
 OrganizationUsersPageHeader.defaultProps = {
-  isNotEmpty: false,
   onInvite: () => {},
 };

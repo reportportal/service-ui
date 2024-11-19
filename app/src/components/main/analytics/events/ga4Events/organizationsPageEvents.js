@@ -26,4 +26,9 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: 'search',
   },
+  SEARCH_ORGANIZATION_USERS_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'search',
+  },
 };

@@ -199,6 +199,7 @@ export const OrganizationTeamListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
 })(
   withPagination({
     paginationSelector: usersPaginationSelector,
