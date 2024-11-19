@@ -42,7 +42,8 @@ import {
   isPluginBuiltin,
 } from 'components/integrations/utils';
 import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
-import { LDAP } from 'common/constants/pluginNames';
+import { EMAIL, LDAP } from 'common/constants/pluginNames';
+import { combineNameAndEmailToFrom } from 'common/utils';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -192,10 +193,11 @@ export class InstancesSection extends Component {
 
   createIntegration = (formData, metaData) => {
     const { isGlobal, instanceType } = this.props;
+    const updatedFormData = instanceType === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const data = {
       enabled: true,
-      integrationParameters: formData,
-      name: formData.integrationName || PLUGIN_NAME_TITLES[instanceType],
+      integrationParameters: updatedFormData,
+      name: updatedFormData.integrationName || PLUGIN_NAME_TITLES[instanceType],
     };
 
     this.props.addIntegrationAction(
