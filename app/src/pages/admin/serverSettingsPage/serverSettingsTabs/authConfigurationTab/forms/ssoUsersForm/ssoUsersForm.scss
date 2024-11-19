@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,24 @@
  * limitations under the License.
  */
 
-.github-auth-form {
-  position: relative;
-  margin-bottom: 33px;
+.sso-users-form {
+  :global(.custom-text-wrapper) {
+    width: 100%;
+    max-width: 700px;
+    padding-left: 0;
+  }
+
+  :global(.form-field) {
+    align-items: flex-start;
+  }
+
+  :global(.custom-span-class) {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    color: $COLOR--gray-60;
+    margin-top: 13px;
+    margin-left: 9px;
+    width: 300px;
+  }
 }
