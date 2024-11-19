@@ -27,10 +27,9 @@ import { FormField } from 'components/fields/formField';
 import { ENABLED_KEY } from 'pages/admin/serverSettingsPage/common/constants';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
-import styles from './ssoUsersForm.scss';
+import './ssoUsersForm.scss';
 
 const formCx = classNames.bind(formStyles);
-const cx = classNames.bind(styles);
 
 const localMessages = defineMessages({
   switcherLabel: {
@@ -66,26 +65,32 @@ function SsoUsersFormComponent({ initialize, enabled }) {
   };
 
   return (
-    <div className={cx('sso-users-form')}>
-      <div className={formCx('form-controller')}>
-        <div className={formCx('heading-wrapper')}>
-          <SectionHeader text={formatMessage(localMessages.formHeader)} />
-        </div>
-        <div className={formCx('form')}>
-          <FormField
-            name={ENABLED_KEY}
-            label={formatMessage(localMessages.switcherLabel)}
-            labelClassName={formCx('label')}
-            format={Boolean}
-            parse={Boolean}
-            customBlock={{
-              wrapperClassName: 'custom-text-wrapper',
-              node: <span className="custom-span-class">{getCustomBlockText()}</span>,
-            }}
-          >
-            <Field name={ENABLED_KEY} component={renderToggle} />
-          </FormField>
-        </div>
+    <div className={formCx('form-controller')}>
+      <div className={formCx('heading-wrapper')}>
+        <SectionHeader text={formatMessage(localMessages.formHeader)} />
+      </div>
+      <div className={formCx('form')}>
+        <FormField
+          name={ENABLED_KEY}
+          label={formatMessage(localMessages.switcherLabel)}
+          labelClassName={formCx('label')}
+          format={Boolean}
+          parse={Boolean}
+          customBlock={{
+            wrapperClassName: 'custom-text-wrapper',
+            node: (
+              <span
+                className={`custom-span-class ${
+                  enabled ? 'enabled-description' : 'disabled-description'
+                }`}
+              >
+                {getCustomBlockText()}
+              </span>
+            ),
+          }}
+        >
+          <Field name={ENABLED_KEY} component={renderToggle} />
+        </FormField>
       </div>
     </div>
   );
