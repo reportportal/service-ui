@@ -15,3 +15,4 @@
  */
 
 export { GithubAuthForm } from './githubAuthForm';
+export { SsoUsersForm } from './ssoUsersForm';

@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-.github-auth-form {
-  position: relative;
-  margin-bottom: 33px;
-}
+import { ENABLED_KEY } from 'pages/admin/serverSettingsPage/common/constants';
+
+export const SSO_USERS_FORM = 'ssoUsersForm';
+export const DEFAULT_FORM_CONFIG = {
+  [ENABLED_KEY]: false,
+};
