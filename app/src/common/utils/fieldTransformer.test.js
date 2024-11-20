@@ -57,7 +57,7 @@ describe('combineNameAndEmailToFrom', () => {
     });
   });
 
-  it('should not modify the object if "fromName" or "fromEmail" is missing', () => {
+  it('should set "from" to "fromName" or "fromEmail" if only one is provided', () => {
     const input1 = { fromName: 'John Doe' };
     const input2 = { fromEmail: 'john.doe@example.com' };
     const input3 = {};
@@ -66,8 +66,8 @@ describe('combineNameAndEmailToFrom', () => {
     const result2 = combineNameAndEmailToFrom(input2);
     const result3 = combineNameAndEmailToFrom(input3);
 
-    expect(result1).toEqual({ fromName: 'John Doe' });
-    expect(result2).toEqual({ fromEmail: 'john.doe@example.com' });
+    expect(result1).toEqual({ from: 'John Doe' });
+    expect(result2).toEqual({ from: 'john.doe@example.com' });
     expect(result3).toEqual({});
   });
 });

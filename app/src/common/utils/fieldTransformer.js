@@ -4,6 +4,10 @@ export function combineNameAndEmailToFrom(inputObj) {
     obj.from = `${obj.fromName} <${obj.fromEmail}>`;
     delete obj.fromName;
     delete obj.fromEmail;
+  } else {
+    obj.from = obj.fromName || obj.fromEmail;
+    delete obj.fromName;
+    delete obj.fromEmail;
   }
   return obj;
 }
@@ -15,6 +19,9 @@ export function separateFromIntoNameAndEmail(inputObj) {
     if (match) {
       obj.fromName = match[1];
       obj.fromEmail = match[2];
+    } else if (obj.from.includes('@')) {
+      obj.fromName = '';
+      obj.fromEmail = obj.from;
     } else {
       obj.fromName = obj.from;
       obj.fromEmail = '';
