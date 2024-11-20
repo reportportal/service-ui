@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { FormField } from 'components/fields/formField';
-import { ENABLED_KEY } from 'pages/admin/serverSettingsPage/common/constants';
 import { ssoUsersOnlySelector, fetchAppInfoAction } from 'controllers/appInfo';
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
-import './ssoUsersForm.scss';
+import styles from './ssoUsersForm.scss';
 
 const formCx = classNames.bind(formStyles);
+const cx = classNames.bind(styles);
 
-const localMessages = defineMessages({
+const messages = defineMessages({
   switcherLabel: {
     id: 'SsoUsersForm.switcherLabel',
     defaultMessage: 'SSO users only',
@@ -42,67 +40,61 @@ const localMessages = defineMessages({
   },
 });
 
-function SsoUsersFormComponent({ initialize, enabled, fetchAppInfo }) {
+const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
   const { formatMessage } = useIntl();
+  const [enabled, setEnabled] = useState(enabledFromStore);
+  const inputId = 'ssoUsersToggle';
 
   useEffect(() => {
     fetchAppInfo();
   }, [fetchAppInfo]);
 
   useEffect(() => {
-    initialize({ [ENABLED_KEY]: enabled });
-  }, [initialize, enabled]);
+    setEnabled(enabledFromStore);
+  }, [enabledFromStore]);
 
-  const renderToggle = ({ input }) => (
-    <InputBigSwitcher
-      value={input.value}
-      onChange={input.onChange}
-      mobileDisabled
-      onChangeEventInfo={ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SSO_USERS_SWITCHER}
-    />
-  );
-
-  const getCustomBlockText = () => {
+  const getDescription = () => {
     return enabled
       ? 'New users can be created via SSO only.'
       : 'Users can manually send invitations for other users. If enabled new users can be created via SSO only.';
   };
 
+  const handleToggle = (value) => {
+    setEnabled(value);
+  };
+
   return (
     <div className={formCx('form-controller')}>
       <div className={formCx('heading-wrapper')}>
-        <SectionHeader text={formatMessage(localMessages.formHeader)} />
+        <SectionHeader text={formatMessage(messages.formHeader)} />
       </div>
       <div className={formCx('form')}>
-        <FormField
-          name={ENABLED_KEY}
-          label={formatMessage(localMessages.switcherLabel)}
-          labelClassName={formCx('label')}
-          format={Boolean}
-          parse={Boolean}
-          customBlock={{
-            wrapperClassName: 'custom-text-wrapper',
-            node: (
-              <span
-                className={`custom-span-class ${
-                  enabled ? 'enabled-description' : 'disabled-description'
-                }`}
-              >
-                {getCustomBlockText()}
-              </span>
-            ),
-          }}
-        >
-          <Field name={ENABLED_KEY} component={renderToggle} />
-        </FormField>
+        <div className={cx('form-group')}>
+          <label htmlFor={inputId} className={cx('form-group-label')}>
+            {formatMessage(messages.switcherLabel)}
+          </label>
+          <div className={cx('form-group-content')}>
+            <div className={cx('input-container')}>
+              <InputBigSwitcher
+                id={inputId}
+                value={enabled}
+                onChange={handleToggle}
+                mobileDisabled
+                onChangeEventInfo={ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SSO_USERS_SWITCHER}
+              />
+              <div className={cx('description')} aria-live="polite">
+                {getDescription()}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 SsoUsersFormComponent.propTypes = {
   enabled: PropTypes.bool,
-  initialize: PropTypes.func.isRequired,
   fetchAppInfo: PropTypes.func.isRequired,
 };
 
@@ -118,9 +110,4 @@ const mapDispatchToProps = {
   fetchAppInfo: fetchAppInfoAction,
 };
 
-const ReduxWrappedForm = reduxForm({
-  form: 'SsoUsersForm',
-  enableReinitialize: true,
-})(SsoUsersFormComponent);
-
-export const SsoUsersForm = connect(mapStateToProps, mapDispatchToProps)(ReduxWrappedForm);
+export const SsoUsersForm = connect(mapStateToProps, mapDispatchToProps)(SsoUsersFormComponent);
