@@ -228,6 +228,7 @@ ProjectTeamListTableWrapped.defaultProps = {
 export const ProjectTeamListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
+  namespace: NAMESPACE,
 })(
   withPagination({
     paginationSelector: membersPaginationSelector,

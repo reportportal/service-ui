@@ -23,6 +23,7 @@ import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
+import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -34,7 +35,9 @@ import styles from './organizationsPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY })(SearchField);
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
+  SearchField,
+);
 
 export const OrganizationsPageHeader = ({
   isEmpty,
