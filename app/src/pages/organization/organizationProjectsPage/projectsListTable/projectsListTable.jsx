@@ -173,6 +173,7 @@ export const ProjectsListTableWrapper = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
 })(
   withPagination({
     paginationSelector: projectsPaginationSelector,

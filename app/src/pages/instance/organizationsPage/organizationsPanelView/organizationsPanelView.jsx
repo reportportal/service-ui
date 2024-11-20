@@ -82,6 +82,7 @@ export const OrganizationsPanelView = withSortingURL({
   defaultDirection: SORTING_ASC,
   defaultFields: [DEFAULT_SORT_COLUMN],
   sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
 })(
   withPagination({
     paginationSelector: organizationsListPaginationSelector,
