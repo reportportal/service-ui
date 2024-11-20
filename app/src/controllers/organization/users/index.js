@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { NAMESPACE, FETCH_ORGANIZATION_USERS } from './constants';
+export { NAMESPACE, FETCH_ORGANIZATION_USERS, SEARCH_KEY } from './constants';
 export {
   prepareActiveOrganizationUsersAction,
   fetchOrganizationUsersAction,

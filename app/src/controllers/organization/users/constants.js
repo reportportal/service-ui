@@ -17,3 +17,4 @@
 export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
 export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
 export const NAMESPACE = 'organizationUsers';
+export const SEARCH_KEY = 'full_name';

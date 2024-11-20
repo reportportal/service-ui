@@ -15,10 +15,16 @@
  */
 
 import { useSelector } from 'react-redux';
+import classNames from 'classnames/bind';
+import { useState } from 'react';
+import { useIntl } from 'react-intl';
 import { loadingSelector, usersSelector } from 'controllers/organization/users';
 import { OrganizationTeamListTable } from 'pages/organization/organizationUsersPage/organizationUsersListTable/organizationUsersListTable';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import classNames from 'classnames/bind';
+import { EmptyPageState } from 'pages/common';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { messages } from '../common/membersPage/membersPageHeader/messages';
 import styles from './organizationUsersPage.scss';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
@@ -26,23 +32,34 @@ import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
 const cx = classNames.bind(styles);
 
 export const OrganizationUsersPage = () => {
+  const { formatMessage } = useIntl();
   const users = useSelector(usersSelector);
   const isUsersLoading = useSelector(loadingSelector);
+  const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
+
+  const getEmptyPageState = () => {
+    return searchValue === null ? (
+      <EmptyUsersPageState isLoading={isUsersLoading} isNotEmpty={!isEmptyUsers} hasPermission />
+    ) : (
+      <EmptyPageState
+        label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+        description={formatMessage(messages.noResultsDescription)}
+        emptyIcon={NoResultsIcon}
+        hasPermission={false}
+      />
+    );
+  };
 
   return (
     <ScrollWrapper>
       <div className={cx('organization-users-page')}>
-        <OrganizationUsersPageHeader isNotEmpty={!isEmptyUsers} />
-        {isEmptyUsers ? (
-          <EmptyUsersPageState
-            isLoading={isUsersLoading}
-            isNotEmpty={!isEmptyUsers}
-            hasPermission
-          />
-        ) : (
-          <OrganizationTeamListTable users={users} />
-        )}
+        <OrganizationUsersPageHeader
+          isUsersLoading={isUsersLoading}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+        {isEmptyUsers ? getEmptyPageState() : <OrganizationTeamListTable users={users} />}
       </div>
     </ScrollWrapper>
   );
