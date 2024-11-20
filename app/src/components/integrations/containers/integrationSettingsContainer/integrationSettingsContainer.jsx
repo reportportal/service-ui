@@ -22,6 +22,8 @@ import { updateIntegrationAction } from 'controllers/plugins';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { EMAIL } from 'common/constants/pluginNames';
+import { combineNameAndEmailToFrom } from 'common/utils';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -61,13 +63,14 @@ export class IntegrationSettingsContainer extends Component {
       },
       isGlobal,
     } = this.props;
+    const updatedFormData = pluginName === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const data = {
       enabled: true,
-      integrationParameters: formData,
+      integrationParameters: updatedFormData,
     };
 
-    if (formData.integrationName) {
-      data.name = formData.integrationName;
+    if (updatedFormData.integrationName) {
+      data.name = updatedFormData.integrationName;
     }
 
     this.props.updateIntegrationAction(
