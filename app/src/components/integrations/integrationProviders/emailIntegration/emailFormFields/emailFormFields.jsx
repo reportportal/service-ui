@@ -221,6 +221,7 @@ export class EmailFormFields extends Component {
               label={formatMessage(messages.usernameLabel)}
               disabled={disabled}
               className={cx('fields')}
+              validate={commonValidators.requiredField}
               isRequired
             >
               <FieldErrorHint provideHint={false}>
