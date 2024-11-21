@@ -92,7 +92,7 @@ import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
-  PROJECT_ASSIGNMENT_ROUTE,
+  ASSIGNMENTS_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchOrganizationsAction } from 'controllers/instance/organizations';
@@ -124,30 +124,30 @@ const routesMap = {
 
   [USER_PROFILE_PAGE]: redirectRoute('/userProfile', () => ({
     type: USER_PROFILE_SUB_PAGE,
-    payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    payload: { profileRoute: ASSIGNMENTS_ROUTE },
   })),
 
-  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: redirectRoute(
     '/organizations/:organizationSlug/userProfile',
     ({ organizationSlug }) => ({
       type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
-      payload: { organizationSlug, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+      payload: { organizationSlug, profileRoute: ASSIGNMENTS_ROUTE },
     }),
   ),
 
-  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   [USER_PROFILE_PAGE_PROJECT_LEVEL]: redirectRoute(
     '/organizations/:organizationSlug/projects/:projectSlug/userProfile',
     (payload) => ({
       type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
-      payload: { ...payload, profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+      payload: { ...payload, profileRoute: ASSIGNMENTS_ROUTE },
     }),
   ),
 
-  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 
