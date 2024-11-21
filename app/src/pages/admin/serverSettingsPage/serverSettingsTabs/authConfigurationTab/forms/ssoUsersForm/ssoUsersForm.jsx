@@ -62,11 +62,8 @@ const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
     setEnabled(enabledFromStore);
   }, [enabledFromStore]);
 
-  const getDescription = () => {
-    return enabled
-      ? formatMessage(messages.ssoOnlyDescription)
-      : formatMessage(messages.manualInvitesDescription);
-  };
+  const getDescription = () =>
+    formatMessage(enabled ? messages.ssoOnlyDescription : messages.manualInvitesDescription);
 
   const handleToggle = (value) => {
     setEnabled(value);
