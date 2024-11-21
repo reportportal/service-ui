@@ -49,15 +49,19 @@ export const availableProjectsSelector = createSelector(
     return Object.keys(assignedOrganizations)
       .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
       .reduce((projects, assignedOrganization) => {
-        const { organizationSlug, organizationId, organizationName } = assignedOrganizations[
-          assignedOrganization
-        ];
+        const {
+          organizationSlug,
+          organizationId,
+          organizationName,
+          organizationRole,
+        } = assignedOrganizations[assignedOrganization];
         const organizationProjects = assignedProjectMap
           .filter((assignedProject) => assignedProject.organizationId === organizationId)
-          .map(({ projectName, projectSlug, projectKey }) => ({
+          .map(({ projectName, projectSlug, projectKey, projectRole }) => ({
             projectName,
             projectSlug,
             projectKey,
+            projectRole,
           }));
 
         return [
@@ -65,6 +69,7 @@ export const availableProjectsSelector = createSelector(
           {
             organizationSlug,
             organizationName,
+            organizationRole,
             projects: organizationProjects.sort((a, b) =>
               a.projectName.toLowerCase() > b.projectName.toLowerCase() ? 1 : -1,
             ),

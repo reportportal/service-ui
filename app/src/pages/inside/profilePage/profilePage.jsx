@@ -35,7 +35,7 @@ import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
-  PROJECT_ASSIGNMENT_ROUTE,
+  ASSIGNMENTS_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
 import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   profilePageProjectAssignmentTab: {
     id: 'ProfilePage.projectAssignmentTab',
-    defaultMessage: 'Project assignment',
+    defaultMessage: 'Assignments',
   },
   profilePageProjectApiKeysTab: {
     id: 'ProfilePage.apiKeys',
@@ -86,7 +86,7 @@ export class ProfilePage extends Component {
   };
 
   static defaultProps = {
-    activeTab: PROJECT_ASSIGNMENT_ROUTE,
+    activeTab: ASSIGNMENTS_ROUTE,
     dispatch: () => {},
     allowDeleteAccount: false,
   };
@@ -129,9 +129,9 @@ export class ProfilePage extends Component {
     } = this.props;
 
     return {
-      [PROJECT_ASSIGNMENT_ROUTE]: {
+      [ASSIGNMENTS_ROUTE]: {
         name: formatMessage(messages.profilePageProjectAssignmentTab),
-        link: this.getRouteLink(PROJECT_ASSIGNMENT_ROUTE),
+        link: this.getRouteLink(ASSIGNMENTS_ROUTE),
         component: <AssignedProjectsBlock />,
       },
       [API_KEYS_ROUTE]: {
