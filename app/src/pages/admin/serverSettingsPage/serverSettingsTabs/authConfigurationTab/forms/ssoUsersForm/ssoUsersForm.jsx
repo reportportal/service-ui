@@ -38,6 +38,15 @@ const messages = defineMessages({
     id: 'SsoUsersForm.formHeader',
     defaultMessage: 'Instance Invitations',
   },
+  ssoOnlyDescription: {
+    id: 'SsoUsersForm.ssoOnlyDescription',
+    defaultMessage: 'New users can be created via SSO only.',
+  },
+  manualInvitesDescription: {
+    id: 'SsoUsersForm.manualInvitesDescription',
+    defaultMessage:
+      'Users can manually send invitations for other users. If enabled new users can be created via SSO only.',
+  },
 });
 
 const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
@@ -55,8 +64,8 @@ const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
 
   const getDescription = () => {
     return enabled
-      ? 'New users can be created via SSO only.'
-      : 'Users can manually send invitations for other users. If enabled new users can be created via SSO only.';
+      ? formatMessage(messages.ssoOnlyDescription)
+      : formatMessage(messages.manualInvitesDescription);
   };
 
   const handleToggle = (value) => {
