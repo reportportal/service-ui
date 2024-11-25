@@ -23,7 +23,10 @@ import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ssoUsersOnlySelector, fetchAppInfoAction } from 'controllers/appInfo';
+import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
+import { fetch } from 'common/utils/fetch';
+import { tokenSelector } from 'controllers/auth';
 import styles from './ssoUsersForm.scss';
 
 const formCx = classNames.bind(formStyles);
@@ -47,9 +50,23 @@ const messages = defineMessages({
     defaultMessage:
       'Users can manually send invitations for other users. If enabled new users can be created via SSO only.',
   },
+  successNotification: {
+    id: 'SsoUsersForm.successNotification',
+    defaultMessage: 'SSO settings have been updated successfully',
+  },
+  errorNotification: {
+    id: 'SsoUsersForm.errorNotification',
+    defaultMessage: 'Failed to update SSO settings',
+  },
 });
 
-const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
+const SsoUsersFormComponent = ({
+  enabled: enabledFromStore,
+  fetchAppInfo,
+  token,
+  dispatchShowSuccessNotification,
+  dispatchShowErrorNotification,
+}) => {
   const { formatMessage } = useIntl();
   const [enabled, setEnabled] = useState(enabledFromStore);
   const inputId = 'ssoUsersToggle';
@@ -65,8 +82,27 @@ const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
   const getDescription = () =>
     formatMessage(enabled ? messages.ssoOnlyDescription : messages.manualInvitesDescription);
 
-  const handleToggle = (value) => {
-    setEnabled(value);
+  const handleToggle = async (value) => {
+    try {
+      await fetch('/api/v1/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+        data: {
+          key: 'server.users.sso',
+          value: value.toString(),
+        },
+      });
+
+      await fetchAppInfo();
+      setEnabled(value);
+      dispatchShowSuccessNotification(formatMessage(messages.successNotification));
+    } catch (error) {
+      dispatchShowErrorNotification(formatMessage(messages.errorNotification));
+      setEnabled(!value);
+    }
   };
 
   return (
@@ -102,6 +138,9 @@ const SsoUsersFormComponent = ({ enabled: enabledFromStore, fetchAppInfo }) => {
 SsoUsersFormComponent.propTypes = {
   enabled: PropTypes.bool,
   fetchAppInfo: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  dispatchShowSuccessNotification: PropTypes.func.isRequired,
+  dispatchShowErrorNotification: PropTypes.func.isRequired,
 };
 
 SsoUsersFormComponent.defaultProps = {
@@ -110,10 +149,13 @@ SsoUsersFormComponent.defaultProps = {
 
 const mapStateToProps = (state) => ({
   enabled: ssoUsersOnlySelector(state),
+  token: tokenSelector(state),
 });
 
-const mapDispatchToProps = {
-  fetchAppInfo: fetchAppInfoAction,
-};
+const mapDispatchToProps = (dispatch) => ({
+  fetchAppInfo: () => dispatch(fetchAppInfoAction()),
+  dispatchShowSuccessNotification: (message) => dispatch(showSuccessNotification({ message })),
+  dispatchShowErrorNotification: (message) => dispatch(showErrorNotification({ message })),
+});
 
 export const SsoUsersForm = connect(mapStateToProps, mapDispatchToProps)(SsoUsersFormComponent);

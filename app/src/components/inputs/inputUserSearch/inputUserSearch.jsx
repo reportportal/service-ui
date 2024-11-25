@@ -65,6 +65,7 @@ export const InputUserSearch = ({
   error,
   touched,
   placeholder,
+  ssoUsersOnly,
 }) => (
   <AsyncAutocomplete
     getURI={getURI(isAdmin, projectId)}
@@ -79,7 +80,7 @@ export const InputUserSearch = ({
     renderOption={renderOption}
     placeholder={placeholder}
     isOptionUnique={isOptionUnique}
-    creatable
+    creatable={!ssoUsersOnly}
     showDynamicSearchPrompt
   />
 );
@@ -92,6 +93,7 @@ InputUserSearch.propTypes = {
   value: PropTypes.object,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   touched: PropTypes.bool,
+  ssoUsersOnly: PropTypes.bool,
 };
 InputUserSearch.defaultProps = {
   isAdmin: false,
@@ -101,4 +103,5 @@ InputUserSearch.defaultProps = {
   value: null,
   error: false,
   touched: false,
+  ssoUsersOnly: false,
 };
