@@ -82,7 +82,10 @@ export const HeaderCell = track()(
         className={cx('header-cell', computedClassName)}
         style={customProps.rawHeaderCellStylesConfig}
       >
-        <div className={cx('title-container')} onClick={sortable ? sortingClickHandler : null}>
+        <div
+          className={cx('title-container', customProps.titleClassName)}
+          onClick={sortable ? sortingClickHandler : null}
+        >
           <div className={cx('filter')} onClick={filterClickHandler}>
             {Parser(FilterIcon)}
           </div>

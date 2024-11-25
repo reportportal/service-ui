@@ -17,6 +17,7 @@
 export const APP_INFO_NAMESPACE = 'appInfo';
 export const ANALYTICS_INSTANCE_KEY = 'server.details.instance';
 export const ANALYTICS_ALL_KEY = 'server.analytics.all';
+export const SSO_USERS_ONLY_KEY = 'server.users.sso';
 export const OLD_HISTORY_KEY = 'history_old';
 export const GA_MEASUREMENT_ID = 'ga_measurement_id';
 export const INSTANCE_TYPE = 'instance_type';

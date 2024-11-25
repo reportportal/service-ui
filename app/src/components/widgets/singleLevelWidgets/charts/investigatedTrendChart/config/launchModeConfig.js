@@ -33,9 +33,6 @@ export const getLaunchModeConfig = ({
 }) => {
   const colors = {};
   const columns = [];
-  // EPMRPP-96393 (GitHub #2381): Changed sorting from -item.number to startTime-based sorting
-  // for consistency across all chart widgets. This ensures chronological ordering
-  // based on actual launch times rather than launch names/numbers.
   const sortedResult = content.sort((a, b) => {
     const startTimeA = new Date(a.startTime);
     const startTimeB = new Date(b.startTime);

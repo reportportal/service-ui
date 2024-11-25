@@ -89,7 +89,7 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
     activeSorting: true,
     sortable: true,
     customProps: {
-      gridHeaderCellStyles: cx('matched-header'),
+      titleClassName: cx('matched-header'),
     },
     sortingEventInfo: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_MATCHED_TESTS_HEADER_CELL,
   });

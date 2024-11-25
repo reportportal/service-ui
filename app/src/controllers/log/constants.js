@@ -15,7 +15,8 @@
  */
 
 import * as logLevels from 'common/constants/logLevels';
-import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
+import { SORTING_ASC } from 'controllers/sorting/constants';
+import { formatSortingString } from 'controllers/sorting/utils';
 
 export const NAMESPACE = 'log';
 export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
