@@ -32,6 +32,7 @@ import {
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
   USER_SUGGESTIONS,
+  SSO_USERS_ONLY_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -58,6 +59,8 @@ export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
+export const ssoUsersOnlySelector = (state) =>
+  extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;

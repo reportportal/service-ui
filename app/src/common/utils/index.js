@@ -58,3 +58,4 @@ export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
 export { createExternalLink } from './createExternalLink';
 export { findAssignedProjectByOrganization } from './findAssignedProjectByOrganization';
+export { combineNameAndEmailToFrom, separateFromIntoNameAndEmail } from './fieldTransformer';
