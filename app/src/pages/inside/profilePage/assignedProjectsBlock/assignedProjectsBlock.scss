@@ -21,12 +21,11 @@
 }
 
 .name-col {
-  display: flex;
-  align-items: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase;
+  width: calc(100% - 130px);
 }
 
 .role-col {
