@@ -21,16 +21,16 @@
 }
 
 .name-col {
-  display: flex;
-  align-items: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase;
+  padding-right: 8px;
 }
 
 .role-col {
   width: 118px;
+  min-width: 118px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
