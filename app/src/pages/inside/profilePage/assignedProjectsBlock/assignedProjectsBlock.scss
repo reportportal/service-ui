@@ -25,11 +25,12 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase;
-  width: calc(100% - 130px);
+  padding-right: 8px;
 }
 
 .role-col {
   width: 118px;
+  min-width: 118px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
