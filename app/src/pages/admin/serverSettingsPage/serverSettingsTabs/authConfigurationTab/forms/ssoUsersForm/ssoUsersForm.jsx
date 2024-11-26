@@ -81,7 +81,7 @@ export const SsoUsersForm = () => {
     setEnabled(value);
 
     try {
-      await fetch(URLS.ssoSettings(), {
+      await fetch(URLS.instanceSettings(), {
         method: 'PUT',
         data: {
           key: 'server.users.sso',
