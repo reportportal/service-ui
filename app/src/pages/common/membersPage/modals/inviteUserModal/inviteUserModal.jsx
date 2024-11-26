@@ -247,6 +247,11 @@ export class InviteUserModal extends Component {
       const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
       if (foundUser) {
         userData.user = makeOptions(data.project, false)({ content: [foundUser] })[0];
+      } else {
+        userData.user = {
+          userLogin: data.email,
+          externalUser: true,
+        };
       }
     }
 
