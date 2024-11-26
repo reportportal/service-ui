@@ -15,10 +15,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -26,7 +25,7 @@ import { ssoUsersOnlySelector, fetchAppInfoAction } from 'controllers/appInfo';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
 import { fetch } from 'common/utils/fetch';
-import { tokenSelector } from 'controllers/auth';
+import { URLS } from 'common/urls';
 import styles from './ssoUsersForm.scss';
 
 const formCx = classNames.bind(formStyles);
@@ -60,20 +59,16 @@ const messages = defineMessages({
   },
 });
 
-const SsoUsersFormComponent = ({
-  enabled: enabledFromStore,
-  fetchAppInfo,
-  token,
-  dispatchShowSuccessNotification,
-  dispatchShowErrorNotification,
-}) => {
+export const SsoUsersForm = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const enabledFromStore = useSelector(ssoUsersOnlySelector);
   const [enabled, setEnabled] = useState(enabledFromStore);
   const inputId = 'ssoUsersToggle';
 
   useEffect(() => {
-    fetchAppInfo();
-  }, [fetchAppInfo]);
+    dispatch(fetchAppInfoAction());
+  }, [dispatch]);
 
   useEffect(() => {
     setEnabled(enabledFromStore);
@@ -83,25 +78,22 @@ const SsoUsersFormComponent = ({
     formatMessage(enabled ? messages.ssoOnlyDescription : messages.manualInvitesDescription);
 
   const handleToggle = async (value) => {
+    setEnabled(value);
+
     try {
-      await fetch('/api/v1/settings', {
+      await fetch(URLS.ssoSettings(), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token,
-        },
         data: {
           key: 'server.users.sso',
           value: value.toString(),
         },
       });
 
-      await fetchAppInfo();
-      setEnabled(value);
-      dispatchShowSuccessNotification(formatMessage(messages.successNotification));
+      await dispatch(fetchAppInfoAction());
+      dispatch(showSuccessNotification({ message: formatMessage(messages.successNotification) }));
     } catch (error) {
-      dispatchShowErrorNotification(formatMessage(messages.errorNotification));
       setEnabled(!value);
+      dispatch(showErrorNotification({ message: formatMessage(messages.errorNotification) }));
     }
   };
 
@@ -134,28 +126,3 @@ const SsoUsersFormComponent = ({
     </div>
   );
 };
-
-SsoUsersFormComponent.propTypes = {
-  enabled: PropTypes.bool,
-  fetchAppInfo: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
-  dispatchShowSuccessNotification: PropTypes.func.isRequired,
-  dispatchShowErrorNotification: PropTypes.func.isRequired,
-};
-
-SsoUsersFormComponent.defaultProps = {
-  enabled: false,
-};
-
-const mapStateToProps = (state) => ({
-  enabled: ssoUsersOnlySelector(state),
-  token: tokenSelector(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchAppInfo: () => dispatch(fetchAppInfoAction()),
-  dispatchShowSuccessNotification: (message) => dispatch(showSuccessNotification({ message })),
-  dispatchShowErrorNotification: (message) => dispatch(showErrorNotification({ message })),
-});
-
-export const SsoUsersForm = connect(mapStateToProps, mapDispatchToProps)(SsoUsersFormComponent);

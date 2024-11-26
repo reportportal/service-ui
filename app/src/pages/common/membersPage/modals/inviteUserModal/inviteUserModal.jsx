@@ -170,7 +170,7 @@ export class InviteUserModal extends Component {
     } = this.props;
     const data = {};
 
-    if (userData.user.externalUser && !this.props.ssoUsersOnly) {
+    if (userData.user.externalUser) {
       data.defaultProject = selectedProject;
       data.email = userData.user.userLogin;
       data.role = userData.role;
@@ -237,7 +237,6 @@ export class InviteUserModal extends Component {
       selectedProject,
       areUserSuggestionsAllowed,
       data: { isProjectSelector },
-      ssoUsersOnly,
     } = this.props;
     const userData = {
       ...data,
@@ -248,11 +247,6 @@ export class InviteUserModal extends Component {
       const foundUser = foundUsers?.content.find(({ email }) => email === data.email);
       if (foundUser) {
         userData.user = makeOptions(data.project, false)({ content: [foundUser] })[0];
-      } else if (!ssoUsersOnly) {
-        userData.user = {
-          userLogin: data.email,
-          externalUser: true,
-        };
       }
     }
 
@@ -260,7 +254,7 @@ export class InviteUserModal extends Component {
     if (res?.errorOccurred) {
       return;
     }
-    if (userData.user.externalUser && !ssoUsersOnly) {
+    if (userData.user.externalUser) {
       this.props.showModalAction({
         id: 'externalUserInvitationModal',
         data: { email: res.email, link: res.backLink },
@@ -296,7 +290,6 @@ export class InviteUserModal extends Component {
     };
 
     const cancelButton = {
-      // Add this definition
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       eventInfo: MEMBERS_PAGE_EVENTS.CANCEL_BTN_INVITE_USER_MODAL,
     };
@@ -315,7 +308,7 @@ export class InviteUserModal extends Component {
           {intl.formatMessage(ssoUsersOnly ? messages.descriptionAssign : messages.description)}
         </p>
         <form className={cx('invite-form')}>
-          {isProjectSelector || areUserSuggestionsAllowed || ssoUsersOnly ? (
+          {isProjectSelector || areUserSuggestionsAllowed ? (
             <ModalField
               label={intl.formatMessage(messages.loginOrEmailLabel)}
               labelWidth={LABEL_WIDTH}
@@ -326,7 +319,7 @@ export class InviteUserModal extends Component {
                     projectId={selectedProject}
                     isAdmin={isAdmin}
                     placeholder={intl.formatMessage(messages.inputPlaceholder)}
-                    ssoUsersOnly={ssoUsersOnly}
+                    creatable={!ssoUsersOnly}
                   />
                 </FieldErrorHint>
               </FieldProvider>
