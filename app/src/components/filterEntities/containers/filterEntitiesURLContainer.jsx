@@ -24,7 +24,6 @@ import { collectFilterEntities, createFilterQuery } from './utils';
 const FilterEntitiesURL = ({
   entities = {},
   updateFilters = () => {},
-  render,
   debounced = true,
   debounceTime = 1000,
   defaultPagination,
@@ -48,10 +47,65 @@ const FilterEntitiesURL = ({
     debounceTime,
   ]);
 
-  return render({
+  return {
     entities,
     onChange: debounced ? debouncedHandleChange : handleChange,
+  };
+};
+
+const filterEntitiesURLForContainer = ({
+  entities = {},
+  updateFilters = () => {},
+  debounced = true,
+  debounceTime = 1000,
+  defaultPagination,
+  prefixQueryKey,
+  render,
+}) => {
+  const filterEntitiesURLParams = FilterEntitiesURL({
+    entities,
+    updateFilters,
+    debounced,
+    debounceTime,
+    defaultPagination,
+    prefixQueryKey,
   });
+  return render(filterEntitiesURLParams);
+};
+
+export const withFilterEntitiesURL = (namespace, prefixQueryKey) => (WrappedComponent) => {
+  const filterEntitiesURL = (props) => {
+    const {
+      entities,
+      defaultPagination,
+      updateFilters,
+      debounced,
+      debounceTime,
+      ...restProps
+    } = props;
+
+    const { entities: filteredEntities, onChange } = FilterEntitiesURL({
+      entities,
+      updateFilters,
+      debounced,
+      debounceTime,
+      defaultPagination,
+      prefixQueryKey,
+    });
+
+    return <WrappedComponent {...restProps} entities={filteredEntities} onChange={onChange} />;
+  };
+
+  return connectRouter(
+    (query) => ({
+      entities: collectFilterEntities(query, prefixQueryKey),
+      defaultPagination: defaultPaginationSelector(),
+    }),
+    {
+      updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
+    },
+    { namespace },
+  )(filterEntitiesURL);
 };
 
 FilterEntitiesURL.propTypes = {
@@ -73,6 +127,6 @@ const createFilterEntitiesURLContainer = (prefixQueryKey) =>
     {
       updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
     },
-  )(FilterEntitiesURL);
+  )(filterEntitiesURLForContainer);
 
 export const FilterEntitiesURLContainer = createFilterEntitiesURLContainer();

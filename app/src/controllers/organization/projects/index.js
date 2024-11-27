@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-export { fetchOrganizationProjectsAction } from './actionCreators';
+export { fetchOrganizationProjectsAction, fetchFilteredProjectAction } from './actionCreators';
 export { projectsReducer } from './reducer';
-export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
+export {
+  projectsPaginationSelector,
+  projectsSelector,
+  loadingSelector,
+  filterQuerySelector,
+} from './selectors';
 export { projectsSagas } from './sagas';
 export {
   DEFAULT_LIMITATION,
@@ -26,4 +31,9 @@ export {
   DEFAULT_QUERY_PARAMS,
   FETCH_ORGANIZATION_PROJECTS,
   SORTING_KEY,
+  FILTERED_PROJECTS,
+  LAST_RUN_DATE_FILTER_NAME,
+  LAUNCHES_FILTER_NAME,
+  TEAMMATES_FILTER_NAME,
+  PROJECT_NAME_FILTER_NAME,
 } from './constants';

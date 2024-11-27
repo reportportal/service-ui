@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
+import {
+  createAlternativeQueryParametersSelector,
+  createQueryParametersSelector,
+} from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
-import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
+import { createSelector } from 'reselect';
+import { getAlternativePaginationAndSortParams, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { getAppliedFilters } from 'controllers/instance/events/utils';
 import { organizationSelector } from '../selectors';
+import { DEFAULT_PAGINATION, FILTERED_PROJECTS, NAMESPACE, SORTING_KEY } from './constants';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
 
@@ -30,4 +36,32 @@ export const querySelector = createAlternativeQueryParametersSelector({
   defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
+});
+
+const createFilterQuerySelector = ({
+  defaultPagination,
+  defaultSorting,
+  sortingKey,
+  namespace,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+      namespace,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return {
+        ...getAlternativePaginationAndSortParams(sort, limit, pageNumber),
+        search_criteria: getAppliedFilters(rest)?.search_criterias,
+      };
+    },
+  );
+
+export const filterQuerySelector = createFilterQuerySelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: FILTERED_PROJECTS,
 });

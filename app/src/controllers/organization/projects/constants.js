@@ -18,6 +18,7 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
 export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
+export const FILTERED_PROJECTS = 'filteredProjects';
 export const NAMESPACE = 'organizationProjects';
 export const CREATE_PROJECT = 'createProject';
 export const DELETE_PROJECT = 'deleteProject';
@@ -53,3 +54,8 @@ export const initialPaginationState = {
 export const ERROR_CODES = {
   PROJECT_EXISTS: 4095,
 };
+
+export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
+export const LAUNCHES_FILTER_NAME = 'launches';
+export const TEAMMATES_FILTER_NAME = 'users';
+export const PROJECT_NAME_FILTER_NAME = 'name';
