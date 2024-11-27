@@ -37,3 +37,4 @@ export {
   TEAMMATES_FILTER_NAME,
   PROJECT_NAME_FILTER_NAME,
 } from './constants';
+export { getFormattedDate } from './utils';
