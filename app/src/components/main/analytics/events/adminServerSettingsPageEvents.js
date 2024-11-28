@@ -38,6 +38,7 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'analytics',
   },
+  // GA3 events
   AUTHORIZATION_CONFIGURATION_TAB: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Click on tab Authorization Configuration',
