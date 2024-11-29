@@ -29,14 +29,20 @@ export const submitAnalyticsBtn = (status) => ({
 });
 
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
+  toggleSsoUsers: (switcherValue) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'sso',
+    switcher: switcherValue ? 'on' : 'off',
+  }),
+  ANALYTICS_TAB: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'analytics',
+  },
+  // GA3 events
   AUTHORIZATION_CONFIGURATION_TAB: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Click on tab Authorization Configuration',
     label: 'Open tab Authorization Configuration',
-  },
-  ANALYTICS_TAB: {
-    ...basicClickEventParametersAdminServerSettingsPage,
-    element_name: 'analytics',
   },
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
