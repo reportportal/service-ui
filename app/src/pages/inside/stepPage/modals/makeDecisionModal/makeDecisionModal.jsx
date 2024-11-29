@@ -390,7 +390,9 @@ const MakeDecision = ({ data }) => {
   const getMakeDecisionTabs = () => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) =>
-        item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        item.id !== itemData.id &&
+        item.issue &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     );
 
     const tabsData = [
