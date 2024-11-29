@@ -26,6 +26,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import formStyles from 'pages/admin/serverSettingsPage/common/formController/formController.scss';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
+import { useTracking } from 'react-tracking';
 import styles from './ssoUsersForm.scss';
 
 const formCx = classNames.bind(formStyles);
@@ -65,6 +66,7 @@ export const SsoUsersForm = () => {
   const enabledFromStore = useSelector(ssoUsersOnlySelector);
   const [enabled, setEnabled] = useState(enabledFromStore);
   const inputId = 'ssoUsersToggle';
+  const { trackEvent } = useTracking();
 
   useEffect(() => {
     dispatch(fetchAppInfoAction());
@@ -79,6 +81,7 @@ export const SsoUsersForm = () => {
 
   const handleToggle = async (value) => {
     setEnabled(value);
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.toggleSsoUsers(value));
 
     try {
       await fetch(URLS.instanceSettings(), {
@@ -114,7 +117,6 @@ export const SsoUsersForm = () => {
                 value={enabled}
                 onChange={handleToggle}
                 mobileDisabled
-                onChangeEventInfo={ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SSO_USERS_SWITCHER}
               />
               <div className={cx('description')} aria-live="polite">
                 {getDescription()}
