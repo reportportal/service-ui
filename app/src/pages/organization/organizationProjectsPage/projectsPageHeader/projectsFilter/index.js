@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS } from './constants';
-
-export const fetchOrganizationsAction = () => ({
-  type: FETCH_ORGANIZATIONS,
-});
-
-export const fetchFilteredOrganizationsAction = () => ({
-  type: FILTERED_ORGANIZATIONS,
-});
+export { ProjectsFilter } from './projectsFilter';

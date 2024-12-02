@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
+import {
+  createAlternativeQueryParametersSelector,
+  createFilterQuerySelector,
+} from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
-import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY } from './constants';
+import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY, FILTERED_ORGANIZATIONS } from './constants';
 
 export const organizationsSelector = (state) => state.organizations || {};
 
@@ -32,4 +35,11 @@ export const querySelector = createAlternativeQueryParametersSelector({
   defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
+});
+
+export const filterQuerySelector = createFilterQuerySelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: FILTERED_ORGANIZATIONS,
 });

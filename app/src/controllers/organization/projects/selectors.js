@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
+import {
+  createAlternativeQueryParametersSelector,
+  createFilterQuerySelector,
+} from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
-import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 import { organizationSelector } from '../selectors';
+import { DEFAULT_PAGINATION, FILTERED_PROJECTS, NAMESPACE, SORTING_KEY } from './constants';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
 
@@ -30,4 +33,11 @@ export const querySelector = createAlternativeQueryParametersSelector({
   defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
+});
+
+export const filterQuerySelector = createFilterQuerySelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: FILTERED_PROJECTS,
 });

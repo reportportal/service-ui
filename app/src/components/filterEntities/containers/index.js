@@ -15,4 +15,4 @@
  */
 
 export { FilterEntitiesContainer } from './filterEntitiesContainer';
-export { FilterEntitiesURLContainer } from './filterEntitiesURLContainer';
+export { FilterEntitiesURLContainer, withFilterEntitiesURL } from './filterEntitiesURLContainer';

@@ -18,8 +18,8 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
-import { querySelector } from './selectors';
-import { FETCH_ORGANIZATIONS, NAMESPACE } from './constants';
+import { filterQuerySelector, querySelector } from './selectors';
+import { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {
   try {
@@ -35,6 +35,21 @@ function* watchFetchOrganizations() {
   yield takeEvery(FETCH_ORGANIZATIONS, fetchOrganizations);
 }
 
+function* fetchFilteredOrganizations() {
+  const filtersParams = yield select(filterQuerySelector);
+
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.organizationSearch(), {
+      method: 'post',
+      data: filtersParams,
+    }),
+  );
+}
+
+function* watchFetchFilteredProjects() {
+  yield takeEvery(FILTERED_ORGANIZATIONS, fetchFilteredOrganizations);
+}
+
 export function* organizationsSagas() {
-  yield all([watchFetchOrganizations()]);
+  yield all([watchFetchOrganizations(), watchFetchFilteredProjects()]);
 }

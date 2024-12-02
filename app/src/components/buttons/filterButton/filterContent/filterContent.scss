@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS } from './constants';
+.filter-popover-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
 
-export const fetchOrganizationsAction = () => ({
-  type: FETCH_ORGANIZATIONS,
-});
+.filter-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-export const fetchFilteredOrganizationsAction = () => ({
-  type: FILTERED_ORGANIZATIONS,
-});
+.actions {
+  display: flex;
+  justify-content: space-between;
+
+  .controls {
+    display: flex;
+    gap: 8px;
+  }
+}

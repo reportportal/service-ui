@@ -17,7 +17,7 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
-import { SORTING_KEY } from 'controllers/sorting/constants';
+import { SORTING_KEY, SORTING_ORDER_KEY } from 'controllers/sorting/constants';
 import { getStorageItem } from 'common/utils/storageUtils';
 import {
   activeProjectSelector,
@@ -31,6 +31,7 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
+import { getAppliedFilters } from 'controllers/instance/events/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -148,8 +149,29 @@ export const createAlternativeQueryParametersSelector = ({
       sortingKey,
       namespace,
     }),
-    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+    ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
       return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
+    },
+  );
+
+export const createFilterQuerySelector = ({
+  defaultPagination,
+  defaultSorting,
+  sortingKey,
+  namespace,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+      namespace,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return {
+        ...getAlternativePaginationAndSortParams(sort, limit, pageNumber),
+        search_criteria: getAppliedFilters(rest)?.search_criterias,
+      };
     },
   );
 

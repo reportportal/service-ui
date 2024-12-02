@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS } from './constants';
-
-export const fetchOrganizationsAction = () => ({
-  type: FETCH_ORGANIZATIONS,
-});
-
-export const fetchFilteredOrganizationsAction = () => ({
-  type: FILTERED_ORGANIZATIONS,
-});
+export { FilterContent } from './filterContent';
