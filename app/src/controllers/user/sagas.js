@@ -126,7 +126,7 @@ function* unassignFromProject({ payload: project }) {
 function* fetchUserWorker() {
   let user;
   try {
-    user = yield call(fetch, URLS.users());
+    user = yield call(fetch, URLS.usersMe());
     yield put(fetchUserSuccessAction(user));
   } catch (err) {
     yield put(fetchUserErrorAction());
