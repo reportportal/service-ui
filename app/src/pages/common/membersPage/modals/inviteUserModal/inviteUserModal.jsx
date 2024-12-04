@@ -36,12 +36,12 @@ import { withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { hideModalAction, showModalAction } from 'controllers/modal';
-import { areUserSuggestionsAllowedSelector } from 'controllers/appInfo';
+import { Input } from 'components/inputs/input';
+import { areUserSuggestionsAllowedSelector, ssoUsersOnlySelector } from 'controllers/appInfo';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { InputUserSearch, makeOptions } from 'components/inputs/inputUserSearch';
-import { Input } from 'components/inputs/input';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import HintIcon from './img/hint-inline.svg';
 import styles from './inviteUserModal.scss';
@@ -64,6 +64,10 @@ const messages = defineMessages({
     defaultMessage:
       'The selected user has the Manager role in organization and will have ‘Can edit’ permissions in the project by default',
   },
+  headerAssignUserModal: {
+    id: 'InviteUserModal.headerAssignUserModal',
+    defaultMessage: 'Assign user',
+  },
   description: {
     id: 'InviteUserModal.description',
     defaultMessage:
@@ -72,6 +76,14 @@ const messages = defineMessages({
   nameOrEmailLabel: {
     id: 'InviteUserModal.nameOrEmailLabel',
     defaultMessage: 'Name or email',
+  },
+  descriptionAssign: {
+    id: 'InviteUserModal.descriptionAssign',
+    defaultMessage: 'Assign user to the project',
+  },
+  loginOrEmailLabel: {
+    id: 'InviteUserModal.loginOrEmailLabel',
+    defaultMessage: 'Login or email',
   },
   emailLabel: {
     id: 'InviteUserModal.emailLabel',
@@ -115,6 +127,7 @@ const inviteFormSelector = formValueSelector(INVITE_USER_FORM);
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
     projectKey: projectKeySelector(state),
+    ssoUsersOnly: ssoUsersOnlySelector(state),
     initialValues: {
       canEdit: false,
       project: urlProjectSlugSelector(state),
@@ -157,6 +170,7 @@ export class InviteUserModal extends Component {
     selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
+    ssoUsersOnly: PropTypes.bool,
     dirty: PropTypes.bool,
     areUserSuggestionsAllowed: PropTypes.bool.isRequired,
     projectName: PropTypes.string.isRequired,
@@ -171,6 +185,7 @@ export class InviteUserModal extends Component {
     selectedProject: '',
     selectedUser: {},
     isAdmin: false,
+    ssoUsersOnly: false,
     dirty: false,
   };
 
@@ -315,6 +330,7 @@ export class InviteUserModal extends Component {
       selectedUser,
       anyTouched,
       invalid,
+      ssoUsersOnly,
     } = this.props;
 
     const okButton = {
@@ -322,6 +338,9 @@ export class InviteUserModal extends Component {
         selectedUser?.userLogin && !selectedUser?.externalUser
           ? COMMON_LOCALE_KEYS.INVITE_AND_ASSIGN
           : COMMON_LOCALE_KEYS.INVITE,
+      ),
+      text: intl.formatMessage(
+        ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE,
       ),
       onClick: () => {
         handleSubmit(this.inviteUserAndCloseModal)();
@@ -339,7 +358,11 @@ export class InviteUserModal extends Component {
 
     return (
       <Modal
-        title={`${intl.formatMessage(messages.headerInviteUserModal)} "${projectName}"`}
+        title={
+          ssoUsersOnly
+            ? intl.formatMessage(messages.headerAssignUserModal)
+            : `${intl.formatMessage(messages.headerInviteUserModal)} "${projectName}"`
+        }
         okButton={okButton}
         cancelButton={cancelButton}
         onClose={this.props.hideModalAction}
@@ -349,7 +372,9 @@ export class InviteUserModal extends Component {
         {selectedUser?.userRole === ADMINISTRATOR && (
           <SystemMessage>{intl.formatMessage(messages.inviteAdmin)}</SystemMessage>
         )}
-        <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
+        <p className={cx('modal-description')}>
+          {intl.formatMessage(ssoUsersOnly ? messages.descriptionAssign : messages.description)}
+        </p>
         <form className={cx('invite-form')}>
           {isProjectSelector || areUserSuggestionsAllowed ? (
             <ModalField
@@ -363,6 +388,7 @@ export class InviteUserModal extends Component {
                     isAdmin={isAdmin}
                     placeholder={intl.formatMessage(messages.inputPlaceholder)}
                     projectKey={projectKey}
+                    creatable={!ssoUsersOnly}
                   />
                 </FieldErrorHint>
               </FieldProvider>
