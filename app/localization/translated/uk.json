@@ -1398,7 +1398,6 @@
   "MembersListTable.viewerRole": "Тільки для перегляду",
   "MembersListTable.youRole": "Ви",
   "MembersPage.notFound": "No members found for ''{filter}''",
-  "MembersPage.title": "Учасники проекту",
   "MembersPageToolbar.assignUser": "Призначити користувача",
   "MembersPageToolbar.inviteUser": "Запросити Користувача",
   "MembersPageToolbar.membersSearchHint": "Ім’я користувача не повинно бути порожнім",

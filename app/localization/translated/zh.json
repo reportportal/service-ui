@@ -1398,7 +1398,6 @@
   "MembersListTable.viewerRole": "View only",
   "MembersListTable.youRole": "You",
   "MembersPage.notFound": "未找到“{filter}”的成员",
-  "MembersPage.title": "项目成员",
   "MembersPageToolbar.assignUser": "Assign User",
   "MembersPageToolbar.inviteUser": "邀请用户",
   "MembersPageToolbar.membersSearchHint": "成员名不能为空",

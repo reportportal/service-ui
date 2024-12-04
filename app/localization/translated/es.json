@@ -1397,7 +1397,6 @@
   "MembersListTable.viewerRole": "View only",
   "MembersListTable.youRole": "You",
   "MembersPage.notFound": "No se encontraron miembros para ''{filter}''",
-  "MembersPage.title": "Miembros del proyecto",
   "MembersPageToolbar.assignUser": "Assign User",
   "MembersPageToolbar.inviteUser": "Invitar Usuario",
   "MembersPageToolbar.membersSearchHint": "El nombre de usuario no debe estar vacío",
