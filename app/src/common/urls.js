@@ -243,7 +243,6 @@ export const URLS = {
   logSearch: (projectKey, itemId) => `${urlBase}${projectKey}/log/search/${itemId}`,
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
   users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
-  usersMe: () => `${urlCommonBase}users/me`,
   userRegistration: () => `${urlCommonBase}users/registration`,
   userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,
@@ -266,7 +265,7 @@ export const URLS = {
   events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlCommonBase}users`,
+  allUsers: () => `${urlCommonBase}users/all`,
 
   exportUsers: (filterEntities) =>
     `${urlCommonBase}users/export${getQueryParams({

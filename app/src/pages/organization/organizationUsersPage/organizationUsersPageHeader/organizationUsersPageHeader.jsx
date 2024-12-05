@@ -47,7 +47,10 @@ export const OrganizationUsersPageHeader = ({
   const isNotEmpty = usersCount > 0;
 
   return (
-    <MembersPageHeader title={formatMessage(messages.organizationUsersTitle)}>
+    <MembersPageHeader
+      title={formatMessage(messages.organizationUsersTitle)}
+      organizationName={organization.name}
+    >
       <div className={cx('actions')}>
         {isNotEmpty && (
           <>
