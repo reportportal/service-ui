@@ -30,8 +30,8 @@ export const ParentInfo = ({ parentItem }) => (
     <div className={cx('icon-holder')}>
       <Duration
         status={parentItem.status}
-        startTime={parentItem.startTime}
-        endTime={parentItem.endTime}
+        startTime={new Date(parentItem.startTime).getTime()}
+        endTime={new Date(parentItem.endTime).getTime()}
         approxTime={parentItem.approximateDuration}
       />
     </div>
