@@ -51,6 +51,7 @@ import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
+import { ProjectSettingsAnalyticsWrapper } from './projectSettingsAnalyticsWrapper';
 
 const cx = classNames.bind(styles);
 
@@ -186,19 +187,21 @@ export const ProjectSettingsPageContainer = () => {
   }, [activeTab, config]);
 
   return (
-    <SettingsLayout navigation={navigation}>
-      <ScrollWrapper resetRequired>
-        <div className={cx('settings-page-content-wrapper')}>
-          {!subPage && (
-            <div className={cx('header')}>
-              <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
-                {headerNodes.children}
-              </Header>
-            </div>
-          )}
-          <div className={cx('content', { 'main-page': !subPage })}>{content}</div>
-        </div>
-      </ScrollWrapper>
-    </SettingsLayout>
+    <ProjectSettingsAnalyticsWrapper>
+      <SettingsLayout navigation={navigation}>
+        <ScrollWrapper resetRequired>
+          <div className={cx('settings-page-content-wrapper')}>
+            {!subPage && (
+              <div className={cx('header')}>
+                <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
+                  {headerNodes.children}
+                </Header>
+              </div>
+            )}
+            <div className={cx('content', { 'main-page': !subPage })}>{content}</div>
+          </div>
+        </ScrollWrapper>
+      </SettingsLayout>
+    </ProjectSettingsAnalyticsWrapper>
   );
 };
