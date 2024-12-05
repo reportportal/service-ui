@@ -318,4 +318,5 @@ export const URLS = {
   clusterByLaunchId: (projectKey, launchId, query) =>
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
+  instanceSettings: () => `${urlBase}settings`,
 };
