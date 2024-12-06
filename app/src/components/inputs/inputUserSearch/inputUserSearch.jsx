@@ -40,18 +40,22 @@ export const makeOptions = (isAdmin, projectKey, { organizationSlug, projectSlug
   content: options,
 }) =>
   options.map((option) => {
-    const isAssignedProject = !!findAssignedProjectByOrganization(
-      option.assignedProjects,
-      option.assignedOrganizations[organizationSlug]?.organizationId,
-      projectSlug,
-    );
+    let isAssignedProject = false;
+
+    if (isAdmin) {
+      isAssignedProject = !!findAssignedProjectByOrganization(
+        option.assignedProjects,
+        option.assignedOrganizations[organizationSlug]?.organizationId,
+        projectSlug,
+      );
+    }
 
     return {
       userName: option.fullName || '',
       userLogin: isAdmin ? option.userId : option.login,
       email: option.email || '',
-      disabled: isAdmin ? isAssignedProject : false,
-      isAssigned: isAdmin ? isAssignedProject : false,
+      disabled: isAssignedProject,
+      isAssigned: isAssignedProject,
       userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
       assignedProjects: option.assignedProjects || {},
       assignedOrganizations: option.assignedOrganizations || {},
