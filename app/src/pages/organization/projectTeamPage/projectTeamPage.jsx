@@ -27,6 +27,7 @@ import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useTracking } from 'react-tracking';
+import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
 import { messages } from '../common/membersPage/membersPageHeader/messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
@@ -47,11 +48,7 @@ export const ProjectTeamPage = () => {
   const isEmptyMembers = members.length === 0;
 
   useEffect(() => {
-    trackEvent({
-      action: 'pageview',
-      page: 'project_team',
-      place: 'project_team',
-    });
+    trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
   }, []);
 
   const onInvite = () => {

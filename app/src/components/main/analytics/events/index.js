@@ -19,7 +19,12 @@ export {
   FILTERS_PAGE,
   getAddEditFilterModalEvents,
 } from './filtersPageEvents';
-export { LAUNCHES_PAGE_EVENTS, LAUNCHES_MODAL_EVENTS, LAUNCHES_PAGE } from './launchesPageEvents';
+export {
+  LAUNCHES_PAGE_EVENTS,
+  LAUNCHES_MODAL_EVENTS,
+  LAUNCHES_PAGE,
+  LAUNCHES_PAGE_VIEWS,
+} from './launchesPageEvents';
 export { LOGIN_PAGE_EVENTS, LOGIN_PAGE } from './loginPageEvents';
 export { SIDEBAR_EVENTS, ADMIN_SIDEBAR_EVENTS, FOOTER_EVENTS } from './sidebarFooterEvents';
 export { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from './membersPageEvents';

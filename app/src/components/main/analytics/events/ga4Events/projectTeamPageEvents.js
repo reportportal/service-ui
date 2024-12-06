@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-export const GENERAL = 'general';
-export const NOTIFICATIONS = 'notifications';
-export const INTEGRATIONS = 'integrations';
-export const DEFECT = 'defect';
-export const ANALYSIS = 'analyzer';
-export const DEMO_DATA = 'demoData';
-export const AUTHORIZATION_CONFIGURATION = 'auth';
-export const ANALYTICS = 'analytics';
-export const PATTERN_ANALYSIS = 'patternAnalysis';
+const PROJECT_TEAM = 'project_team';
+
+export const PROJECT_TEAM_PAGE_VIEWS = {
+  PROJECT_TEAM: {
+    action: 'pageview',
+    page: PROJECT_TEAM,
+    place: PROJECT_TEAM,
+  },
+};

@@ -20,15 +20,10 @@ import { getBasicClickEventParameters, normalizeEventParameter } from '../common
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
-const INDEX_SETTINGS = 'index_settings';
-const AUTO_ANALYSIS = 'auto_analysis';
-const SIMILAR_ITEMS = 'similar_items';
-const UNIQUE_ERRORS = 'unique_errors';
 const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
 const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
-const DEMO_DATA = 'demo_data';
 const GENERAL = 'general';
 const BASIC_EVENT_PARAMETERS_ANALYZER_TAB = getBasicClickEventParameters(PROJECT_SETTINGS);
 const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
@@ -51,6 +46,16 @@ const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
 };
 
 const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
+
+export const PROJECT_SETTINGS_VIEWS = {
+  getProjectSettingsPageView: (settingsTab, subTab) => ({
+    action: 'pageview',
+    page: PROJECT_SETTINGS,
+    place: subTab
+      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      : `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}`,
+  }),
+};
 
 export const PROJECT_SETTINGS_GENERAL_TAB_EVENTS = {
   CLICK_SUBMIT: (inactivityTimeout, type) => ({
@@ -287,47 +292,4 @@ export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
     ...(place && { place }),
     link_name: 'documentation',
   }),
-};
-
-export const PROJECT_SETTINGS_PAGES = {
-  GENERAL: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${GENERAL}`,
-  },
-  DEFECT_TYPES: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${DEFECT_TYPES}`,
-  },
-  ANALYZER_INDEX_SETTINGS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${ANALYZER}_${INDEX_SETTINGS}`,
-  },
-  ANALYZER_AUTO_ANALYSIS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${ANALYZER}_${AUTO_ANALYSIS}`,
-  },
-  ANALYZER_SIMILAR_ITEMS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${ANALYZER}_${SIMILAR_ITEMS}`,
-  },
-  ANALYZER_UNIQUE_ERRORS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${ANALYZER}_${UNIQUE_ERRORS}`,
-  },
-  NOTIFICATIONS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${NOTIFICATIONS}`,
-  },
-  INTEGRATIONS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${INTEGRATIONS}`,
-  },
-  PATTERN_ANALYSIS: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${PATTERN_ANALYSIS}`,
-  },
-  DEMO_DATA: {
-    page: PROJECT_SETTINGS,
-    place: `${PROJECT_SETTINGS}_${DEMO_DATA}`,
-  },
 };
