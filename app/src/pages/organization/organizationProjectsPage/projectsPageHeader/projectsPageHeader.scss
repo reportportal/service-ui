@@ -62,6 +62,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 16px;
 
     i {
       display: flex;
@@ -70,11 +71,6 @@
 
       &.search-icon {
         width: 40px;
-        height: 36px;
-      }
-
-      &.filters-icon {
-        width: 57px;
         height: 36px;
       }
 

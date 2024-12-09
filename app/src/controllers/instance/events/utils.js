@@ -57,5 +57,7 @@ export const getAppliedFilters = (filters, projectKey) => {
     };
   });
 
-  return { search_criterias: [...appliedFilters, projectIdFilterParam] };
+  return {
+    search_criterias: [...appliedFilters, ...(projectKey ? [projectIdFilterParam] : [])],
+  };
 };

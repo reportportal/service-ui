@@ -20,17 +20,20 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { fetchOrganizationBySlugAction } from '..';
-import { querySelector } from './selectors';
-import { activeOrganizationSelector } from '../selectors';
-import { fetchOrganizationProjectsAction } from './actionCreators';
+import { getFormattedDate } from 'controllers/organization/projects/utils';
 import {
+  FILTERED_PROJECTS,
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
   ERROR_CODES,
   NAMESPACE,
   DELETE_PROJECT,
+  LAST_RUN_DATE_FILTER_NAME,
 } from './constants';
+import { fetchOrganizationBySlugAction } from '..';
+import { filterQuerySelector, querySelector } from './selectors';
+import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
+import { fetchOrganizationProjectsAction } from './actionCreators';
 
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
@@ -116,6 +119,37 @@ function* deleteProject({ payload: { projectId, projectName } }) {
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
 }
+
+function* fetchFilteredProjects() {
+  const activeOrganizationId = yield select(activeOrganizationIdSelector);
+  const filtersParams = yield select(filterQuerySelector);
+  const { search_criteria: searchCriteria } = filtersParams;
+
+  const lastRunDateFilterIndex = Object.values(searchCriteria).findIndex(
+    (el) => el.filter_key === LAST_RUN_DATE_FILTER_NAME,
+  );
+  if (lastRunDateFilterIndex !== -1) {
+    searchCriteria[lastRunDateFilterIndex].value = getFormattedDate(
+      searchCriteria[lastRunDateFilterIndex].value,
+    );
+  }
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.filterOrganizationProjects(activeOrganizationId), {
+      method: 'post',
+      data: { ...filtersParams, ...searchCriteria },
+    }),
+  );
+}
+
+function* watchFetchFilteredProjects() {
+  yield takeEvery(FILTERED_PROJECTS, fetchFilteredProjects);
+}
+
 export function* projectsSagas() {
-  yield all([watchFetchProjects(), watchCreateProject(), watchDeleteProject()]);
+  yield all([
+    watchFetchProjects(),
+    watchCreateProject(),
+    watchDeleteProject(),
+    watchFetchFilteredProjects(),
+  ]);
 }

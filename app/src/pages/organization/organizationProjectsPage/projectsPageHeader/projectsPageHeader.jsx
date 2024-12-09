@@ -21,13 +21,14 @@ import Parser from 'html-react-parser';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
-import { loadingSelector } from 'controllers/organization/projects';
+import { FILTERED_PROJECTS, loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
+import { FilterPopover } from 'pages/organization/organizationProjectsPage/projectsPageHeader/projectsFilterPopover';
+import { withFilterEntitiesURL } from 'components/filterEntities/containers';
 import projectsIcon from './img/projects-inline.svg';
 import styles from './projectsPageHeader.scss';
 import { messages } from '../messages';
@@ -39,11 +40,15 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
+const FiltersFields = withFilterEntitiesURL(FILTERED_PROJECTS)(FilterPopover);
+
 export const ProjectsPageHeader = ({
   hasPermission,
   onCreateProject,
   searchValue,
   setSearchValue,
+  appliedFiltersCount,
+  setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
@@ -95,7 +100,11 @@ export const ProjectsPageHeader = ({
                 setSearchValue={setSearchValue}
                 placeholder={formatMessage(messages.searchPlaceholder)}
               />
-              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+              <FiltersFields
+                debounced={false}
+                appliedFiltersCount={appliedFiltersCount}
+                setAppliedFiltersCount={setAppliedFiltersCount}
+              />
             </div>
           )}
           {isNotEmpty && hasPermission && (
@@ -114,6 +123,8 @@ ProjectsPageHeader.propTypes = {
   onCreateProject: PropTypes.func.isRequired,
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
+  appliedFiltersCount: PropTypes.number,
+  setAppliedFiltersCount: PropTypes.func,
 };
 
 ProjectsPageHeader.defaultProps = {

@@ -129,6 +129,8 @@ export const URLS = {
     `${urlCommonBase}organizations${getQueryParams(preferencesObj)}`,
   organizationProjects: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/projects${getQueryParams(preferencesObj)}`,
+  filterOrganizationProjects: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/projects/searches`,
   organizationUsers: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
   projectDelete: ({ organizationId, projectId }) =>

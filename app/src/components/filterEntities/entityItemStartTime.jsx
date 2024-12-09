@@ -31,7 +31,7 @@ const endOfToday = moment()
 export const getTimeDateRangePresets = (tracking, events) => [
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Today'))}>
+      <div onClick={() => tracking?.trackEvent(events?.getChosenDate('Today'))}>
         <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />
       </div>
     ),
