@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   LAUNCHES_FILTER_NAME,
@@ -24,8 +25,8 @@ import {
   getContainmentComparisons,
   getRangeComparisons,
   getTimeRange,
-} from 'components/buttons/filterButton';
-import { FilterButton } from 'components/buttons/filterButton/filterButton';
+} from 'components/main/filterButton';
+import { FilterButton } from 'components/main/filterButton/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { messages } from './messages';
 
@@ -36,6 +37,7 @@ export const ProjectsFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
@@ -85,7 +87,7 @@ export const ProjectsFilter = ({
       setAppliedFiltersCount={setAppliedFiltersCount}
       definedFilters={entities}
       onFilterChange={onFilterChange}
-      filteredAction={fetchFilteredProjectAction}
+      filteredAction={() => dispatch(fetchFilteredProjectAction())}
     />
   );
 };

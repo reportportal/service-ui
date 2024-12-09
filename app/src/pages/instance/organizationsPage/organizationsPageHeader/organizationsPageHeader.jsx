@@ -15,17 +15,16 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { BaseIconButton } from '@reportportal/ui-kit';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
-import { FILTERED_ORGANIZATIONS, NAMESPACE } from 'controllers/instance/organizations/constants';
-import { useSelector } from 'react-redux';
+import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { withFilterEntitiesURL } from 'components/filterEntities/containers';
@@ -41,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(FILTERED_ORGANIZATIONS)(OrganizationsFilter);
+const FiltersFields = withFilterEntitiesURL(NAMESPACE)(OrganizationsFilter);
 
 export const OrganizationsPageHeader = ({
   isEmpty,
@@ -70,7 +69,6 @@ export const OrganizationsPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
-              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
               <FiltersFields
                 debounced={false}
                 appliedFiltersCount={appliedFiltersCount}

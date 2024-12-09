@@ -36,7 +36,6 @@ const FilterEntitiesURL = ({
       }
       const filterQuery = createFilterQuery(newEntities, entities, prefixQueryKey);
       if (!isEmptyObject(filterQuery)) {
-        console.log('filterQuery', filterQuery);
         updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
       }
     },

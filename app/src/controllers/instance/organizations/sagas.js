@@ -19,7 +19,7 @@ import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
 import { filterQuerySelector, querySelector } from './selectors';
-import { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
+import { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
 
 function* fetchOrganizations() {
   try {
@@ -47,7 +47,7 @@ function* fetchFilteredOrganizations() {
 }
 
 function* watchFetchFilteredProjects() {
-  yield takeEvery(FILTERED_ORGANIZATIONS, fetchFilteredOrganizations);
+  yield takeEvery(FETCH_FILTERED_ORGANIZATIONS, fetchFilteredOrganizations);
 }
 
 export function* organizationsSagas() {

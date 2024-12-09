@@ -26,7 +26,7 @@ import {
   ERROR_CODES,
   NAMESPACE,
   DELETE_PROJECT,
-  FILTERED_PROJECTS,
+  FETCH_FILTERED_PROJECTS,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { filterQuerySelector, querySelector } from './selectors';
@@ -123,7 +123,7 @@ function* fetchFilteredProjects() {
   const filtersParams = yield select(filterQuerySelector);
 
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.filterOrganizationProjects(activeOrganizationId), {
+    fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
       method: 'post',
       data: filtersParams,
     }),
@@ -131,7 +131,7 @@ function* fetchFilteredProjects() {
 }
 
 function* watchFetchFilteredProjects() {
-  yield takeEvery(FILTERED_PROJECTS, fetchFilteredProjects);
+  yield takeEvery(FETCH_FILTERED_PROJECTS, fetchFilteredProjects);
 }
 
 export function* projectsSagas() {

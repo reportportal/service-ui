@@ -15,7 +15,6 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Popover } from '@reportportal/ui-kit';
@@ -36,12 +35,12 @@ export const FilterButton = ({
   filteredAction,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useDispatch();
   const [filters, setFilters] = useState(defaultFilters);
   const [initialFilters, setInitialFilters] = useState(defaultFilters);
 
   useEffect(() => {
-    dispatch(filteredAction());
+    setAppliedFiltersCount(Object.keys(definedFilters).length);
+    filteredAction();
   }, []);
 
   useEffect(() => {

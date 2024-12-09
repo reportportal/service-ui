@@ -17,10 +17,10 @@
 import classNames from 'classnames/bind';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useMemo } from 'react';
 import { FilterInput } from './filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
@@ -38,7 +38,6 @@ export const FilterContent = ({
   filteredAction,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const closePopover = () => {
     setIsOpen(false);
@@ -63,12 +62,18 @@ export const FilterContent = ({
     }, {});
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
-    dispatch(filteredAction());
+    filteredAction();
     setIsOpen(false);
   };
 
-  const isDefaultFilters = isEqual(defaultFilters, filters);
-  const isDefinedFilters = isEqual(initialFilters, filters);
+  const isDefaultFilters = useMemo(() => isEqual(defaultFilters, filters), [
+    defaultFilters,
+    filters,
+  ]);
+  const isDefinedFilters = useMemo(() => isEqual(initialFilters, filters), [
+    initialFilters,
+    filters,
+  ]);
 
   return (
     <div className={cx('filter-popover-content')}>

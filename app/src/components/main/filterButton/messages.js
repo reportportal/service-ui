@@ -61,4 +61,8 @@ export const messages = defineMessages({
     id: 'FilterButton.notContains',
     defaultMessage: 'Not contains',
   },
+  helpText: {
+    id: 'FilterButton.helpText',
+    defaultMessage: 'Only digits are allowed',
+  },
 });

@@ -18,7 +18,7 @@ import {
   CREATE_PROJECT,
   DELETE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
-  FILTERED_PROJECTS,
+  FETCH_FILTERED_PROJECTS,
 } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
@@ -39,5 +39,5 @@ export const deleteProjectAction = (project) => ({
 });
 
 export const fetchFilteredProjectAction = () => ({
-  type: FILTERED_PROJECTS,
+  type: FETCH_FILTERED_PROJECTS,
 });

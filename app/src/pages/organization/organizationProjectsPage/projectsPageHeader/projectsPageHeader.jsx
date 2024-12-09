@@ -25,11 +25,7 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
-import {
-  SEARCH_KEY,
-  NAMESPACE,
-  FILTERED_PROJECTS,
-} from 'controllers/organization/projects/constants';
+import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import { withFilterEntitiesURL } from 'components/filterEntities/containers';
 import projectsIcon from './img/projects-inline.svg';
@@ -44,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(FILTERED_PROJECTS)(ProjectsFilter);
+const FiltersFields = withFilterEntitiesURL(NAMESPACE)(ProjectsFilter);
 
 export const ProjectsPageHeader = ({
   hasPermission,

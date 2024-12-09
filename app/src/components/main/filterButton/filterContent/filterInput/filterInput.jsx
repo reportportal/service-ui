@@ -22,47 +22,60 @@ import styles from './filterInput.scss';
 const cx = classNames.bind(styles);
 
 export const FilterInput = ({ filter, setFilters }) => {
-  const { filterName, options, value, condition, placeholder, title, withField } = filter;
+  const { filterName, options, value, condition, placeholder, title, withField, helpText } = filter;
+
+  const onChangeOption = (newValue) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: {
+        ...filter,
+        ...(withField ? { condition: newValue } : { value: newValue }),
+      },
+    }));
+  };
+
+  const onTextFieldChange = ({ target }) => {
+    if (helpText && !Number(target.value)) {
+      return;
+    }
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: { ...filter, value: target.value },
+    }));
+  };
+
+  const onClear = () => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: { ...filter, value: '' },
+    }));
+  };
 
   return (
-    <div className={cx('filter-item')}>
+    <div className={cx('filter-item', { 'with-help-text': helpText })}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
         <Dropdown
           options={options}
           value={withField ? condition : value}
-          onChange={(newValue) => {
-            setFilters((prevFilters) => ({
-              ...prevFilters,
-              [filterName]: {
-                ...filter,
-                ...(withField ? { condition: newValue } : { value: newValue }),
-              },
-            }));
-          }}
+          onChange={onChangeOption}
           isListWidthLimited
           className={cx({ dropdown: withField })}
           placeholder={placeholder}
         />
         {withField && (
-          <FieldText
-            className={cx('input-field')}
-            placeholder={placeholder}
-            value={value}
-            onChange={({ target }) => {
-              setFilters((prevFilters) => ({
-                ...prevFilters,
-                [filterName]: { ...filter, value: target.value },
-              }));
-            }}
-            onClear={() => {
-              setFilters((prevFilters) => ({
-                ...prevFilters,
-                [filterName]: { ...filter, value: '' },
-              }));
-            }}
-            clearable
-          />
+          <div className={cx('input-field-container')}>
+            <FieldText
+              className={cx('input-field')}
+              placeholder={placeholder}
+              value={value}
+              onChange={onTextFieldChange}
+              onClear={onClear}
+              clearable
+              helpText={helpText}
+            />
+          </div>
         )}
       </div>
     </div>

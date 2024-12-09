@@ -19,7 +19,7 @@ import {
   createFilterQuerySelector,
 } from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
-import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY, FILTERED_ORGANIZATIONS } from './constants';
+import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY } from './constants';
 
 export const organizationsSelector = (state) => state.organizations || {};
 
@@ -41,5 +41,5 @@ export const filterQuerySelector = createFilterQuerySelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,
-  namespace: FILTERED_ORGANIZATIONS,
+  namespace: NAMESPACE,
 });

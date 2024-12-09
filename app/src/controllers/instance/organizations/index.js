@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { FETCH_ORGANIZATIONS, FILTERED_ORGANIZATIONS } from './constants';
+export { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS } from './constants';
 export { fetchOrganizationsAction, fetchFilteredOrganizationsAction } from './actionCreators';
 export { organizationsReducer } from './reducer';
 export {

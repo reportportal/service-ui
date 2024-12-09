@@ -122,15 +122,15 @@ export const URLS = {
   login: () => `${uatBase}sso/oauth/token`,
   sessionToken: () => `${uatBase}sso/me`,
 
-  apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
-  apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
+  apiKeys: (userId) => `${urlBase}users/${userId}/api-keys`,
+  apiKeyById: (userId, apiKeyId) => `${urlBase}users/${userId}/api-keys/${apiKeyId}`,
 
   organizationList: (preferencesObj = {}) =>
     `${urlCommonBase}organizations${getQueryParams(preferencesObj)}`,
-  organizationSearch: () => `${urlCommonBase}organizations/searches`,
+  organizationSearches: () => `${urlCommonBase}organizations/searches`,
   organizationProjects: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/projects${getQueryParams(preferencesObj)}`,
-  filterOrganizationProjects: (organizationId) =>
+  organizationProjectsSearches: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/projects/searches`,
   organizationUsers: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
@@ -155,7 +155,7 @@ export const URLS = {
       term: searchTerm,
     })}`,
   searchUsers: (term) =>
-    `${urlCommonBase}users/search${getQueryParams({
+    `${urlBase}users/search${getQueryParams({
       term,
     })}`,
   projectAddPattern: (projectKey) => `${urlBase}${projectKey}/settings/pattern`,
@@ -245,17 +245,17 @@ export const URLS = {
     })}`,
   logSearch: (projectKey, itemId) => `${urlBase}${projectKey}/log/search/${itemId}`,
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
-  users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
-  userRegistration: () => `${urlCommonBase}users/registration`,
-  userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
-  userPasswordReset: () => `${urlCommonBase}users/password/reset`,
-  userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
-  userPasswordRestore: () => `${urlCommonBase}users/password/restore`,
-  userChangePassword: () => `${urlCommonBase}users/password/change`,
+  users: (ids = []) => `${urlBase}users?ids=${ids.join(',')}`,
+  userRegistration: () => `${urlBase}users/registration`,
+  userValidateRegistrationInfo: () => `${urlBase}users/registration/info`,
+  userPasswordReset: () => `${urlBase}users/password/reset`,
+  userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
+  userPasswordRestore: () => `${urlBase}users/password/restore`,
+  userChangePassword: () => `${urlBase}users/password/change`,
   userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
-  userInfo: (userId) => `${urlCommonBase}users/${userId}`,
+  userInfo: (userId) => `${urlBase}users/${userId}`,
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
-  userInviteExternal: () => `${urlCommonBase}users/bid`,
+  userInviteExternal: () => `${urlBase}users/bid`,
   userUnassign: (projectKey) => `${urlBase}project/${projectKey}/unassign`,
 
   generateDemoData: (projectKey) => `${urlBase}demo/${projectKey}/generate`,
@@ -268,7 +268,7 @@ export const URLS = {
   events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlCommonBase}users/all`,
+  allUsers: () => `${urlBase}users/all`,
 
   exportUsers: (filterEntities) =>
     `${urlCommonBase}users/export${getQueryParams({

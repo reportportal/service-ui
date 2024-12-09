@@ -16,6 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import {
   LAUNCHES_FILTER_NAME,
   FILTER_NAME,
@@ -24,8 +25,9 @@ import {
   getContainmentComparisons,
   getRangeComparisons,
   getTimeRange,
-} from 'components/buttons/filterButton';
-import { FilterButton } from 'components/buttons/filterButton/filterButton';
+  messages as helpMessage,
+} from 'components/main/filterButton';
+import { FilterButton } from 'components/main/filterButton/filterButton';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { messages } from './messages';
 
@@ -36,6 +38,7 @@ export const OrganizationsFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
@@ -56,6 +59,7 @@ export const OrganizationsFilter = ({
       placeholder: formatMessage(messages.launchesPlaceholder),
       options: rangeComparisons,
       condition: rangeComparisons[0].value,
+      helpText: formatMessage(helpMessage.helpText),
       withField: true,
     },
     [TEAMMATES_FILTER_NAME]: {
@@ -65,6 +69,7 @@ export const OrganizationsFilter = ({
       placeholder: formatMessage(messages.usersPlaceholder),
       options: rangeComparisons,
       condition: rangeComparisons[0].value,
+      helpText: formatMessage(helpMessage.helpText),
       withField: true,
     },
     [FILTER_NAME]: {
@@ -85,7 +90,7 @@ export const OrganizationsFilter = ({
       setAppliedFiltersCount={setAppliedFiltersCount}
       definedFilters={entities}
       onFilterChange={onFilterChange}
-      filteredAction={fetchFilteredOrganizationsAction}
+      filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
     />
   );
 };
