@@ -38,14 +38,14 @@ export const getTimeRange = (formatMessage) => [
 ];
 
 export const getRangeComparisons = (formatMessage) => [
-  { label: formatMessage(messages.equals), value: CONDITION_EQ },
-  { label: formatMessage(messages.greaterOrEqual), value: CONDITION_GREATER_EQ },
-  { label: formatMessage(messages.lessOrEqual), value: CONDITION_LESS_EQ },
+  { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
+  { label: formatMessage(messages.greaterOrEqual), value: CONDITION_GREATER_EQ.toUpperCase() },
+  { label: formatMessage(messages.lessOrEqual), value: CONDITION_LESS_EQ.toUpperCase() },
 ];
 
 export const getContainmentComparisons = (formatMessage) => [
-  { label: formatMessage(messages.equals), value: CONDITION_EQ },
-  { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ },
-  { label: formatMessage(messages.contains), value: CONDITION_CNT },
-  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT_EVENTS },
+  { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
+  { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ.toUpperCase() },
+  { label: formatMessage(messages.contains), value: CONDITION_CNT.toUpperCase() },
+  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT_EVENTS.toUpperCase() },
 ];
