@@ -39,7 +39,7 @@ function* fetchFilteredOrganizations() {
   const filtersParams = yield select(filterQuerySelector);
 
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.organizationSearch(), {
+    fetchDataAction(NAMESPACE)(URLS.organizationSearches(), {
       method: 'post',
       data: filtersParams,
     }),
