@@ -91,13 +91,6 @@ export const OrganizationProjectsPage = () => {
   };
 
   const getEmptyPageState = () => {
-    if (organizationLoading || projectsLoading) {
-      return (
-        <div className={cx('loader')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
     return searchValue === null ? (
       <EmptyPageState
         hasPermission={hasPermission}
@@ -119,7 +112,15 @@ export const OrganizationProjectsPage = () => {
   };
 
   const renderContent = () => {
-    if (isProjectsEmpty || organizationLoading || projectsLoading) {
+    if (organizationLoading || projectsLoading) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    if (isProjectsEmpty) {
       return getEmptyPageState();
     }
 
