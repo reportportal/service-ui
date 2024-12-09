@@ -25,6 +25,7 @@ import {
   getContainmentComparisons,
   getRangeComparisons,
   getTimeRange,
+  messages as helpMessage,
 } from 'components/main/filterButton';
 import { FilterButton } from 'components/main/filterButton/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
@@ -60,6 +61,7 @@ export const ProjectsFilter = ({
       placeholder: formatMessage(messages.launchesPlaceholder),
       options: rangeComparisons,
       condition: rangeComparisons[0].value,
+      helpText: formatMessage(helpMessage.helpText),
       withField: true,
     },
     [TEAMMATES_FILTER_NAME]: {
@@ -69,6 +71,7 @@ export const ProjectsFilter = ({
       placeholder: formatMessage(messages.usersPlaceholder),
       options: rangeComparisons,
       condition: rangeComparisons[0].value,
+      helpText: formatMessage(helpMessage.helpText),
       withField: true,
     },
     [FILTER_NAME]: {
