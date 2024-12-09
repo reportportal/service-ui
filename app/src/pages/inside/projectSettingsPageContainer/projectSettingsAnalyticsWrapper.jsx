@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { payloadSelector } from 'controllers/pages';
@@ -23,30 +23,13 @@ import { PROJECT_SETTINGS_VIEWS } from 'components/main/analytics/events/ga4Even
 export const ProjectSettingsAnalyticsWrapper = ({ children }) => {
   const { trackEvent } = useTracking();
   const payload = useSelector(payloadSelector);
-  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    const clearTimeoutIfNeeded = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-
-    if (!payload.settingsTab) {
-      return clearTimeoutIfNeeded;
-    }
-
-    timeoutRef.current = setTimeout(() => {
-      if ('subTab' in payload && !payload.subTab) {
-        return;
-      }
-
+    if (payload.settingsTab) {
       trackEvent(
         PROJECT_SETTINGS_VIEWS.getProjectSettingsPageView(payload.settingsTab, payload.subTab),
       );
-    }, 0);
-
-    return clearTimeoutIfNeeded;
+    }
   }, [payload, trackEvent]);
 
   return children;

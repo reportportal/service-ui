@@ -131,7 +131,7 @@ export const ProjectSettingsPageContainer = () => {
       },
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
-        link: createTabLink(ANALYSIS),
+        link: createTabLink(ANALYSIS, { subTab: 'indexSettings' }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
         ),
