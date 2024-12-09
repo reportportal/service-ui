@@ -119,15 +119,7 @@ export const OrganizationProjectsPage = () => {
   };
 
   const renderContent = () => {
-    if (organizationLoading || projectsLoading) {
-      return (
-        <div className={cx('loader')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
-
-    if (isProjectsEmpty) {
+    if (isProjectsEmpty || organizationLoading || projectsLoading) {
       return getEmptyPageState();
     }
 
