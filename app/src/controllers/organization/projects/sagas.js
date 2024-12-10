@@ -20,6 +20,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { updateFormatDate } from 'components/filterEntities/utils';
 import {
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
@@ -121,6 +122,7 @@ function* watchDeleteProject() {
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const filtersParams = yield select(filterQuerySelector);
+  updateFormatDate(filtersParams);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {

@@ -29,6 +29,7 @@ import {
 } from 'components/main/filterButton';
 import { FilterButton } from 'components/main/filterButton/filterButton';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import { messages } from './messages';
 
 export const OrganizationsFilter = ({
@@ -50,6 +51,7 @@ export const OrganizationsFilter = ({
       value: timeRange[0].value,
       title: formatMessage(messages.lastRunDate),
       options: timeRange,
+      condition: CONDITION_BETWEEN.toUpperCase(),
       placeholder: formatMessage(messages.lastRunDatePlaceholder),
     },
     [LAUNCHES_FILTER_NAME]: {

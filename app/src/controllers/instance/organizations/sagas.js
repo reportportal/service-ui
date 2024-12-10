@@ -18,6 +18,7 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
+import { updateFormatDate } from 'components/filterEntities/utils';
 import { filterQuerySelector, querySelector } from './selectors';
 import { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
 
@@ -37,7 +38,7 @@ function* watchFetchOrganizations() {
 
 function* fetchFilteredOrganizations() {
   const filtersParams = yield select(filterQuerySelector);
-
+  updateFormatDate(filtersParams);
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationSearches(), {
       method: 'post',
