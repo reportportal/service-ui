@@ -62,7 +62,7 @@ const getFormattedDate = (value) => {
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(endOfToday)};${utcString}`;
 };
 
-export const updateFormatDate = (filtersParams) => {
+export const prepareQueryFilters = (filtersParams) => {
   const { limit, sort, offset, order, ...rest } = filtersParams;
 
   const searchCriteria = getAppliedFilters(rest)?.search_criterias;

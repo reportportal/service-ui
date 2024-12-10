@@ -33,10 +33,3 @@ export const querySelector = createAlternativeQueryParametersSelector({
   sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
 });
-
-export const filterQuerySelector = createAlternativeQueryParametersSelector({
-  defaultPagination: DEFAULT_PAGINATION,
-  defaultSorting: SORTING_ASC,
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-});
