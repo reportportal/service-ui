@@ -17,7 +17,7 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
-import { SORTING_KEY } from 'controllers/sorting/constants';
+import { SORTING_KEY, SORTING_ORDER_KEY } from 'controllers/sorting/constants';
 import { getStorageItem } from 'common/utils/storageUtils';
 import {
   activeProjectSelector,
@@ -148,7 +148,7 @@ export const createAlternativeQueryParametersSelector = ({
       sortingKey,
       namespace,
     }),
-    ({ [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+    ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
       return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
     },
   );

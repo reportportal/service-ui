@@ -67,6 +67,7 @@ export const OrganizationProjectsPage = () => {
 
   const isProjectsEmpty = !projectsLoading && projects.length === 0;
   const [searchValue, setSearchValue] = useState(null);
+  const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
 
   const showCreateProjectModal = () => {
     dispatch(
@@ -91,7 +92,7 @@ export const OrganizationProjectsPage = () => {
   };
 
   const getEmptyPageState = () => {
-    return searchValue === null ? (
+    return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
         hasPermission={hasPermission}
         label={label}
@@ -135,6 +136,8 @@ export const OrganizationProjectsPage = () => {
           onCreateProject={showCreateProjectModal}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
+          appliedFiltersCount={appliedFiltersCount}
+          setAppliedFiltersCount={setAppliedFiltersCount}
         />
         {renderContent()}
       </div>

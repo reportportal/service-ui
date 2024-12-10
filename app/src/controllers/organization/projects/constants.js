@@ -17,7 +17,9 @@
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
+// TODO: After joining the filter and the search, leave one constant
 export const FETCH_ORGANIZATION_PROJECTS = 'fetchOrganizationProjects';
+export const FETCH_FILTERED_PROJECTS = 'fetchFilteredProjects';
 export const NAMESPACE = 'organizationProjects';
 export const CREATE_PROJECT = 'createProject';
 export const DELETE_PROJECT = 'deleteProject';

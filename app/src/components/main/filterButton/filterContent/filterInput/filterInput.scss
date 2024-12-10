@@ -14,13 +14,47 @@
  * limitations under the License.
  */
 
-export { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS } from './constants';
-export { fetchOrganizationsAction, fetchFilteredOrganizationsAction } from './actionCreators';
-export { organizationsReducer } from './reducer';
-export {
-  organizationsSelector,
-  organizationsListSelector,
-  organizationsListLoadingSelector,
-  organizationsListPaginationSelector,
-} from './selectors';
-export { organizationsSagas } from './sagas';
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+
+  .label {
+    font-size: 13px;
+    line-height: 20px;
+    color: $COLOR--almost-black;
+    font-family: $FONT-ROBOTO-MEDIUM;
+  }
+
+  .container {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+
+    .dropdown {
+      min-width: 156px;
+      width: 156px;
+    }
+
+    .input-field {
+      flex: 1;
+    }
+  }
+}
+
+.with-help-text {
+  margin-bottom: 0;
+}
+
+.input-field-container {
+  width: 100%;
+
+  &:last-child span {
+    color: $COLOR--e-400;
+  }
+
+  div.input-field {
+    width: 100%;
+  }
+}

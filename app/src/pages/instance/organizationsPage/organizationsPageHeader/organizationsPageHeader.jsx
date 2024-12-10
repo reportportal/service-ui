@@ -15,21 +15,22 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
+import { BaseIconButton } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import { NAMESPACE } from 'controllers/instance/organizations/constants';
-import { useSelector } from 'react-redux';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { BaseIconButton } from '@reportportal/ui-kit';
+import { withFilterEntitiesURL } from 'components/filterEntities/containers';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
+import { OrganizationsFilter } from './organizationsFilter';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 
@@ -39,6 +40,8 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
+const FiltersFields = withFilterEntitiesURL(NAMESPACE)(OrganizationsFilter);
+
 export const OrganizationsPageHeader = ({
   isEmpty,
   searchValue,
@@ -46,6 +49,8 @@ export const OrganizationsPageHeader = ({
   openPanelView,
   openTableView,
   isOpenTableView,
+  appliedFiltersCount,
+  setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
@@ -64,7 +69,11 @@ export const OrganizationsPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
-              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+              <FiltersFields
+                debounced={false}
+                appliedFiltersCount={appliedFiltersCount}
+                setAppliedFiltersCount={setAppliedFiltersCount}
+              />
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
                 onClick={openPanelView}
@@ -94,6 +103,8 @@ OrganizationsPageHeader.propTypes = {
   openPanelView: PropTypes.func.isRequired,
   openTableView: PropTypes.func.isRequired,
   isOpenTableView: PropTypes.bool.isRequired,
+  appliedFiltersCount: PropTypes.bool.isRequired,
+  setAppliedFiltersCount: PropTypes.func.isRequired,
 };
 
 OrganizationsPageHeader.defaultProps = {

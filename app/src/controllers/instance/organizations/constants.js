@@ -18,7 +18,9 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 
 export const NAMESPACE = 'organizations';
 
+// TODO: After joining the filter and the search, leave one constant
 export const FETCH_ORGANIZATIONS = 'fetchOrganizations';
+export const FETCH_FILTERED_ORGANIZATIONS = 'fetchFilteredOrganizations';
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 export const DEFAULT_LIMITATION = 20;
 export const initialPaginationState = {

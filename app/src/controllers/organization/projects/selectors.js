@@ -16,8 +16,8 @@
 
 import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
-import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 import { organizationSelector } from '../selectors';
+import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 
 const domainSelector = (state) => organizationSelector(state).projects || {};
 

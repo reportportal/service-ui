@@ -49,6 +49,7 @@ export const OrganizationsPage = () => {
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
   const userId = useSelector(userIdSelector);
   const [searchValue, setSearchValue] = useState(null);
+  const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
@@ -73,7 +74,7 @@ export const OrganizationsPage = () => {
       );
     }
 
-    return searchValue === null ? (
+    return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
         hasPermission={hasPermission}
         emptyIcon={EmptyIcon}
@@ -108,6 +109,8 @@ export const OrganizationsPage = () => {
           openPanelView={openPanelView}
           openTableView={openTableView}
           isOpenTableView={isOpenTableView}
+          appliedFiltersCount={appliedFiltersCount}
+          setAppliedFiltersCount={setAppliedFiltersCount}
         />
         {isEmptyOrganizations ? (
           getEmptyPageState()
