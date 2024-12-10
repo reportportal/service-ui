@@ -17,15 +17,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { Button } from '@reportportal/ui-kit';
+import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
@@ -61,7 +59,9 @@ export const ProjectTeamPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
               />
-              <i className={cx('filters-icon')}>{Parser(filterIcon)}</i>
+              <i className={cx('filters-icon')}>
+                <FilterOutlineIcon />
+              </i>
             </div>
             {hasPermission && (
               <Button variant={'ghost'} onClick={onInvite}>

@@ -161,15 +161,18 @@ export const createFilterQuerySelector = ({
   namespace,
 } = {}) =>
   createSelector(
-    createQueryParametersSelector({
+    createAlternativeQueryParametersSelector({
       defaultPagination,
       defaultSorting,
       sortingKey,
       namespace,
     }),
-    ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+    ({ limit, sort, offset, order, ...rest }) => {
       return {
-        ...getAlternativePaginationAndSortParams(sort, limit, pageNumber),
+        limit,
+        sort,
+        offset,
+        order,
         search_criteria: getAppliedFilters(rest)?.search_criterias,
       };
     },

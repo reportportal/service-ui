@@ -17,10 +17,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Popover } from '@reportportal/ui-kit';
-import Parser from 'html-react-parser';
-import filterIcon from 'common/img/newIcons/filters-outline-inline.svg';
-import filterFilledIcon from 'common/img/newIcons/filter-filled-inline.svg';
+import { Popover, FilterOutlineIcon, FilterFilledIcon } from '@reportportal/ui-kit';
 import { FilterContent } from './filterContent';
 import styles from './filterButton.scss';
 
@@ -92,7 +89,7 @@ export const FilterButton = ({
         tabIndex={0}
       >
         <i className={cx('filter-icon')}>
-          {appliedFiltersCount ? Parser(filterFilledIcon) : Parser(filterIcon)}
+          {appliedFiltersCount ? <FilterFilledIcon /> : <FilterOutlineIcon />}
         </i>
         {appliedFiltersCount ? (
           <span className={cx('filters-count')}>{appliedFiltersCount}</span>
