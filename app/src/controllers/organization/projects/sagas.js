@@ -122,12 +122,12 @@ function* watchDeleteProject() {
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const filtersParams = yield select(filterQuerySelector);
-  updateFormatDate(filtersParams);
+  const data = updateFormatDate(filtersParams);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
       method: 'post',
-      data: filtersParams,
+      data,
     }),
   );
 }

@@ -31,7 +31,6 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { getAppliedFilters } from 'controllers/instance/events/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -151,30 +150,6 @@ export const createAlternativeQueryParametersSelector = ({
     }),
     ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
       return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
-    },
-  );
-
-export const createFilterQuerySelector = ({
-  defaultPagination,
-  defaultSorting,
-  sortingKey,
-  namespace,
-} = {}) =>
-  createSelector(
-    createAlternativeQueryParametersSelector({
-      defaultPagination,
-      defaultSorting,
-      sortingKey,
-      namespace,
-    }),
-    ({ limit, sort, offset, order, ...rest }) => {
-      return {
-        limit,
-        sort,
-        offset,
-        order,
-        search_criteria: getAppliedFilters(rest)?.search_criterias,
-      };
     },
   );
 

@@ -21,17 +21,16 @@ import styles from './filterInput.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterInput = ({ filter, setFilters }) => {
+export const FilterInput = ({ filter, onFilter }) => {
   const { filterName, options, value, condition, placeholder, title, withField, helpText } = filter;
 
   const onChangeOption = (newValue) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
+    onFilter({
       [filterName]: {
         ...filter,
         ...(withField ? { condition: newValue } : { value: newValue }),
       },
-    }));
+    });
   };
 
   const onTextFieldChange = ({ target }) => {
@@ -39,18 +38,10 @@ export const FilterInput = ({ filter, setFilters }) => {
       return;
     }
 
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterName]: { ...filter, value: target.value },
-    }));
+    onFilter({ [filterName]: { ...filter, value: target.value } });
   };
 
-  const onClear = () => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterName]: { ...filter, value: '' },
-    }));
-  };
+  const onClear = () => onFilter({ [filterName]: { ...filter, value: '' } });
 
   return (
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
@@ -84,5 +75,5 @@ export const FilterInput = ({ filter, setFilters }) => {
 
 FilterInput.propTypes = {
   filter: PropTypes.object,
-  setFilters: PropTypes.func,
+  onFilter: PropTypes.func,
 };

@@ -17,6 +17,7 @@
 import moment from 'moment/moment';
 import { getMinutesFromTimestamp } from 'common/utils';
 import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
+import { getAppliedFilters } from 'controllers/instance/events/utils';
 
 export function bindDefaultValue(key, options = {}) {
   const { filterValues } = this.props;
@@ -62,7 +63,9 @@ const getFormattedDate = (value) => {
 };
 
 export const updateFormatDate = (filtersParams) => {
-  const { search_criteria: searchCriteria } = filtersParams;
+  const { limit, sort, offset, order, ...rest } = filtersParams;
+
+  const searchCriteria = getAppliedFilters(rest)?.search_criterias;
 
   const lastRunDateFilterIndex = Object.values(searchCriteria).findIndex(
     (el) => el.filter_key === LAST_RUN_DATE_FILTER_NAME,
@@ -72,4 +75,12 @@ export const updateFormatDate = (filtersParams) => {
       searchCriteria[lastRunDateFilterIndex].value,
     );
   }
+
+  return {
+    limit,
+    sort,
+    offset,
+    order,
+    search_criteria: searchCriteria,
+  };
 };

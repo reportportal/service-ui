@@ -38,11 +38,12 @@ function* watchFetchOrganizations() {
 
 function* fetchFilteredOrganizations() {
   const filtersParams = yield select(filterQuerySelector);
-  updateFormatDate(filtersParams);
+  const data = updateFormatDate(filtersParams);
+
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationSearches(), {
       method: 'post',
-      data: filtersParams,
+      data,
     }),
   );
 }

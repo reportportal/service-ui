@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  createAlternativeQueryParametersSelector,
-  createFilterQuerySelector,
-} from 'controllers/pages/selectors';
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { SORTING_ASC } from 'controllers/sorting';
 import { NAMESPACE, DEFAULT_PAGINATION, SORTING_KEY } from './constants';
 
@@ -37,7 +34,7 @@ export const querySelector = createAlternativeQueryParametersSelector({
   namespace: NAMESPACE,
 });
 
-export const filterQuerySelector = createFilterQuerySelector({
+export const filterQuerySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: SORTING_ASC,
   sortingKey: SORTING_KEY,

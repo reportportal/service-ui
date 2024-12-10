@@ -75,11 +75,17 @@ export const FilterContent = ({
     filters,
   ]);
 
+  const handleChangeFilters = (newFilters) =>
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
+
   return (
     <div className={cx('filter-popover-content')}>
       <div className={cx('filter-items')}>
         {Object.values(filters).map((filter) => (
-          <FilterInput key={filter.filterName} filter={filter} setFilters={setFilters} />
+          <FilterInput key={filter.filterName} filter={filter} onFilter={handleChangeFilters} />
         ))}
       </div>
       <div className={cx('actions')}>
