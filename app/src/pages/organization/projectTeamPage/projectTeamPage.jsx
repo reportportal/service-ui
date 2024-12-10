@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { userRolesSelector } from 'controllers/pages';
@@ -26,6 +26,8 @@ import { showModalAction } from 'controllers/modal';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useTracking } from 'react-tracking';
+import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
 import { messages } from '../common/membersPage/membersPageHeader/messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
@@ -35,6 +37,7 @@ import styles from './projectTeamPage.scss';
 const cx = classNames.bind(styles);
 
 export const ProjectTeamPage = () => {
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const userRoles = useSelector(userRolesSelector);
@@ -43,6 +46,10 @@ export const ProjectTeamPage = () => {
   const isMembersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
+
+  useEffect(() => {
+    trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
+  }, []);
 
   const onInvite = () => {
     dispatch(fetchMembersAction());

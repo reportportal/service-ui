@@ -27,6 +27,7 @@ import InviteUserIcon from 'common/img/invite-inline.svg';
 import AddUserIcon from 'common/img/add-user-inline.svg';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -65,6 +66,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     filterEntities: collectFilterEntities(querySelector(state)),
+    ssoUsersOnly: ssoUsersOnlySelector(state),
   }),
   {
     showModalAction,
@@ -86,10 +88,12 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    ssoUsersOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     filterEntities: {},
+    ssoUsersOnly: false,
   };
 
   onExportUsers = () => {
@@ -139,23 +143,28 @@ export class ActionPanel extends Component {
     });
   };
 
-  actionButtons = [
-    {
-      key: EXPORT,
-      icon: ExportIcon,
-      onClick: this.onExportUsers,
-    },
-    {
-      key: INVITE_USER,
-      icon: InviteUserIcon,
-      onClick: this.showInviteUserModal,
-    },
-    {
-      key: ADD_USER,
-      icon: AddUserIcon,
-      onClick: this.showAddUserModal,
-    },
-  ];
+  get actionButtons() {
+    const { ssoUsersOnly } = this.props;
+    const allButtons = [
+      {
+        key: EXPORT,
+        icon: ExportIcon,
+        onClick: this.onExportUsers,
+      },
+      {
+        key: INVITE_USER,
+        icon: InviteUserIcon,
+        onClick: this.showInviteUserModal,
+      },
+      {
+        key: ADD_USER,
+        icon: AddUserIcon,
+        onClick: this.showAddUserModal,
+      },
+    ];
+
+    return ssoUsersOnly ? [allButtons[0]] : allButtons;
+  }
 
   renderHeaderButtons = () => {
     const {

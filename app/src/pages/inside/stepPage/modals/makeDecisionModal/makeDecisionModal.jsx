@@ -83,7 +83,9 @@ const MakeDecision = ({ data }) => {
     suggestChoice: {},
     historyChoice: historyItems.find(
       (item) =>
-        item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        item.id !== itemData.id &&
+        item.issue &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
     commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
     extraAnalyticsParams: {
@@ -390,7 +392,9 @@ const MakeDecision = ({ data }) => {
   const getMakeDecisionTabs = () => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) =>
-        item.id !== itemData.id && !item.issue?.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        item.id !== itemData.id &&
+        item.issue &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     );
 
     const tabsData = [

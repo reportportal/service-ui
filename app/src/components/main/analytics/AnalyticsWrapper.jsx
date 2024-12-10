@@ -64,7 +64,7 @@ export const analyticsEventObserver = ReactObserver();
       GA4.event(data.action, eventParameters);
     }
   },
-  process: ({ page }) => (page ? { action: 'pageview', page, place: '' } : null),
+  process: ({ page, place }) => (page ? { action: 'pageview', page, place: place || '' } : null),
 })
 export class AnalyticsWrapper extends Component {
   static propTypes = {

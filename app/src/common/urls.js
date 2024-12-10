@@ -271,7 +271,7 @@ export const URLS = {
   allUsers: () => `${urlBase}users/all`,
 
   exportUsers: (filterEntities) =>
-    `${urlCommonBase}users/export${getQueryParams({
+    `${urlBase}users/export${getQueryParams({
       view: 'csv',
       ...createFilterQuery(filterEntities),
     })}`,
@@ -320,4 +320,5 @@ export const URLS = {
   clusterByLaunchId: (projectKey, launchId, query) =>
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
+  instanceSettings: () => `${urlBase}settings`,
 };

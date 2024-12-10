@@ -20,11 +20,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { projectMembersSelector } from 'controllers/project';
+import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
+import { activeOrganizationNameSelector } from 'controllers/organization';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 import styles from './projectTeamPageHeader.scss';
@@ -44,10 +45,16 @@ export const ProjectTeamPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const projectMembers = useSelector(projectMembersSelector);
+  const projectName = useSelector(projectNameSelector);
+  const organizationName = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = projectMembers.length !== 0;
 
   return (
-    <MembersPageHeader title={formatMessage(messages.projectTeamTitle)}>
+    <MembersPageHeader
+      title={formatMessage(messages.projectTeamTitle)}
+      organizationName={organizationName}
+      projectName={projectName}
+    >
       <div className={cx('actions')}>
         {isNotEmptyMembers && (
           <>
