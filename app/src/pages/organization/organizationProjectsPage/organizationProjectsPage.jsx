@@ -91,13 +91,6 @@ export const OrganizationProjectsPage = () => {
   };
 
   const getEmptyPageState = () => {
-    if (organizationLoading || projectsLoading) {
-      return (
-        <div className={cx('loader')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
     return searchValue === null ? (
       <EmptyPageState
         hasPermission={hasPermission}
@@ -118,6 +111,22 @@ export const OrganizationProjectsPage = () => {
     );
   };
 
+  const renderContent = () => {
+    if (organizationLoading || projectsLoading) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    if (isProjectsEmpty) {
+      return getEmptyPageState();
+    }
+
+    return <ProjectsListTableWrapper projects={projectsWithAssignedRoles} />;
+  };
+
   return (
     <ScrollWrapper>
       <div className={cx('organization-projects-container')}>
@@ -127,11 +136,7 @@ export const OrganizationProjectsPage = () => {
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        {isProjectsEmpty ? (
-          getEmptyPageState()
-        ) : (
-          <ProjectsListTableWrapper projects={projectsWithAssignedRoles} />
-        )}
+        {renderContent()}
       </div>
     </ScrollWrapper>
   );
