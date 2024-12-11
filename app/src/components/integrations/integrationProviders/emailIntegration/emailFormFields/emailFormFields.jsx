@@ -33,17 +33,19 @@ import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Dropdown } from 'componentLibrary/dropdown';
+import { separateFromIntoNameAndEmail } from 'common/utils';
 import {
   DEFAULT_FORM_CONFIG,
   AUTH_ENABLED_KEY,
   PROTOCOL_KEY,
   SSL_KEY,
   TLS_KEY,
-  FROM_KEY,
+  FROM_NAME_KEY,
   HOST_KEY,
   PORT_KEY,
   USERNAME_KEY,
   PASSWORD_KEY,
+  FROM_EMAIL_KEY,
 } from '../constants';
 import styles from './emailFormFields.scss';
 
@@ -58,9 +60,13 @@ const messages = defineMessages({
     id: 'EmailFormFields.protocolLabel',
     defaultMessage: 'Protocol',
   },
-  fromLabel: {
-    id: 'EmailFormFields.fromLabel',
-    defaultMessage: 'Default sender name',
+  fromNameLabel: {
+    id: 'EmailFormFields.fromNameLabel',
+    defaultMessage: 'From name',
+  },
+  fromEmailLabel: {
+    id: 'EmailFormFields.fromEmailLabel',
+    defaultMessage: 'From Email',
   },
   portLabel: {
     id: 'EmailFormFields.portLabel',
@@ -72,7 +78,7 @@ const messages = defineMessages({
   },
   usernameLabel: {
     id: 'EmailFormFields.usernameLabel',
-    defaultMessage: 'Sender email',
+    defaultMessage: 'Username',
   },
   passwordLabel: {
     id: 'EmailFormFields.passwordLabel',
@@ -115,7 +121,9 @@ export class EmailFormFields extends Component {
   }
 
   componentDidMount() {
-    this.props.initialize(this.props.initialData);
+    const { initialData } = this.props;
+    const preparedData = separateFromIntoNameAndEmail(initialData);
+    this.props.initialize(preparedData);
   }
 
   onChangeAuthAvailability = (event, value) => {
@@ -160,10 +168,22 @@ export class EmailFormFields extends Component {
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
-          name={FROM_KEY}
-          label={formatMessage(messages.fromLabel)}
+          name={FROM_NAME_KEY}
+          label={formatMessage(messages.fromNameLabel)}
           disabled={disabled}
           className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name={FROM_EMAIL_KEY}
+          label={formatMessage(messages.fromEmailLabel)}
+          disabled={disabled}
+          className={cx('fields')}
+          validate={commonValidators.email}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -184,18 +204,6 @@ export class EmailFormFields extends Component {
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
-          name={USERNAME_KEY}
-          label={formatMessage(messages.usernameLabel)}
-          validate={commonValidators.email}
-          disabled={disabled}
-          className={cx('fields')}
-          isRequired
-        >
-          <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} />
-          </FieldErrorHint>
-        </FieldElement>
-        <FieldElement
           name={AUTH_ENABLED_KEY}
           label={formatMessage(messages.authLabel)}
           disabled={disabled}
@@ -207,17 +215,31 @@ export class EmailFormFields extends Component {
           </FieldErrorHint>
         </FieldElement>
         {authEnabled && (
-          <FieldElement
-            name={PASSWORD_KEY}
-            label={formatMessage(messages.passwordLabel)}
-            disabled={disabled}
-            className={cx('fields')}
-            isRequired
-          >
-            <FieldErrorHint provideHint={false}>
-              <FieldText defaultWidth={false} type="password" />
-            </FieldErrorHint>
-          </FieldElement>
+          <>
+            <FieldElement
+              name={USERNAME_KEY}
+              label={formatMessage(messages.usernameLabel)}
+              disabled={disabled}
+              className={cx('fields')}
+              validate={commonValidators.requiredField}
+              isRequired
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldText defaultWidth={false} />
+              </FieldErrorHint>
+            </FieldElement>
+            <FieldElement
+              name={PASSWORD_KEY}
+              label={formatMessage(messages.passwordLabel)}
+              disabled={disabled}
+              className={cx('fields')}
+              isRequired
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldText defaultWidth={false} type="password" />
+              </FieldErrorHint>
+            </FieldElement>
+          </>
         )}
         <div className={cx('checkboxes-container')}>
           <div className={cx('checkbox-wrapper')}>

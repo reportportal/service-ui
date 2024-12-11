@@ -33,8 +33,11 @@ export const getLaunchModeConfig = ({
 }) => {
   const colors = {};
   const columns = [];
-
-  const sortedResult = content.sort((item) => -item.number);
+  const sortedResult = content.sort((a, b) => {
+    const startTimeA = new Date(a.startTime);
+    const startTimeB = new Date(b.startTime);
+    return startTimeA - startTimeB;
+  });
   const itemsData = sortedResult.map((item) => ({
     id: item.id,
     name: item.name,

@@ -36,6 +36,8 @@ import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
+import { fetchProjectAction } from 'controllers/project/actionCreators';
+import { projectIdSelector } from 'controllers/pages';
 import { capitalizeWord } from '../util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
@@ -213,12 +215,14 @@ const AddEditNotificationModal = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const projectId = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const attributesValue =
     useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];
 
   useEffect(() => {
     initialize(data.notification);
+    dispatch(fetchProjectAction(projectId, false));
   }, []);
 
   const caseOptions = [

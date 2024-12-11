@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
@@ -22,6 +23,7 @@ import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -44,15 +46,21 @@ const messages = defineMessages({
     id: 'MembersPageToolbar.inviteUser',
     defaultMessage: 'Invite User',
   },
+  assignUser: {
+    id: 'MembersPageToolbar.assignUser',
+    defaultMessage: 'Assign User',
+  },
   searchInputPlaceholder: {
     id: 'MembersPageToolbar.searchByName',
     defaultMessage: 'Search by name',
   },
 });
+
 @connect(
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
+    ssoUsersOnly: ssoUsersOnlySelector(state),
   }),
   {
     showModalAction,
@@ -74,6 +82,7 @@ export class MembersPageToolbar extends React.Component {
     onInvite: PropTypes.func,
     projectRole: PropTypes.string,
     accountRole: PropTypes.string,
+    ssoUsersOnly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -86,6 +95,7 @@ export class MembersPageToolbar extends React.Component {
     onInvite: () => {},
     projectRole: '',
     accountRole: '',
+    ssoUsersOnly: false,
     onFilterChange: () => {},
   };
 
@@ -103,6 +113,12 @@ export class MembersPageToolbar extends React.Component {
   showPermissionMapModal = () => {
     this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.PERMISSION_MAP_CLICK);
     this.props.showModalAction({ id: 'permissionMapModal' });
+  };
+
+  getButtonText = () => {
+    const { ssoUsersOnly } = this.props;
+    if (ssoUsersOnly === undefined) return messages.inviteUser;
+    return ssoUsersOnly ? messages.assignUser : messages.inviteUser;
   };
 
   render() {
@@ -127,7 +143,7 @@ export class MembersPageToolbar extends React.Component {
             onClick={this.showInviteUserModal}
             disabled={!canInviteInternalUser(this.props.accountRole, this.props.projectRole)}
           >
-            {this.props.intl.formatMessage(messages.inviteUser)}
+            {this.props.intl.formatMessage(this.getButtonText())}
           </GhostButton>
         </div>
       </div>

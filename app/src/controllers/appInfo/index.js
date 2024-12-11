@@ -29,5 +29,6 @@ export {
   isDemoInstanceSelector,
   areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
+  ssoUsersOnlySelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';

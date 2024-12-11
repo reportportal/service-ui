@@ -1,5 +1,5 @@
-/*!
- * Copyright 2021 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-.expand-col {
-  width: 10px;
-}
-
-.cluster-header {
-  padding-left: 37px;
-  width: 100%;
-}
-
-.matched-header{
-  width: 130px;
-}
-
-.extension-col {
-  width: 165px;
-}
+export { SsoUsersForm } from './ssoUsersForm';

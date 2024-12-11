@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 });
 
-const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
+const isResolved = (status = '') => status.toUpperCase() === STATUS_RESOLVED;
 const getStorageKey = (activeProject) => `${activeProject}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
@@ -186,14 +186,18 @@ export class IssueInfoTooltip extends Component {
       <Fragment>
         <h4 className={cx('header')}>{formatMessage(messages.issueSummaryTitle)}</h4>
         <p className={cx('content')}>{issue.summary}</p>
-        <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
-        <p
-          className={cx('content', {
-            resolved: isResolved(issue.status),
-          })}
-        >
-          {issue.status}
-        </p>
+        {issue.status && (
+          <>
+            <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
+            <p
+              className={cx('content', {
+                resolved: isResolved(issue.status),
+              })}
+            >
+              {issue.status}
+            </p>
+          </>
+        )}
       </Fragment>
     ) : (
       <Fragment>
