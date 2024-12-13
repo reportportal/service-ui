@@ -30,11 +30,12 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
-import { userIdSelector } from 'controllers/user';
+import { assignedOrganizationsSelector, userIdSelector } from 'controllers/user';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
 import { messages } from './messages';
+import { NoAssignedEmptyPage } from './noAssignedEmptyPage';
 import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +56,9 @@ export const OrganizationsPage = () => {
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
   );
 
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector);
+  const noAssignedOrganizations = Object.keys(assignedOrganizations).length === 0 && !hasPermission;
+
   const openPanelView = () => {
     setIsOpenTableView(false);
     updateStorageItem(`${userId}_settings`, { organizationsPanel: PANEL_VIEW });
@@ -74,9 +78,13 @@ export const OrganizationsPage = () => {
       );
     }
 
+    if (noAssignedOrganizations) {
+      return <NoAssignedEmptyPage />;
+    }
+
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={hasPermission}
+        hasPermission={!hasPermission}
         emptyIcon={EmptyIcon}
         icon={<PlusIcon />}
         label={formatMessage(
@@ -101,18 +109,20 @@ export const OrganizationsPage = () => {
   return (
     <ScrollWrapper>
       <div className={cx('organizations-page')}>
-        <OrganizationsPageHeader
-          hasPermission={hasPermission}
-          isEmpty={isEmptyOrganizations && searchValue === null}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          openPanelView={openPanelView}
-          openTableView={openTableView}
-          isOpenTableView={isOpenTableView}
-          appliedFiltersCount={appliedFiltersCount}
-          setAppliedFiltersCount={setAppliedFiltersCount}
-        />
-        {isEmptyOrganizations ? (
+        {!noAssignedOrganizations && (
+          <OrganizationsPageHeader
+            hasPermission={hasPermission}
+            isEmpty={isEmptyOrganizations && searchValue === null}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            openPanelView={openPanelView}
+            openTableView={openTableView}
+            isOpenTableView={isOpenTableView}
+            appliedFiltersCount={appliedFiltersCount}
+            setAppliedFiltersCount={setAppliedFiltersCount}
+          />
+        )}
+        {!isEmptyOrganizations ? (
           getEmptyPageState()
         ) : (
           <OrganizationsPanelView

@@ -416,14 +416,17 @@ function* watchUpdatePAState() {
 
 function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   try {
-    const project = yield call(fetch, URLS.projectByName(projectKey));
+    let project;
+    if (projectKey) {
+      project = yield call(fetch, URLS.projectByName(projectKey));
+      yield put(setProjectIntegrationsAction(project.integrations));
+    }
     yield put(fetchProjectSuccessAction(project));
-    yield put(setProjectIntegrationsAction(project.integrations));
 
     const userRoles = yield select(userRolesSelector);
     const hasFilterPermissions = canWorkWithFilters(userRoles);
 
-    if (!fetchInfoOnly && hasFilterPermissions) {
+    if (!fetchInfoOnly && hasFilterPermissions && projectKey) {
       yield put(fetchProjectPreferencesAction(project.projectKey));
     }
   } catch (error) {
