@@ -122,7 +122,7 @@ export const OrganizationsPage = () => {
             setAppliedFiltersCount={setAppliedFiltersCount}
           />
         )}
-        {!isEmptyOrganizations ? (
+        {isEmptyOrganizations ? (
           getEmptyPageState()
         ) : (
           <OrganizationsPanelView
