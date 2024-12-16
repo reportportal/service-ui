@@ -63,7 +63,10 @@ export const DurationTooltip = ({ status, timing, type }) => {
   );
 
   const getStatusTitle = () => {
-    const durationTime = getDuration(timing.start, timing.end);
+    const durationTime = getDuration(
+      new Date(timing.start).getTime(),
+      new Date(timing.end).getTime(),
+    );
     const endTime = dateFormat(timing.end, true);
     const approxTime = getApproximateTime(timing);
     const approxTimeIsOver = approxTime < 0;
