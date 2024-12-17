@@ -76,19 +76,15 @@ export const ProjectSettingsPageContainer = () => {
 
   const extensionsConfig = useMemo(() => {
     return extensions.reduce((acc, extension) => {
-      const hasInitialPage = extension.initialPage?.payload || extension.initialPage?.type;
-
       return {
         ...acc,
         [extension.name]: {
           name: extension.title || extension.name,
-          link: hasInitialPage
-            ? createTabLink(
-                extension.name,
-                { subTab: extension.initialPage?.payload?.subTab },
-                extension.initialPage?.type,
-              )
-            : createTabLink(extension.name),
+          link: createTabLink(
+            extension.name,
+            extension.initialPage?.payload,
+            extension.initialPage?.type,
+          ),
           component: (
             <ExtensionLoader
               extension={extension}
