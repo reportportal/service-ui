@@ -66,8 +66,8 @@ export const ProjectSettingsPageContainer = () => {
   const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
-    (tabName, extendedParams = {}) => ({
-      type: PROJECT_SETTINGS_TAB_PAGE,
+    (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
+      type: page,
       payload: { projectSlug, settingsTab: tabName, organizationSlug, ...extendedParams },
     }),
     [projectSlug, organizationSlug],
@@ -79,7 +79,11 @@ export const ProjectSettingsPageContainer = () => {
         ...acc,
         [extension.name]: {
           name: extension.title || extension.name,
-          link: createTabLink(extension.name),
+          link: createTabLink(
+            extension.name,
+            extension.initialPage?.payload,
+            extension.initialPage?.type,
+          ),
           component: (
             <ExtensionLoader
               extension={extension}
