@@ -47,6 +47,16 @@ const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
 
 const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
 
+export const PROJECT_SETTINGS_VIEWS = {
+  getProjectSettingsPageView: (settingsTab, subTab) => ({
+    action: 'pageview',
+    page: PROJECT_SETTINGS,
+    place: subTab
+      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      : `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}`,
+  }),
+};
+
 export const PROJECT_SETTINGS_GENERAL_TAB_EVENTS = {
   CLICK_SUBMIT: (inactivityTimeout, type) => ({
     ...BASIC_EVENT_PARAMETERS_GENERAL,

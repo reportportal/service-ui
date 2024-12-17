@@ -15,6 +15,12 @@
  */
 
 export const MEMBERS_PAGE = 'members';
+export const MEMBERS_PAGE_VIEWS = {
+  MEMBERS_PAGE: {
+    page: MEMBERS_PAGE,
+    place: MEMBERS_PAGE,
+  },
+};
 export const MEMBERS_PAGE_EVENTS = {
   ENTER_SEARCH_PARAM: {
     category: MEMBERS_PAGE,

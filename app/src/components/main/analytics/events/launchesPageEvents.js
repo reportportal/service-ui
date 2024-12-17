@@ -47,7 +47,20 @@ import { getBasicClickEventParameters } from './common/ga4Utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from './common/constants';
 
 export const LAUNCHES_PAGE = 'launches';
+const LAUNCH_VIEW = 'launches';
+const DEBUG_VIEW = 'debug_mode';
 const LAUNCHES_MODAL = 'Modal launches';
+
+export const LAUNCHES_PAGE_VIEWS = {
+  LAUNCHES: {
+    page: LAUNCHES_PAGE,
+    place: LAUNCH_VIEW,
+  },
+  DEBUG: {
+    page: LAUNCHES_PAGE,
+    place: DEBUG_VIEW,
+  },
+};
 
 const formatAnalyzeItemsMode = (modes) =>
   modes.map((mode) => LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[mode]).join('#');
