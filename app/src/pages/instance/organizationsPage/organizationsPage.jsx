@@ -84,7 +84,7 @@ export const OrganizationsPage = () => {
 
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={!hasPermission}
+        hasPermission={hasPermission}
         emptyIcon={EmptyIcon}
         icon={<PlusIcon />}
         label={formatMessage(
