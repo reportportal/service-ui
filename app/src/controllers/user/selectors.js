@@ -27,6 +27,7 @@ export const idSelector = (state) => userInfoSelector(state).id;
 export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const userEmailSelector = (state) => userInfoSelector(state).email || '';
 export const photoIdSelector = (state) => userInfoSelector(state).photoId;
+export const fullNameSelector = (state) => userInfoSelector(state).fullName;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;

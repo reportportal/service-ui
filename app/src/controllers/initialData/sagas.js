@@ -41,12 +41,12 @@ function* fetchInitialData() {
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
+    yield put(authSuccessAction());
     const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
     yield put(fetchProjectAction(activeProjectKey));
     yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
-    yield put(authSuccessAction());
   } else {
     yield put(resetTokenAction());
     yield put(fetchPublicPluginsAction());

@@ -106,19 +106,21 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   return (
     <div className={cx('organizations-popover')}>
       <div className={cx('organizations-search')}>
-        <ThemeProvider theme="dark">
-          <FieldText
-            startIcon={<SearchIcon />}
-            placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
-            className={cx('field-text')}
-            defaultWidth={false}
-            value={valueSearch}
-            onChange={handleChange}
-            onClear={handleClear}
-            maxLength={256}
-            clearable
-          />
-        </ThemeProvider>
+        {filteredProjects.length > 0 && (
+          <ThemeProvider theme="dark">
+            <FieldText
+              startIcon={<SearchIcon />}
+              placeholder={formatMessage(COMMON_LOCALE_KEYS.SEARCH)}
+              className={cx('field-text')}
+              defaultWidth={false}
+              value={valueSearch}
+              onChange={handleChange}
+              onClear={handleClear}
+              maxLength={256}
+              clearable
+            />
+          </ThemeProvider>
+        )}
       </div>
       {availableProjects.length > 0 && (
         <>
