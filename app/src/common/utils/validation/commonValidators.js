@@ -36,7 +36,8 @@ export const descriptionEntity = bindMessageToValidator(
   'descriptionEntityHint',
 );
 
-export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
+export const btsJiraUrl = bindMessageToValidator(validate.jiraUrl, 'btsUrlHint');
+export const btsRallyUrl = bindMessageToValidator(validate.rallyUrl, 'btsUrlHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,
   'btsIntegrationNameHint',

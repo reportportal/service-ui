@@ -90,7 +90,7 @@ export class JiraConnectionFormFields extends Component {
         <FieldElement
           name="url"
           label={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
-          validate={commonValidators.btsUrl}
+          validate={commonValidators.btsJiraUrl}
           disabled={disabled || editAuthMode}
           className={cx('fields')}
           isRequired
