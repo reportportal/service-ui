@@ -85,7 +85,7 @@ export class RallyConnectionFormFields extends Component {
         </FieldElement>
         <FieldElement
           name="url"
-          validate={commonValidators.btsUrl}
+          validate={commonValidators.btsRallyUrl}
           disabled={disabled || editAuthMode}
           label={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
           className={cx('fields')}

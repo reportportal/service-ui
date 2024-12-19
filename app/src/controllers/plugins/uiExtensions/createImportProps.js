@@ -80,6 +80,7 @@ import { attributesArray, isNotEmptyArray } from 'common/utils/validation/valida
 import {
   requiredField,
   btsUrl,
+  btsJiraCloudUrl,
   btsProjectKey,
   btsIntegrationName,
   email,
@@ -390,6 +391,7 @@ export const createImportProps = (pluginName) => ({
     isNotEmptyArray,
     requiredField,
     btsUrl,
+    btsJiraCloudUrl,
     btsProjectKey,
     btsProjectId,
     btsBoardId,
