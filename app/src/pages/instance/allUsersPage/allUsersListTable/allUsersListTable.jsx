@@ -18,6 +18,7 @@ import {
   fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
 import { MembersListTable } from 'pages/organization/common/membersPage/membersListTable';
+import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +60,12 @@ const AllUsersListTableComponent = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+
+  const renderRowActions = () => (
+    <i className={cx('menu-icon')}>
+      <MeatballMenuIcon />
+    </i>
+  );
 
   const data = useMemo(
     () =>
@@ -146,6 +153,7 @@ const AllUsersListTableComponent = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
+      renderRowActions={renderRowActions}
     />
   );
 };

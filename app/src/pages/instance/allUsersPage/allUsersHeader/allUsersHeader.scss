@@ -1,3 +1,29 @@
+.all-users-header-container {
+  padding: 48px 32px 12px 32px;
+  border-bottom: 1px solid $COLOR--e-100;
+  background: $COLOR--bg-000;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: $FONT-REGULAR;
+  font-size: 20px;
+  line-height: 31px;
+  color: $COLOR--almost-black;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .actions {
   display: flex;
   align-items: center;
@@ -8,4 +34,29 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.filter-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: $COLOR--gray-60;
+
+  &:hover {
+    color: $COLOR--topaz-hover;
+  }
+}
+
+.menu-icon {
+  svg {
+    margin-bottom: 3px;
+  }
+}
+
+.meatball-button {
+  min-width: 36px;
+  padding: 0 8px;
 }
