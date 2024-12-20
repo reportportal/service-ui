@@ -29,10 +29,6 @@ import {
 export const required = isNotEmpty;
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
 export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
-export const jiraCloudUrl = composeValidators([
-  isNotEmpty,
-  regex(/https:\/\/[^?]*.atlassian.(net|com)\/.*/),
-]);
 export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com\/).*/),

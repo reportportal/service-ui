@@ -54,21 +54,6 @@ describe('validate.url', () => {
   });
 });
 
-describe('validate.jiraCloudUrl', () => {
-  test('validation should be correct', () => {
-    expect(validate.jiraCloudUrl('https://*.atlassian.net/8888')).toBe(true);
-    expect(validate.jiraCloudUrl('https://*.atlassian.com/8888')).toBe(true);
-    expect(validate.jiraCloudUrl('https://.atlassian.net/8888')).toBe(true);
-    expect(validate.jiraCloudUrl('https://*atlassian.net/8888')).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.jiraCloudUrl(undefined)).toBe(false);
-    expect(validate.jiraCloudUrl('')).toBe(false);
-    expect(validate.jiraCloudUrl('  ')).toBe(false);
-    expect(validate.jiraCloudUrl('example')).toBe(false);
-  });
-});
-
 describe('validate.rallyUrl', () => {
   test('validation should be correct', () => {
     expect(validate.rallyUrl('https://rally1.rallydev.com/8888')).toBe(true);
