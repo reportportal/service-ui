@@ -149,7 +149,9 @@ const routesMap = {
 
   [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
-  API_PAGE: '/api',
+  API_PAGE_INSTANCE_LEVEL: '/api',
+  API_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/api',
+  API_PAGE_PROJECT_LEVEL: '/organizations/:organizationSlug/projects/:projectSlug/api',
 
   [ALL_USERS_PAGE]: {
     path: '/users',

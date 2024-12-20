@@ -16,9 +16,15 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { API_PAGE } from 'controllers/pages';
+import {
+  API_PAGE_INSTANCE_LEVEL,
+  API_PAGE_ORGANIZATION_LEVEL,
+  API_PAGE_PROJECT_LEVEL,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
+} from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
 import { useEffect, useState } from 'react';
@@ -36,9 +42,31 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const [latestServiceVersions, setLatestServiceVersions] = useState({});
 
   const currentYear = new Date().getFullYear();
+
+  const getApiLink = () => {
+    if (projectSlug && organizationSlug) {
+      return {
+        type: API_PAGE_PROJECT_LEVEL,
+        payload: { organizationSlug, projectSlug },
+      };
+    }
+
+    if (organizationSlug) {
+      return {
+        type: API_PAGE_ORGANIZATION_LEVEL,
+        payload: { organizationSlug },
+      };
+    }
+
+    return {
+      type: API_PAGE_INSTANCE_LEVEL,
+    };
+  };
 
   const ServiceContentItems = [
     {
@@ -47,7 +75,7 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
     },
     {
       isInternal: true,
-      linkTo: { type: API_PAGE },
+      linkTo: getApiLink(),
       message: messages.openAPI,
     },
     {
