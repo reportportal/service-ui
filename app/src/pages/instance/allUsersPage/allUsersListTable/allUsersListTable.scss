@@ -1,47 +1,74 @@
-.member-name-column {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.full-name {
-  color: $COLOR--almost-black;
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.badges {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.badge {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-family: $FONT-ROBOTO-BOLD;
-  font-size: 11px;
-  line-height: 16px;
-  text-transform: lowercase;
-  color: $COLOR--white-two;
-
-  &.admin-badge,
-  &.you-badge {
-    background-color: $COLOR--tag-value-text;
-  }
-}
-
 .date {
   font-family: inherit;
   color: inherit;
   min-height: auto;
 }
 
+.row-action-menu {
+  display: flex;
+  flex-direction: column;
+
+  p {
+    padding: 7px 16px;
+    align-items: center;
+    font-size: 13px;
+    line-height: 20px;
+    width: 120px;
+    color: $COLOR--almost-black;
+  }
+}
+
 .menu-icon {
   svg {
     margin-bottom: 3px;
+  }
+}
+
+.member-name-column {
+  display: flex;
+  align-items: center;
+}
+
+.full-name {
+  margin-left: 16px;
+}
+
+.custom-user-avatar {
+  width: 32px;
+  height: 32px;
+
+  img {
+    border-radius: 50%;
+  }
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  gap: 8px;
+
+  .badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: $COLOR--white-two;
+    font-family: $FONT-ROBOTO-BOLD;
+    font-size: 11px;
+    line-height: 16px;
+
+    &.admin {
+      background-color: $COLOR--tag-value-text;
+    }
+
+    &.manager {
+      background-color: $COLOR--test-execution-status-passed;
+    }
+
+    &.you {
+      background-color: $COLOR--topaz-focused;
+    }
   }
 }
