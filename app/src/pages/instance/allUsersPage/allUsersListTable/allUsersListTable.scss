@@ -4,18 +4,34 @@
   gap: 16px;
 }
 
-.admin-badge {
+.full-name {
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 2px 8px;
   border-radius: 6px;
-  background-color: $COLOR--tag-value-text;
-  color: $COLOR--white-two;
   font-family: $FONT-ROBOTO-BOLD;
   font-size: 11px;
   line-height: 16px;
-  margin-right: 16px;
+  text-transform: lowercase;
+  color: $COLOR--white-two;
+
+  &.admin-badge,
+  &.you-badge {
+    background-color: $COLOR--tag-value-text;
+  }
 }
 
 .date {

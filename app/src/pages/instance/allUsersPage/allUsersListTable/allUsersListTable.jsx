@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
@@ -17,6 +17,7 @@ import {
   allUsersPaginationSelector,
   fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
+import { userInfoSelector } from 'controllers/user';
 import { MembersListTable } from 'pages/organization/common/membersPage/membersListTable';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import styles from './allUsersListTable.scss';
@@ -60,6 +61,7 @@ const AllUsersListTableComponent = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const currentUser = useSelector(userInfoSelector);
 
   const renderRowActions = () => (
     <i className={cx('menu-icon')}>
@@ -71,6 +73,8 @@ const AllUsersListTableComponent = ({
     () =>
       users.map((user) => {
         const organizationsCount = Object.keys(user.assignedOrganizations || {}).length;
+        const isCurrentUser = user.id === currentUser.id;
+
         return {
           id: user.id,
           fullName: {
@@ -78,11 +82,18 @@ const AllUsersListTableComponent = ({
             component: (
               <div className={cx('member-name-column')}>
                 <div className={cx('full-name')}>{user.fullName}</div>
-                {user.userRole === ADMINISTRATOR && (
-                  <div className={cx('admin-badge')}>
-                    <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
-                  </div>
-                )}
+                <div className={cx('badges')}>
+                  {user.userRole === ADMINISTRATOR && (
+                    <div className={cx('badge', 'admin-badge')}>
+                      <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+                    </div>
+                  )}
+                  {isCurrentUser && (
+                    <div className={cx('badge', 'you-badge')}>
+                      <FormattedMessage id={'UserBlock.youBadge'} defaultMessage={'you'} />
+                    </div>
+                  )}
+                </div>
               </div>
             ),
           },
@@ -99,7 +110,7 @@ const AllUsersListTableComponent = ({
           organizations: organizationsCount,
         };
       }),
-    [users],
+    [users, currentUser.id],
   );
 
   const primaryColumn = {
