@@ -74,15 +74,10 @@ export const AllUsersHeader = ({ onInvite }) => {
 };
 
 AllUsersHeader.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  searchValue: PropTypes.string,
-  setSearchValue: PropTypes.func.isRequired,
-  onExport: PropTypes.func,
   onInvite: PropTypes.func,
 };
 
 AllUsersHeader.defaultProps = {
   searchValue: '',
-  onExport: () => {},
   onInvite: () => {},
 };
