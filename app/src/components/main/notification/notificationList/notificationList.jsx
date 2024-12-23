@@ -170,7 +170,6 @@ export class NotificationList extends PureComponent {
             <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
               <div className={cx('notification-item-wrapper')}>
                 <SystemAlert
-                  uid={uid}
                   type={type}
                   title={Parser(
                     DOMPurify.sanitize(
