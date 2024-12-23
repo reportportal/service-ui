@@ -177,7 +177,7 @@ export class NotificationList extends PureComponent {
                       messageId ? formatMessage(messages[messageId], values) : message,
                     ),
                   )}
-                  onClose={this.props.hideNotification}
+                  onClose={() => this.props.hideNotification(uid)}
                   className={cx('notification-item')}
                 />
               </div>
