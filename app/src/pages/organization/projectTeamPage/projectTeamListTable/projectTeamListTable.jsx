@@ -37,9 +37,9 @@ import {
   withPagination,
 } from 'controllers/pagination';
 import { ADMIN_TYPE } from 'common/utils/permissions/constants';
-import { messages } from '../../common/membersPage/messages';
+import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './projectTeamListTable.scss';
-import { MembersListTable } from '../../common/membersPage/membersListTable';
+import { MembersListTable } from '../../../common/users/membersListTable';
 
 const cx = classNames.bind(styles);
 

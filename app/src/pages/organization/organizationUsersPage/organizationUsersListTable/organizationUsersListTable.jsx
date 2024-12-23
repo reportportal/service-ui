@@ -37,8 +37,8 @@ import {
 } from 'controllers/organization/users';
 import { SORTING_KEY } from 'controllers/organization/projects';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { MembersListTable } from '../../common/membersPage/membersListTable';
-import { messages } from '../../common/membersPage/messages';
+import { MembersListTable } from '../../../common/users/membersListTable';
+import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
