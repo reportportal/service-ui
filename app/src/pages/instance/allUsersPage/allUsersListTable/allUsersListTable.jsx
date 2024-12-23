@@ -20,11 +20,12 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
-import { InstanceUserAvatar } from 'pages/instance/common/instanceUserAvatar';
+import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { ADMIN_TYPE } from 'common/utils/permissions/constants';
+import { NAMESPACE } from 'controllers/instance/allUsers/constants';
+import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
@@ -37,13 +38,11 @@ import {
   allUsersPaginationSelector,
   fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
-import { MembersListTable } from 'pages/organization/common/membersPage/membersListTable';
-import { messages } from 'pages/organization/common/membersPage/messages';
+import { MembersListTable } from 'pages/common/users/membersListTable';
+import { messages } from 'pages/common/users/membersListTable/messages';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
-const NAMESPACE = 'allUsers';
-
 const AllUsersListTableComponent = ({
   users,
   onChangeSorting,
@@ -86,32 +85,11 @@ const AllUsersListTableComponent = ({
           fullName: {
             content: user.fullName,
             component: (
-              <div className={cx('member-name-column')}>
-                <InstanceUserAvatar className={cx('custom-user-avatar')} userId={user.id} />
-                <div className={cx('full-name')}>{user.fullName}</div>
-                <div className={cx('badges')}>
-                  {memberBadges.map(({ title, type }) => {
-                    const badgeContent = (
-                      <div key={`${user.userId}-${type}`} className={cx('badge', type)}>
-                        {formatMessage(title)}
-                      </div>
-                    );
-
-                    return type === ADMIN_TYPE ? (
-                      <Tooltip
-                        key={`${user.userId}-${type}-tooltip`}
-                        content={formatMessage(messages.adminAccessInfo)}
-                        placement="top"
-                        width={248}
-                      >
-                        {badgeContent}
-                      </Tooltip>
-                    ) : (
-                      badgeContent
-                    );
-                  })}
-                </div>
-              </div>
+              <UserNameCell
+                user={user}
+                badges={memberBadges}
+                userAvatar={(props) => <UserAvatar {...props} isNewApi />}
+              />
             ),
           },
           email: user.email,
@@ -127,7 +105,7 @@ const AllUsersListTableComponent = ({
           organizations: organizationsCount,
         };
       }),
-    [users, currentUser.id, formatMessage],
+    [users, currentUser.id],
   );
 
   const primaryColumn = {

@@ -24,25 +24,31 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, projectKey, userId }) => (
-  <div className={cx('user-avatar', className)}>
-    <Image
-      className={cx('avatar')}
-      src={URLS.dataUserPhoto(projectKey, userId, true)}
-      alt="avatar"
-      fallback={DefaultUserImage}
-      preloaderColor="charcoal"
-    />
-  </div>
-);
+export const UserAvatar = ({ className, userId, projectKey, isNewApi }) => {
+  const src = isNewApi ? URLS.userAvatar(userId) : URLS.dataUserPhoto(projectKey, userId, true);
+
+  return (
+    <div className={cx('user-avatar', className)}>
+      <Image
+        className={cx('avatar')}
+        src={src}
+        alt="avatar"
+        fallback={DefaultUserImage}
+        preloaderColor="charcoal"
+      />
+    </div>
+  );
+};
 
 UserAvatar.propTypes = {
   className: PropTypes.string,
+  userId: PropTypes.string.isRequired,
   projectKey: PropTypes.string,
-  userId: PropTypes.string,
+  isNewApi: PropTypes.bool,
 };
+
 UserAvatar.defaultProps = {
   className: '',
   projectKey: '',
-  userId: '',
+  isNewApi: false,
 };
