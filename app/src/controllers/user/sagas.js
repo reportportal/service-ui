@@ -187,11 +187,11 @@ function* fetchUserWorker() {
 
     if (!isAssignedToTargetProject && assignmentNotRequired) {
       try {
-        const organizationProjects = yield call(
+        const currentProject = yield call(
           fetch,
           URLS.organizationProjects(activeOrganization?.id, { slug: activeOrganization?.slug }),
         );
-        projectKey = organizationProjects?.items?.[0]?.key;
+        projectKey = currentProject?.items?.[0]?.key;
       } catch (e) {} // eslint-disable-line no-empty
     }
 
