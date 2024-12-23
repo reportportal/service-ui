@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,28 @@
  * limitations under the License.
  */
 
-export { AllUsersGrid } from './allUsersGrid';
+.date {
+  font-family: inherit;
+  color: inherit;
+  min-height: auto;
+}
+
+.row-action-menu {
+  display: flex;
+  flex-direction: column;
+
+  p {
+    padding: 7px 16px;
+    align-items: center;
+    font-size: 13px;
+    line-height: 20px;
+    width: 120px;
+    color: $COLOR--almost-black;
+  }
+}
+
+.menu-icon {
+  svg {
+    margin-bottom: 3px;
+  }
+}

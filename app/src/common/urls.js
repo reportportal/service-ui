@@ -37,6 +37,7 @@ export const URLS = {
   dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
   dataUserPhoto: (projectKey, login, loadThumbnail) =>
     `${urlBase}data/${projectKey}/userphoto${getQueryParams({ login, loadThumbnail })}`,
+  userAvatar: (userId) => `${urlCommonBase}users/${userId}/avatar`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
   dashboards: (projectKey, params) =>

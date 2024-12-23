@@ -17,7 +17,7 @@
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { createQueryParametersSelector } from 'controllers/pages';
 import { createSelectedItemsSelector } from 'controllers/groupOperations';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_SORTING, NAMESPACE } from './constants';
 import { administrateDomainSelector } from '../selectors';
 
 const domainSelector = (state) => administrateDomainSelector(state).allUsers || {};
@@ -32,4 +32,5 @@ export const selectedUsersSelector = createSelectedItemsSelector(groupOperations
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
+  namespace: NAMESPACE,
 });

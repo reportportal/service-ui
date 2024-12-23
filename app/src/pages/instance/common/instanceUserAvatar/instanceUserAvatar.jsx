@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,28 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { Image } from 'components/main/image';
-import styles from './userAvatar.scss';
+import styles from './instanceUserAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, userId, projectKey, isNewApi }) => {
-  const src = isNewApi ? URLS.userAvatar(userId) : URLS.dataUserPhoto(projectKey, userId, true);
+export const InstanceUserAvatar = ({ className, userId }) => (
+  <div className={cx('user-avatar', className)}>
+    <Image
+      className={cx('avatar')}
+      src={URLS.userAvatar(userId)}
+      alt="avatar"
+      fallback={DefaultUserImage}
+      preloaderColor="charcoal"
+    />
+  </div>
+);
 
-  return (
-    <div className={cx('user-avatar', className)}>
-      <Image
-        className={cx('avatar')}
-        src={src}
-        alt="avatar"
-        fallback={DefaultUserImage}
-        preloaderColor="charcoal"
-      />
-    </div>
-  );
-};
-
-UserAvatar.propTypes = {
+InstanceUserAvatar.propTypes = {
   className: PropTypes.string,
-  userId: PropTypes.string.isRequired,
-  projectKey: PropTypes.string,
-  isNewApi: PropTypes.bool,
+  userId: PropTypes.string,
 };
 
-UserAvatar.defaultProps = {
+InstanceUserAvatar.defaultProps = {
   className: '',
-  projectKey: '',
-  isNewApi: false,
+  userId: '',
 };

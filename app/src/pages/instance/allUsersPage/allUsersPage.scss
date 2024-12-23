@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-.action-buttons {
+.all-users-page {
   display: flex;
-  justify-content: flex-end;
-  .action-button {
-    &:not(:last-child) {
-      margin-right: 15px;
-    }
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-  }
+  flex-direction: column;
+  min-height: 100%;
 }
