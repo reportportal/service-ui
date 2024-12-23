@@ -120,7 +120,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       }),
     );
 
-    return noAssignedOrganizations ? [] : sidebarItems;
+    return sidebarItems;
   };
 
   const link = { type: ORGANIZATIONS_PAGE };

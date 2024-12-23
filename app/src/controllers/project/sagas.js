@@ -416,7 +416,7 @@ function* watchUpdatePAState() {
 
 function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   try {
-    let project;
+    let project = null;
     if (projectKey) {
       project = yield call(fetch, URLS.projectByName(projectKey));
       yield put(setProjectIntegrationsAction(project.integrations));

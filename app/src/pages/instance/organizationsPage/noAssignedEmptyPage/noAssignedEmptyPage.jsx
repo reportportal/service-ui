@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,9 @@ import { fullNameSelector } from 'controllers/user/selectors';
 import OpenIcon from 'common/img/open-in-rounded-inline.svg';
 import { SAAS } from 'controllers/appInfo/constants';
 import { useIntl } from 'react-intl';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import RocketIcon from '../img/rocket-inline.svg';
-import FooterIcon from '../img/footer-inline.svg';
+import FooterImg from '../img/footer.png';
 import { messages } from './messages';
 import styles from './noAssignedEmptyPage.scss';
 
@@ -31,7 +32,8 @@ const cx = classNames.bind(styles);
 export const NoAssignedEmptyPage = () => {
   const { formatMessage } = useIntl();
   const fullName = useSelector(fullNameSelector);
-  const isSaaS = process.env.SAAS !== SAAS;
+  const instanceType = useSelector(instanceTypeSelector);
+  const isSaaS = instanceType !== SAAS;
   const description = isSaaS
     ? formatMessage(messages.descriptionSaaS)
     : formatMessage(messages.description);
@@ -39,17 +41,17 @@ export const NoAssignedEmptyPage = () => {
   const getSaasRender = () => {
     return (
       <div className={cx('saas-container')}>
-        <div className={cx('block')}>
-          <div className={cx('block-title')}>{formatMessage(messages.existingOrganization)}</div>
-          <div className={cx('block-description')}>{formatMessage(messages.invitations)}</div>
-        </div>
+        <section className={cx('block')}>
+          <h2 className={cx('block-title')}>{formatMessage(messages.existingOrganization)}</h2>
+          <p className={cx('block-description')}>{formatMessage(messages.invitations)}</p>
+        </section>
         <div className={cx('separator-container')}>
           <div className={cx('text')}>{formatMessage(messages.or)}</div>
           <div className={cx('separator')} />
         </div>
-        <div className={cx('block')}>
-          <div className={cx('block-title')}>{formatMessage(messages.createOwnOrganization)}</div>
-          <div className={cx('block-description')}>{formatMessage(messages.contactUs)}</div>
+        <section className={cx('block')}>
+          <h2 className={cx('block-title')}>{formatMessage(messages.createOwnOrganization)}</h2>
+          <p className={cx('block-description')}>{formatMessage(messages.contactUs)}</p>
           <a
             href="https://reportportal.io/pricing/saas"
             className={cx('link-container')}
@@ -59,7 +61,7 @@ export const NoAssignedEmptyPage = () => {
             <div className={cx('link')}>{formatMessage(messages.reviewPricing)}</div>
             <div className={cx('open-icon')}>{Parser(OpenIcon)}</div>
           </a>
-        </div>
+        </section>
       </div>
     );
   };
@@ -72,7 +74,7 @@ export const NoAssignedEmptyPage = () => {
         <div className={cx('description')}>{description}</div>
         {isSaaS && getSaasRender()}
       </div>
-      <div className={cx('footer-icon')}>{Parser(FooterIcon)}</div>
+      <img className={cx('footer-icon')} src={FooterImg} alt="footer" />
     </div>
   );
 };
