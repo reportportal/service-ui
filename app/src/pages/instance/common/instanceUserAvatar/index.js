@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { AllUsersListTable } from './allUsersListTable';
+export { InstanceUserAvatar } from './instanceUserAvatar';

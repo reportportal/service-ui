@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
@@ -5,8 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { userInfoSelector, activeProjectKeySelector } from 'controllers/user';
+import { InstanceUserAvatar } from 'pages/instance/common/instanceUserAvatar';
+import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { ADMIN_TYPE } from 'common/utils/permissions/constants';
 import {
@@ -42,7 +58,6 @@ const AllUsersListTableComponent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
-  const activeProjectKey = useSelector(activeProjectKeySelector);
 
   const renderRowActions = () => (
     <Popover
@@ -72,11 +87,7 @@ const AllUsersListTableComponent = ({
             content: user.fullName,
             component: (
               <div className={cx('member-name-column')}>
-                <UserAvatar
-                  className={cx('custom-user-avatar')}
-                  projectKey={activeProjectKey}
-                  userId={user.userId}
-                />
+                <InstanceUserAvatar className={cx('custom-user-avatar')} userId={user.id} />
                 <div className={cx('full-name')}>{user.fullName}</div>
                 <div className={cx('badges')}>
                   {memberBadges.map(({ title, type }) => {
@@ -116,7 +127,7 @@ const AllUsersListTableComponent = ({
           organizations: organizationsCount,
         };
       }),
-    [users, currentUser.id, activeProjectKey, formatMessage],
+    [users, currentUser.id, formatMessage],
   );
 
   const primaryColumn = {
