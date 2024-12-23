@@ -31,7 +31,7 @@ export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
 export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
 export const rallyUrl = composeValidators([
   isNotEmpty,
-  regex(/^(https:\/\/rally1.rallydev.com\/).*/),
+  regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
 export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
