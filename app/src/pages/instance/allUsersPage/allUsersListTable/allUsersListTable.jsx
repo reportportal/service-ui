@@ -21,11 +21,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { UserAvatarWithNewApi } from 'pages/inside/common/userAvatar';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { NAMESPACE } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
+
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
@@ -85,11 +86,7 @@ const AllUsersListTableComponent = ({
           fullName: {
             content: user.fullName,
             component: (
-              <UserNameCell
-                user={user}
-                badges={memberBadges}
-                userAvatar={(props) => <UserAvatar {...props} isNewApi />}
-              />
+              <UserNameCell user={user} badges={memberBadges} userAvatar={UserAvatarWithNewApi} />
             ),
           },
           email: user.email,
