@@ -78,6 +78,5 @@ AllUsersHeader.propTypes = {
 };
 
 AllUsersHeader.defaultProps = {
-  searchValue: '',
   onInvite: () => {},
 };
