@@ -21,7 +21,7 @@
   opacity: 0.8;
   max-width: 600px;
   transform: translateX(-50%);
-  z-index: 5;
+  z-index: $Z-INDEX-POPUP;
 }
 
 .notification-item-wrapper {
