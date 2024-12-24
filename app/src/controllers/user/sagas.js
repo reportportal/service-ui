@@ -15,12 +15,17 @@
  */
 
 import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { userAssignedSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  userAssignedSelector,
+  urlOrganizationAndProjectSelector,
+  ORGANIZATIONS_PAGE,
+} from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
 import { findAssignedProjectByOrganization } from 'common/utils';
@@ -134,71 +139,81 @@ function* fetchUserWorker() {
   }
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
-  const userSettings = getStorageItem(`${userId}_settings`) || {};
-  const targetActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
-  const { organizationSlug: targetOrganizationSlug, projectSlug: targetProjectSlug } =
-    targetActiveProject || {};
 
-  const { assignmentNotRequired, isAssignedToTargetProject } = yield select(
-    userAssignedSelector(targetProjectSlug, targetOrganizationSlug),
-  );
-
-  const defaultProject = Object.keys(assignedProjects)[0];
-  const {
-    projectSlug: defaultProjectSlug,
-    projectKey: defaultProjectKey,
-    organizationId,
-  } = assignedProjects[defaultProject];
-  const defaultOrganization = Object.keys(assignedOrganizations).find(
-    (key) => assignedOrganizations[key].organizationId === organizationId,
-  );
-  const { organizationSlug: defaultOrganizationSlug } = defaultOrganization
-    ? assignedOrganizations[defaultOrganization]
-    : Object.keys(assignedOrganizations)[0];
-
-  let projectKey;
-  let activeOrganization;
-
-  try {
-    const activeOrganizationResponse = yield call(
-      fetch,
-      URLS.organizationList({ slug: targetOrganizationSlug }),
-    );
-
-    activeOrganization = activeOrganizationResponse?.items?.[0];
-  } catch (e) {} // eslint-disable-line no-empty
-
-  if (!isAssignedToTargetProject && assignmentNotRequired) {
-    try {
-      // TODO: Fetch project by slug
-      const organizationProjects = yield call(
-        fetch,
-        URLS.organizationProjects(activeOrganization?.id),
-      );
-      projectKey = organizationProjects?.items?.find(({ slug }) => slug === targetProjectSlug)?.key;
-    } catch (e) {} // eslint-disable-line no-empty
-  }
-
-  const activeProject =
-    isAssignedToTargetProject || projectKey
-      ? targetActiveProject
-      : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
-
-  if (!projectKey) {
-    const assignedProject = findAssignedProjectByOrganization(
-      assignedProjects,
-      assignedOrganizations[targetOrganizationSlug]?.organizationId,
-      targetProjectSlug,
-    );
-
-    projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
-  }
-
-  yield put(setActiveProjectAction(activeProject));
-  yield put(setActiveProjectKeyAction(projectKey));
-  yield put(setActiveOrganizationAction(activeOrganization));
-  const format = getLogTimeFormatFromStorage(user.userId);
+  const format = getLogTimeFormatFromStorage(userId);
   yield put(setLogTimeFormatAction(format));
+
+  if (Object.keys(assignedOrganizations).length === 0) {
+    yield put(setActiveProjectKeyAction(null));
+    yield put(
+      redirect({
+        type: ORGANIZATIONS_PAGE,
+      }),
+    );
+  } else {
+    const userSettings = getStorageItem(`${userId}_settings`) || {};
+    const targetActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
+    const { organizationSlug: targetOrganizationSlug, projectSlug: targetProjectSlug } =
+      targetActiveProject || {};
+
+    const { assignmentNotRequired, isAssignedToTargetProject } = yield select(
+      userAssignedSelector(targetProjectSlug, targetOrganizationSlug),
+    );
+
+    const defaultProject = Object.keys(assignedProjects)[0];
+    const {
+      projectSlug: defaultProjectSlug,
+      projectKey: defaultProjectKey,
+      organizationId,
+    } = assignedProjects[defaultProject];
+    const defaultOrganization = Object.keys(assignedOrganizations).find(
+      (key) => assignedOrganizations[key].organizationId === organizationId,
+    );
+    const { organizationSlug: defaultOrganizationSlug } = defaultOrganization
+      ? assignedOrganizations[defaultOrganization]
+      : Object.keys(assignedOrganizations)[0];
+
+    let projectKey;
+    let activeOrganization;
+
+    try {
+      const activeOrganizationResponse = yield call(
+        fetch,
+        URLS.organizationList({ slug: targetOrganizationSlug }),
+      );
+
+      activeOrganization = activeOrganizationResponse?.items?.[0];
+    } catch (e) {} // eslint-disable-line no-empty
+
+    if (!isAssignedToTargetProject && assignmentNotRequired) {
+      try {
+        const currentProject = yield call(
+          fetch,
+          URLS.organizationProjects(activeOrganization?.id, { slug: activeOrganization?.slug }),
+        );
+        projectKey = currentProject?.items?.[0]?.key;
+      } catch (e) {} // eslint-disable-line no-empty
+    }
+
+    const activeProject =
+      isAssignedToTargetProject || projectKey
+        ? targetActiveProject
+        : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+
+    if (!projectKey) {
+      const assignedProject = findAssignedProjectByOrganization(
+        assignedProjects,
+        assignedOrganizations[targetOrganizationSlug]?.organizationId,
+        targetProjectSlug,
+      );
+
+      projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
+    }
+
+    yield put(setActiveProjectAction(activeProject));
+    yield put(setActiveProjectKeyAction(projectKey));
+    yield put(setActiveOrganizationAction(activeOrganization));
+  }
 }
 
 function* saveActiveProjectWorker({ payload: activeProject }) {

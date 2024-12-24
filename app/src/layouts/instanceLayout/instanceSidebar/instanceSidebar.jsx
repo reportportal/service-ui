@@ -40,6 +40,8 @@ import OrganizationsIcon from 'common/img/sidebar/organizations-icon-inline.svg'
 import UsersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import PluginsIcon from 'common/img/sidebar/plugins-icon-inline.svg';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { assignedOrganizationsSelector } from 'controllers/user';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
@@ -51,6 +53,10 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const adminPageExtensions = useSelector(uiExtensionAdminPagesSelector);
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector);
+  const noAssignedOrganizations =
+    Object.keys(assignedOrganizations).length === 0 && userRoles.userRole !== ADMINISTRATOR;
+
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
   const onClickButton = (eventInfo) => {
@@ -149,7 +155,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
 
   return (
     <AppSidebar
-      createMainBlock={createMainBlock}
+      createMainBlock={noAssignedOrganizations ? () => {} : createMainBlock}
       items={getSidebarItems()}
       isOpenOrganizationPopover={isOpenOrganizationPopover}
       linkToUserProfilePage={linkToUserProfilePage}

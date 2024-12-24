@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OrganizationsPageHeader } from './organizationsPageHeader';
+export { NoAssignedEmptyPage } from './noAssignedEmptyPage';
