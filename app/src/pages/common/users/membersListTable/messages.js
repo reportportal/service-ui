@@ -41,6 +41,14 @@ export const messages = defineMessages({
     id: 'MembersListTable.projects',
     defaultMessage: 'Projects',
   },
+  type: {
+    id: 'MembersListTable.type',
+    defaultMessage: 'Type',
+  },
+  organizations: {
+    id: 'MembersListTable.organizations',
+    defaultMessage: 'Organizations',
+  },
   adminAccessInfo: {
     id: 'MembersListTable.adminAccessInfo',
     defaultMessage:
