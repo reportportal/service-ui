@@ -125,13 +125,13 @@ const AllUsersListTableComponent = ({
     },
     {
       key: 'accountType',
-      header: formatMessage(messages.role),
+      header: formatMessage(messages.type),
       width: 114,
       align: 'left',
     },
     {
       key: 'organizations',
-      header: formatMessage(messages.projects),
+      header: formatMessage(messages.organizations),
       width: 104,
       align: 'right',
     },
