@@ -81,7 +81,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const { formatMessage } = useIntl();
 
   const dispatch = useDispatch();
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
   const userRoles = useSelector(userRolesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const pluginNameInCamelCase = toCamelCase(pluginName);
@@ -317,7 +317,8 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                     to={{
                       type: PROJECT_SETTINGS_TAB_PAGE,
                       payload: {
-                        projectId: activeProject,
+                        organizationSlug,
+                        projectSlug,
                         settingsTab: INTEGRATIONS,
                       },
                       meta: {
