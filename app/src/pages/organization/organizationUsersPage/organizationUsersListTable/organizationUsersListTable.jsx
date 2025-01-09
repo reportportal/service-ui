@@ -20,7 +20,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
@@ -79,9 +79,17 @@ const OrgTeamListTableWrapped = ({
                 <div className={cx('member-name-column')}>
                   <div className={cx('full-name')}>{fullName}</div>
                   {instanceRole === ADMINISTRATOR && (
-                    <div className={cx('admin-badge')}>
-                      <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
-                    </div>
+                    <Tooltip
+                      key={`${id}-tooltip`}
+                      content={formatMessage(messages.adminAccessInfo)}
+                      placement="top"
+                      width={248}
+                      wrapperClassName={cx('tooltip')}
+                    >
+                      <div className={cx('admin-badge')}>
+                        <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+                      </div>
+                    </Tooltip>
                   )}
                 </div>
               ),
