@@ -45,7 +45,10 @@
   font-family: $FONT-ROBOTO-BOLD;
   font-size: 11px;
   line-height: 16px;
-  margin-right: 16px;
+}
+
+.tooltip {
+  width: fit-content;
 }
 
 .member-name-column {
