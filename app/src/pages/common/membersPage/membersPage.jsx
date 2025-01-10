@@ -28,7 +28,7 @@ import {
 import { withFilter } from 'controllers/filter';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
-import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { MEMBERS_PAGE_EVENTS, MEMBERS_PAGE_VIEWS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @withPagination({
   paginationSelector: membersPaginationSelector,
 })
-@track({ page: MEMBERS_PAGE })
+@track(MEMBERS_PAGE_VIEWS.MEMBERS_PAGE)
 export class MembersPage extends Component {
   static propTypes = {
     onFilterChange: PropTypes.func,
@@ -125,7 +125,6 @@ export class MembersPage extends Component {
 
   render() {
     const { filter, members, loading } = this.props;
-
     return (
       <Fragment>
         <MembersPageToolbar
