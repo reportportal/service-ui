@@ -26,7 +26,7 @@
     "@formatjs/intl-relativetimeformat": "4.5.1",
     "@formatjs/intl-utils": "1.6.0",
     "@reportportal/ui-kit": "^0.0.1-alpha.38",
-    "axios": "1.6.4",
+    "axios": "1.7.9",
     "c3": "0.7.20",
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
@@ -91,7 +91,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
-    "swagger-ui-react": "5.17.12",
+    "swagger-ui-react": "5.18.2",
     "video.js": "7.17.0"
   },
   "devDependencies": {
