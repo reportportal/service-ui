@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,35 @@
  * limitations under the License.
  */
 
-export { AttachmentCodeModal } from './attachmentCodeModal';
-export { AttachmentHarFileModal } from './attachmentHarFileModal';
-export { AttachmentImageModal } from './attachmentImageModal';
-export { AttachmentVideoModal } from './attachmentVideoModal';
+.attachment-video-modal {
+  max-width: 1000px;
+  width: 1000px;
+  margin-left: -500px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: auto;
+    margin-left: 0;
+  }
+}
+
+.attachment-modal-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.attachment-video-wrapper {
+  display: table;
+  text-align: center;
+}
+
+.attachment-video {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.video-item {
+  max-width: 100%;
+}
