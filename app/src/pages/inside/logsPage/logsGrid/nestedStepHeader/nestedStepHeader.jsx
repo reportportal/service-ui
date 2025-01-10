@@ -153,8 +153,8 @@ export class NestedStepHeader extends Component {
                   status={data.status}
                   itemNumber={data.number}
                   timing={{
-                    start: data.startTime,
-                    end: data.endTime,
+                    start: new Date(data.startTime).getTime(),
+                    end: new Date(data.endTime).getTime(),
                     approxTime: data.approximateDuration,
                   }}
                 />
