@@ -34,27 +34,45 @@
   }
 }
 
-.admin-badge {
+.member-name-column {
+  display: flex;
+  align-items: center;
+}
+
+.full-name {
+  margin-left: 16px;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  gap: 8px;
+}
+
+.admin-badge,
+.you-badge {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 2px 8px;
   border-radius: 6px;
-  background-color: $COLOR--tag-value-text;
   color: $COLOR--white-two;
   font-family: $FONT-ROBOTO-BOLD;
   font-size: 11px;
   line-height: 16px;
 }
 
-.tooltip {
-  width: fit-content;
+.admin-badge {
+  background-color: $COLOR--tag-value-text;
 }
 
-.member-name-column {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.you-badge {
+  background-color: $COLOR--topaz-focused;
+}
+
+.tooltip {
+  width: fit-content;
 }
 
 .date {

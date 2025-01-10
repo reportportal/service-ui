@@ -2057,6 +2057,7 @@
   "UserBlock.adminBadge": "管理",
   "UserBlock.logout": "登出",
   "UserBlock.profile": "简介",
+  "UserBlock.youBadge": "You",
   "UserInfo.submitError": "错误！无法保存更改",
   "UserInfo.submitSuccess": "已保存更改",
   "ViewTabs.disabledAnalyzer": "服务分析器未运行",

@@ -2057,6 +2057,7 @@
   "UserBlock.adminBadge": "Administrador",
   "UserBlock.logout": "Cerrar sesión",
   "UserBlock.profile": "Perfil",
+  "UserBlock.youBadge": "You",
   "UserInfo.submitError": "¡Error! No se pueden guardar los cambios",
   "UserInfo.submitSuccess": "Cambios guardados con éxito",
   "ViewTabs.disabledAnalyzer": "El servicio de ANALIZADOR no está iniciado",
