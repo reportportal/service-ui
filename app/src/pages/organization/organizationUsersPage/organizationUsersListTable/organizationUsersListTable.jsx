@@ -37,6 +37,7 @@ import {
 } from 'controllers/organization/users';
 import { SORTING_KEY } from 'controllers/organization/projects';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { userInfoSelector } from 'controllers/user';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './organizationUsersListTable.scss';
@@ -58,6 +59,7 @@ const OrgTeamListTableWrapped = ({
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const showPagination = users.length > 0;
+  const currentUser = useSelector(userInfoSelector);
   const data = useMemo(
     () =>
       users.map(
@@ -71,6 +73,7 @@ const OrgTeamListTableWrapped = ({
           org_role: orgRole,
         }) => {
           const projectsCount = stats.project_stats.total_count;
+          const isCurrentUser = id === currentUser.id;
           return {
             id,
             fullName: {
@@ -78,19 +81,25 @@ const OrgTeamListTableWrapped = ({
               component: (
                 <div className={cx('member-name-column')}>
                   <div className={cx('full-name')}>{fullName}</div>
-                  {instanceRole === ADMINISTRATOR && (
-                    <Tooltip
-                      key={`${id}-tooltip`}
-                      content={formatMessage(messages.adminAccessInfo)}
-                      placement="top"
-                      width={248}
-                      wrapperClassName={cx('tooltip')}
-                    >
-                      <div className={cx('admin-badge')}>
-                        <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+                  <div className={cx('badges')}>
+                    {instanceRole === ADMINISTRATOR && (
+                      <Tooltip
+                        key={`${id}-tooltip`}
+                        content={formatMessage(messages.adminAccessInfo)}
+                        placement="top"
+                        width={248}
+                      >
+                        <div className={cx('admin-badge')}>
+                          <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'Admin'} />
+                        </div>
+                      </Tooltip>
+                    )}
+                    {isCurrentUser && (
+                      <div className={cx('you-badge')}>
+                        <FormattedMessage id={'UserBlock.youBadge'} defaultMessage={'You'} />
                       </div>
-                    </Tooltip>
-                  )}
+                    )}
+                  </div>
                 </div>
               ),
             },
@@ -108,7 +117,7 @@ const OrgTeamListTableWrapped = ({
           };
         },
       ),
-    [users, organizationSlug, projectSlug],
+    [users, organizationSlug, projectSlug, currentUser.id],
   );
 
   const primaryColumn = {
