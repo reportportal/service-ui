@@ -54,6 +54,18 @@ describe('validate.url', () => {
   });
 });
 
+describe('validate.rallyUrl', () => {
+  test('validation should be correct', () => {
+    expect(validate.rallyUrl('https://rally1.rallydev.com/8888')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.rallyUrl(undefined)).toBe(false);
+    expect(validate.rallyUrl('')).toBe(false);
+    expect(validate.rallyUrl('  ')).toBe(false);
+    expect(validate.rallyUrl('example')).toBe(false);
+  });
+});
+
 describe('validate.email', () => {
   test('validation should be correct', () => {
     expect(validate.email('email@example.com')).toBe(true);
