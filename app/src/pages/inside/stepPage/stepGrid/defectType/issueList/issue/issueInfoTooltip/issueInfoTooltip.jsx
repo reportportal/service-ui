@@ -196,14 +196,18 @@ export class IssueInfoTooltip extends Component {
       <Fragment>
         <h4 className={cx('header')}>{formatMessage(messages.issueSummaryTitle)}</h4>
         <p className={cx('content')}>{issue.summary}</p>
-        <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
-        <p
-          className={cx('content', {
-            resolved: isResolved(issue.status),
-          })}
-        >
-          {issue.status}
-        </p>
+        {issue.status && (
+          <>
+            <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
+            <p
+              className={cx('content', {
+                resolved: isResolved(issue.status),
+              })}
+            >
+              {issue.status}
+            </p>
+          </>
+        )}
       </Fragment>
     ) : (
       <Fragment>

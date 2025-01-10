@@ -38,6 +38,7 @@ export const descriptionEntity = bindMessageToValidator(
 );
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
+export const btsRallyUrl = bindMessageToValidator(validate.rallyUrl, 'btsUrlHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,
   'btsIntegrationNameHint',
