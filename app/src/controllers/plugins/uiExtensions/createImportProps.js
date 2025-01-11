@@ -81,6 +81,7 @@ import {
   querySelector,
   payloadSelector,
   activeProjectRoleSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -345,6 +346,7 @@ export const createImportProps = (pluginName) => ({
     projectInfoSelector,
     projectAttributesSelector,
     activeProjectRoleSelector,
+    userRolesSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
