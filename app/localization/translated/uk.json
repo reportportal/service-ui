@@ -1544,6 +1544,7 @@
   "OrganizationsControl.all": "Всі",
   "OrganizationsControl.allOrganizations": "Всі організації",
   "OrganizationsControl.assignmentsList": "Призначений список",
+  "OrganizationsControl.noAssignments": "Ніяких призначень",
   "OrganizationsControl.organization": "Організація",
   "OrganizationsFilter.lastRunDate": "Last Run Date",
   "OrganizationsFilter.lastRunDatePlaceholder": "Будь-який",

@@ -1544,6 +1544,7 @@
   "OrganizationsControl.all": "Усе",
   "OrganizationsControl.allOrganizations": "Усе арганізацыі",
   "OrganizationsControl.assignmentsList": "Прызначаны спіс",
+  "OrganizationsControl.noAssignments": "Ніякіх прызначэнняў",
   "OrganizationsControl.organization": "Арганізацыя",
   "OrganizationsFilter.lastRunDate": "Дата апошняга запуску",
   "OrganizationsFilter.lastRunDatePlaceholder": "Любая",

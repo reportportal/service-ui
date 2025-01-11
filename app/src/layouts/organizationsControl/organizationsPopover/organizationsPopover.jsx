@@ -48,6 +48,10 @@ export const messages = defineMessages({
     id: 'OrganizationsControl.assignmentsList',
     defaultMessage: 'Assignments list',
   },
+  noAssignments: {
+    id: 'OrganizationsControl.noAssignments',
+    defaultMessage: 'No assignments',
+  },
 });
 
 export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
@@ -171,7 +175,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           ))
         ) : (
           <div className={cx('organizations-empty-state')}>
-            {formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+            {formatMessage(messages.noAssignments)}
           </div>
         )}
       </ScrollWrapper>
