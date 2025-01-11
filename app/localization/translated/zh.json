@@ -1544,6 +1544,7 @@
   "OrganizationsControl.all": "All",
   "OrganizationsControl.allOrganizations": "All organizations",
   "OrganizationsControl.assignmentsList": "Assignments list",
+  "OrganizationsControl.noAssignments": "No assignments",
   "OrganizationsControl.organization": "组织",
   "OrganizationsFilter.lastRunDate": "Last Run Date",
   "OrganizationsFilter.lastRunDatePlaceholder": "Any",
