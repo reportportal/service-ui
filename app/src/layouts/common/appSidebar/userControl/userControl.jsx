@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { Image } from 'components/main/image';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
-import { photoTimeStampSelector, userInfoSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { withPopover } from 'componentLibrary/popover';
@@ -32,15 +32,14 @@ import styles from './userControl.scss';
 const cx = classNames.bind(styles);
 
 const UserControl = ({ onClick }) => {
-  const { userRole, fullName, email } = useSelector(userInfoSelector);
-  const photoTimeStamp = useSelector(photoTimeStampSelector);
+  const { userRole, fullName, email, id } = useSelector(userInfoSelector);
 
   return (
     <div className={cx('user-block-wrapper')} onClick={onClick}>
       <button className={cx('avatar-block')}>
         <Image
           className={cx('avatar-img')}
-          src={URLS.dataPhoto(photoTimeStamp, true)}
+          src={URLS.userAvatar(id)}
           alt="avatar"
           fallback={DefaultUserImage}
         />
