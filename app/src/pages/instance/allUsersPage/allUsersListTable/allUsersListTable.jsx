@@ -86,7 +86,13 @@ const AllUsersListTableComponent = ({
           fullName: {
             content: user.fullName,
             component: (
-              <UserNameCell user={user} badges={memberBadges} userAvatar={UserAvatarWithNewApi} />
+              <UserNameCell
+                user={user}
+                badges={memberBadges}
+                userAvatar={({ className, userId: avatarUserId }) => (
+                  <UserAvatarWithNewApi thumbnail className={className} userId={avatarUserId} />
+                )}
+              />
             ),
           },
           email: user.email,

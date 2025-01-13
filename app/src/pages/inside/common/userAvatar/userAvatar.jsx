@@ -24,8 +24,10 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, userId, projectKey, isNewApi }) => {
-  const src = isNewApi ? URLS.userAvatar(userId) : URLS.dataUserPhoto(projectKey, userId, true);
+export const UserAvatar = ({ className, userId, projectKey, isNewApi, thumbnail }) => {
+  const src = isNewApi
+    ? URLS.userAvatar(userId, thumbnail)
+    : URLS.dataUserPhoto(projectKey, userId, true);
 
   return (
     <div className={cx('user-avatar', className)}>
@@ -45,10 +47,12 @@ UserAvatar.propTypes = {
   userId: PropTypes.string.isRequired,
   projectKey: PropTypes.string,
   isNewApi: PropTypes.bool,
+  thumbnail: PropTypes.bool,
 };
 
 UserAvatar.defaultProps = {
   className: '',
   projectKey: '',
   isNewApi: false,
+  thumbnail: false,
 };
