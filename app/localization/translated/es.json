@@ -2189,21 +2189,5 @@
   "launchPatternAnalysisModal.title": "Análisis de patrones de ejecuciones",
   "notFoundPage.oops": "Ups. Página no encontrada.",
   "notFoundPage.pageNotExist": "La página que busca no existe.",
-  "notFoundPage.toHome": "Llévame de aquí",
-  "usersGrid.accountTypeGithub": "Github",
-  "usersGrid.accountTypeInternal": "Interno",
-  "usersGrid.accountTypeLdap": "Ldap",
-  "usersGrid.accountTypeSaml": "Saml",
-  "usersGrid.accountTypeScim": "SCIM",
-  "usersGrid.accountTypeUpsa": "UPSA",
-  "usersGrid.contains": "Contiene",
-  "usersGrid.email": "Correo electrónico",
-  "usersGrid.lastLogin": "Último acceso",
-  "usersGrid.name": "Nombre",
-  "usersGrid.project": "Proyecto",
-  "usersGrid.role": "Rol",
-  "usersGrid.roleAdmin": "Admin",
-  "usersGrid.roleNonAdmin": "No Admin",
-  "usersGrid.type": "Tipo",
-  "usersGrid.user": "Usuario"
+  "notFoundPage.toHome": "Llévame de aquí"
 }

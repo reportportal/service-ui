@@ -2189,21 +2189,5 @@
   "launchPatternAnalysisModal.title": "Патэрн-аналіз запускаў",
   "notFoundPage.oops": "Упс. Здаецца, Вы згубіліся.",
   "notFoundPage.pageNotExist": "Старонка, якую Вы шукаеце, не існуе.",
-  "notFoundPage.toHome": "Забярыце мяне адсюль",
-  "usersGrid.accountTypeGithub": "Github",
-  "usersGrid.accountTypeInternal": "Унутраны",
-  "usersGrid.accountTypeLdap": "Ldap",
-  "usersGrid.accountTypeSaml": "Saml",
-  "usersGrid.accountTypeScim": "SCIM",
-  "usersGrid.accountTypeUpsa": "UPSA",
-  "usersGrid.contains": "Змяшчае",
-  "usersGrid.email": "Эл. пошта",
-  "usersGrid.lastLogin": "Апошні ўваход",
-  "usersGrid.name": "Iмя",
-  "usersGrid.project": "Праект",
-  "usersGrid.role": "Роль",
-  "usersGrid.roleAdmin": "Адмін",
-  "usersGrid.roleNonAdmin": "Не Адмін",
-  "usersGrid.type": "Тып",
-  "usersGrid.user": "Лагін"
+  "notFoundPage.toHome": "Забярыце мяне адсюль"
 }

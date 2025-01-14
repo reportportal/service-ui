@@ -2189,21 +2189,5 @@
   "launchPatternAnalysisModal.title": "Паттерн-анализ запусков",
   "notFoundPage.oops": "Упс. Страница не найдена.",
   "notFoundPage.pageNotExist": "Страница, которую Вы ищете, не существует.",
-  "notFoundPage.toHome": "Заберите меня отсюда",
-  "usersGrid.accountTypeGithub": "Github",
-  "usersGrid.accountTypeInternal": "Внутренний",
-  "usersGrid.accountTypeLdap": "Ldap",
-  "usersGrid.accountTypeSaml": "Saml",
-  "usersGrid.accountTypeScim": "SCIM",
-  "usersGrid.accountTypeUpsa": "UPSA",
-  "usersGrid.contains": "Содержит",
-  "usersGrid.email": "Эл. почта",
-  "usersGrid.lastLogin": "Последний вход",
-  "usersGrid.name": "Имя",
-  "usersGrid.project": "Проект",
-  "usersGrid.role": "Роль",
-  "usersGrid.roleAdmin": "Админ",
-  "usersGrid.roleNonAdmin": "Не Админ",
-  "usersGrid.type": "Тип",
-  "usersGrid.user": "Логин"
+  "notFoundPage.toHome": "Заберите меня отсюда"
 }

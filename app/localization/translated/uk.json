@@ -2189,21 +2189,5 @@
   "launchPatternAnalysisModal.title": "Патерн-аналіз запусків",
   "notFoundPage.oops": "Упс. Сторінка не знайдена.",
   "notFoundPage.pageNotExist": "Сторінка, яку Ви шукаєте, не існує.",
-  "notFoundPage.toHome": "Заберіть мене звідси",
-  "usersGrid.accountTypeGithub": "На GitHub",
-  "usersGrid.accountTypeInternal": "Внутрішній",
-  "usersGrid.accountTypeLdap": "У LDAP",
-  "usersGrid.accountTypeSaml": "Saml",
-  "usersGrid.accountTypeScim": "SCIM",
-  "usersGrid.accountTypeUpsa": "УПСА",
-  "usersGrid.contains": "Містить",
-  "usersGrid.email": "Ел. пошта",
-  "usersGrid.lastLogin": "Останній вхід",
-  "usersGrid.name": "Ім’я",
-  "usersGrid.project": "Проект",
-  "usersGrid.role": "Роль",
-  "usersGrid.roleAdmin": "Адмін",
-  "usersGrid.roleNonAdmin": "Не Адмін",
-  "usersGrid.type": "Тип",
-  "usersGrid.user": "Логін"
+  "notFoundPage.toHome": "Заберіть мене звідси"
 }
