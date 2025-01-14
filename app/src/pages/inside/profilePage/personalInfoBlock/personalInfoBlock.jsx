@@ -82,6 +82,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userInfoSelector(state).userId,
+    currentUserId: userInfoSelector(state).id,
     accountType: userInfoSelector(state).accountType,
     isDemoInstance: isDemoInstanceSelector(state),
   }),
@@ -96,6 +97,7 @@ const messages = defineMessages({
 export class PersonalInfoBlock extends Component {
   static propTypes = {
     userId: PropTypes.string,
+    currentUserId: PropTypes.number,
     accountType: PropTypes.string,
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -109,14 +111,16 @@ export class PersonalInfoBlock extends Component {
   };
   static defaultProps = {
     userId: '',
+    currentUserId: null,
     accountType: '',
     isDemoInstance: false,
   };
 
   state = {
-    avatarSource: URLS.dataPhoto(),
+    avatarSource: URLS.userAvatar(this.props.currentUserId, false),
     forceUpdateInProgress: false,
   };
+
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
     this.props.showModalAction({
@@ -158,7 +162,6 @@ export class PersonalInfoBlock extends Component {
     if (accountType === UPSA) {
       return 'epam';
     }
-
     return accountType.toLowerCase();
   };
 
@@ -180,9 +183,11 @@ export class PersonalInfoBlock extends Component {
         });
       });
   };
+
   uploadNewImage = (image) => {
     this.setState({ avatarSource: image });
   };
+
   removeImage = () => {
     this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
   };

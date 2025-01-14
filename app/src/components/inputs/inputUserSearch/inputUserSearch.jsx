@@ -56,7 +56,7 @@ export const makeOptions = (isAdmin, projectKey, { organizationSlug, projectSlug
       email: option.email || '',
       disabled: isAssignedProject,
       isAssigned: isAssignedProject,
-      userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
+      userAvatar: URLS.userAvatar(isAdmin ? option.userId : option.login, true),
       assignedProjects: option.assignedProjects || {},
       assignedOrganizations: option.assignedOrganizations || {},
       userRole: option.userRole,
