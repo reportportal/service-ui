@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { Image } from 'components/main/image';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
-import { userInfoSelector } from 'controllers/user';
+import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { withPopover } from 'componentLibrary/popover';
@@ -33,13 +33,16 @@ const cx = classNames.bind(styles);
 
 const UserControl = ({ onClick }) => {
   const { userRole, fullName, email, id } = useSelector(userInfoSelector);
+  const photoTimeStamp = useSelector(photoTimeStampSelector);
+
+  const avatarUrl = `${URLS.userAvatar(id, true)}${photoTimeStamp ? `&ts=${photoTimeStamp}` : ''}`;
 
   return (
     <div className={cx('user-block-wrapper')} onClick={onClick}>
       <button className={cx('avatar-block')}>
         <Image
           className={cx('avatar-img')}
-          src={URLS.userAvatar(id, true)}
+          src={avatarUrl}
           alt="avatar"
           fallback={DefaultUserImage}
         />
@@ -49,7 +52,6 @@ const UserControl = ({ onClick }) => {
           <div className={cx('username-wrapper')}>
             <div className={cx('username')}>{fullName}</div>
             <div className={cx('arrow-icon')}>
-              {/* TODO: Need to manage this permission via common permission engine */}
               {userRole === ADMINISTRATOR && (
                 <div className={cx('admin-badge')}>
                   <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
