@@ -34,7 +34,7 @@ export const FilterInput = ({ filter, onFilter }) => {
   };
 
   const onTextFieldChange = ({ target }) => {
-    if (helpText && !Number(target.value)) {
+    if (helpText && !Number.isInteger(Number(target.value))) {
       return;
     }
 

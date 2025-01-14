@@ -1547,8 +1547,6 @@
   "OrganizationsFilter.lastRunDatePlaceholder": "Будь-який",
   "OrganizationsFilter.launches": "Запуски",
   "OrganizationsFilter.launchesPlaceholder": "Введіть кількість запусків",
-  "OrganizationsFilter.name": "Назва організації",
-  "OrganizationsFilter.namePlaceholder": "Введіть частину імені",
   "OrganizationsFilter.users": "Користувачі",
   "OrganizationsFilter.usersPlaceholder": "Введіть кількість учасників",
   "OrganizationsItem.open": "відкрити",

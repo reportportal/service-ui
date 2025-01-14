@@ -35,7 +35,7 @@ export const DEFAULT_PAGINATION = {
 
 export const SORTING_KEY = 'order';
 
-export const SEARCH_KEY = 'name';
+export const SEARCH_KEY = 'filter.CNT.name';
 
 export const DEFAULT_QUERY_PARAMS = {
   limit: DEFAULT_LIMITATION,

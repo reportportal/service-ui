@@ -19,10 +19,8 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   LAUNCHES_FILTER_NAME,
-  FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
-  getContainmentComparisons,
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
@@ -43,7 +41,6 @@ export const ProjectsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
-  const containmentComparisons = getContainmentComparisons(formatMessage);
 
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
@@ -72,15 +69,6 @@ export const ProjectsFilter = ({
       options: rangeComparisons,
       condition: rangeComparisons[0].value,
       helpText: formatMessage(helpMessage.helpText),
-      withField: true,
-    },
-    [FILTER_NAME]: {
-      filterName: FILTER_NAME,
-      value: '',
-      title: formatMessage(messages.name),
-      placeholder: formatMessage(messages.namePlaceholder),
-      options: containmentComparisons,
-      condition: containmentComparisons[0].value,
       withField: true,
     },
   };

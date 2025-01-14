@@ -1547,8 +1547,6 @@
   "OrganizationsFilter.lastRunDatePlaceholder": "Любой",
   "OrganizationsFilter.launches": "Запуски",
   "OrganizationsFilter.launchesPlaceholder": "Введите количество запусков",
-  "OrganizationsFilter.name": "Название Организации",
-  "OrganizationsFilter.namePlaceholder": "Введите часть имени",
   "OrganizationsFilter.users": "Пользователи",
   "OrganizationsFilter.usersPlaceholder": "Введите количество участников",
   "OrganizationsItem.open": "открыть",

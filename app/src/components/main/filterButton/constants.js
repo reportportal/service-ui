@@ -15,19 +15,15 @@
  */
 
 import {
-  CONDITION_CNT,
   CONDITION_EQ,
   CONDITION_GREATER_EQ,
   CONDITION_LESS_EQ,
-  CONDITION_NOT_CNT_EVENTS,
-  CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
 import { messages } from './messages';
 
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
 export const TEAMMATES_FILTER_NAME = 'users';
-export const FILTER_NAME = 'name';
 
 export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
@@ -41,11 +37,4 @@ export const getRangeComparisons = (formatMessage) => [
   { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
   { label: formatMessage(messages.greaterOrEqual), value: CONDITION_GREATER_EQ.toUpperCase() },
   { label: formatMessage(messages.lessOrEqual), value: CONDITION_LESS_EQ.toUpperCase() },
-];
-
-export const getContainmentComparisons = (formatMessage) => [
-  { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
-  { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ.toUpperCase() },
-  { label: formatMessage(messages.contains), value: CONDITION_CNT.toUpperCase() },
-  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT_EVENTS.toUpperCase() },
 ];

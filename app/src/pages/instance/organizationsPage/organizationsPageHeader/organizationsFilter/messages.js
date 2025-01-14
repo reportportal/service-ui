@@ -41,12 +41,4 @@ export const messages = defineMessages({
     id: 'OrganizationsFilter.usersPlaceholder',
     defaultMessage: 'Enter the number of members',
   },
-  name: {
-    id: 'OrganizationsFilter.name',
-    defaultMessage: 'Organization name',
-  },
-  namePlaceholder: {
-    id: 'OrganizationsFilter.namePlaceholder',
-    defaultMessage: 'Enter part of the name',
-  },
 });

@@ -1547,8 +1547,6 @@
   "OrganizationsFilter.lastRunDatePlaceholder": "Any",
   "OrganizationsFilter.launches": "Launches",
   "OrganizationsFilter.launchesPlaceholder": "Enter the number of launches",
-  "OrganizationsFilter.name": "Organization Name",
-  "OrganizationsFilter.namePlaceholder": "Enter part of the name",
   "OrganizationsFilter.users": "Users",
   "OrganizationsFilter.usersPlaceholder": "Enter the number of members",
   "OrganizationsItem.open": "open",

@@ -95,7 +95,7 @@ import {
   ASSIGNMENTS_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
-import { fetchOrganizationsAction } from 'controllers/instance/organizations';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
@@ -178,7 +178,7 @@ const routesMap = {
   [ORGANIZATIONS_PAGE]: {
     path: '/organizations',
     thunk: (dispatch) => {
-      dispatch(fetchOrganizationsAction());
+      dispatch(fetchFilteredOrganizationsAction());
     },
   },
 

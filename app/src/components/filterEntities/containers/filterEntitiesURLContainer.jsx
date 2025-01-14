@@ -28,13 +28,19 @@ const FilterEntitiesURL = ({
   debounceTime = 1000,
   defaultPagination,
   prefixQueryKey,
+  additionalFilter,
 }) => {
   const handleChange = useCallback(
     (newEntities) => {
       if (isEqual(newEntities, entities)) {
         return;
       }
-      const filterQuery = createFilterQuery(newEntities, entities, prefixQueryKey);
+      const { [additionalFilter]: value } = entities;
+      const filterQuery = createFilterQuery(
+        additionalFilter && value ? { [additionalFilter]: value, ...newEntities } : newEntities,
+        entities,
+        prefixQueryKey,
+      );
       if (!isEmptyObject(filterQuery)) {
         updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
       }
@@ -100,10 +106,13 @@ export const withFilterEntitiesURL = (namespace, prefixQueryKey) => (WrappedComp
       debounceTime,
       defaultPagination,
       prefixQueryKey,
+      additionalFilter: 'name',
     });
 
+    const { name, ...entriesWithoutName } = filteredEntities;
+
     return (
-      <WrappedComponent {...restProps} entities={filteredEntities} onFilterChange={onChange} />
+      <WrappedComponent {...restProps} entities={entriesWithoutName} onFilterChange={onChange} />
     );
   };
 
