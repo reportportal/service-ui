@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { UserAvatarWithNewApi } from 'pages/inside/common/userAvatar';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { NAMESPACE } from 'controllers/instance/allUsers/constants';
@@ -90,7 +90,7 @@ const AllUsersListTableComponent = ({
                 user={user}
                 badges={memberBadges}
                 userAvatar={({ className, userId: avatarUserId }) => (
-                  <UserAvatarWithNewApi thumbnail className={className} userId={avatarUserId} />
+                  <UserAvatar thumbnail className={className} userId={avatarUserId} />
                 )}
               />
             ),

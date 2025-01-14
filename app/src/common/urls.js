@@ -35,8 +35,6 @@ export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
 
   dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
-  dataUserPhoto: (projectKey, login, loadThumbnail) =>
-    `${urlBase}data/${projectKey}/userphoto${getQueryParams({ login, loadThumbnail })}`,
   userAvatar: (userId, thumbnail = false) =>
     `${urlCommonBase}users/${userId}/avatar${getQueryParams({ thumbnail })}`,
 

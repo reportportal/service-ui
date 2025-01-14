@@ -39,7 +39,7 @@ import {
 } from 'controllers/organization/users';
 import { SORTING_KEY } from 'controllers/organization/projects';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
-import { UserAvatarWithNewApi } from 'pages/inside/common/userAvatar';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './organizationUsersListTable.scss';
@@ -106,7 +106,7 @@ const OrgTeamListTableWrapped = ({
                   user={user}
                   badges={memberBadges}
                   userAvatar={({ className, userId: avatarUserId }) => (
-                    <UserAvatarWithNewApi thumbnail className={className} userId={avatarUserId} />
+                    <UserAvatar thumbnail className={className} userId={avatarUserId} />
                   )}
                 />
               ),
