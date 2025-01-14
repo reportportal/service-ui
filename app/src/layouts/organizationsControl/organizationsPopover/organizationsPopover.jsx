@@ -48,6 +48,10 @@ export const messages = defineMessages({
     id: 'OrganizationsControl.assignmentsList',
     defaultMessage: 'Assignments list',
   },
+  noAssignments: {
+    id: 'OrganizationsControl.noAssignments',
+    defaultMessage: 'No assignments',
+  },
 });
 
 export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
@@ -106,7 +110,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   return (
     <div className={cx('organizations-popover')}>
       <div className={cx('organizations-search')}>
-        {filteredProjects.length > 0 && (
+        {availableProjects.length > 0 && (
           <ThemeProvider theme="dark">
             <FieldText
               startIcon={<SearchIcon />}
@@ -171,7 +175,9 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           ))
         ) : (
           <div className={cx('organizations-empty-state')}>
-            {formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+            {availableProjects.length > 0
+              ? formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)
+              : formatMessage(messages.noAssignments)}
           </div>
         )}
       </ScrollWrapper>
