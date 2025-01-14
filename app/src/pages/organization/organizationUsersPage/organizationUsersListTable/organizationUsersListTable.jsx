@@ -39,7 +39,6 @@ import {
 } from 'controllers/organization/users';
 import { SORTING_KEY } from 'controllers/organization/projects';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './organizationUsersListTable.scss';
@@ -101,15 +100,7 @@ const OrgTeamListTableWrapped = ({
             id,
             fullName: {
               content: fullName,
-              component: (
-                <UserNameCell
-                  user={user}
-                  badges={memberBadges}
-                  userAvatar={({ className, userId: avatarUserId }) => (
-                    <UserAvatar thumbnail className={className} userId={avatarUserId} />
-                  )}
-                />
-              ),
+              component: <UserNameCell user={user} badges={memberBadges} />,
             },
             email,
             lastLogin: {

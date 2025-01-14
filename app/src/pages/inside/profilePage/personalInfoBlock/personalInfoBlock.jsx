@@ -81,8 +81,8 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    userId: userInfoSelector(state).userId,
-    currentUserId: userInfoSelector(state).id,
+    userLogin: userInfoSelector(state).userId,
+    userId: userInfoSelector(state).id,
     accountType: userInfoSelector(state).accountType,
     isDemoInstance: isDemoInstanceSelector(state),
   }),
@@ -96,8 +96,8 @@ const messages = defineMessages({
 @track()
 export class PersonalInfoBlock extends Component {
   static propTypes = {
-    userId: PropTypes.string,
-    currentUserId: PropTypes.number,
+    userLogin: PropTypes.string,
+    userId: PropTypes.number,
     accountType: PropTypes.string,
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -110,14 +110,14 @@ export class PersonalInfoBlock extends Component {
     isDemoInstance: PropTypes.bool,
   };
   static defaultProps = {
-    userId: '',
-    currentUserId: null,
+    userLogin: '',
+    userId: null,
     accountType: '',
     isDemoInstance: false,
   };
 
   state = {
-    avatarSource: URLS.userAvatar(this.props.currentUserId, false),
+    avatarSource: URLS.userAvatar(this.props.userId, false),
     forceUpdateInProgress: false,
   };
 
@@ -193,9 +193,9 @@ export class PersonalInfoBlock extends Component {
   };
 
   render() {
-    const { intl, accountType, userId, isDemoInstance } = this.props;
+    const { intl, accountType, userLogin, isDemoInstance } = this.props;
     const { forceUpdateInProgress } = this.state;
-    const isDefaultUser = userId === DEFAULT_USER_ID;
+    const isDefaultUser = userLogin === DEFAULT_USER_ID;
     const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
     return (
       <div className={cx('personal-info-block')}>
@@ -211,7 +211,7 @@ export class PersonalInfoBlock extends Component {
               />
             </div>
             <div className={cx('info')}>
-              <UserInfo accountType={accountType} userId={userId} />
+              <UserInfo accountType={accountType} userId={userLogin} />
               {accountType === INTERNAL && (
                 <PhotoControls
                   accountType={accountType}

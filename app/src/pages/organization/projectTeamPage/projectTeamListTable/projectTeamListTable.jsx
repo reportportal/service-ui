@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
@@ -90,15 +89,7 @@ const ProjectTeamListTableWrapped = ({
             id,
             fullName: {
               content: fullName,
-              component: (
-                <UserNameCell
-                  user={user}
-                  badges={memberBadges}
-                  userAvatar={({ className, userId: avatarUserId }) => (
-                    <UserAvatar thumbnail className={className} userId={avatarUserId} />
-                  )}
-                />
-              ),
+              component: <UserNameCell user={user} badges={memberBadges} />,
             },
             email,
             lastLogin: {
