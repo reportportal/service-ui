@@ -110,7 +110,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   return (
     <div className={cx('organizations-popover')}>
       <div className={cx('organizations-search')}>
-        {filteredProjects.length > 0 && (
+        {availableProjects.length > 0 && (
           <ThemeProvider theme="dark">
             <FieldText
               startIcon={<SearchIcon />}
@@ -175,7 +175,9 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
           ))
         ) : (
           <div className={cx('organizations-empty-state')}>
-            {formatMessage(messages.noAssignments)}
+            {availableProjects.length > 0
+              ? formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)
+              : formatMessage(messages.noAssignments)}
           </div>
         )}
       </ScrollWrapper>
