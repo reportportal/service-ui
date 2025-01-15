@@ -31,28 +31,32 @@ export const UserNameCell = ({ user, badges }) => {
   return (
     <div className={cx('user-name-cell')}>
       <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
-      <div className={cx('full-name')}>{user.fullName}</div>
-      <div className={cx('badges')}>
-        {badges.map(({ title, type }) => {
-          const badgeContent = (
-            <div key={`${user.id}-${type}`} className={cx('badge', type)}>
-              {formatMessage(title)}
-            </div>
-          );
+      <div className={cx('name-badge-wrapper')}>
+        {' '}
+        {/* Just added this wrapper */}
+        <div className={cx('full-name')}>{user.fullName}</div>
+        <div className={cx('badges')}>
+          {badges.map(({ title, type }) => {
+            const badgeContent = (
+              <div key={`${user.id}-${type}`} className={cx('badge', type)}>
+                {formatMessage(title)}
+              </div>
+            );
 
-          return type === ADMIN_TYPE ? (
-            <Tooltip
-              key={`${user.id}-${type}-tooltip`}
-              content={formatMessage(messages.adminAccessInfo)}
-              placement="top"
-              width={248}
-            >
-              {badgeContent}
-            </Tooltip>
-          ) : (
-            badgeContent
-          );
-        })}
+            return type === ADMIN_TYPE ? (
+              <Tooltip
+                key={`${user.id}-${type}-tooltip`}
+                content={formatMessage(messages.adminAccessInfo)}
+                placement="top"
+                width={248}
+              >
+                {badgeContent}
+              </Tooltip>
+            ) : (
+              badgeContent
+            );
+          })}
+        </div>
       </div>
     </div>
   );
