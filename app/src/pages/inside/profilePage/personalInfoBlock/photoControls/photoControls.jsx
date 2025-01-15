@@ -115,7 +115,7 @@ export class PhotoControls extends Component {
   onSave = () => {
     const formData = new FormData();
     formData.append('file', this.state.image);
-    fetch(URLS.dataPhoto(this.props.userId), { method: 'post', data: formData })
+    fetch(URLS.dataPhoto(), { method: 'post', data: formData })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.submitUpload),
@@ -167,7 +167,7 @@ export class PhotoControls extends Component {
     }
   };
   removeImageHandler = () => {
-    fetch(URLS.userAvatar(), { method: 'delete' })
+    fetch(URLS.userAvatar(this.props.userId), { method: 'delete' })
       .then(() => {
         this.props.removeImage();
         this.props.setPhotoTimeStampAction(Date.now());
