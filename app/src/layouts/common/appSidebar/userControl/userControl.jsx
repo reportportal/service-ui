@@ -40,7 +40,7 @@ const UserControl = ({ onClick }) => {
       <button className={cx('avatar-block')}>
         <Image
           className={cx('avatar-img')}
-          src={URLS.userAvatar(id, true, photoTimeStamp)}
+          src={URLS.userAvatar(id, photoTimeStamp, true)}
           alt="avatar"
           fallback={DefaultUserImage}
         />
