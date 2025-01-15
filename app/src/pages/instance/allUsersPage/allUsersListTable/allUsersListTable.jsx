@@ -25,6 +25,7 @@ import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { NAMESPACE } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
+import { ACCOUNT_TYPE_DISPLAY_MAP } from 'common/constants/accountType';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
@@ -43,21 +44,7 @@ import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-const getDisplayAccountType = (accountType) => {
-  if (accountType === 'UPSA') {
-    return 'Synched';
-  }
-
-  const typeMap = {
-    INTERNAL: 'Internal',
-    GITHUB: 'GitHub',
-    SAML: 'SAML',
-    LDAP: 'LDAP',
-    SCIM: 'SCIM',
-  };
-
-  return typeMap[accountType] || accountType;
-};
+const getDisplayAccountType = (accountType) => ACCOUNT_TYPE_DISPLAY_MAP[accountType] || accountType;
 
 const AllUsersListTableComponent = ({
   users,
