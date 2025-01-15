@@ -25,7 +25,6 @@ import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { NAMESPACE } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
-
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
@@ -43,6 +42,23 @@ import { messages } from 'pages/common/users/membersListTable/messages';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
+
+const getDisplayAccountType = (accountType) => {
+  if (accountType === 'UPSA') {
+    return 'Synched';
+  }
+
+  const typeMap = {
+    INTERNAL: 'Internal',
+    GITHUB: 'GitHub',
+    SAML: 'SAML',
+    LDAP: 'LDAP',
+    SCIM: 'SCIM',
+  };
+
+  return typeMap[accountType] || accountType;
+};
+
 const AllUsersListTableComponent = ({
   users,
   onChangeSorting,
@@ -95,7 +111,7 @@ const AllUsersListTableComponent = ({
               <span>n/a</span>
             ),
           },
-          accountType: user.accountType.toLowerCase(),
+          accountType: getDisplayAccountType(user.accountType),
           organizations: organizationsCount,
         };
       }),
