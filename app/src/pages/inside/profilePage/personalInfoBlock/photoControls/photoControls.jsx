@@ -166,7 +166,7 @@ export class PhotoControls extends Component {
     }
   };
   removeImageHandler = () => {
-    fetch(URLS.dataPhoto(), { method: 'delete' })
+    fetch(URLS.userAvatar(), { method: 'delete' })
       .then(() => {
         this.props.removeImage();
         this.props.setPhotoTimeStampAction(Date.now());
