@@ -212,6 +212,7 @@ export class PersonalInfoBlock extends Component {
                   accountType={accountType}
                   uploadNewImage={this.uploadNewImage}
                   removeImage={this.removeImage}
+                  userId={userId}
                 />
               )}
               {accountType === INTERNAL && (
