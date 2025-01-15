@@ -24,8 +24,8 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, userId, projectKey, isNewApi }) => {
-  const src = isNewApi ? URLS.userAvatar(userId) : URLS.dataUserPhoto(projectKey, userId, true);
+export const UserAvatar = ({ className, userId, thumbnail }) => {
+  const src = URLS.userAvatar(userId, thumbnail);
 
   return (
     <div className={cx('user-avatar', className)}>
@@ -43,12 +43,10 @@ export const UserAvatar = ({ className, userId, projectKey, isNewApi }) => {
 UserAvatar.propTypes = {
   className: PropTypes.string,
   userId: PropTypes.string.isRequired,
-  projectKey: PropTypes.string,
-  isNewApi: PropTypes.bool,
+  thumbnail: PropTypes.bool,
 };
 
 UserAvatar.defaultProps = {
   className: '',
-  projectKey: '',
-  isNewApi: false,
+  thumbnail: false,
 };

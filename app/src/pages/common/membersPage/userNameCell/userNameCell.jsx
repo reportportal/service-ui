@@ -20,16 +20,17 @@ import classNames from 'classnames/bind';
 import { Tooltip } from '@reportportal/ui-kit';
 import { ADMIN_TYPE } from 'common/utils/permissions/constants';
 import { messages } from 'pages/common/users/membersListTable/messages';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import styles from './userNameCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserNameCell = ({ user, badges, userAvatar: UserAvatar }) => {
+export const UserNameCell = ({ user, badges }) => {
   const { formatMessage } = useIntl();
 
   return (
     <div className={cx('user-name-cell')}>
-      <UserAvatar className={cx('user-avatar')} userId={user.id} />
+      <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
       <div className={cx('full-name')}>{user.fullName}</div>
       <div className={cx('badges')}>
         {badges.map(({ title, type }) => {
@@ -68,7 +69,6 @@ UserNameCell.propTypes = {
       type: PropTypes.string.isRequired,
     }),
   ),
-  userAvatar: PropTypes.elementType.isRequired,
 };
 
 UserNameCell.defaultProps = {

@@ -16,11 +16,13 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { userInfoSelector } from 'controllers/user';
+import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
@@ -36,8 +38,7 @@ import {
   usersPaginationSelector,
 } from 'controllers/organization/users';
 import { SORTING_KEY } from 'controllers/organization/projects';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { userInfoSelector } from 'controllers/user';
+import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './organizationUsersListTable.scss';
@@ -57,103 +58,8 @@ const OrgTeamListTableWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const showPagination = users.length > 0;
+  const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
   const currentUser = useSelector(userInfoSelector);
-  const data = useMemo(
-    () =>
-      users.map(
-        ({
-          id,
-          email,
-          full_name: fullName,
-          stats,
-          instance_role: instanceRole,
-          last_login_at: lastLogin,
-          org_role: orgRole,
-        }) => {
-          const projectsCount = stats.project_stats.total_count;
-          const isCurrentUser = id === currentUser.id;
-          return {
-            id,
-            fullName: {
-              content: fullName,
-              component: (
-                <div className={cx('member-name-column')}>
-                  <div className={cx('full-name')}>{fullName}</div>
-                  <div className={cx('badges')}>
-                    {instanceRole === ADMINISTRATOR && (
-                      <Tooltip
-                        key={`${id}-tooltip`}
-                        content={formatMessage(messages.adminAccessInfo)}
-                        placement="top"
-                        width={248}
-                      >
-                        <div className={cx('admin-badge')}>
-                          <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'Admin'} />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {isCurrentUser && (
-                      <div className={cx('you-badge')}>
-                        <FormattedMessage id={'UserBlock.youBadge'} defaultMessage={'You'} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ),
-            },
-            email,
-            lastLogin: {
-              content: lastLogin,
-              component: lastLogin ? (
-                <AbsRelTime startTime={lastLogin} customClass={cx('date')} />
-              ) : (
-                <span>n/a</span>
-              ),
-            },
-            permissions: orgRole,
-            projects: projectsCount,
-          };
-        },
-      ),
-    [users, organizationSlug, projectSlug, currentUser.id],
-  );
-
-  const primaryColumn = {
-    key: 'fullName',
-    header: formatMessage(messages.name),
-  };
-
-  const fixedColumns = useMemo(
-    () => [
-      {
-        key: 'email',
-        header: formatMessage(messages.email),
-        width: 208,
-        align: 'left',
-      },
-      {
-        key: 'lastLogin',
-        header: formatMessage(messages.lastLogin),
-        width: 156,
-        align: 'left',
-      },
-      {
-        key: 'permissions',
-        header: formatMessage(messages.role),
-        width: 114,
-        align: 'left',
-      },
-      {
-        key: 'projects',
-        header: formatMessage(messages.projects),
-        width: 104,
-        align: 'right',
-      },
-    ],
-    [formatMessage],
-  );
 
   const renderRowActions = () => (
     <Popover
@@ -170,6 +76,81 @@ const OrgTeamListTableWrapped = ({
     </Popover>
   );
 
+  const data = useMemo(
+    () =>
+      users.map(
+        ({
+          id,
+          email,
+          full_name: fullName,
+          stats,
+          instance_role: instanceRole,
+          last_login_at: lastLogin,
+          org_role: orgRole,
+        }) => {
+          const projectsCount = stats.project_stats.total_count;
+          const isCurrentUser = id === currentUser.id;
+          const memberBadges = getRoleBadgesData(instanceRole, null, isCurrentUser);
+          const user = {
+            id: id.toString(),
+            fullName,
+          };
+
+          return {
+            id,
+            fullName: {
+              content: fullName,
+              component: <UserNameCell user={user} badges={memberBadges} />,
+            },
+            email,
+            lastLogin: {
+              content: lastLogin,
+              component: lastLogin ? (
+                <AbsRelTime startTime={lastLogin} customClass={cx('date')} />
+              ) : (
+                <span>n/a</span>
+              ),
+            },
+            permissions: orgRole,
+            projects: projectsCount,
+          };
+        },
+      ),
+    [users, organizationSlug, currentUser.id],
+  );
+
+  const primaryColumn = {
+    key: 'fullName',
+    header: formatMessage(messages.name),
+  };
+
+  const fixedColumns = [
+    {
+      key: 'email',
+      header: formatMessage(messages.email),
+      width: 208,
+      align: 'left',
+    },
+    {
+      key: 'lastLogin',
+      header: formatMessage(messages.lastLogin),
+      width: 156,
+      align: 'left',
+    },
+    {
+      key: 'permissions',
+      header: formatMessage(messages.role),
+      width: 114,
+      align: 'left',
+    },
+    {
+      key: 'projects',
+      header: formatMessage(messages.projects),
+      width: 104,
+      align: 'right',
+    },
+  ];
+
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
     dispatch(prepareActiveOrganizationUsersAction());
@@ -181,7 +162,7 @@ const OrgTeamListTableWrapped = ({
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
-      showPagination={showPagination}
+      showPagination={users.length > 0}
       renderRowActions={renderRowActions}
       sortingDirection={sortingDirection}
       pageSize={pageSize}

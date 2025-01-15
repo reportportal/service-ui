@@ -21,8 +21,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover, Tooltip } from '@reportportal/ui-kit';
-import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
@@ -36,7 +35,7 @@ import {
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
-import { ADMIN_TYPE } from 'common/utils/permissions/constants';
+import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './projectTeamListTable.scss';
 import { MembersListTable } from '../../../common/users/membersListTable';
@@ -82,43 +81,15 @@ const ProjectTeamListTableWrapped = ({
             organizationRole,
             currentUserId === userId,
           );
-
+          const user = {
+            id: id.toString(),
+            fullName,
+          };
           return {
             id,
             fullName: {
               content: fullName,
-              component: (
-                <div className={cx('member-name-column')}>
-                  <UserAvatar
-                    className={cx('custom-user-avatar')}
-                    projectKey={activeProjectKey}
-                    userId={userId}
-                  />
-                  <div className={cx('full-name')}>{fullName}</div>
-                  <div className={cx('badges')}>
-                    {memberBadges.map(({ title, type }) => {
-                      const badgeContent = (
-                        <div key={`${userId}-${type}`} className={cx('badge', type)}>
-                          {formatMessage(title)}
-                        </div>
-                      );
-
-                      return type === ADMIN_TYPE ? (
-                        <Tooltip
-                          key={`${userId}-${type}-tooltip`}
-                          content={formatMessage(messages.adminAccessInfo)}
-                          placement="top"
-                          width={248}
-                        >
-                          {badgeContent}
-                        </Tooltip>
-                      ) : (
-                        badgeContent
-                      );
-                    })}
-                  </div>
-                </div>
-              ),
+              component: <UserNameCell user={user} badges={memberBadges} />,
             },
             email,
             lastLogin: {

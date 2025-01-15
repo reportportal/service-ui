@@ -15,4 +15,3 @@
  */
 
 export { UserAvatar } from './userAvatar';
-export { UserAvatarWithNewApi } from './userAvatarWithNewApi';
