@@ -33,7 +33,6 @@ export const UserNameCell = ({ user, badges }) => {
       <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
       <div className={cx('name-badge-wrapper')}>
         {' '}
-        {/* Just added this wrapper */}
         <div className={cx('full-name')}>{user.fullName}</div>
         <div className={cx('badges')}>
           {badges.map(({ title, type }) => {
