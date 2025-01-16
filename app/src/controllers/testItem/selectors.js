@@ -471,9 +471,9 @@ export const testCaseNameLinkSelector = (state) => (ownProps) => {
 
 const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
   const { origin, pathname: pathPrefix } = window.location;
-  const { projectId, filterId } = payload;
+  const { organizationSlug, projectSlug, filterId } = payload;
 
-  return `${origin}${pathPrefix}#${projectId}/launches/${filterId}`;
+  return `${origin}${pathPrefix}#organizations/${organizationSlug}/projects/${projectSlug}/launches/${filterId}`;
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
