@@ -193,10 +193,11 @@ export class PersonalInfoBlock extends Component {
   };
 
   render() {
-    const { intl, accountType, userLogin, isDemoInstance } = this.props;
+    const { intl, accountType, userLogin, isDemoInstance, userId } = this.props;
     const { forceUpdateInProgress } = this.state;
     const isDefaultUser = userLogin === DEFAULT_USER_ID;
     const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
+
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerBody>
