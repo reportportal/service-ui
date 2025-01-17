@@ -27,8 +27,18 @@
     }
   }
 
-  .full-name {
+  .name-badge-wrapper {
+    display: flex;
+    align-items: center;
     margin-left: 16px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .full-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .badges {
