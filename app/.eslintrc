@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": [
     "airbnb",
     // "plugin:jsx-a11y/recommended",
@@ -63,9 +63,13 @@
     "react-hooks/rules-of-hooks": 2,
     "react-hooks/exhaustive-deps": 1
   },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "legacyDecorators": true
-    }
+ "parserOptions": {
+  "ecmaFeatures": {
+    "legacyDecorators": true
+  },
+  "requireConfigFile": true,
+  "babelOptions": {
+    "configFile": "./.babelrc"
   }
+}
 }
