@@ -50,8 +50,8 @@ export const FilterInput = ({ filter, onChange }) => {
             }
 
             return (
-              <div className={cx('input-field-container')}>
-                <FieldProvider key={name} name={name}>
+              <div key={name} className={cx('input-field-container')}>
+                <FieldProvider name={name}>
                   <FieldText
                     name={filterName}
                     className={cx('input-field')}
