@@ -32,40 +32,38 @@ export const FilterInput = ({ filter, onChange }) => {
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        {fields
-          .filter(({ name }) => name)
-          .map(({ name, placeholder, options, value, condition }) => {
-            if (options) {
-              return (
-                <FieldProvider key={name} name={name}>
-                  <Dropdown
-                    options={options}
-                    value={condition}
-                    isListWidthLimited
-                    className={cx({ dropdown: withField })}
-                    placeholder={placeholder}
-                  />
-                </FieldProvider>
-              );
-            }
-
+        {fields.map(({ name, placeholder, options, value, condition }) => {
+          if (options) {
             return (
-              <div key={name} className={cx('input-field-container')}>
-                <FieldProvider name={name}>
-                  <FieldText
-                    name={filterName}
-                    className={cx('input-field')}
-                    placeholder={placeholder}
-                    value={value}
-                    onClear={() => onClear(name)}
-                    clearable
-                    helpText={helpText}
-                    type="number"
-                  />
-                </FieldProvider>
-              </div>
+              <FieldProvider key={name} name={name}>
+                <Dropdown
+                  options={options}
+                  value={condition}
+                  isListWidthLimited
+                  className={cx({ dropdown: withField })}
+                  placeholder={placeholder}
+                />
+              </FieldProvider>
             );
-          })}
+          }
+
+          return (
+            <div key={name} className={cx('input-field-container')}>
+              <FieldProvider name={name}>
+                <FieldText
+                  name={filterName}
+                  className={cx('input-field')}
+                  placeholder={placeholder}
+                  value={value}
+                  onClear={() => onClear(name)}
+                  clearable
+                  helpText={helpText}
+                  type="number"
+                />
+              </FieldProvider>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
