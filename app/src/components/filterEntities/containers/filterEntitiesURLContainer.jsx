@@ -32,8 +32,6 @@ const FilterEntitiesURL = ({
 }) => {
   const handleChange = useCallback(
     (newEntities) => {
-      console.log('newEntities', newEntities);
-      console.log('entities', entities);
       if (isEqual(newEntities, entities)) {
         return;
       }
@@ -112,7 +110,7 @@ export const withFilterEntitiesURL = (namespace, prefixQueryKey) => (WrappedComp
     });
 
     const { name, ...entriesWithoutName } = filteredEntities;
-    console.log('entriesWithoutName', entriesWithoutName);
+
     return (
       <WrappedComponent {...restProps} entities={entriesWithoutName} onFilterChange={onChange} />
     );

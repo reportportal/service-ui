@@ -40,20 +40,6 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-// const wrappedFilter = () => (WrappedComponent) => (props) => {
-//   const { formatMessage } = useIntl();
-//   const dispatch = useDispatch();
-
-//   return (
-//     <WrappedComponent
-//       {...props}
-//       filteredAction={() => dispatch(fetchFilteredProjectAction())}
-//       teammatesFilterMessage={formatMessage(messages.teammates)}
-//     />
-//   );
-// };
-
-// const FiltersFields = withFilterEntitiesURL(NAMESPACE)(wrappedFilter(Filter));
 const FiltersFields = withFilterEntitiesURL(NAMESPACE)(Filter);
 
 export const ProjectsPageHeader = ({

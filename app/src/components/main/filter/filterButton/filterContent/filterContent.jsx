@@ -50,6 +50,7 @@ export const FilterContentWrapped = ({
   filtersState,
 }) => {
   const { formatMessage } = useIntl();
+  const isDisabled = pristine || submitting;
 
   useEffect(() => {
     initialize({
@@ -108,7 +109,7 @@ export const FilterContentWrapped = ({
             className={cx('clear-all')}
             variant={'text'}
             onClick={reset}
-            disabled={pristine || submitting}
+            disabled={isDisabled}
           >
             {formatMessage(messages.clearAllFilters)}
           </Button>
@@ -116,7 +117,7 @@ export const FilterContentWrapped = ({
             <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
               {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
             </Button>
-            <Button className={cx('apply')} type="submit" disabled={pristine || submitting}>
+            <Button className={cx('apply')} type="submit" disabled={isDisabled}>
               {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
             </Button>
           </div>
