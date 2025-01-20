@@ -37,7 +37,7 @@ export const FilterInput = ({ filter, onChange }) => {
           .map(({ name, placeholder, options, value, condition }) => {
             if (options) {
               return (
-                <FieldProvider name={name}>
+                <FieldProvider key={name} name={name}>
                   <Dropdown
                     options={options}
                     value={condition}
@@ -51,7 +51,7 @@ export const FilterInput = ({ filter, onChange }) => {
 
             return (
               <div className={cx('input-field-container')}>
-                <FieldProvider name={name}>
+                <FieldProvider key={name} name={name}>
                   <FieldText
                     name={filterName}
                     className={cx('input-field')}

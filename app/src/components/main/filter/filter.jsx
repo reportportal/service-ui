@@ -116,7 +116,6 @@ Filter.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   appliedFiltersCount: PropTypes.number.isRequired,
   setAppliedFiltersCount: PropTypes.func.isRequired,
-  defaultFilters: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
   teammatesFilterMessage: PropTypes.string.isRequired,
 };
