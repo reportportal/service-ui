@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { projectMembersSelector, projectNameSelector } from 'controllers/project';
+import { projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
@@ -42,12 +42,11 @@ export const ProjectTeamPageHeader = ({
   isMembersLoading,
   searchValue,
   setSearchValue,
+  isNotEmptyMembers,
 }) => {
   const { formatMessage } = useIntl();
-  const projectMembers = useSelector(projectMembersSelector);
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
-  const isNotEmptyMembers = projectMembers.length !== 0;
 
   return (
     <MembersPageHeader
@@ -86,6 +85,7 @@ ProjectTeamPageHeader.propTypes = {
   isMembersLoading: PropTypes.bool.isRequired,
   searchValue: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
+  isNotEmptyMembers: PropTypes.bool.isRequired,
   hasPermission: PropTypes.bool,
   isNotEmpty: PropTypes.bool,
   onInvite: PropTypes.func,
