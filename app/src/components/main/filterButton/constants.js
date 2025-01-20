@@ -23,7 +23,9 @@ import { messages } from './messages';
 
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
+export const LAUNCHES_FILTER_NAME_CONDITION = 'launches_condition';
 export const TEAMMATES_FILTER_NAME = 'users';
+export const TEAMMATES_FILTER_NAME_CONDITION = 'users_condition';
 
 export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },

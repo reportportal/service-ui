@@ -21,6 +21,8 @@ import {
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
+  LAUNCHES_FILTER_NAME_CONDITION,
+  TEAMMATES_FILTER_NAME_CONDITION,
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
@@ -45,31 +47,50 @@ export const ProjectsFilter = ({
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
       filterName: LAST_RUN_DATE_FILTER_NAME,
-      value: timeRange[0].value,
       title: formatMessage(messages.lastRunDate),
-      options: timeRange,
-      condition: CONDITION_BETWEEN.toUpperCase(),
-      placeholder: formatMessage(messages.lastRunDatePlaceholder),
+      defaultCondition: CONDITION_BETWEEN.toUpperCase(),
+      fields: [
+        {
+          value: timeRange[0].value,
+          options: timeRange,
+          placeholder: formatMessage(messages.lastRunDatePlaceholder),
+          name: LAST_RUN_DATE_FILTER_NAME,
+        },
+      ],
     },
     [LAUNCHES_FILTER_NAME]: {
       filterName: LAUNCHES_FILTER_NAME,
-      value: '',
       title: formatMessage(messages.launches),
-      placeholder: formatMessage(messages.launchesPlaceholder),
-      options: rangeComparisons,
-      condition: rangeComparisons[0].value,
       helpText: formatMessage(helpMessage.helpText),
-      withField: true,
+      fields: [
+        {
+          options: rangeComparisons,
+          condition: rangeComparisons[0].value,
+          name: LAUNCHES_FILTER_NAME_CONDITION,
+        },
+        {
+          value: '',
+          placeholder: formatMessage(messages.launchesPlaceholder),
+          name: LAUNCHES_FILTER_NAME,
+        },
+      ],
     },
     [TEAMMATES_FILTER_NAME]: {
       filterName: TEAMMATES_FILTER_NAME,
-      value: '',
       title: formatMessage(messages.users),
-      placeholder: formatMessage(messages.usersPlaceholder),
-      options: rangeComparisons,
-      condition: rangeComparisons[0].value,
       helpText: formatMessage(helpMessage.helpText),
-      withField: true,
+      fields: [
+        {
+          options: rangeComparisons,
+          condition: rangeComparisons[0].value,
+          name: TEAMMATES_FILTER_NAME_CONDITION,
+        },
+        {
+          value: '',
+          placeholder: formatMessage(messages.usersPlaceholder),
+          name: TEAMMATES_FILTER_NAME,
+        },
+      ],
     },
   };
 

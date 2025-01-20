@@ -32,35 +32,11 @@ export const FilterButton = ({
   filteredAction,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [filters, setFilters] = useState(defaultFilters);
-  const [initialFilters, setInitialFilters] = useState(defaultFilters);
 
   useEffect(() => {
     setAppliedFiltersCount(Object.keys(definedFilters).length);
     filteredAction();
   }, []);
-
-  useEffect(() => {
-    if (Object.keys(definedFilters).length) {
-      let definedAppliedFiltersCount = 0;
-      const updatedFilters = { ...filters };
-      Object.keys(definedFilters).forEach((filterKey) => {
-        updatedFilters[filterKey] = {
-          ...updatedFilters[filterKey],
-          condition: definedFilters[filterKey].condition,
-          value: definedFilters[filterKey].value,
-        };
-        definedAppliedFiltersCount += definedFilters[filterKey].value ? 1 : 0;
-      });
-      setFilters(updatedFilters);
-      setInitialFilters(updatedFilters);
-      setAppliedFiltersCount(definedAppliedFiltersCount);
-    } else {
-      setFilters(defaultFilters);
-      setInitialFilters(defaultFilters);
-      setAppliedFiltersCount(0);
-    }
-  }, [definedFilters]);
 
   return (
     <Popover
@@ -70,10 +46,8 @@ export const FilterButton = ({
           setAppliedFiltersCount={setAppliedFiltersCount}
           onFilterChange={onFilterChange}
           defaultFilters={defaultFilters}
-          filters={filters}
-          setFilters={setFilters}
-          initialFilters={initialFilters}
           filteredAction={filteredAction}
+          definedFilters={definedFilters}
         />
       }
       placement="bottom-end"

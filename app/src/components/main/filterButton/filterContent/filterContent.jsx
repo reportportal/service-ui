@@ -15,108 +15,136 @@
  */
 
 import classNames from 'classnames/bind';
+import { reduxForm } from 'redux-form';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import isEqual from 'fast-deep-equal';
+import {
+  LAUNCHES_FILTER_NAME,
+  TEAMMATES_FILTER_NAME,
+  LAST_RUN_DATE_FILTER_NAME,
+  LAUNCHES_FILTER_NAME_CONDITION,
+  TEAMMATES_FILTER_NAME_CONDITION,
+} from 'components/main/filterButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { FilterInput } from './filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterContent = ({
+export const FilterContentWrapped = ({
   setIsOpen,
   setAppliedFiltersCount,
   onFilterChange,
   defaultFilters,
-  filters,
-  setFilters,
-  initialFilters,
+  definedFilters,
   filteredAction,
+  initialize,
+  change,
+  pristine,
+  reset,
+  submitting,
+  filtersState,
 }) => {
   const { formatMessage } = useIntl();
 
+  useEffect(() => {
+    initialize({
+      [LAST_RUN_DATE_FILTER_NAME]:
+        definedFilters[LAST_RUN_DATE_FILTER_NAME]?.value ||
+        defaultFilters[LAST_RUN_DATE_FILTER_NAME].fields[0].value,
+      [LAUNCHES_FILTER_NAME]:
+        definedFilters[LAUNCHES_FILTER_NAME]?.value ||
+        defaultFilters[LAUNCHES_FILTER_NAME].fields[1].value,
+      [LAUNCHES_FILTER_NAME_CONDITION]:
+        definedFilters[LAUNCHES_FILTER_NAME]?.condition ||
+        defaultFilters[LAUNCHES_FILTER_NAME].fields[0].condition,
+      [TEAMMATES_FILTER_NAME]:
+        definedFilters[TEAMMATES_FILTER_NAME]?.value ||
+        defaultFilters[TEAMMATES_FILTER_NAME].fields[1].value,
+      [TEAMMATES_FILTER_NAME_CONDITION]:
+        definedFilters[TEAMMATES_FILTER_NAME]?.condition ||
+        defaultFilters[TEAMMATES_FILTER_NAME].fields[0].condition,
+    });
+  }, []);
+
   const closePopover = () => {
     setIsOpen(false);
-    setFilters(initialFilters);
-  };
-
-  const clearAllFilters = () => {
-    setFilters(defaultFilters);
   };
 
   const handleApply = () => {
     let appliedFiltersCount = 0;
 
-    const fields = Object.values(filters).reduce((acc, { filterName, value, condition }) => {
+    const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
+      const value = filtersState[filterName];
       acc[filterName] = {
         value,
-        condition,
+        condition: defaultCondition || filtersState[`${filterName}_condition`],
       };
       appliedFiltersCount += value ? 1 : 0;
 
       return acc;
     }, {});
+
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
     filteredAction();
     setIsOpen(false);
   };
 
-  const isDefaultFilters = useMemo(() => isEqual(defaultFilters, filters), [
-    defaultFilters,
-    filters,
-  ]);
-  const isDefinedFilters = useMemo(() => isEqual(initialFilters, filters), [
-    initialFilters,
-    filters,
-  ]);
-
-  const handleChangeFilters = (newFilters) =>
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      ...newFilters,
-    }));
-
   return (
-    <div className={cx('filter-popover-content')}>
-      <div className={cx('filter-items')}>
-        {Object.values(filters).map((filter) => (
-          <FilterInput key={filter.filterName} filter={filter} onFilter={handleChangeFilters} />
-        ))}
-      </div>
-      <div className={cx('actions')}>
-        <Button
-          className={cx('clear-all')}
-          variant={'text'}
-          onClick={clearAllFilters}
-          disabled={isDefaultFilters}
-        >
-          {formatMessage(messages.clearAllFilters)}
-        </Button>
-        <div className={cx('controls')}>
-          <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
-            {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+    <form onSubmit={handleApply}>
+      <div className={cx('filter-popover-content')}>
+        <div className={cx('filter-items')}>
+          {Object.values(defaultFilters).map((filter) => (
+            <FilterInput key={filter.filterName} filter={filter} onChange={change} />
+          ))}
+        </div>
+        <div className={cx('actions')}>
+          <Button
+            className={cx('clear-all')}
+            variant={'text'}
+            onClick={reset}
+            disabled={pristine || submitting}
+          >
+            {formatMessage(messages.clearAllFilters)}
           </Button>
-          <Button className={cx('apply')} onClick={handleApply} disabled={isDefinedFilters}>
-            {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
-          </Button>
+          <div className={cx('controls')}>
+            <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
+              {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+            </Button>
+            <Button className={cx('apply')} type="submit" disabled={pristine || submitting}>
+              {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
-FilterContent.propTypes = {
+FilterContentWrapped.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
   setAppliedFiltersCount: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   defaultFilters: PropTypes.object.isRequired,
-  initialFilters: PropTypes.array.isRequired,
-  filters: PropTypes.array.isRequired,
-  setFilters: PropTypes.func.isRequired,
+  definedFilters: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  reset: PropTypes.func.isRequired,
+  filtersState: PropTypes.object.isRequired,
 };
+
+export const FilterContentForm = reduxForm({
+  form: 'filter',
+})(FilterContentWrapped);
+
+export const FilterContent = connect((state) => ({
+  filtersState: state?.form?.filter?.values || {},
+}))(FilterContentForm);
