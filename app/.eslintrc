@@ -63,13 +63,9 @@
     "react-hooks/rules-of-hooks": 2,
     "react-hooks/exhaustive-deps": 1
   },
- "parserOptions": {
-  "ecmaFeatures": {
-    "legacyDecorators": true
-  },
-  "requireConfigFile": true,
-  "babelOptions": {
-    "configFile": "./.babelrc"
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
   }
-}
 }
