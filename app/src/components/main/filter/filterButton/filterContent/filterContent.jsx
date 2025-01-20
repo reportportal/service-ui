@@ -19,17 +19,17 @@ import { reduxForm } from 'redux-form';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import {
-  LAUNCHES_FILTER_NAME,
-  TEAMMATES_FILTER_NAME,
-  LAST_RUN_DATE_FILTER_NAME,
-  LAUNCHES_FILTER_NAME_CONDITION,
-  TEAMMATES_FILTER_NAME_CONDITION,
-} from 'components/main/filterButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { FilterInput } from './filterInput';
+import {
+  LAST_RUN_DATE_FILTER_NAME,
+  LAUNCHES_FILTER_NAME,
+  LAUNCHES_FILTER_NAME_CONDITION,
+  TEAMMATES_FILTER_NAME,
+  TEAMMATES_FILTER_NAME_CONDITION,
+} from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 

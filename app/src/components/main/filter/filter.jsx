@@ -16,8 +16,9 @@
 
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
+  FilterButton,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
@@ -26,20 +27,18 @@ import {
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
-} from 'components/main/filterButton';
-import { FilterButton } from 'components/main/filterButton/filterButton';
-import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
-import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
+} from './filterButton';
 import { messages } from './messages';
 
-export const OrganizationsFilter = ({
+export const Filter = ({
   entities,
   onFilterChange,
   appliedFiltersCount,
   setAppliedFiltersCount,
+  filteredAction,
+  teammatesFilterMessage,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
@@ -77,7 +76,7 @@ export const OrganizationsFilter = ({
     },
     [TEAMMATES_FILTER_NAME]: {
       filterName: TEAMMATES_FILTER_NAME,
-      title: formatMessage(messages.users),
+      title: teammatesFilterMessage,
       helpText: formatMessage(helpMessage.helpText),
       fields: [
         {
@@ -101,12 +100,12 @@ export const OrganizationsFilter = ({
       setAppliedFiltersCount={setAppliedFiltersCount}
       definedFilters={entities}
       onFilterChange={onFilterChange}
-      filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
+      filteredAction={filteredAction}
     />
   );
 };
 
-OrganizationsFilter.propTypes = {
+Filter.propTypes = {
   entities: PropTypes.objectOf(
     PropTypes.shape({
       filter_key: PropTypes.string,
@@ -114,8 +113,10 @@ OrganizationsFilter.propTypes = {
       condition: PropTypes.string,
     }),
   ),
-  onFilterChange: PropTypes.func,
-  appliedFiltersCount: PropTypes.number,
-  setAppliedFiltersCount: PropTypes.func,
-  defaultFilters: PropTypes.object,
+  onFilterChange: PropTypes.func.isRequired,
+  appliedFiltersCount: PropTypes.number.isRequired,
+  setAppliedFiltersCount: PropTypes.func.isRequired,
+  defaultFilters: PropTypes.object.isRequired,
+  filteredAction: PropTypes.func.isRequired,
+  teammatesFilterMessage: PropTypes.string.isRequired,
 };

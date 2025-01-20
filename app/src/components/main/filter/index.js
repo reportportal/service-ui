@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OrganizationsFilter } from './organizationsFilter';
+export { Filter } from './filter';
