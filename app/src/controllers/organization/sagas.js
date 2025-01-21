@@ -20,7 +20,7 @@ import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { fetchOrganizationProjectsAction, projectsSagas } from './projects';
+import { fetchFilteredProjectAction, projectsSagas } from './projects';
 import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
@@ -40,7 +40,7 @@ function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
       activeOrganization = yield select(activeOrganizationSelector);
     }
-    yield put(fetchOrganizationProjectsAction(activeOrganization.id));
+    yield put(fetchFilteredProjectAction(activeOrganization.id));
   } catch (error) {
     yield put(
       redirect({

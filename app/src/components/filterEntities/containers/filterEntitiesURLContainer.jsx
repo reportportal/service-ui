@@ -24,17 +24,24 @@ import { collectFilterEntities, createFilterQuery } from './utils';
 const FilterEntitiesURL = ({
   entities = {},
   updateFilters = () => {},
+  render,
   debounced = true,
   debounceTime = 1000,
   defaultPagination,
   prefixQueryKey,
+  additionalFilter,
 }) => {
   const handleChange = useCallback(
     (newEntities) => {
       if (isEqual(newEntities, entities)) {
         return;
       }
-      const filterQuery = createFilterQuery(newEntities, entities, prefixQueryKey);
+      const { [additionalFilter]: value } = entities;
+      const filterQuery = createFilterQuery(
+        additionalFilter && value ? { [additionalFilter]: value, ...newEntities } : newEntities,
+        entities,
+        prefixQueryKey,
+      );
       if (!isEmptyObject(filterQuery)) {
         updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
       }
@@ -47,79 +54,23 @@ const FilterEntitiesURL = ({
     debounceTime,
   ]);
 
-  return {
+  return render({
     entities,
     onChange: debounced ? debouncedHandleChange : handleChange,
-  };
+  });
 };
 
 FilterEntitiesURL.propTypes = {
   entities: PropTypes.object,
   updateFilters: PropTypes.func,
+  render: PropTypes.func.isRequired,
   debounced: PropTypes.bool,
   debounceTime: PropTypes.number,
   defaultPagination: PropTypes.any.isRequired,
   prefixQueryKey: PropTypes.string,
 };
 
-const filterEntitiesURLForContainer = ({
-  entities = {},
-  updateFilters = () => {},
-  debounced = true,
-  debounceTime = 1000,
-  defaultPagination,
-  prefixQueryKey,
-  render,
-}) => {
-  const filterEntitiesURLParams = FilterEntitiesURL({
-    entities,
-    updateFilters,
-    debounced,
-    debounceTime,
-    defaultPagination,
-    prefixQueryKey,
-  });
-  return render(filterEntitiesURLParams);
-};
-
-export const withFilterEntitiesURL = (namespace, prefixQueryKey) => (WrappedComponent) => {
-  const filterEntitiesURL = (props) => {
-    const {
-      entities,
-      defaultPagination,
-      updateFilters,
-      debounced,
-      debounceTime,
-      ...restProps
-    } = props;
-
-    const { entities: filteredEntities, onChange } = FilterEntitiesURL({
-      entities,
-      updateFilters,
-      debounced,
-      debounceTime,
-      defaultPagination,
-      prefixQueryKey,
-    });
-
-    return (
-      <WrappedComponent {...restProps} entities={filteredEntities} onFilterChange={onChange} />
-    );
-  };
-
-  return connectRouter(
-    (query) => ({
-      entities: collectFilterEntities(query, prefixQueryKey),
-      defaultPagination: defaultPaginationSelector(),
-    }),
-    {
-      updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
-    },
-    { namespace },
-  )(filterEntitiesURL);
-};
-
-const createFilterEntitiesURLContainer = (prefixQueryKey) =>
+export const createFilterEntitiesURLContainer = (prefixQueryKey, namespace) =>
   connectRouter(
     (query) => ({
       entities: collectFilterEntities(query, prefixQueryKey),
@@ -128,6 +79,7 @@ const createFilterEntitiesURLContainer = (prefixQueryKey) =>
     {
       updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
     },
-  )(filterEntitiesURLForContainer);
+    { namespace },
+  )(FilterEntitiesURL);
 
 export const FilterEntitiesURLContainer = createFilterEntitiesURLContainer();

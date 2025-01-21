@@ -15,108 +15,109 @@
  */
 
 import classNames from 'classnames/bind';
+import { reduxForm } from 'redux-form';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import isEqual from 'fast-deep-equal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useMemo } from 'react';
-import { FilterInput } from './filterInput';
+import { useEffect } from 'react';
+import { FilterInput } from './filterInput/filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterContent = ({
+export const FilterContentWrapped = ({
   setIsOpen,
   setAppliedFiltersCount,
   onFilterChange,
   defaultFilters,
-  filters,
-  setFilters,
-  initialFilters,
   filteredAction,
+  initialState,
+  initialize,
+  change,
+  pristine,
+  reset,
+  submitting,
+  handleSubmit,
 }) => {
   const { formatMessage } = useIntl();
+  const isDisabled = pristine || submitting;
+
+  useEffect(() => {
+    initialize(initialState);
+  }, []);
 
   const closePopover = () => {
     setIsOpen(false);
-    setFilters(initialFilters);
   };
 
-  const clearAllFilters = () => {
-    setFilters(defaultFilters);
-  };
-
-  const handleApply = () => {
+  const handleApply = (formData) => {
     let appliedFiltersCount = 0;
 
-    const fields = Object.values(filters).reduce((acc, { filterName, value, condition }) => {
+    const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
+      const value = formData[filterName];
       acc[filterName] = {
         value,
-        condition,
+        condition: defaultCondition || formData[`${filterName}_condition`],
       };
       appliedFiltersCount += value ? 1 : 0;
 
       return acc;
     }, {});
+
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
     filteredAction();
     setIsOpen(false);
   };
 
-  const isDefaultFilters = useMemo(() => isEqual(defaultFilters, filters), [
-    defaultFilters,
-    filters,
-  ]);
-  const isDefinedFilters = useMemo(() => isEqual(initialFilters, filters), [
-    initialFilters,
-    filters,
-  ]);
-
-  const handleChangeFilters = (newFilters) =>
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      ...newFilters,
-    }));
-
   return (
-    <div className={cx('filter-popover-content')}>
-      <div className={cx('filter-items')}>
-        {Object.values(filters).map((filter) => (
-          <FilterInput key={filter.filterName} filter={filter} onFilter={handleChangeFilters} />
-        ))}
-      </div>
-      <div className={cx('actions')}>
-        <Button
-          className={cx('clear-all')}
-          variant={'text'}
-          onClick={clearAllFilters}
-          disabled={isDefaultFilters}
-        >
-          {formatMessage(messages.clearAllFilters)}
-        </Button>
-        <div className={cx('controls')}>
-          <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
-            {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+    <form onSubmit={handleSubmit(handleApply)}>
+      <div className={cx('filter-popover-content')}>
+        <div className={cx('filter-items')}>
+          {Object.values(defaultFilters).map((filter) => (
+            <FilterInput key={filter.filterName} filter={filter} onChange={change} />
+          ))}
+        </div>
+        <div className={cx('actions')}>
+          <Button
+            className={cx('clear-all')}
+            variant={'text'}
+            onClick={reset}
+            disabled={isDisabled}
+          >
+            {formatMessage(messages.clearAllFilters)}
           </Button>
-          <Button className={cx('apply')} onClick={handleApply} disabled={isDefinedFilters}>
-            {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
-          </Button>
+          <div className={cx('controls')}>
+            <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
+              {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+            </Button>
+            <Button className={cx('apply')} type="submit" disabled={isDisabled}>
+              {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
-FilterContent.propTypes = {
+FilterContentWrapped.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
   setAppliedFiltersCount: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   defaultFilters: PropTypes.object.isRequired,
-  initialFilters: PropTypes.array.isRequired,
-  filters: PropTypes.array.isRequired,
-  setFilters: PropTypes.func.isRequired,
+  initialState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  reset: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
+
+export const FilterContent = reduxForm({
+  form: 'filter',
+})(FilterContentWrapped);

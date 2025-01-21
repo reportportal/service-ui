@@ -17,63 +17,59 @@
 import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import styles from './filterInput.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterInput = ({ filter, onFilter }) => {
-  const { filterName, options, value, condition, placeholder, title, withField, helpText } = filter;
+export const FilterInput = ({ filter, onChange }) => {
+  const { filterName, title, helpText, fields } = filter;
+  const withCondition = fields.length > 1;
 
-  const onChangeOption = (newValue) => {
-    onFilter({
-      [filterName]: {
-        ...filter,
-        ...(withField ? { condition: newValue } : { value: newValue }),
-      },
-    });
-  };
-
-  const onTextFieldChange = ({ target }) => {
-    if (helpText && !Number(target.value)) {
-      return;
-    }
-
-    onFilter({ [filterName]: { ...filter, value: target.value } });
-  };
-
-  const onClear = () => onFilter({ [filterName]: { ...filter, value: '' } });
+  const onClear = (fieldName) => onChange(fieldName, '');
 
   return (
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        <Dropdown
-          options={options}
-          value={withField ? condition : value}
-          onChange={onChangeOption}
-          isListWidthLimited
-          className={cx({ dropdown: withField })}
-          placeholder={placeholder}
-        />
-        {withField && (
-          <div className={cx('input-field-container')}>
-            <FieldText
-              className={cx('input-field')}
-              placeholder={placeholder}
-              value={value}
-              onChange={onTextFieldChange}
-              onClear={onClear}
-              clearable
-              helpText={helpText}
-            />
-          </div>
-        )}
+        {fields.map(({ name, placeholder, options, value, condition, type }) => {
+          if (options) {
+            return (
+              <FieldProvider key={name} name={name}>
+                <Dropdown
+                  options={options}
+                  value={condition}
+                  isListWidthLimited
+                  className={cx({ dropdown: withCondition })}
+                  placeholder={placeholder}
+                />
+              </FieldProvider>
+            );
+          }
+
+          return (
+            <div key={name} className={cx('input-field-container')}>
+              <FieldProvider name={name}>
+                <FieldText
+                  name={filterName}
+                  className={cx('input-field')}
+                  placeholder={placeholder}
+                  value={value}
+                  onClear={() => onClear(name)}
+                  clearable
+                  helpText={helpText}
+                  type={type}
+                />
+              </FieldProvider>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
 FilterInput.propTypes = {
-  filter: PropTypes.object,
-  onFilter: PropTypes.func,
+  filter: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
 };

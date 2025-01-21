@@ -19,8 +19,8 @@ export {
   LAST_RUN_DATE_FILTER_NAME,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
-  FILTER_NAME,
-  getContainmentComparisons,
+  TEAMMATES_FILTER_NAME_CONDITION,
+  LAUNCHES_FILTER_NAME_CONDITION,
   getRangeComparisons,
   getTimeRange,
 } from './constants';
