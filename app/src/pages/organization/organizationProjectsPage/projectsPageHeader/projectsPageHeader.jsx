@@ -27,7 +27,7 @@ import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
-import { withFilterEntitiesURL } from 'components/filterEntities/containers';
+import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { ProjectsFilter } from './projectsFilter';
 import projectsIcon from './img/projects-inline.svg';
 import userIcon from './img/user-inline.svg';
@@ -40,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(NAMESPACE)(ProjectsFilter);
+const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
 export const ProjectsPageHeader = ({
   hasPermission,
@@ -100,10 +100,17 @@ export const ProjectsPageHeader = ({
                 setSearchValue={setSearchValue}
                 placeholder={formatMessage(messages.searchPlaceholder)}
               />
-              <FiltersFields
+              <FilterEntitiesURLContainer
                 debounced={false}
-                appliedFiltersCount={appliedFiltersCount}
-                setAppliedFiltersCount={setAppliedFiltersCount}
+                additionalFilter="name"
+                render={({ entities, onChange }) => (
+                  <ProjectsFilter
+                    appliedFiltersCount={appliedFiltersCount}
+                    setAppliedFiltersCount={setAppliedFiltersCount}
+                    entities={entities}
+                    onFilterChange={onChange}
+                  />
+                )}
               />
             </div>
           )}

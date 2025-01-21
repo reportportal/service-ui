@@ -27,7 +27,7 @@ import { withFilter } from 'controllers/filter';
 import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { withFilterEntitiesURL } from 'components/filterEntities/containers';
+import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
@@ -40,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(NAMESPACE)(OrganizationsFilter);
+const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
 export const OrganizationsPageHeader = ({
   isEmpty,
@@ -69,10 +69,17 @@ export const OrganizationsPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
-              <FiltersFields
+              <FilterEntitiesURLContainer
                 debounced={false}
-                appliedFiltersCount={appliedFiltersCount}
-                setAppliedFiltersCount={setAppliedFiltersCount}
+                additionalFilter="name"
+                render={({ entities, onChange }) => (
+                  <OrganizationsFilter
+                    appliedFiltersCount={appliedFiltersCount}
+                    setAppliedFiltersCount={setAppliedFiltersCount}
+                    entities={entities}
+                    onFilterChange={onChange}
+                  />
+                )}
               />
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
