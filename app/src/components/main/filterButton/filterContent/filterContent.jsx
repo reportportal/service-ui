@@ -21,7 +21,6 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { FilterInput } from './filterInput/filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
@@ -40,7 +39,7 @@ export const FilterContentWrapped = ({
   pristine,
   reset,
   submitting,
-  filtersState,
+  handleSubmit,
 }) => {
   const { formatMessage } = useIntl();
   const isDisabled = pristine || submitting;
@@ -53,14 +52,14 @@ export const FilterContentWrapped = ({
     setIsOpen(false);
   };
 
-  const handleApply = () => {
+  const handleApply = (formData) => {
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const value = filtersState[filterName];
+      const value = formData[filterName];
       acc[filterName] = {
         value,
-        condition: defaultCondition || filtersState[`${filterName}_condition`],
+        condition: defaultCondition || formData[`${filterName}_condition`],
       };
       appliedFiltersCount += value ? 1 : 0;
 
@@ -74,7 +73,7 @@ export const FilterContentWrapped = ({
   };
 
   return (
-    <form onSubmit={handleApply}>
+    <form onSubmit={handleSubmit(handleApply)}>
       <div className={cx('filter-popover-content')}>
         <div className={cx('filter-items')}>
           {Object.values(defaultFilters).map((filter) => (
@@ -116,13 +115,9 @@ FilterContentWrapped.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   reset: PropTypes.func.isRequired,
-  filtersState: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
 
-export const FilterContentForm = reduxForm({
+export const FilterContent = reduxForm({
   form: 'filter',
 })(FilterContentWrapped);
-
-export const FilterContent = connect((state) => ({
-  filtersState: state?.form?.filter?.values || {},
-}))(FilterContentForm);

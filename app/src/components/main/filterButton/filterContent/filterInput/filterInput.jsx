@@ -26,7 +26,7 @@ export const FilterInput = ({ filter, onChange }) => {
   const { filterName, title, helpText, fields } = filter;
   const withCondition = fields.length > 1;
 
-  const onClear = (nameField) => onChange(nameField, '');
+  const onClear = (fieldName) => onChange(fieldName, '');
 
   return (
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
