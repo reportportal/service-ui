@@ -22,14 +22,7 @@ import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { FilterInput } from './filterInput';
-import {
-  LAST_RUN_DATE_FILTER_NAME,
-  LAUNCHES_FILTER_NAME,
-  LAUNCHES_FILTER_NAME_CONDITION,
-  TEAMMATES_FILTER_NAME,
-  TEAMMATES_FILTER_NAME_CONDITION,
-} from '../constants';
+import { FilterInput } from './filterInput/filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -40,8 +33,8 @@ export const FilterContentWrapped = ({
   setAppliedFiltersCount,
   onFilterChange,
   defaultFilters,
-  definedFilters,
   filteredAction,
+  initialState,
   initialize,
   change,
   pristine,
@@ -53,23 +46,7 @@ export const FilterContentWrapped = ({
   const isDisabled = pristine || submitting;
 
   useEffect(() => {
-    initialize({
-      [LAST_RUN_DATE_FILTER_NAME]:
-        definedFilters[LAST_RUN_DATE_FILTER_NAME]?.value ||
-        defaultFilters[LAST_RUN_DATE_FILTER_NAME].fields[0].value,
-      [LAUNCHES_FILTER_NAME]:
-        definedFilters[LAUNCHES_FILTER_NAME]?.value ||
-        defaultFilters[LAUNCHES_FILTER_NAME].fields[1].value,
-      [LAUNCHES_FILTER_NAME_CONDITION]:
-        definedFilters[LAUNCHES_FILTER_NAME]?.condition ||
-        defaultFilters[LAUNCHES_FILTER_NAME].fields[0].condition,
-      [TEAMMATES_FILTER_NAME]:
-        definedFilters[TEAMMATES_FILTER_NAME]?.value ||
-        defaultFilters[TEAMMATES_FILTER_NAME].fields[1].value,
-      [TEAMMATES_FILTER_NAME_CONDITION]:
-        definedFilters[TEAMMATES_FILTER_NAME]?.condition ||
-        defaultFilters[TEAMMATES_FILTER_NAME].fields[0].condition,
-    });
+    initialize(initialState);
   }, []);
 
   const closePopover = () => {
@@ -132,7 +109,7 @@ FilterContentWrapped.propTypes = {
   setAppliedFiltersCount: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   defaultFilters: PropTypes.object.isRequired,
-  definedFilters: PropTypes.object.isRequired,
+  initialState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,

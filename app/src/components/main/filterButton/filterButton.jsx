@@ -29,6 +29,7 @@ export const FilterButton = ({
   appliedFiltersCount,
   setAppliedFiltersCount,
   defaultFilters,
+  initialState,
   filteredAction,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,7 @@ export const FilterButton = ({
           onFilterChange={onFilterChange}
           defaultFilters={defaultFilters}
           filteredAction={filteredAction}
-          definedFilters={definedFilters}
+          initialState={initialState}
         />
       }
       placement="bottom-end"
@@ -85,5 +86,6 @@ FilterButton.propTypes = {
   appliedFiltersCount: PropTypes.number,
   setAppliedFiltersCount: PropTypes.func,
   defaultFilters: PropTypes.object,
+  initialState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
 };

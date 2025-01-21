@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 export const FilterInput = ({ filter, onChange }) => {
   const { filterName, title, helpText, fields } = filter;
-  const withField = fields.length > 1;
+  const withCondition = fields.length > 1;
 
   const onClear = (nameField) => onChange(nameField, '');
 
@@ -32,7 +32,7 @@ export const FilterInput = ({ filter, onChange }) => {
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        {fields.map(({ name, placeholder, options, value, condition }) => {
+        {fields.map(({ name, placeholder, options, value, condition, type }) => {
           if (options) {
             return (
               <FieldProvider key={name} name={name}>
@@ -40,7 +40,7 @@ export const FilterInput = ({ filter, onChange }) => {
                   options={options}
                   value={condition}
                   isListWidthLimited
-                  className={cx({ dropdown: withField })}
+                  className={cx({ dropdown: withCondition })}
                   placeholder={placeholder}
                 />
               </FieldProvider>
@@ -58,7 +58,7 @@ export const FilterInput = ({ filter, onChange }) => {
                   onClear={() => onClear(name)}
                   clearable
                   helpText={helpText}
-                  type="number"
+                  type={type}
                 />
               </FieldProvider>
             </div>

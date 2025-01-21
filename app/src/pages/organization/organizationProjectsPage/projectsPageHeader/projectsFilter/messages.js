@@ -18,23 +18,27 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   lastRunDate: {
-    id: 'FilterComponent.lastRunDate',
+    id: 'ProjectsFilter.lastRunDate',
     defaultMessage: 'Last Run Date',
   },
   lastRunDatePlaceholder: {
-    id: 'FilterComponent.lastRunDatePlaceholder',
+    id: 'ProjectsFilter.lastRunDatePlaceholder',
     defaultMessage: 'Any',
   },
   launches: {
-    id: 'FilterComponent.launches',
+    id: 'ProjectsFilter.launches',
     defaultMessage: 'Launches',
   },
   launchesPlaceholder: {
-    id: 'FilterComponent.launchesPlaceholder',
+    id: 'ProjectsFilter.launchesPlaceholder',
     defaultMessage: 'Enter the number of launches',
   },
+  users: {
+    id: 'ProjectsFilter.users',
+    defaultMessage: 'Teammates',
+  },
   usersPlaceholder: {
-    id: 'FilterComponent.usersPlaceholder',
+    id: 'ProjectsFilter.usersPlaceholder',
     defaultMessage: 'Enter the number of members',
   },
 });

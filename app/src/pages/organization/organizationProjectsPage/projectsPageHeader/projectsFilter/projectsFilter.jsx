@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
@@ -27,18 +28,18 @@ import {
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
-} from './filterButton';
+} from 'components/main/filterButton';
+import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { messages } from './messages';
 
-export const Filter = ({
+export const ProjectsFilter = ({
   entities,
   onFilterChange,
   appliedFiltersCount,
   setAppliedFiltersCount,
-  filteredAction,
-  teammatesFilterMessage,
 }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
@@ -71,12 +72,13 @@ export const Filter = ({
           value: '',
           placeholder: formatMessage(messages.launchesPlaceholder),
           name: LAUNCHES_FILTER_NAME,
+          type: 'number',
         },
       ],
     },
     [TEAMMATES_FILTER_NAME]: {
       filterName: TEAMMATES_FILTER_NAME,
-      title: teammatesFilterMessage,
+      title: formatMessage(messages.users),
       helpText: formatMessage(helpMessage.helpText),
       fields: [
         {
@@ -88,9 +90,20 @@ export const Filter = ({
           value: '',
           placeholder: formatMessage(messages.usersPlaceholder),
           name: TEAMMATES_FILTER_NAME,
+          type: 'number',
         },
       ],
     },
+  };
+
+  const initialFilterState = {
+    [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
+    [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
+    [LAUNCHES_FILTER_NAME_CONDITION]:
+      entities[LAUNCHES_FILTER_NAME]?.condition || rangeComparisons[0].value,
+    [TEAMMATES_FILTER_NAME]: entities[TEAMMATES_FILTER_NAME]?.value || '',
+    [TEAMMATES_FILTER_NAME_CONDITION]:
+      entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
   };
 
   return (
@@ -100,12 +113,13 @@ export const Filter = ({
       setAppliedFiltersCount={setAppliedFiltersCount}
       definedFilters={entities}
       onFilterChange={onFilterChange}
-      filteredAction={filteredAction}
+      initialState={initialFilterState}
+      filteredAction={() => dispatch(fetchFilteredProjectAction())}
     />
   );
 };
 
-Filter.propTypes = {
+ProjectsFilter.propTypes = {
   entities: PropTypes.objectOf(
     PropTypes.shape({
       filter_key: PropTypes.string,
@@ -116,6 +130,4 @@ Filter.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   appliedFiltersCount: PropTypes.number.isRequired,
   setAppliedFiltersCount: PropTypes.func.isRequired,
-  filteredAction: PropTypes.func.isRequired,
-  teammatesFilterMessage: PropTypes.string.isRequired,
 };

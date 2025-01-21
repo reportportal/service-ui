@@ -16,7 +16,7 @@
 
 import moment from 'moment/moment';
 import { getMinutesFromTimestamp } from 'common/utils';
-import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filter/filterButton';
+import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
 
 export function bindDefaultValue(key, options = {}) {

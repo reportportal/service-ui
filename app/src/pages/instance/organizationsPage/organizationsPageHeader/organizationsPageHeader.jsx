@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -25,13 +25,10 @@ import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import { NAMESPACE } from 'controllers/instance/organizations/constants';
-import {
-  fetchFilteredOrganizationsAction,
-  organizationsListLoadingSelector,
-} from 'controllers/instance/organizations';
+import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { withFilterEntitiesURL } from 'components/filterEntities/containers';
-import { Filter } from 'components/main/filter';
+import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
 import { messages } from '../messages';
@@ -43,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(NAMESPACE)(Filter);
+const FiltersFields = withFilterEntitiesURL(NAMESPACE)(OrganizationsFilter);
 
 export const OrganizationsPageHeader = ({
   isEmpty,
@@ -56,7 +53,6 @@ export const OrganizationsPageHeader = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
 
   return (
@@ -77,8 +73,6 @@ export const OrganizationsPageHeader = ({
                 debounced={false}
                 appliedFiltersCount={appliedFiltersCount}
                 setAppliedFiltersCount={setAppliedFiltersCount}
-                filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
-                teammatesFilterMessage={formatMessage(messages.users)}
               />
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}

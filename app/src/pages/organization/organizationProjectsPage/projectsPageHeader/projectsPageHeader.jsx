@@ -16,19 +16,19 @@
 
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
-import { fetchFilteredProjectAction, loadingSelector } from 'controllers/organization/projects';
+import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import { withFilterEntitiesURL } from 'components/filterEntities/containers';
-import { Filter } from 'components/main/filter';
+import { ProjectsFilter } from './projectsFilter';
 import projectsIcon from './img/projects-inline.svg';
 import userIcon from './img/user-inline.svg';
 import { messages } from '../messages';
@@ -40,7 +40,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const FiltersFields = withFilterEntitiesURL(NAMESPACE)(Filter);
+const FiltersFields = withFilterEntitiesURL(NAMESPACE)(ProjectsFilter);
 
 export const ProjectsPageHeader = ({
   hasPermission,
@@ -51,7 +51,6 @@ export const ProjectsPageHeader = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
   const projectsCount = organization?.relationships?.projects?.meta.count;
@@ -105,8 +104,6 @@ export const ProjectsPageHeader = ({
                 debounced={false}
                 appliedFiltersCount={appliedFiltersCount}
                 setAppliedFiltersCount={setAppliedFiltersCount}
-                filteredAction={() => dispatch(fetchFilteredProjectAction())}
-                teammatesFilterMessage={formatMessage(messages.teammates)}
               />
             </div>
           )}
