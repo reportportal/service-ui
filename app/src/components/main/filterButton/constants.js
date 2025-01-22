@@ -21,6 +21,7 @@ import {
 } from 'components/filterEntities/constants';
 import { messages } from './messages';
 
+export const ORGANIZATION_TYPE_FILTER_NAME = 'organization_type';
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
 export const LAUNCHES_FILTER_NAME_CONDITION = 'launches_condition';

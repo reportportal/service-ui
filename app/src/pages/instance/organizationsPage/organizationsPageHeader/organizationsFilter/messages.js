@@ -41,4 +41,20 @@ export const messages = defineMessages({
     id: 'OrganizationsFilter.usersPlaceholder',
     defaultMessage: 'Enter the number of members',
   },
+  organizationType: {
+    id: 'OrganizationsFilter.organizationType',
+    defaultMessage: 'Organization Type',
+  },
+  typePersonal: {
+    id: 'OrganizationsFilter.typePersonal',
+    defaultMessage: 'Personal',
+  },
+  typeInternal: {
+    id: 'OrganizationsFilter.typeInternal',
+    defaultMessage: 'Internal',
+  },
+  typeSynched: {
+    id: 'OrganizationsFilter.typeSynced',
+    defaultMessage: 'Synched',
+  },
 });

@@ -30,6 +30,7 @@ import {
   getTimeRange,
   messages as helpMessage,
 } from 'components/main/filterButton';
+import { ORGANIZATION_TYPE_FILTER_NAME } from 'components/main/filterButton/constants';
 import { messages } from './messages';
 
 export const OrganizationsFilter = ({
@@ -43,8 +44,23 @@ export const OrganizationsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
-
+  const organizationTypes = [
+    { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
+    { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
+    { label: formatMessage(messages.typeSynched), value: 'SYNCHED' },
+  ];
   const filters = {
+    [ORGANIZATION_TYPE_FILTER_NAME]: {
+      filterName: ORGANIZATION_TYPE_FILTER_NAME,
+      title: formatMessage(messages.organizationType),
+      fields: [
+        {
+          options: organizationTypes,
+          value: organizationTypes.map((option) => option.value),
+          multiSelect: true,
+        },
+      ],
+    },
     [LAST_RUN_DATE_FILTER_NAME]: {
       filterName: LAST_RUN_DATE_FILTER_NAME,
       title: formatMessage(messages.lastRunDate),
@@ -95,8 +111,11 @@ export const OrganizationsFilter = ({
       ],
     },
   };
-
+  console.log(entities, ' entities');
   const initialFilterState = {
+    [ORGANIZATION_TYPE_FILTER_NAME]:
+      entities[ORGANIZATION_TYPE_FILTER_NAME]?.value ||
+      organizationTypes.map((option) => option.value),
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:

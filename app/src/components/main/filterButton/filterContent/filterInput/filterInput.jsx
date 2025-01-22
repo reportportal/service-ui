@@ -25,14 +25,14 @@ const cx = classNames.bind(styles);
 export const FilterInput = ({ filter, onChange }) => {
   const { filterName, title, helpText, fields } = filter;
   const withCondition = fields.length > 1;
-
+  console.log(filter);
   const onClear = (fieldName) => onChange(fieldName, '');
 
   return (
     <div className={cx('filter-item', { 'with-help-text': helpText })}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        {fields.map(({ name, placeholder, options, value, condition, type }) => {
+        {fields.map(({ name, placeholder, options, value, condition, type, multiSelect }) => {
           if (options) {
             return (
               <FieldProvider key={name} name={name}>
@@ -42,6 +42,7 @@ export const FilterInput = ({ filter, onChange }) => {
                   isListWidthLimited
                   className={cx({ dropdown: withCondition })}
                   placeholder={placeholder}
+                  multiSelect={multiSelect}
                 />
               </FieldProvider>
             );
