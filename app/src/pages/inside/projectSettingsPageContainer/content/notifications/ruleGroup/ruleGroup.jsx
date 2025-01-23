@@ -369,9 +369,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
               )}
             </div>
           ) : (
-            isUpdateSettingAvailable && (
-              <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
-            )
+            <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
           )}
         </div>
       </Layout>

@@ -330,7 +330,8 @@ export class GeneralTab extends Component {
   render() {
     const { intl, userRoles, isLoading, projectName } = this.props;
     const { processingData } = this.state;
-    const isDisabled = !canUpdateSettings(userRoles) || processingData;
+    const canPerformUpdate = canUpdateSettings(userRoles);
+    const isDisabled = !canPerformUpdate || processingData;
     return isLoading ? (
       <SpinningPreloader />
     ) : (
@@ -427,19 +428,21 @@ export class GeneralTab extends Component {
               mobileDisabled
             />
           </FormField>
-          <div className={cx('submit-block')}>
-            <Button type="submit" disabled={isDisabled}>
-              {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-            </Button>
-            {processingData && (
-              <div className={cx('preloader-block')}>
-                <BubblesLoader className={cx('preloader')} />
-                <span className={cx('preloader-text')}>
-                  {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
-                </span>
-              </div>
-            )}
-          </div>
+          {canPerformUpdate && (
+            <div className={cx('submit-block')}>
+              <Button type="submit" disabled={isDisabled}>
+                {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+              </Button>
+              {processingData && (
+                <div className={cx('preloader-block')}>
+                  <BubblesLoader className={cx('preloader')} />
+                  <span className={cx('preloader-text')}>
+                    {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </form>
       </div>
     );

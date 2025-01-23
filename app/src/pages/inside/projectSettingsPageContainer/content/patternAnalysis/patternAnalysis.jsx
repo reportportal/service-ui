@@ -91,12 +91,17 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
         </SettingsPageContent>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noPatternAnalysisTitle)}
-          description={formatMessage(messages.noPatternAnalysisDescription)}
-          buttonName={formatMessage(messages.create)}
+          title={formatMessage(
+            isAbleToCreate ? messages.noPatternAnalysisTitle : messages.noPatternsYetTitle,
+          )}
+          description={formatMessage(
+            isAbleToCreate
+              ? messages.noPatternAnalysisDescription
+              : messages.noPatternsAppearDescription,
+          )}
+          buttonName={isAbleToCreate && formatMessage(messages.create)}
           buttonDataAutomationId="createPatternButton"
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
-          disableButton={!isAbleToCreate}
           handleButton={onAddPattern}
           handleDocumentationClick={handleDocumentationClick}
         />

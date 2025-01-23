@@ -21,6 +21,14 @@ export const messages = defineMessages({
     id: 'NoPatternAnalysis.title',
     defaultMessage: 'No Pattern Rules',
   },
+  noPatternsYetTitle: {
+    id: 'NoPatternsYet.title',
+    defaultMessage: 'No Patterns Yet',
+  },
+  noPatternsAppearDescription: {
+    id: 'NoPatternsAppear.description',
+    defaultMessage: 'Patterns will appear here once created by your team',
+  },
   noPatternAnalysisDescription: {
     id: 'NoPatternAnalysis.description',
     defaultMessage:

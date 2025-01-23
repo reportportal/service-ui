@@ -122,19 +122,23 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
 
   useEffect(() => {
     setHeaderTitleNode(
-      <span className={cx('button')}>
-        <Button
-          disabled={!isEditable || !canAddNewDefectType}
-          onClick={() =>
-            onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
-              trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
-            )
-          }
-          data-automation-id={'createDefectTypeButton'}
-        >
-          {formatMessage(messages.createDefectHeader)}
-        </Button>
-      </span>,
+      <>
+        {isEditable && (
+          <span className={cx('button')}>
+            <Button
+              disabled={!isEditable || !canAddNewDefectType}
+              onClick={() =>
+                onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
+                  trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
+                )
+              }
+              data-automation-id={'createDefectTypeButton'}
+            >
+              {formatMessage(messages.createDefectHeader)}
+            </Button>
+          </span>
+        )}
+      </>,
     );
 
     return () => setHeaderTitleNode(null);
