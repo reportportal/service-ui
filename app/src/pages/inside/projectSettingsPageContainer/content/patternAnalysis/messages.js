@@ -23,7 +23,7 @@ export const messages = defineMessages({
   },
   noPatternsYetTitle: {
     id: 'NoPatternsYet.title',
-    defaultMessage: 'No Patterns Yet',
+    defaultMessage: 'No patterns yet',
   },
   noPatternsAppearDescription: {
     id: 'NoPatternsAppear.description',
