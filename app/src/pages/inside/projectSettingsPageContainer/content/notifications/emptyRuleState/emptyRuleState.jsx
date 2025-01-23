@@ -21,25 +21,32 @@ import Parser from 'html-react-parser';
 import plusIcon from 'common/img/plus-button-inline.svg';
 import { Button } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
-import styles from './emptyRuleState.scss';
+import { canUpdateSettings } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
+import { useSelector } from 'react-redux';
 import { messages } from '../messages';
+import styles from './emptyRuleState.scss';
 
 const cx = classNames.bind(styles);
 
 export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
   const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
+  const isUpdateSettingAvailable = canUpdateSettings(userRoles);
   return (
     <div className={cx('empty-rule-state')}>
       <span className={cx('label')}>{formatMessage(messages.noItemsMessage, { ruleName })}</span>
-      <Button
-        onClick={onCreateClick}
-        variant={'text'}
-        className={cx('button')}
-        icon={Parser(plusIcon)}
-        data-automation-id="createRuleFromEmptyStateButton"
-      >
-        {formatMessage(messages.create)}
-      </Button>
+      {isUpdateSettingAvailable && (
+        <Button
+          onClick={onCreateClick}
+          variant={'text'}
+          className={cx('button')}
+          icon={Parser(plusIcon)}
+          data-automation-id="createRuleFromEmptyStateButton"
+        >
+          {formatMessage(messages.create)}
+        </Button>
+      )}
     </div>
   );
 };
