@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,11 @@
  *  limitations under the License.
  */
 
-import { FETCH_EXTENSION_MANIFESTS_SUCCESS, UPDATE_EXTENSION_MANIFEST } from './constants';
+import {
+  FETCH_EXTENSION_MANIFESTS_SUCCESS,
+  UPDATE_EXTENSION_MANIFEST,
+  ADD_EXTENSION_MANIFEST,
+} from './constants';
 
 export const fetchExtensionManifestsSuccessAction = (extensionManifests) => ({
   type: FETCH_EXTENSION_MANIFESTS_SUCCESS,
@@ -22,5 +26,9 @@ export const fetchExtensionManifestsSuccessAction = (extensionManifests) => ({
 });
 export const updateExtensionManifestAction = (extensionManifest) => ({
   type: UPDATE_EXTENSION_MANIFEST,
+  payload: extensionManifest,
+});
+export const addExtensionManifestAction = (extensionManifest) => ({
+  type: ADD_EXTENSION_MANIFEST,
   payload: extensionManifest,
 });

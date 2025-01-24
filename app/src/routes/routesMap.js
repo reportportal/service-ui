@@ -328,7 +328,8 @@ const routesMap = {
     },
   },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
-  [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
+  [PROJECT_PLUGIN_PAGE]:
+    '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

@@ -133,13 +133,13 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       icon: SettingsIcon,
       message: formatMessage(messages.projectsSettings),
     });
-    projectPageExtensions.forEach(({ icon, internalRoute }) => {
+    projectPageExtensions.forEach(({ icon, internalRoute, name }) => {
       if (icon) {
         sidebarItems.push({
           onClick: onClickNavBtn,
           link: {
             type: PROJECT_PLUGIN_PAGE,
-            payload: { organizationSlug, projectSlug, pluginPage: internalRoute },
+            payload: { organizationSlug, projectSlug, pluginPage: internalRoute || name },
           },
           icon: icon.svg,
           message: icon.title,
