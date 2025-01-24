@@ -149,8 +149,26 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     }
   };
 
-  const tabsConfig = useMemo(() => {
-    const config = {
+  const tabsConfig = useMemo(
+    () => ({
+      ...(hasPermission
+        ? {
+            [INDEX_SETTINGS]: {
+              name: formatMessage(messages.indexSettings),
+              link: createTabLink(INDEX_SETTINGS),
+              component: (
+                <IndexSettings
+                  analyzerConfig={analyzerConfig}
+                  indexingRunning={indexingRunning}
+                  isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
+                  analyzerUnavailableTitle={analyzerUnavailableTitle}
+                  onFormSubmit={updateProjectConfig}
+                  hasPermission={hasPermission}
+                />
+              ),
+            },
+          }
+        : {}),
       [AUTO_ANALYSIS]: {
         name: formatMessage(messages.autoAnalysis),
         link: createTabLink(AUTO_ANALYSIS),
@@ -188,34 +206,16 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           />
         ),
       },
-    };
-
-    if (hasPermission) {
-      config[INDEX_SETTINGS] = {
-        name: formatMessage(messages.indexSettings),
-        link: createTabLink(INDEX_SETTINGS),
-        component: (
-          <IndexSettings
-            analyzerConfig={analyzerConfig}
-            indexingRunning={indexingRunning}
-            isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
-            analyzerUnavailableTitle={analyzerUnavailableTitle}
-            onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
-          />
-        ),
-      };
-    }
-
-    return config;
-  }, [
-    analyzerConfig,
-    createTabLink,
-    hasPermission,
-    analyzerUnavailableTitle,
-    isAnalyzerServiceAvailable,
-    indexingRunning,
-  ]);
+    }),
+    [
+      analyzerConfig,
+      createTabLink,
+      hasPermission,
+      analyzerUnavailableTitle,
+      isAnalyzerServiceAvailable,
+      indexingRunning,
+    ],
+  );
 
   useEffect(() => {
     setHeaderNodes(
