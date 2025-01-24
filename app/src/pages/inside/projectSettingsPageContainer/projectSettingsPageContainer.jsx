@@ -39,7 +39,7 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
-import { canSeeDemoData } from 'common/utils/permissions';
+import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
@@ -135,7 +135,9 @@ export const ProjectSettingsPageContainer = () => {
       },
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
-        link: createTabLink(ANALYSIS, { subTab: 'indexSettings' }),
+        link: createTabLink(ANALYSIS, {
+          subTab: canUpdateSettings(userRoles) ? 'indexSettings' : 'autoAnalysis',
+        }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
         ),
