@@ -49,7 +49,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
-  const { slug: organizationSlug } = useSelector(activeOrganizationSelector);
+  const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const organizationName = useSelector(activeOrganizationNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
 
@@ -113,7 +113,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     payload: { organizationSlug },
   };
   const titles = {
-    shortTitle: `${organizationName[0]}${organizationName[organizationName.length - 1]}`,
+    shortTitle: `${organizationName?.[0]}${organizationName?.[organizationName.length - 1]}`,
     topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: organizationName,
     level: 'organization',
