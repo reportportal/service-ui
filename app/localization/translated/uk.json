@@ -1723,6 +1723,7 @@
   "ProjectsPage.assignError": "У процесі призначення на проект сталася помилка",
   "ProjectsPage.assignSuccess": "Ви призначені на проект",
   "ProjectsPage.deleteError": "При видаленні проекту виникла помилка",
+  "ProjectsPage.deleteProjectSuccess": "Проект ''{name}'' успішно видалено",
   "ProjectsPage.noResultsDescription": "Ваші критерії пошуку чи фільтра не відповідають жодному результату. Будь ласка, спробуйте інші ключові слова або змініть налаштування фільтра.",
   "ProjectsPage.projectDuplicateHint": "Проект з таким найменуванням вже існує в цій організації",
   "ProjectsPage.projectExists": "Проект з такою назвою вже існує в цій організації",

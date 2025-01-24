@@ -1723,6 +1723,7 @@
   "ProjectsPage.assignError": "В процессе назначения на проект произошла ошибка",
   "ProjectsPage.assignSuccess": "Вы назначены на проект",
   "ProjectsPage.deleteError": "При удалении проекта возникла ошибка",
+  "ProjectsPage.deleteProjectSuccess": "Проект ''{name}'' был успешно удален",
   "ProjectsPage.noResultsDescription": "Ваши критерии поиска или фильтра не дали никаких результатов. Попробуйте другие ключевые слова или измените настройки фильтра.",
   "ProjectsPage.projectDuplicateHint": "Проект с данным наименованием уже существует в этой организации",
   "ProjectsPage.projectExists": "Проект с таким названием уже существует в этой организации",
