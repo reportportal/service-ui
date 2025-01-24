@@ -1723,6 +1723,7 @@
   "ProjectsPage.assignError": "Адбылася памылка пры прысваенні праекту",
   "ProjectsPage.assignSuccess": "Вы прызначаныя на праект",
   "ProjectsPage.deleteError": "Пры выдаленні праекта ўзнікла памылка",
+  "ProjectsPage.deleteProjectSuccess": "Праект ''{name}'' быў паспяхова выдалены",
   "ProjectsPage.noResultsDescription": "Вашым крытэрам пошуку або фільтра не знойдзена ніводнага выніку. Калі ласка, паспрабуйце іншыя ключавыя словы або змяніце налады фільтра.",
   "ProjectsPage.projectDuplicateHint": "Праект з дадзеным найменнем ўжо існуе ў сістэме",
   "ProjectsPage.projectExists": "Праект з такой назвай ужо існуе ў гэтай арганізацыі",
