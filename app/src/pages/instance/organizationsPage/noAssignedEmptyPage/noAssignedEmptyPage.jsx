@@ -33,7 +33,7 @@ export const NoAssignedEmptyPage = () => {
   const { formatMessage } = useIntl();
   const fullName = useSelector(fullNameSelector);
   const instanceType = useSelector(instanceTypeSelector);
-  const isSaaS = instanceType !== SAAS;
+  const isSaaS = instanceType === SAAS;
   const description = isSaaS
     ? formatMessage(messages.descriptionSaaS)
     : formatMessage(messages.description);
