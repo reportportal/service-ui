@@ -25,7 +25,7 @@ const fetchManifest = async (url, manifestFileName) => {
   return response.json();
 };
 
-// TODO: restrict access to this function (f.e. only for admins)
+// TODO: restrict access to this function (e.g. only for admins)
 export const createExtensionOverrider = (store) => async (pluginName, url) => {
   const plugin = pluginByNameSelector(store.getState(), pluginName);
 
@@ -39,7 +39,7 @@ export const createExtensionOverrider = (store) => async (pluginName, url) => {
   return manifest;
 };
 
-// TODO: restrict access to this function (f.e. only for admins)
+// TODO: restrict access to this function (e.g. only for admins)
 export const createExtensionAppender = (store) => async (url) => {
   const manifestFileName = `${MANIFEST_FILE_KEY}.json`;
 
