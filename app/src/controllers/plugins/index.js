@@ -42,6 +42,7 @@ export { isPluginSupportsCommonCommand } from './uiExtensions/utils';
 export {
   pluginsSelector,
   pluginByNameSelector,
+  enabledPluginSelector,
   availablePluginsSelector,
   availableGroupedPluginsSelector,
   createNamedIntegrationsSelector,
