@@ -23,7 +23,7 @@ import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { withModal } from 'controllers/modal';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { enabledImportPluginsSelector } from 'controllers/plugins';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
 });
 
-const ImportLaunchModal = ({ data: { onImport }, activeProject, importPlugins }) => {
+const ImportLaunchModal = ({ data: { onImport }, activeProjectKey, importPlugins }) => {
   const {
     files,
     actions: { addFiles, removeFile, updateFile },
@@ -104,7 +104,7 @@ const ImportLaunchModal = ({ data: { onImport }, activeProject, importPlugins })
     setSelectedPlugin(importPlugins.find((plugin) => plugin.name === name));
 
   const saveFiles = async () => {
-    const url = URLS.pluginFileImport(activeProject, selectedPlugin.name);
+    const url = URLS.pluginFileImport(activeProjectKey, selectedPlugin.name);
 
     trackEvent(LAUNCHES_MODAL_EVENTS.getOkBtnImportModal(selectedPlugin.name));
     await uploadFiles(url, onUploadSuccess, onUploadError);
@@ -150,11 +150,11 @@ ImportLaunchModal.propTypes = {
     onImport: PropTypes.func,
   }).isRequired,
   importPlugins: PropTypes.arrayOf(PropTypes.object).isRequired,
-  activeProject: PropTypes.string.isRequired,
+  activeProjectKey: PropTypes.string.isRequired,
 };
 export default withModal('importLaunchModal')(
   connect((state) => ({
-    activeProject: activeProjectSelector(state),
+    activeProjectKey: activeProjectKeySelector(state),
     importPlugins: enabledImportPluginsSelector(state),
   }))(ImportLaunchModal),
 );
