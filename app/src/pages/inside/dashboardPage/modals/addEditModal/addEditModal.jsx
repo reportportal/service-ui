@@ -68,6 +68,14 @@ const messages = defineMessages({
     id: 'DashboardForm.modalCancelButtonText',
     defaultMessage: 'Cancel',
   },
+  duplicateModalTitle: {
+    id: 'DashboardForm.duplicateModalTitle',
+    defaultMessage: 'Duplicate Dashboard',
+  },
+  duplicateModalSubmitButtonText: {
+    id: 'DashboardForm.duplicateModalSubmitButtonText',
+    defaultMessage: 'Duplicate',
+  },
 });
 
 const LABEL_WIDTH = 90;
@@ -92,12 +100,12 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
 })
 export class AddEditModal extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       dashboardItem: PropTypes.object,
       onSubmit: PropTypes.func,
       type: PropTypes.string,
     }),
-    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,
@@ -122,11 +130,18 @@ export class AddEditModal extends Component {
   }
 
   getCloseConfirmationConfig = () => {
-    if (!this.props.dirty) {
+    const {
+      dirty,
+      data: { type },
+      intl,
+    } = this.props;
+
+    if (!dirty || type === 'duplicate') {
       return null;
     }
+
     return {
-      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+      confirmationWarning: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
 
@@ -139,15 +154,29 @@ export class AddEditModal extends Component {
 
     const dashboardId = dashboardItem?.id;
 
-    if (dirty) {
+    if (type === 'duplicate' || dirty) {
       const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
-      const dashboardEvent =
-        type === 'edit'
-          ? DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
-              dashboardId,
-              isChangedDescription,
-            )
-          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(dashboardId, isChangedDescription);
+      let dashboardEvent;
+
+      switch (type) {
+        case 'edit':
+          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+            dashboardId,
+            isChangedDescription,
+          );
+          break;
+        case 'duplicate':
+          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+            dashboardId,
+            isChangedDescription,
+          );
+          break;
+        default:
+          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+            dashboardId,
+            isChangedDescription,
+          );
+      }
 
       trackEvent(dashboardEvent);
       this.props.data.onSubmit(item);
@@ -162,8 +191,24 @@ export class AddEditModal extends Component {
       handleSubmit,
       data: { type },
     } = this.props;
-    const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
-    const title = intl.formatMessage(messages[`${type}ModalTitle`]);
+
+    let title;
+    let submitText;
+
+    switch (type) {
+      case 'edit':
+        title = intl.formatMessage(messages.editModalTitle);
+        submitText = intl.formatMessage(messages.editModalSubmitButtonText);
+        break;
+      case 'duplicate':
+        title = intl.formatMessage(messages.duplicateModalTitle);
+        submitText = intl.formatMessage(messages.duplicateModalSubmitButtonText);
+        break;
+      default:
+        title = intl.formatMessage(messages.addModalTitle);
+        submitText = intl.formatMessage(messages.addModalSubmitButtonText);
+    }
+
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
 
     return (
@@ -180,7 +225,7 @@ export class AddEditModal extends Component {
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
-        <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
+        <form className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
             labelWidth={LABEL_WIDTH}

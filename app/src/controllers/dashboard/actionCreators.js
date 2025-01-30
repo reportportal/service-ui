@@ -30,6 +30,8 @@ import {
   UPDATE_DASHBOARD,
   UPDATE_DASHBOARD_SUCCESS,
   UPDATE_DASHBOARD_WIDGETS,
+  DUPLICATE_DASHBOARD,
+  DUPLICATE_DASHBOARD_SUCCESS,
 } from './constants';
 
 export const fetchDashboardsAction = (params) => ({
@@ -48,6 +50,16 @@ export const addDashboardAction = (item) => ({
 
 export const addDashboardSuccessAction = (item) => ({
   type: ADD_DASHBOARD_SUCCESS,
+  payload: item,
+});
+
+export const duplicateDashboardAction = (item) => ({
+  type: DUPLICATE_DASHBOARD,
+  payload: item,
+});
+
+export const duplicateDashboardSuccessAction = (item) => ({
+  type: DUPLICATE_DASHBOARD_SUCCESS,
   payload: item,
 });
 
