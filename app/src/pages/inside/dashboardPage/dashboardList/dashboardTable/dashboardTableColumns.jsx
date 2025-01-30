@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -22,6 +22,8 @@ import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import Parser from 'html-react-parser';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
@@ -77,6 +79,70 @@ OwnerColumn.defaultProps = {
   className: '',
 };
 
+export const DuplicateColumn = track()(
+  ({ value, customProps, className, tracking: { trackEvent } }) => {
+    const [opened, setOpened] = useState(false);
+
+    useEffect(() => {
+      const handleOutsideClick = (e) => {
+        if (!e.target.closest(`.${cx('duplicate-dropdown')}`) && opened) {
+          setOpened(false);
+        }
+      };
+
+      document.addEventListener('click', handleOutsideClick);
+      return () => document.removeEventListener('click', handleOutsideClick);
+    }, [opened]);
+
+    const handleDuplicate = () => {
+      const { id } = value;
+      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', id));
+      customProps.onDuplicate(value);
+      setOpened(false);
+    };
+
+    const handleCopyConfig = () => {
+      // TODO: Copy configuration functionality will be added later
+      setOpened(false);
+    };
+
+    return (
+      <div className={cx(className, 'icon-cell', 'with-button')}>
+        <div className={cx('icon-holder', 'no-border')}>
+          <div className={cx('duplicate-dropdown')} onClick={() => setOpened(!opened)}>
+            <div className={cx('duplicate-icon')}>
+              {Parser(IconDuplicate.replace('stroke="#999999"', 'stroke="currentColor"'))}
+            </div>
+            <i className={cx('arrow', { opened })} />
+            {opened && (
+              <div className={cx('hamburger-menu', 'shown')}>
+                <div className={cx('dropdown-item')} onClick={handleDuplicate}>
+                  Duplicate
+                </div>
+                <div className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                  Copy dashboard configuration to clipboard
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  },
+);
+
+DuplicateColumn.propTypes = {
+  value: PropTypes.object,
+  customProps: PropTypes.object,
+  className: PropTypes.string,
+};
+
+DuplicateColumn.defaultProps = {
+  value: {},
+  customProps: {},
+  className: '',
+};
+
 export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
   const { onEdit } = customProps;
   const { id } = value;
@@ -87,8 +153,10 @@ export const EditColumn = track()(({ value, customProps, className, tracking: { 
   };
 
   return (
-    <div className={cx(className, 'icon-cell', 'with-button')}>
-      <Icon type="icon-pencil" onClick={editItemHandler} />
+    <div className={cx(className, 'icon-cell', 'with-button', 'edit-cell')}>
+      <div className={cx('icon-holder')}>
+        <Icon type="icon-pencil" onClick={editItemHandler} />
+      </div>
     </div>
   );
 });
@@ -112,7 +180,7 @@ export const DeleteColumn = track()(
     };
 
     return (
-      <div className={cx(className, 'icon-cell', 'with-button')}>
+      <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
         <div className={cx('icon-holder')}>
           <Icon type="icon-delete" onClick={deleteItemHandler} />
         </div>

@@ -47,6 +47,7 @@ import {
   REMOVE_DASHBOARD_SUCCESS,
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
+  DUPLICATE_DASHBOARD,
 } from './constants';
 import { dashboardItemsSelector, querySelector } from './selectors';
 import {
@@ -131,6 +132,42 @@ function* addDashboard({ payload: dashboard }) {
   });
 }
 
+function* duplicateDashboard({ payload: dashboard }) {
+  const activeProject = yield select(activeProjectSelector);
+  try {
+    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
+
+    const result = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
+      method: 'post',
+      data: {
+        name: dashboard.name,
+        description: dashboard.description,
+        config,
+      },
+    });
+
+    yield put(
+      addDashboardSuccessAction({
+        id: result.id,
+        name: dashboard.name,
+        description: dashboard.description,
+        owner: dashboard.owner,
+        widgets: [], // or config.widgets if available
+      }),
+    );
+
+    yield put(
+      showNotification({
+        message: 'Dashboard successfully duplicated',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
 function* updateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
   const { name, description, id } = dashboard;
@@ -205,5 +242,6 @@ export function* dashboardSagas() {
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
+    yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
   ]);
 }

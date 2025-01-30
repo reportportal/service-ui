@@ -28,6 +28,7 @@ import {
   OwnerColumn,
   EditColumn,
   DeleteColumn,
+  DuplicateColumn,
 } from './dashboardTableColumns';
 import styles from './dashboardTable.scss';
 
@@ -44,6 +45,10 @@ const messages = defineMessages({
   owner: {
     id: 'DashboardTable.owner',
     defaultMessage: 'Owner',
+  },
+  duplicate: {
+    id: 'DashboardTable.duplicate',
+    defaultMessage: 'Duplicate',
   },
   edit: {
     id: 'DashboardTable.edit',
@@ -64,6 +69,7 @@ export class DashboardTable extends Component {
     intl: PropTypes.object.isRequired,
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
+    onDuplicate: PropTypes.func,
     onAddItem: PropTypes.func,
     projectId: PropTypes.string,
     dashboardItems: PropTypes.array,
@@ -74,6 +80,7 @@ export class DashboardTable extends Component {
   static defaultProps = {
     onDeleteItem: () => {},
     onEditItem: () => {},
+    onDuplicate: () => {},
     onAddItem: () => {},
     projectId: '',
     dashboardItems: [],
@@ -82,7 +89,7 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, intl, projectId } = this.props;
+    const { onDeleteItem, onEditItem, onDuplicate, intl, projectId } = this.props;
 
     return [
       {
@@ -110,6 +117,17 @@ export class DashboardTable extends Component {
         },
         formatter: (value) => value.owner,
         component: OwnerColumn,
+      },
+      {
+        title: {
+          full: intl.formatMessage(messages.duplicate),
+          short: intl.formatMessage(messages.duplicate),
+        },
+        component: DuplicateColumn,
+        customProps: {
+          onDuplicate,
+        },
+        align: ALIGN_CENTER,
       },
       {
         title: {
