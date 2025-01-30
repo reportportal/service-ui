@@ -42,7 +42,10 @@ export const URLS = {
   dashboards: (activeProject, params) =>
     `${urlBase}${activeProject}/dashboard${getQueryParams({ ...params })}`,
 
-  widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
+  widget: (activeProject, widgetId = '') => {
+    const widgetIdPart = widgetId ? `/${widgetId}` : '';
+    return `${urlBase}${activeProject}/widget${widgetIdPart}`;
+  },
   widgetMultilevel: (activeProject, widgetId, params) =>
     `${urlBase}${activeProject}/widget/multilevel/${widgetId}${getQueryParams({
       ...params,
@@ -58,7 +61,10 @@ export const URLS = {
   projectWidget: (activeProject, widgetId = '', interval = '') =>
     `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
+  filter: (activeProject, id = '') => {
+    const filterId = id ? `/${id}` : '';
+    return `${urlBase}${activeProject}/filter${filterId}`;
+  },
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
   filtersSearch: (activeProject) =>
     `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
@@ -178,7 +184,10 @@ export const URLS = {
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
   testItemsWithProviderType: (activeProject, ids) =>
     `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
-  testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
+  testItem: (activeProject, id = '') => {
+    const itemId = id ? `/${id}` : '';
+    return `${urlBase}${activeProject}/item${itemId}`;
+  },
   testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
   testItemsHistory: (activeProject, historyDepth, type, id) =>
