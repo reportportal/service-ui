@@ -189,7 +189,7 @@ function* fetchUserWorker() {
       try {
         const currentProject = yield call(
           fetch,
-          URLS.organizationProjects(activeOrganization?.id, { slug: activeOrganization?.slug }),
+          URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
         );
         projectKey = currentProject?.items?.[0]?.key;
       } catch (e) {} // eslint-disable-line no-empty
