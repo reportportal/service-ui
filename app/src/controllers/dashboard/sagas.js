@@ -152,13 +152,13 @@ function* duplicateDashboard({ payload: dashboard }) {
         name: dashboard.name,
         description: dashboard.description,
         owner: dashboard.owner,
-        widgets: [], // or config.widgets if available
+        widgets: [],
       }),
     );
 
     yield put(
       showNotification({
-        message: 'Dashboard successfully duplicated',
+        messageId: 'duplicateDashboardSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );

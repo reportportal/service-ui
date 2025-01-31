@@ -1514,6 +1514,7 @@
   "NotificationItem.successLogin": "Успішний вхід",
   "NotificationRule.launchNameLabel": "Назва запуску",
   "NotificationRule.launchOwner": "Власник запуску",
+  "Notifications.duplicateDashboardSuccess": "Дублікат дашборду успішно створено",
   "Notifications.notifications": "Повідомлення електронною поштою",
   "Notifications.ruleNameDuplicateHint": "Правило з такою назвою вже існує для цього каналу зв’язку",
   "Notifications.updateEmail": "оновлено",
