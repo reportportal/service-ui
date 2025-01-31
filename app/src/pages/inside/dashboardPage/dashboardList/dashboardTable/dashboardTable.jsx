@@ -19,9 +19,10 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
+import { messages } from './messages';
 import {
   NameColumn,
   DescriptionColumn,
@@ -33,32 +34,6 @@ import {
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  dashboardName: {
-    id: 'DashboardTable.dashboardName',
-    defaultMessage: 'Dashboard Name',
-  },
-  description: {
-    id: 'DashboardTable.description',
-    defaultMessage: 'Description',
-  },
-  owner: {
-    id: 'DashboardTable.owner',
-    defaultMessage: 'Owner',
-  },
-  duplicate: {
-    id: 'DashboardTable.duplicate',
-    defaultMessage: 'Duplicate',
-  },
-  edit: {
-    id: 'DashboardTable.edit',
-    defaultMessage: 'Edit',
-  },
-  deleteDashboard: {
-    id: 'DashboardTable.deleteDashboard',
-    defaultMessage: 'Delete',
-  },
-});
 
 @injectIntl
 @connect((state) => ({

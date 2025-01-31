@@ -24,7 +24,9 @@ import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
+import { injectIntl } from 'react-intl';
 import styles from './dashboardTable.scss';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
@@ -80,7 +82,7 @@ OwnerColumn.defaultProps = {
 };
 
 export const DuplicateColumn = track()(
-  ({ value, customProps, className, tracking: { trackEvent } }) => {
+  injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
 
     useEffect(() => {
@@ -117,10 +119,10 @@ export const DuplicateColumn = track()(
             {opened && (
               <div className={cx('hamburger-menu', 'shown')}>
                 <div className={cx('dropdown-item')} onClick={handleDuplicate}>
-                  Duplicate
+                  {intl.formatMessage(messages.duplicate)}
                 </div>
                 <div className={cx('dropdown-item')} onClick={handleCopyConfig}>
-                  Copy dashboard configuration to clipboard
+                  {intl.formatMessage(messages.copyConfig)}
                 </div>
               </div>
             )}
@@ -128,7 +130,7 @@ export const DuplicateColumn = track()(
         </div>
       </div>
     );
-  },
+  }),
 );
 
 DuplicateColumn.propTypes = {
