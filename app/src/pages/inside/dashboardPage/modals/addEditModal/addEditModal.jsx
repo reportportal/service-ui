@@ -166,7 +166,7 @@ export class AddEditModal extends Component {
           );
           break;
         case 'duplicate':
-          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+          dashboardEvent = DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
             dashboardId,
             isChangedDescription,
           );

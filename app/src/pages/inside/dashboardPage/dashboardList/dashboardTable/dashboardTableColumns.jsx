@@ -84,6 +84,7 @@ OwnerColumn.defaultProps = {
 export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
+    const { id } = value;
 
     useEffect(() => {
       const handleOutsideClick = (e) => {
@@ -96,22 +97,30 @@ export const DuplicateColumn = track()(
       return () => document.removeEventListener('click', handleOutsideClick);
     }, [opened]);
 
-    const handleDuplicate = () => {
-      const { id } = value;
+    const handleClick = (e) => {
+      e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', id));
+      setOpened(!opened);
+    };
+
+    const handleDuplicate = (e) => {
+      e.stopPropagation();
+      trackEvent(DASHBOARD_EVENTS.clickOnDropdownOption('duplicate'));
       customProps.onDuplicate(value);
       setOpened(false);
     };
 
-    const handleCopyConfig = () => {
-      // TODO: Copy configuration functionality will be added later
+    const handleCopyConfig = (e) => {
+      e.stopPropagation();
+      trackEvent(DASHBOARD_EVENTS.clickOnDropdownOption('copy_dashboard'));
+      // TODO: Implement copy configuration functionality
       setOpened(false);
     };
 
     return (
       <div className={cx(className, 'icon-cell', 'with-button')}>
         <div className={cx('icon-holder', 'no-border')}>
-          <div className={cx('duplicate-dropdown')} onClick={() => setOpened(!opened)}>
+          <div className={cx('duplicate-dropdown')} onClick={handleClick}>
             <div className={cx('duplicate-icon')}>
               {Parser(IconDuplicate.replace('stroke="#999999"', 'stroke="currentColor"'))}
             </div>
@@ -132,6 +141,18 @@ export const DuplicateColumn = track()(
     );
   }),
 );
+
+DuplicateColumn.propTypes = {
+  value: PropTypes.object,
+  customProps: PropTypes.object,
+  className: PropTypes.string,
+};
+
+DuplicateColumn.defaultProps = {
+  value: {},
+  customProps: {},
+  className: '',
+};
 
 DuplicateColumn.propTypes = {
   value: PropTypes.object,
