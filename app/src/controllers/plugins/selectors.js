@@ -40,6 +40,8 @@ export const publicPluginsSelector = (state) => {
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
+export const enabledPluginSelector = (state, name) => pluginByNameSelector(state, name).enabled;
+
 export const notificationPluginsSelector = createSelector(pluginsSelector, (plugins) => {
   return plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE);
 });

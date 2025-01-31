@@ -85,14 +85,13 @@ module.exports = () => {
       },
       hot: true,
       historyApiFallback: true,
-      https: false,
       host: '0.0.0.0',
       port: 3000,
       proxy: [
         {
           context: ['/composite', '/api/', '/uat/'],
           target: process.env.PROXY_PATH,
-          bypass(req) {
+          onProxyReq: (proxyReq, req) => {
             console.log(`proxy url: ${req.url}`);
           },
         },
