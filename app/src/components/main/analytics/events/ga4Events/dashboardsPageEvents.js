@@ -107,6 +107,19 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
+  clickOnDuplicateMenuOption: (option) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: option,
+  }),
+
+  clickOnBtnInModalDuplicateDashboard: (dashboardId, isDescriptionEdited) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'duplicate',
+    modal: 'duplicate_dashboard',
+    link_name: isDescriptionEdited,
+    number: dashboardId,
+  }),
+
   clickOnButtonUpdateInModalEditDashboard: (dashboardId, linkName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'update',
