@@ -89,6 +89,26 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
     ),
   ]);
 
+const getModalTexts = (type, intl) => {
+  switch (type) {
+    case 'edit':
+      return {
+        title: intl.formatMessage(messages.editModalTitle),
+        submitText: intl.formatMessage(messages.editModalSubmitButtonText),
+      };
+    case 'duplicate':
+      return {
+        title: intl.formatMessage(messages.duplicateModalTitle),
+        submitText: intl.formatMessage(messages.duplicateModalSubmitButtonText),
+      };
+    default:
+      return {
+        title: intl.formatMessage(messages.addModalTitle),
+        submitText: intl.formatMessage(messages.addModalSubmitButtonText),
+      };
+  }
+};
+
 @withModal('dashboardAddEditModal')
 @injectIntl
 @track()
@@ -130,18 +150,11 @@ export class AddEditModal extends Component {
   }
 
   getCloseConfirmationConfig = () => {
-    const {
-      dirty,
-      data: { type },
-      intl,
-    } = this.props;
-
-    if (!dirty || type === 'duplicate') {
+    if (!this.props.dirty) {
       return null;
     }
-
     return {
-      confirmationWarning: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
 
@@ -152,9 +165,8 @@ export class AddEditModal extends Component {
       dirty,
     } = this.props;
 
-    const dashboardId = dashboardItem?.id;
-
     if (type === 'duplicate' || dirty) {
+      const dashboardId = dashboardItem?.id;
       const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
       let dashboardEvent;
 
@@ -192,23 +204,7 @@ export class AddEditModal extends Component {
       data: { type },
     } = this.props;
 
-    let title;
-    let submitText;
-
-    switch (type) {
-      case 'edit':
-        title = intl.formatMessage(messages.editModalTitle);
-        submitText = intl.formatMessage(messages.editModalSubmitButtonText);
-        break;
-      case 'duplicate':
-        title = intl.formatMessage(messages.duplicateModalTitle);
-        submitText = intl.formatMessage(messages.duplicateModalSubmitButtonText);
-        break;
-      default:
-        title = intl.formatMessage(messages.addModalTitle);
-        submitText = intl.formatMessage(messages.addModalSubmitButtonText);
-    }
-
+    const { title, submitText } = getModalTexts(type, intl);
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
 
     return (

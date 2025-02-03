@@ -152,7 +152,10 @@ function* duplicateDashboard({ payload: dashboard }) {
         name: dashboard.name,
         description: dashboard.description,
         owner: dashboard.owner,
-        widgets: [],
+        widgets: config.widgets.map((widget) => ({
+          ...widget.widgetObject,
+          content: widget.widgetResource,
+        })),
       }),
     );
 

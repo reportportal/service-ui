@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -84,11 +84,11 @@ OwnerColumn.defaultProps = {
 export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
-    const { id } = value;
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
       const handleOutsideClick = (e) => {
-        if (!e.target.closest(`.${cx('duplicate-dropdown')}`) && opened) {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
           setOpened(false);
         }
       };
@@ -99,20 +99,20 @@ export const DuplicateColumn = track()(
 
     const handleClick = (e) => {
       e.stopPropagation();
-      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', id));
+      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
       setOpened(!opened);
     };
 
     const handleDuplicate = (e) => {
       e.stopPropagation();
-      trackEvent(DASHBOARD_EVENTS.clickOnDropdownOption('duplicate'));
+      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('duplicate'));
       customProps.onDuplicate(value);
       setOpened(false);
     };
 
     const handleCopyConfig = (e) => {
       e.stopPropagation();
-      trackEvent(DASHBOARD_EVENTS.clickOnDropdownOption('copy_dashboard'));
+      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
       // TODO: Implement copy configuration functionality
       setOpened(false);
     };
@@ -120,39 +120,30 @@ export const DuplicateColumn = track()(
     return (
       <div className={cx(className, 'icon-cell', 'with-button')}>
         <div className={cx('icon-holder', 'no-border')}>
-          <div className={cx('duplicate-dropdown')} onClick={handleClick}>
-            <div className={cx('duplicate-icon')}>
-              {Parser(IconDuplicate.replace('stroke="#999999"', 'stroke="currentColor"'))}
-            </div>
+          <button
+            ref={dropdownRef}
+            type="button"
+            className={cx('duplicate-dropdown')}
+            onClick={handleClick}
+          >
+            <div className={cx('duplicate-icon')}>{Parser(IconDuplicate)}</div>
             <i className={cx('arrow', { opened })} />
             {opened && (
-              <div className={cx('hamburger-menu', 'shown')}>
-                <div className={cx('dropdown-item')} onClick={handleDuplicate}>
+              <div className={cx('duplicate-menu', 'shown')}>
+                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
                   {intl.formatMessage(messages.duplicate)}
-                </div>
-                <div className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                </button>
+                <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
                   {intl.formatMessage(messages.copyConfig)}
-                </div>
+                </button>
               </div>
             )}
-          </div>
+          </button>
         </div>
       </div>
     );
   }),
 );
-
-DuplicateColumn.propTypes = {
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-  className: PropTypes.string,
-};
-
-DuplicateColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
 
 DuplicateColumn.propTypes = {
   value: PropTypes.object,

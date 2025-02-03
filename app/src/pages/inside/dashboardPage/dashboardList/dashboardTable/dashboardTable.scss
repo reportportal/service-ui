@@ -87,6 +87,9 @@
 
 .duplicate-dropdown {
   position: relative;
+  appearance: none;
+  background: none;
+  border: none;
   display: flex;
   align-items: center;
   padding-right: 15px;
@@ -108,7 +111,7 @@
   svg {
     height: 30px;
     width: 30px;
-    stroke-width: 1.5;
+    stroke: $COLOR--gray-60;
   }
 }
 
@@ -130,7 +133,7 @@
   }
 }
 
-.hamburger-menu {
+.duplicate-menu {
   position: absolute;
   top: 100%;
   right: -25px;
@@ -150,11 +153,15 @@
 }
 
 .dropdown-item {
+  all: unset;
+  display: block;
+  width: 100%;
   padding: 8px 15px;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   text-align: left;
-
+  cursor: pointer;
+  box-sizing: border-box;
   &:hover {
     background: $COLOR--tealish-hover;
   }

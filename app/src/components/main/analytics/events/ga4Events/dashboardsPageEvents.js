@@ -107,7 +107,7 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  clickOnDropdownOption: (option) => ({
+  clickOnDuplicateMenuOption: (option) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: option,
   }),
