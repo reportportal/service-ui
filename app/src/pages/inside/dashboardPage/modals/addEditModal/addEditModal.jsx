@@ -89,26 +89,6 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
     ),
   ]);
 
-const getModalTexts = (type, intl) => {
-  switch (type) {
-    case 'edit':
-      return {
-        title: intl.formatMessage(messages.editModalTitle),
-        submitText: intl.formatMessage(messages.editModalSubmitButtonText),
-      };
-    case 'duplicate':
-      return {
-        title: intl.formatMessage(messages.duplicateModalTitle),
-        submitText: intl.formatMessage(messages.duplicateModalSubmitButtonText),
-      };
-    default:
-      return {
-        title: intl.formatMessage(messages.addModalTitle),
-        submitText: intl.formatMessage(messages.addModalSubmitButtonText),
-      };
-  }
-};
-
 @withModal('dashboardAddEditModal')
 @injectIntl
 @track()
@@ -149,6 +129,29 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
+  getModalTexts() {
+    const { type } = this.props.data;
+    const { intl } = this.props;
+
+    switch (type) {
+      case 'edit':
+        return {
+          title: intl.formatMessage(messages.editModalTitle),
+          submitText: intl.formatMessage(messages.editModalSubmitButtonText),
+        };
+      case 'duplicate':
+        return {
+          title: intl.formatMessage(messages.duplicateModalTitle),
+          submitText: intl.formatMessage(messages.duplicateModalSubmitButtonText),
+        };
+      default:
+        return {
+          title: intl.formatMessage(messages.addModalTitle),
+          submitText: intl.formatMessage(messages.addModalSubmitButtonText),
+        };
+    }
+  }
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -157,6 +160,28 @@ export class AddEditModal extends Component {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
+
+  getTrackingEvent(dashboardId, isChangedDescription) {
+    const { type } = this.props.data;
+
+    switch (type) {
+      case 'edit':
+        return DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      case 'duplicate':
+        return DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      default:
+        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+    }
+  }
 
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
@@ -168,29 +193,8 @@ export class AddEditModal extends Component {
     if (type === 'duplicate' || dirty) {
       const dashboardId = dashboardItem?.id;
       const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
-      let dashboardEvent;
 
-      switch (type) {
-        case 'edit':
-          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
-            dashboardId,
-            isChangedDescription,
-          );
-          break;
-        case 'duplicate':
-          dashboardEvent = DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
-            dashboardId,
-            isChangedDescription,
-          );
-          break;
-        default:
-          dashboardEvent = DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-            dashboardId,
-            isChangedDescription,
-          );
-      }
-
-      trackEvent(dashboardEvent);
+      trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
       this.props.data.onSubmit(item);
     }
 
@@ -198,13 +202,8 @@ export class AddEditModal extends Component {
   };
 
   render() {
-    const {
-      intl,
-      handleSubmit,
-      data: { type },
-    } = this.props;
-
-    const { title, submitText } = getModalTexts(type, intl);
+    const { intl, handleSubmit } = this.props;
+    const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
 
     return (

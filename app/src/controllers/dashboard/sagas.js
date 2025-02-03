@@ -136,7 +136,6 @@ function* duplicateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
   try {
     const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
-
     const result = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
       method: 'post',
       data: {
@@ -146,18 +145,8 @@ function* duplicateDashboard({ payload: dashboard }) {
       },
     });
 
-    yield put(
-      addDashboardSuccessAction({
-        id: result.id,
-        name: dashboard.name,
-        description: dashboard.description,
-        owner: dashboard.owner,
-        widgets: config.widgets.map((widget) => ({
-          ...widget.widgetObject,
-          content: widget.widgetResource,
-        })),
-      }),
-    );
+    const newDashboard = yield call(fetch, URLS.dashboard(activeProject, result.id));
+    yield put(addDashboardSuccessAction(newDashboard));
 
     yield put(
       showNotification({

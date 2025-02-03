@@ -113,6 +113,10 @@
     width: 30px;
     stroke: $COLOR--gray-60;
   }
+
+  .duplicate-dropdown:hover & svg {
+    stroke: $COLOR--gray-47;
+  }
 }
 
 .arrow {
