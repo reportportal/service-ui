@@ -19,41 +19,21 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
+import { messages } from './messages';
 import {
   NameColumn,
   DescriptionColumn,
   OwnerColumn,
   EditColumn,
   DeleteColumn,
+  DuplicateColumn,
 } from './dashboardTableColumns';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  dashboardName: {
-    id: 'DashboardTable.dashboardName',
-    defaultMessage: 'Dashboard Name',
-  },
-  description: {
-    id: 'DashboardTable.description',
-    defaultMessage: 'Description',
-  },
-  owner: {
-    id: 'DashboardTable.owner',
-    defaultMessage: 'Owner',
-  },
-  edit: {
-    id: 'DashboardTable.edit',
-    defaultMessage: 'Edit',
-  },
-  deleteDashboard: {
-    id: 'DashboardTable.deleteDashboard',
-    defaultMessage: 'Delete',
-  },
-});
 
 @injectIntl
 @connect((state) => ({
@@ -64,6 +44,7 @@ export class DashboardTable extends Component {
     intl: PropTypes.object.isRequired,
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
+    onDuplicate: PropTypes.func,
     onAddItem: PropTypes.func,
     projectId: PropTypes.string,
     dashboardItems: PropTypes.array,
@@ -74,6 +55,7 @@ export class DashboardTable extends Component {
   static defaultProps = {
     onDeleteItem: () => {},
     onEditItem: () => {},
+    onDuplicate: () => {},
     onAddItem: () => {},
     projectId: '',
     dashboardItems: [],
@@ -82,7 +64,7 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, intl, projectId } = this.props;
+    const { onDeleteItem, onEditItem, onDuplicate, intl, projectId } = this.props;
 
     return [
       {
@@ -110,6 +92,17 @@ export class DashboardTable extends Component {
         },
         formatter: (value) => value.owner,
         component: OwnerColumn,
+      },
+      {
+        title: {
+          full: intl.formatMessage(messages.duplicate),
+          short: intl.formatMessage(messages.duplicate),
+        },
+        component: DuplicateColumn,
+        customProps: {
+          onDuplicate,
+        },
+        align: ALIGN_CENTER,
       },
       {
         title: {

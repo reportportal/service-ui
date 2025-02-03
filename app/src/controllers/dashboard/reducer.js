@@ -36,6 +36,7 @@ import {
   REMOVE_DASHBOARD_SUCCESS,
   TOGGLE_FULL_SCREEN_MODE,
   UPDATE_DASHBOARD_SUCCESS,
+  DUPLICATE_DASHBOARD_SUCCESS,
 } from './constants';
 
 const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type = '', payload = {} }) => {
@@ -46,6 +47,8 @@ const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type = '', payloa
       return state.map((item) => (item.id === payload.id ? payload : item));
     case REMOVE_DASHBOARD_SUCCESS:
       return state.filter((item) => item.id !== payload);
+    case DUPLICATE_DASHBOARD_SUCCESS:
+      return [...state, payload];
     default:
       return state;
   }

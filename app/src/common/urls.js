@@ -41,6 +41,8 @@ export const URLS = {
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject, params) =>
     `${urlBase}${activeProject}/dashboard${getQueryParams({ ...params })}`,
+  dashboardConfig: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}/config`,
+  dashboardPreconfigured: (activeProject) => `${urlBase}${activeProject}/dashboard/preconfigured`,
 
   widget: (activeProject, widgetId = '') => {
     const widgetIdPart = widgetId ? `/${widgetId}` : '';
@@ -315,7 +317,10 @@ export const URLS = {
   btsIntegrationPostTicket: (projectId, integrationId) =>
     `${urlBase}bts/${projectId}/${integrationId}/ticket`,
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
-    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
+    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({
+      btsProject,
+      btsUrl,
+    })}`,
   runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
   clusterByLaunchId: (activeProject, launchId, query) =>
     `${urlBase}${activeProject}/launch/cluster/${launchId}${getQueryParams(query)}`,

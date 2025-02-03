@@ -24,6 +24,8 @@ export {
   updateDashboardWidgetsAction,
   toggleFullScreenModeAction,
   changeFullScreenModeAction,
+  duplicateDashboardAction,
+  duplicateDashboardSuccessAction,
 } from './actionCreators';
 export { dashboardReducer } from './reducer';
 export {

@@ -26,6 +26,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
   addDashboardAction,
+  duplicateDashboardAction,
   dashboardItemsSelector,
   dashboardGridTypeSelector,
   DASHBOARDS_TABLE_VIEW,
@@ -90,6 +91,7 @@ const messages = defineMessages({
     deleteDashboard: deleteDashboardAction,
     editDashboard: updateDashboardAction,
     addDashboard: addDashboardAction,
+    duplicateDashboard: duplicateDashboardAction,
   },
 )
 @withFilter()
@@ -122,6 +124,7 @@ export class DashboardPage extends Component {
     pageSize: PropTypes.number,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
+    duplicateDashboard: PropTypes.func,
   };
 
   static defaultProps = {
@@ -129,6 +132,7 @@ export class DashboardPage extends Component {
     deleteDashboard: () => {},
     editDashboard: () => {},
     addDashboard: () => {},
+    duplicateDashboard: () => {},
     userInfo: {},
     filter: '',
     dashboardItems: [],
@@ -172,6 +176,24 @@ export class DashboardPage extends Component {
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
           deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
+      },
+    });
+  };
+
+  onDuplicateDashboardItem = (item) => {
+    const { showModal, duplicateDashboard } = this.props;
+
+    const duplicateItem = {
+      ...item,
+      name: `${item.name}_copy`,
+    };
+
+    showModal({
+      id: 'dashboardAddEditModal',
+      data: {
+        dashboardItem: duplicateItem,
+        onSubmit: duplicateDashboard,
+        type: 'duplicate',
       },
     });
   };
@@ -253,6 +275,7 @@ export class DashboardPage extends Component {
             userInfo={userInfo}
             loading={loading}
             onDeleteItem={this.onDeleteDashboardItem}
+            onDuplicate={this.onDuplicateDashboardItem}
             onEditItem={this.onEditDashboardItem}
             onAddItem={this.onAddDashboardItem}
             filter={filter}
