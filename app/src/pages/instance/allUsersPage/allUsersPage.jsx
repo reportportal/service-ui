@@ -17,7 +17,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -43,23 +42,21 @@ export const AllUsersPage = () => {
   const [searchValue, setSearchValue] = useState(null);
 
   return (
-    <ScrollWrapper>
-      <div className={cx('all-users-page')}>
-        <AllUsersHeader
-          isLoading={isLoading}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
+    <div className={cx('all-users-page')}>
+      <AllUsersHeader
+        isLoading={isLoading}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
+      {users.length === 0 && !isLoading ? (
+        <EmptyPageState
+          label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          description={formatMessage(messages.noResultsDescription)}
+          emptyIcon={NoResultsIcon}
         />
-        {users.length === 0 && !isLoading ? (
-          <EmptyPageState
-            label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
-            description={formatMessage(messages.noResultsDescription)}
-            emptyIcon={NoResultsIcon}
-          />
-        ) : (
-          <AllUsersListTable users={users} />
-        )}
-      </div>
-    </ScrollWrapper>
+      ) : (
+        <AllUsersListTable users={users} />
+      )}
+    </div>
   );
 };

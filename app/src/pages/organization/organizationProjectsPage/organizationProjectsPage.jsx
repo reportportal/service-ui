@@ -22,7 +22,6 @@ import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { loadingSelector, projectsSelector } from 'controllers/organization/projects/selectors';
 import { activeOrganizationLoadingSelector } from 'controllers/organization/selectors';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organization/projects/actionCreators';
@@ -129,18 +128,16 @@ export const OrganizationProjectsPage = () => {
   };
 
   return (
-    <ScrollWrapper>
-      <div className={cx('organization-projects-container')}>
-        <ProjectsPageHeader
-          hasPermission={hasPermission}
-          onCreateProject={showCreateProjectModal}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          appliedFiltersCount={appliedFiltersCount}
-          setAppliedFiltersCount={setAppliedFiltersCount}
-        />
-        {renderContent()}
-      </div>
-    </ScrollWrapper>
+    <div className={cx('organization-projects-container')}>
+      <ProjectsPageHeader
+        hasPermission={hasPermission}
+        onCreateProject={showCreateProjectModal}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        appliedFiltersCount={appliedFiltersCount}
+        setAppliedFiltersCount={setAppliedFiltersCount}
+      />
+      {renderContent()}
+    </div>
   );
 };

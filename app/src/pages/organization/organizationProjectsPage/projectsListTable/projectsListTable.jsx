@@ -135,6 +135,7 @@ export const ProjectsListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('projects-pagination-wrapper')}
+      scrollWrapperClassName={cx('scroll-wrapper')}
     >
       <Table
         data={data}

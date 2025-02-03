@@ -18,17 +18,30 @@ import { useIntl } from 'react-intl';
 import { Pagination } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { messages } from './messages';
 import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationWrapper = ({ children, showPagination, className, ...paginationProps }) => {
+export const PaginationWrapper = ({
+  children,
+  showPagination,
+  className,
+  scrollWrapperClassName,
+  ...paginationProps
+}) => {
   const { formatMessage } = useIntl();
 
   return (
     <div className={cx('pagination-wrapper', className)}>
-      {children}
+      <ScrollWrapper
+        withBackToTop
+        className={cx('scroll', scrollWrapperClassName)}
+        classNameBackToTop={cx('back-to-top')}
+      >
+        {children}
+      </ScrollWrapper>
       {showPagination && (
         <div className={cx('pagination')}>
           <Pagination
@@ -52,9 +65,11 @@ PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
+  scrollWrapperClassName: PropTypes.string,
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
+  scrollWrapperClassName: '',
 };

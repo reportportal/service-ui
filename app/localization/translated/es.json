@@ -1786,7 +1786,6 @@
   "SauceLabsFormFields.accessTokenTitle": "Token de acceso",
   "SauceLabsFormFields.dataCenter": "Centro de datos",
   "SauceLabsFormFields.userNameTitle": "Nombre de usuario",
-  "ScrollWrapper.backToTop": "Arriba",
   "SearchDashboardForm.dashboardNameSearchHint": "El nombre del panel de control debe tener entre 3 y 128 caracteres.",
   "ServerSettingsPage.title": "Configuración del servidor",
   "ServerSettingsTabs.analytics": "Analítica",
