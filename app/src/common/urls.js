@@ -177,13 +177,20 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
+  suite: (activeProject, suiteId) => {
+    const id = suiteId ? `/${suiteId}` : '';
+    return `${urlBase}${activeProject}/item${id}`;
+  },
 
   notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
   notificationById: (activeProject, notificationId) =>
     `${urlBase}${activeProject}/settings/notification/${notificationId}`,
 
-  testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
+  testItems: (activeProject, ids) => {
+    const queryParams = getQueryParams({ ids });
+    const querySuffix = queryParams ? `/${queryParams}` : '';
+    return `${urlBase}${activeProject}/item${querySuffix}`;
+  },
   testItemsWithProviderType: (activeProject, ids) =>
     `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => {
@@ -236,7 +243,10 @@ export const URLS = {
       'filter.eq.launch': itemId,
       'filter.gte.level': level,
     })}`,
-  logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
+  logItemActivity: (activeProject, itemId) => {
+    const id = itemId ? `/${itemId}` : '';
+    return `${urlBase}${activeProject}/activity/item${id}`;
+  },
   logItemStackTrace: (activeProject, path, pageSize) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.under.path': path,
