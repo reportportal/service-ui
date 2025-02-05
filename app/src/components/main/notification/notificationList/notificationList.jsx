@@ -111,6 +111,10 @@ const messages = defineMessages({
     id: 'Notifications.duplicateDashboardSuccess',
     defaultMessage: 'Dashboard has been duplicated successfully',
   },
+  dashboardConfigurationCopied: {
+    id: 'Notifications.dashboardConfigurationCopied',
+    defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
+  },
   addPatternSuccess: {
     id: 'PatternAnalysis.addPatternSuccess',
     defaultMessage: 'Pattern rule has been created',

@@ -33,6 +33,7 @@
   "DashboardTable.duplicate": "Duplicate",
   "DashboardTable.copyConfig": "Copy dashboard configuration to clipboard",
   "Notifications.duplicateDashboardSuccess": "Dashboard has been duplicated successfully",
+  "Notifications.dashboardConfigurationCopied": "Dashboard configuration has been copied to clipboard successfully",
   "AddEditDashboard.dashboardNameExistsHint": "Este nombre ya está en uso.",
   "AddEditDashboard.dashboardNameHint": "El nombre del panel debe tener entre 3 y 128 caracteres.",
   "AddEditDefectTypeModal.abbreviation": "Abreviatura",

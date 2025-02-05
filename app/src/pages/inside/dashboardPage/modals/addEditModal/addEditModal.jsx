@@ -31,6 +31,7 @@ import { validate, composeBoundValidators, bindMessageToValidator } from 'common
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
+
 const messages = defineMessages({
   dashboardNamePlaceholder: {
     id: 'DashboardForm.dashboardNamePlaceholder',
@@ -129,6 +130,10 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
+  handleShowDashboardConfig = () => {
+    console.log('Show dashboard configuration clicked');
+  };
+
   getModalTexts() {
     const { type } = this.props.data;
     const { intl } = this.props;
@@ -202,9 +207,11 @@ export class AddEditModal extends Component {
   };
 
   render() {
-    const { intl, handleSubmit } = this.props;
+    const { intl, handleSubmit, data } = this.props;
     const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
+
+    const isAddModal = data.type !== 'edit' && data.type !== 'duplicate';
 
     return (
       <ModalLayout
@@ -219,6 +226,18 @@ export class AddEditModal extends Component {
           text: cancelText,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        renderFooterElements={
+          isAddModal
+            ? () => (
+                <div
+                  className={cx('dashboardConfigButton')}
+                  onClick={this.handleShowDashboardConfig}
+                >
+                  Show dashboard configuration
+                </div>
+              )
+            : undefined
+        }
       >
         <form className={cx('add-dashboard-form')}>
           <ModalField

@@ -1515,6 +1515,7 @@
   "NotificationRule.launchNameLabel": "Название запуска",
   "NotificationRule.launchOwner": "Владелец запуска",
   "Notifications.duplicateDashboardSuccess": "Дубликат дашборда успешно создан",
+  "Notifications.dashboardConfigurationCopied": "Конфигурация дашборда была скопирована в буфер обмена успешно.",
   "Notifications.notifications": "Уведомления по электронной почте",
   "Notifications.ruleNameDuplicateHint": "Правило с таким названием уже существует для этого канала связи",
   "Notifications.updateEmail": "обновлено",
