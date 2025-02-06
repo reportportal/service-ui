@@ -21,7 +21,6 @@ import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -82,18 +81,16 @@ export const ProjectTeamPage = () => {
   };
 
   return (
-    <ScrollWrapper>
-      <div className={cx('project-team-page')}>
-        <ProjectTeamPageHeader
-          hasPermission={hasPermission}
-          onInvite={showInviteUserModal}
-          isMembersLoading={isMembersLoading}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          isNotEmptyMembers={!isEmptyMembers}
-        />
-        {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
-      </div>
-    </ScrollWrapper>
+    <div className={cx('project-team-page')}>
+      <ProjectTeamPageHeader
+        hasPermission={hasPermission}
+        onInvite={showInviteUserModal}
+        isMembersLoading={isMembersLoading}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        isNotEmptyMembers={!isEmptyMembers}
+      />
+      {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
+    </div>
   );
 };

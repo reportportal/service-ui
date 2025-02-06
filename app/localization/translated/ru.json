@@ -1786,7 +1786,6 @@
   "SauceLabsFormFields.accessTokenTitle": "Токен доступа",
   "SauceLabsFormFields.dataCenter": "Центр данных",
   "SauceLabsFormFields.userNameTitle": "Имя пользователя",
-  "ScrollWrapper.backToTop": "Вверх",
   "SearchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128.",
   "ServerSettingsPage.title": "Настройки сервера",
   "ServerSettingsTabs.analytics": "Аналитика",

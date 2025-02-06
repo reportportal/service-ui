@@ -1786,7 +1786,6 @@
   "SauceLabsFormFields.accessTokenTitle": "访问令牌",
   "SauceLabsFormFields.dataCenter": "数据中心",
   "SauceLabsFormFields.userNameTitle": "用户名",
-  "ScrollWrapper.backToTop": "回到顶部",
   "SearchDashboardForm.dashboardNameSearchHint": "报告面板名称的长度应为3到128个字符",
   "ServerSettingsPage.title": "服务器设置",
   "ServerSettingsTabs.analytics": "分析",

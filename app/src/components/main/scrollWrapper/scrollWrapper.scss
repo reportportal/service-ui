@@ -15,6 +15,14 @@
  * limitations under the License.
  */
 
+ @mixin fill-svg($color) {
+  svg {
+    path {
+      fill: $color;
+    }
+  }
+}
+
 .scroll-component {
   &:hover {
     .thumb-horizontal {
@@ -72,89 +80,37 @@
 
 .back-to-top {
   position: fixed;
-  left: 10px;
-  bottom: 65px;
-  padding: 0;
-  font-size: 12px;
-  font-family: $FONT-LIGHT;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    position: sticky;
-    z-index: $Z_INDEX-STICKY-TOOLBAR;
-    bottom: 0;
-    left: 0;
-    text-align: center;
-    margin-right: 15px;
-    margin-left: 15px;
-    margin-top: 5px;
-    background-color: $COLOR--white-two;
-    height: 35px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-right: 0;
-    margin-left: 0;
-  }
-
-  @media print {
-    display: none;
-  }
+  right: 32px;
+  bottom: 32px;
 }
 
 .back-to-top-button {
-  border: none;
-  color: color.adjust($COLOR--gray-91, $lightness: -25%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: $COLOR--white-two;
   cursor: pointer;
+  border: none;
   outline: none;
-  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 40px $COLOR--item-shadow-hover;
 
   &:hover {
-    color: $COLOR--gray-91;
+    @include fill-svg($COLOR--topaz-hover-2);
   }
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding: 0;
-    width: 100%;
-    margin-bottom: 1px;
-    line-height: 34px;
-    color: $COLOR--gray-47;
-    background-color: $COLOR--white-two;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      color: $COLOR--gray-47;
-    }
+  &:active {
+    @include fill-svg($COLOR--topaz-pressed);
   }
-}
-
-.message {
-  display: none;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: inline-block;
+  &:focus-visible {
+    @include fill-svg($COLOR--topaz-focused);
+    outline: 2px solid $COLOR--topaz-focused;
   }
 }
 
 .top-icon {
-  width: 20px;
-  margin-right: 5px;
+  width: 15px;
+  height: 15px;
   display: inline-block;
-
-  svg {
-    fill: $COLOR--white-two;
-  }
-
-  &:hover {
-    svg {
-      fill: $COLOR--gray-80;
-    }
-  }
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 15px;
-    vertical-align: sub;
-
-    svg {
-      fill: $COLOR--gray-47;
-    }
-  }
 }

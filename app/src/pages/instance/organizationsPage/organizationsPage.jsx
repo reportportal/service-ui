@@ -21,7 +21,6 @@ import { canCreateOrganization } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptyPageState } from 'pages/common';
 import {
   organizationsListLoadingSelector,
@@ -107,30 +106,28 @@ export const OrganizationsPage = () => {
   };
 
   return (
-    <ScrollWrapper>
-      <div className={cx('organizations-page')}>
-        {!noAssignedOrganizations && (
-          <OrganizationsPageHeader
-            hasPermission={hasPermission}
-            isEmpty={isEmptyOrganizations && searchValue === null}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            openPanelView={openPanelView}
-            openTableView={openTableView}
-            isOpenTableView={isOpenTableView}
-            appliedFiltersCount={appliedFiltersCount}
-            setAppliedFiltersCount={setAppliedFiltersCount}
-          />
-        )}
-        {isEmptyOrganizations ? (
-          getEmptyPageState()
-        ) : (
-          <OrganizationsPanelView
-            organizationsList={organizationsList}
-            isOpenTableView={isOpenTableView}
-          />
-        )}
-      </div>
-    </ScrollWrapper>
+    <div className={cx('organizations-page')}>
+      {!noAssignedOrganizations && (
+        <OrganizationsPageHeader
+          hasPermission={hasPermission}
+          isEmpty={isEmptyOrganizations && searchValue === null}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          openPanelView={openPanelView}
+          openTableView={openTableView}
+          isOpenTableView={isOpenTableView}
+          appliedFiltersCount={appliedFiltersCount}
+          setAppliedFiltersCount={setAppliedFiltersCount}
+        />
+      )}
+      {isEmptyOrganizations ? (
+        getEmptyPageState()
+      ) : (
+        <OrganizationsPanelView
+          organizationsList={organizationsList}
+          isOpenTableView={isOpenTableView}
+        />
+      )}
+    </div>
   );
 };

@@ -26,11 +26,17 @@
 .pagination {
   padding: 0 32px;
   box-sizing: border-box;
-  width: calc(100% - 48px);
+  width: 100%;
   border-top: 1px solid $COLOR--e-100;
   background-color: $COLOR--bg-100;
-  position: sticky;
-  bottom: 0;
   display: flex;
   justify-content: center;
+}
+
+.scroll {
+  flex: 1;
+}
+
+.back-to-top {
+  bottom: 102px;
 }
