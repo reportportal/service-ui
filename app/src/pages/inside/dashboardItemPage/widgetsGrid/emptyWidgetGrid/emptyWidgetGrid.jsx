@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   dashboardEmptyText: {
     id: 'DashboardItemPage.dashboardEmptyText',
-    defaultMessage: 'Add your first widget to analyse statistics',
+    defaultMessage: 'Add your first widget to start analyzing the statistics',
   },
   dashboardEmptyTextViewer: {
     id: 'DashboardItemPage.dashboardEmptyTextViewer',
@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   notMyDashboardEmptyHeader: {
     id: 'DashboardItemPage.notMyDashboardEmptyHeader',
-    defaultMessage: 'There are no widgets on this dashboard',
+    defaultMessage: 'No widgets yet',
   },
 });
 

@@ -72,14 +72,14 @@ export class NoFiltersBlock extends PureComponent {
         <div className={cx('flex-wrapper')}>
           <div className={cx('icon')} />
           <div className={cx('title')}>
-            <FormattedMessage id={'NoFiltersBlock.title'} defaultMessage={'There are no filters'} />
+            <FormattedMessage id={'NoFiltersBlock.title'} defaultMessage={'No filters yet'} />
           </div>
           {canWorkWithFilters(userRoles) && (
             <>
               <div className={cx('message')}>
                 <FormattedMessage
                   id={'NoFiltersBlock.message'}
-                  defaultMessage={'You can create your first filter on the '}
+                  defaultMessage={'Add your first filter to start on the '}
                 />
                 <Link
                   className={cx('link')}

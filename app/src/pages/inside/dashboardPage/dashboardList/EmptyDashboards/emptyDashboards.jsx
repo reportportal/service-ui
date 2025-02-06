@@ -33,11 +33,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   currentUserDashboardsHeadline: {
     id: 'DashboardEmptyResults.currentUserDashboardsHeadline',
-    defaultMessage: 'You have no dashboards',
+    defaultMessage: 'No dashboards yet',
   },
   currentUserDashboardsText: {
     id: 'DashboardEmptyResults.currentUserDashboardsText',
-    defaultMessage: 'Add your first dashboard to analyse statistics',
+    defaultMessage: 'Add your first dashboard and widget to start analyzing the statistics',
   },
   currentUserDashboardsTextViewer: {
     id: 'DashboardEmptyResults.currentUserDashboardsTextViewer',
