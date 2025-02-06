@@ -24,22 +24,12 @@ import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationWrapper = ({
-  children,
-  showPagination,
-  className,
-  scrollWrapperClassName,
-  ...paginationProps
-}) => {
+export const PaginationWrapper = ({ children, showPagination, className, ...paginationProps }) => {
   const { formatMessage } = useIntl();
 
   return (
     <div className={cx('pagination-wrapper', className)}>
-      <ScrollWrapper
-        withBackToTop
-        className={cx('scroll', scrollWrapperClassName)}
-        classNameBackToTop={cx('back-to-top')}
-      >
+      <ScrollWrapper withBackToTop className={cx('scroll')} classNameBackToTop={cx('back-to-top')}>
         {children}
       </ScrollWrapper>
       {showPagination && (
@@ -65,11 +55,9 @@ PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
-  scrollWrapperClassName: PropTypes.string,
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
-  scrollWrapperClassName: '',
 };
