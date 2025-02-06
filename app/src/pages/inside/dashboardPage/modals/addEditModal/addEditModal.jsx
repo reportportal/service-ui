@@ -28,6 +28,8 @@ import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
+import { GhostButton } from 'components/buttons/ghostButton';
+import PasteIcon from 'common/img/paste-configuration-inline.svg';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -76,6 +78,23 @@ const messages = defineMessages({
   duplicateModalSubmitButtonText: {
     id: 'DashboardForm.duplicateModalSubmitButtonText',
     defaultMessage: 'Duplicate',
+  },
+  configurationTitle: {
+    id: 'DashboardForm.configurationTitle',
+    defaultMessage: 'Configuration',
+  },
+  pasteConfiguration: {
+    id: 'DashboardForm.pasteConfiguration',
+    defaultMessage: 'Paste configuration',
+  },
+  pasteConfigHint: {
+    id: 'DashboardForm.pasteConfigHint',
+    defaultMessage:
+      'Paste from the clipboard to quickly create a dashboard with pre-configured widgets. Filters specified in the configuration will be created in the project.',
+  },
+  showDashboardConfiguration: {
+    id: 'DashboardForm.showDashboardConfiguration',
+    defaultMessage: 'Show dashboard configuration',
   },
 });
 
@@ -126,12 +145,42 @@ export class AddEditModal extends Component {
     handleSubmit: () => {},
   };
 
+  state = {
+    showConfig: false,
+  };
+
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
   handleShowDashboardConfig = () => {
-    console.log('Show dashboard configuration clicked');
+    this.setState({ showConfig: true });
+  };
+
+  getTrackingEvent(dashboardId, isChangedDescription) {
+    const { type } = this.props.data;
+
+    switch (type) {
+      case 'edit':
+        return DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      case 'duplicate':
+        return DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      default:
+        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+    }
+  }
+
+  handlePasteConfiguration = () => {
+    console.log('Paste configuration clicked');
   };
 
   getModalTexts() {
@@ -166,28 +215,6 @@ export class AddEditModal extends Component {
     };
   };
 
-  getTrackingEvent(dashboardId, isChangedDescription) {
-    const { type } = this.props.data;
-
-    switch (type) {
-      case 'edit':
-        return DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
-          dashboardId,
-          isChangedDescription,
-        );
-      case 'duplicate':
-        return DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
-          dashboardId,
-          isChangedDescription,
-        );
-      default:
-        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-          dashboardId,
-          isChangedDescription,
-        );
-    }
-  }
-
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking: { trackEvent },
@@ -210,7 +237,6 @@ export class AddEditModal extends Component {
     const { intl, handleSubmit, data } = this.props;
     const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
-
     const isAddModal = data.type !== 'edit' && data.type !== 'duplicate';
 
     return (
@@ -227,13 +253,13 @@ export class AddEditModal extends Component {
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
         renderFooterElements={
-          isAddModal
+          isAddModal && !this.state.showConfig
             ? () => (
                 <div
                   className={cx('dashboardConfigButton')}
                   onClick={this.handleShowDashboardConfig}
                 >
-                  Show dashboard configuration
+                  {intl.formatMessage(messages.showDashboardConfiguration)}
                 </div>
               )
             : undefined
@@ -265,6 +291,22 @@ export class AddEditModal extends Component {
               <InputTextArea />
             </FieldProvider>
           </ModalField>
+
+          {this.state.showConfig && isAddModal && (
+            <ModalField
+              label={intl.formatMessage(messages.configurationTitle)}
+              labelWidth={LABEL_WIDTH}
+            >
+              <div className={cx('configuration-content')}>
+                <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
+                  {intl.formatMessage(messages.pasteConfiguration)}
+                </GhostButton>
+                <div className={cx('configuration-hint')}>
+                  {intl.formatMessage(messages.pasteConfigHint)}
+                </div>
+              </div>
+            </ModalField>
+          )}
         </form>
       </ModalLayout>
     );
