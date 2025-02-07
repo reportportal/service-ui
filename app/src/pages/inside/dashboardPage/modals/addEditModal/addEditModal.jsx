@@ -21,6 +21,7 @@ import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -30,6 +31,8 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PasteIcon from 'common/img/paste-configuration-inline.svg';
+import StorageIcon from 'common/img/storage-message-inline.svg';
+import RemovePastedIcon from 'common/img/remove-pasted-inline.svg';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -96,6 +99,22 @@ const messages = defineMessages({
     id: 'DashboardForm.showDashboardConfiguration',
     defaultMessage: 'Show dashboard configuration',
   },
+  configurationPasted: {
+    id: 'DashboardForm.configurationPasted',
+    defaultMessage: 'Dashboard configuration pasted',
+  },
+  canAdjustNameDesc: {
+    id: 'DashboardForm.canAdjustNameDesc',
+    defaultMessage: 'Name and description can still be adjusted.',
+  },
+  removeConfiguration: {
+    id: 'DashboardForm.removeConfiguration',
+    defaultMessage: 'Remove configuration',
+  },
+  removeConfigurationHint: {
+    id: 'DashboardForm.removeConfigurationHint',
+    defaultMessage: 'You can remove the pasted dashboard configuration.',
+  },
 });
 
 const LABEL_WIDTH = 90;
@@ -147,6 +166,7 @@ export class AddEditModal extends Component {
 
   state = {
     showConfig: false,
+    configurationPasted: false,
   };
 
   componentDidMount() {
@@ -155,6 +175,16 @@ export class AddEditModal extends Component {
 
   handleShowDashboardConfig = () => {
     this.setState({ showConfig: true });
+  };
+
+  handlePasteConfiguration = () => {
+    console.log('Configuration pasted');
+    this.setState({ configurationPasted: true });
+  };
+
+  handleRemoveConfiguration = () => {
+    console.log('Configuration removed');
+    this.setState({ configurationPasted: false });
   };
 
   getTrackingEvent(dashboardId, isChangedDescription) {
@@ -178,10 +208,6 @@ export class AddEditModal extends Component {
         );
     }
   }
-
-  handlePasteConfiguration = () => {
-    console.log('Paste configuration clicked');
-  };
 
   getModalTexts() {
     const { type } = this.props.data;
@@ -298,12 +324,41 @@ export class AddEditModal extends Component {
               labelWidth={LABEL_WIDTH}
             >
               <div className={cx('configuration-content')}>
-                <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
-                  {intl.formatMessage(messages.pasteConfiguration)}
-                </GhostButton>
-                <div className={cx('configuration-hint')}>
-                  {intl.formatMessage(messages.pasteConfigHint)}
-                </div>
+                {!this.state.configurationPasted ? (
+                  <>
+                    <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
+                      {intl.formatMessage(messages.pasteConfiguration)}
+                    </GhostButton>
+                    <div className={cx('configuration-hint')}>
+                      {intl.formatMessage(messages.pasteConfigHint)}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={cx('configuration-pasted')}>
+                      <span className={cx('pasted-icon')}>{Parser(StorageIcon)}</span>
+                      <span className={cx('pasted-text')}>
+                        {intl.formatMessage(messages.configurationPasted)}
+                      </span>
+                    </div>
+                    <div className={cx('configuration-hint')}>
+                      {intl.formatMessage(messages.canAdjustNameDesc)}
+                    </div>
+                    <div className={cx('remove-configuration')}>
+                      <GhostButton
+                        icon={RemovePastedIcon}
+                        onClick={this.handleRemoveConfiguration}
+                        className={cx('remove-button')}
+                        color="red"
+                      >
+                        {intl.formatMessage(messages.removeConfiguration)}
+                      </GhostButton>
+                      <div className={cx('configuration-hint')}>
+                        {intl.formatMessage(messages.removeConfigurationHint)}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </ModalField>
           )}
