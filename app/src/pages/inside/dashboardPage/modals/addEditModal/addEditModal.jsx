@@ -185,19 +185,6 @@ export class AddEditModal extends Component {
     this.setState({ showConfig: true });
   };
 
-  validateConfig = (configText) => {
-    try {
-      const config = JSON.parse(configText);
-      // Add basic validation that config has required structure
-      if (!config || !config.widgets || !Array.isArray(config.widgets)) {
-        return null;
-      }
-      return config;
-    } catch (error) {
-      return null;
-    }
-  };
-
   handlePasteConfiguration = async () => {
     try {
       const clipboardText = await navigator.clipboard.readText();
@@ -344,12 +331,13 @@ export class AddEditModal extends Component {
         renderFooterElements={
           isAddModal && !showConfig
             ? () => (
-                <div
+                <button
                   className={cx('dashboardConfigButton')}
                   onClick={this.handleShowDashboardConfig}
+                  type="button"
                 >
                   {intl.formatMessage(messages.showDashboardConfiguration)}
-                </div>
+                </button>
               )
             : undefined
         }
