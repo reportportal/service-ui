@@ -110,27 +110,62 @@ function* fetchDashboard() {
   }
 }
 
-function* addDashboard({ payload: dashboard }) {
+function* addDashboard({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const owner = yield select(userIdSelector);
-  const { id } = yield call(fetch, URLS.dashboards(activeProject), {
-    method: 'post',
-    data: dashboard,
-  });
 
-  yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
-  yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
-  yield put(
-    showNotification({
-      messageId: 'addDashboardSuccess',
-      type: NOTIFICATION_TYPES.SUCCESS,
-    }),
-  );
-  yield put(hideModalAction());
-  yield put({
-    type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectId: activeProject, dashboardId: id },
-  });
+  try {
+    let response;
+    const isPreconfigured = payload.config !== undefined;
+    let parsedConfig = null;
+
+    if (isPreconfigured) {
+      try {
+        parsedConfig = JSON.parse(payload.config);
+      } catch (error) {
+        yield put(
+          showNotification({
+            messageId: 'addPreconfigDashboardError',
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+        return;
+      }
+
+      response = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
+        method: 'post',
+        data: {
+          name: payload.name,
+          description: payload.description,
+          config: parsedConfig,
+        },
+      });
+    } else {
+      response = yield call(fetch, URLS.dashboards(activeProject), {
+        method: 'post',
+        data: payload,
+      });
+    }
+
+    const { id } = response;
+
+    yield put(addDashboardSuccessAction({ id, owner, ...payload }));
+    yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
+    yield put(
+      showNotification({
+        messageId: 'addDashboardSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+
+    yield put(hideModalAction());
+    yield put({
+      type: PROJECT_DASHBOARD_ITEM_PAGE,
+      payload: { projectId: activeProject, dashboardId: id },
+    });
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* duplicateDashboard({ payload: dashboard }) {
