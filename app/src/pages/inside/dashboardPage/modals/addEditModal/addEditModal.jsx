@@ -267,6 +267,11 @@ export class AddEditModal extends Component {
       trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
 
       if (configurationPasted && pastedConfig) {
+        if (this.state.isSubmitting) {
+          return;
+        }
+        this.setState({ isSubmitting: true });
+
         onSubmit(
           {
             name: formData.name,
