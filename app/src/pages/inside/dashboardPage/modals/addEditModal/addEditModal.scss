@@ -14,52 +14,68 @@
  * limitations under the License.
  */
 
-.form-row {
-  display: flex;
-  position: relative;
-  height: 30px;
-  width: 100%;
-  padding: 0 45px;
-  box-sizing: border-box;
-  margin: 10px 0;
-  justify-content: flex-start;
-
-  input {
-    border: 1px solid $COLOR--gray-80;
-  }
-}
-
 .add-dashboard-form {
   width: 415px;
 }
 
-.form-field {
-  width: 100%;
-  display: flex;
-  margin-bottom: 15px;
-}
-
-.form-label {
-  width: 25%;
-  text-align: right;
-  padding-right: 15px;
+.dashboard-config-button {
+  color: $COLOR--topaz;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-left: 9px;
+  margin-bottom: 0px;
+  font-family: $FONT-SEMIBOLD;
   font-size: 13px;
-  font-family: $FONT-REGULAR;
-  color: $COLOR--charcoal-grey;
+  line-height: 17.7px;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
 }
 
-.input-wrap {
-  position: relative;
+.configuration-content {
+  width: 100%;
+}
 
-  textarea {
-    border: 1px solid $COLOR--gray-80;
-    height: 60px;
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
+.configuration-hint {
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: 10px;
+  margin-top: 8px;
+  font-family: $FONT-REGULAR;
+  font-size: 10px;
+  line-height: 14px;
+  color: $COLOR--black-2;
+}
 
-    &:focus {
-      outline: none;
+.configuration-pasted {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  .pasted-icon {
+    display: flex;
+    align-items: center;
+    
+    svg {
+      width: 20px;
+      height: 20px;
     }
+  }
+
+  .pasted-text {
+    font-family: $FONT-SEMIBOLD;
+    font-size: 13px;
+    line-height: 17.7px;
+    color: $COLOR--charcoal-grey;
+  }
+}
+
+.remove-configuration {
+  margin-top: 16px;
+
+  .configuration-hint {
+    margin-top: 8px;
   }
 }
