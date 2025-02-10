@@ -173,8 +173,8 @@ export class AddEditModal extends Component {
 
   state = {
     showConfig: false,
-    configurationPasted: false,
     pastedConfig: null,
+    isSubmitting: false,
   };
 
   componentDidMount() {
@@ -197,7 +197,6 @@ export class AddEditModal extends Component {
       }
 
       this.setState({
-        configurationPasted: true,
         pastedConfig: clipboardText,
       });
     } catch (error) {
@@ -210,8 +209,8 @@ export class AddEditModal extends Component {
 
   handleRemoveConfiguration = () => {
     this.setState({
-      configurationPasted: false,
       pastedConfig: null,
+      isSubmitting: false,
     });
   };
 
@@ -244,7 +243,7 @@ export class AddEditModal extends Component {
       dirty,
     } = this.props;
 
-    const { configurationPasted, pastedConfig } = this.state;
+    const { pastedConfig } = this.state;
 
     if (type === 'duplicate' || dirty) {
       const dashboardId = dashboardItem?.id;
@@ -253,7 +252,7 @@ export class AddEditModal extends Component {
 
       trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
 
-      if (configurationPasted && pastedConfig) {
+      if (pastedConfig) {
         if (this.state.isSubmitting) {
           return;
         }
@@ -310,7 +309,7 @@ export class AddEditModal extends Component {
 
   render() {
     const { intl, handleSubmit, data } = this.props;
-    const { showConfig, configurationPasted } = this.state;
+    const { showConfig, pastedConfig } = this.state;
     const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
     const isAddModal = data.type !== 'edit' && data.type !== 'duplicate';
@@ -332,7 +331,7 @@ export class AddEditModal extends Component {
           isAddModal && !showConfig
             ? () => (
                 <button
-                  className={cx('dashboardConfigButton')}
+                  className={cx('dashboard-config-button')}
                   onClick={this.handleShowDashboardConfig}
                   type="button"
                 >
@@ -375,7 +374,7 @@ export class AddEditModal extends Component {
               labelWidth={LABEL_WIDTH}
             >
               <div className={cx('configuration-content')}>
-                {!configurationPasted ? (
+                {!pastedConfig ? (
                   <>
                     <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
                       {intl.formatMessage(messages.pasteConfiguration)}
