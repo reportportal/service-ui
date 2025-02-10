@@ -17,7 +17,7 @@
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
+import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
   FilterButton,
@@ -26,11 +26,18 @@ import {
   LAST_RUN_DATE_FILTER_NAME,
   LAUNCHES_FILTER_NAME_CONDITION,
   TEAMMATES_FILTER_NAME_CONDITION,
+  ORGANIZATION_TYPE_FILTER_NAME,
   getRangeComparisons,
   getTimeRange,
+  getOrganizationTypes,
   messages as helpMessage,
 } from 'components/main/filterButton';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
+import classNames from 'classnames/bind';
 import { messages } from './messages';
+import styles from './organizationFilter.scss';
+
+const cx = classNames.bind(styles);
 
 export const OrganizationsFilter = ({
   entities,
@@ -43,60 +50,112 @@ export const OrganizationsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
+  const organizationTypes = getOrganizationTypes(formatMessage);
 
   const filters = {
+    [ORGANIZATION_TYPE_FILTER_NAME]: {
+      filterName: ORGANIZATION_TYPE_FILTER_NAME,
+      title: formatMessage(messages.organizationType),
+      defaultCondition: CONDITION_IN.toUpperCase(),
+      fields: [
+        {
+          component: Dropdown,
+          name: ORGANIZATION_TYPE_FILTER_NAME,
+          props: {
+            options: organizationTypes,
+            value: organizationTypes.map((option) => option.value),
+            multiSelect: true,
+          },
+        },
+      ],
+    },
     [LAST_RUN_DATE_FILTER_NAME]: {
       filterName: LAST_RUN_DATE_FILTER_NAME,
       title: formatMessage(messages.lastRunDate),
       defaultCondition: CONDITION_BETWEEN.toUpperCase(),
       fields: [
         {
-          value: timeRange[0].value,
-          options: timeRange,
-          placeholder: formatMessage(messages.lastRunDatePlaceholder),
+          component: Dropdown,
           name: LAST_RUN_DATE_FILTER_NAME,
+          props: {
+            value: timeRange[0].value,
+            options: timeRange,
+            placeholder: formatMessage(messages.lastRunDatePlaceholder),
+          },
         },
       ],
     },
     [LAUNCHES_FILTER_NAME]: {
       filterName: LAUNCHES_FILTER_NAME,
       title: formatMessage(messages.launches),
-      helpText: formatMessage(helpMessage.helpText),
+      fieldsWrapperClassName: cx('dual-input'),
       fields: [
         {
-          options: rangeComparisons,
-          condition: rangeComparisons[0].value,
+          component: Dropdown,
           name: LAUNCHES_FILTER_NAME_CONDITION,
+          containerClassName: cx('dropdown-condition'),
+          props: {
+            options: rangeComparisons,
+            condition: rangeComparisons[0].value,
+          },
         },
         {
-          value: '',
-          placeholder: formatMessage(messages.launchesPlaceholder),
+          component: FieldText,
           name: LAUNCHES_FILTER_NAME,
-          type: 'number',
+          containerClassName: cx('text-field-container'),
+          props: {
+            value: '',
+            placeholder: formatMessage(messages.launchesPlaceholder),
+            type: 'number',
+            helpText: formatMessage(helpMessage.helpText),
+            clearable: true,
+            defaultWidth: false,
+          },
         },
       ],
     },
     [TEAMMATES_FILTER_NAME]: {
       filterName: TEAMMATES_FILTER_NAME,
       title: formatMessage(messages.users),
-      helpText: formatMessage(helpMessage.helpText),
+      fieldsWrapperClassName: cx('dual-input'),
       fields: [
         {
-          options: rangeComparisons,
-          condition: rangeComparisons[0].value,
+          component: Dropdown,
           name: TEAMMATES_FILTER_NAME_CONDITION,
+          containerClassName: cx('dropdown-condition'),
+          props: {
+            options: rangeComparisons,
+            condition: rangeComparisons[0].value,
+            isListWidthLimited: true,
+          },
         },
         {
-          value: '',
-          placeholder: formatMessage(messages.usersPlaceholder),
+          component: FieldText,
           name: TEAMMATES_FILTER_NAME,
-          type: 'number',
+          containerClassName: cx('text-field-container'),
+          props: {
+            value: '',
+            helpText: formatMessage(helpMessage.helpText),
+            placeholder: formatMessage(messages.usersPlaceholder),
+            type: 'number',
+            defaultWidth: false,
+            className: cx('input-field'),
+            clearable: true,
+          },
         },
       ],
     },
   };
+  const getTypeEntity = () => {
+    if (entities[ORGANIZATION_TYPE_FILTER_NAME]) {
+      return entities[ORGANIZATION_TYPE_FILTER_NAME].value?.split(',') || [];
+    } else {
+      return organizationTypes.map((option) => option.value);
+    }
+  };
 
   const initialFilterState = {
+    [ORGANIZATION_TYPE_FILTER_NAME]: getTypeEntity(),
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:

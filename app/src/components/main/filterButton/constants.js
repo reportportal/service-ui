@@ -21,6 +21,7 @@ import {
 } from 'components/filterEntities/constants';
 import { messages } from './messages';
 
+export const ORGANIZATION_TYPE_FILTER_NAME = 'type';
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
 export const LAUNCHES_FILTER_NAME_CONDITION = 'launches_condition';
@@ -39,4 +40,10 @@ export const getRangeComparisons = (formatMessage) => [
   { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
   { label: formatMessage(messages.greaterOrEqual), value: CONDITION_GREATER_EQ.toUpperCase() },
   { label: formatMessage(messages.lessOrEqual), value: CONDITION_LESS_EQ.toUpperCase() },
+];
+
+export const getOrganizationTypes = (formatMessage) => [
+  { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
+  { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
+  { label: formatMessage(messages.typeSynched), value: 'SYNCED' },
 ];
