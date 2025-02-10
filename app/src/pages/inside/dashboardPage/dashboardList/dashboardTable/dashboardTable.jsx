@@ -18,44 +18,24 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
 import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
+import { messages } from './messages';
 import {
   NameColumn,
   DescriptionColumn,
   OwnerColumn,
   EditColumn,
   DeleteColumn,
+  DuplicateColumn,
 } from './dashboardTableColumns';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  dashboardName: {
-    id: 'DashboardTable.dashboardName',
-    defaultMessage: 'Dashboard Name',
-  },
-  description: {
-    id: 'DashboardTable.description',
-    defaultMessage: 'Description',
-  },
-  owner: {
-    id: 'DashboardTable.owner',
-    defaultMessage: 'Owner',
-  },
-  edit: {
-    id: 'DashboardTable.edit',
-    defaultMessage: 'Edit',
-  },
-  deleteDashboard: {
-    id: 'DashboardTable.deleteDashboard',
-    defaultMessage: 'Delete',
-  },
-});
 
 @injectIntl
 @connect((state) => ({
@@ -67,6 +47,7 @@ export class DashboardTable extends Component {
     intl: PropTypes.object.isRequired,
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
+    onDuplicate: PropTypes.func,
     onAddItem: PropTypes.func,
     projectId: PropTypes.string,
     dashboardItems: PropTypes.array,
@@ -82,6 +63,7 @@ export class DashboardTable extends Component {
   static defaultProps = {
     onDeleteItem: () => {},
     onEditItem: () => {},
+    onDuplicate: () => {},
     onAddItem: () => {},
     projectId: '',
     dashboardItems: [],
@@ -97,6 +79,7 @@ export class DashboardTable extends Component {
       intl,
       projectId,
       userRoles,
+      onDuplicate,
       slugs: { organizationSlug, projectSlug },
     } = this.props;
 
@@ -128,6 +111,39 @@ export class DashboardTable extends Component {
         },
         formatter: (value) => value.owner,
         component: OwnerColumn,
+      },
+      {
+        title: {
+          full: intl.formatMessage(messages.duplicate),
+          short: intl.formatMessage(messages.duplicate),
+        },
+        component: DuplicateColumn,
+        customProps: {
+          onDuplicate,
+        },
+        align: ALIGN_CENTER,
+      },
+      {
+        title: {
+          full: intl.formatMessage(messages.edit),
+          short: intl.formatMessage(messages.edit),
+        },
+        component: EditColumn,
+        customProps: {
+          onEdit: onEditItem,
+        },
+        align: ALIGN_CENTER,
+      },
+      {
+        title: {
+          full: intl.formatMessage(messages.deleteDashboard),
+          short: intl.formatMessage(messages.deleteDashboard),
+        },
+        component: DeleteColumn,
+        customProps: {
+          onDelete: onDeleteItem,
+        },
+        align: ALIGN_CENTER,
       },
     ];
 
