@@ -101,15 +101,23 @@ const messages = defineMessages({
   },
   addDashboardSuccess: {
     id: 'DashboardPage.addDashboardSuccess',
-    defaultMessage: 'Dashboard has been added',
+    defaultMessage: 'Dashboard has been created successfully.',
   },
   deleteDashboardSuccess: {
     id: 'DashboardPage.deleteDashboardSuccess',
     defaultMessage: 'Dashboard has been deleted',
   },
+  addPreconfigDashboardError: {
+    id: 'DashboardPage.addPreconfigDashboardError',
+    defaultMessage: "Dashboard can't be created. Please check the pasted configuration.",
+  },
   duplicateDashboardSuccess: {
     id: 'Notifications.duplicateDashboardSuccess',
     defaultMessage: 'Dashboard has been duplicated successfully',
+  },
+  dashboardConfigurationCopied: {
+    id: 'Notifications.dashboardConfigurationCopied',
+    defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
   },
   addPatternSuccess: {
     id: 'PatternAnalysis.addPatternSuccess',
