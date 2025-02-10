@@ -143,7 +143,10 @@ function* fetchUserWorker() {
   const format = getLogTimeFormatFromStorage(userId);
   yield put(setLogTimeFormatAction(format));
 
-  if (Object.keys(assignedOrganizations).length === 0) {
+  if (
+    Object.keys(assignedOrganizations).length === 0 ||
+    Object.keys(assignedProjects).length === 0
+  ) {
     yield put(setActiveProjectKeyAction(null));
     yield put(
       redirect({
