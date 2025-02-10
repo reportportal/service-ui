@@ -181,10 +181,8 @@ export const URLS = {
   notificationById: (activeProject, notificationId) =>
     `${urlBase}${activeProject}/settings/notification/${notificationId}`,
 
-  testItems: (activeProject, ids) => {
-    console.log('activeProject');
-    return removeTrailingSlash(`${urlBase}${activeProject}/item${getQueryParams({ ids })}`);
-  },
+  testItems: (activeProject, ids) =>
+    removeTrailingSlash(`${urlBase}${activeProject}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (activeProject, ids) =>
     `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') =>
