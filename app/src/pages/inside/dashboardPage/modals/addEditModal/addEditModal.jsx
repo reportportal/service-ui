@@ -177,20 +177,18 @@ export class AddEditModal extends Component {
     isSubmitting: false,
   };
 
+  tracking = this.props.tracking;
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
   handleShowDashboardConfig = () => {
-    const { tracking } = this.props;
-    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
     this.setState({ showConfig: true });
   };
 
   handlePasteConfiguration = async () => {
-    const { tracking } = this.props;
-    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
-
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
     try {
       const clipboardText = await navigator.clipboard.readText();
       if (!clipboardText.trim()) {
@@ -213,8 +211,7 @@ export class AddEditModal extends Component {
   };
 
   handleRemoveConfiguration = () => {
-    const { tracking } = this.props;
-    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
 
     this.setState({
       pastedConfig: null,
@@ -246,7 +243,6 @@ export class AddEditModal extends Component {
 
   submitFormAndCloseModal = (closeModal) => (formData) => {
     const {
-      tracking: { trackEvent },
       data: { dashboardItem, type, onSubmit },
       dirty,
     } = this.props;
@@ -259,7 +255,7 @@ export class AddEditModal extends Component {
         formData.description !== this.props.data.dashboardItem?.description;
 
       if (!pastedConfig) {
-        trackEvent(
+        this.tracking.trackEvent(
           DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
             dashboardId,
             isChangedDescription,
@@ -280,7 +276,7 @@ export class AddEditModal extends Component {
             description: formData.description,
             config: pastedConfig,
             trackSuccess: () =>
-              trackEvent(
+              this.tracking.trackEvent(
                 DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
                   dashboardId,
                   isChangedDescription,
@@ -288,7 +284,7 @@ export class AddEditModal extends Component {
                 ),
               ),
             trackFailure: () =>
-              trackEvent(
+              this.tracking.trackEvent(
                 DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
                   dashboardId,
                   isChangedDescription,
