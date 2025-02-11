@@ -182,10 +182,15 @@ export class AddEditModal extends Component {
   }
 
   handleShowDashboardConfig = () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
     this.setState({ showConfig: true });
   };
 
   handlePasteConfiguration = async () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
+
     try {
       const clipboardText = await navigator.clipboard.readText();
       if (!clipboardText.trim()) {
@@ -208,6 +213,9 @@ export class AddEditModal extends Component {
   };
 
   handleRemoveConfiguration = () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
+
     this.setState({
       pastedConfig: null,
       isSubmitting: false,
@@ -250,9 +258,17 @@ export class AddEditModal extends Component {
       const isChangedDescription =
         formData.description !== this.props.data.dashboardItem?.description;
 
-      trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
-
-      if (pastedConfig) {
+      if (!pastedConfig) {
+        trackEvent(
+          DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+            dashboardId,
+            isChangedDescription,
+            'standard',
+          ),
+        );
+        onSubmit(formData);
+        closeModal();
+      } else {
         if (this.state.isSubmitting) {
           return;
         }
@@ -263,12 +279,25 @@ export class AddEditModal extends Component {
             name: formData.name,
             description: formData.description,
             config: pastedConfig,
+            trackSuccess: () =>
+              trackEvent(
+                DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+                  dashboardId,
+                  isChangedDescription,
+                  'successfully_created',
+                ),
+              ),
+            trackFailure: () =>
+              trackEvent(
+                DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+                  dashboardId,
+                  isChangedDescription,
+                  'cannot_be_created',
+                ),
+              ),
           },
           true,
         );
-      } else {
-        onSubmit(formData);
-        closeModal();
       }
     } else {
       closeModal();
