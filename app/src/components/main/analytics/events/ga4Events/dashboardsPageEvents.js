@@ -89,6 +89,24 @@ export const DASHBOARD_EVENTS = {
     element_name: 'add_new_dashboard',
   },
 
+  CLICK_ON_SHOW_DASHBOARD_CONFIG: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'show_dashboard_configuration',
+    modal: 'add_new_dashboard',
+  },
+
+  CLICK_ON_PASTE_CONFIGURATION: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'paste_configuration',
+    modal: 'add_new_dashboard',
+  },
+
+  CLICK_ON_REMOVE_CONFIGURATION: {
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'remove_configuration',
+    modal: 'add_new_dashboard',
+  },
+
   clickOnAddNewWidgetButton: (dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add_new_widget',
@@ -128,11 +146,12 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  clickOnButtonInModalAddNewDashboard: (dashboardId, linkName) => ({
+  clickOnButtonInModalAddNewDashboard: (dashboardId, linkName, condition = 'standard') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add',
     modal: 'add_new_dashboard',
     link_name: linkName,
+    condition,
     number: dashboardId,
   }),
 
