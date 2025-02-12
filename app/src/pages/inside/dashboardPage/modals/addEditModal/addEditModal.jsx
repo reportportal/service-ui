@@ -280,14 +280,16 @@ export class AddEditModal extends Component {
                   'successfully_created',
                 ),
               ),
-            trackFailure: () =>
+            trackFailure: () => {
+              this.setState({ isSubmitting: false });
               this.tracking.trackEvent(
                 DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
                   dashboardId,
                   isChangedDescription,
                   'cannot_be_created',
                 ),
-              ),
+              );
+            },
           },
           true,
         );
