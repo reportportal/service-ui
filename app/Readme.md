@@ -2,6 +2,10 @@
 
 [![Build Status](https://semaphoreci.com/api/v1/lexecon/rp_service-ui/branches/develop/shields_badge.svg)](https://semaphoreci.com/lexecon/rp_service-ui)
 
+# Project Setup Note
+
+**Important**: This project is primarily developed in the `app` directory. When using an IDE or code editor, it is recommended to open the project from the `app` folder to ensure proper configuration and dependency resolution.
+
 ## Installation
 
 For local development, you need a [node.js](https://nodejs.org)(version 20 is recommended).

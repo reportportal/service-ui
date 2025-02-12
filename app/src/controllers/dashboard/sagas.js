@@ -20,7 +20,7 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
+import { userIdSelector, activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
@@ -49,6 +49,7 @@ import {
   REMOVE_DASHBOARD_SUCCESS,
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
+  DUPLICATE_DASHBOARD,
 } from './constants';
 import { dashboardItemsSelector, querySelector } from './selectors';
 import {
@@ -134,6 +135,34 @@ function* addDashboard({ payload: dashboard }) {
   });
 }
 
+function* duplicateDashboard({ payload: dashboard }) {
+  const activeProject = yield select(activeProjectSelector);
+  try {
+    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
+    const result = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
+      method: 'post',
+      data: {
+        name: dashboard.name,
+        description: dashboard.description,
+        config,
+      },
+    });
+
+    const newDashboard = yield call(fetch, URLS.dashboard(activeProject, result.id));
+    yield put(addDashboardSuccessAction(newDashboard));
+
+    yield put(
+      showNotification({
+        messageId: 'duplicateDashboardSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
 function* updateDashboard({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
   const { name, description, id } = dashboard;
@@ -208,5 +237,6 @@ export function* dashboardSagas() {
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
+    yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
   ]);
 }
