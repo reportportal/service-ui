@@ -113,16 +113,19 @@ function* fetchDashboard() {
 function* addDashboard({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const owner = yield select(userIdSelector);
-
+  const { onSuccess, onError } = payload;
+  const isPreconfigured = typeof payload.config !== 'undefined';
   try {
     let response;
-    const isPreconfigured = payload.config !== undefined;
     let parsedConfig = null;
 
     if (isPreconfigured) {
       try {
         parsedConfig = JSON.parse(payload.config);
       } catch (error) {
+        if (onError) {
+          onError();
+        }
         yield put(
           showNotification({
             messageId: 'addPreconfigDashboardError',
@@ -140,6 +143,10 @@ function* addDashboard({ payload }) {
           config: parsedConfig,
         },
       });
+
+      if (onSuccess) {
+        onSuccess();
+      }
     } else {
       response = yield call(fetch, URLS.dashboards(activeProject), {
         method: 'post',
@@ -164,6 +171,9 @@ function* addDashboard({ payload }) {
       payload: { projectId: activeProject, dashboardId: id },
     });
   } catch (error) {
+    if (isPreconfigured && onError) {
+      onError();
+    }
     yield put(showDefaultErrorNotification(error));
   }
 }

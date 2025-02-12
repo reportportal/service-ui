@@ -177,15 +177,19 @@ export class AddEditModal extends Component {
     isSubmitting: false,
   };
 
+  tracking = this.props.tracking;
+
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
   handleShowDashboardConfig = () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
     this.setState({ showConfig: true });
   };
 
   handlePasteConfiguration = async () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
     try {
       const clipboardText = await navigator.clipboard.readText();
       if (!clipboardText.trim()) {
@@ -208,10 +212,32 @@ export class AddEditModal extends Component {
   };
 
   handleRemoveConfiguration = () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
     this.setState({
       pastedConfig: null,
       isSubmitting: false,
     });
+  };
+
+  handleTrackSuccess = (dashboardId, isChangedDescription) => {
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'successfully_created',
+      ),
+    );
+  };
+
+  handleTrackError = (dashboardId, isChangedDescription) => {
+    this.setState({ isSubmitting: false });
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'cannot_be_created',
+      ),
+    );
   };
 
   getTrackingEvent = (dashboardId, isChangedDescription) => {
@@ -229,16 +255,18 @@ export class AddEditModal extends Component {
           isChangedDescription,
         );
       default:
-        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-          dashboardId,
-          isChangedDescription,
-        );
+        return this.pastedConfig
+          ? null
+          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+              dashboardId,
+              isChangedDescription,
+              'standard',
+            );
     }
   };
 
   submitFormAndCloseModal = (closeModal) => (formData) => {
     const {
-      tracking: { trackEvent },
       data: { dashboardItem, type, onSubmit },
       dirty,
     } = this.props;
@@ -250,9 +278,11 @@ export class AddEditModal extends Component {
       const isChangedDescription =
         formData.description !== this.props.data.dashboardItem?.description;
 
-      trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
-
-      if (pastedConfig) {
+      if (!pastedConfig) {
+        this.tracking.trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
+        onSubmit(formData);
+        closeModal();
+      } else {
         if (this.state.isSubmitting) {
           return;
         }
@@ -263,12 +293,11 @@ export class AddEditModal extends Component {
             name: formData.name,
             description: formData.description,
             config: pastedConfig,
+            onSuccess: () => this.handleTrackSuccess(dashboardId, isChangedDescription),
+            onError: () => this.handleTrackError(dashboardId, isChangedDescription),
           },
           true,
         );
-      } else {
-        onSubmit(formData);
-        closeModal();
       }
     } else {
       closeModal();
