@@ -178,6 +178,7 @@ export class AddEditModal extends Component {
   };
 
   tracking = this.props.tracking;
+
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
@@ -212,11 +213,31 @@ export class AddEditModal extends Component {
 
   handleRemoveConfiguration = () => {
     this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
-
     this.setState({
       pastedConfig: null,
       isSubmitting: false,
     });
+  };
+
+  handleTrackSuccess = (dashboardId, isChangedDescription) => {
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'successfully_created',
+      ),
+    );
+  };
+
+  handleTrackError = (dashboardId, isChangedDescription) => {
+    this.setState({ isSubmitting: false });
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'cannot_be_created',
+      ),
+    );
   };
 
   getTrackingEvent = (dashboardId, isChangedDescription) => {
@@ -272,24 +293,8 @@ export class AddEditModal extends Component {
             name: formData.name,
             description: formData.description,
             config: pastedConfig,
-            trackSuccess: () =>
-              this.tracking.trackEvent(
-                DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-                  dashboardId,
-                  isChangedDescription,
-                  'successfully_created',
-                ),
-              ),
-            trackFailure: () => {
-              this.setState({ isSubmitting: false });
-              this.tracking.trackEvent(
-                DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-                  dashboardId,
-                  isChangedDescription,
-                  'cannot_be_created',
-                ),
-              );
-            },
+            onSuccess: () => this.handleTrackSuccess(dashboardId, isChangedDescription),
+            onError: () => this.handleTrackError(dashboardId, isChangedDescription),
           },
           true,
         );
