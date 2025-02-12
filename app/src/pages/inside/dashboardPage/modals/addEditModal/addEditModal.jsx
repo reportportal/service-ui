@@ -234,10 +234,13 @@ export class AddEditModal extends Component {
           isChangedDescription,
         );
       default:
-        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-          dashboardId,
-          isChangedDescription,
-        );
+        return this.pastedConfig
+          ? null
+          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+              dashboardId,
+              isChangedDescription,
+              'standard',
+            );
     }
   };
 
@@ -255,13 +258,7 @@ export class AddEditModal extends Component {
         formData.description !== this.props.data.dashboardItem?.description;
 
       if (!pastedConfig) {
-        this.tracking.trackEvent(
-          DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-            dashboardId,
-            isChangedDescription,
-            'standard',
-          ),
-        );
+        this.tracking.trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
         onSubmit(formData);
         closeModal();
       } else {
