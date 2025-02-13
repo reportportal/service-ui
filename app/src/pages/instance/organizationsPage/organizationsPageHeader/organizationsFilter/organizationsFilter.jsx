@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
   LAUNCHES_FILTER_NAME,
@@ -115,6 +116,7 @@ export const OrganizationsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
+      event={ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton}
     />
   );
 };

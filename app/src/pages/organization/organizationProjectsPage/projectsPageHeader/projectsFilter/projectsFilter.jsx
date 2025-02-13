@@ -30,6 +30,7 @@ import {
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { messages } from './messages';
 
 export const ProjectsFilter = ({
@@ -115,6 +116,7 @@ export const ProjectsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       filteredAction={() => dispatch(fetchFilteredProjectAction())}
+      event={PROJECTS_PAGE_EVENTS.clickApplyFilterButton}
     />
   );
 };

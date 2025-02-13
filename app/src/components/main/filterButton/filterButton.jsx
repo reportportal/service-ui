@@ -31,6 +31,7 @@ export const FilterButton = ({
   defaultFilters,
   initialState,
   filteredAction,
+  event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,6 +50,7 @@ export const FilterButton = ({
           defaultFilters={defaultFilters}
           filteredAction={filteredAction}
           initialState={initialState}
+          event={event}
         />
       }
       placement="bottom-end"
@@ -88,4 +90,9 @@ FilterButton.propTypes = {
   defaultFilters: PropTypes.object,
   initialState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
+  event: PropTypes.func,
+};
+
+FilterButton.defaultProps = {
+  event: null,
 };
