@@ -23,7 +23,6 @@ import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useEffect } from 'react';
 import { FilterInput } from './filterInput/filterInput';
-import { LAST_RUN_DATE_FILTER_NAME } from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -76,11 +75,7 @@ export const FilterContentWrapped = ({
     setIsOpen(false);
 
     if (event) {
-      const type = Object.keys(fields)
-        .filter((field) => fields[field].value)
-        .join('#');
-      const condition = fields[LAST_RUN_DATE_FILTER_NAME]?.value;
-      trackEvent(event(type, condition));
+      trackEvent(event(fields));
     }
   };
 

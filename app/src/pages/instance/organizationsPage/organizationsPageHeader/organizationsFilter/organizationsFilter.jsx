@@ -97,6 +97,15 @@ export const OrganizationsFilter = ({
     },
   };
 
+  const eventHandler = (fields) => {
+    const type = Object.keys(fields)
+      .filter((field) => fields[field].value)
+      .join('#');
+    const condition = fields[LAST_RUN_DATE_FILTER_NAME]?.value;
+
+    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
+  };
+
   const initialFilterState = {
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
@@ -116,7 +125,7 @@ export const OrganizationsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
-      event={ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton}
+      event={eventHandler}
     />
   );
 };
