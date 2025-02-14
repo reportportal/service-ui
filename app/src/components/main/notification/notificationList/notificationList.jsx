@@ -111,6 +111,10 @@ const messages = defineMessages({
     id: 'DashboardPage.deleteDashboardSuccess',
     defaultMessage: 'Dashboard has been deleted',
   },
+  duplicateDashboardSuccess: {
+    id: 'Notifications.duplicateDashboardSuccess',
+    defaultMessage: 'Dashboard has been duplicated successfully',
+  },
   addPatternSuccess: {
     id: 'PatternAnalysis.addPatternSuccess',
     defaultMessage: 'Pattern rule has been created',

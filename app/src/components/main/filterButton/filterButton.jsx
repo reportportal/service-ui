@@ -36,7 +36,8 @@ export const FilterButton = ({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setAppliedFiltersCount(Object.keys(definedFilters).length);
+    const { name, ...filters } = definedFilters;
+    setAppliedFiltersCount(Object.keys(filters).length);
     filteredAction();
   }, []);
 

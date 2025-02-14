@@ -41,8 +41,13 @@ export const URLS = {
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
   dashboards: (projectKey, params) =>
     `${urlBase}${projectKey}/dashboard${getQueryParams({ ...params })}`,
+  dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
+  dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
-  widget: (projectKey, widgetId = '') => `${urlBase}${projectKey}/widget/${widgetId}`,
+  widget: (projectKey, widgetId = '') => {
+    const widgetIdPart = widgetId ? `/${widgetId}` : '';
+    return `${urlBase}${projectKey}/widget${widgetIdPart}`;
+  },
   widgetMultilevel: (projectKey, widgetId, params) =>
     `${urlBase}${projectKey}/widget/multilevel/${widgetId}${getQueryParams({
       ...params,
@@ -58,7 +63,10 @@ export const URLS = {
   projectWidget: (projectKey, widgetId = '', interval = '') =>
     `${urlBase}project/${projectKey}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  filter: (projectKey, id = '') => `${urlBase}${projectKey}/filter/${id}`,
+  filter: (projectKey, id = '') => {
+    const filterId = id ? `/${id}` : '';
+    return `${urlBase}${projectKey}/filter${filterId}`;
+  },
   filters: (projectKey) => `${urlBase}${projectKey}/filter`,
   filtersSearch: (projectKey) =>
     `${urlBase}${projectKey}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
@@ -178,16 +186,26 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  suite: (projectKey, suiteId) => `${urlBase}${projectKey}/item/${suiteId}`,
+  suite: (projectKey, suiteId) => {
+    const id = suiteId ? `/${suiteId}` : '';
+    return `${urlBase}${projectKey}/item${id}`;
+  },
 
   notification: (projectKey) => `${urlBase}${projectKey}/settings/notification`,
   notificationById: (projectKey, notificationId) =>
     `${urlBase}${projectKey}/settings/notification/${notificationId}`,
 
-  testItems: (projectKey, ids) => `${urlBase}${projectKey}/item/${getQueryParams({ ids })}`,
+  testItems: (projectKey, ids) => {
+    const queryParams = getQueryParams({ ids });
+    const querySuffix = queryParams ? `/${queryParams}` : '';
+    return `${urlBase}${projectKey}/item${querySuffix}`;
+  },
   testItemsWithProviderType: (projectKey, ids) =>
     `${urlBase}${projectKey}/item/v2${getQueryParams({ ids })}`,
-  testItem: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}`,
+  testItem: (projectKey, id = '') => {
+    const itemId = id ? `/${id}` : '';
+    return `${urlBase}${projectKey}/item${itemId}`;
+  },
   testItemStatistics: (projectKey) => `${urlBase}${projectKey}/item/statistics`,
   testItemUpdate: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}/update`,
   testItemsHistory: (projectKey, historyDepth, type, id) =>
@@ -234,7 +252,10 @@ export const URLS = {
       'filter.eq.launch': itemId,
       'filter.gte.level': level,
     })}`,
-  logItemActivity: (projectKey, itemId) => `${urlBase}${projectKey}/activity/item/${itemId}`,
+  logItemActivity: (projectKey, itemId) => {
+    const id = itemId ? `/${itemId}` : '';
+    return `${urlBase}${projectKey}/activity/item${id}`;
+  },
   logItemStackTrace: (projectKey, path, pageSize) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,
@@ -315,7 +336,10 @@ export const URLS = {
   btsIntegrationPostTicket: (projectKey, integrationId) =>
     `${urlBase}bts/${projectKey}/${integrationId}/ticket`,
   btsTicket: (projectKey, issueId, btsProject, btsUrl) =>
-    `${urlBase}bts/${projectKey}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
+    `${urlBase}bts/${projectKey}/ticket/${issueId}${getQueryParams({
+      btsProject,
+      btsUrl,
+    })}`,
   runUniqueErrorAnalysis: (projectKey) => `${urlBase}${projectKey}/launch/cluster`,
   clusterByLaunchId: (projectKey, launchId, query) =>
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,

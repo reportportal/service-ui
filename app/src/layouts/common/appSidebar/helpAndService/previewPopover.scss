@@ -85,6 +85,7 @@
   min-width: 270px;
   display: flex;
   align-items: center;
+  width: 100%;
 
   .service-block {
     display: none;
@@ -107,6 +108,7 @@
 
 .service-wrapper {
   display: flex;
+  width: 100%;
 
   &:hover {
     background-color: $COLOR--darkmode-gray-500;
@@ -128,7 +130,7 @@
 .service-control {
   border: none;
   background-color: transparent;
-  width: 280px;
+  width: 100%;
   padding: 0;
   cursor: pointer;
 }

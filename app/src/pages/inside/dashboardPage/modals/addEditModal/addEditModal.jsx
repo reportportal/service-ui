@@ -68,6 +68,14 @@ const messages = defineMessages({
     id: 'DashboardForm.modalCancelButtonText',
     defaultMessage: 'Cancel',
   },
+  duplicateModalTitle: {
+    id: 'DashboardForm.duplicateModalTitle',
+    defaultMessage: 'Duplicate Dashboard',
+  },
+  duplicateModalSubmitButtonText: {
+    id: 'DashboardForm.duplicateModalSubmitButtonText',
+    defaultMessage: 'Duplicate',
+  },
 });
 
 const LABEL_WIDTH = 90;
@@ -92,12 +100,12 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
 })
 export class AddEditModal extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       dashboardItem: PropTypes.object,
       onSubmit: PropTypes.func,
       type: PropTypes.string,
     }),
-    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,
@@ -121,6 +129,29 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
+  getModalTexts() {
+    const { type } = this.props.data;
+    const { intl } = this.props;
+
+    switch (type) {
+      case 'edit':
+        return {
+          title: intl.formatMessage(messages.editModalTitle),
+          submitText: intl.formatMessage(messages.editModalSubmitButtonText),
+        };
+      case 'duplicate':
+        return {
+          title: intl.formatMessage(messages.duplicateModalTitle),
+          submitText: intl.formatMessage(messages.duplicateModalSubmitButtonText),
+        };
+      default:
+        return {
+          title: intl.formatMessage(messages.addModalTitle),
+          submitText: intl.formatMessage(messages.addModalSubmitButtonText),
+        };
+    }
+  }
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -130,6 +161,28 @@ export class AddEditModal extends Component {
     };
   };
 
+  getTrackingEvent(dashboardId, isChangedDescription) {
+    const { type } = this.props.data;
+
+    switch (type) {
+      case 'edit':
+        return DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      case 'duplicate':
+        return DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      default:
+        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+    }
+  }
+
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking: { trackEvent },
@@ -137,19 +190,11 @@ export class AddEditModal extends Component {
       dirty,
     } = this.props;
 
-    const dashboardId = dashboardItem?.id;
-
-    if (dirty) {
+    if (type === 'duplicate' || dirty) {
+      const dashboardId = dashboardItem?.id;
       const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
-      const dashboardEvent =
-        type === 'edit'
-          ? DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
-              dashboardId,
-              isChangedDescription,
-            )
-          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(dashboardId, isChangedDescription);
 
-      trackEvent(dashboardEvent);
+      trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
       this.props.data.onSubmit(item);
     }
 
@@ -157,13 +202,8 @@ export class AddEditModal extends Component {
   };
 
   render() {
-    const {
-      intl,
-      handleSubmit,
-      data: { type },
-    } = this.props;
-    const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
-    const title = intl.formatMessage(messages[`${type}ModalTitle`]);
+    const { intl, handleSubmit } = this.props;
+    const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
 
     return (
@@ -180,7 +220,7 @@ export class AddEditModal extends Component {
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
-        <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
+        <form className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
             labelWidth={LABEL_WIDTH}

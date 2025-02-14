@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   lastRunDate: {
     id: 'OrganizationsFilter.lastRunDate',
-    defaultMessage: 'Last Run Date',
+    defaultMessage: 'Last run date',
   },
   lastRunDatePlaceholder: {
     id: 'OrganizationsFilter.lastRunDatePlaceholder',
@@ -40,5 +40,9 @@ export const messages = defineMessages({
   usersPlaceholder: {
     id: 'OrganizationsFilter.usersPlaceholder',
     defaultMessage: 'Enter the number of members',
+  },
+  organizationType: {
+    id: 'OrganizationsFilter.organizationType',
+    defaultMessage: 'Organization type',
   },
 });

@@ -57,13 +57,118 @@
 }
 
 .icon-holder {
-  border-left: 1px solid $COLOR--gray-91;
   min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.no-border {
+    border-left: none;
+  }
+}
+
+.edit-cell, 
+.delete-cell {
+  .icon-holder {
+    border-left: 1px solid $COLOR--gray-91;
+  }
 }
 
 .dashboard-table {
   background-color: $COLOR--white-two;
   padding-bottom: 15px;
+}
+
+.with-button {
+  i {
+    cursor: pointer;
+  }
+}
+
+.duplicate-dropdown {
+  position: relative;
+  appearance: none;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+  cursor: pointer;
+  color: $COLOR--gray-60;
+
+  &:hover {
+    color: $COLOR--gray-47;
+  }
+}
+
+.duplicate-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  width: 20px;
+
+  svg {
+    height: 30px;
+    width: 30px;
+    stroke: $COLOR--gray-60;
+  }
+
+  .duplicate-dropdown:hover & svg {
+    stroke: $COLOR--gray-47;
+  }
+}
+
+.arrow {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  margin-top: -1px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid currentColor;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  box-sizing: border-box;
+  transition: transform 200ms linear;
+
+  &.opened {
+    transform: rotate(180deg);
+  }
+}
+
+.duplicate-menu {
+  position: absolute;
+  top: 100%;
+  right: -25px;
+  z-index: $Z-INDEX-POPUP;
+  margin-top: 4px;
+  background: $COLOR--white-two;
+  border: 1px solid $COLOR--gray-91;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  min-width: max-content;
+  white-space: nowrap;
+  display: none;
+
+  &.shown {
+    display: block;
+  }
+}
+
+.dropdown-item {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  &:hover {
+    background: $COLOR--tealish-hover;
+  }
 }
 
 @media (max-width: $SCREEN_SM_MAX) {
@@ -80,11 +185,5 @@
     @media (max-width: $SCREEN_SM_MAX) {
       display: none;
     }
-  }
-}
-
-.with-button {
-  i {
-    cursor: pointer;
   }
 }

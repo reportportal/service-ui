@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-export { FilterButton } from './filterButton';
-export {
-  LAST_RUN_DATE_FILTER_NAME,
-  LAUNCHES_FILTER_NAME,
-  TEAMMATES_FILTER_NAME,
-  TEAMMATES_FILTER_NAME_CONDITION,
-  LAUNCHES_FILTER_NAME_CONDITION,
-  ORGANIZATION_TYPE_FILTER_NAME,
-  getRangeComparisons,
-  getTimeRange,
-  getOrganizationTypes,
-} from './constants';
-export { messages } from './messages';
+.dropdown-condition {
+  min-width: 156px;
+  width: 156px;
+}
+
+.text-field-container {
+  &:last-child span {
+    color: $COLOR--e-400;
+  }
+}
+
+.dual-input {
+  margin-bottom: 0;
+}

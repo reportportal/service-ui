@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,32 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  lastRunDate: {
-    id: 'ProjectsFilter.lastRunDate',
-    defaultMessage: 'Last run date',
+  dashboardName: {
+    id: 'DashboardTable.dashboardName',
+    defaultMessage: 'Dashboard Name',
   },
-  lastRunDatePlaceholder: {
-    id: 'ProjectsFilter.lastRunDatePlaceholder',
-    defaultMessage: 'Any',
+  description: {
+    id: 'DashboardTable.description',
+    defaultMessage: 'Description',
   },
-  launches: {
-    id: 'ProjectsFilter.launches',
-    defaultMessage: 'Launches',
+  owner: {
+    id: 'DashboardTable.owner',
+    defaultMessage: 'Owner',
   },
-  launchesPlaceholder: {
-    id: 'ProjectsFilter.launchesPlaceholder',
-    defaultMessage: 'Enter the number of launches',
+  duplicate: {
+    id: 'DashboardTable.duplicate',
+    defaultMessage: 'Duplicate',
   },
-  users: {
-    id: 'ProjectsFilter.users',
-    defaultMessage: 'Teammates',
+  edit: {
+    id: 'DashboardTable.edit',
+    defaultMessage: 'Edit',
   },
-  usersPlaceholder: {
-    id: 'ProjectsFilter.usersPlaceholder',
-    defaultMessage: 'Enter the number of members',
+  deleteDashboard: {
+    id: 'DashboardTable.deleteDashboard',
+    defaultMessage: 'Delete',
+  },
+  copyConfig: {
+    id: 'DashboardTable.copyConfig',
+    defaultMessage: 'Copy dashboard configuration to clipboard',
   },
 });
