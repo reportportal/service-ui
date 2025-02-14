@@ -74,3 +74,12 @@ export const baseEventParametersShape = PropTypes.shape({
   projectInfoId: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
+
+export const getFilterProps = (fields, conditionProp) => {
+  const type = Object.keys(fields)
+    .filter((field) => fields[field].value)
+    .join('#');
+  const condition = fields[conditionProp]?.value;
+
+  return { type, condition };
+};

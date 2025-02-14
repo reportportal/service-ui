@@ -31,6 +31,7 @@ import {
 } from 'components/main/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
+import { getFilterProps } from 'components/main/analytics/utils';
 import { messages } from './messages';
 
 export const ProjectsFilter = ({
@@ -98,10 +99,7 @@ export const ProjectsFilter = ({
   };
 
   const eventHandler = (fields) => {
-    const type = Object.keys(fields)
-      .filter((field) => fields[field].value)
-      .join('#');
-    const condition = fields[LAST_RUN_DATE_FILTER_NAME]?.value;
+    const { type, condition } = getFilterProps(fields, LAST_RUN_DATE_FILTER_NAME);
 
     return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };

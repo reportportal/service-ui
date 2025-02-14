@@ -31,6 +31,7 @@ import {
   getTimeRange,
   messages as helpMessage,
 } from 'components/main/filterButton';
+import { getFilterProps } from 'components/main/analytics/utils';
 import { messages } from './messages';
 
 export const OrganizationsFilter = ({
@@ -98,10 +99,7 @@ export const OrganizationsFilter = ({
   };
 
   const eventHandler = (fields) => {
-    const type = Object.keys(fields)
-      .filter((field) => fields[field].value)
-      .join('#');
-    const condition = fields[LAST_RUN_DATE_FILTER_NAME]?.value;
+    const { type, condition } = getFilterProps(fields, LAST_RUN_DATE_FILTER_NAME);
 
     return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
