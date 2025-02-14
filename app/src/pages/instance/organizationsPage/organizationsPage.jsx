@@ -110,7 +110,7 @@ export const OrganizationsPage = () => {
       {!noAssignedOrganizations && (
         <OrganizationsPageHeader
           hasPermission={hasPermission}
-          isEmpty={isEmptyOrganizations && searchValue === null}
+          isEmpty={isEmptyOrganizations && searchValue === null && appliedFiltersCount === 0}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
           openPanelView={openPanelView}

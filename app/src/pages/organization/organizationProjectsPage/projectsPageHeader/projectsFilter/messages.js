@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   lastRunDate: {
     id: 'ProjectsFilter.lastRunDate',
-    defaultMessage: 'Last Run Date',
+    defaultMessage: 'Last run date',
   },
   lastRunDatePlaceholder: {
     id: 'ProjectsFilter.lastRunDatePlaceholder',

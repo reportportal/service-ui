@@ -15,7 +15,6 @@
  */
 
 import classNames from 'classnames/bind';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import styles from './filterInput.scss';
@@ -23,43 +22,19 @@ import styles from './filterInput.scss';
 const cx = classNames.bind(styles);
 
 export const FilterInput = ({ filter, onChange }) => {
-  const { filterName, title, helpText, fields } = filter;
-  const withCondition = fields.length > 1;
-
+  const { filterName, title, fields, fieldsWrapperClassName } = filter;
   const onClear = (fieldName) => onChange(fieldName, '');
 
   return (
-    <div className={cx('filter-item', { 'with-help-text': helpText })}>
+    <div className={cx('filter-item', fieldsWrapperClassName)}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        {fields.map(({ name, placeholder, options, value, condition, type }) => {
-          if (options) {
-            return (
-              <FieldProvider key={name} name={name}>
-                <Dropdown
-                  options={options}
-                  value={condition}
-                  isListWidthLimited
-                  className={cx({ dropdown: withCondition })}
-                  placeholder={placeholder}
-                />
-              </FieldProvider>
-            );
-          }
-
+        {fields.map(({ component, name, containerClassName, props }) => {
+          const InputComponent = component;
           return (
-            <div key={name} className={cx('input-field-container')}>
-              <FieldProvider name={name}>
-                <FieldText
-                  name={filterName}
-                  className={cx('input-field')}
-                  placeholder={placeholder}
-                  value={value}
-                  onClear={() => onClear(name)}
-                  clearable
-                  helpText={helpText}
-                  type={type}
-                />
+            <div key={filterName} className={cx('input-wrapper', containerClassName)}>
+              <FieldProvider name={name} {...props}>
+                <InputComponent onClear={() => onClear(name)} />
               </FieldProvider>
             </div>
           );
@@ -70,6 +45,19 @@ export const FilterInput = ({ filter, onChange }) => {
 };
 
 FilterInput.propTypes = {
-  filter: PropTypes.object.isRequired,
+  filter: PropTypes.shape({
+    filterName: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    defaultCondition: PropTypes.string,
+    fieldsWrapperClassName: PropTypes.string,
+    fields: PropTypes.arrayOf(
+      PropTypes.shape({
+        component: PropTypes.elementType,
+        name: PropTypes.string.isRequired,
+        containerClassName: PropTypes.string,
+        props: PropTypes.object,
+      }),
+    ),
+  }),
   onChange: PropTypes.func.isRequired,
 };

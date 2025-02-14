@@ -30,8 +30,12 @@ import {
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
+import classNames from 'classnames/bind';
 import { messages } from './messages';
+import styles from './projectsFilter.scss';
 
+const cx = classNames.bind(styles);
 export const ProjectsFilter = ({
   entities,
   onFilterChange,
@@ -51,46 +55,71 @@ export const ProjectsFilter = ({
       defaultCondition: CONDITION_BETWEEN.toUpperCase(),
       fields: [
         {
-          value: timeRange[0].value,
-          options: timeRange,
-          placeholder: formatMessage(messages.lastRunDatePlaceholder),
+          component: Dropdown,
           name: LAST_RUN_DATE_FILTER_NAME,
+          props: {
+            value: timeRange[0].value,
+            options: timeRange,
+            placeholder: formatMessage(messages.lastRunDatePlaceholder),
+          },
         },
       ],
     },
     [LAUNCHES_FILTER_NAME]: {
       filterName: LAUNCHES_FILTER_NAME,
       title: formatMessage(messages.launches),
-      helpText: formatMessage(helpMessage.helpText),
+      fieldsWrapperClassName: cx('dual-input'),
       fields: [
         {
-          options: rangeComparisons,
-          condition: rangeComparisons[0].value,
+          component: Dropdown,
           name: LAUNCHES_FILTER_NAME_CONDITION,
+          containerClassName: cx('dropdown-condition'),
+          props: {
+            options: rangeComparisons,
+            condition: rangeComparisons[0].value,
+          },
         },
         {
-          value: '',
-          placeholder: formatMessage(messages.launchesPlaceholder),
+          component: FieldText,
           name: LAUNCHES_FILTER_NAME,
-          type: 'number',
+          containerClassName: cx('text-field-container'),
+          props: {
+            value: '',
+            placeholder: formatMessage(messages.launchesPlaceholder),
+            type: 'number',
+            helpText: formatMessage(helpMessage.helpText),
+            clearable: true,
+            defaultWidth: false,
+          },
         },
       ],
     },
     [TEAMMATES_FILTER_NAME]: {
       filterName: TEAMMATES_FILTER_NAME,
       title: formatMessage(messages.users),
-      helpText: formatMessage(helpMessage.helpText),
+      fieldsWrapperClassName: cx('dual-input'),
       fields: [
         {
-          options: rangeComparisons,
-          condition: rangeComparisons[0].value,
+          component: Dropdown,
           name: TEAMMATES_FILTER_NAME_CONDITION,
+          containerClassName: cx('dropdown-condition'),
+          props: {
+            options: rangeComparisons,
+            condition: rangeComparisons[0].value,
+          },
         },
         {
-          value: '',
-          placeholder: formatMessage(messages.usersPlaceholder),
+          component: FieldText,
           name: TEAMMATES_FILTER_NAME,
-          type: 'number',
+          containerClassName: cx('text-field-container'),
+          props: {
+            value: '',
+            placeholder: formatMessage(messages.usersPlaceholder),
+            type: 'number',
+            helpText: formatMessage(helpMessage.helpText),
+            clearable: true,
+            defaultWidth: false,
+          },
         },
       ],
     },
