@@ -33,7 +33,7 @@ import {
   getOrganizationTypes,
   messages as helpMessage,
 } from 'components/main/filterButton';
-import { getFilterProps } from 'components/main/analytics/utils';
+import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
@@ -157,7 +157,7 @@ export const OrganizationsFilter = ({
   };
 
   const eventHandler = (fields) => {
-    const { type, condition } = getFilterProps(fields, LAST_RUN_DATE_FILTER_NAME);
+    const { type, condition } = getApplyFilterEventParams(fields, LAST_RUN_DATE_FILTER_NAME);
 
     return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };

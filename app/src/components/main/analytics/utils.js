@@ -75,7 +75,7 @@ export const baseEventParametersShape = PropTypes.shape({
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
 
-export const getFilterProps = (fields, conditionProp) => {
+export const getApplyFilterEventParams = (fields, conditionProp) => {
   const type = Object.keys(fields)
     .filter((field) => fields[field].value)
     .join('#');

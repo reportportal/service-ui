@@ -31,7 +31,7 @@ import {
 } from 'components/main/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
-import { getFilterProps } from 'components/main/analytics/utils';
+import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
@@ -128,7 +128,7 @@ export const ProjectsFilter = ({
   };
 
   const eventHandler = (fields) => {
-    const { type, condition } = getFilterProps(fields, LAST_RUN_DATE_FILTER_NAME);
+    const { type, condition } = getApplyFilterEventParams(fields, LAST_RUN_DATE_FILTER_NAME);
 
     return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
