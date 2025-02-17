@@ -30,7 +30,10 @@ export const FilterButton = ({
   setAppliedFiltersCount,
   defaultFilters,
   initialState,
+  defaultState,
   filteredAction,
+  getClearButtonState,
+  getApplyButtonState,
   event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,6 +54,9 @@ export const FilterButton = ({
           defaultFilters={defaultFilters}
           filteredAction={filteredAction}
           initialState={initialState}
+          defaultState={defaultState}
+          getClearButtonState={getClearButtonState}
+          getApplyButtonState={getApplyButtonState}
           event={event}
         />
       }
@@ -90,7 +96,10 @@ FilterButton.propTypes = {
   setAppliedFiltersCount: PropTypes.func,
   defaultFilters: PropTypes.object,
   initialState: PropTypes.object.isRequired,
+  defaultState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
+  getClearButtonState: PropTypes.func.isRequired,
+  getApplyButtonState: PropTypes.func.isRequired,
   event: PropTypes.func,
 };
 
