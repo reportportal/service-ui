@@ -66,9 +66,11 @@ export const FilterButton = ({
         })}
         tabIndex={0}
       >
-        <i className={cx('filter-icon')}>
-          {appliedFiltersCount ? <FilterFilledIcon /> : <FilterOutlineIcon />}
-        </i>
+        <div>
+          <i className={cx('filter-icon')}>
+            {appliedFiltersCount ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+          </i>
+        </div>
         {appliedFiltersCount ? (
           <span className={cx('filters-count')}>{appliedFiltersCount}</span>
         ) : null}
