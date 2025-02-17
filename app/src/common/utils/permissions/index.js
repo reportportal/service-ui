@@ -36,6 +36,7 @@ export {
   canMoveToDebug,
   canMergeLaunches,
   canWorkWithFilters,
+  canWorkWithOrganizationFilter,
   canReadData,
   canSeeDemoData,
   canWorkWithTests,

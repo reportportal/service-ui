@@ -28,6 +28,8 @@ import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
+import { canWorkWithOrganizationFilter } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
@@ -54,6 +56,7 @@ export const OrganizationsPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
+  const userRoles = useSelector(userRolesSelector);
 
   return (
     <div className={cx('organizations-page-header-container')}>
@@ -69,18 +72,20 @@ export const OrganizationsPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
-              <FilterEntitiesURLContainer
-                debounced={false}
-                additionalFilter="name"
-                render={({ entities, onChange }) => (
-                  <OrganizationsFilter
-                    appliedFiltersCount={appliedFiltersCount}
-                    setAppliedFiltersCount={setAppliedFiltersCount}
-                    entities={entities}
-                    onFilterChange={onChange}
-                  />
-                )}
-              />
+              {canWorkWithOrganizationFilter(userRoles) && (
+                <FilterEntitiesURLContainer
+                  debounced={false}
+                  additionalFilter="name"
+                  render={({ entities, onChange }) => (
+                    <OrganizationsFilter
+                      appliedFiltersCount={appliedFiltersCount}
+                      setAppliedFiltersCount={setAppliedFiltersCount}
+                      entities={entities}
+                      onFilterChange={onChange}
+                    />
+                  )}
+                />
+              )}
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
                 onClick={openPanelView}
