@@ -28,6 +28,7 @@ import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { ProjectsFilter } from './projectsFilter';
 import projectsIcon from './img/projects-inline.svg';
 import userIcon from './img/user-inline.svg';
@@ -99,6 +100,7 @@ export const ProjectsPageHeader = ({
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 placeholder={formatMessage(messages.searchPlaceholder)}
+                event={PROJECTS_PAGE_EVENTS.SEARCH_PROJECTS_FIELD}
               />
               <FilterEntitiesURLContainer
                 debounced={false}

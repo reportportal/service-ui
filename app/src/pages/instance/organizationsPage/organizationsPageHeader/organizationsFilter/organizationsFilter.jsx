@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
   LAUNCHES_FILTER_NAME,
@@ -32,6 +33,7 @@ import {
   getOrganizationTypes,
   messages as helpMessage,
 } from 'components/main/filterButton';
+import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
@@ -154,6 +156,12 @@ export const OrganizationsFilter = ({
     }
   };
 
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(fields, LAST_RUN_DATE_FILTER_NAME);
+
+    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
+  };
+
   const initialFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]: getTypeEntity(),
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
@@ -174,6 +182,7 @@ export const OrganizationsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
+      event={eventHandler}
     />
   );
 };

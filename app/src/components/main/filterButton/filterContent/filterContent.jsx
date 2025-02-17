@@ -16,6 +16,7 @@
 
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
+import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -40,8 +41,10 @@ export const FilterContentWrapped = ({
   reset,
   submitting,
   handleSubmit,
+  event,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const isDisabled = pristine || submitting;
 
   useEffect(() => {
@@ -70,6 +73,10 @@ export const FilterContentWrapped = ({
     setAppliedFiltersCount(appliedFiltersCount);
     filteredAction();
     setIsOpen(false);
+
+    if (event) {
+      trackEvent(event(fields));
+    }
   };
 
   return (
@@ -116,6 +123,11 @@ FilterContentWrapped.propTypes = {
   submitting: PropTypes.bool.isRequired,
   reset: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  event: PropTypes.func,
+};
+
+FilterContentWrapped.defaultProps = {
+  event: null,
 };
 
 export const FilterContent = reduxForm({

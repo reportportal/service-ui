@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,19 @@
 
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
-const ORGANIZATION_PAGE = 'organization';
+const PROJECTS_PAGE = 'project_page';
 
-const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
+const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(PROJECTS_PAGE);
 
-export const ORGANIZATION_PAGE_EVENTS = {
-  SEARCH_ORGANIZATION_FIELD: {
+export const PROJECTS_PAGE_EVENTS = {
+  SEARCH_PROJECTS_FIELD: {
     ...BASIC_EVENT_PARAMETERS,
-    place: 'all_organizations',
-    element_name: 'search',
-  },
-  SEARCH_ORGANIZATION_USERS_FIELD: {
-    ...BASIC_EVENT_PARAMETERS,
-    place: 'all_users',
+    place: 'projects',
     element_name: 'search',
   },
   clickApplyFilterButton: (type, condition) => ({
     ...BASIC_EVENT_PARAMETERS,
-    modal: 'filter_organization',
+    modal: 'filter_project_page',
     element_name: 'apply',
     condition,
     type,
