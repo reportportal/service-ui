@@ -91,7 +91,7 @@
     }
 
     &:hover {
-      i.filter-icon {
+      div i.filter-icon {
         svg {
           path {
             fill: $COLOR--topaz-hover-2;
@@ -100,7 +100,7 @@
         }
       }
 
-      .filters-count {
+      span.filters-count {
         color: $COLOR--topaz-hover-2;
       }
     }
