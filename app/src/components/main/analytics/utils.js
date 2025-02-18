@@ -16,6 +16,7 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
+import { CONDITION_ANY } from 'components/filterEntities/constants';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -75,11 +76,15 @@ export const baseEventParametersShape = PropTypes.shape({
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
 
-export const getApplyFilterEventParams = (fields, conditionProp) => {
+export const getApplyFilterEventParams = (fields, initialState, conditionProp) => {
   const type = Object.keys(fields)
-    .filter((field) => fields[field].value)
+    .filter((field) => fields[field].value !== initialState[field])
     .join('#');
-  const condition = fields[conditionProp]?.value;
+
+  const condition =
+    fields[conditionProp].value !== initialState[conditionProp]
+      ? fields[conditionProp]?.value || CONDITION_ANY
+      : undefined;
 
   return { type, condition };
 };
