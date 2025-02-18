@@ -18,7 +18,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const pjson = require('../package.json');
 
@@ -32,7 +31,11 @@ module.exports = {
     filename: '[name].app.[contenthash:8].js',
     publicPath: 'auto',
     assetModuleFilename: 'media/[name].[contenthash:8][ext]',
-    clean: true,
+    clean: {
+      keep: (asset) => {
+        return asset.includes('localization/messages');
+      },
+    },
   },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
@@ -82,9 +85,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../localization/messages')],
-    }),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../src/index.tpl.html'),
