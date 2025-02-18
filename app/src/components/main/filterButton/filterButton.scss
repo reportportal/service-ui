@@ -16,11 +16,12 @@
 
 .filters-icon-container {
   height: 36px;
-  width: 40px;
+  width: 57px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 10px;
 
   i.filter-icon {
     display: block;
@@ -71,8 +72,6 @@
 
   &.with-applied {
     gap: 8px;
-    padding: 0 12px;
-    margin-left: 10px;
     background-color: $COLOR--bg-200;
 
     i.filter-icon {
