@@ -65,8 +65,9 @@ export const OrganizationsFilter = ({
           name: ORGANIZATION_TYPE_FILTER_NAME,
           props: {
             options: organizationTypes,
-            value: organizationTypes.map((option) => option.value),
+            value: [],
             multiSelect: true,
+            placeholder: formatMessage(messages.organizationTypePlaceholder),
           },
         },
       ],
@@ -148,13 +149,6 @@ export const OrganizationsFilter = ({
       ],
     },
   };
-  const getTypeEntity = () => {
-    if (entities[ORGANIZATION_TYPE_FILTER_NAME]) {
-      return entities[ORGANIZATION_TYPE_FILTER_NAME].value?.split(',') || [];
-    } else {
-      return organizationTypes.map((option) => option.value);
-    }
-  };
 
   const eventHandler = (fields) => {
     const { type, condition } = getApplyFilterEventParams(fields, LAST_RUN_DATE_FILTER_NAME);
@@ -163,7 +157,8 @@ export const OrganizationsFilter = ({
   };
 
   const initialFilterState = {
-    [ORGANIZATION_TYPE_FILTER_NAME]: getTypeEntity(),
+    [ORGANIZATION_TYPE_FILTER_NAME]:
+      entities[ORGANIZATION_TYPE_FILTER_NAME]?.value?.split(',') || [],
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:

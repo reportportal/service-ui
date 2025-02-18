@@ -59,7 +59,7 @@ export const FilterContentWrapped = ({
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const value = formData[filterName];
+      const value = formData[filterName].toString();
       acc[filterName] = {
         value,
         condition: defaultCondition || formData[`${filterName}_condition`],
