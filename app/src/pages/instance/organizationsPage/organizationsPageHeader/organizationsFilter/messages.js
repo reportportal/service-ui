@@ -45,4 +45,8 @@ export const messages = defineMessages({
     id: 'OrganizationsFilter.organizationType',
     defaultMessage: 'Organization type',
   },
+  organizationTypePlaceholder: {
+    id: 'OrganizationsFilter.organizationTypePlaceholder',
+    defaultMessage: 'Select organization type',
+  },
 });
