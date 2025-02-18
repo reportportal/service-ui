@@ -127,8 +127,12 @@ export const ProjectsFilter = ({
     },
   };
 
-  const eventHandler = (fields) => {
-    const { type, condition } = getApplyFilterEventParams(fields, LAST_RUN_DATE_FILTER_NAME);
+  const eventHandler = (fields, initialState) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialState,
+      LAST_RUN_DATE_FILTER_NAME,
+    );
 
     return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };

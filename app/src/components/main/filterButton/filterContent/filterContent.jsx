@@ -75,7 +75,7 @@ export const FilterContentWrapped = ({
     setIsOpen(false);
 
     if (event) {
-      trackEvent(event(fields));
+      trackEvent(event(fields, initialState));
     }
   };
 
