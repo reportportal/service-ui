@@ -45,5 +45,5 @@ export const getRangeComparisons = (formatMessage) => [
 export const getOrganizationTypes = (formatMessage) => [
   { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
   { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
-  { label: formatMessage(messages.typeSynched), value: 'SYNCED' },
+  { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
 ];
