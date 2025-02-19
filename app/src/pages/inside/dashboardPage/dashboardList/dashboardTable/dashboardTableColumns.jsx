@@ -19,7 +19,6 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
-import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
@@ -33,12 +32,12 @@ import { messages } from './messages';
 const cx = classNames.bind(styles);
 
 export const NameColumn = track()(
-  ({ value, customProps: { projectId }, className, tracking: { trackEvent } }) => {
+  ({ value, customProps: { getLink }, className, tracking: { trackEvent } }) => {
     const { id: dashboardId, name } = value;
     return (
       <NavLink
         className={cx(className, 'name')}
-        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
+        to={getLink(dashboardId)}
         onClick={() => {
           trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
         }}
