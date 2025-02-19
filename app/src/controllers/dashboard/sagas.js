@@ -30,6 +30,7 @@ import {
   activeDashboardIdSelector,
   pageSelector,
   projectIdSelector,
+  pagePropertiesSelector,
 } from 'controllers/pages';
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
@@ -166,9 +167,13 @@ function* addDashboard({ payload }) {
     );
 
     yield put(hideModalAction());
+    const query = yield select(pagePropertiesSelector);
     yield put({
       type: PROJECT_DASHBOARD_ITEM_PAGE,
       payload: { projectId: activeProject, dashboardId: id },
+      meta: {
+        query,
+      },
     });
   } catch (error) {
     if (isPreconfigured && onError) {
