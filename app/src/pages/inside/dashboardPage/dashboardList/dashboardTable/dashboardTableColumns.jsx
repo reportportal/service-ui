@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -84,39 +84,43 @@ OwnerColumn.defaultProps = {
 
 export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
-    const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
+    const { openDropdownId, onDropdownToggle } = customProps;
+    const opened = openDropdownId === value.id;
 
     useEffect(() => {
       const handleOutsideClick = (e) => {
         if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-          setOpened(false);
+          onDropdownToggle(null);
         }
       };
 
-      document.addEventListener('click', handleOutsideClick);
-      return () => document.removeEventListener('click', handleOutsideClick);
-    }, [opened]);
+      if (opened) {
+        document.addEventListener('click', handleOutsideClick);
+        return () => document.removeEventListener('click', handleOutsideClick);
+      }
+      return () => {};
+    }, [opened, onDropdownToggle]);
 
     const handleClick = (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
-      setOpened(!opened);
+      onDropdownToggle(value.id);
     };
 
     const handleDuplicate = (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('duplicate'));
       customProps.onDuplicate(value);
-      setOpened(false);
+      onDropdownToggle(null);
     };
 
     const handleCopyConfig = (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
       dispatch(copyDashboardConfigAction(value));
-      setOpened(false);
+      onDropdownToggle(null);
     };
 
     return (
