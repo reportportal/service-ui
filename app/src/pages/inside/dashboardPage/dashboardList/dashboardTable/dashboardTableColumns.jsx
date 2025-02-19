@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,18 +89,20 @@ export const DuplicateColumn = track()(
     const dispatch = useDispatch();
 
     useEffect(() => {
-      const handleOutsideClick = (e) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-          setOpened(false);
-        }
-      };
+      if (opened) {
+        const handleOutsideClick = (e) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setOpened(false);
+          }
+        };
 
-      document.addEventListener('click', handleOutsideClick);
-      return () => document.removeEventListener('click', handleOutsideClick);
+        document.addEventListener('click', handleOutsideClick);
+        return () => document.removeEventListener('click', handleOutsideClick);
+      }
+      return () => {};
     }, [opened]);
 
-    const handleClick = (e) => {
-      e.stopPropagation();
+    const handleClick = () => {
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
       setOpened(!opened);
     };
