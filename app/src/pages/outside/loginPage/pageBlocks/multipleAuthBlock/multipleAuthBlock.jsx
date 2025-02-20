@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DOMPurify from 'dompurify';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import Link from 'redux-first-router-link';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
@@ -26,6 +27,7 @@ import { LOGIN_PAGE } from 'controllers/pages';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './multipleAuthBlock.scss';
 
@@ -53,12 +55,17 @@ const messages = defineMessages({
 @connect((state) => ({
   externalAuthExtensions: authExtensionsSelector(state),
 }))
+@track()
 @injectIntl
 export class MultipleAuthBlock extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     multipleAuthKey: PropTypes.string,
     externalAuthExtensions: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     multipleAuthKey: '',
@@ -101,8 +108,13 @@ export class MultipleAuthBlock extends Component {
       selectedAuthPath,
     });
 
-  externalAuthClickHandler = () =>
+  externalAuthClickHandler = () => {
+    const { multipleAuthKey } = this.props;
+    const { tracking } = this.props;
+    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(multipleAuthKey));
+
     setWindowLocationToNewPath(normalizePathWithPrefix(this.state.selectedAuthPath));
+  };
 
   renderProviders = (isSingleAuth) => {
     const { selectedAuthPath, authOptions } = this.state;
