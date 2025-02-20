@@ -51,15 +51,21 @@ export class ExternalLoginBlock extends PureComponent {
 
       return (
         <div className={cx('external-auth-btn')} key={authType}>
-          <BigButton roundedCorners color="booger">
-            {val.providers ? (
-              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
+          {val.providers ? (
+            <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
+              <BigButton roundedCorners color="booger">
                 {Parser(val.button)}
-              </Link>
-            ) : (
-              <span onClick={this.getExternalAuthClickHandler(val.path)}>{Parser(val.button)}</span>
-            )}
-          </BigButton>
+              </BigButton>
+            </Link>
+          ) : (
+            <BigButton
+              roundedCorners
+              color="booger"
+              onClick={this.getExternalAuthClickHandler(val.path)}
+            >
+              <span>{Parser(val.button)}</span>
+            </BigButton>
+          )}
         </div>
       );
     });
