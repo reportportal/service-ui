@@ -21,6 +21,7 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import Link from 'redux-first-router-link';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -33,6 +34,10 @@ import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import PasswordIcon from 'common/img/password-field-icon-inline.svg';
+import {
+  LOGIN,
+  LOGIN_PAGE_EVENTS,
+} from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
@@ -85,6 +90,7 @@ const messages = defineMessages({
     password: commonValidators.password(password),
   }),
 })
+@track()
 @injectIntl
 export class LoginForm extends React.Component {
   static propTypes = {
@@ -97,6 +103,10 @@ export class LoginForm extends React.Component {
     dispatch: PropTypes.func.isRequired,
     isDemoInstance: PropTypes.bool,
     initialize: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -188,6 +198,11 @@ export class LoginForm extends React.Component {
     );
   };
 
+  clickEventHandler = () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -234,7 +249,12 @@ export class LoginForm extends React.Component {
               <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
             </Link>
             <div className={cx('login-button-container')}>
-              <BigButton roundedCorners type="submit" color={'organish'}>
+              <BigButton
+                roundedCorners
+                type="submit"
+                color={'organish'}
+                onClick={this.clickEventHandler}
+              >
                 {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
               </BigButton>
             </div>
