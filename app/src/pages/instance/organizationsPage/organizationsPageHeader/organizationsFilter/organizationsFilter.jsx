@@ -160,6 +160,15 @@ export const OrganizationsFilter = ({
     return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
+  const defaultFilterState = {
+    [ORGANIZATION_TYPE_FILTER_NAME]: organizationTypes.map((option) => option.value),
+    [LAST_RUN_DATE_FILTER_NAME]: '',
+    [LAUNCHES_FILTER_NAME]: '',
+    [LAUNCHES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
+    [TEAMMATES_FILTER_NAME]: '',
+    [TEAMMATES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
+  };
+
   const initialFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]:
       entities[ORGANIZATION_TYPE_FILTER_NAME]?.value?.split(',') || [],
@@ -172,6 +181,43 @@ export const OrganizationsFilter = ({
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
   };
 
+  const getClearButtonState = (formValues) => {
+    return (
+      [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+        (prop) => formValues?.[prop] === '',
+      ) && formValues[ORGANIZATION_TYPE_FILTER_NAME].length === 3
+    );
+  };
+
+  const getApplyButtonState = (formValues) => {
+    if (!formValues) {
+      return false;
+    }
+
+    let isApply =
+      [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+        (prop) => formValues[prop] === initialFilterState[prop],
+      ) &&
+      formValues[ORGANIZATION_TYPE_FILTER_NAME].every((type) =>
+        initialFilterState[ORGANIZATION_TYPE_FILTER_NAME].includes(type),
+      ) &&
+      formValues[ORGANIZATION_TYPE_FILTER_NAME].length ===
+        initialFilterState[ORGANIZATION_TYPE_FILTER_NAME].length;
+
+    if (initialFilterState[LAUNCHES_FILTER_NAME] !== '') {
+      isApply =
+        formValues[LAUNCHES_FILTER_NAME_CONDITION] ===
+          initialFilterState[LAUNCHES_FILTER_NAME_CONDITION] && isApply;
+    }
+    if (initialFilterState[TEAMMATES_FILTER_NAME] !== '') {
+      isApply =
+        formValues[TEAMMATES_FILTER_NAME_CONDITION] ===
+          initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
+    }
+
+    return isApply;
+  };
+
   return (
     <FilterButton
       defaultFilters={filters}
@@ -180,7 +226,10 @@ export const OrganizationsFilter = ({
       definedFilters={entities}
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
+      defaultState={defaultFilterState}
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
+      getClearButtonState={getClearButtonState}
+      getApplyButtonState={getApplyButtonState}
       event={eventHandler}
     />
   );

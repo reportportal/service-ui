@@ -137,6 +137,14 @@ export const ProjectsFilter = ({
     return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
+  const defaultFilterState = {
+    [LAST_RUN_DATE_FILTER_NAME]: '',
+    [LAUNCHES_FILTER_NAME]: '',
+    [LAUNCHES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
+    [TEAMMATES_FILTER_NAME]: '',
+    [TEAMMATES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
+  };
+
   const initialFilterState = {
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
@@ -147,6 +155,35 @@ export const ProjectsFilter = ({
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
   };
 
+  const getClearButtonState = (formValues) => {
+    return [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+      (prop) => formValues?.[prop] === '',
+    );
+  };
+
+  const getApplyButtonState = (formValues) => {
+    if (!formValues) {
+      return false;
+    }
+
+    let isApply = [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+      (prop) => formValues[prop] === initialFilterState[prop],
+    );
+
+    if (initialFilterState[LAUNCHES_FILTER_NAME] !== '') {
+      isApply =
+        formValues[LAUNCHES_FILTER_NAME_CONDITION] ===
+          initialFilterState[LAUNCHES_FILTER_NAME_CONDITION] && isApply;
+    }
+    if (initialFilterState[TEAMMATES_FILTER_NAME] !== '') {
+      isApply =
+        formValues[TEAMMATES_FILTER_NAME_CONDITION] ===
+          initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
+    }
+
+    return isApply;
+  };
+
   return (
     <FilterButton
       defaultFilters={filters}
@@ -155,7 +192,10 @@ export const ProjectsFilter = ({
       definedFilters={entities}
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
+      defaultState={defaultFilterState}
       filteredAction={() => dispatch(fetchFilteredProjectAction())}
+      getClearButtonState={getClearButtonState}
+      getApplyButtonState={getApplyButtonState}
       event={eventHandler}
     />
   );

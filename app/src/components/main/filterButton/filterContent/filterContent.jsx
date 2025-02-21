@@ -15,13 +15,14 @@
  */
 
 import classNames from 'classnames/bind';
-import { reduxForm } from 'redux-form';
+import { getFormValues, reduxForm } from 'redux-form';
+import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterInput } from './filterInput/filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
@@ -35,21 +36,30 @@ export const FilterContentWrapped = ({
   defaultFilters,
   filteredAction,
   initialState,
+  defaultState,
   initialize,
   change,
-  pristine,
-  reset,
-  submitting,
   handleSubmit,
+  getClearButtonState,
+  getApplyButtonState,
   event,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const isDisabled = pristine || submitting;
+  const formValues = useSelector((state) => getFormValues('filter')(state));
+  const [isClear, setIsClear] = useState(true);
+  const [isApply, setIsApply] = useState(true);
 
   useEffect(() => {
     initialize(initialState);
   }, []);
+
+  const clearAll = () => initialize(defaultState);
+
+  useEffect(() => {
+    setIsClear(getClearButtonState(formValues));
+    setIsApply(getApplyButtonState(formValues));
+  }, [formValues]);
 
   const closePopover = () => {
     setIsOpen(false);
@@ -91,8 +101,8 @@ export const FilterContentWrapped = ({
           <Button
             className={cx('clear-all')}
             variant={'text'}
-            onClick={reset}
-            disabled={isDisabled}
+            onClick={clearAll}
+            disabled={isClear}
           >
             {formatMessage(messages.clearAllFilters)}
           </Button>
@@ -100,7 +110,7 @@ export const FilterContentWrapped = ({
             <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
               {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
             </Button>
-            <Button className={cx('apply')} type="submit" disabled={isDisabled}>
+            <Button className={cx('apply')} type="submit" disabled={isApply}>
               {formatMessage(COMMON_LOCALE_KEYS.APPLY)}
             </Button>
           </div>
@@ -116,13 +126,13 @@ FilterContentWrapped.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   defaultFilters: PropTypes.object.isRequired,
   initialState: PropTypes.object.isRequired,
+  defaultState: PropTypes.object.isRequired,
   filteredAction: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
-  pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired,
-  reset: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  getClearButtonState: PropTypes.func.isRequired,
+  getApplyButtonState: PropTypes.func.isRequired,
   event: PropTypes.func,
 };
 
