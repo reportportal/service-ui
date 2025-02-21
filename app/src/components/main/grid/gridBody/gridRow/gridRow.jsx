@@ -318,7 +318,6 @@ export class GridRow extends Component {
                   this.getHighlightBlockClasses(),
                 )}
               >
-                <div>!!!</div>
                 <div
                   className={cx('accordion-toggler', { rotated: this.state.expanded })}
                   onClick={this.toggleAccordion}
