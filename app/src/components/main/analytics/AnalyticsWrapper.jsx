@@ -23,8 +23,6 @@ import GA4 from 'react-ga4';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { assignedProjectsSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
 import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
@@ -32,13 +30,12 @@ export const analyticsEventObserver = ReactObserver();
 @connect((state) => ({
   baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
-  entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
     queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
   },
-  dispatch: ({ baseEventParameters, gaMeasurementId, entryType, ...data }) => {
+  dispatch: ({ baseEventParameters, gaMeasurementId, ...data }) => {
     const {
       instanceId,
       buildVersion,
@@ -59,7 +56,6 @@ export const analyticsEventObserver = ReactObserver();
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
         uid: `${userId}|${instanceId}`,
-        kind: entryType || 'not_set',
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
