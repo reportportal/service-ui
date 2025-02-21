@@ -177,7 +177,7 @@ export class GridRow extends Component {
       return;
     }
 
-    if (!this.state.expanded) {
+    if (!this.state.expanded && this.props.eventsInfo.clickOnExpandAccordion) {
       this.props.tracking.trackEvent(this.props.eventsInfo.clickOnExpandAccordion);
     }
 
@@ -318,6 +318,7 @@ export class GridRow extends Component {
                   this.getHighlightBlockClasses(),
                 )}
               >
+                <div>!!!</div>
                 <div
                   className={cx('accordion-toggler', { rotated: this.state.expanded })}
                   onClick={this.toggleAccordion}
