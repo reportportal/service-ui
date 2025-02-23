@@ -28,7 +28,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { LOGIN, LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
