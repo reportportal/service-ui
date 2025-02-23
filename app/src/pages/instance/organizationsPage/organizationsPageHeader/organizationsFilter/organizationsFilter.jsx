@@ -161,7 +161,7 @@ export const OrganizationsFilter = ({
   };
 
   const defaultFilterState = {
-    [ORGANIZATION_TYPE_FILTER_NAME]: organizationTypes.map((option) => option.value),
+    [ORGANIZATION_TYPE_FILTER_NAME]: [],
     [LAST_RUN_DATE_FILTER_NAME]: '',
     [LAUNCHES_FILTER_NAME]: '',
     [LAUNCHES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
@@ -185,7 +185,7 @@ export const OrganizationsFilter = ({
     return (
       [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
         (prop) => formValues?.[prop] === '',
-      ) && formValues[ORGANIZATION_TYPE_FILTER_NAME].length === 3
+      ) && formValues[ORGANIZATION_TYPE_FILTER_NAME].length === 0
     );
   };
 
