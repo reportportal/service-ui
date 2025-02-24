@@ -29,12 +29,8 @@ export const LOGIN_PAGE_EVENTS = {
         elementName = 'login_with_saml';
         break;
       }
-      case LOGIN: {
-        elementName = LOGIN;
-        break;
-      }
       default: {
-        break;
+        elementName = LOGIN;
       }
     }
 
