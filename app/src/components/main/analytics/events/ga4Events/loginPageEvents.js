@@ -17,26 +17,8 @@ export const LOGIN_PAGE_EVENTS = {
     element_name: 'logo',
     place: 'header',
   },
-  clickOnLoginButton: (authType) => {
-    let elementName = 'login_with_epam';
-
-    switch (authType) {
-      case 'github': {
-        elementName = 'login_with_github';
-        break;
-      }
-      case 'samlProviders': {
-        elementName = 'login_with_saml';
-        break;
-      }
-      default: {
-        elementName = LOGIN;
-      }
-    }
-
-    return {
-      ...getBasicClickEventParameters(LOGIN_PAGE),
-      element_name: elementName,
-    };
-  },
+  clickOnLoginButton: (authType) => ({
+    ...getBasicClickEventParameters(LOGIN_PAGE),
+    element_name: authType === LOGIN ? LOGIN : `login_with_${authType}`,
+  }),
 };
