@@ -22,11 +22,16 @@ import { connect } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
+import track from 'react-tracking';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
+import {
+  LOGIN,
+  LOGIN_PAGE_EVENTS,
+} from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
@@ -85,6 +90,7 @@ const messages = defineMessages({
     password: commonValidators.password(password),
   }),
 })
+@track()
 @injectIntl
 export class LoginForm extends React.Component {
   static propTypes = {
@@ -97,6 +103,10 @@ export class LoginForm extends React.Component {
     dispatch: PropTypes.func.isRequired,
     isDemoInstance: PropTypes.bool,
     initialize: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -188,6 +198,11 @@ export class LoginForm extends React.Component {
     );
   };
 
+  clickEventHandler = () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -234,7 +249,12 @@ export class LoginForm extends React.Component {
               <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
             </Link>
             <div className={cx('login-button-container')}>
-              <BigButton roundedCorners type="submit" color={'organish'}>
+              <BigButton
+                roundedCorners
+                type="submit"
+                color={'organish'}
+                onClick={this.clickEventHandler}
+              >
                 {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
               </BigButton>
             </div>

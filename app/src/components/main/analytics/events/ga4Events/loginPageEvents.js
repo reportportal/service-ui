@@ -1,5 +1,7 @@
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
+export const LOGIN = 'login';
+
 const LOGIN_PAGE = 'login_page';
 
 export const LOGIN_PAGE_EVENTS = {
@@ -15,4 +17,8 @@ export const LOGIN_PAGE_EVENTS = {
     element_name: 'logo',
     place: 'header',
   },
+  clickOnLoginButton: (authType) => ({
+    ...getBasicClickEventParameters(LOGIN_PAGE),
+    element_name: authType === LOGIN ? LOGIN : `login_with_${authType}`,
+  }),
 };
