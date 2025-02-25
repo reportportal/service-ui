@@ -18,7 +18,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
@@ -31,6 +30,11 @@ module.exports = {
     path: path.resolve(__dirname, '../build'),
     filename: '[name].app.[hash:6].js',
     publicPath: '',
+    clean: {
+      keep: (asset) => {
+        return asset.includes('localization/messages');
+      },
+    },
   },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
@@ -120,9 +124,6 @@ module.exports = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
-    }),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../sl_instrumented/index.tpl.html'),
