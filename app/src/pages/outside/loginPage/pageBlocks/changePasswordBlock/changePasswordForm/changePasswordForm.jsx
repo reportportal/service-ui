@@ -59,7 +59,8 @@ const notifications = defineMessages({
 const hints = defineMessages({
   passwordHint: {
     id: 'ChangePasswordForm.passwordConstraints',
-    defaultMessage: 'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+    defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
   },
 });
 
