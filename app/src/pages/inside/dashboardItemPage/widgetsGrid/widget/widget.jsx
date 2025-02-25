@@ -24,7 +24,7 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -162,7 +162,7 @@ export class SimpleWidget extends Component {
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
     const { widget, queryParameters, userSettings } = this.state;
-
+    const isTestCaseSearch = widgetType === TEST_CASE_SEARCH;
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
@@ -175,7 +175,11 @@ export class SimpleWidget extends Component {
       );
     }
 
-    if (!isWidgetDataAvailable(widget) && (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)) {
+    if (
+      !isTestCaseSearch &&
+      !isWidgetDataAvailable(widget) &&
+      (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)
+    ) {
       return <NoDataAvailable />;
     }
 

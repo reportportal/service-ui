@@ -38,6 +38,7 @@ import {
   COMPONENT_HEALTH_CHECK,
   COMPONENT_HEALTH_CHECK_TABLE,
   MOST_TIME_CONSUMING,
+  TEST_CASE_SEARCH,
   /*
   PRODUCT_STATUS,
   */
@@ -90,6 +91,7 @@ import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inli
 import COMPONENT_HEALTH_CHECK_PREVIEW from './img/wdgt-component-health-check-inline.svg';
 import COMPONENT_HEALTH_CHECK_TABLE_PREVIEW from './img/wdgt-component-health-check-table-view-inline.svg';
 import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
+import TEST_CASE_SEARCH_PREVIEW from './img/wdgt-test-case-search-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 */
@@ -388,6 +390,19 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
     controls: MostTimeConsumingTestCasesControls,
+  },
+  {
+    id: TEST_CASE_SEARCH,
+    title: formatMessage(widgetTypesMessages[TEST_CASE_SEARCH]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.testCaseSearchTable'}
+        defaultMessage={
+          'Allows to find test case by name and/or attribute through out all launches executions.'
+        }
+      />
+    ),
+    preview: Parser(TEST_CASE_SEARCH_PREVIEW),
   },
   /*
   {
