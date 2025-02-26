@@ -87,7 +87,7 @@ const messages = defineMessages({
   form: 'loginPage',
   validate: ({ login, password }) => ({
     login: commonValidators.login(login),
-    password: commonValidators.password(password),
+    password: commonValidators.oldPassword(password),
   }),
 })
 @track()
