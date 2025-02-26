@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
-import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import Parser from 'html-react-parser';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
+import { injectIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { copyDashboardConfigAction } from 'controllers/dashboard';
 import styles from './dashboardTable.scss';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
 export const NameColumn = track()(
-  ({ value, customProps: { projectId }, className, tracking: { trackEvent } }) => {
+  ({ value, customProps: { getLink }, className, tracking: { trackEvent } }) => {
     const { id: dashboardId, name } = value;
     return (
       <NavLink
         className={cx(className, 'name')}
-        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
+        to={getLink(dashboardId)}
         onClick={() => {
           trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
         }}
@@ -77,6 +82,85 @@ OwnerColumn.defaultProps = {
   className: '',
 };
 
+export const DuplicateColumn = track()(
+  injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
+    const [opened, setOpened] = useState(false);
+    const dropdownRef = useRef(null);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      if (opened) {
+        const handleOutsideClick = (e) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setOpened(false);
+          }
+        };
+
+        document.addEventListener('click', handleOutsideClick);
+        return () => document.removeEventListener('click', handleOutsideClick);
+      }
+      return () => {};
+    }, [opened]);
+
+    const handleClick = () => {
+      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
+      setOpened(!opened);
+    };
+
+    const handleDuplicate = (e) => {
+      e.stopPropagation();
+      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('duplicate'));
+      customProps.onDuplicate(value);
+      setOpened(false);
+    };
+
+    const handleCopyConfig = (e) => {
+      e.stopPropagation();
+      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
+      dispatch(copyDashboardConfigAction(value));
+      setOpened(false);
+    };
+
+    return (
+      <div className={cx(className, 'icon-cell', 'with-button')}>
+        <div className={cx('icon-holder', 'no-border')}>
+          <button
+            ref={dropdownRef}
+            type="button"
+            className={cx('duplicate-dropdown')}
+            onClick={handleClick}
+          >
+            <div className={cx('duplicate-icon')}>{Parser(IconDuplicate)}</div>
+            <i className={cx('arrow', { opened })} />
+            {opened && (
+              <div className={cx('duplicate-menu', 'shown')}>
+                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
+                  {intl.formatMessage(messages.duplicate)}
+                </button>
+                <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                  {intl.formatMessage(messages.copyConfig)}
+                </button>
+              </div>
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  }),
+);
+
+DuplicateColumn.propTypes = {
+  value: PropTypes.object,
+  customProps: PropTypes.object,
+  className: PropTypes.string,
+};
+
+DuplicateColumn.defaultProps = {
+  value: {},
+  customProps: {},
+  className: '',
+};
+
 export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
   const { onEdit } = customProps;
   const { id } = value;
@@ -87,8 +171,10 @@ export const EditColumn = track()(({ value, customProps, className, tracking: { 
   };
 
   return (
-    <div className={cx(className, 'icon-cell', 'with-button')}>
-      <Icon type="icon-pencil" onClick={editItemHandler} />
+    <div className={cx(className, 'icon-cell', 'with-button', 'edit-cell')}>
+      <div className={cx('icon-holder')}>
+        <Icon type="icon-pencil" onClick={editItemHandler} />
+      </div>
     </div>
   );
 });
@@ -112,7 +198,7 @@ export const DeleteColumn = track()(
     };
 
     return (
-      <div className={cx(className, 'icon-cell', 'with-button')}>
+      <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
         <div className={cx('icon-holder')}>
           <Icon type="icon-delete" onClick={deleteItemHandler} />
         </div>

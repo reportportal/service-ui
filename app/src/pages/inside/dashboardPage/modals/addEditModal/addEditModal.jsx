@@ -21,6 +21,7 @@ import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -28,9 +29,15 @@ import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { NOTIFICATION_TYPES } from 'controllers/notification';
+import PasteIcon from 'common/img/paste-configuration-inline.svg';
+import StorageIcon from 'common/img/storage-message-inline.svg';
+import RemovePastedIcon from 'common/img/remove-pasted-inline.svg';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
+
 const messages = defineMessages({
   dashboardNamePlaceholder: {
     id: 'DashboardForm.dashboardNamePlaceholder',
@@ -68,6 +75,51 @@ const messages = defineMessages({
     id: 'DashboardForm.modalCancelButtonText',
     defaultMessage: 'Cancel',
   },
+  duplicateModalTitle: {
+    id: 'DashboardForm.duplicateModalTitle',
+    defaultMessage: 'Duplicate Dashboard',
+  },
+  duplicateModalSubmitButtonText: {
+    id: 'DashboardForm.duplicateModalSubmitButtonText',
+    defaultMessage: 'Duplicate',
+  },
+  configurationTitle: {
+    id: 'DashboardForm.configurationTitle',
+    defaultMessage: 'Configuration',
+  },
+  pasteConfiguration: {
+    id: 'DashboardForm.pasteConfiguration',
+    defaultMessage: 'Paste configuration',
+  },
+  pasteConfigHint: {
+    id: 'DashboardForm.pasteConfigHint',
+    defaultMessage:
+      'Paste from the clipboard to quickly create a dashboard with pre-configured widgets. Filters specified in the configuration will be created in the project.',
+  },
+  showDashboardConfiguration: {
+    id: 'DashboardForm.showDashboardConfiguration',
+    defaultMessage: 'Show dashboard configuration',
+  },
+  configurationPasted: {
+    id: 'DashboardForm.configurationPasted',
+    defaultMessage: 'Dashboard configuration pasted',
+  },
+  canAdjustNameDesc: {
+    id: 'DashboardForm.canAdjustNameDesc',
+    defaultMessage: 'Name and description can still be adjusted.',
+  },
+  removeConfiguration: {
+    id: 'DashboardForm.removeConfiguration',
+    defaultMessage: 'Remove configuration',
+  },
+  removeConfigurationHint: {
+    id: 'DashboardForm.removeConfigurationHint',
+    defaultMessage: 'You can remove the pasted dashboard configuration.',
+  },
+  invalidConfig: {
+    id: 'DashboardForm.invalidConfig',
+    defaultMessage: "Dashboard can't be created. Please check the pasted configuration.",
+  },
 });
 
 const LABEL_WIDTH = 90;
@@ -92,12 +144,12 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
 })
 export class AddEditModal extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       dashboardItem: PropTypes.object,
       onSubmit: PropTypes.func,
       type: PropTypes.string,
     }),
-    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,
@@ -105,6 +157,7 @@ export class AddEditModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -115,11 +168,141 @@ export class AddEditModal extends Component {
     },
     initialize: () => {},
     handleSubmit: () => {},
+    showNotification: () => {},
   };
+
+  state = {
+    showConfig: false,
+    pastedConfig: null,
+    isSubmitting: false,
+  };
+
+  tracking = this.props.tracking;
 
   componentDidMount() {
     this.props.initialize(this.props.data.dashboardItem);
   }
+
+  handleShowDashboardConfig = () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
+    this.setState({ showConfig: true });
+  };
+
+  handlePasteConfiguration = async () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      if (!clipboardText.trim()) {
+        this.props.showNotification({
+          message: this.props.intl.formatMessage(messages.invalidConfig),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+        return;
+      }
+
+      this.setState({
+        pastedConfig: clipboardText,
+      });
+    } catch (error) {
+      this.props.showNotification({
+        message: this.props.intl.formatMessage(messages.invalidConfig),
+        type: NOTIFICATION_TYPES.ERROR,
+      });
+    }
+  };
+
+  handleRemoveConfiguration = () => {
+    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
+    this.setState({
+      pastedConfig: null,
+      isSubmitting: false,
+    });
+  };
+
+  handleTrackSuccess = (dashboardId, isChangedDescription) => {
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'successfully_created',
+      ),
+    );
+  };
+
+  handleTrackError = (dashboardId, isChangedDescription) => {
+    this.setState({ isSubmitting: false });
+    this.tracking.trackEvent(
+      DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+        dashboardId,
+        isChangedDescription,
+        'cannot_be_created',
+      ),
+    );
+  };
+
+  getTrackingEvent = (dashboardId, isChangedDescription) => {
+    const { type } = this.props.data;
+
+    switch (type) {
+      case 'edit':
+        return DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      case 'duplicate':
+        return DASHBOARD_EVENTS.clickOnBtnInModalDuplicateDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
+      default:
+        return this.pastedConfig
+          ? null
+          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+              dashboardId,
+              isChangedDescription,
+              'standard',
+            );
+    }
+  };
+
+  submitFormAndCloseModal = (closeModal) => (formData) => {
+    const {
+      data: { dashboardItem, type, onSubmit },
+      dirty,
+    } = this.props;
+
+    const { pastedConfig } = this.state;
+
+    if (type === 'duplicate' || dirty) {
+      const dashboardId = dashboardItem?.id;
+      const isChangedDescription =
+        formData.description !== this.props.data.dashboardItem?.description;
+
+      if (!pastedConfig) {
+        this.tracking.trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
+        onSubmit(formData);
+        closeModal();
+      } else {
+        if (this.state.isSubmitting) {
+          return;
+        }
+        this.setState({ isSubmitting: true });
+
+        onSubmit(
+          {
+            name: formData.name,
+            description: formData.description,
+            config: pastedConfig,
+            onSuccess: () => this.handleTrackSuccess(dashboardId, isChangedDescription),
+            onError: () => this.handleTrackError(dashboardId, isChangedDescription),
+          },
+          true,
+        );
+      }
+    } else {
+      closeModal();
+    }
+  };
 
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
@@ -130,41 +313,35 @@ export class AddEditModal extends Component {
     };
   };
 
-  submitFormAndCloseModal = (closeModal) => (item) => {
-    const {
-      tracking: { trackEvent },
-      data: { dashboardItem, type },
-      dirty,
-    } = this.props;
+  getModalTexts() {
+    const { type } = this.props.data;
+    const { intl } = this.props;
 
-    const dashboardId = dashboardItem?.id;
-
-    if (dirty) {
-      const isChangedDescription = item.description !== this.props.data.dashboardItem?.description;
-      const dashboardEvent =
-        type === 'edit'
-          ? DASHBOARD_EVENTS.clickOnButtonUpdateInModalEditDashboard(
-              dashboardId,
-              isChangedDescription,
-            )
-          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(dashboardId, isChangedDescription);
-
-      trackEvent(dashboardEvent);
-      this.props.data.onSubmit(item);
+    switch (type) {
+      case 'edit':
+        return {
+          title: intl.formatMessage(messages.editModalTitle),
+          submitText: intl.formatMessage(messages.editModalSubmitButtonText),
+        };
+      case 'duplicate':
+        return {
+          title: intl.formatMessage(messages.duplicateModalTitle),
+          submitText: intl.formatMessage(messages.duplicateModalSubmitButtonText),
+        };
+      default:
+        return {
+          title: intl.formatMessage(messages.addModalTitle),
+          submitText: intl.formatMessage(messages.addModalSubmitButtonText),
+        };
     }
-
-    closeModal();
-  };
+  }
 
   render() {
-    const {
-      intl,
-      handleSubmit,
-      data: { type },
-    } = this.props;
-    const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
-    const title = intl.formatMessage(messages[`${type}ModalTitle`]);
+    const { intl, handleSubmit, data } = this.props;
+    const { showConfig, pastedConfig } = this.state;
+    const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
+    const isAddModal = data.type !== 'edit' && data.type !== 'duplicate';
 
     return (
       <ModalLayout
@@ -179,8 +356,21 @@ export class AddEditModal extends Component {
           text: cancelText,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        renderFooterElements={
+          isAddModal && !showConfig
+            ? () => (
+                <button
+                  className={cx('dashboard-config-button')}
+                  onClick={this.handleShowDashboardConfig}
+                  type="button"
+                >
+                  {intl.formatMessage(messages.showDashboardConfiguration)}
+                </button>
+              )
+            : undefined
+        }
       >
-        <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
+        <form className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
             labelWidth={LABEL_WIDTH}
@@ -206,6 +396,51 @@ export class AddEditModal extends Component {
               <InputTextArea />
             </FieldProvider>
           </ModalField>
+
+          {showConfig && isAddModal && (
+            <ModalField
+              label={intl.formatMessage(messages.configurationTitle)}
+              labelWidth={LABEL_WIDTH}
+            >
+              <div className={cx('configuration-content')}>
+                {!pastedConfig ? (
+                  <>
+                    <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
+                      {intl.formatMessage(messages.pasteConfiguration)}
+                    </GhostButton>
+                    <div className={cx('configuration-hint')}>
+                      {intl.formatMessage(messages.pasteConfigHint)}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={cx('configuration-pasted')}>
+                      <span className={cx('pasted-icon')}>{Parser(StorageIcon)}</span>
+                      <span className={cx('pasted-text')}>
+                        {intl.formatMessage(messages.configurationPasted)}
+                      </span>
+                    </div>
+                    <div className={cx('configuration-hint')}>
+                      {intl.formatMessage(messages.canAdjustNameDesc)}
+                    </div>
+                    <div className={cx('remove-configuration')}>
+                      <GhostButton
+                        icon={RemovePastedIcon}
+                        onClick={this.handleRemoveConfiguration}
+                        className={cx('remove-button')}
+                        color="red"
+                      >
+                        {intl.formatMessage(messages.removeConfiguration)}
+                      </GhostButton>
+                      <div className={cx('configuration-hint')}>
+                        {intl.formatMessage(messages.removeConfigurationHint)}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </ModalField>
+          )}
         </form>
       </ModalLayout>
     );

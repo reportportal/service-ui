@@ -24,6 +24,9 @@ export {
   updateDashboardWidgetsAction,
   toggleFullScreenModeAction,
   changeFullScreenModeAction,
+  duplicateDashboardAction,
+  duplicateDashboardSuccessAction,
+  copyDashboardConfigAction,
 } from './actionCreators';
 export { dashboardReducer } from './reducer';
 export {
@@ -34,6 +37,8 @@ export {
   loadingSelector,
   totalDashboardsSelector,
   dashboardPaginationSelector,
+  querySelector,
+  getDashboardItemPageLinkSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,
