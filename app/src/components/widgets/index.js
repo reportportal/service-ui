@@ -49,6 +49,7 @@ import {
   MostPopularPatterns,
   ComponentHealthCheck,
   ComponentHealthCheckTable,
+  TestCaseSearch,
 } from './multiLevelWidgets';
 
 const CHARTS = {
@@ -75,6 +76,7 @@ const CHARTS = {
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
   [widgetTypes.MOST_TIME_CONSUMING]: MostTimeConsumingTestCases,
   [widgetTypes.COMPONENT_HEALTH_CHECK_TABLE]: ComponentHealthCheckTable,
+  [widgetTypes.TEST_CASE_SEARCH]: TestCaseSearch,
 };
 
 const MULTI_LEVEL_WIDGETS_MAP = {
@@ -97,4 +99,15 @@ const MATERIALIZED_VIEW_WIDGETS = [
   widgetTypes.COMPONENT_HEALTH_CHECK_TABLE,
 ];
 
-export { CHARTS, MULTI_LEVEL_WIDGETS_MAP, MATERIALIZED_VIEW_WIDGETS, NoDataAvailable };
+const WIDGETS_WITH_INTERNAL_EMPTY_STATE = [
+  ...Object.keys(MULTI_LEVEL_WIDGETS_MAP),
+  widgetTypes.TEST_CASE_SEARCH,
+];
+
+export {
+  CHARTS,
+  MULTI_LEVEL_WIDGETS_MAP,
+  WIDGETS_WITH_INTERNAL_EMPTY_STATE,
+  MATERIALIZED_VIEW_WIDGETS,
+  NoDataAvailable,
+};

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-export { CumulativeTrendChart } from './cumulativeTrendChart';
-export { MostPopularPatterns } from './mostPopularPatterns';
-export { ComponentHealthCheck } from './componentHealthCheck';
-export { ComponentHealthCheckTable } from './componentHealthCheckTable';
-export { TestCaseSearch } from './testCaseSearchTable';
+export { TestCaseSearch } from './testCaseSearch';
