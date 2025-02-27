@@ -78,7 +78,7 @@ export const baseEventParametersShape = PropTypes.shape({
 
 export const getApplyFilterEventParams = (fields, initialState, conditionProp) => {
   const type = Object.keys(fields)
-    .filter((field) => fields[field].value !== initialState[field])
+    .filter((field) => fields[field].value.toString() !== initialState[field].toString())
     .join('#');
 
   const condition =
