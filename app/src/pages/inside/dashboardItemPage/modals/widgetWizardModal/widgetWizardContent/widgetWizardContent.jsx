@@ -122,6 +122,14 @@ export class WidgetWizardContent extends Component {
     }
   }
 
+  getOffsetStep = () => {
+    const activeWidget = this.widgets.find(
+      (widget) => widget.id === this.props.formValues.widgetType,
+    );
+    const skipSecondStep = !activeWidget?.controls;
+    return skipSecondStep ? 2 : 1;
+  };
+
   onClickNextStep = () => {
     const {
       tracking,
@@ -166,11 +174,8 @@ export class WidgetWizardContent extends Component {
   };
 
   onClickPrevStep = () => {
-    const activeWidget = this.widgets.find(
-      (widget) => widget.id === this.props.formValues.widgetType,
-    );
-    const skipSecondStep = !activeWidget?.controls;
-    this.setState({ step: this.state.step - (skipSecondStep ? 2 : 1) });
+    const offsetStep = this.getOffsetStep();
+    this.setState({ step: this.state.step - offsetStep });
     this.props.tracking.trackEvent(this.props.eventsInfo.prevStep);
   };
 
@@ -251,11 +256,8 @@ export class WidgetWizardContent extends Component {
   };
 
   nextStep = () => {
-    const activeWidget = this.widgets.find(
-      (widget) => widget.id === this.props.formValues.widgetType,
-    );
-    const skipSecondStep = !activeWidget.controls;
-    this.setState({ step: this.state.step + (skipSecondStep ? 2 : 1) });
+    const offsetStep = this.getOffsetStep();
+    this.setState({ step: this.state.step + offsetStep });
   };
 
   render() {

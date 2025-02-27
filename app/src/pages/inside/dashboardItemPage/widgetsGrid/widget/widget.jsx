@@ -24,7 +24,7 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -32,7 +32,12 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
+import {
+  CHARTS,
+  MULTI_LEVEL_WIDGETS_MAP,
+  NoDataAvailable,
+  WIDGETS_WITH_INTERNAL_EMPTY_STATE,
+} from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
@@ -162,7 +167,6 @@ export class SimpleWidget extends Component {
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
     const { widget, queryParameters, userSettings } = this.state;
-    const isTestCaseSearch = widgetType === TEST_CASE_SEARCH;
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
@@ -176,9 +180,8 @@ export class SimpleWidget extends Component {
     }
 
     if (
-      !isTestCaseSearch &&
       !isWidgetDataAvailable(widget) &&
-      (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)
+      (!WIDGETS_WITH_INTERNAL_EMPTY_STATE.includes(widgetType) || !widget.id)
     ) {
       return <NoDataAvailable />;
     }
