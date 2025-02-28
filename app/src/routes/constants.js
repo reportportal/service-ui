@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
+import { ProductVersionsPage } from 'pages/inside/productVersionsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -55,7 +56,8 @@ import {
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATION_USERS_PAGE,
-} from 'controllers/pages';
+  PRODUCT_VERSIONS_PAGE,
+} from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
@@ -165,6 +167,11 @@ export const pageRendering = {
   },
   [PROJECT_PLUGIN_PAGE]: {
     component: ProjectUiExtensionPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSIONS_PAGE]: {
+    component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
   },

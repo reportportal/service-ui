@@ -34,21 +34,24 @@ import {
   INTEGRATIONS,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
+  ENVIRONMENTS,
+  TEST_DATA,
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
-import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
-import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
 import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
-import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
-import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
+import { Integrations } from './content/integrations';
+import { DefectTypes } from './content/defectTypes';
+import { DemoDataTab } from './content/demoDataContent';
+import { Navigation } from './navigation';
+import { Header } from './header';
+import { PatternAnalysis } from './content/patternAnalysis';
+import { Notifications } from './content/notifications';
 import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
+import { TestData, Environments } from './content/testLibrary';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
 import { ProjectSettingsAnalyticsWrapper } from './projectSettingsAnalyticsWrapper';
@@ -158,6 +161,18 @@ export const ProjectSettingsPageContainer = () => {
         link: createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
+        mobileDisabled: true,
+      },
+      [ENVIRONMENTS]: {
+        name: formatMessage(messages.environments),
+        link: createTabLink(ENVIRONMENTS),
+        component: <Environments />,
+        mobileDisabled: true,
+      },
+      [TEST_DATA]: {
+        name: formatMessage(messages.testData),
+        link: createTabLink(TEST_DATA),
+        component: <TestData />,
         mobileDisabled: true,
       },
     };

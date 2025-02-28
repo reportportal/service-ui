@@ -33,6 +33,7 @@ import {
   PROJECT_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
+  PRODUCT_VERSIONS_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -46,6 +47,7 @@ import LaunchesIcon from 'common/img/sidebar/launches-icon-inline.svg';
 import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
+import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -123,16 +125,28 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       });
     }
 
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
-      link: {
-        type: PROJECT_SETTINGS_PAGE,
-        payload: { organizationSlug, projectSlug },
+    sidebarItems.push(
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_SETTINGS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: SettingsIcon,
+        message: formatMessage(messages.projectsSettings),
       },
-      icon: SettingsIcon,
-      message: formatMessage(messages.projectsSettings),
-    });
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.productVersions.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PRODUCT_VERSIONS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: ProductVersionsIcon,
+        message: formatMessage(messages.productVersions),
+      },
+    );
     projectPageExtensions.forEach(({ icon, internalRoute, name, title }) => {
       if (icon) {
         sidebarItems.push({

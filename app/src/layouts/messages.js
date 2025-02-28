@@ -53,6 +53,10 @@ export const messages = defineMessages({
     id: 'Sidebar.dashboardsBtn',
     defaultMessage: 'Project Dashboards',
   },
+  productVersions: {
+    id: 'Sidebar.productVersions',
+    defaultMessage: 'Product Versions',
+  },
   organizations: {
     id: 'InstanceSidebar.organizations',
     defaultMessage: 'Organizations',

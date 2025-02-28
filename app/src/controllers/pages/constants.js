@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ export const PLUGINS_PAGE = 'PLUGINS_PAGE';
 export const PLUGINS_TAB_PAGE = 'PLUGINS_TAB_PAGE';
 export const PLUGIN_UI_EXTENSION_ADMIN_PAGE = 'PLUGIN_UI_EXTENSION_ADMIN_PAGE';
 // inside
+export const PRODUCT_VERSIONS_PAGE = 'PRODUCT_VERSIONS_PAGE';
 export const API_PAGE_INSTANCE_LEVEL = 'API_PAGE_INSTANCE_LEVEL';
 export const API_PAGE_ORGANIZATION_LEVEL = 'API_PAGE_ORGANIZATION_LEVEL';
 export const API_PAGE_PROJECT_LEVEL = 'API_PAGE_PROJECT_LEVEL';
@@ -112,6 +113,7 @@ export const pageNames = {
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_PLUGIN_PAGE,
+  PRODUCT_VERSIONS_PAGE,
 };
 
 export const adminPageNames = {

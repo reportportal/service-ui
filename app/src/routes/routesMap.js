@@ -65,6 +65,7 @@ import {
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
+  PRODUCT_VERSIONS_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -330,6 +331,8 @@ const routesMap = {
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
+  [PRODUCT_VERSIONS_PAGE]:
+    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage*',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

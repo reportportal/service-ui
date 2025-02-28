@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-export const GENERAL = 'general';
-export const NOTIFICATIONS = 'notifications';
-export const INTEGRATIONS = 'integrations';
-export const DEFECT = 'defect';
-export const ANALYSIS = 'analyzer';
-export const DEMO_DATA = 'demoData';
-export const AUTHORIZATION_CONFIGURATION = 'auth';
-export const ANALYTICS = 'analytics';
-export const PATTERN_ANALYSIS = 'patternAnalysis';
-export const ENVIRONMENTS = 'environments';
-export const TEST_DATA = 'testData';
+import classNames from 'classnames/bind';
+import React from 'react';
+import { SettingsPageContent } from '../../settingsPageContent';
+import styles from './environments.scss';
+
+const cx = classNames.bind(styles);
+
+export const Environments = () => {
+  return (
+    <SettingsPageContent>
+      <div className={cx('environments')}>Environments</div>
+    </SettingsPageContent>
+  );
+};
