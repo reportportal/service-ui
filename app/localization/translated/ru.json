@@ -2256,6 +2256,7 @@
   "usersGrid.accountTypeInternal": "Внутренний",
   "usersGrid.accountTypeLdap": "Ldap",
   "usersGrid.accountTypeSaml": "Saml",
+  "usersGrid.accountTypeScim": "SCIM",
   "usersGrid.accountTypeUpsa": "UPSA",
   "usersGrid.contains": "Содержит",
   "usersGrid.email": "Эл. почта",

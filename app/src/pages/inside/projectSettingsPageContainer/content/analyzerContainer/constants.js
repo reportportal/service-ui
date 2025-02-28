@@ -15,7 +15,7 @@
  */
 
 export const INDEX_SETTINGS = 'indexSettings';
-export const AUTO_ANALYSIS = 'analysis';
+export const AUTO_ANALYSIS = 'autoAnalysis';
 export const SIMILAR_ITEMS = 'similarItems';
 export const UNIQUE_ERRORS = 'uniqueErrors';
 export const INDEXING_RUNNING = 'indexingRunning';

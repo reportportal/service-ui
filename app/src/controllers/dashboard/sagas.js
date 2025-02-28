@@ -226,6 +226,7 @@ function* copyDashboardConfig({ payload: dashboard }) {
     yield put(showDefaultErrorNotification(error));
   }
 }
+
 function* updateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
   const { name, description, id } = dashboard;
