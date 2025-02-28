@@ -30,6 +30,7 @@ const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
+const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
@@ -44,10 +45,8 @@ export const URLS = {
   dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
   dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
-  widget: (projectKey, widgetId = '') => {
-    const widgetIdPart = widgetId ? `/${widgetId}` : '';
-    return `${urlBase}${projectKey}/widget${widgetIdPart}`;
-  },
+  widget: (projectKey, widgetId = '') =>
+    removeTrailingSlash(`${urlBase}${projectKey}/widget/${widgetId}`),
   widgetMultilevel: (projectKey, widgetId, params) =>
     `${urlBase}${projectKey}/widget/multilevel/${widgetId}${getQueryParams({
       ...params,
@@ -55,7 +54,7 @@ export const URLS = {
   widgetPreview: (projectKey) => `${urlBase}${projectKey}/widget/preview`,
 
   dashboardWidget: (projectKey, dashboardId, widgetId) =>
-    `${urlBase}${projectKey}/dashboard/${dashboardId}/${widgetId}`,
+    removeTrailingSlash(`${urlBase}${projectKey}/dashboard/${dashboardId}/${widgetId}`),
 
   addDashboardWidget: (projectKey, dashboardId) =>
     `${urlBase}${projectKey}/dashboard/${dashboardId}/add`,
@@ -63,10 +62,7 @@ export const URLS = {
   projectWidget: (projectKey, widgetId = '', interval = '') =>
     `${urlBase}project/${projectKey}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  filter: (projectKey, id = '') => {
-    const filterId = id ? `/${id}` : '';
-    return `${urlBase}${projectKey}/filter${filterId}`;
-  },
+  filter: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/filter/${id}`),
   filters: (projectKey) => `${urlBase}${projectKey}/filter`,
   filtersSearch: (projectKey) =>
     `${urlBase}${projectKey}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
@@ -76,7 +72,7 @@ export const URLS = {
 
   debug: (projectKey) => `${urlBase}${projectKey}/launch/mode`,
 
-  launch: (projectKey, id) => `${urlBase}${projectKey}/launch/${id}`,
+  launch: (projectKey, id) => removeTrailingSlash(`${urlBase}${projectKey}/launch/${id}`),
   launchStatus: (projectKey, ids) => `${urlBase}${projectKey}/launch/status?ids=${ids}`,
   launchByIds: (projectKey, ids) => `${urlBase}${projectKey}/launch?filter.in.id=${ids}`,
   launchAttributeKeysSearch: (projectKey) => (searchTerm = '') =>
@@ -150,10 +146,11 @@ export const URLS = {
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
   projectDefectType: (projectKey) => `${urlBase}${projectKey}/settings/sub-type`,
-  projectDeleteDefectType: (projectKey, id) => `${urlBase}${projectKey}/settings/sub-type/${id}`,
+  projectDeleteDefectType: (projectKey, id) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/settings/sub-type/${id}`),
   projects: () => `${urlBase}project/list`,
   projectPreferences: (projectKey, filterId = '') =>
-    `${urlBase}project/${projectKey}/preference/${filterId}`,
+    removeTrailingSlash(`${urlBase}project/${projectKey}/preference/${filterId}`),
   projectUsers: (projectKey) => `${urlBase}project/${projectKey}/users`,
   projectUserSearchUser: (projectKey) => (searchTerm) =>
     `${urlBase}project/${projectKey}/usernames/search${getQueryParams({
@@ -186,26 +183,17 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  suite: (projectKey, suiteId) => {
-    const id = suiteId ? `/${suiteId}` : '';
-    return `${urlBase}${projectKey}/item${id}`;
-  },
+  suite: (projectKey, suiteId) => removeTrailingSlash(`${urlBase}${projectKey}/item/${suiteId}`),
 
   notification: (projectKey) => `${urlBase}${projectKey}/settings/notification`,
   notificationById: (projectKey, notificationId) =>
     `${urlBase}${projectKey}/settings/notification/${notificationId}`,
 
-  testItems: (projectKey, ids) => {
-    const queryParams = getQueryParams({ ids });
-    const querySuffix = queryParams ? `/${queryParams}` : '';
-    return `${urlBase}${projectKey}/item${querySuffix}`;
-  },
+  testItems: (projectKey, ids) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (projectKey, ids) =>
     `${urlBase}${projectKey}/item/v2${getQueryParams({ ids })}`,
-  testItem: (projectKey, id = '') => {
-    const itemId = id ? `/${id}` : '';
-    return `${urlBase}${projectKey}/item${itemId}`;
-  },
+  testItem: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/item/${id}`),
   testItemStatistics: (projectKey) => `${urlBase}${projectKey}/item/statistics`,
   testItemUpdate: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}/update`,
   testItemsHistory: (projectKey, historyDepth, type, id) =>
@@ -252,10 +240,8 @@ export const URLS = {
       'filter.eq.launch': itemId,
       'filter.gte.level': level,
     })}`,
-  logItemActivity: (projectKey, itemId) => {
-    const id = itemId ? `/${itemId}` : '';
-    return `${urlBase}${projectKey}/activity/item${id}`;
-  },
+  logItemActivity: (projectKey, itemId) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
   logItemStackTrace: (projectKey, path, pageSize) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,

@@ -50,6 +50,7 @@ import {
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
   DUPLICATE_DASHBOARD,
+  COPY_DASHBOARD_CONFIG,
 } from './constants';
 import { dashboardItemsSelector, querySelector } from './selectors';
 import {
@@ -115,24 +116,70 @@ function* addDashboard({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
   const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const owner = yield select(userIdSelector);
-  const { id } = yield call(fetch, URLS.dashboards(projectKey), {
-    method: 'post',
-    data: dashboard,
-  });
+  const { onSuccess, onError } = dashboard;
+  const isPreconfigured = typeof dashboard.config !== 'undefined';
 
-  yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
-  yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
-  yield put(
-    showNotification({
-      messageId: 'addDashboardSuccess',
-      type: NOTIFICATION_TYPES.SUCCESS,
-    }),
-  );
-  yield put(hideModalAction());
-  yield put({
-    type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectSlug, dashboardId: id, organizationSlug },
-  });
+  try {
+    let response;
+    let parsedConfig = null;
+
+    if (isPreconfigured) {
+      try {
+        parsedConfig = JSON.parse(dashboard.config);
+      } catch (error) {
+        if (onError) {
+          onError();
+        }
+        yield put(
+          showNotification({
+            messageId: 'addPreconfigDashboardError',
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+        return;
+      }
+
+      response = yield call(fetch, URLS.dashboardPreconfigured(projectKey), {
+        method: 'post',
+        data: {
+          name: dashboard.name,
+          description: dashboard.description,
+          config: parsedConfig,
+        },
+      });
+
+      if (onSuccess) {
+        onSuccess();
+      }
+    } else {
+      response = yield call(fetch, URLS.dashboards(projectKey), {
+        method: 'post',
+        data: dashboard,
+      });
+    }
+
+    const { id } = response;
+
+    yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
+    yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
+    yield put(
+      showNotification({
+        messageId: 'addDashboardSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+
+    yield put(hideModalAction());
+    yield put({
+      type: PROJECT_DASHBOARD_ITEM_PAGE,
+      payload: { projectSlug, dashboardId: id, organizationSlug },
+    });
+  } catch (error) {
+    if (isPreconfigured && onError) {
+      onError();
+    }
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* duplicateDashboard({ payload: dashboard }) {
@@ -163,6 +210,21 @@ function* duplicateDashboard({ payload: dashboard }) {
   }
 }
 
+function* copyDashboardConfig({ payload: dashboard }) {
+  const activeProject = yield select(activeProjectSelector);
+  try {
+    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
+    yield call([navigator.clipboard, 'writeText'], JSON.stringify(config));
+    yield put(
+      showNotification({
+        messageId: 'dashboardConfigurationCopied',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
 function* updateDashboard({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
   const { name, description, id } = dashboard;
@@ -238,5 +300,6 @@ export function* dashboardSagas() {
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
+    yield takeEvery(COPY_DASHBOARD_CONFIG, copyDashboardConfig),
   ]);
 }

@@ -25,6 +25,8 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { copyDashboardConfigAction } from 'controllers/dashboard';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -93,6 +95,7 @@ export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
       const handleOutsideClick = (e) => {
@@ -121,7 +124,7 @@ export const DuplicateColumn = track()(
     const handleCopyConfig = (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
-      // TODO: Implement copy configuration functionality
+      dispatch(copyDashboardConfigAction(value));
       setOpened(false);
     };
 

@@ -115,7 +115,6 @@
     "babel-plugin-react-intl": "4.1.20",
     "buffer": "6.0.3",
     "circular-dependency-plugin": "5.2.2",
-    "clean-webpack-plugin": "^4.0.0",
     "compression-webpack-plugin": "^11.1.0",
     "css-hot-loader": "1.4.4",
     "css-loader": "7.1.2",
