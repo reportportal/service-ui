@@ -23,8 +23,8 @@ import GA4 from 'react-ga4';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { assignedProjectsSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+// import { assignedProjectsSelector } from 'controllers/user';
+// import { projectIdSelector } from 'controllers/pages';
 import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
@@ -32,7 +32,7 @@ export const analyticsEventObserver = ReactObserver();
 @connect((state) => ({
   baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
-  entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
+  // entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
