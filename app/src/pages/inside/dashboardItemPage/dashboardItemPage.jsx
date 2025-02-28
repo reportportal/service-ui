@@ -39,6 +39,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
+  pagePropertiesSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -113,6 +114,7 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
+    query: pagePropertiesSelector(state),
   }),
   {
     showModalAction,
@@ -146,11 +148,13 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     activeDashboardId: PropTypes.number,
+    query: PropTypes.object,
   };
 
   static defaultProps = {
     fullScreenMode: false,
     activeDashboardId: undefined,
+    query: {},
   };
 
   onDeleteDashboard = () => {
@@ -206,13 +210,16 @@ export class DashboardItemPage extends Component {
   };
 
   getBreadcrumbs = () => {
-    const { activeProject, intl } = this.props;
+    const { activeProject, query, intl } = this.props;
     return [
       {
         title: intl.formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
           payload: { projectId: activeProject },
+          meta: {
+            query,
+          },
         },
         eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },

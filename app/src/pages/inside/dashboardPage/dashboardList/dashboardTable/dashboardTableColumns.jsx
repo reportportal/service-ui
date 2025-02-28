@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
-import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
@@ -33,12 +32,12 @@ import { messages } from './messages';
 const cx = classNames.bind(styles);
 
 export const NameColumn = track()(
-  ({ value, customProps: { projectId }, className, tracking: { trackEvent } }) => {
+  ({ value, customProps: { getLink }, className, tracking: { trackEvent } }) => {
     const { id: dashboardId, name } = value;
     return (
       <NavLink
         className={cx(className, 'name')}
-        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
+        to={getLink(dashboardId)}
         onClick={() => {
           trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
         }}
@@ -90,18 +89,20 @@ export const DuplicateColumn = track()(
     const dispatch = useDispatch();
 
     useEffect(() => {
-      const handleOutsideClick = (e) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-          setOpened(false);
-        }
-      };
+      if (opened) {
+        const handleOutsideClick = (e) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setOpened(false);
+          }
+        };
 
-      document.addEventListener('click', handleOutsideClick);
-      return () => document.removeEventListener('click', handleOutsideClick);
+        document.addEventListener('click', handleOutsideClick);
+        return () => document.removeEventListener('click', handleOutsideClick);
+      }
+      return () => {};
     }, [opened]);
 
-    const handleClick = (e) => {
-      e.stopPropagation();
+    const handleClick = () => {
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
       setOpened(!opened);
     };
