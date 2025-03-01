@@ -67,7 +67,7 @@
     "react-datepicker": "4.10.0",
     "react-dnd": "16.0.0",
     "react-dnd-html5-backend": "16.0.1",
-    "react-dom": "18.2.0",
+    "react-dom": "18.3.1",
     "react-dropzone": "7.0.1",
     "react-event-observer": "0.5.11",
     "react-ga4": "1.4.1",
