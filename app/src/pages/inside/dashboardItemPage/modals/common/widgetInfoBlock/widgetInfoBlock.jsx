@@ -120,7 +120,7 @@ export class WidgetInfoBlock extends PureComponent {
       intl: { formatMessage },
     } = this.props;
     const { loading, widgetData } = this.state;
-    console.log(activeWidget);
+
     return (
       <div className={cx('edit-widget-info-section')}>
         {activeWidget.id && (
