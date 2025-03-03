@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { MeatballMenuIcon, FilterOutlineIcon, Button, SearchIcon } from '@reportportal/ui-kit';
+import {
+  MeatballMenuIcon,
+  FilterOutlineIcon,
+  Button,
+  SearchIcon,
+  Popover,
+} from '@reportportal/ui-kit';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
+import { showModalAction } from 'controllers/modal';
 import styles from './allUsersHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -42,11 +49,26 @@ const messages = defineMessages({
     id: 'AllUsersPage.invite',
     defaultMessage: 'Invite user',
   },
+  createUser: {
+    id: 'AllUsersPage.createUser',
+    defaultMessage: 'Create user',
+  },
 });
 
 export const AllUsersHeader = ({ onInvite }) => {
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const [isOpen, setIsOpen] = useState(false);
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
+
+  const openCreateUserModal = () => {
+    dispatch(
+      showModalAction({
+        id: 'createUserModal',
+      }),
+    );
+    setIsOpen(false);
+  };
 
   return (
     <div className={cx('all-users-header-container')}>
@@ -63,9 +85,20 @@ export const AllUsersHeader = ({ onInvite }) => {
                 {formatMessage(messages.invite)}
               </Button>
             )}
-            <Button variant="ghost" onClick={() => {}} className={cx('meatball-button')}>
-              <MeatballMenuIcon />
-            </Button>
+            <Popover
+              placement={'bottom-end'}
+              isOpened={isOpen}
+              setIsOpened={setIsOpen}
+              content={
+                <button className={cx('popover-content')} onClick={openCreateUserModal}>
+                  {formatMessage(messages.createUser)}
+                </button>
+              }
+            >
+              <Button variant="ghost" className={cx('meatball-button')}>
+                <MeatballMenuIcon />
+              </Button>
+            </Popover>
           </div>
         </div>
       </div>
