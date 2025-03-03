@@ -23,7 +23,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Popover } from '@reportportal/ui-kit';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import IconTick from 'common/img/newIcons/tick-inline.svg';
-import styles from './clipboardButton.scss';
+import styles from './copyClipboardButton.scss';
 
 const cx = classNames.bind(styles);
 

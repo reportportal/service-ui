@@ -23,7 +23,7 @@ import { getFormValues, reduxForm } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { ClipboardButton } from 'components/buttons/clipboardButton';
+import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { commonValidators } from 'common/utils/validation';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
