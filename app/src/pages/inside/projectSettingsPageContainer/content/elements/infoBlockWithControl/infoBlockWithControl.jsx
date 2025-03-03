@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-.test-data-page {
-  &__datasets-wrapper {
-    display: flex;
-    gap: 24px;
-  }
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import styles from './infoBlockWithControl.scss';
 
-  &__how-to-get-started {
-    margin-top: 96px;
-  }
-}
+const cx = classNames.bind(styles);
 
+export const InfoBlockWithControl = ({ label, control }) => (
+  <div className={cx('info-block-with-control')}>
+    <span className={cx('info-block-with-control__label')}>{label}</span>
+    <div className={cx('info-block-with-control__button')}>{control}</div>
+  </div>
+);
+
+InfoBlockWithControl.propTypes = {
+  label: PropTypes.string.isRequired,
+  control: PropTypes.node,
+};

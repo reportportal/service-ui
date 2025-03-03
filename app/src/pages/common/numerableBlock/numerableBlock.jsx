@@ -15,45 +15,36 @@
  */
 
 import React from 'react';
-import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-
-import { intlMessageType } from 'common/constants/localization';
 
 import styles from './numerableBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const NumerableBlock = ({ title, items, fullWidth = false }) => {
-  const { formatMessage } = useIntl();
-
-  return (
-    <div className={cx('numerable-block')}>
-      <h2 className={cx('numerable-block__title')}>{title}</h2>
-      <div className={cx('numerable-block__list')}>
-        {items.map((message, index) => (
-          <div
-            className={cx('numerable-block__list-item', {
-              'numerable-block__list-item--full-width': fullWidth,
-            })}
-            /* eslint-disable-next-line react/no-array-index-key */
-            key={index}
-          >
-            <div className={cx('numerable-block__list-item-number')}>{index + 1}</div>
-            <div className={cx('numerable-block__list-item-text')}>
-              {Parser(formatMessage(message))}
-            </div>
-          </div>
-        ))}
-      </div>
+export const NumerableBlock = ({ title, items, className, fullWidth = false }) => (
+  <div className={cx('numerable-block', className)}>
+    <h2 className={cx('numerable-block__title')}>{title}</h2>
+    <div className={cx('numerable-block__list')}>
+      {items.map((message, index) => (
+        <div
+          className={cx('numerable-block__list-item', {
+            'numerable-block__list-item--full-width': fullWidth,
+          })}
+          /* eslint-disable-next-line react/no-array-index-key */
+          key={index}
+        >
+          <div className={cx('numerable-block__list-item-number')}>{index + 1}</div>
+          <div className={cx('numerable-block__list-item-text')}>{message}</div>
+        </div>
+      ))}
     </div>
-  );
-};
+  </div>
+);
 
 NumerableBlock.propTypes = {
-  items: PropTypes.arrayOf(intlMessageType),
-  title: PropTypes.string,
+  items: PropTypes.arrayOf(PropTypes.node).isRequired,
+  title: PropTypes.string.isRequired,
+  className: PropTypes.string,
   fullWidth: PropTypes.bool,
 };
