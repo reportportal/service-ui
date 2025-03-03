@@ -14,17 +14,43 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import React from 'react';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { useIntl } from 'react-intl';
+
+import { NumerableBlock } from 'pages/common/numerableBlock';
+
 import { SettingsPageContent } from '../../settingsPageContent';
+import { EmptyStatePage } from '../../emptyStatePage';
+import { messages } from './messages';
+
 import styles from './environments.scss';
 
 const cx = classNames.bind(styles);
 
+const benefits = [
+  messages.emptyPageFirstBenefit,
+  messages.emptyPageSecondBenefit,
+  messages.emptyPageThirdBenefit,
+];
+
 export const Environments = () => {
+  const { formatMessage } = useIntl();
+
   return (
     <SettingsPageContent>
-      <div className={cx('environments')}>Environments</div>
+      <div className={cx('environments')}>
+        <EmptyStatePage
+          title={formatMessage(messages.emptyPageTitle)}
+          description={Parser(formatMessage(messages.emptyPageDescription))}
+          buttonName={formatMessage(messages.emptyPageButtonText)}
+          documentationLink="https://reportportal.io/docs/"
+          imageType="lines"
+          buttonDataAutomationId="createEnvironmentButton"
+        />
+        <NumerableBlock items={benefits} title={formatMessage(messages.numerableBlockTitle)} />
+      </div>
     </SettingsPageContent>
   );
 };
