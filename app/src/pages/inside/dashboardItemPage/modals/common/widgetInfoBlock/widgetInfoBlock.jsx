@@ -68,7 +68,7 @@ export class WidgetInfoBlock extends PureComponent {
     if (
       this.props.customCondition &&
       !isEqual(prevData, newData) &&
-      (filterIds.length || contentParameters.widgetOptions.launchNameFilter) &&
+      (filterIds.length || contentParameters.widgetOptions?.launchNameFilter) &&
       !WIDGETS_STATIC_PREVIEWS[this.props.activeWidget.id]
     ) {
       this.fetchWidget(this.props.widgetSettings);
