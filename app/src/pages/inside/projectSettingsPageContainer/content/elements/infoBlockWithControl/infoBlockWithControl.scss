@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
-.empty-rule-state {
-  margin-left: 48px;
+.info-block-with-control {
+  display: flex;
+  height: 64px;
+  padding: 0 16px;
+  border-radius: 8px;
+  justify-content: space-between;
+  background-color: $COLOR--bg-200;
+  align-items: center;
+  width: 100%;
 
-  div:first-child {
-    width: auto;
-    max-width: calc(100% - 32px);
+  &__label {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: $COLOR--e-400;
+    text-indent: 1px;
   }
 
+  &__button button {
+    border: $COLOR--topaz solid 1px;
+    height: 36px;
+    padding: 7px 16px;
+  }
 }

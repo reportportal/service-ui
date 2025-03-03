@@ -14,17 +14,73 @@
  * limitations under the License.
  */
 
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import React from 'react';
+import { createExternalLink, docsReferences } from 'common/utils';
+import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
+import { NumerableBlock } from 'pages/common/numerableBlock';
+import { FormattedDescription, TabDescription } from '../../../content/elements';
+import { VariablesControl } from './variablesControl';
+import { Datasets } from './datasets';
 import { SettingsPageContent } from '../../settingsPageContent';
+import { HeaderControls } from './headerControls';
+import { messages } from './messages';
 import styles from './testData.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestData = () => {
+export const TestData = ({ setHeaderTitleNode }) => {
+  const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    setHeaderTitleNode(<HeaderControls />);
+
+    return () => setHeaderTitleNode(null);
+  });
+
+  const howToGetStartedItems = [
+    messages.createList,
+    messages.createDataset,
+    messages.linkEnvironments,
+  ].map((translation) =>
+    formatMessage(translation, {
+      b: (chunks) => <strong>{chunks}</strong>,
+      br: <br />,
+    }),
+  );
+
   return (
     <SettingsPageContent>
-      <div className={cx('test-data')}>Test data</div>
+      <TabDescription>
+        <FormattedDescription
+          content={formatMessage(messages.tabDescription, {
+            a: (data) =>
+              createExternalLink(
+                data,
+                // TODO: Update link
+                docsReferences.workWithReports,
+                'documentationLink',
+                OpenInNewTabIcon,
+              ),
+          })}
+        />
+      </TabDescription>
+      <div className={cx('test-data-page__datasets-wrapper')}>
+        <VariablesControl />
+        <Datasets isEmpty />
+      </div>
+      <NumerableBlock
+        title={formatMessage(messages.howToGetStarted)}
+        items={howToGetStartedItems}
+        className={cx('test-data-page__how-to-get-started')}
+        fullWidth
+      />
     </SettingsPageContent>
   );
+};
+
+TestData.propTypes = {
+  setHeaderTitleNode: PropTypes.func.isRequired,
 };

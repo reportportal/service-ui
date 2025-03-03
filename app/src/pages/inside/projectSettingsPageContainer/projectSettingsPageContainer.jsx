@@ -172,7 +172,7 @@ export const ProjectSettingsPageContainer = () => {
       [TEST_DATA]: {
         name: formatMessage(messages.testData),
         link: createTabLink(TEST_DATA),
-        component: <TestData />,
+        component: <TestData setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />,
         mobileDisabled: true,
       },
     };

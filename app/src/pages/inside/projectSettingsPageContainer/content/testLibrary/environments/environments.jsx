@@ -49,7 +49,10 @@ export const Environments = () => {
           imageType="lines"
           buttonDataAutomationId="createEnvironmentButton"
         />
-        <NumerableBlock items={benefits} title={formatMessage(messages.numerableBlockTitle)} />
+        <NumerableBlock
+          items={benefits.map(formatMessage)}
+          title={formatMessage(messages.numerableBlockTitle)}
+        />
       </div>
     </SettingsPageContent>
   );
