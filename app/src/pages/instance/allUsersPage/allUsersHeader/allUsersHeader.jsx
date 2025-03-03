@@ -81,24 +81,26 @@ export const AllUsersHeader = ({ onInvite }) => {
               <FilterOutlineIcon />
             </i>
             {!ssoUsersOnly && (
-              <Button variant="ghost" onClick={onInvite}>
-                {formatMessage(messages.invite)}
-              </Button>
+              <>
+                <Button variant="ghost" onClick={onInvite}>
+                  {formatMessage(messages.invite)}
+                </Button>
+                <Popover
+                  placement={'bottom-end'}
+                  isOpened={isOpen}
+                  setIsOpened={setIsOpen}
+                  content={
+                    <button className={cx('popover-content')} onClick={openCreateUserModal}>
+                      {formatMessage(messages.createUser)}
+                    </button>
+                  }
+                >
+                  <Button variant="ghost" className={cx('meatball-button')}>
+                    <MeatballMenuIcon />
+                  </Button>
+                </Popover>
+              </>
             )}
-            <Popover
-              placement={'bottom-end'}
-              isOpened={isOpen}
-              setIsOpened={setIsOpen}
-              content={
-                <button className={cx('popover-content')} onClick={openCreateUserModal}>
-                  {formatMessage(messages.createUser)}
-                </button>
-              }
-            >
-              <Button variant="ghost" className={cx('meatball-button')}>
-                <MeatballMenuIcon />
-              </Button>
-            </Popover>
           </div>
         </div>
       </div>

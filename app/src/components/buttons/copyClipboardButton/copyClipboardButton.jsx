@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Popover } from '@reportportal/ui-kit';
+import { Tooltip } from '@reportportal/ui-kit';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import IconTick from 'common/img/newIcons/tick-inline.svg';
 import styles from './copyClipboardButton.scss';
@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   copyToClipboard: {
     id: 'ClipboardButton.copyToClipboard',
-    defaultMessage: 'Copy to clipboard',
+    defaultMessage: 'Copied to clipboard',
   },
 });
 
@@ -46,17 +46,9 @@ export const ClipboardButton = ({ text }) => {
   return (
     <div className={cx('copy-wrapper')}>
       {isCopy ? (
-        <Popover
-          placement="top"
-          isOpened
-          setIsOpened={() => {}}
-          content={
-            <div className={cx('popover-content')}>{formatMessage(messages.copyToClipboard)}</div>
-          }
-          className={cx('popover')}
-        >
+        <Tooltip content={formatMessage(messages.copyToClipboard)} placement="top">
           <div className={cx('popover-message')}>{Parser(IconTick)}</div>
-        </Popover>
+        </Tooltip>
       ) : (
         <div onClick={copyToClipboardHandler} className={cx('clipboard')}>
           <CopyToClipboard className={cx('copy')} text={text}>
