@@ -121,7 +121,7 @@ export class ActionPanel extends Component {
         email: values.email,
         fullName: values.fullName,
         login: values.login,
-        password: values.password,
+        password: values.password.trim(),
         projectRole: values.projectRole,
       },
     })
