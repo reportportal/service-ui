@@ -26,6 +26,14 @@ export const messages = defineMessages({
     defaultMessage:
       'No integrations were configured. You can manually setup the integration for this project.',
   },
+  noGlobalIntegrationsYet: {
+    id: 'IntegrationsDescription.noGlobalIntegrationsYet',
+    defaultMessage: 'No integrations yet',
+  },
+  noGlobalIntegrationsYetDescription: {
+    id: 'IntegrationsDescription.noGlobalIntegrationsYetDescription',
+    defaultMessage: 'Integration will appear here once created by your team',
+  },
   noGlobalIntegrationsButtonAdd: {
     id: 'IntegrationsDescription.noGlobalIntegrationsButtonAdd',
     defaultMessage: 'Add Project Integration',

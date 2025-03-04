@@ -47,4 +47,12 @@ export const messages = defineMessages({
     id: 'IntegrationsCase.noIntegrationsDescription',
     defaultMessage: 'Your project has no integrations yet',
   },
+  noIntegrationsYet: {
+    id: 'IntegrationsCase.noIntegrationsYet',
+    defaultMessage: 'No integrations yet',
+  },
+  noIntegrationsYetDescription: {
+    id: 'IntegrationsCase.noIntegrationsYetDescription',
+    defaultMessage: 'Integration will appear here once plugins are configured by your team',
+  },
 });
