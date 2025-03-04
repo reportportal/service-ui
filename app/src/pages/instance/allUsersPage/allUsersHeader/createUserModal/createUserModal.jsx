@@ -83,8 +83,8 @@ const messages = defineMessages({
   },
 });
 
-export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid, dirty }) => {
-  const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state));
+export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
+  const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
@@ -96,6 +96,8 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid, 
     onSubmit?.(formData);
     hideModal();
   };
+
+  const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
 
   return (
     <Modal
@@ -119,7 +121,7 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid, 
           </Checkbox>
         </FieldProvider>
       }
-      allowCloseOutside={dirty}
+      allowCloseOutside={!isSomeFieldFilled}
     >
       <div className={cx('modal-content')}>
         <div className={cx('wrapper-message')}>
@@ -173,7 +175,6 @@ CreateUserModal.propTypes = {
   handleSubmit: PropTypes.func,
   anyTouched: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
-  dirty: PropTypes.bool.isRequired,
 };
 
 export default withModal('createUserModal')(
