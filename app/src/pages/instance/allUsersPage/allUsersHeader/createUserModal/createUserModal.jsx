@@ -183,7 +183,7 @@ export default withModal('createUserModal')(
         [FULL_NAME_FIELD]: commonValidators.createPatternCreateUserNameValidator()(
           fullName?.trim(),
         ),
-        [EMAIL_FIELD]: commonValidators.emailCreateUserValidator(email?.trim()),
+        [EMAIL_FIELD]: commonValidators.emailCreateUserValidator()(email?.trim()),
         [PASSWORD_FIELD]: commonValidators.createPatternCreateUserPasswordValidator()(
           password?.trim(),
         ),
