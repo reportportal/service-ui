@@ -37,7 +37,7 @@
     "d3": "7.8.5",
     "d3-selection": "1.4.0",
     "date-fns": "2.29.3",
-    "dompurify": "2.5.4",
+    "dompurify": "3.2.4",
     "dotenv": "5.0.1",
     "downshift": "6.1.7",
     "fast-deep-equal": "3.1.3",
