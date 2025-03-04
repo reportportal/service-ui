@@ -63,7 +63,8 @@ const messages = defineMessages({
   form: 'registration',
   validate: ({ login, name, password, confirmPassword }) => ({
     password: commonValidators.password(password.trim()),
-    confirmPassword: (!confirmPassword || confirmPassword.trim() !== password.trim()) && 'confirmPasswordHint',
+    confirmPassword:
+      (!confirmPassword || confirmPassword.trim() !== password.trim()) && 'confirmPasswordHint',
     login: commonValidators.login(login),
     name: commonValidators.userName(name),
   }),
