@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-.environments {
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  justify-content: center;
-  align-items: center;
-}
+export { NumerableBlock } from './numerableBlock';

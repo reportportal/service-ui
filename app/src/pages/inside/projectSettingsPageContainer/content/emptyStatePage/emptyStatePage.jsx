@@ -27,6 +27,7 @@ import styles from './emptyStatePage.scss';
 import plus from './img/empty-state-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
+import lines from './img/environments-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +35,7 @@ const images = {
   bell,
   rhombus,
   plus,
+  lines,
 };
 
 const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
@@ -104,13 +106,13 @@ export const EmptyStatePage = ({
 EmptyStatePage.propTypes = {
   handleButton: PropTypes.func,
   title: PropTypes.string,
-  description: PropTypes.string,
+  description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   buttonName: PropTypes.string,
   documentationLink: PropTypes.string,
   disableButton: PropTypes.bool,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell']),
+  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines']),
   buttonDataAutomationId: PropTypes.string,
   documentationDataAutomationId: PropTypes.string,
   buttonTooltip: PropTypes.string,
