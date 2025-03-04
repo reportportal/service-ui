@@ -89,11 +89,11 @@ export class RegistrationPageContainer extends Component {
     const data = {
       fullName: name,
       login,
-      password,
+      password: password.trim(),
       email,
     };
     return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
-      .then(() => this.props.loginAction({ login, password }))
+      .then(() => this.props.loginAction({ login, password: password.trim() }))
       .catch(({ message }) => {
         this.props.showNotification({
           type: NOTIFICATION_TYPES.ERROR,

@@ -165,7 +165,7 @@ export class PersonalInfoBlock extends Component {
   changePasswordHandler = (data) => {
     fetch(URLS.userChangePassword(), {
       method: 'post',
-      data: { oldPassword: data.oldPassword, newPassword: data.newPassword },
+      data: { oldPassword: data.oldPassword.trim(), newPassword: data.newPassword.trim() },
     })
       .then(() => {
         this.props.showNotification({

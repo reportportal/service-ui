@@ -62,8 +62,9 @@ const messages = defineMessages({
 @reduxForm({
   form: 'registration',
   validate: ({ login, name, password, confirmPassword }) => ({
-    password: commonValidators.password(password),
-    confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
+    password: commonValidators.password(password.trim()),
+    confirmPassword:
+      (!confirmPassword || confirmPassword.trim() !== password.trim()) && 'confirmPasswordHint',
     login: commonValidators.login(login),
     name: commonValidators.userName(name),
   }),

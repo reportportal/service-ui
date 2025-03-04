@@ -72,9 +72,9 @@ const messages = defineMessages({
 @reduxForm({
   form: 'changePasswordForm',
   validate: ({ oldPassword, newPassword, confirmPassword }) => ({
-    oldPassword: commonValidators.oldPassword(oldPassword),
-    newPassword: commonValidators.password(newPassword),
-    confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
+    oldPassword: commonValidators.oldPassword(oldPassword.trim()),
+    newPassword: commonValidators.password(newPassword.trim()),
+    confirmPassword: newPassword.trim() !== confirmPassword.trim() && 'profileConfirmPassword',
   }),
 })
 @track()

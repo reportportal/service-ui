@@ -74,8 +74,9 @@ const hints = defineMessages({
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
-    password: commonValidators.password(password),
-    passwordRepeat: (!passwordRepeat || passwordRepeat !== password) && 'confirmPasswordHint',
+    password: commonValidators.password(password.trim()),
+    passwordRepeat:
+      (!passwordRepeat || passwordRepeat.trim() !== password.trim()) && 'confirmPasswordHint',
   }),
 })
 @injectIntl
@@ -101,7 +102,7 @@ export class ChangePasswordForm extends PureComponent {
     fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {
-        password,
+        password: password.trim(),
         uuid,
       },
     })
