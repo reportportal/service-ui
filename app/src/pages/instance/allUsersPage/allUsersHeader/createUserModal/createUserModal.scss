@@ -26,6 +26,7 @@
 
 .fields-wrapper {
   display: flex;
+  gap: 16px;
 }
 
 .help-text {
@@ -34,4 +35,19 @@
 
 .checkbox {
   font-weight: 400;
+}
+
+.wrapper-message {
+  & > div {
+    min-height: 80px;
+
+    & > div:last-child {
+      padding: 16px;
+    }
+  }
+}
+
+.field-wrapper {
+  width: 100%;
+  display: flex;
 }

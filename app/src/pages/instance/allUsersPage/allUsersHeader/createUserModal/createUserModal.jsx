@@ -119,9 +119,12 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }
           </Checkbox>
         </FieldProvider>
       }
+      allowCloseOutside={invalid}
     >
       <div className={cx('modal-content')}>
-        <SystemMessage>{formatMessage(messages.description)}</SystemMessage>
+        <div className={cx('wrapper-message')}>
+          <SystemMessage>{formatMessage(messages.description)}</SystemMessage>
+        </div>
         <FieldProvider name={FULL_NAME_FIELD}>
           <FieldErrorHint provideHint={false}>
             <FieldText
@@ -132,29 +135,33 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }
           </FieldErrorHint>
         </FieldProvider>
         <div className={cx('fields-wrapper')}>
-          <FieldProvider name={EMAIL_FIELD}>
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.email)}
-                defaultWidth={false}
-                placeholder={formatMessage(messages.emailPlaceholder)}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-          <ClipboardButton text={formValues?.[EMAIL_FIELD]} />
-          <FieldProvider name={PASSWORD_FIELD}>
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.password)}
-                defaultWidth={false}
-                placeholder={formatMessage(messages.passwordPlaceholder)}
-                type="password"
-                helpText={formatMessage(messages.passwordValidateMessage)}
-                classNameHelpText={cx('help-text')}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-          <ClipboardButton text={formValues?.[PASSWORD_FIELD]} />
+          <div className={cx('field-wrapper')}>
+            <FieldProvider name={EMAIL_FIELD}>
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.email)}
+                  defaultWidth={false}
+                  placeholder={formatMessage(messages.emailPlaceholder)}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <ClipboardButton text={formValues?.[EMAIL_FIELD]} />
+          </div>
+          <div className={cx('field-wrapper')}>
+            <FieldProvider name={PASSWORD_FIELD}>
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.password)}
+                  defaultWidth={false}
+                  placeholder={formatMessage(messages.passwordPlaceholder)}
+                  type="password"
+                  helpText={formatMessage(messages.passwordValidateMessage)}
+                  classNameHelpText={cx('help-text')}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <ClipboardButton text={formValues?.[PASSWORD_FIELD]} />
+          </div>
         </div>
       </div>
     </Modal>
@@ -173,11 +180,11 @@ export default withModal('createUserModal')(
     form: CREATE_USER_FORM,
     validate: ({ fullName, email, password }) => {
       return {
-        [FULL_NAME_FIELD]: commonValidators.createPatternUserCreateNameValidator()(
+        [FULL_NAME_FIELD]: commonValidators.createPatternCreateUserNameValidator()(
           fullName?.trim(),
         ),
-        [EMAIL_FIELD]: commonValidators.email(email?.trim()),
-        [PASSWORD_FIELD]: commonValidators.createPatternUserCreatePasswordValidator()(
+        [EMAIL_FIELD]: commonValidators.emailCreateUserValidator(email?.trim()),
+        [PASSWORD_FIELD]: commonValidators.createPatternCreateUserPasswordValidator()(
           password?.trim(),
         ),
       };
