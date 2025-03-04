@@ -53,3 +53,7 @@ export const docsReferences = {
   pluginsDocs: 'https://reportportal.io/docs/plugins/',
   projectConfigurationDocs: 'https://reportportal.io/docs/configuration/ProjectConfiguration',
 };
+
+export const widgetDocsReferences = {
+  testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch',
+};

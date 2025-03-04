@@ -43,6 +43,7 @@ import {
   PRODUCT_STATUS,
   */
 } from 'common/constants/widgetTypes';
+import { widgetDocsReferences } from 'common/utils/referenceDictionary';
 import { widgetTypesMessages } from './messages';
 import {
   LaunchStatisticsControls,
@@ -403,6 +404,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(TEST_CASE_SEARCH_PREVIEW),
+    documentationLink: widgetDocsReferences.testCaseSearch,
   },
   /*
   {

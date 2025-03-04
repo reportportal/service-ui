@@ -22,14 +22,19 @@ import Parser from 'html-react-parser';
 import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { injectIntl } from 'react-intl';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 
 const cx = classNames.bind(styles);
-
+@injectIntl
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
@@ -68,7 +73,7 @@ export class WidgetInfoBlock extends PureComponent {
     if (
       this.props.customCondition &&
       !isEqual(prevData, newData) &&
-      (filterIds.length || contentParameters.widgetOptions.launchNameFilter) &&
+      (filterIds.length || contentParameters.widgetOptions?.launchNameFilter) &&
       !WIDGETS_STATIC_PREVIEWS[this.props.activeWidget.id]
     ) {
       this.fetchWidget(this.props.widgetSettings);
@@ -110,7 +115,10 @@ export class WidgetInfoBlock extends PureComponent {
   }, 300);
 
   render() {
-    const { activeWidget } = this.props;
+    const {
+      activeWidget,
+      intl: { formatMessage },
+    } = this.props;
     const { loading, widgetData } = this.state;
 
     return (
@@ -119,6 +127,13 @@ export class WidgetInfoBlock extends PureComponent {
           <div className={cx('widget-info-block')}>
             <div className={cx('widget-title')}>{activeWidget.title}</div>
             <div className={cx('widget-description')}>{activeWidget.description}</div>
+            {activeWidget.documentationLink && (
+              <LinkComponent to={activeWidget.documentationLink} icon={ExternalLinkIcon}>
+                <span className={cx('link')}>
+                  {formatMessage(COMMON_LOCALE_KEYS.documentation)}
+                </span>
+              </LinkComponent>
+            )}
           </div>
         )}
         <WidgetPreview

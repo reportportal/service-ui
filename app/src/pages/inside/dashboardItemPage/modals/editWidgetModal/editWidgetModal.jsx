@@ -211,7 +211,7 @@ export class EditWidgetModal extends Component {
     }
 
     const widgetMode =
-      widgetSettings.contentParameters &&
+      widgetSettings.contentParameters?.widgetOptions &&
       getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
     if (widgetMode) {
       this.props.tracking.trackEvent(this.props.data.eventsInfo.selectToggleButtons(widgetMode));
