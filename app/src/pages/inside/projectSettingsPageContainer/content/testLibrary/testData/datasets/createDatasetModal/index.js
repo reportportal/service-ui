@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { Datasets } from './datasets';
-export { CreateDatasetModal } from './createDatasetModal';
+export { CreateDatasetModal, CREATE_DATASET_MODAL_KEY } from './createDatasetModal';

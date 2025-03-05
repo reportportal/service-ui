@@ -18,9 +18,12 @@ import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { Button } from '@reportportal/ui-kit';
 import plusIcon from 'common/img/plus-button-inline.svg';
+import { hideModalAction, showModalAction } from 'controllers/modal';
 import { InfoBlockWithControl } from '../../../elements/infoBlockWithControl';
+import { CREATE_DATASET_MODAL_KEY } from './createDatasetModal';
 
 const messages = defineMessages({
   noDatasetsCreatedYet: {
@@ -35,12 +38,31 @@ const messages = defineMessages({
 
 export const Datasets = ({ isEmpty }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
+  const handleModalSubmit = (data) => {
+    // eslint-disable-next-line no-console
+    console.log(data);
+
+    dispatch(hideModalAction());
+  };
+
+  const openCreateDatasetModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_DATASET_MODAL_KEY,
+        data: {
+          onSubmit: handleModalSubmit,
+        },
+      }),
+    );
+  };
 
   return isEmpty ? (
     <InfoBlockWithControl
       label={formatMessage(messages.noDatasetsCreatedYet)}
       control={
-        <Button variant="text" icon={Parser(plusIcon)}>
+        <Button variant="text" icon={Parser(plusIcon)} onClick={openCreateDatasetModal}>
           {formatMessage(messages.createDataset)}
         </Button>
       }
