@@ -38,7 +38,7 @@ const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 const messages = defineMessages({
   deleteWidgetSuccess: {
     id: 'WidgetsGrid.notification.deleteWidgetSuccess',
-    defaultMessage: 'Widget has been deleted',
+    defaultMessage: 'Widget has been deleted successfully',
   },
 });
 

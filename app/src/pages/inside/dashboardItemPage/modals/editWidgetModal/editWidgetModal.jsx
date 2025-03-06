@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   editWidgetSuccess: {
     id: 'EditWidgetModal.editWidgetSuccess',
-    defaultMessage: 'Widget has been updated',
+    defaultMessage: 'Widget has been updated successfully',
   },
 });
 
