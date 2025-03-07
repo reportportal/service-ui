@@ -86,7 +86,7 @@ Tabs.propTypes = {
     PropTypes.shape({
       name: PropTypes.node,
       link: PropTypes.object,
-      component: PropTypes.Element,
+      component: PropTypes.element,
       eventInfo: PropTypes.object,
       mobileDisabled: PropTypes.bool,
     }),

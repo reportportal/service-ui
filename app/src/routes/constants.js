@@ -57,6 +57,7 @@ import {
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATION_USERS_PAGE,
   PRODUCT_VERSIONS_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -171,6 +172,11 @@ export const pageRendering = {
     rawContent: true,
   },
   [PRODUCT_VERSIONS_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
