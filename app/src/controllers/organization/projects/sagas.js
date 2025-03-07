@@ -101,12 +101,13 @@ function* watchCreateProject() {
 }
 
 function* deleteProject({ payload: { projectId, projectName } }) {
-  const { id: organizationId } = yield select(activeOrganizationSelector);
+  const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
   try {
     yield call(fetch, URLS.projectDelete({ organizationId, projectId }), {
       method: 'delete',
     });
 
+    yield put(fetchOrganizationBySlugAction(organizationSlug));
     yield fetchFilteredProjects();
     yield put(hideModalAction());
     yield put(
