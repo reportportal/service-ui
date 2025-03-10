@@ -34,6 +34,19 @@ import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
 
+function* fetchFilteredProjects() {
+  const activeOrganizationId = yield select(activeOrganizationIdSelector);
+  const filtersParams = yield select(querySelector);
+  const data = prepareQueryFilters(filtersParams);
+
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
+      method: 'post',
+      data,
+    }),
+  );
+}
+
 function* fetchOrganizationProjects({ payload: organizationId }) {
   const query = yield select(querySelector);
 
@@ -93,8 +106,9 @@ function* deleteProject({ payload: { projectId, projectName } }) {
     yield call(fetch, URLS.projectDelete({ organizationId, projectId }), {
       method: 'delete',
     });
+
     yield put(fetchOrganizationBySlugAction(organizationSlug));
-    yield put(fetchOrganizationProjectsAction(organizationId));
+    yield fetchFilteredProjects();
     yield put(hideModalAction());
     yield put(
       showNotification({
@@ -117,19 +131,6 @@ function* deleteProject({ payload: { projectId, projectName } }) {
 
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
-}
-
-function* fetchFilteredProjects() {
-  const activeOrganizationId = yield select(activeOrganizationIdSelector);
-  const filtersParams = yield select(querySelector);
-  const data = prepareQueryFilters(filtersParams);
-
-  yield put(
-    fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
-      method: 'post',
-      data,
-    }),
-  );
 }
 
 function* watchFetchFilteredProjects() {
