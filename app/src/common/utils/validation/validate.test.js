@@ -118,7 +118,7 @@ describe('validate.oldPassword', () => {
 
 describe('validate.password', () => {
   test('validation should be correct', () => {
-    expect(validate.password('aA1_5678')).toBe(true);
+    expect(validate.password('aA1!5678')).toBe(true);
     expect(validate.password('Aa1@3@.?n&()*^HFU')).toBe(true);
     expect(validate.password('Firstname+lastname@ex1')).toBe(true);
   });
