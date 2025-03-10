@@ -35,8 +35,7 @@ export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
 export const password = composeValidators([
   isNotEmpty,
-  minLength(8),
-  regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
+  regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,256}$/),
 ]);
 export const userName = composeValidators([
   isNotEmpty,
