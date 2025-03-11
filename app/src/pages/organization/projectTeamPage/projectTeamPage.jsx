@@ -88,7 +88,6 @@ export const ProjectTeamPage = () => {
         isMembersLoading={isMembersLoading}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
-        isNotEmptyMembers={!isEmptyMembers}
       />
       {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
     </div>
