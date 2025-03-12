@@ -56,6 +56,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    showDisplayLauncherToggle: PropTypes.bool,
   };
   static defaultProps = {
     data: {},
@@ -65,6 +66,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
+    showDisplayLauncherToggle: true,
   };
 
   renderMetaInfo = () =>

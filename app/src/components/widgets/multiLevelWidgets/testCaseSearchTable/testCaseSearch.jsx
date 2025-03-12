@@ -15,44 +15,48 @@
  */
 
 import classNames from 'classnames/bind';
-import { useIntl } from 'react-intl';
-import { EntityInputConditional } from 'components/filterEntities';
-import { TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
-import { CONDITION_CNT } from 'components/filterEntities/constants';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchedTestItemsSelector, testItemsSearchAction } from 'controllers/testItem';
+import { TestCaseSearchControl } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchControl';
+import { TestCaseSearchContent } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchContent';
+import { collectFilterEntities } from 'controllers/filter/utils';
 import styles from './testCaseSearch.scss';
-import { messages } from './messages';
 
 const cx = classNames.bind(styles);
-export const TestCaseSearch = () => {
-  const { formatMessage } = useIntl();
-  // TODO: update in scope task of filtering
-  const filterEntity = [
-    {
-      id: TEST_CASE_SEARCH,
-      component: EntityInputConditional,
-      value: {
-        condition: CONDITION_CNT,
-      },
-      title: formatMessage(messages.testNameTitle),
-      active: true,
-      removable: false,
-      static: true,
-      customProps: {
-        placeholder: formatMessage(messages.testNamePlaceholder),
-      },
-    },
-  ];
+export const TestCaseSearch = ({ widget: { id: widgetId } }) => {
+  const searchDetails = useSelector(searchedTestItemsSelector);
+  const targetWidgetSearch = searchDetails[widgetId] || {};
+  const { searchCriteria = {}, content = [] } = targetWidgetSearch;
+  const [searchValue, setSearchValue] = useState(collectFilterEntities(searchCriteria));
+  const dispatch = useDispatch();
+
+  const isSearchValueEmpty = !Object.keys(searchValue).length;
+  const handleSearch = (entity) => {
+    const filter = createFilterQuery(entity);
+    setSearchValue(entity);
+    dispatch(testItemsSearchAction({ searchCriteria: filter, widgetId }));
+  };
+  const handleClear = () => {
+    setSearchValue({});
+    dispatch(testItemsSearchAction({ widgetId }));
+  };
 
   return (
     <div className={cx('test-case-search-container')}>
-      <div className={cx('filter-controls')}>
-        <EntitiesGroup entities={filterEntity} />
-      </div>
-      <div className={cx('content')}>
-        <p className={cx('title')}>{formatMessage(messages.letsSearch)}</p>
-        <p className={cx('desctiption')}>{formatMessage(messages.provideParameters)}</p>
-      </div>
+      <TestCaseSearchControl
+        filter={searchValue}
+        setFilter={setSearchValue}
+        onChange={handleSearch}
+        onClear={handleClear}
+      />
+      <TestCaseSearchContent isEmptyState={isSearchValueEmpty} data={content} />
     </div>
   );
+};
+
+TestCaseSearch.propTypes = {
+  widget: PropTypes.object,
 };

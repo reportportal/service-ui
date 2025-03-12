@@ -14,9 +14,26 @@
  * limitations under the License.
  */
 
-.test-case-search-container {
+.content {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  gap: 7px;
+  background: $COLOR--white-five;
+  color: $COLOR--gray-47;
+  vertical-align: middle;
+  box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+  font-family: $FONT-REGULAR;
+  border-top: 1px solid $COLOR--gray-91;
   height: 100%;
-}
 
+  .title {
+    font-size: 21px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+}

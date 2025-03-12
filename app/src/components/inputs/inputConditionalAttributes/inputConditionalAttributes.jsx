@@ -40,6 +40,7 @@ export class InputConditionalAttributes extends Component {
     keyURLCreator: PropTypes.func,
     projectId: PropTypes.string,
     isAttributeValueRequired: PropTypes.bool,
+    hideEditor: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ export class InputConditionalAttributes extends Component {
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
     projectId: '',
     isAttributeValueRequired: true,
+    hideEditor: false,
   };
 
   constructor(props) {
@@ -142,6 +144,7 @@ export class InputConditionalAttributes extends Component {
       valueURLCreator,
       projectId,
       isAttributeValueRequired,
+      hideEditor,
     } = this.props;
     const inputConditions = this.getConditions();
 
@@ -154,14 +157,16 @@ export class InputConditionalAttributes extends Component {
             editable={false}
             onChange={this.onRemove}
           />
-          <AttributeEditor
-            keyURLCreator={keyURLCreator}
-            valueURLCreator={valueURLCreator}
-            projectId={projectId}
-            onConfirm={this.onChangeAttributes}
-            nakedView
-            isAttributeValueRequired={isAttributeValueRequired}
-          />
+          {!hideEditor && (
+            <AttributeEditor
+              keyURLCreator={keyURLCreator}
+              valueURLCreator={valueURLCreator}
+              projectId={projectId}
+              onConfirm={this.onChangeAttributes}
+              nakedView
+              isAttributeValueRequired={isAttributeValueRequired}
+            />
+          )}
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>

@@ -65,6 +65,7 @@ const NameColumn = ({ className, customProps, ...rest }) => (
   <div className={cx('name-col', className, customProps.className)}>
     <ItemInfoWithRetries
       {...rest}
+      hideEdit={customProps?.hideEdit}
       customProps={{
         ...customProps,
         ownLinkParams: { ...customProps.ownLinkParams, testItem: rest.value },
@@ -81,18 +82,22 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }) => {
+const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
-      <StatusDropdown
-        itemId={id}
-        status={status}
-        attributes={attributes}
-        description={description}
-        onChange={onChange}
-        fetchFunc={fetchFunc}
-      />
+      {viewOnly ? (
+        <span className={cx('status-value')}>{status.toLowerCase()}</span>
+      ) : (
+        <StatusDropdown
+          itemId={id}
+          status={status}
+          attributes={attributes}
+          description={description}
+          onChange={onChange}
+          fetchFunc={fetchFunc}
+        />
+      )}
     </div>
   );
 };
@@ -103,11 +108,13 @@ StatusColumn.propTypes = {
     formatMessage: PropTypes.func.isRequired,
     onChange: PropTypes.func,
     fetchFunc: PropTypes.func,
+    viewOnly: PropTypes.bool,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
   className: null,
   value: {},
+  viewOnly: false,
 };
 
 const StartTimeColumn = ({ className, value }) => (
@@ -127,13 +134,14 @@ StartTimeColumn.defaultProps = {
 const DefectTypeColumn = ({
   className,
   value,
-  customProps: { onEdit, onUnlinkSingleTicket, events },
+  customProps: { hideEdit, onEdit, onUnlinkSingleTicket, events },
 }) => (
   <div className={cx('defect-type-col', className)}>
     {value.issue?.issueType && (
       <DefectType
         issue={value.issue}
         patternTemplates={value.patternTemplates}
+        hideEdit={hideEdit}
         onEdit={() => onEdit(value)}
         onRemove={onUnlinkSingleTicket(value)}
         events={events}
@@ -148,6 +156,7 @@ DefectTypeColumn.propTypes = {
     onEdit: PropTypes.func.isRequired,
     onUnlinkSingleTicket: PropTypes.func.isRequired,
     events: PropTypes.object,
+    hideEdit: PropTypes.bool,
   }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
@@ -198,6 +207,7 @@ export class StepGrid extends Component {
     }),
     onStatusUpdate: PropTypes.func.isRequired,
     modifyColumnsFunc: PropTypes.func,
+    isTestSearchView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -222,6 +232,7 @@ export class StepGrid extends Component {
       highlightedRowId: null,
     }),
     modifyColumnsFunc: null,
+    isTestSearchView: false,
   };
 
   constructor(props) {
@@ -235,43 +246,50 @@ export class StepGrid extends Component {
       onEditDefect,
       onStatusUpdate,
       modifyColumnsFunc,
+      isTestSearchView,
     } = props;
     this.columns = [
-      {
-        id: 'predefinedFilterSwitcher',
-        title: {
-          component: PredefinedFilterSwitcherCell,
-        },
-        formatter: () => {},
-      },
-      {
-        id: ENTITY_METHOD_TYPE,
-        title: {
-          full: 'method type',
-        },
-        sortable: true,
-        component: MethodTypeColumn,
-        customProps: {
-          formatMessage,
-        },
-        withFilter: true,
-        filterEventInfo: events.METHOD_TYPE_FILTER,
-        sortingEventInfo: events.METHOD_TYPE_SORTING,
-      },
+      ...(isTestSearchView
+        ? []
+        : [
+            {
+              id: 'predefinedFilterSwitcher',
+              title: {
+                component: PredefinedFilterSwitcherCell,
+              },
+              formatter: () => {},
+            },
+            {
+              id: ENTITY_METHOD_TYPE,
+              title: {
+                full: 'method type',
+              },
+              sortable: true,
+              component: MethodTypeColumn,
+              customProps: {
+                formatMessage,
+              },
+              withFilter: true,
+              filterEventInfo: events.METHOD_TYPE_FILTER,
+              sortingEventInfo: events.METHOD_TYPE_SORTING,
+            },
+          ]),
       {
         id: 'name',
         title: {
           full: 'name',
         },
-        sortable: true,
+        sortable: !isTestSearchView,
         component: NameColumn,
         maxHeight: 170,
         customProps: {
           onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
           events,
+          hideEdit: isTestSearchView,
+          openInNewTab: isTestSearchView,
         },
-        withFilter: true,
+        withFilter: !isTestSearchView,
         filterEventInfo: events.NAME_FILTER,
         sortingEventInfo: events.NAME_SORTING,
       },
@@ -280,14 +298,15 @@ export class StepGrid extends Component {
         title: {
           full: 'status',
         },
-        sortable: true,
+        sortable: !isTestSearchView,
         component: StatusColumn,
         customProps: {
           formatMessage,
           onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
+          viewOnly: isTestSearchView,
         },
-        withFilter: true,
+        withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
         sortingEventInfo: events.STATUS_SORTING,
       },
@@ -298,7 +317,7 @@ export class StepGrid extends Component {
         },
         sortable: true,
         component: StartTimeColumn,
-        withFilter: true,
+        withFilter: !isTestSearchView,
         filterEventInfo: events.START_TIME_FILTER,
         sortingEventInfo: events.START_TIME_SORTING,
       },
@@ -310,6 +329,7 @@ export class StepGrid extends Component {
         sortable: false,
         component: DefectTypeColumn,
         customProps: {
+          hideEdit: isTestSearchView,
           onEdit: (data) => {
             onEditDefect(data);
           },
@@ -319,7 +339,7 @@ export class StepGrid extends Component {
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
         },
-        withFilter: true,
+        withFilter: !isTestSearchView,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
       },
     ];
@@ -349,7 +369,7 @@ export class StepGrid extends Component {
   };
 
   highlightFailedItems = (value) => ({
-    [cx('failed')]: value.status === FAILED,
+    [cx('failed')]: value.status === FAILED && !this.props.isTestSearchView,
   });
 
   render() {
@@ -367,6 +387,7 @@ export class StepGrid extends Component {
       sortingColumn,
       sortingDirection,
       rowHighlightingConfig,
+      isTestSearchView,
     } = this.props;
 
     return (
@@ -378,7 +399,7 @@ export class StepGrid extends Component {
           onToggleSelectAll={onAllItemsSelect}
           onItemsSelect={onItemsSelect}
           selectedItems={selectedItems}
-          selectable
+          selectable={!isTestSearchView}
           rowClassMapper={this.highlightFailedItems}
           loading={loading}
           groupHeader={GroupHeader}

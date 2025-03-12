@@ -24,6 +24,7 @@ export {
   setPageLoadingAction,
   fetchTestItemsFromLogPageAction,
   setDefaultItemStatisticsAction,
+  testItemsSearchAction,
 } from './actionCreators';
 export { fetchParentItems, fetchParentLaunch, testItemsSagas } from './sagas';
 export {
@@ -71,6 +72,7 @@ export {
   compositeAttributesSelector,
   filteredItemStatisticsSelector,
   isFilterParamsExistsSelector,
+  searchedTestItemsSelector,
 } from './selectors';
 export {
   formatItemName,

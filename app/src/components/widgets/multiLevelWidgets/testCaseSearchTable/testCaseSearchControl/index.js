@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-.test-case-search-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
+export { TestCaseSearchControl } from './testCaseSearchControl';

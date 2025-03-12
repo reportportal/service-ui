@@ -98,6 +98,8 @@ export const isTestItemsListSelector = createSelector(
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
 
+export const searchedTestItemsSelector = (state) => domainSelector(state).searchedItems;
+
 export const isFilterParamsExistsSelector = (state) => {
   const namespace = namespaceSelector(state);
   const query = queryParametersSelector(state, namespace);
@@ -264,6 +266,9 @@ export const breadcrumbsSelector = createSelector(
 export const nameLinkSelector = (state, ownProps) => {
   const { ownLinkParams, itemId, uniqueId } = ownProps;
   const payload = ownLinkParams?.payload || payloadSelector(state);
+  if (payload.dashboardId && !payload.filterId) {
+    payload.filterId = ALL;
+  }
   let testItemIds = ownLinkParams?.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
@@ -288,7 +293,6 @@ export const nameLinkSelector = (state, ownProps) => {
       clusterId: ownLinkParams.testItem.clusterId,
     };
   }
-
   return createLink(testItemIds, itemId, payload, query, page);
 };
 

@@ -57,6 +57,7 @@ import {
   setPageLoadingAction,
   setDefaultItemStatisticsAction,
   fetchParentLaunchSuccessAction,
+  searchItemWidgetDetailsAction,
 } from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
@@ -70,6 +71,7 @@ import {
   PROVIDER_TYPE_LAUNCH,
   PROVIDER_TYPE_FILTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
+  SEARCH_TEST_ITEMS,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -84,6 +86,7 @@ import {
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
   launchSelector,
+  searchedTestItemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -346,11 +349,34 @@ function* watchDeleteTestItems() {
   yield takeEvery(DELETE_TEST_ITEMS, deleteTestItems);
 }
 
+function* searchTestItemsFromWidget({ payload: { widgetId, searchCriteria } }) {
+  const activeProject = yield select(activeProjectSelector);
+  if (!searchCriteria) {
+    const searchedItems = yield select(searchedTestItemsSelector);
+    delete searchedItems?.[widgetId];
+  } else {
+    const result = yield call(fetch, URLS.testItemSearch(activeProject, searchCriteria));
+    yield put(
+      searchItemWidgetDetailsAction({
+        [widgetId]: {
+          searchCriteria,
+          ...result,
+        },
+      }),
+    );
+  }
+}
+
+function* watchTestItemsFromWidget() {
+  yield takeEvery(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
+}
+
 export function* testItemsSagas() {
   yield all([
     watchFetchTestItems(),
     watchRestorePath(),
     watchTestItemsFromLogPage(),
     watchDeleteTestItems(),
+    watchTestItemsFromWidget(),
   ]);
 }

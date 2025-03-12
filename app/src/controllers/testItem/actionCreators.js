@@ -28,6 +28,8 @@ import {
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   FILTERED_ITEM_STATISTICS_NAMESPACE,
   FETCH_PARENT_LAUNCH_SUCCESS,
+  SEARCH_TEST_ITEMS,
+  SEARCHED_ITEMS_WIDGET,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -77,6 +79,16 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
       }),
     validateDeleteItem,
   );
+
+export const testItemsSearchAction = (params) => ({
+  type: SEARCH_TEST_ITEMS,
+  payload: params,
+});
+
+export const searchItemWidgetDetailsAction = (params) => ({
+  type: SEARCHED_ITEMS_WIDGET,
+  payload: params,
+});
 
 export const setDefaultItemStatisticsAction = () =>
   fetchSuccessAction(FILTERED_ITEM_STATISTICS_NAMESPACE, FILTERED_ITEM_STATISTICS_INITIAL_STATE);

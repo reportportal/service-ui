@@ -78,6 +78,7 @@ export class AttributeEditor extends Component {
     }),
     customClass: PropTypes.string,
     nakedView: PropTypes.bool,
+    isAttributeKeyRequired: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
   };
 
@@ -96,6 +97,7 @@ export class AttributeEditor extends Component {
     },
     customClass: '',
     nakedView: false,
+    isAttributeKeyRequired: false,
     isAttributeValueRequired: true,
   };
 

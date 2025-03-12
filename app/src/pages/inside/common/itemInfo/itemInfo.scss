@@ -217,6 +217,20 @@
   }
 }
 
+.external-icon {
+  height: 16px;
+  width: 16px;
+  display: inline-flex;
+  margin-left: 5px;
+  align-items: end;
+  transform: translateY(5%);
+
+   svg {
+    width: 90%;
+    height: 90%;
+  }
+}
+
 @keyframes auto-analyze-blink {
   from {
     opacity: 0;

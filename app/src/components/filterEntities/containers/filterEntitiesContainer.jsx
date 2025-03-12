@@ -18,12 +18,19 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { omit } from 'common/utils/omit';
-import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST, LEVEL_LAUNCH } from 'common/constants/launchLevels';
+import {
+  LEVEL_STEP,
+  LEVEL_SUITE,
+  LEVEL_TEST,
+  LEVEL_LAUNCH,
+  LEVEL_WIDGET_TEST_CASE,
+} from 'common/constants/launchLevels';
 import {
   StepLevelEntities,
   SuiteLevelEntities,
   LaunchLevelEntities,
 } from 'pages/inside/common/filterEntitiesGroups';
+import { TestCaseSearchLevelEntities } from 'pages/inside/common/filterEntitiesGroups/testCaseSearchLevelEntities';
 import { filterValueShape } from '../propTypes';
 import { FilterEntitiesAddHandlerContainer } from './filterEntitiesAddHandlerContainer';
 
@@ -32,6 +39,7 @@ const ENTITY_PROVIDERS = {
   [LEVEL_SUITE]: SuiteLevelEntities,
   [LEVEL_TEST]: SuiteLevelEntities,
   [LEVEL_STEP]: StepLevelEntities,
+  [LEVEL_WIDGET_TEST_CASE]: TestCaseSearchLevelEntities,
 };
 
 export class FilterEntitiesContainer extends Component {
