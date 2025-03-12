@@ -86,7 +86,6 @@ import {
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
   launchSelector,
-  searchedTestItemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -352,8 +351,7 @@ function* watchDeleteTestItems() {
 function* searchTestItemsFromWidget({ payload: { widgetId, searchCriteria } }) {
   const activeProject = yield select(activeProjectSelector);
   if (!searchCriteria) {
-    const searchedItems = yield select(searchedTestItemsSelector);
-    delete searchedItems?.[widgetId];
+    yield put(searchItemWidgetDetailsAction({ [widgetId]: {} }));
   } else {
     const result = yield call(fetch, URLS.testItemSearch(activeProject, searchCriteria));
     yield put(
