@@ -15,48 +15,155 @@
  */
 
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
-import { LEVEL_WIDGET_TEST_CASE } from 'common/constants/launchLevels';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { commonValidators } from 'common/utils/validation';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+import {
+  EntityInputConditional,
+  EntityInputConditionalAttributes,
+} from 'components/filterEntities';
+import {
+  CONDITION_CNT,
+  CONDITION_HAS,
+  ENTITY_NAME,
+  ENTITY_ATTRIBUTE,
+} from 'components/filterEntities/constants';
+import { useCallback } from 'react';
 import styles from './testCaseSearchControl.scss';
+import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
+
+const TestCaseSearchNameEntity = ({ filterValues = {}, render, disabled = false, ...rest }) => {
+  const { formatMessage } = useIntl();
+
+  return render({
+    filterEntities: [
+      {
+        id: ENTITY_NAME,
+        component: EntityInputConditional,
+        value: filterValues[ENTITY_NAME] || {
+          condition: CONDITION_CNT,
+        },
+        validationFunc: commonValidators.itemNameEntity,
+        title: formatMessage(messages.testNameTitle),
+        active: true,
+        removable: false,
+        static: true,
+        customProps: {
+          conditions: [CONDITION_CNT],
+          placeholder: formatMessage(messages.testNamePlaceholder),
+        },
+      },
+    ],
+    disabled,
+    ...rest,
+  });
+};
+
+TestCaseSearchNameEntity.propTypes = {
+  filterValues: PropTypes.object,
+  render: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
+const TestCaseSearchAttributeEntity = ({
+  filterValues = {},
+  render,
+  disabled = false,
+  ...rest
+}) => {
+  const intl = useIntl();
+  const projectId = useSelector(activeProjectSelector);
+
+  return render({
+    filterEntities: [
+      {
+        id: ENTITY_ATTRIBUTE,
+        component: EntityInputConditionalAttributes,
+        value: filterValues[ENTITY_ATTRIBUTE] || {
+          condition: CONDITION_HAS,
+        },
+        validationFunc: commonValidators.requiredField,
+        title: intl.formatMessage(messages.Attribute),
+        active: true,
+        removable: false,
+        customProps: {
+          projectId,
+          keyURLCreator: URLS.launchAttributeKeysSearch,
+          valueURLCreator: URLS.launchAttributeValuesSearch,
+          conditions: [CONDITION_HAS],
+          canAddSinglePair: true,
+        },
+      },
+    ],
+    disabled,
+    ...rest,
+  });
+};
+
+TestCaseSearchAttributeEntity.propTypes = {
+  filterValues: PropTypes.object,
+  render: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
 export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
+  const isFilterEmpty = !filter || (!filter.name && !filter.compositeAttribute);
+  const isSearchByAttribute = !isFilterEmpty && filter.compositeAttribute;
+  const isSearchByName = !isFilterEmpty && filter.name;
+  const { formatMessage } = useIntl();
   const handleEntitiesChange = (entity) => {
     if (entity?.name?.value || entity?.compositeAttribute?.value) {
       onChange(entity);
-    } else if (entity?.name.value === '' || entity?.compositeAttribute?.value === '') {
+    } else if (entity?.name?.value === '' || entity?.compositeAttribute?.value === '') {
       onClear();
     }
   };
+  const filterContainer = useCallback(
+    (entityProvider, isDisabled = false) => {
+      return (
+        <FilterEntitiesContainer
+          onChange={handleEntitiesChange}
+          entities={filter}
+          entitiesProvider={entityProvider}
+          render={({
+            onFilterAdd,
+            onFilterRemove,
+            onFilterValidate,
+            onFilterChange,
+            filterErrors,
+            filterEntities,
+          }) => (
+            <EntitiesGroup
+              browserTooltipTitle={isDisabled ? formatMessage(messages.oneOption) : ''}
+              className={cx('filter-entity')}
+              disabled={isDisabled}
+              onChange={onFilterChange}
+              onValidate={onFilterValidate}
+              onRemove={onFilterRemove}
+              onAdd={onFilterAdd}
+              errors={filterErrors}
+              entities={filterEntities}
+              staticMode
+            />
+          )}
+        />
+      );
+    },
+    [filter, handleEntitiesChange],
+  );
+
   return (
     <div className={cx('filter-controls')}>
-      <FilterEntitiesContainer
-        level={LEVEL_WIDGET_TEST_CASE}
-        onChange={handleEntitiesChange}
-        entities={filter}
-        render={({
-          onFilterAdd,
-          onFilterRemove,
-          onFilterValidate,
-          onFilterChange,
-          filterErrors,
-          filterEntities,
-        }) => (
-          <EntitiesGroup
-            onChange={onFilterChange}
-            onValidate={(id, error) => {
-              onFilterValidate(id, error);
-            }}
-            onRemove={onFilterRemove}
-            onAdd={onFilterAdd}
-            errors={filterErrors}
-            entities={filterEntities}
-            staticMode
-          />
-        )}
-      />
+      {filterContainer(TestCaseSearchNameEntity, isSearchByAttribute)}
+      <span className={cx('separator')}>OR</span>
+      {filterContainer(TestCaseSearchAttributeEntity, isSearchByName)}
     </div>
   );
 };

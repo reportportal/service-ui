@@ -26,7 +26,7 @@ import { collectFilterEntities } from 'controllers/filter/utils';
 import styles from './testCaseSearch.scss';
 
 const cx = classNames.bind(styles);
-export const TestCaseSearch = ({ widget: { id: widgetId } }) => {
+export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
   const { searchCriteria = {}, content = [] } = targetWidgetSearch;
@@ -52,11 +52,16 @@ export const TestCaseSearch = ({ widget: { id: widgetId } }) => {
         onChange={handleSearch}
         onClear={handleClear}
       />
-      <TestCaseSearchContent isEmptyState={isSearchValueEmpty} data={content} />
+      <TestCaseSearchContent
+        listView={isDisplayedLaunches}
+        isEmptyState={isSearchValueEmpty}
+        data={content}
+      />
     </div>
   );
 };
 
 TestCaseSearch.propTypes = {
   widget: PropTypes.object,
+  isDisplayedLaunches: PropTypes.bool,
 };

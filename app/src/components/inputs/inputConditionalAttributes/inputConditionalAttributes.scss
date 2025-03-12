@@ -25,19 +25,30 @@
   &:hover {
     border-color: $COLOR--gray-47;
   }
+
   &:focus-within {
     border-color: $COLOR--topaz;
     box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 
   &.disabled {
-    .conditions-block {
-      cursor: default;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $COLOR--gray-80;
+      opacity: 0.5;
     }
+
     .input {
       background-color: $COLOR--gray-91;
       border-color: $COLOR--gray-80;
     }
+
     .clear-icon {
       cursor: default;
 
@@ -134,10 +145,12 @@
   &:hover:not(.active):not(.disabled) {
     background-color: $COLOR--tealish-hover;
   }
+
   &.active {
     background-color: $COLOR--gray-91;
     cursor: default;
   }
+
   &.disabled {
     color: $COLOR--gray-60;
     cursor: default;
@@ -149,6 +162,7 @@
   align-items: center;
   margin-left: 60px;
   flex-wrap: wrap;
+
   & > div {
     padding-bottom: 0px;
     margin-bottom: 0px;

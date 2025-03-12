@@ -40,6 +40,9 @@ export class EntitiesGroup extends Component {
     events: PropTypes.object,
     staticMode: PropTypes.bool,
     vertical: PropTypes.bool,
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
+    browserTooltipTitle: PropTypes.string,
   };
 
   static defaultProps = {
@@ -53,6 +56,9 @@ export class EntitiesGroup extends Component {
     events: {},
     staticMode: false,
     vertical: false,
+    disabled: false,
+    className: '',
+    browserTooltipTitle: '',
   };
 
   state = {
@@ -96,9 +102,19 @@ export class EntitiesGroup extends Component {
   };
 
   render() {
-    const { entities, entitySmallSize, errors, staticMode, vertical, events } = this.props;
+    const {
+      entities,
+      entitySmallSize,
+      errors,
+      staticMode,
+      vertical,
+      events,
+      disabled,
+      className,
+      browserTooltipTitle,
+    } = this.props;
     return (
-      <div className={cx('entities-group')}>
+      <div className={cx('entities-group', className)}>
         {this.getActiveEntities().map((entity) => {
           const EntityComponent = entity.component;
           const { id, removable, title, value, customProps = {} } = entity;
@@ -121,6 +137,8 @@ export class EntitiesGroup extends Component {
                 vertical={vertical}
                 customProps={customProps}
                 events={events}
+                disabled={disabled}
+                browserTooltipTitle={browserTooltipTitle}
               />
             </div>
           );

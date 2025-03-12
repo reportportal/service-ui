@@ -40,7 +40,9 @@ export class InputConditionalAttributes extends Component {
     keyURLCreator: PropTypes.func,
     projectId: PropTypes.string,
     isAttributeValueRequired: PropTypes.bool,
-    hideEditor: PropTypes.bool,
+    canAddSinglePair: PropTypes.bool,
+    disabled: PropTypes.bool,
+    browserTooltipTitle: PropTypes.string,
   };
 
   static defaultProps = {
@@ -51,7 +53,8 @@ export class InputConditionalAttributes extends Component {
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
     projectId: '',
     isAttributeValueRequired: true,
-    hideEditor: false,
+    canAddSinglePair: false,
+    disabled: false,
   };
 
   constructor(props) {
@@ -95,7 +98,7 @@ export class InputConditionalAttributes extends Component {
   };
 
   onChangeAttributes = (attribute) => {
-    const { value } = this.props.value;
+    const { value = '' } = this.props.value;
     const newAttributes = [
       ...this.state.attributes,
       { key: attribute.key || '', value: attribute.value || '' },
@@ -144,12 +147,21 @@ export class InputConditionalAttributes extends Component {
       valueURLCreator,
       projectId,
       isAttributeValueRequired,
-      hideEditor,
+      canAddSinglePair,
+      disabled,
+      browserTooltipTitle = '',
     } = this.props;
     const inputConditions = this.getConditions();
+    const hideEdit = canAddSinglePair && this.state?.attributes?.length;
 
     return (
-      <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
+      <div
+        className={cx('input-conditional-attributes', {
+          opened: this.state.opened,
+          disabled,
+        })}
+        title={browserTooltipTitle}
+      >
         <div className={cx('attributes-block')}>
           <AttributeListField
             value={this.state.attributes}
@@ -157,7 +169,7 @@ export class InputConditionalAttributes extends Component {
             editable={false}
             onChange={this.onRemove}
           />
-          {!hideEditor && (
+          {!hideEdit && (
             <AttributeEditor
               keyURLCreator={keyURLCreator}
               valueURLCreator={valueURLCreator}

@@ -33,4 +33,12 @@ export const messages = defineMessages({
     id: 'testCaseSearch.provideParameters',
     defaultMessage: 'Provide parameters to activate the test case search.',
   },
+  Attribute: {
+    id: 'testCaseSearch.AttributeTitle',
+    defaultMessage: 'Attribute',
+  },
+  oneOption: {
+    id: 'testCaseSearch.oneOption',
+    defaultMessage: 'Only one option, either test name or attributes, can be active at a time',
+  },
 });
