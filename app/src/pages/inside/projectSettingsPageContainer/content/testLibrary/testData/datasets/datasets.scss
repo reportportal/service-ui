@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-.test-data-page {
-  &__how-to-get-started {
-    margin-top: 96px;
+.datasets {
+  &__wrapper {
+    width: 100%;
+  }
+
+  &__list {
+    margin-bottom: 12px;
+  }
+
+  &__no-variables-message {
+    background-color: var(--rp-ui-base-bg-200);
+    border-radius: 8px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-e-400);
+    padding: 12px 16px;
   }
 }

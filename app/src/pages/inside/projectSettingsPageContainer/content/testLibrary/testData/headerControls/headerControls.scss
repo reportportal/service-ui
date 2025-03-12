@@ -22,9 +22,10 @@
   &__button {
     border: none;
 
-    &:hover, &:focus, &:active {
+    &:hover,
+    &:focus,
+    &:active {
       border: none !important;
     }
   }
 }
-

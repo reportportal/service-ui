@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -42,7 +41,6 @@ export const CREATE_DATASET_MODAL_KEY = 'createDatasetModal';
 export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [datasetName, setDatasetName] = useState();
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
@@ -56,15 +54,10 @@ export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={() => dispatch(hideModalAction())}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldProvider name="datasetName">
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              label={formatMessage(messages.name)}
-              defaultWidth={false}
-              value={datasetName}
-              onChange={(e) => setDatasetName(e.target.value)}
-            />
+            <FieldText label={formatMessage(messages.name)} defaultWidth={false} />
           </FieldErrorHint>
         </FieldProvider>
       </form>
