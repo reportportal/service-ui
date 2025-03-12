@@ -192,7 +192,6 @@ export const URLS = {
   testItemsInfo: (activeProject) => `${urlBase}${activeProject}/item/info`,
   testItemSearch: (activeProject, searchParam = {}) => {
     return `${urlBase}${activeProject}/item/search${getQueryParams(searchParam)}`;
-    // return `${urlBase}${activeProject}/item/search?filter.has.compositeAttribute=os:`;
   },
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,

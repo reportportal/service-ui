@@ -47,7 +47,6 @@ export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
           <EntitiesGroup
             onChange={onFilterChange}
             onValidate={(id, error) => {
-              // setIsSearchNameValid(!error);
               onFilterValidate(id, error);
             }}
             onRemove={onFilterRemove}
