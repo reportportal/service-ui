@@ -83,8 +83,9 @@ const messages = defineMessages({
   },
 });
 
-export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
+export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
+  const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
@@ -98,6 +99,9 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }
   };
 
   const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
+  const isTouched = Object.keys(fields).some(
+    (field) => field !== ADMIN_RIGHTS && fields[field].touched,
+  );
 
   return (
     <Modal
@@ -107,7 +111,7 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }
         onClick: () => {
           handleSubmit(onCreateUser)();
         },
-        disabled: anyTouched && invalid,
+        disabled: isTouched && invalid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -173,7 +177,6 @@ export const CreateUserModal = ({ data = {}, handleSubmit, anyTouched, invalid }
 CreateUserModal.propTypes = {
   data: PropTypes.object,
   handleSubmit: PropTypes.func,
-  anyTouched: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
 };
 
