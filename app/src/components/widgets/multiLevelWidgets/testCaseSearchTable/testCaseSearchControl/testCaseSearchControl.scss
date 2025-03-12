@@ -16,5 +16,18 @@
 
 .filter-controls {
   padding: 13px 0 0 21px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
+.filter-entity {
+  width: auto;
+}
+
+.separator {
+  padding: 10px 10px 0 0;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--gray-60;
+}

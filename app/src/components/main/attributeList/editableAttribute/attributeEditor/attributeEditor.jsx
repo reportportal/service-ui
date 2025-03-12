@@ -237,7 +237,7 @@ export class AttributeEditor extends Component {
         <div className={cx('control')}>
           <div
             className={cx('icon', 'check-icon', { disabled: !this.isFormValid() })}
-            onClick={this.isFormValid() ? this.handleSubmit : null}
+            onClick={this.isFormValid() ? this.handleSubmit : () => {}}
           >
             {Parser(CircleCheckIcon)}
           </div>

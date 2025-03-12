@@ -58,6 +58,7 @@ export class InputConditional extends Component {
     onBlur: PropTypes.func,
     onKeyUp: PropTypes.func,
     onKeyPress: PropTypes.func,
+    browserTooltipTitle: PropTypes.string,
   };
 
   static defaultProps = {
@@ -77,6 +78,7 @@ export class InputConditional extends Component {
     onKeyUp: () => {},
     onKeyPress: () => {},
     conditions: [CONDITION_CNT, CONDITION_NOT_CNT, CONDITION_EQ, CONDITION_NOT_EQ],
+    browserTooltipTitle: '',
   };
   state = {
     opened: false,
@@ -134,6 +136,7 @@ export class InputConditional extends Component {
       onKeyPress,
       conditionsBlockClassName,
       inputClassName,
+      browserTooltipTitle,
     } = this.props;
     return (
       <div
@@ -142,6 +145,7 @@ export class InputConditional extends Component {
           disabled,
           'mobile-disabled': mobileDisabled,
         })}
+        title={browserTooltipTitle}
       >
         <input
           type={'text'}

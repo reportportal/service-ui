@@ -22,4 +22,3 @@ export const LEVEL_LOG = 'LOG';
 export const LEVEL_NOT_FOUND = 'NOT_FOUND';
 export const LEVEL_STORY = 'STORY';
 export const LEVEL_SCENARIO = 'SCENARIO';
-export const LEVEL_WIDGET_TEST_CASE = 'WIDGET_TEST_CASE';

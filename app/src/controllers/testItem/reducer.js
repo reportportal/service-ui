@@ -18,6 +18,8 @@ import { combineReducers } from 'redux';
 import { loadingReducer } from 'controllers/loading';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import {
   NAMESPACE,
   SET_LEVEL,
@@ -76,5 +78,5 @@ export const testItemReducer = combineReducers({
   filteredItemStatistics: fetchReducer(FILTERED_ITEM_STATISTICS_NAMESPACE, {
     initialState: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   }),
-  searchedItems: searchedItemsWidgetReducer,
+  searchedItems: createPageScopedReducer(searchedItemsWidgetReducer, [PROJECT_DASHBOARD_ITEM_PAGE]),
 });

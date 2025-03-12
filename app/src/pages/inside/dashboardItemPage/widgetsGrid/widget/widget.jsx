@@ -24,7 +24,7 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -125,6 +125,7 @@ export class SimpleWidget extends Component {
       userSettings: {},
       hasError: false,
       error: null,
+      displayLaunchesValue: false,
     };
   }
 
@@ -166,7 +167,7 @@ export class SimpleWidget extends Component {
 
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
-    const { widget, queryParameters, userSettings } = this.state;
+    const { widget, queryParameters, userSettings, displayLaunchesValue } = this.state;
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
@@ -203,6 +204,7 @@ export class SimpleWidget extends Component {
           userSettings={userSettings}
           onChangeUserSettings={this.onChangeUserSettings}
           isPrintMode={isPrintMode}
+          isDisplayedLaunches={displayLaunchesValue}
         />
       )
     );
@@ -406,7 +408,7 @@ export class SimpleWidget extends Component {
   };
 
   render() {
-    const { widget, visible } = this.state;
+    const { widget, visible, displayLaunchesValue } = this.state;
     const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
@@ -421,7 +423,13 @@ export class SimpleWidget extends Component {
     if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
       headerData.meta.push(widgetOptions.latest || true);
     }
+    const isTestCaseSearch = widget.widgetType === TEST_CASE_SEARCH;
 
+    const handleDisplayLaunchesToggleChange = () => {
+      this.setState({
+        displayLaunchesValue: !displayLaunchesValue,
+      });
+    };
     return (
       <div className={cx('widget-container', { disabled: isFullscreen })}>
         <div
@@ -437,6 +445,8 @@ export class SimpleWidget extends Component {
             onForceUpdate={this.showForceUpdateWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
+            isDisplayedLaunches={this.state.displayLaunchesValue}
+            onDisplayLaunchesToggle={isTestCaseSearch ? handleDisplayLaunchesToggleChange : null}
           />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
