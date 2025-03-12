@@ -51,6 +51,7 @@ export class EntityInputConditionalAttributes extends PureComponent {
           valueURLCreator={valueURLCreator}
           projectId={projectId}
           isAttributeValueRequired={false}
+          {...customProps}
         />
       </FieldFilterEntity>
     );

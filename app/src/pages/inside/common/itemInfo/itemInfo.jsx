@@ -45,6 +45,7 @@ import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { RetriesCounter } from './retriesCounter';
@@ -167,9 +168,13 @@ export class ItemInfo extends Component {
             ownLinkParams={customProps.ownLinkParams}
             className={cx('name-link')}
             onClick={onNameClick}
+            target={customProps.openInNewTab ? '_blank' : '_self'}
           >
             <ItemNameTooltip tooltipContent={value.name}>
               <span>{formatItemName(value.name)}</span>
+              {customProps?.openInNewTab && (
+                <i className={cx('external-icon')}>{Parser(ExternalLinkIcon)}</i>
+              )}
             </ItemNameTooltip>
           </NameLink>
           <span className={cx('edit-number-box')}>
@@ -239,7 +244,7 @@ export class ItemInfo extends Component {
             <AttributesBlock
               attributes={value.attributes}
               onClickAttribute={customProps.onClickAttribute}
-              isAttributeClickable
+              isAttributeClickable={!hideEdit}
             />
           )}
           {isStepLevel && (

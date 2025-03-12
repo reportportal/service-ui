@@ -26,6 +26,7 @@ import {
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   SET_PAGE_LOADING,
   FETCH_PARENT_LAUNCH_SUCCESS,
+  SEARCHED_ITEMS_WIDGET,
 } from './constants';
 
 const levelReducer = (state = '', { type = '', payload = {} }) => {
@@ -55,6 +56,15 @@ const parentItemsReducer = (state = [], { type = '', payload = {} }) => {
   }
 };
 
+const searchedItemsWidgetReducer = (state = {}, { type = '', payload = {} }) => {
+  switch (type) {
+    case SEARCHED_ITEMS_WIDGET:
+      return { ...state, ...payload };
+    default:
+      return state;
+  }
+};
+
 export const testItemReducer = combineReducers({
   level: levelReducer,
   loading: loadingReducer(NAMESPACE),
@@ -66,4 +76,5 @@ export const testItemReducer = combineReducers({
   filteredItemStatistics: fetchReducer(FILTERED_ITEM_STATISTICS_NAMESPACE, {
     initialState: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   }),
+  searchedItems: searchedItemsWidgetReducer,
 });

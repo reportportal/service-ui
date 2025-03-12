@@ -48,6 +48,8 @@ export const PROVIDER_TYPE_CLUSTER = 'cluster';
 export const PROVIDER_TYPE_WIDGET_ID = 'widgetId';
 export const PROVIDER_TYPE_LAUNCH_ID = 'launchId';
 export const PROVIDER_TYPE_FILTER_ID = 'filterId';
+export const SEARCH_TEST_ITEMS = 'searchTestItemsFromWidget';
+export const SEARCHED_ITEMS_WIDGET = 'searchedItemsWidget';
 
 export const LIST_VIEW = 'LIST_VIEW';
 export const LOG_VIEW = 'PARENT_LOG_VIEW';

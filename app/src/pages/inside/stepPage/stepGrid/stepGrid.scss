@@ -40,6 +40,10 @@
   text-transform: uppercase;
   width: 9%;
 
+  .status-value{
+    font-family: $FONT-REGULAR;
+    text-transform: capitalize;
+  }
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
