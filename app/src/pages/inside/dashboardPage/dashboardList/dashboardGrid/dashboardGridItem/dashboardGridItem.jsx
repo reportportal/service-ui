@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PROJECT_DASHBOARD_ITEM_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { getDashboardItemPageLinkSelector } from 'controllers/dashboard/selectors';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
@@ -27,7 +27,7 @@ import styles from './dashboardGridItem.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  slugs: urlOrganizationAndProjectSelector(state),
+  getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -44,10 +44,7 @@ export class DashboardGridItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
+    getDashboardItemPageLink: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -74,19 +71,13 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const {
-      item,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
+    const { item, getDashboardItemPageLink } = this.props;
     const { name, description, owner, id } = item;
 
     return (
       <div className={cx('grid-view')}>
         <NavLink
-          to={{
-            type: PROJECT_DASHBOARD_ITEM_PAGE,
-            payload: { organizationSlug, projectSlug, dashboardId: id },
-          }}
+          to={getDashboardItemPageLink(id)}
           className={cx('grid-view-inner')}
           onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
         >

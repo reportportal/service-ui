@@ -37,6 +37,8 @@ export {
   loadingSelector,
   totalDashboardsSelector,
   dashboardPaginationSelector,
+  querySelector,
+  getDashboardItemPageLinkSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,

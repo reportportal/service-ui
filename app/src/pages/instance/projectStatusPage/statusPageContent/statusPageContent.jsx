@@ -56,33 +56,40 @@ export class StatusPageContent extends Component {
     }
   }
 
-  fetchData = () => {
+  fetchData = async () => {
     const { projectKey, interval } = this.props;
     this.setState({
       loading: true,
     });
     const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
-    Promise.all(widgetsWithUrls.map((item) => fetch(item.getUrl(projectKey, interval))))
-      .then((responses) => {
-        const widgetsData = widgetsWithUrls.reduce(
-          (acc, item, index) => ({
-            ...acc,
-            [item.id]: responses[index],
-          }),
-          {},
-        );
-        this.setState({
-          widgetsData,
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          widgetsData: {},
-          loading: false,
-        });
+    try {
+      const responses = [];
+
+      /* eslint-disable no-await-in-loop */
+      for (let i = 0; i < widgetsWithUrls.length; i += 1) {
+        const response = await fetch(widgetsWithUrls[i].getUrl(projectKey, interval));
+        responses.push(response);
+      }
+
+      const widgetsData = widgetsWithUrls.reduce(
+        (acc, item, index) => ({
+          ...acc,
+          [item.id]: responses[index],
+        }),
+        {},
+      );
+
+      this.setState({
+        widgetsData,
+        loading: false,
       });
+    } catch (e) {
+      this.setState({
+        widgetsData: {},
+        loading: false,
+      });
+    }
   };
 
   renderWidget = (widgetData) => {
