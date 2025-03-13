@@ -28,6 +28,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   activeDashboardIdSelector,
   pageSelector,
+  pagePropertiesSelector,
 } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
@@ -170,9 +171,13 @@ function* addDashboard({ payload: dashboard }) {
     );
 
     yield put(hideModalAction());
+    const query = yield select(pagePropertiesSelector);
     yield put({
       type: PROJECT_DASHBOARD_ITEM_PAGE,
       payload: { projectSlug, dashboardId: id, organizationSlug },
+      meta: {
+        query,
+      },
     });
   } catch (error) {
     if (isPreconfigured && onError) {
@@ -225,6 +230,7 @@ function* copyDashboardConfig({ payload: dashboard }) {
     yield put(showDefaultErrorNotification(error));
   }
 }
+
 function* updateDashboard({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
   const { name, description, id } = dashboard;

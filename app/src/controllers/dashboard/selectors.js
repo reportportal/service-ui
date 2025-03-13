@@ -15,7 +15,13 @@
  */
 
 import { createSelector } from 'reselect';
-import { activeDashboardIdSelector, createQueryParametersSelector } from 'controllers/pages';
+import {
+  activeDashboardIdSelector,
+  pagePropertiesSelector,
+  createQueryParametersSelector,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+} from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
 
 const domainSelector = (state) => state.dashboards || {};
 export const loadingSelector = (state) => domainSelector(state).loading || false;
@@ -43,3 +49,16 @@ export const dashboardFullScreenModeSelector = (state) => domainSelector(state).
 export const querySelector = createQueryParametersSelector();
 
 export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;
+
+export const getDashboardItemPageLinkSelector = (state) => (dashboardId) => {
+  const { organizationSlug, projectSlug } = activeProjectSelector(state);
+  const queryParams = pagePropertiesSelector(state);
+
+  return {
+    type: PROJECT_DASHBOARD_ITEM_PAGE,
+    payload: { organizationSlug, projectSlug, dashboardId },
+    meta: {
+      query: queryParams,
+    },
+  };
+};
