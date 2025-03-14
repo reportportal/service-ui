@@ -410,6 +410,7 @@ export class StepGrid extends Component {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           rowHighlightingConfig={rowHighlightingConfig}
+          isViewOnly={isTestSearchView}
         />
         {!data.length && !loading && (
           <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

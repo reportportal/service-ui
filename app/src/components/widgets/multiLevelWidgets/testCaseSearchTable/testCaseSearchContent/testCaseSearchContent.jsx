@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { messages } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/messages';
-import { StepGrid } from 'pages/inside/stepPage/stepGrid';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { StepGrid } from 'pages/inside/stepPage/stepGrid';
 import styles from './testCaseSearchContent.scss';
+import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
-export const TestCaseSearchContent = ({ isEmptyState, data, listView }) => {
+export const TestCaseSearchContent = ({
+  isEmptyState,
+  data,
+  listView,
+  loading,
+  sortingDirection,
+  onChangeSorting,
+}) => {
   const { formatMessage } = useIntl();
   return (
     <ScrollWrapper>
@@ -33,7 +41,15 @@ export const TestCaseSearchContent = ({ isEmptyState, data, listView }) => {
           <p className={cx('description')}>{formatMessage(messages.provideParameters)}</p>
         </div>
       ) : (
-        <StepGrid data={data} listView={listView} isTestSearchView />
+        <StepGrid
+          data={data}
+          listView={listView}
+          isTestSearchView
+          onChangeSorting={onChangeSorting}
+          sortingDirection={sortingDirection}
+          sortingColumn={ENTITY_START_TIME}
+          loading={loading}
+        />
       )}
     </ScrollWrapper>
   );
@@ -43,4 +59,7 @@ TestCaseSearchContent.propTypes = {
   isEmptyState: PropTypes.bool,
   data: PropTypes.array,
   listView: PropTypes.bool,
+  loading: PropTypes.bool,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };

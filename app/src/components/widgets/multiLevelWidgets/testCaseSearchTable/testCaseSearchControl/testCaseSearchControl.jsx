@@ -119,9 +119,9 @@ export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
   const isSearchByName = !isFilterEmpty && filter.name;
   const { formatMessage } = useIntl();
   const handleEntitiesChange = (entity) => {
-    if (entity?.name?.value || entity?.compositeAttribute?.value) {
+    if (entity?.[ENTITY_NAME]?.value || entity?.[ENTITY_ATTRIBUTE]?.value) {
       onChange(entity);
-    } else if (entity?.name?.value === '' || entity?.compositeAttribute?.value === '') {
+    } else if (entity?.[ENTITY_NAME]?.value === '' || entity?.[ENTITY_ATTRIBUTE]?.value === '') {
       onClear();
     }
   };

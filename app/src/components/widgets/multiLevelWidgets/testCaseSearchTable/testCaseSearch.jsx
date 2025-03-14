@@ -16,33 +16,43 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { createFilterQuery } from 'components/filterEntities/containers/utils';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchedTestItemsSelector, testItemsSearchAction } from 'controllers/testItem';
 import { TestCaseSearchControl } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchControl';
 import { TestCaseSearchContent } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchContent';
-import { collectFilterEntities } from 'controllers/filter/utils';
+import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import styles from './testCaseSearch.scss';
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
-  const { searchCriteria = {}, content = [] } = targetWidgetSearch;
-  const [searchValue, setSearchValue] = useState(collectFilterEntities(searchCriteria));
+  const { searchCriteria = {}, content = [], loading = false } = targetWidgetSearch;
+  const [searchValue, setSearchValue] = useState(searchCriteria);
+  const [sortingDirection, setSortingDirection] = useState(SORTING_DESC);
   const dispatch = useDispatch();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
   const handleSearch = (entity) => {
-    const filter = createFilterQuery(entity);
     setSearchValue(entity);
-    dispatch(testItemsSearchAction({ searchCriteria: filter, widgetId }));
   };
   const handleClear = () => {
     setSearchValue({});
-    dispatch(testItemsSearchAction({ widgetId }));
   };
+  const handleChangeSorting = () => {
+    setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
+  };
+
+  useEffect(() => {
+    if (isSearchValueEmpty) return;
+    dispatch(
+      testItemsSearchAction({
+        searchParams: { searchCriteria: searchValue, sortingDirection },
+        widgetId,
+      }),
+    );
+  }, [searchValue, sortingDirection]);
 
   return (
     <div className={cx('test-case-search-container')}>
@@ -56,6 +66,9 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         listView={isDisplayedLaunches}
         isEmptyState={isSearchValueEmpty}
         data={content}
+        loading={loading}
+        sortingDirection={sortingDirection}
+        onChangeSorting={handleChangeSorting}
       />
     </div>
   );
