@@ -52,6 +52,8 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { SORTING_KEY } from 'controllers/sorting';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -348,16 +350,29 @@ function* watchDeleteTestItems() {
   yield takeEvery(DELETE_TEST_ITEMS, deleteTestItems);
 }
 
-function* searchTestItemsFromWidget({ payload: { widgetId, searchCriteria } }) {
+function* searchTestItemsFromWidget({ payload: { widgetId, searchParams } }) {
   const activeProject = yield select(activeProjectSelector);
-  if (!searchCriteria) {
+  if (!searchParams) {
     yield put(searchItemWidgetDetailsAction({ [widgetId]: {} }));
   } else {
-    const result = yield call(fetch, URLS.testItemSearch(activeProject, searchCriteria));
+    const { searchCriteria, sortingDirection } = searchParams;
+    const query = createFilterQuery(searchCriteria);
+    yield put(
+      searchItemWidgetDetailsAction({
+        [widgetId]: {
+          loading: true,
+        },
+      }),
+    );
+    const result = yield call(
+      fetch,
+      URLS.testItemSearch(activeProject, { ...query, [SORTING_KEY]: sortingDirection }),
+    );
     yield put(
       searchItemWidgetDetailsAction({
         [widgetId]: {
           searchCriteria,
+          loading: false,
           ...result,
         },
       }),

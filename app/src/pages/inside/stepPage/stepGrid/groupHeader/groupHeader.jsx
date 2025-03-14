@@ -40,7 +40,7 @@ export const GroupHeader = connect((state) => ({
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
-}))(({ data, activeProject, launchId, filterId, isTestItemsList }) => {
+}))(({ data, activeProject, launchId, filterId, isTestItemsList, isViewOnly }) => {
   const { itemPaths = [], launchPathName } = data[0].pathNames;
 
   let pathNames = itemPaths;
@@ -60,20 +60,24 @@ export const GroupHeader = connect((state) => ({
   return (
     <div className={cx('group-header-row')}>
       {/* td inside of div because of EPMRPP-36916 */}
-      <td className={cx('group-header-content')} colSpan={100}>
+      <td className={cx('group-header-content', { disabled: isViewOnly })} colSpan={100}>
         {pathNames.map((key, i, array) => (
           <Fragment key={`${key.id}${key.name}`}>
-            <Link
-              className={cx('link')}
-              to={createLink(
-                activeProject,
-                filterId,
-                itemLaunchId,
-                array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
-              )}
-            >
-              {key.name}
-            </Link>
+            {isViewOnly ? (
+              <span className={cx('item-name')}> {key.name}</span>
+            ) : (
+              <Link
+                className={cx('link')}
+                to={createLink(
+                  activeProject,
+                  filterId,
+                  itemLaunchId,
+                  array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
+                )}
+              >
+                {key.name}
+              </Link>
+            )}
             {i < array.length - 1 && <span className={cx('separator')}> / </span>}
           </Fragment>
         ))}
@@ -86,4 +90,5 @@ GroupHeader.propTypes = {
 };
 GroupHeader.defaultProps = {
   data: [],
+  isViewOnly: false,
 };

@@ -23,7 +23,14 @@ import PropTypes from 'prop-types';
 import styles from './testCaseSearchContent.scss';
 
 const cx = classNames.bind(styles);
-export const TestCaseSearchContent = ({ isEmptyState, data, listView }) => {
+export const TestCaseSearchContent = ({
+  isEmptyState,
+  data,
+  listView,
+  loading,
+  sortingDirection,
+  onChangeSorting,
+}) => {
   const { formatMessage } = useIntl();
   return (
     <ScrollWrapper>
@@ -33,7 +40,15 @@ export const TestCaseSearchContent = ({ isEmptyState, data, listView }) => {
           <p className={cx('description')}>{formatMessage(messages.provideParameters)}</p>
         </div>
       ) : (
-        <StepGrid data={data} listView={listView} isTestSearchView />
+        <StepGrid
+          data={data}
+          listView={listView}
+          isTestSearchView
+          onChangeSorting={onChangeSorting}
+          sortingDirection={sortingDirection}
+          sortingColumn={'startTime'}
+          loading={loading}
+        />
       )}
     </ScrollWrapper>
   );
@@ -43,4 +58,7 @@ TestCaseSearchContent.propTypes = {
   isEmptyState: PropTypes.bool,
   data: PropTypes.array,
   listView: PropTypes.bool,
+  loading: PropTypes.bool,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
