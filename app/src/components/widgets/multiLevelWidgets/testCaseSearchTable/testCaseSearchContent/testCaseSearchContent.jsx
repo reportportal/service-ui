@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { messages } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/messages';
-import { StepGrid } from 'pages/inside/stepPage/stepGrid';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { StepGrid } from 'pages/inside/stepPage/stepGrid';
 import styles from './testCaseSearchContent.scss';
+import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 export const TestCaseSearchContent = ({
@@ -46,7 +47,7 @@ export const TestCaseSearchContent = ({
           isTestSearchView
           onChangeSorting={onChangeSorting}
           sortingDirection={sortingDirection}
-          sortingColumn={'startTime'}
+          sortingColumn={ENTITY_START_TIME}
           loading={loading}
         />
       )}

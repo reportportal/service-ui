@@ -52,7 +52,9 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { SORTING_KEY } from 'controllers/sorting';
+import { FILTER_ENTITY_ID_TO_TYPE_MAP } from 'components/main/analytics/events/common/testItemPages/constants';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { formatSortingString, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import {
   setLevelAction,
@@ -355,7 +357,11 @@ function* searchTestItemsFromWidget({ payload: { widgetId, searchParams } }) {
   if (!searchParams) {
     yield put(searchItemWidgetDetailsAction({ [widgetId]: {} }));
   } else {
-    const { searchCriteria, sortingDirection } = searchParams;
+    const { searchCriteria, sortingDirection = SORTING_DESC } = searchParams;
+    const sorting = formatSortingString(
+      [FILTER_ENTITY_ID_TO_TYPE_MAP[ENTITY_START_TIME]],
+      sortingDirection,
+    );
     const query = createFilterQuery(searchCriteria);
     yield put(
       searchItemWidgetDetailsAction({
@@ -366,7 +372,7 @@ function* searchTestItemsFromWidget({ payload: { widgetId, searchParams } }) {
     );
     const result = yield call(
       fetch,
-      URLS.testItemSearch(activeProject, { ...query, [SORTING_KEY]: sortingDirection }),
+      URLS.testItemSearch(activeProject, { ...query, [SORTING_KEY]: sorting }),
     );
     yield put(
       searchItemWidgetDetailsAction({

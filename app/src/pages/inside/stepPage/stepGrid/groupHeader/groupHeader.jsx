@@ -64,7 +64,7 @@ export const GroupHeader = connect((state) => ({
         {pathNames.map((key, i, array) => (
           <Fragment key={`${key.id}${key.name}`}>
             {isViewOnly ? (
-              <span className={cx('item-name')}> {key.name}</span>
+              <span className={cx('item-name')}>{key.name}</span>
             ) : (
               <Link
                 className={cx('link')}
