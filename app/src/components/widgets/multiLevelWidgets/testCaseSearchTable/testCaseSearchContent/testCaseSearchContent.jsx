@@ -17,7 +17,10 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { StepGrid } from 'pages/inside/stepPage/stepGrid';
 import { Button } from '@reportportal/ui-kit';
@@ -36,6 +39,12 @@ export const TestCaseSearchContent = ({
   onLoadMore,
 }) => {
   const { formatMessage } = useIntl();
+  const dashboardId = useSelector(activeDashboardIdSelector);
+  const targetEvents = {
+    CLICK_ITEM_NAME: WIDGETS_EVENTS.clickOnSearchedItemName(dashboardId),
+    onClickIssueTicketEvent: WIDGETS_EVENTS.clickOnIssueTicket(dashboardId),
+    clickOnExpandAccordion: WIDGETS_EVENTS.clickOnExpandDescription(dashboardId),
+  };
   return (
     <ScrollWrapper>
       {isEmptyState ? (
@@ -53,6 +62,7 @@ export const TestCaseSearchContent = ({
             sortingDirection={sortingDirection}
             sortingColumn={ENTITY_START_TIME}
             loading={loading}
+            events={targetEvents}
           />
           {onLoadMore && (
             <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>

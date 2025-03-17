@@ -43,6 +43,7 @@ import {
   PRODUCT_STATUS,
   */
 } from 'common/constants/widgetTypes';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { widgetDocsReferences } from 'common/utils/referenceDictionary';
 import { widgetTypesMessages } from './messages';
 import {
@@ -405,6 +406,7 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(TEST_CASE_SEARCH_PREVIEW),
     documentationLink: widgetDocsReferences.testCaseSearch,
+    documentationClickEventInfo: WIDGETS_EVENTS.onSearchWidgetDocumentLinkClick,
   },
   /*
   {
