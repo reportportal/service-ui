@@ -25,6 +25,8 @@ export {
   fetchTestItemsFromLogPageAction,
   setDefaultItemStatisticsAction,
   testItemsSearchAction,
+  refreshSearchedItemsAction,
+  loadMoreSearchedItemsAction,
 } from './actionCreators';
 export { fetchParentItems, fetchParentLaunch, testItemsSagas } from './sagas';
 export {

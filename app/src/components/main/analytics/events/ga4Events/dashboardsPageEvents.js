@@ -64,7 +64,13 @@ export const WIDGETS_EVENTS = {
       ...actionType,
     };
   },
-
+  clickOnLoadMoreSearchItems: (dashboardId, isSearchedByName) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'load_more',
+    type: 'search_widget',
+    number: dashboardId,
+    status: isSearchedByName ? 'test_name' : 'attribute',
+  }),
   ON_DRAG_WIDGET: {
     ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: 'drag_widget',

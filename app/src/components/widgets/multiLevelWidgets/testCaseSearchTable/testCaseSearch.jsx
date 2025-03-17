@@ -17,23 +17,42 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchedTestItemsSelector, testItemsSearchAction } from 'controllers/testItem';
-import { TestCaseSearchControl } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchControl';
-import { TestCaseSearchContent } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/testCaseSearchContent';
+import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
+import { activeDashboardIdSelector } from 'controllers/pages';
+import {
+  loadMoreSearchedItemsAction,
+  searchedTestItemsSelector,
+  testItemsSearchAction,
+} from 'controllers/testItem';
+import { TestCaseSearchControl } from './testCaseSearchControl';
+import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
+
+const MAXIMUM_ITEMS = 300;
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
+  const dashboardId = useSelector(activeDashboardIdSelector);
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
-  const { searchCriteria = {}, content = [], loading = false } = targetWidgetSearch;
+  const {
+    searchCriteria = {},
+    sortingDirection: initialDirection = SORTING_DESC,
+    content = [],
+    page = {},
+    loading = false,
+  } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
-  const [sortingDirection, setSortingDirection] = useState(SORTING_DESC);
+  const [sortingDirection, setSortingDirection] = useState(initialDirection);
+
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
+  const isLoadMoreAvailable = page?.hasNext && content.length > 0 && content.length < MAXIMUM_ITEMS;
   const handleSearch = (entity) => {
     setSearchValue(entity);
   };
@@ -42,6 +61,10 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   };
   const handleChangeSorting = () => {
     setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
+  };
+  const handleLoadMore = () => {
+    trackEvent(WIDGETS_EVENTS.clickOnLoadMoreSearchItems(dashboardId, !!searchValue?.name?.value));
+    dispatch(loadMoreSearchedItemsAction(widgetId));
   };
 
   useEffect(() => {
@@ -69,6 +92,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         loading={loading}
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
+        onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}
       />
     </div>
   );

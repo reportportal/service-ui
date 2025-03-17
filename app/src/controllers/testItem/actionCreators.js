@@ -30,6 +30,8 @@ import {
   FETCH_PARENT_LAUNCH_SUCCESS,
   SEARCH_TEST_ITEMS,
   SEARCHED_ITEMS_WIDGET,
+  REFRESH_SEARCHED_ITEMS,
+  LOAD_MORE_SEARCHED_ITEMS,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -83,6 +85,16 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
 export const testItemsSearchAction = (params) => ({
   type: SEARCH_TEST_ITEMS,
   payload: params,
+});
+
+export const refreshSearchedItemsAction = (id) => ({
+  type: REFRESH_SEARCHED_ITEMS,
+  payload: id,
+});
+
+export const loadMoreSearchedItemsAction = (id) => ({
+  type: LOAD_MORE_SEARCHED_ITEMS,
+  payload: id,
 });
 
 export const searchItemWidgetDetailsAction = (params) => ({

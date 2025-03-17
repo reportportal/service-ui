@@ -20,6 +20,8 @@ import { useIntl } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { StepGrid } from 'pages/inside/stepPage/stepGrid';
+import { Button } from '@reportportal/ui-kit';
+import React from 'react';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
 
@@ -31,6 +33,7 @@ export const TestCaseSearchContent = ({
   loading,
   sortingDirection,
   onChangeSorting,
+  onLoadMore,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -41,15 +44,22 @@ export const TestCaseSearchContent = ({
           <p className={cx('description')}>{formatMessage(messages.provideParameters)}</p>
         </div>
       ) : (
-        <StepGrid
-          data={data}
-          listView={listView}
-          isTestSearchView
-          onChangeSorting={onChangeSorting}
-          sortingDirection={sortingDirection}
-          sortingColumn={ENTITY_START_TIME}
-          loading={loading}
-        />
+        <div className={cx('test-case-grid-wrapper')}>
+          <StepGrid
+            data={data}
+            listView={listView}
+            isTestSearchView
+            onChangeSorting={onChangeSorting}
+            sortingDirection={sortingDirection}
+            sortingColumn={ENTITY_START_TIME}
+            loading={loading}
+          />
+          {onLoadMore && (
+            <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>
+              Load More
+            </Button>
+          )}
+        </div>
       )}
     </ScrollWrapper>
   );
@@ -62,4 +72,5 @@ TestCaseSearchContent.propTypes = {
   loading: PropTypes.bool,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  onLoadMore: PropTypes.func,
 };

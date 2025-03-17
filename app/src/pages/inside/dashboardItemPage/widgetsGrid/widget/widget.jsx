@@ -39,6 +39,7 @@ import {
   WIDGETS_WITH_INTERNAL_EMPTY_STATE,
 } from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { refreshSearchedItemsAction } from 'controllers/testItem';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
@@ -74,6 +75,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   }),
   {
     showModalAction,
+    refreshSearchedItemsAction,
   },
 )
 @track()
@@ -84,6 +86,7 @@ export class SimpleWidget extends Component {
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    refreshSearchedItemsAction: PropTypes.func.isRequired,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
@@ -344,6 +347,11 @@ export class SimpleWidget extends Component {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.fetchWidget();
   };
+  refreshWidgetSearch = () => {
+    const { widgetId } = this.props;
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
+    this.props.refreshSearchedItemsAction(widgetId);
+  };
 
   showDeleteWidgetModal = () => {
     const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
@@ -439,7 +447,7 @@ export class SimpleWidget extends Component {
         >
           <WidgetHeader
             data={headerData}
-            onRefresh={this.refreshWidget}
+            onRefresh={isTestCaseSearch ? this.refreshWidgetSearch : this.refreshWidget}
             onDelete={this.showDeleteWidgetModal}
             onEdit={this.showEditWidgetModal}
             onForceUpdate={this.showForceUpdateWidgetModal}
