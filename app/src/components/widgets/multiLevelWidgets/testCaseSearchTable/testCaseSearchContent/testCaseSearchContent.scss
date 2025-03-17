@@ -37,3 +37,14 @@
     font-size: 13px;
   }
 }
+
+.test-case-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: $COLOR--white;
+
+  .load-more{
+    margin: 20px auto;
+    background: $COLOR--white-two;
+  }
+}

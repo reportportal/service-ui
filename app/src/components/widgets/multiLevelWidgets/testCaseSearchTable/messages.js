@@ -41,4 +41,8 @@ export const messages = defineMessages({
     id: 'testCaseSearch.oneOption',
     defaultMessage: 'Only one option, either test name or attributes, can be active at a time',
   },
+  loadMore: {
+    id: 'testCaseSearch.loadMore',
+    defaultMessage: 'Load more',
+  },
 });
