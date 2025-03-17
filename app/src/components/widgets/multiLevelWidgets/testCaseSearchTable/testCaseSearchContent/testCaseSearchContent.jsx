@@ -56,7 +56,7 @@ export const TestCaseSearchContent = ({
           />
           {onLoadMore && (
             <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>
-              Load More
+              {formatMessage(messages.loadMore)}
             </Button>
           )}
         </div>

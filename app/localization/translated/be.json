@@ -2258,6 +2258,7 @@
   "rolesRow.unAssignFromPersonalProject": "Немагчыма вывесці карыстальніка з персанальнага праекта",
   "testCaseSearch.AttributeTitle": "Атрыбут",
   "testCaseSearch.letsSearch": "Пачнём пошук",
+  "testCaseSearch.loadMore": "Загрузіць больш",
   "testCaseSearch.oneOption": "Толькі адзін варыянт, або назва тэсту, або атрыбуты, можа быць актыўным адначасова",
   "testCaseSearch.provideParameters": "Укажыце параметры для актывацыі пошуку тэст-кейса.",
   "testCaseSearch.testNamePlaceholder": "Увядзіце назву тэсту",
