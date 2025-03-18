@@ -388,6 +388,7 @@ export class StepGrid extends Component {
       sortingDirection,
       rowHighlightingConfig,
       isTestSearchView,
+      events,
     } = this.props;
 
     return (
@@ -411,6 +412,7 @@ export class StepGrid extends Component {
           sortingDirection={sortingDirection}
           rowHighlightingConfig={rowHighlightingConfig}
           isViewOnly={isTestSearchView}
+          eventsInfo={events}
         />
         {!data.length && !loading && (
           <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

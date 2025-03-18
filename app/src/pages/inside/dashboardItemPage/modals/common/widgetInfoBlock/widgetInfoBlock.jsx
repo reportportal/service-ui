@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import Parser from 'html-react-parser';
+import { connect } from 'react-redux';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
@@ -31,6 +33,10 @@ import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 
 const cx = classNames.bind(styles);
+
+@connect((state) => ({
+  dashboardId: activeDashboardIdSelector(state),
+}))
 @injectIntl
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
@@ -39,6 +45,7 @@ export class WidgetInfoBlock extends PureComponent {
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
     customCondition: PropTypes.bool,
+    dashboardId: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -118,6 +125,7 @@ export class WidgetInfoBlock extends PureComponent {
     const {
       activeWidget,
       intl: { formatMessage },
+      dashboardId,
     } = this.props;
     const { loading, widgetData } = this.state;
 
@@ -128,7 +136,11 @@ export class WidgetInfoBlock extends PureComponent {
             <div className={cx('widget-title')}>{activeWidget.title}</div>
             <div className={cx('widget-description')}>{activeWidget.description}</div>
             {activeWidget.documentationLink && (
-              <LinkComponent to={activeWidget.documentationLink} icon={ExternalLinkIcon}>
+              <LinkComponent
+                to={activeWidget.documentationLink}
+                icon={ExternalLinkIcon}
+                event={activeWidget?.documentationClickEventInfo(dashboardId)}
+              >
                 <span className={cx('link')}>
                   {formatMessage(COMMON_LOCALE_KEYS.documentation)}
                 </span>

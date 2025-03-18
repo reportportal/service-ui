@@ -434,9 +434,14 @@ export class SimpleWidget extends Component {
     const isTestCaseSearch = widget.widgetType === TEST_CASE_SEARCH;
 
     const handleDisplayLaunchesToggleChange = () => {
+      const {
+        activeDashboardId,
+        tracking: { trackEvent },
+      } = this.props;
       this.setState({
         displayLaunchesValue: !displayLaunchesValue,
       });
+      trackEvent(WIDGETS_EVENTS.onDisplayLaunchesToggle(!displayLaunchesValue, activeDashboardId));
     };
     return (
       <div className={cx('widget-container', { disabled: isFullscreen })}>
