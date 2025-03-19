@@ -48,6 +48,10 @@ const messages = defineMessages({
 });
 
 const attributeKeyValidator = commonValidators.attributeKey;
+const requiredAttributeKeyValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  commonValidators.attributeKey,
+]);
 const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
@@ -80,6 +84,7 @@ export class AttributeEditor extends Component {
     nakedView: PropTypes.bool,
     isAttributeKeyRequired: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
+    withValidationMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -99,6 +104,7 @@ export class AttributeEditor extends Component {
     nakedView: false,
     isAttributeKeyRequired: false,
     isAttributeValueRequired: true,
+    withValidationMessage: true,
   };
 
   constructor(props) {
@@ -117,8 +123,13 @@ export class AttributeEditor extends Component {
       ? attributeValueValidator(value)
       : attributeFilterValueValidator(value);
 
+  getAttributeKeyValidator = (key) =>
+    this.props.isAttributeKeyRequired
+      ? requiredAttributeKeyValidator(key)
+      : attributeKeyValidator(key);
+
   getValidationErrors = (key, value) => ({
-    key: attributeKeyValidator(key),
+    key: this.props.attribute.edited && this.getAttributeKeyValidator(key),
     value: this.props.attribute.edited && this.getAttributeValueValidator(value),
   });
 
@@ -194,11 +205,12 @@ export class AttributeEditor extends Component {
       customClass,
       intl,
       nakedView,
+      withValidationMessage,
     } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
-          <FieldErrorHint error={this.state.errors.key} staticHint>
+          <FieldErrorHint error={this.state.errors.key} staticHint={withValidationMessage}>
             <AttributeInput
               customClass={cx('input')}
               attributes={attributes}
@@ -217,7 +229,7 @@ export class AttributeEditor extends Component {
           </FieldErrorHint>
         </div>
         <div className={cx('control')}>
-          <FieldErrorHint error={this.state.errors.value} staticHint>
+          <FieldErrorHint error={this.state.errors.value} staticHint={withValidationMessage}>
             <AttributeInput
               customClass={cx('input')}
               minLength={1}
