@@ -100,7 +100,7 @@ const TestCaseSearchAttributeEntity = ({
           conditions: [CONDITION_HAS],
           canAddSinglePair: true,
           isAttributeValueRequired: true,
-          isAttributeKeyRequired: true,
+          isAttributeKeyRequired: false,
           withValidationMessage: false,
         },
       },
