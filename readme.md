@@ -8,7 +8,7 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/reportportal/service-ui?sort=semver)](https://github.com/reportportal/service-ui/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/reportportal/service-ui.svg?maxAge=159200)](https://hub.docker.com/r/reportportal/service-ui/)
 
-1. Install nodejs (version 20 is recommended)
+1. Install Node.js (version 20 is recommended)
 
 2. Open console from the project root
 
