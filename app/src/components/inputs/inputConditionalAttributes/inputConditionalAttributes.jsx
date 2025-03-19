@@ -44,7 +44,7 @@ export class InputConditionalAttributes extends Component {
     canAddSinglePair: PropTypes.bool,
     disabled: PropTypes.bool,
     browserTooltipTitle: PropTypes.string,
-    iswithValidationMessage: PropTypes.bool,
+    withValidationMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -59,7 +59,7 @@ export class InputConditionalAttributes extends Component {
     isAttributeValueRequired: true,
     canAddSinglePair: false,
     disabled: false,
-    iswithValidationMessage: true,
+    withValidationMessage: true,
   };
 
   constructor(props) {
@@ -156,7 +156,7 @@ export class InputConditionalAttributes extends Component {
       canAddSinglePair,
       disabled,
       browserTooltipTitle,
-      iswithValidationMessage,
+      withValidationMessage,
     } = this.props;
     const inputConditions = this.getConditions();
     const hideEdit = canAddSinglePair && this.state?.attributes?.length;
@@ -185,7 +185,7 @@ export class InputConditionalAttributes extends Component {
               nakedView
               isAttributeKeyRequired={isAttributeKeyRequired}
               isAttributeValueRequired={isAttributeValueRequired}
-              iswithValidationMessage={iswithValidationMessage}
+              withValidationMessage={withValidationMessage}
             />
           )}
         </div>

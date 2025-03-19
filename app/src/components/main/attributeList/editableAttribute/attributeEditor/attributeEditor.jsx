@@ -84,7 +84,7 @@ export class AttributeEditor extends Component {
     nakedView: PropTypes.bool,
     isAttributeKeyRequired: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
-    iswithValidationMessage: PropTypes.bool,
+    withValidationMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -104,7 +104,7 @@ export class AttributeEditor extends Component {
     nakedView: false,
     isAttributeKeyRequired: false,
     isAttributeValueRequired: true,
-    iswithValidationMessage: true,
+    withValidationMessage: true,
   };
 
   constructor(props) {
@@ -205,12 +205,12 @@ export class AttributeEditor extends Component {
       customClass,
       intl,
       nakedView,
-      iswithValidationMessage,
+      withValidationMessage,
     } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
-          <FieldErrorHint error={this.state.errors.key} staticHint={iswithValidationMessage}>
+          <FieldErrorHint error={this.state.errors.key} staticHint={withValidationMessage}>
             <AttributeInput
               customClass={cx('input')}
               attributes={attributes}
@@ -229,7 +229,7 @@ export class AttributeEditor extends Component {
           </FieldErrorHint>
         </div>
         <div className={cx('control')}>
-          <FieldErrorHint error={this.state.errors.value} staticHint={iswithValidationMessage}>
+          <FieldErrorHint error={this.state.errors.value} staticHint={withValidationMessage}>
             <AttributeInput
               customClass={cx('input')}
               minLength={1}
