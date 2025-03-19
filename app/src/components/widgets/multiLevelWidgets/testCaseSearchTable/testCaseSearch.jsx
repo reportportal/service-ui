@@ -16,7 +16,7 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -32,6 +32,11 @@ import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
 
 const MAXIMUM_ITEMS = 300;
+const TRACKING_EVENTS_TRIGGER_SOURCES = {
+  creatingWidget: 'creating_widget',
+  sorting: 'sorting',
+  loadMore: 'load_more',
+};
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
@@ -47,24 +52,42 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
+  const triggerSourceRef = useRef(null);
 
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
   const isLoadMoreAvailable = page?.hasNext && content.length > 0 && content.length < MAXIMUM_ITEMS;
+
+  const trackPerformance = useCallback(
+    (responseTime) =>
+      trackEvent(
+        WIDGETS_EVENTS.onLoadCompletion(
+          dashboardId,
+          responseTime,
+          triggerSourceRef.current,
+          !!searchValue?.name?.value,
+        ),
+      ),
+    [searchValue],
+  );
+
   const handleSearch = (entity) => {
+    triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
   };
   const handleClear = () => {
     setSearchValue({});
   };
   const handleChangeSorting = () => {
+    triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.sorting;
     setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
   };
   const handleLoadMore = () => {
+    triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.loadMore;
     trackEvent(WIDGETS_EVENTS.clickOnLoadMoreSearchItems(dashboardId, !!searchValue?.name?.value));
-    dispatch(loadMoreSearchedItemsAction(widgetId));
+    dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance }));
   };
 
   useEffect(() => {
@@ -73,6 +96,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
       testItemsSearchAction({
         searchParams: { searchCriteria: searchValue, sortingDirection },
         widgetId,
+        trackPerformance,
       }),
     );
   }, [searchValue, sortingDirection]);
