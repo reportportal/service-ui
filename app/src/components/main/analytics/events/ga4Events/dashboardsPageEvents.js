@@ -15,7 +15,11 @@
  */
 
 import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
-import { getBasicClickEventParameters, normalizeEventParameter } from '../common/ga4Utils';
+import {
+  getBasicClickEventParameters,
+  getBasicPerformanceEventParameters,
+  normalizeEventParameter,
+} from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
 
@@ -103,6 +107,15 @@ export const WIDGETS_EVENTS = {
     switcher: isDisplayedLaunches ? 'on' : 'off',
     type: 'search_widget',
     number: dashboardId,
+  }),
+  onLoadCompletion: (dashboardId, time, type, isSearchedByName) => ({
+    ...getBasicPerformanceEventParameters(DASHBOARDS),
+    element_name: 'response_time',
+    type: 'search_widget',
+    number: dashboardId,
+    icon_name: type,
+    switcher: Math.round(time),
+    status: isSearchedByName ? 'test_name' : 'attribute',
   }),
   ON_DRAG_WIDGET: {
     ...getBasicClickEventParameters(DASHBOARDS),

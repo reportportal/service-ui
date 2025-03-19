@@ -375,7 +375,10 @@ function* fetchSearchedItems(searchCriteria, sortingDirection = SORTING_DESC, pa
 const updateSearchedItemsState = (widgetId) => (state) =>
   put(searchItemWidgetDetailsAction({ [widgetId]: state }));
 
-function* searchTestItemsFromWidget({ payload: { widgetId, searchParams } }) {
+function* searchTestItemsFromWidget({
+  payload: { widgetId, searchParams, trackPerformance = () => {} },
+}) {
+  const startTime = performance.now();
   const { searchCriteria, sortingDirection = SORTING_DESC } = searchParams;
   yield updateSearchedItemsState(widgetId)({ loading: true });
   const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
@@ -385,6 +388,8 @@ function* searchTestItemsFromWidget({ payload: { widgetId, searchParams } }) {
     loading: false,
     ...result,
   });
+  const endTime = performance.now();
+  trackPerformance(endTime - startTime);
 }
 
 function* refreshSearchedItemsFromWidget({ payload: widgetId }) {
@@ -394,7 +399,8 @@ function* refreshSearchedItemsFromWidget({ payload: widgetId }) {
   yield put(testItemsSearchAction({ widgetId, searchParams: { searchCriteria } }));
 }
 
-function* loadMoreSearchedItemsFromWidget({ payload: widgetId }) {
+function* loadMoreSearchedItemsFromWidget({ payload: { widgetId, trackPerformance = () => {} } }) {
+  const startTime = performance.now();
   const searchDetails = yield select(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
   const { searchCriteria, sortingDirection, page, content = [] } = targetWidgetSearch;
@@ -411,6 +417,8 @@ function* loadMoreSearchedItemsFromWidget({ payload: widgetId }) {
     content: [...content, ...result.content],
     page: result.page,
   });
+  const endTime = performance.now();
+  trackPerformance(endTime - startTime);
 }
 
 function* watchTestItemsFromWidget() {
