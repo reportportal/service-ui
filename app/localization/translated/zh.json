@@ -2266,6 +2266,7 @@
   "usersGrid.accountTypeInternal": "内部",
   "usersGrid.accountTypeLdap": "Ldap",
   "usersGrid.accountTypeSaml": "Saml",
+  "usersGrid.accountTypeScim": "SCIM",
   "usersGrid.accountTypeUpsa": "UPSA",
   "usersGrid.contains": "包含",
   "usersGrid.email": "电子邮箱",

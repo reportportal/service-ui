@@ -21,9 +21,9 @@ import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
 import {
-  LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
   LAUNCHES_MODAL_EVENTS,
+  LAUNCHES_PAGE_VIEWS,
 } from 'components/main/analytics/events';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
@@ -145,7 +145,7 @@ const messages = defineMessages({
   namespace: NAMESPACE,
 })
 @injectIntl
-@track({ page: LAUNCHES_PAGE })
+@track(({ debugMode }) => (debugMode ? LAUNCHES_PAGE_VIEWS.DEBUG : LAUNCHES_PAGE_VIEWS.LAUNCHES))
 export class LaunchesPage extends Component {
   static propTypes = {
     debugMode: PropTypes.bool.isRequired,

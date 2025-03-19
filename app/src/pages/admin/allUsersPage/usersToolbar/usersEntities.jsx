@@ -32,7 +32,7 @@ import {
 } from 'components/filterEntities/constants';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import { USER, ADMINISTRATOR } from 'common/constants/accountRoles';
-import { INTERNAL, LDAP, UPSA, GITHUB, SAML } from 'common/constants/accountType';
+import { INTERNAL, LDAP, UPSA, GITHUB, SAML, SCIM } from 'common/constants/accountType';
 import {
   EMAIL,
   FULL_NAME,
@@ -83,6 +83,10 @@ const messages = defineMessages({
   accountTypeSaml: {
     id: 'usersGrid.accountTypeSaml',
     defaultMessage: 'Saml',
+  },
+  accountTypeScim: {
+    id: 'usersGrid.accountTypeScim',
+    defaultMessage: 'SCIM',
   },
 });
 
@@ -177,6 +181,10 @@ export class UsersEntities extends Component {
             {
               label: formatMessage(messages.accountTypeSaml),
               value: SAML,
+            },
+            {
+              label: formatMessage(messages.accountTypeScim),
+              value: SCIM,
             },
           ],
           multiple: true,

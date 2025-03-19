@@ -2266,6 +2266,7 @@
   "usersGrid.accountTypeInternal": "Interno",
   "usersGrid.accountTypeLdap": "Ldap",
   "usersGrid.accountTypeSaml": "Saml",
+  "usersGrid.accountTypeScim": "SCIM",
   "usersGrid.accountTypeUpsa": "UPSA",
   "usersGrid.contains": "Contiene",
   "usersGrid.email": "Correo electrónico",

@@ -28,6 +28,7 @@ import {
   removePluginAction,
   addIntegrationAction,
   removeProjectIntegrationsByTypeAction,
+  enabledPluginSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import {
@@ -115,10 +116,11 @@ const messages = defineMessages({
 });
 
 @connect(
-  (state) => ({
+  (state, ownProps) => ({
     projectId: projectIdSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    isEnabled: enabledPluginSelector(state, ownProps.instanceType),
   }),
   {
     showModalAction,
@@ -142,6 +144,7 @@ export class InstancesSection extends Component {
     removePluginAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -297,6 +300,7 @@ export class InstancesSection extends Component {
       userRole,
       isGlobal,
       pluginDetails: { metadata },
+      isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
     const disabled = !canUpdateSettings(accountRole, userRole);
@@ -323,7 +327,7 @@ export class InstancesSection extends Component {
                   onItemClick={onItemClick}
                   isGlobal={isGlobal}
                 />
-                {this.multiple && !disabled && (
+                {this.multiple && !disabled && isEnabled && (
                   <div className={cx('add-integration-button')}>
                     <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                       {formatMessage(messages.addIntegrationButtonTitle)}
@@ -357,7 +361,7 @@ export class InstancesSection extends Component {
                 {formatMessage(messages.noGlobalIntegrationMessage)}
               </p>
             )}
-            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
+            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && isEnabled && (
               <div className={cx('add-integration-button')}>
                 <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                   {formatMessage(messages.addIntegrationButtonTitle)}
