@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
+import { debounce } from 'common/utils';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import {
   loadMoreSearchedItemsAction,
@@ -37,6 +38,7 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
   sorting: 'sorting',
   loadMore: 'load_more',
 };
+const THROTTLING_TIME = 300;
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
@@ -73,10 +75,10 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     [searchValue],
   );
 
-  const handleSearch = (entity) => {
+  const handleSearch = debounce((entity) => {
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
-  };
+  }, THROTTLING_TIME);
   const handleClear = () => {
     setSearchValue({});
   };
