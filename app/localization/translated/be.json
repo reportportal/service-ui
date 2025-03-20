@@ -2257,6 +2257,7 @@
   "rolesRow.projectSearchPlaceholder": "Проект",
   "rolesRow.unAssignFromPersonalProject": "Немагчыма вывесці карыстальніка з персанальнага праекта",
   "testCaseSearch.AttributeTitle": "Атрыбут",
+  "testCaseSearch.errorLoadingData": "Працягвайце ўводзіць тэкст, каб удакладніць пошук.",
   "testCaseSearch.letsSearch": "Пачнём пошук",
   "testCaseSearch.loadMore": "Загрузіць больш",
   "testCaseSearch.maximumItems": "Вы загрузілі максімальна дазволеную колькасць тэставых выпадкаў (300).",

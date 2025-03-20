@@ -381,13 +381,17 @@ function* searchTestItemsFromWidget({
   const startTime = performance.now();
   const { searchCriteria, sortingDirection = SORTING_DESC } = searchParams;
   yield updateSearchedItemsState(widgetId)({ loading: true });
-  const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
-  yield updateSearchedItemsState(widgetId)({
-    searchCriteria,
-    sortingDirection,
-    loading: false,
-    ...result,
-  });
+  try {
+    const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
+    yield updateSearchedItemsState(widgetId)({
+      searchCriteria,
+      sortingDirection,
+      loading: false,
+      ...result,
+    });
+  } catch (error) {
+    yield updateSearchedItemsState(widgetId)({ loading: false, error });
+  }
   const endTime = performance.now();
   trackPerformance(endTime - startTime);
 }
