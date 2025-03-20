@@ -2259,6 +2259,7 @@
   "testCaseSearch.AttributeTitle": "Атрыбут",
   "testCaseSearch.letsSearch": "Пачнём пошук",
   "testCaseSearch.loadMore": "Загрузіць больш",
+  "testCaseSearch.maximumItems": "Вы загрузілі максімальна дазволеную колькасць тэставых выпадкаў (300).",
   "testCaseSearch.oneOption": "Толькі адзін варыянт, або назва тэсту, або атрыбуты, можа быць актыўным адначасова",
   "testCaseSearch.provideParameters": "Укажыце параметры для актывацыі пошуку тэст-кейса.",
   "testCaseSearch.testNamePlaceholder": "Увядзіце назву тэсту",

@@ -2259,6 +2259,7 @@
   "testCaseSearch.AttributeTitle": "Атрибут",
   "testCaseSearch.letsSearch": "Начнем искать",
   "testCaseSearch.loadMore": "Загрузить больше",
+  "testCaseSearch.maximumItems": "Вы загрузили максимально допустимое количество тестовых кейсов (300).",
   "testCaseSearch.oneOption": "Только один вариант — либо название теста, либо атрибуты — может быть активным одновременно",
   "testCaseSearch.provideParameters": "Укажите параметры для активации поиска тест-кейса.",
   "testCaseSearch.testNamePlaceholder": "Введите название теста",
