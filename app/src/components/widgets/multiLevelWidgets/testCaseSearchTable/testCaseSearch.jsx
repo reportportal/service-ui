@@ -32,7 +32,6 @@ import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
 
-const MAXIMUM_ITEMS = 300;
 const TRACKING_EVENTS_TRIGGER_SOURCES = {
   creatingWidget: 'creating_widget',
   sorting: 'sorting',
@@ -60,7 +59,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const { trackEvent } = useTracking();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
-  const isLoadMoreAvailable = page?.hasNext && content.length > 0 && content.length < MAXIMUM_ITEMS;
+  const isLoadMoreAvailable = page?.hasNext;
 
   const trackPerformance = useCallback(
     (responseTime) =>

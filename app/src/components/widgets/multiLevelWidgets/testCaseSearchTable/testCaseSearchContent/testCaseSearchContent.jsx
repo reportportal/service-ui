@@ -28,6 +28,8 @@ import React from 'react';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
 
+const MAXIMUM_ITEMS = 300;
+
 const cx = classNames.bind(styles);
 export const TestCaseSearchContent = ({
   isEmptyState,
@@ -45,6 +47,8 @@ export const TestCaseSearchContent = ({
     onClickIssueTicketEvent: WIDGETS_EVENTS.clickOnIssueTicket(dashboardId),
     clickOnExpandAccordion: WIDGETS_EVENTS.clickOnExpandDescription(dashboardId),
   };
+  const isLoadMoreDisabled = data.length >= MAXIMUM_ITEMS;
+
   return (
     <ScrollWrapper>
       {isEmptyState ? (
@@ -65,9 +69,17 @@ export const TestCaseSearchContent = ({
             events={targetEvents}
           />
           {onLoadMore && (
-            <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>
+            <Button
+              className={cx('load-more', { disabled: isLoadMoreDisabled })}
+              variant={'ghost'}
+              onClick={onLoadMore}
+              disabled={isLoadMoreDisabled}
+            >
               {formatMessage(messages.loadMore)}
             </Button>
+          )}
+          {onLoadMore && isLoadMoreDisabled && (
+            <span className={cx('max-items-info')}>{formatMessage(messages.maximumItems)}</span>
           )}
         </div>
       )}

@@ -43,8 +43,20 @@
   flex-direction: column;
   background: $COLOR--white;
 
-  .load-more{
-    margin: 20px auto;
+  .load-more {
+    margin: 20px auto 60px auto;
     background: $COLOR--white-two;
+
+    &.disabled {
+      margin-bottom: 12px;
+    }
+  }
+
+  .max-items-info {
+    text-align: center;
+    font-family: $FONT-REGULAR;
+    color: $COLOR--gray-60;
+    font-size: 13px;
+    margin-bottom: 60px;
   }
 }
