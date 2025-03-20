@@ -49,6 +49,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     content = [],
     page = {},
     loading = false,
+    error = null,
   } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
@@ -117,6 +118,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
         onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}
+        error={error}
       />
     </div>
   );

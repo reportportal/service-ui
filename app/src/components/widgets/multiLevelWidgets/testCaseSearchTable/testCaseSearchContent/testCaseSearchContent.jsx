@@ -37,6 +37,7 @@ export const TestCaseSearchContent = ({
   sortingDirection,
   onChangeSorting,
   onLoadMore,
+  error,
 }) => {
   const { formatMessage } = useIntl();
   const dashboardId = useSelector(activeDashboardIdSelector);
@@ -63,6 +64,7 @@ export const TestCaseSearchContent = ({
             sortingColumn={ENTITY_START_TIME}
             loading={loading}
             events={targetEvents}
+            errorMessage={error ? formatMessage(messages.errorLoadingData) : null}
           />
           {onLoadMore && (
             <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>
@@ -83,4 +85,5 @@ TestCaseSearchContent.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   onLoadMore: PropTypes.func,
+  error: PropTypes.object,
 };
