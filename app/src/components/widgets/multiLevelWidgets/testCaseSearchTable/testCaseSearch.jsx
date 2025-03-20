@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
+import { debounce } from 'common/utils';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import {
   loadMoreSearchedItemsAction,
@@ -31,12 +32,12 @@ import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
 
-const MAXIMUM_ITEMS = 300;
 const TRACKING_EVENTS_TRIGGER_SOURCES = {
   creatingWidget: 'creating_widget',
   sorting: 'sorting',
   loadMore: 'load_more',
 };
+const THROTTLING_TIME = 300;
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
@@ -59,7 +60,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const { trackEvent } = useTracking();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
-  const isLoadMoreAvailable = page?.hasNext && content.length > 0 && content.length < MAXIMUM_ITEMS;
+  const isLoadMoreAvailable = page?.hasNext;
 
   const trackPerformance = useCallback(
     (responseTime) =>
@@ -74,10 +75,10 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     [searchValue],
   );
 
-  const handleSearch = (entity) => {
+  const handleSearch = debounce((entity) => {
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
-  };
+  }, THROTTLING_TIME);
   const handleClear = () => {
     setSearchValue({});
   };

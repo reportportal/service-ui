@@ -45,6 +45,10 @@ export const messages = defineMessages({
     id: 'testCaseSearch.loadMore',
     defaultMessage: 'Load more',
   },
+  maximumItems: {
+    id: 'testCaseSearch.maximumItems',
+    defaultMessage: 'You have loaded the maximum allowed number (300) of test cases.',
+  },
   errorLoadingData: {
     id: 'testCaseSearch.errorLoadingData',
     defaultMessage: 'Keep typing to refine your search.',
