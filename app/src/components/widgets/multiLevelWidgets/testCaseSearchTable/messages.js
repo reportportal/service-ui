@@ -45,4 +45,8 @@ export const messages = defineMessages({
     id: 'testCaseSearch.loadMore',
     defaultMessage: 'Load more',
   },
+  errorLoadingData: {
+    id: 'testCaseSearch.errorLoadingData',
+    defaultMessage: 'Keep typing to refine your search.',
+  },
 });
