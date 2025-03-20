@@ -2257,6 +2257,7 @@
   "rolesRow.projectSearchPlaceholder": "Проект",
   "rolesRow.unAssignFromPersonalProject": "Неможливо вивести з персонального проекту",
   "testCaseSearch.AttributeTitle": "Атрибут",
+  "testCaseSearch.errorLoadingData": "Продовжуйте вводити текст, щоб уточнити пошук.",
   "testCaseSearch.letsSearch": "Розпочнімо пошук",
   "testCaseSearch.loadMore": "Завантажити більше",
   "testCaseSearch.oneOption": "Тільки один варіант — або назва тесту, або атрибути — може бути активним одночасно",
