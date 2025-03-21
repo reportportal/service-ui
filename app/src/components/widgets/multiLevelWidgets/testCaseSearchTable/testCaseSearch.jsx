@@ -49,11 +49,12 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     sortingDirection: initialDirection = SORTING_DESC,
     content = [],
     page = {},
-    loading = false,
+    loading: fetchLoading = false,
     error = null,
   } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
+  const [loading, setLoading] = useState(fetchLoading);
   const triggerSourceRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -75,10 +76,11 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     [searchValue],
   );
 
-  const handleSearch = debounce((entity) => {
+  const handleSearch = (entity) => {
+    setLoading(true);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
-  }, THROTTLING_TIME);
+  };
   const handleClear = () => {
     setSearchValue({});
   };
@@ -93,24 +95,27 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   };
 
   useEffect(() => {
-    if (isSearchValueEmpty) return;
-    dispatch(
-      testItemsSearchAction({
-        searchParams: { searchCriteria: searchValue, sortingDirection },
-        widgetId,
-        trackPerformance,
-      }),
-    );
-  }, [searchValue, sortingDirection]);
+    setLoading(fetchLoading);
+  }, [fetchLoading]);
+
+  useEffect(() => {
+    if (isSearchValueEmpty) return () => {};
+    const debouncedDispatch = debounce(() => {
+      dispatch(
+        testItemsSearchAction({
+          searchParams: { searchCriteria: searchValue, sortingDirection },
+          widgetId,
+          trackPerformance,
+        }),
+      );
+    }, THROTTLING_TIME);
+
+    return debouncedDispatch();
+  }, [searchValue, sortingDirection, dispatch]);
 
   return (
     <div className={cx('test-case-search-container')}>
-      <TestCaseSearchControl
-        filter={searchValue}
-        setFilter={setSearchValue}
-        onChange={handleSearch}
-        onClear={handleClear}
-      />
+      <TestCaseSearchControl filter={searchValue} onChange={handleSearch} onClear={handleClear} />
       <TestCaseSearchContent
         listView={isDisplayedLaunches}
         isEmptyState={isSearchValueEmpty}
