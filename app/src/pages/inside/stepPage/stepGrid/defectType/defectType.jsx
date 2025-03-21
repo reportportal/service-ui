@@ -93,6 +93,7 @@ export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates
           <DefectTypeItem
             type={issue.issueType}
             onClick={() => onClickEdit(events.onEditEvent?.(eventData))}
+            className={cx({ 'view-only': hideEdit })}
           />
         )}
         {!hideEdit && (

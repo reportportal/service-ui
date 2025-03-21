@@ -21,6 +21,7 @@
   box-sizing: border-box;
   background-color: $COLOR--white-two;
   border: 1px solid $COLOR--gray-80;
+  display: flex;
 
   &:hover {
     border-color: $COLOR--gray-47;
