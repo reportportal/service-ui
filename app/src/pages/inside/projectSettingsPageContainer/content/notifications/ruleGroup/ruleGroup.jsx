@@ -42,7 +42,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { PROJECT_SETTINGS_TAB_PAGE, userRolesSelector } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
 import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';

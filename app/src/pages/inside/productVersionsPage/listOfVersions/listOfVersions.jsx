@@ -16,47 +16,29 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import { useIntl } from 'react-intl';
-
-import { NumerableBlock } from 'pages/common/numerableBlock';
-import PlusIcon from 'common/img/plus-button-inline.svg';
-
-import { EmptyStatePage } from '../../projectSettingsPageContainer/content/emptyStatePage';
-import { messages } from './messages';
+import PropTypes from 'prop-types';
 
 import styles from './listOfVersions.scss';
+import { EmptyState } from './emptyState';
+import { VersionList } from './versionList';
 
 const cx = classNames.bind(styles);
 
-export const ListOfVersions = () => {
-  const { formatMessage } = useIntl();
+export const ListOfVersions = ({ openCreateProductVersionModal, versions }) => (
+  <div
+    className={cx('list-of-versions', {
+      'list-of-versions--empty': !versions.length,
+    })}
+  >
+    {versions.length > 0 ? (
+      <VersionList versions={versions} />
+    ) : (
+      <EmptyState openCreateProductVersionModal={openCreateProductVersionModal} />
+    )}
+  </div>
+);
 
-  const benefits = [
-    messages.emptyPageFirstBenefit,
-    messages.emptyPageSecondBenefit,
-    messages.emptyPageThirdBenefit,
-  ].map((translation) =>
-    formatMessage(translation, {
-      strong: (chunks) => <strong>{chunks}</strong>,
-    }),
-  );
-
-  return (
-    <div className={cx('list-of-versions')}>
-      <EmptyStatePage
-        title={formatMessage(messages.emptyPageTitle)}
-        description={Parser(formatMessage(messages.emptyPageDescription))}
-        buttonName={formatMessage(messages.emptyPageButtonText)}
-        buttonIcon={PlusIcon}
-        imageType="branches"
-        buttonDataAutomationId="addProductVersionButton"
-      />
-      <NumerableBlock
-        items={benefits}
-        title={formatMessage(messages.numerableBlockTitle)}
-        fullWidth
-      />
-    </div>
-  );
+ListOfVersions.propTypes = {
+  openCreateProductVersionModal: PropTypes.func.isRequired,
+  versions: PropTypes.array,
 };

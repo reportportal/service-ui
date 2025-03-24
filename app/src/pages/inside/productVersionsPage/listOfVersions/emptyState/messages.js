@@ -26,10 +26,6 @@ export const messages = defineMessages({
     defaultMessage:
       'Add your first Product version to let you effectively manage and track the Launches on each version of your product',
   },
-  emptyPageButtonText: {
-    id: 'ListOfVersionsPage.emptyButtonText',
-    defaultMessage: 'Add Product version',
-  },
   numerableBlockTitle: {
     id: 'ListOfVersionsPage.numerableBlock.title',
     defaultMessage: 'Why is it beneficial?',

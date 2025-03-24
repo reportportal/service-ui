@@ -1,0 +1,50 @@
+.version-list {
+  &__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 820px;
+    height: 104px;
+    margin-bottom: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: var(--rp-ui-base-bg-000);
+    border-radius: 8px;
+    box-shadow: var(--rp-ui-base-shadow);
+
+    &:last-child {
+      margin-bottom: 24px;
+    }
+
+    &:hover {
+      box-shadow: var(--rp-ui-base-shadow-hover);
+    }
+
+    &-title {
+      font-family: $FONT-REGULAR;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 31px;
+      letter-spacing: 0;
+      color: var(--rp-ui-base-almost-black);
+    }
+
+    &-timestamp {
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 16px;
+      letter-spacing: 0;
+      color: var(--rp-ui-base-e-400);
+    }
+
+    svg {
+      position: absolute;
+      top: 47px;
+      right: 24px;
+      transform: rotate(-90deg);
+    }
+  }
+}

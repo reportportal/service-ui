@@ -14,35 +14,19 @@
  * limitations under the License.
  */
 
-.product-versions-page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+import { defineMessages } from 'react-intl';
 
-  &__header {
-    position: sticky;
-    top: 0;
-    z-index: $Z-INDEX-PAGE-CONTAINER-HEADER;
-  }
-
-  &__navigation-panel {
-    position: relative;
-  }
-
-  &__tabs {
-    min-height: 32px;
-  }
-
-  &__button {
-    position: absolute;
-    bottom: 14px;
-    right: 0;
-  }
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding: 32px 32px 60px;
-  }
-}
+export const messages = defineMessages({
+  title: {
+    id: 'CreateProductVersionModal.title',
+    defaultMessage: 'Create product version',
+  },
+  name: {
+    id: 'CreateProductVersionModal.name',
+    defaultMessage: 'Name',
+  },
+  namePlaceholder: {
+    id: 'CreateProductVersionModal.namePlaceholder',
+    defaultMessage: 'Enter product version’s name ',
+  },
+});

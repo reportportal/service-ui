@@ -56,6 +56,7 @@ export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
 export const projectNamePattern = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_. ]+$/)]);
 export const projectNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);
+export const projectVersionLength = composeValidators([isNotEmpty, maxLength(60)]);
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
