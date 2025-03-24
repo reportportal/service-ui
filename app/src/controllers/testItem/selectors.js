@@ -100,7 +100,8 @@ export const isTestItemsListSelector = createSelector(
 
 export const searchedTestItemsSelector = (state) => domainSelector(state).searchedItems;
 
-export const isSearchedItemsSelector = (state) => !isEmptyObject(searchedTestItemsSelector(state));
+export const isSearchWidgetItemsExistSelector = (state) =>
+  !isEmptyObject(searchedTestItemsSelector(state));
 
 export const isFilterParamsExistsSelector = (state) => {
   const namespace = namespaceSelector(state);

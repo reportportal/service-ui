@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { isTestItemsListSelector, isSearchedItemsSelector } from 'controllers/testItem';
+import { isTestItemsListSelector, isSearchWidgetItemsExistSelector } from 'controllers/testItem';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +40,7 @@ export const GroupHeader = connect((state) => ({
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
-  isSearchedItems: isSearchedItemsSelector(state),
+  isSearchedItems: isSearchWidgetItemsExistSelector(state),
 }))(({ data, activeProject, launchId, filterId, isTestItemsList, isSearchedItems, isViewOnly }) => {
   const { itemPaths = [], launchPathName } = data[0].pathNames;
 
