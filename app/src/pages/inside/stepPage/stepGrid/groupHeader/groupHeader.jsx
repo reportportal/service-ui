@@ -21,8 +21,7 @@ import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { isTestItemsListSelector } from 'controllers/testItem';
-import { isSearchedItemsSelector } from 'controllers/testItem/selectors';
+import { isTestItemsListSelector, isSearchedItemsSelector } from 'controllers/testItem';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
