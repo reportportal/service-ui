@@ -70,7 +70,7 @@ export const TestCaseSearchContent = ({
             events={targetEvents}
             errorMessage={error ? formatMessage(messages.errorLoadingData) : null}
           />
-          {onLoadMore && (
+          {!loading && onLoadMore && (
             <Button
               className={cx('load-more', { disabled: isLoadMoreDisabled })}
               variant={'ghost'}

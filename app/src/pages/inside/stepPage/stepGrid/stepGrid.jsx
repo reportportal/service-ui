@@ -416,7 +416,7 @@ export class StepGrid extends Component {
           isViewOnly={isTestSearchView}
           eventsInfo={events}
         />
-        {errorMessage ? (
+        {!loading && errorMessage ? (
           <div className={cx('error-message-wrapper')}>
             <span className={cx('message')}>{errorMessage}</span>
           </div>

@@ -24,7 +24,7 @@ import {
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
+import { put, select, all, takeEvery, take, call, takeLatest } from 'redux-saga/effects';
 import {
   testItemIdsArraySelector,
   launchIdSelector,
@@ -426,7 +426,7 @@ function* loadMoreSearchedItemsFromWidget({ payload: { widgetId, trackPerformanc
 }
 
 function* watchTestItemsFromWidget() {
-  yield takeEvery(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
+  yield takeLatest(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
 }
 function* watchRefreshSearchedItems() {
   yield takeEvery(REFRESH_SEARCHED_ITEMS, refreshSearchedItemsFromWidget);

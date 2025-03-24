@@ -173,7 +173,6 @@ export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
 
 TestCaseSearchControl.propTypes = {
   filter: PropTypes.object,
-  setFilter: PropTypes.func,
   onChange: PropTypes.func,
   onClear: PropTypes.func,
 };
