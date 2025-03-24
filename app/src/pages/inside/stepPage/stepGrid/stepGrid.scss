@@ -40,10 +40,11 @@
   text-transform: uppercase;
   width: 9%;
 
-  .status-value{
+  .status-value {
     font-family: $FONT-REGULAR;
     text-transform: capitalize;
   }
+
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
@@ -72,4 +73,20 @@
 
 .failed {
   background-color: $COLOR--light-red;
+}
+
+.error-message-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 0;
+  text-align: center;
+  background-color: $COLOR--white-two;
+
+  .message {
+    color: $COLOR--gray-47;
+    font-family: $FONT-REGULAR;
+    font-size: 17px;
+    text-align: center;
+  }
 }

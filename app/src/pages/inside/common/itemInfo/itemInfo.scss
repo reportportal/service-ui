@@ -57,6 +57,28 @@
   @media (max-width: $SCREEN_SM_MAX) {
     font-size: 16px;
   }
+
+  .external-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-flex;
+    margin-left: 5px;
+    align-items: end;
+    transform: translateY(5%);
+    visibility: hidden;
+
+    svg {
+      width: 90%;
+      height: 90%;
+    }
+  }
+
+  &:hover {
+    .external-icon {
+      visibility: visible;
+    }
+  }
+
 }
 
 .name {
@@ -214,20 +236,6 @@
   svg {
     width: 15px;
     height: 15px;
-  }
-}
-
-.external-icon {
-  height: 16px;
-  width: 16px;
-  display: inline-flex;
-  margin-left: 5px;
-  align-items: end;
-  transform: translateY(5%);
-
-   svg {
-    width: 90%;
-    height: 90%;
   }
 }
 

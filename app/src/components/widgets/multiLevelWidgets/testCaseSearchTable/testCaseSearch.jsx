@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
+import { debounce } from 'common/utils';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import {
   loadMoreSearchedItemsAction,
@@ -31,12 +32,12 @@ import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
 
-const MAXIMUM_ITEMS = 300;
 const TRACKING_EVENTS_TRIGGER_SOURCES = {
   creatingWidget: 'creating_widget',
   sorting: 'sorting',
   loadMore: 'load_more',
 };
+const THROTTLING_TIME = 300;
 
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
@@ -48,17 +49,19 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     sortingDirection: initialDirection = SORTING_DESC,
     content = [],
     page = {},
-    loading = false,
+    loading: fetchLoading = false,
+    error = null,
   } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
+  const [loading, setLoading] = useState(fetchLoading);
   const triggerSourceRef = useRef(null);
 
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
   const isSearchValueEmpty = !Object.keys(searchValue).length;
-  const isLoadMoreAvailable = page?.hasNext && content.length > 0 && content.length < MAXIMUM_ITEMS;
+  const isLoadMoreAvailable = page?.hasNext;
 
   const trackPerformance = useCallback(
     (responseTime) =>
@@ -74,6 +77,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   );
 
   const handleSearch = (entity) => {
+    setLoading(true);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
   };
@@ -91,24 +95,27 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   };
 
   useEffect(() => {
-    if (isSearchValueEmpty) return;
-    dispatch(
-      testItemsSearchAction({
-        searchParams: { searchCriteria: searchValue, sortingDirection },
-        widgetId,
-        trackPerformance,
-      }),
-    );
-  }, [searchValue, sortingDirection]);
+    setLoading(fetchLoading);
+  }, [fetchLoading]);
+
+  useEffect(() => {
+    if (isSearchValueEmpty) return () => {};
+    const debouncedDispatch = debounce(() => {
+      dispatch(
+        testItemsSearchAction({
+          searchParams: { searchCriteria: searchValue, sortingDirection },
+          widgetId,
+          trackPerformance,
+        }),
+      );
+    }, THROTTLING_TIME);
+
+    return debouncedDispatch();
+  }, [searchValue, sortingDirection, dispatch]);
 
   return (
     <div className={cx('test-case-search-container')}>
-      <TestCaseSearchControl
-        filter={searchValue}
-        setFilter={setSearchValue}
-        onChange={handleSearch}
-        onClear={handleClear}
-      />
+      <TestCaseSearchControl filter={searchValue} onChange={handleSearch} onClear={handleClear} />
       <TestCaseSearchContent
         listView={isDisplayedLaunches}
         isEmptyState={isSearchValueEmpty}
@@ -117,6 +124,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
         onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}
+        error={error}
       />
     </div>
   );

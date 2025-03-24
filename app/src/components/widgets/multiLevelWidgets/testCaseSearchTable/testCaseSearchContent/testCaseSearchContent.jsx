@@ -28,6 +28,8 @@ import React from 'react';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
 
+const MAXIMUM_ITEMS = 300;
+
 const cx = classNames.bind(styles);
 export const TestCaseSearchContent = ({
   isEmptyState,
@@ -37,6 +39,7 @@ export const TestCaseSearchContent = ({
   sortingDirection,
   onChangeSorting,
   onLoadMore,
+  error,
 }) => {
   const { formatMessage } = useIntl();
   const dashboardId = useSelector(activeDashboardIdSelector);
@@ -45,6 +48,8 @@ export const TestCaseSearchContent = ({
     onClickIssueTicketEvent: WIDGETS_EVENTS.clickOnIssueTicket(dashboardId),
     clickOnExpandAccordion: WIDGETS_EVENTS.clickOnExpandDescription(dashboardId),
   };
+  const isLoadMoreDisabled = data.length >= MAXIMUM_ITEMS;
+
   return (
     <ScrollWrapper>
       {isEmptyState ? (
@@ -63,11 +68,20 @@ export const TestCaseSearchContent = ({
             sortingColumn={ENTITY_START_TIME}
             loading={loading}
             events={targetEvents}
+            errorMessage={error ? formatMessage(messages.errorLoadingData) : null}
           />
-          {onLoadMore && (
-            <Button className={cx('load-more')} variant={'ghost'} onClick={onLoadMore}>
+          {!loading && onLoadMore && (
+            <Button
+              className={cx('load-more', { disabled: isLoadMoreDisabled })}
+              variant={'ghost'}
+              onClick={onLoadMore}
+              disabled={isLoadMoreDisabled}
+            >
               {formatMessage(messages.loadMore)}
             </Button>
+          )}
+          {onLoadMore && isLoadMoreDisabled && (
+            <span className={cx('max-items-info')}>{formatMessage(messages.maximumItems)}</span>
           )}
         </div>
       )}
@@ -83,4 +97,5 @@ TestCaseSearchContent.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   onLoadMore: PropTypes.func,
+  error: PropTypes.object,
 };

@@ -24,7 +24,7 @@ import {
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
+import { put, select, all, takeEvery, take, call, takeLatest } from 'redux-saga/effects';
 import {
   testItemIdsArraySelector,
   launchIdSelector,
@@ -381,13 +381,17 @@ function* searchTestItemsFromWidget({
   const startTime = performance.now();
   const { searchCriteria, sortingDirection = SORTING_DESC } = searchParams;
   yield updateSearchedItemsState(widgetId)({ loading: true });
-  const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
-  yield updateSearchedItemsState(widgetId)({
-    searchCriteria,
-    sortingDirection,
-    loading: false,
-    ...result,
-  });
+  try {
+    const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
+    yield updateSearchedItemsState(widgetId)({
+      searchCriteria,
+      sortingDirection,
+      loading: false,
+      ...result,
+    });
+  } catch (error) {
+    yield updateSearchedItemsState(widgetId)({ loading: false, error });
+  }
   const endTime = performance.now();
   trackPerformance(endTime - startTime);
 }
@@ -422,7 +426,7 @@ function* loadMoreSearchedItemsFromWidget({ payload: { widgetId, trackPerformanc
 }
 
 function* watchTestItemsFromWidget() {
-  yield takeEvery(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
+  yield takeLatest(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
 }
 function* watchRefreshSearchedItems() {
   yield takeEvery(REFRESH_SEARCHED_ITEMS, refreshSearchedItemsFromWidget);

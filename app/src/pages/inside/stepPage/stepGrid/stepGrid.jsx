@@ -208,6 +208,7 @@ export class StepGrid extends Component {
     onStatusUpdate: PropTypes.func.isRequired,
     modifyColumnsFunc: PropTypes.func,
     isTestSearchView: PropTypes.bool,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -389,6 +390,7 @@ export class StepGrid extends Component {
       rowHighlightingConfig,
       isTestSearchView,
       events,
+      errorMessage,
     } = this.props;
 
     return (
@@ -414,8 +416,13 @@ export class StepGrid extends Component {
           isViewOnly={isTestSearchView}
           eventsInfo={events}
         />
-        {!data.length && !loading && (
-          <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        {!loading && errorMessage ? (
+          <div className={cx('error-message-wrapper')}>
+            <span className={cx('message')}>{errorMessage}</span>
+          </div>
+        ) : (
+          !data.length &&
+          !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
         )}
       </Fragment>
     );
