@@ -49,7 +49,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { omit } from 'common/utils';
+import { isEmptyObject, omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
@@ -99,6 +99,8 @@ export const isTestItemsListSelector = createSelector(
 );
 
 export const searchedTestItemsSelector = (state) => domainSelector(state).searchedItems;
+
+export const isSearchedItemsSelector = (state) => !isEmptyObject(searchedTestItemsSelector(state));
 
 export const isFilterParamsExistsSelector = (state) => {
   const namespace = namespaceSelector(state);
