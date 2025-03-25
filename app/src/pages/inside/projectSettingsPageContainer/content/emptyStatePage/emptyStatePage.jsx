@@ -28,6 +28,7 @@ import plus from './img/empty-state-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
+import branches from './img/product-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -36,6 +37,7 @@ const images = {
   rhombus,
   plus,
   lines,
+  branches,
 };
 
 const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
@@ -50,6 +52,7 @@ const ButtonWithTooltip = withTooltip({
 export const EmptyStatePage = ({
   handleButton,
   buttonName,
+  buttonIcon,
   description,
   documentationLink,
   title,
@@ -83,6 +86,7 @@ export const EmptyStatePage = ({
             adjustWidthOn={'wide-content'}
             onClick={disableButton ? null : handleButton}
             data-automation-id={buttonDataAutomationId}
+            {...(buttonIcon && { icon: Parser(buttonIcon) })}
           >
             {buttonName}
           </Button>
@@ -112,10 +116,11 @@ EmptyStatePage.propTypes = {
   disableButton: PropTypes.bool,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines']),
+  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches']),
   buttonDataAutomationId: PropTypes.string,
   documentationDataAutomationId: PropTypes.string,
   buttonTooltip: PropTypes.string,
+  buttonIcon: PropTypes.string,
 };
 
 EmptyStatePage.defaultProps = {
