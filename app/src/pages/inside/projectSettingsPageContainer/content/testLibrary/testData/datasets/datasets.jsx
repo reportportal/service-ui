@@ -19,13 +19,19 @@ import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { hideModalAction, showModalAction } from 'controllers/modal';
+import classNames from 'classnames/bind';
+
 import { Button } from '@reportportal/ui-kit';
 import plusIcon from 'common/img/plus-button-inline.svg';
-import { hideModalAction, showModalAction } from 'controllers/modal';
+import { Dataset, datasetShape } from './dataset';
 import { InfoBlockWithControl } from '../../../elements/infoBlockWithControl';
 import { CREATE_DATASET_MODAL_KEY } from './createDatasetModal';
+import styles from './datasets.scss';
 
-const messages = defineMessages({
+const cx = classNames.bind(styles);
+
+export const messages = defineMessages({
   noDatasetsCreatedYet: {
     id: 'TestData.noDatasetsCreatedYet',
     defaultMessage: 'No datasets created yet. Create a new one and start adding values.',
@@ -34,15 +40,20 @@ const messages = defineMessages({
     id: 'TestData.createDataset',
     defaultMessage: 'Create Dataset',
   },
+  noVariablesAvailable: {
+    id: 'TestData.noVariablesAvailable',
+    defaultMessage:
+      'No values currently available. Please add at least one variable to get started.',
+  },
 });
 
-export const Datasets = ({ isEmpty }) => {
+export const Datasets = ({ datasets, variables, onDatasetAdd }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const handleModalSubmit = (data) => {
     // eslint-disable-next-line no-console
-    console.log(data);
+    onDatasetAdd(data);
 
     dispatch(hideModalAction());
   };
@@ -58,7 +69,7 @@ export const Datasets = ({ isEmpty }) => {
     );
   };
 
-  return isEmpty ? (
+  return datasets.length === 0 ? (
     <InfoBlockWithControl
       label={formatMessage(messages.noDatasetsCreatedYet)}
       control={
@@ -67,9 +78,24 @@ export const Datasets = ({ isEmpty }) => {
         </Button>
       }
     />
-  ) : null;
+  ) : (
+    <div className={cx('datasets__wrapper')}>
+      <div className={cx('datasets__list')}>
+        {datasets.map((dataset) => (
+          <Dataset dataset={dataset} key={dataset.datasetName} />
+        ))}
+      </div>
+      {variables.length === 0 && (
+        <div className={cx('datasets__no-variables-message')}>
+          {formatMessage(messages.noVariablesAvailable)}
+        </div>
+      )}
+    </div>
+  );
 };
 
 Datasets.propTypes = {
-  isEmpty: PropTypes.bool.isRequired,
+  datasets: PropTypes.arrayOf(datasetShape).isRequired,
+  variables: PropTypes.array.isRequired,
+  onDatasetAdd: PropTypes.func.isRequired,
 };
