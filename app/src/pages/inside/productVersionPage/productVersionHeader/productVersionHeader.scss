@@ -1,0 +1,57 @@
+
+.product-version-header {
+  background-color: var(--rp-ui-base-bg-000);
+  padding: 16px 32px 0;
+
+  &__breadcrumb {
+    color: var(--rp-ui-base-e-300);
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    line-height: 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+
+    svg {
+      height: 16px;
+    }
+  }
+
+  &__tree-icon {
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__breadcrumb-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+      color: var(--rp-ui-base-e-300);
+    }
+  }
+
+  &__title {
+    color: var(--rp-ui-base-almost-black);
+    font-size: 20px;
+    font-family: $FONT-REGULAR;
+    line-height: 31px;
+  }
+
+  &__tab-wrapper {
+    padding-top: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    a {
+      padding-bottom: 6px;
+    }
+  }
+
+  &__popover {
+    width: auto;
+  }
+}

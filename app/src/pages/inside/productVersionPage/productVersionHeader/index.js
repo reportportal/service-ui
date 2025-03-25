@@ -1,0 +1,1 @@
+export { ProductVersionHeader } from './productVersionHeader';

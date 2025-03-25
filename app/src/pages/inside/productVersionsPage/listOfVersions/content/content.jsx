@@ -17,13 +17,18 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { HelpPanel } from 'pages/inside/common/helpPanel';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 
+import { PRODUCT_VERSION_TAB_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
+import Link from 'redux-first-router-link';
 import styles from './content.scss';
 import { messages } from './messages';
 
@@ -31,6 +36,7 @@ const cx = classNames.bind(styles);
 
 export const Content = ({ versions }) => {
   const { formatMessage, formatDate } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
   const infoItems = [
     {
@@ -63,7 +69,19 @@ export const Content = ({ versions }) => {
     <>
       <div className={cx('content-list')}>
         {versions.map(({ productVersion, timestamp }) => (
-          <div className={cx('content-list__item')} key={productVersion}>
+          <Link
+            to={{
+              type: PRODUCT_VERSION_TAB_PAGE,
+              payload: {
+                productVersionId: productVersion,
+                projectSlug,
+                productVersionTab: DOCUMENTATION,
+                organizationSlug,
+              },
+            }}
+            className={cx('content-list__item')}
+            key={productVersion}
+          >
             <div className={cx('content-list__item-title')}>{productVersion}</div>
             <div className={cx('content-list__item-timestamp')}>
               {formatMessage(messages.lastUpdatedDate, {
@@ -75,7 +93,7 @@ export const Content = ({ versions }) => {
               })}
             </div>
             <ChevronDownDropdownIcon />
-          </div>
+          </Link>
         ))}
       </div>
       <HelpPanel items={infoItems} />
