@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { PopoverTools } from './popoverTools';
+export { RENAME_PRODUCT_VERSION_MODAL } from './renameProductVersionModal';

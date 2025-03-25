@@ -272,6 +272,10 @@ const messages = defineMessages({
     id: 'ListOfVersionsPage.projectVersionLengthHint',
     defaultMessage: 'Name must not exceed 60 characters',
   },
+  enteredTextDoesNotMatchKeyword: {
+    id: 'ProductVersionPage.enteredTextDoesNotMatch',
+    defaultMessage: 'The entered text does not match the required keyword',
+  },
 });
 
 @injectIntl
