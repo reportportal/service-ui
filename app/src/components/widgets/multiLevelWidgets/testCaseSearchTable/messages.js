@@ -57,26 +57,6 @@ export const messages = defineMessages({
     id: 'testCaseSearch.statusTitle',
     defaultMessage: 'Status',
   },
-  statusPassed: {
-    id: 'testCaseSearch.statusPassed',
-    defaultMessage: 'Passed',
-  },
-  statusFailed: {
-    id: 'testCaseSearch.statusFailed',
-    defaultMessage: 'Failed',
-  },
-  statusSkipped: {
-    id: 'testCaseSearch.statusSkipped',
-    defaultMessage: 'Skipped',
-  },
-  statusInterrupted: {
-    id: 'testCaseSearch.statusInterrupted',
-    defaultMessage: 'Interrupted',
-  },
-  statusInProgress: {
-    id: 'testCaseSearch.statusInProgress',
-    defaultMessage: 'In progress',
-  },
   statusPlaceholder: {
     id: 'testCaseSearch.statusPlaceholder',
     defaultMessage: 'Select status',

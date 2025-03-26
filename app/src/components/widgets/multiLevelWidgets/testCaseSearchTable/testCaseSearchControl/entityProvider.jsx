@@ -17,6 +17,7 @@ import {
 import { URLS } from 'common/urls';
 import { commonValidators } from 'common/utils/validation';
 import { FAILED, IN_PROGRESS, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/testStatuses';
+import { statusLocalization } from 'common/constants/localization/statusLocalization';
 import { messages } from '../messages';
 
 export const useEntityConfig = (entityType, filterValues) => {
@@ -73,23 +74,23 @@ export const useEntityConfig = (entityType, filterValues) => {
       customProps: {
         options: [
           {
-            label: formatMessage(messages.statusPassed),
+            label: formatMessage(statusLocalization[PASSED]),
             value: PASSED.toUpperCase(),
           },
           {
-            label: formatMessage(messages.statusFailed),
+            label: formatMessage(statusLocalization[FAILED]),
             value: FAILED.toUpperCase(),
           },
           {
-            label: formatMessage(messages.statusSkipped),
+            label: formatMessage(statusLocalization[SKIPPED]),
             value: SKIPPED.toUpperCase(),
           },
           {
-            label: formatMessage(messages.statusInterrupted),
+            label: formatMessage(statusLocalization[INTERRUPTED]),
             value: INTERRUPTED.toUpperCase(),
           },
           {
-            label: formatMessage(messages.statusInProgress),
+            label: formatMessage(statusLocalization[IN_PROGRESS]),
             value: IN_PROGRESS.toUpperCase(),
           },
         ],

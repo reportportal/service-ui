@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { ENTITY_NAME, ENTITY_ATTRIBUTE } from 'components/filterEntities/constants';
 import { useCallback } from 'react';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   TestCaseSearchAttributeEntity,
   TestCaseSearchNameEntity,
@@ -90,13 +91,13 @@ export const TestCaseSearchControl = ({ filter = {}, onSearchChange, onClear, on
         isDisabled: isSearchByAttribute,
         tooltipText: formatMessage(messages.oneOption),
       })}
-      <span className={cx('separator')}>OR</span>
+      <span className={cx('separator')}>{formatMessage(COMMON_LOCALE_KEYS.OR)}</span>
       {filterContainer({
         entityProvider: TestCaseSearchAttributeEntity,
         isDisabled: isSearchByName,
         tooltipText: formatMessage(messages.oneOption),
       })}
-      <span className={cx('separator')}>AND</span>
+      <span className={cx('separator')}>{formatMessage(COMMON_LOCALE_KEYS.AND)}</span>
       {filterContainer({
         entityProvider: TestCaseSearchStatusEntity,
         isDisabled: isFilterEmpty,
