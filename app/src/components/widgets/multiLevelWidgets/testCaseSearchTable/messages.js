@@ -53,4 +53,36 @@ export const messages = defineMessages({
     id: 'testCaseSearch.errorLoadingData',
     defaultMessage: 'Keep typing to refine your search.',
   },
+  statusTitle: {
+    id: 'testCaseSearch.statusTitle',
+    defaultMessage: 'Status',
+  },
+  statusPassed: {
+    id: 'testCaseSearch.statusPassed',
+    defaultMessage: 'Passed',
+  },
+  statusFailed: {
+    id: 'testCaseSearch.statusFailed',
+    defaultMessage: 'Failed',
+  },
+  statusSkipped: {
+    id: 'testCaseSearch.statusSkipped',
+    defaultMessage: 'Skipped',
+  },
+  statusInterrupted: {
+    id: 'testCaseSearch.statusInterrupted',
+    defaultMessage: 'Interrupted',
+  },
+  statusInProgress: {
+    id: 'testCaseSearch.statusInProgress',
+    defaultMessage: 'In progress',
+  },
+  statusPlaceholder: {
+    id: 'testCaseSearch.statusPlaceholder',
+    defaultMessage: 'Select status',
+  },
+  testNameOrAttributeRequired: {
+    id: 'testCaseSearch.testNameOrAttributeRequired',
+    defaultMessage: "Add 'Test Name' or 'Attribute' to work with 'Status' filter",
+  },
 });

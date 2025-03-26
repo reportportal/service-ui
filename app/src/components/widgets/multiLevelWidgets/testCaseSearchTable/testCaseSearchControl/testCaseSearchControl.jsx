@@ -18,121 +18,42 @@ import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { commonValidators } from 'common/utils/validation';
-import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
-import {
-  EntityInputConditional,
-  EntityInputConditionalAttributes,
-} from 'components/filterEntities';
-import {
-  CONDITION_CNT,
-  CONDITION_HAS,
-  ENTITY_NAME,
-  ENTITY_ATTRIBUTE,
-} from 'components/filterEntities/constants';
+import { ENTITY_NAME, ENTITY_ATTRIBUTE } from 'components/filterEntities/constants';
 import { useCallback } from 'react';
+import {
+  TestCaseSearchAttributeEntity,
+  TestCaseSearchNameEntity,
+  TestCaseSearchStatusEntity,
+} from './entityProvider';
 import styles from './testCaseSearchControl.scss';
 import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-const TestCaseSearchNameEntity = ({ filterValues = {}, render, disabled = false, ...rest }) => {
-  const { formatMessage } = useIntl();
-
-  return render({
-    filterEntities: [
-      {
-        id: ENTITY_NAME,
-        component: EntityInputConditional,
-        value: filterValues[ENTITY_NAME] || {
-          condition: CONDITION_CNT,
-        },
-        validationFunc: commonValidators.itemNameEntity,
-        title: formatMessage(messages.testNameTitle),
-        active: true,
-        removable: false,
-        static: true,
-        customProps: {
-          conditions: [CONDITION_CNT],
-          placeholder: formatMessage(messages.testNamePlaceholder),
-        },
-      },
-    ],
-    disabled,
-    ...rest,
-  });
-};
-
-TestCaseSearchNameEntity.propTypes = {
-  filterValues: PropTypes.object,
-  render: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-};
-
-const TestCaseSearchAttributeEntity = ({
-  filterValues = {},
-  render,
-  disabled = false,
-  ...rest
-}) => {
-  const intl = useIntl();
-  const projectId = useSelector(activeProjectSelector);
-
-  return render({
-    filterEntities: [
-      {
-        id: ENTITY_ATTRIBUTE,
-        component: EntityInputConditionalAttributes,
-        value: filterValues[ENTITY_ATTRIBUTE] || {
-          condition: CONDITION_HAS,
-        },
-        validationFunc: commonValidators.requiredField,
-        title: intl.formatMessage(messages.Attribute),
-        active: true,
-        removable: false,
-        customProps: {
-          projectId,
-          keyURLCreator: URLS.launchAttributeKeysSearch,
-          valueURLCreator: URLS.launchAttributeValuesSearch,
-          conditions: [CONDITION_HAS],
-          canAddSinglePair: true,
-          isAttributeValueRequired: true,
-          isAttributeKeyRequired: true,
-          withValidationMessage: false,
-        },
-      },
-    ],
-    disabled,
-    ...rest,
-  });
-};
-
-TestCaseSearchAttributeEntity.propTypes = {
-  filterValues: PropTypes.object,
-  render: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-};
-
-export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
+export const TestCaseSearchControl = ({ filter = {}, onSearchChange, onClear, onStatusChange }) => {
   const isFilterEmpty = !filter || (!filter.name && !filter.compositeAttribute);
   const isSearchByAttribute = !isFilterEmpty && filter.compositeAttribute;
   const isSearchByName = !isFilterEmpty && filter.name;
   const { formatMessage } = useIntl();
   const handleEntitiesChange = (entity) => {
     if (entity?.[ENTITY_NAME]?.value || entity?.[ENTITY_ATTRIBUTE]?.value) {
-      onChange(entity);
+      onSearchChange(entity);
     } else if (entity?.[ENTITY_NAME]?.value === '' || entity?.[ENTITY_ATTRIBUTE]?.value === '') {
       onClear();
     }
   };
+
   const filterContainer = useCallback(
-    (entityProvider, isDisabled = false) => {
+    ({
+      entityProvider,
+      isDisabled = false,
+      onEntitiesChange = handleEntitiesChange,
+      tooltipText = '',
+    }) => {
       return (
         <FilterEntitiesContainer
-          onChange={handleEntitiesChange}
+          onChange={onEntitiesChange}
           entities={filter}
           entitiesProvider={entityProvider}
           render={({
@@ -144,7 +65,7 @@ export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
             filterEntities,
           }) => (
             <EntitiesGroup
-              browserTooltipTitle={isDisabled ? formatMessage(messages.oneOption) : ''}
+              browserTooltipTitle={isDisabled ? tooltipText : ''}
               className={cx('filter-entity')}
               disabled={isDisabled}
               onChange={onFilterChange}
@@ -159,20 +80,36 @@ export const TestCaseSearchControl = ({ filter = {}, onChange, onClear }) => {
         />
       );
     },
-    [filter, handleEntitiesChange],
+    [filter],
   );
 
   return (
     <div className={cx('filter-controls')}>
-      {filterContainer(TestCaseSearchNameEntity, isSearchByAttribute)}
+      {filterContainer({
+        entityProvider: TestCaseSearchNameEntity,
+        isDisabled: isSearchByAttribute,
+        tooltipText: formatMessage(messages.oneOption),
+      })}
       <span className={cx('separator')}>OR</span>
-      {filterContainer(TestCaseSearchAttributeEntity, isSearchByName)}
+      {filterContainer({
+        entityProvider: TestCaseSearchAttributeEntity,
+        isDisabled: isSearchByName,
+        tooltipText: formatMessage(messages.oneOption),
+      })}
+      <span className={cx('separator')}>AND</span>
+      {filterContainer({
+        entityProvider: TestCaseSearchStatusEntity,
+        isDisabled: isFilterEmpty,
+        onEntitiesChange: onStatusChange,
+        tooltipText: formatMessage(messages.testNameOrAttributeRequired),
+      })}
     </div>
   );
 };
 
 TestCaseSearchControl.propTypes = {
   filter: PropTypes.object,
-  onChange: PropTypes.func,
+  onSearchChange: PropTypes.func,
   onClear: PropTypes.func,
+  onStatusChange: PropTypes.func,
 };
