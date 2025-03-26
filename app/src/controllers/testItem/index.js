@@ -75,6 +75,7 @@ export {
   filteredItemStatisticsSelector,
   isFilterParamsExistsSelector,
   searchedTestItemsSelector,
+  isSearchWidgetItemsExistSelector,
 } from './selectors';
 export {
   formatItemName,
