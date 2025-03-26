@@ -103,6 +103,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     );
   };
   const handleChangeSorting = () => {
+    setThrottling(THROTTLING_SEARCH_TIME);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.sorting;
     setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
   };
