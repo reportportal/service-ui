@@ -9,7 +9,7 @@
 * [ ] Have you checked that no new circular dependencies appreared with your changes? (the webpack plugin reports circular dependencies within the `dev` npm script)
 * [ ] Have you made sure that all the necessary pipelines has been successfully completed?
 * [ ] If the task requires translations to be updated, have you done this by running the `manage:translations` script?
-* [ ] Have you add the link to the PR to the Jira ticket description?
+* [ ] Have you added the link to the PR to the Jira ticket description?
 
 ## Visuals
 
