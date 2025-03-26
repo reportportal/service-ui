@@ -45,6 +45,7 @@ export class InputDropdown extends Component {
     independentGroupSelection: PropTypes.bool,
     customClasses: PropTypes.object,
     title: PropTypes.string,
+    placeholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -70,17 +71,18 @@ export class InputDropdown extends Component {
       opened: '',
     },
     title: '',
+    placeholder: '',
   };
   state = {
     opened: false,
   };
 
   componentDidMount() {
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener('click', this.handleClickOutside, true);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('click', this.handleClickOutside, true);
   }
 
   onClickSelectBlock = (e) => {
@@ -106,7 +108,7 @@ export class InputDropdown extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (this.node && !this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node?.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -215,7 +217,9 @@ export class InputDropdown extends Component {
       selectAll,
       customClasses,
       title,
+      placeholder,
     } = this.props;
+    const displayedValue = this.displayedValue();
     return (
       <Manager>
         <div ref={this.setRef} className={cx('dropdown-container')} title={title}>
@@ -236,7 +240,11 @@ export class InputDropdown extends Component {
                   })}
                   onClick={this.onClickSelectBlock}
                 >
-                  <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
+                  <span
+                    className={cx('value', customClasses.value, { placeholder: !displayedValue })}
+                  >
+                    {displayedValue || placeholder}
+                  </span>
                   <span className={cx('arrow', customClasses.arrow)} />
                 </div>
               </div>

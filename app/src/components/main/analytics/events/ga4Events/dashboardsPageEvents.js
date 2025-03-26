@@ -108,14 +108,19 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
-  onLoadCompletion: (dashboardId, time, type, isSearchedByName) => ({
+  onLoadCompletion: (dashboardId, time, type, isSearchedByName, statusValues) => ({
     ...getBasicPerformanceEventParameters(DASHBOARDS),
     element_name: 'response_time',
     type: 'search_widget',
     number: dashboardId,
     icon_name: type,
     switcher: Math.round(time),
-    status: isSearchedByName ? 'test_name' : 'attribute',
+    status:
+      (isSearchedByName ? 'test_name' : 'attribute') +
+      (statusValues ? '#test_execution_status' : ''),
+    ...(statusValues && {
+      condition: statusValues.length === 5 ? 'All' : statusValues.join('#').toLowerCase(),
+    }),
   }),
   ON_DRAG_WIDGET: {
     ...getBasicClickEventParameters(DASHBOARDS),

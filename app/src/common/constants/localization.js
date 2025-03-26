@@ -83,6 +83,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.ok',
     defaultMessage: 'Ok',
   },
+  AND: {
+    id: 'Common.and',
+    defaultMessage: 'And',
+  },
+  OR: {
+    id: 'Common.or',
+    defaultMessage: 'Or',
+  },
   DISABLE: {
     id: 'Common.disable',
     defaultMessage: 'Disable',
