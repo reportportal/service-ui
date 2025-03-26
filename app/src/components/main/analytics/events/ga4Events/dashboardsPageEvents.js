@@ -115,7 +115,9 @@ export const WIDGETS_EVENTS = {
     number: dashboardId,
     icon_name: type,
     switcher: Math.round(time),
-    status: isSearchedByName ? 'test_name' : 'attribute',
+    status:
+      (isSearchedByName ? 'test_name' : 'attribute') +
+      (statusValues ? '#test_execution_status' : ''),
     ...(statusValues && {
       condition: statusValues.length === 5 ? 'All' : statusValues.join('#').toLowerCase(),
     }),
