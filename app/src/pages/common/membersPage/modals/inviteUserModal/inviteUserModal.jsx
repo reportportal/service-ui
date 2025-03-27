@@ -29,7 +29,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
 import { urlOrganizationSlugSelector, urlProjectSlugSelector } from 'controllers/pages';
-import { isAdminSelector } from 'controllers/user';
+import { activeProjectSelector, isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalField } from 'components/main/modal';
@@ -121,7 +121,7 @@ const inviteFormSelector = formValueSelector(INVITE_USER_FORM);
 @connect(
   (state, ownProps) => ({
     selectedProject: ownProps.data.isProjectSelector
-      ? inviteFormSelector(state, 'project')
+      ? inviteFormSelector(state, 'project') || activeProjectSelector(state)
       : urlProjectSlugSelector(state),
     projectName: projectNameSelector(state),
     selectedUser: inviteFormSelector(state, 'user'),

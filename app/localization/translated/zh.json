@@ -909,6 +909,7 @@
   "GeneralTab.week1": "7天",
   "GeneralTab.week2": "14天",
   "GeneralTab.week3": "21天",
+  "GenerateApiKeyModal.apiKeyNameShouldMatch": "Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, ='",
   "GenerateApiKeyModal.apiKeyNameUniqueHint": "已存在相同名称的API密钥",
   "GenerateApiKeyModal.apiKeyNameWrongSizeHint": "API密钥名称应为1到40个字符。",
   "GenerateApiKeyModal.counterText": "剩余字符数：",

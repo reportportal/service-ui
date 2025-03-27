@@ -166,6 +166,7 @@ export class IntegrationForm extends Component {
                       updateMetaData={this.updateMetaData}
                       isGlobal={isGlobal}
                       pluginName={pluginName}
+                      isConfiguration
                     />
                   )}
                 </div>

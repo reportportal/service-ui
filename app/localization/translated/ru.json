@@ -907,6 +907,7 @@
   "GeneralTab.week1": "7 дней",
   "GeneralTab.week2": "14 дней",
   "GeneralTab.week3": "21 день",
+  "GenerateApiKeyModal.apiKeyNameShouldMatch": "Введите действительный API-ключ: используйте буквы, цифры, -, ., _, ~, /, +, ='",
   "GenerateApiKeyModal.apiKeyNameUniqueHint": "Ключ API с таким именем уже существует",
   "GenerateApiKeyModal.apiKeyNameWrongSizeHint": "Имя ключа API должно иметь размер от 1 до 40 символов.",
   "GenerateApiKeyModal.counterText": "Количество оставшихся символов: ",

@@ -619,6 +619,18 @@ describe('validate.apiKeyName', () => {
   });
 });
 
+describe('validate.apiKeyNameShouldMatch', () => {
+  test('validation should be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('abc')).toBe(true);
+    expect(validate.apiKeyNameShouldMatch('Az1-._~+/')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('api key name')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('apiKeyName!')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('$apiKeyName')).toBe(false);
+  });
+});
+
 describe('validate.anyOptionSelected', () => {
   test('validation should be correct', () => {
     expect(validate.anyOptionSelected({ option1: true, option2: false })).toBe(true);

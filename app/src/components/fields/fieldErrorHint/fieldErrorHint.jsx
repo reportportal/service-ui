@@ -274,6 +274,10 @@ const messages = defineMessages({
     id: 'GenerateApiKeyModal.apiKeyNameUniqueHint',
     defaultMessage: 'API Key with the same name already exists',
   },
+  apiKeyNameShouldMatch: {
+    id: 'GenerateApiKeyModal.apiKeyNameShouldMatch',
+    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, =',
+  },
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',
     defaultMessage: 'The field should have size not more than 128 symbols.',
