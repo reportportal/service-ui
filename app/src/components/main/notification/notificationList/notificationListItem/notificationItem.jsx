@@ -157,6 +157,10 @@ const messages = defineMessages({
     defaultMessage:
       "Loaded tests are grouped under the launches due to the active 'Display launches' toggle.",
   },
+  updateSessionExpirationSuccess: {
+    id: 'ProfilePage.updateSessionExpirationSuccess',
+    defaultMessage: 'Session inactivity timeout has been changed successfully',
+  },
 });
 
 @injectIntl

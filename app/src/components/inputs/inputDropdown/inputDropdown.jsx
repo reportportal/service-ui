@@ -69,6 +69,7 @@ export class InputDropdown extends Component {
       selectList: '',
       dropdownOption: '',
       opened: '',
+      container: '',
     },
     title: '',
     placeholder: '',
@@ -222,7 +223,11 @@ export class InputDropdown extends Component {
     const displayedValue = this.displayedValue();
     return (
       <Manager>
-        <div ref={this.setRef} className={cx('dropdown-container')} title={title}>
+        <div
+          ref={this.setRef}
+          className={cx('dropdown-container', customClasses.container)}
+          title={title}
+        >
           <Reference>
             {({ ref }) => (
               <div

@@ -16,9 +16,19 @@
 
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { APP_INFO_NAMESPACE } from './constants';
+import { APP_INFO_NAMESPACE, UPDATE_EXPIRATION_SESSION, UPDATE_SERVER_SETTINGS } from './constants';
 
 export const fetchAppInfoAction = () =>
   fetchDataAction(APP_INFO_NAMESPACE, true)(URLS.appInfo(), {
     headers: { Authorization: undefined },
   });
+
+export const updateServerSettingsAction = (settings) => ({
+  type: UPDATE_SERVER_SETTINGS,
+  payload: settings,
+});
+
+export const updateExpirationSessionAction = (expiration) => ({
+  type: UPDATE_EXPIRATION_SESSION,
+  payload: expiration,
+});

@@ -32,6 +32,7 @@ import {
   ALLOW_DELETE_ACCOUNT,
   USER_SUGGESTIONS,
   SSO_USERS_ONLY_KEY,
+  SERVER_SESSION_EXPIRATION_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -60,6 +61,8 @@ export const analyzerExtensionsSelector = (state) => extensionsSelector(state).a
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
+export const sessionExpirationTimeSelector = (state) =>
+  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY] || 0);
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
