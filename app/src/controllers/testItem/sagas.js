@@ -403,12 +403,15 @@ function* refreshSearchedItemsFromWidget({ payload: widgetId }) {
   yield put(testItemsSearchAction({ widgetId, searchParams: { searchCriteria } }));
 }
 
-function* loadMoreSearchedItemsFromWidget({ payload: { widgetId, trackPerformance = () => {} } }) {
+function* loadMoreSearchedItemsFromWidget({
+  payload: { widgetId, trackPerformance = () => {}, isDisplayedLaunches = false },
+}) {
   const startTime = performance.now();
   const searchDetails = yield select(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
   const { searchCriteria, sortingDirection, page, content = [] } = targetWidgetSearch;
   const currentPageNumber = page?.number;
+  yield updateSearchedItemsState(widgetId)({ ...targetWidgetSearch, loadingMore: true });
   const result = yield call(
     fetchSearchedItems,
     searchCriteria,
@@ -420,7 +423,16 @@ function* loadMoreSearchedItemsFromWidget({ payload: { widgetId, trackPerformanc
     sortingDirection,
     content: [...content, ...result.content],
     page: result.page,
+    loadingMore: false,
   });
+  if (isDisplayedLaunches) {
+    yield put(
+      showNotification({
+        messageId: 'loadedItemsWithDisplayedLaunches',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  }
   const endTime = performance.now();
   trackPerformance(endTime - startTime);
 }

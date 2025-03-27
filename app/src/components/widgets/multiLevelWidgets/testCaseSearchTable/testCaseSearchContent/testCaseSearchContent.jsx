@@ -25,6 +25,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { StepGrid } from 'pages/inside/stepPage/stepGrid';
 import { Button } from '@reportportal/ui-kit';
 import React from 'react';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
 
@@ -35,10 +36,11 @@ export const TestCaseSearchContent = ({
   isEmptyState,
   data,
   listView,
-  loading,
+  isTableLoading,
   sortingDirection,
   onChangeSorting,
   onLoadMore,
+  isLoadingMore,
   error,
 }) => {
   const { formatMessage } = useIntl();
@@ -49,7 +51,7 @@ export const TestCaseSearchContent = ({
     clickOnExpandAccordion: WIDGETS_EVENTS.clickOnExpandDescription(dashboardId),
   };
   const isLoadMoreDisabled = data.length >= MAXIMUM_ITEMS;
-
+  const isLoadMoreButtonVisible = !isTableLoading && onLoadMore;
   return (
     <ScrollWrapper>
       {isEmptyState ? (
@@ -66,20 +68,25 @@ export const TestCaseSearchContent = ({
             onChangeSorting={onChangeSorting}
             sortingDirection={sortingDirection}
             sortingColumn={ENTITY_START_TIME}
-            loading={loading}
+            loading={isTableLoading}
             events={targetEvents}
             errorMessage={error ? formatMessage(messages.errorLoadingData) : null}
           />
-          {!loading && onLoadMore && (
-            <Button
-              className={cx('load-more', { disabled: isLoadMoreDisabled })}
-              variant={'ghost'}
-              onClick={onLoadMore}
-              disabled={isLoadMoreDisabled}
-            >
-              {formatMessage(messages.loadMore)}
-            </Button>
-          )}
+          {isLoadMoreButtonVisible &&
+            (isLoadingMore ? (
+              <div className={cx('spinner-block')}>
+                <SpinningPreloader />
+              </div>
+            ) : (
+              <Button
+                className={cx('load-more', { disabled: isLoadMoreDisabled })}
+                variant={'ghost'}
+                onClick={onLoadMore}
+                disabled={isLoadMoreDisabled}
+              >
+                {formatMessage(messages.loadMore)}
+              </Button>
+            ))}
           {onLoadMore && isLoadMoreDisabled && (
             <span className={cx('max-items-info')}>{formatMessage(messages.maximumItems)}</span>
           )}
@@ -93,9 +100,10 @@ TestCaseSearchContent.propTypes = {
   isEmptyState: PropTypes.bool,
   data: PropTypes.array,
   listView: PropTypes.bool,
-  loading: PropTypes.bool,
+  isTableLoading: PropTypes.bool,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   onLoadMore: PropTypes.func,
+  isLoadingMore: PropTypes.bool,
   error: PropTypes.object,
 };

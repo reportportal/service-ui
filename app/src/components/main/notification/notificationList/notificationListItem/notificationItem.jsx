@@ -152,6 +152,11 @@ const messages = defineMessages({
     id: 'ProfilePage.apiKeys.fetchApiKeysError',
     defaultMessage: 'An error occurred during fetch API keys',
   },
+  loadedItemsWithDisplayedLaunches: {
+    id: 'TestCaseSearch.loadedItemsWithDisplayedLaunches',
+    defaultMessage:
+      "Loaded tests are grouped under the launches due to the active 'Display launches' toggle.",
+  },
 });
 
 @injectIntl
