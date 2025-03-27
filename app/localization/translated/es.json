@@ -1985,6 +1985,7 @@
   "TableWidgets.skippedColumnShort": "omit",
   "TableWidgets.totalColumnFull": "Total",
   "TableWidgets.totalColumnShort": "Tot",
+  "TestCaseSearch.loadedItemsWithDisplayedLaunches": "Loaded tests are grouped under the launches due to the active 'Display launches' toggle.",
   "TestCasesGrowthTrendControls.ItemsFieldLabel": "Elementos",
   "TestCasesGrowthTrendControls.ItemsValidationError": "La cantidad de elementos acepta valores de '1' a '600'",
   "TestItemChanges.fromItem": "del elemento de prueba",

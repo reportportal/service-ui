@@ -1985,6 +1985,7 @@
   "TableWidgets.skippedColumnShort": "проп",
   "TableWidgets.totalColumnFull": "Всего",
   "TableWidgets.totalColumnShort": "Вс",
+  "TestCaseSearch.loadedItemsWithDisplayedLaunches": "Загруженные тесты сгрупированы под запусками из-за активного переключателя «Отображение запусков».",
   "TestCasesGrowthTrendControls.ItemsFieldLabel": "Элементы",
   "TestCasesGrowthTrendControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",
   "TestItemChanges.fromItem": "от элемента тестирования",
