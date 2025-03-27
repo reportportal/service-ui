@@ -62,7 +62,7 @@ export const authExtensionsSelector = (state) => uatInfoSelector(state).authExte
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
-  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY] || 0);
+  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;

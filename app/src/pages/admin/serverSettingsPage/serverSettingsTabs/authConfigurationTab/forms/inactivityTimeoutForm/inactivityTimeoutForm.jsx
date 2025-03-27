@@ -19,11 +19,11 @@ import { SectionHeader } from 'components/main/sectionHeader';
 import React, { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useDispatch, useSelector } from 'react-redux';
 import { sessionExpirationTimeSelector, updateExpirationSessionAction } from 'controllers/appInfo';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { Messages } from 'pages/inside/projectSettingsPageContainer/generalTab/generalTabMessages';
 import styles from './inactivityTimeoutForm.scss';
 
 const cx = classNames.bind(styles);
@@ -49,19 +49,19 @@ export const InactivityTimeoutForm = () => {
   const expirationTimeoutConfig = useSelector(sessionExpirationTimeSelector);
   const dispatch = useDispatch();
 
-  const [timeout, setTimeout] = useState(expirationTimeoutConfig);
+  const [inactivityTimeout, setInactivityTimeout] = useState(expirationTimeoutConfig);
   const getMilliseconds = (hour) => hour * 60 * 60 * 1000;
 
-  const timeoutOption = [
-    { value: getMilliseconds(15 / 60), label: `15 ${formatMessage(COMMON_LOCALE_KEYS.MINUTES)}` },
-    { value: getMilliseconds(1), label: `1 ${formatMessage(COMMON_LOCALE_KEYS.HOURS)}` },
-    { value: getMilliseconds(12), label: `12 ${formatMessage(COMMON_LOCALE_KEYS.HOURS)}` },
-    { value: getMilliseconds(24), label: `24 ${formatMessage(COMMON_LOCALE_KEYS.HOURS)}` },
+  const timeoutOptions = [
+    { value: getMilliseconds(15 / 60), label: formatMessage(Messages.minutes15) },
+    { value: getMilliseconds(1), label: formatMessage(Messages.hour1) },
+    { value: getMilliseconds(12), label: formatMessage(Messages.hour12) },
+    { value: getMilliseconds(24), label: formatMessage(Messages.hour24) },
   ];
 
   const handleTimeoutChange = (value) => {
-    const label = timeoutOption.find((option) => option.value === value).label;
-    setTimeout(value);
+    const label = timeoutOptions.find((option) => option.value === value).label;
+    setInactivityTimeout(value);
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.changeSessionInactivity(label));
     dispatch(updateExpirationSessionAction(value));
   };
@@ -78,8 +78,8 @@ export const InactivityTimeoutForm = () => {
             container: cx('timeout-dropdown'),
             selectList: cx('timeout-select-list'),
           }}
-          options={timeoutOption}
-          value={timeout}
+          options={timeoutOptions}
+          value={inactivityTimeout}
           onChange={handleTimeoutChange}
         />
         <p className={cx('description')}>{formatMessage(messages.description)}</p>

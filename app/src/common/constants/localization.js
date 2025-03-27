@@ -303,14 +303,6 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.assign',
     defaultMessage: 'Assign',
   },
-  MINUTES: {
-    id: 'Common.minutes',
-    defaultMessage: 'minutes',
-  },
-  HOURS: {
-    id: 'Common.hours',
-    defaultMessage: 'hours',
-  },
 });
 
 export const months = [

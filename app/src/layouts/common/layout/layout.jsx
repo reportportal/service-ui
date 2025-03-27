@@ -62,7 +62,7 @@ export class Layout extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.windowResizeHandler, false);
-    this.addActivityListener();
+    if (this.props.sessionExpirationConfig !== Infinity) this.addActivityListener();
   }
 
   componentDidUpdate(prevProps) {
