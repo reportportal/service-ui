@@ -52,11 +52,12 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     content = [],
     page = {},
     loading: fetchLoading = false,
+    loadingMore = false,
     error = null,
   } = targetWidgetSearch;
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
-  const [loading, setLoading] = useState(fetchLoading);
+  const [isTableLoading, setIsTableLoading] = useState(fetchLoading);
   const [throttling, setThrottling] = useState(THROTTLING_SEARCH_TIME);
   const triggerSourceRef = useRef(null);
 
@@ -84,7 +85,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
 
   const handleSearch = (entity) => {
     setThrottling(THROTTLING_SEARCH_TIME);
-    setLoading(true);
+    setIsTableLoading(true);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
   };
@@ -110,11 +111,11 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const handleLoadMore = () => {
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.loadMore;
     trackEvent(WIDGETS_EVENTS.clickOnLoadMoreSearchItems(dashboardId, !!searchValue?.name?.value));
-    dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance }));
+    dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance, isDisplayedLaunches }));
   };
 
   useEffect(() => {
-    setLoading(fetchLoading);
+    setIsTableLoading(fetchLoading);
   }, [fetchLoading]);
 
   useEffect(() => {
@@ -144,7 +145,8 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         listView={isDisplayedLaunches}
         isEmptyState={isSearchValueEmpty}
         data={content}
-        loading={loading}
+        isTableLoading={isTableLoading}
+        isLoadingMore={loadingMore}
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
         onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}

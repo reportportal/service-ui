@@ -1985,6 +1985,7 @@
   "TableWidgets.skippedColumnShort": "прап",
   "TableWidgets.totalColumnFull": "Усяго",
   "TableWidgets.totalColumnShort": "Усяго",
+  "TestCaseSearch.loadedItemsWithDisplayedLaunches": "Загружаныя тэсты згрупаваны пад запускамі з-за актыўнага пераключальніка «Адлюстраванне запускаў».",
   "TestCasesGrowthTrendControls.ItemsFieldLabel": "Элементы",
   "TestCasesGrowthTrendControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",
   "TestItemChanges.fromItem": "ад элемента тэставання",
