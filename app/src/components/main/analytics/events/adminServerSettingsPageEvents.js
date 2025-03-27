@@ -34,6 +34,11 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'sso',
     switcher: switcherValue ? 'on' : 'off',
   }),
+  changeSessionInactivity: (condition) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'session_inactivity_timeout',
+    condition,
+  }),
   ANALYTICS_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'analytics',
