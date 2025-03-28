@@ -17,28 +17,28 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  firstInfoTitle: {
-    id: 'VersionsList.firstInfoTitle',
+  productVersionWorkTitle: {
+    id: 'VersionsList.productVersionWorkTitle',
     defaultMessage: 'How does Product version work?',
   },
-  firstInfoDescription: {
-    id: 'VersionsList.firstInfoDescription',
+  productVersionWorkDescription: {
+    id: 'VersionsList.productVersionWorkDescription',
     defaultMessage: 'Explore the functionality and benefits of Product versions',
   },
-  secondInfoTitle: {
-    id: 'VersionsList.secondInfoTitle',
+  manageProductVersionsTitle: {
+    id: 'VersionsList.manageProductVersionsTitle',
     defaultMessage: 'How to manage Product versions?',
   },
-  secondInfoDescription: {
-    id: 'VersionsList.secondInfoDescription',
+  manageProductVersionsDescription: {
+    id: 'VersionsList.manageProductVersionsDescription',
     defaultMessage: 'Learn effective strategies for managing your Product versions',
   },
-  thirdInfoTitle: {
-    id: 'VersionsList.thirdInfoTitle',
+  linkToTestCaseVersionTitle: {
+    id: 'VersionsList.linkToTestCaseVersionTitle',
     defaultMessage: 'How to link to test case version?',
   },
-  thirdInfoDescription: {
-    id: 'VersionsList.thirdInfoDescription',
+  linkToTestCaseVersionDescription: {
+    id: 'VersionsList.linkToTestCaseVersionDescription',
     defaultMessage: 'Understand the steps to link a test to a Product version',
   },
   lastUpdatedDate: {

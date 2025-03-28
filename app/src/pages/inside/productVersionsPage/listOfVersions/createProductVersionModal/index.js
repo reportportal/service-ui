@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { CreateDatasetModal, CREATE_PRODUCT_VERSION_MODAL_KEY } from './createProductVersionModal';
+export { CREATE_PRODUCT_VERSION_MODAL_KEY } from './createProductVersionModal';

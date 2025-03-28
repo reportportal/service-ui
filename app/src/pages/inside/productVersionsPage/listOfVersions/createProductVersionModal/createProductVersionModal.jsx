@@ -29,7 +29,7 @@ import { messages } from './messages';
 
 export const CREATE_PRODUCT_VERSION_MODAL_KEY = 'createProductVersionModal';
 
-export const CreateProductVersionModal = ({ data: { onSubmit }, handleSubmit }) => {
+const CreateProductVersionModal = ({ data: { onSubmit }, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ CreateProductVersionModal.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-export const CreateDatasetModal = withModal(CREATE_PRODUCT_VERSION_MODAL_KEY)(
+withModal(CREATE_PRODUCT_VERSION_MODAL_KEY)(
   reduxForm({
     form: 'createProductVersionForm',
     validate: ({ productVersion }) => ({

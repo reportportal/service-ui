@@ -24,35 +24,35 @@ import { HelpPanel } from 'pages/inside/common/helpPanel';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 
-import styles from './versionList.scss';
+import styles from './content.scss';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const VersionList = ({ versions }) => {
+export const Content = ({ versions }) => {
   const { formatMessage, formatDate } = useIntl();
 
   const infoItems = [
     {
-      title: formatMessage(messages.firstInfoTitle),
+      title: formatMessage(messages.productVersionWorkTitle),
       mainIcon: discoverPluginsIcon,
-      description: formatMessage(messages.firstInfoDescription),
+      description: formatMessage(messages.productVersionWorkDescription),
       openIcon: openInNewTabIcon,
       automationId: 'productVersionWorkLink',
       link: 'https://reportportal.io/docs/',
     },
     {
-      title: formatMessage(messages.secondInfoTitle),
+      title: formatMessage(messages.manageProductVersionsTitle),
       mainIcon: discoverPluginsIcon,
-      description: formatMessage(messages.secondInfoDescription),
+      description: formatMessage(messages.manageProductVersionsDescription),
       openIcon: openInNewTabIcon,
       automationId: 'manageProductVersionLink',
       link: 'https://reportportal.io/docs/',
     },
     {
-      title: formatMessage(messages.thirdInfoTitle),
+      title: formatMessage(messages.linkToTestCaseVersionTitle),
       mainIcon: discoverPluginsIcon,
-      description: formatMessage(messages.thirdInfoDescription),
+      description: formatMessage(messages.linkToTestCaseVersionDescription),
       openIcon: openInNewTabIcon,
       automationId: 'testCaseVersionLink',
       link: 'https://reportportal.io/docs/',
@@ -61,11 +61,11 @@ export const VersionList = ({ versions }) => {
 
   return (
     <>
-      <div className={cx('version-list')}>
+      <div className={cx('content-list')}>
         {versions.map(({ productVersion, timestamp }) => (
-          <div className={cx('version-list__item')} key={productVersion}>
-            <div className={cx('version-list__item-title')}>{productVersion}</div>
-            <div className={cx('version-list__item-timestamp')}>
+          <div className={cx('content-list__item')} key={productVersion}>
+            <div className={cx('content-list__item-title')}>{productVersion}</div>
+            <div className={cx('content-list__item-timestamp')}>
               {formatMessage(messages.lastUpdatedDate, {
                 date: formatDate(timestamp, {
                   year: 'numeric',
@@ -83,7 +83,7 @@ export const VersionList = ({ versions }) => {
   );
 };
 
-VersionList.propTypes = {
+Content.propTypes = {
   versions: PropTypes.arrayOf(
     PropTypes.shape({
       productVersion: PropTypes.string,

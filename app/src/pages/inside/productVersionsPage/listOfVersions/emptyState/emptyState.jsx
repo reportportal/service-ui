@@ -30,9 +30,9 @@ export const EmptyState = ({ openCreateProductVersionModal }) => {
   const { formatMessage } = useIntl();
 
   const benefits = [
-    messages.emptyPageFirstBenefit,
-    messages.emptyPageSecondBenefit,
-    messages.emptyPageThirdBenefit,
+    messages.stayOrganizedBenefit,
+    messages.beUpToDateBenefit,
+    messages.enhanceTrackingBenefit,
   ].map((translation) =>
     formatMessage(translation, {
       strong: (chunks) => <strong>{chunks}</strong>,

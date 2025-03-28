@@ -30,18 +30,18 @@ export const messages = defineMessages({
     id: 'ListOfVersionsPage.numerableBlock.title',
     defaultMessage: 'Why is it beneficial?',
   },
-  emptyPageFirstBenefit: {
-    id: 'ListOfVersionsPage.emptyPageFirstBenefit',
+  stayOrganizedBenefit: {
+    id: 'ListOfVersionsPage.stayOrganizedBenefit',
     defaultMessage:
       '<strong>Stay Organized:</strong> Product versions help organize your tests and manage their settings in one place, ensuring efficiency and saving time',
   },
-  emptyPageSecondBenefit: {
-    id: 'ListOfVersionsPage.emptyPageSecondBenefit',
+  beUpToDateBenefit: {
+    id: 'ListOfVersionsPage.beUpToDateBenefit',
     defaultMessage:
       '<strong>Be Up-to-Date:</strong> Mark tests as default to use the latest version for the next run. Stay updated without any extra hassle.',
   },
-  emptyPageThirdBenefit: {
-    id: 'ListOfVersionsPage.emptyPageThirdBenefit',
+  enhanceTrackingBenefit: {
+    id: 'ListOfVersionsPage.enhanceTrackingBenefit',
     defaultMessage:
       '<strong>Enhance Tracking:</strong> Understand the evolution of your product by comparing tests across different versions. This will boost your product analysis.',
   },

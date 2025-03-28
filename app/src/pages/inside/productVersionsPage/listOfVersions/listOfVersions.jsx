@@ -17,23 +17,24 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import isEmpty from 'lodash.isempty';
 
 import styles from './listOfVersions.scss';
 import { EmptyState } from './emptyState';
-import { VersionList } from './versionList';
+import { Content } from './content';
 
 const cx = classNames.bind(styles);
 
 export const ListOfVersions = ({ openCreateProductVersionModal, versions }) => (
   <div
     className={cx('list-of-versions', {
-      'list-of-versions--empty': !versions.length,
+      'list-of-versions--empty': isEmpty(versions),
     })}
   >
-    {versions.length > 0 ? (
-      <VersionList versions={versions} />
-    ) : (
+    {isEmpty(versions) ? (
       <EmptyState openCreateProductVersionModal={openCreateProductVersionModal} />
+    ) : (
+      <Content versions={versions} />
     )}
   </div>
 );

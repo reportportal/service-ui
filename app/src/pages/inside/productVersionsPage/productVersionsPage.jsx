@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import isEmpty from 'lodash.isempty';
 import { Button } from '@reportportal/ui-kit';
 
 import {
@@ -47,7 +48,6 @@ export const ProductVersionsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const [headerNodes, setHeaderNodes] = useState({});
   const [versions, setVersions] = useState([]);
   const { subPage: activeSubPage } = useSelector(payloadSelector);
   const { subPage } = useSelector(querySelector);
@@ -65,7 +65,6 @@ export const ProductVersionsPage = () => {
   );
 
   const handleModalSubmit = (data) => {
-    // eslint-disable-next-line no-console
     setVersions((prevState) => [...prevState, { ...data, timestamp: new Date() }]);
     dispatch(hideModalAction());
   };
@@ -103,33 +102,10 @@ export const ProductVersionsPage = () => {
   );
 
   useEffect(() => {
-    setHeaderNodes({
-      children: (
-        <div className={cx('product-versions-page__navigation-panel')}>
-          <div className={cx('product-versions-page__tabs')}>
-            <Tabs config={tabsConfig} activeTab={activeSubPage} withContent={false} />
-          </div>
-          {versions.length > 0 && (
-            <Button
-              adjustWidthOn={'wide-content'}
-              onClick={openCreateProductVersionModal}
-              data-automation-id="addProductVersionButton"
-              icon={Parser(PlusIcon)}
-              className={cx('product-versions-page__button')}
-            >
-              {formatMessage(messages.addProductVersionButtonText)}
-            </Button>
-          )}
-        </div>
-      ),
-    });
-
     if (!activeSubPage || !tabsConfig[activeSubPage]) {
       const firstTabConfigKey = Object.keys(tabsConfig)[0];
       dispatch(tabsConfig[firstTabConfigKey].link);
     }
-
-    return () => setHeaderNodes(null);
   }, [activeSubPage, versions]);
 
   return (
@@ -138,11 +114,23 @@ export const ProductVersionsPage = () => {
         <div className={cx('product-versions-page')}>
           {!subPage && (
             <div className={cx('product-versions-page__header')}>
-              <Header
-                title={formatMessage(messages.productVersions)}
-                titleNode={headerNodes.titleNode}
-              >
-                {headerNodes.children}
+              <Header title={formatMessage(messages.productVersions)}>
+                <div className={cx('product-versions-page__navigation-panel')}>
+                  <div className={cx('product-versions-page__tabs')}>
+                    <Tabs config={tabsConfig} activeTab={activeSubPage} withContent={false} />
+                  </div>
+                  {!isEmpty(versions) && (
+                    <Button
+                      adjustWidthOn={'wide-content'}
+                      onClick={openCreateProductVersionModal}
+                      data-automation-id="addProductVersionButton"
+                      icon={Parser(PlusIcon)}
+                      className={cx('product-versions-page__button')}
+                    >
+                      {formatMessage(messages.addProductVersionButtonText)}
+                    </Button>
+                  )}
+                </div>
               </Header>
             </div>
           )}
