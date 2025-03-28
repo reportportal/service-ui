@@ -20,7 +20,7 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { userIdSelector, activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
+import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
@@ -188,10 +188,10 @@ function* addDashboard({ payload: dashboard }) {
 }
 
 function* duplicateDashboard({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   try {
-    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
-    const result = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
+    const config = yield call(fetch, URLS.dashboardConfig(projectKey, dashboard.id));
+    const result = yield call(fetch, URLS.dashboardPreconfigured(projectKey), {
       method: 'post',
       data: {
         name: dashboard.name,
@@ -200,7 +200,7 @@ function* duplicateDashboard({ payload: dashboard }) {
       },
     });
 
-    const newDashboard = yield call(fetch, URLS.dashboard(activeProject, result.id));
+    const newDashboard = yield call(fetch, URLS.dashboard(projectKey, result.id));
     yield put(addDashboardSuccessAction(newDashboard));
 
     yield put(
@@ -216,9 +216,9 @@ function* duplicateDashboard({ payload: dashboard }) {
 }
 
 function* copyDashboardConfig({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   try {
-    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
+    const config = yield call(fetch, URLS.dashboardConfig(projectKey, dashboard.id));
     yield call([navigator.clipboard, 'writeText'], JSON.stringify(config));
     yield put(
       showNotification({
