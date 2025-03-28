@@ -18,12 +18,12 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+
 import { createExternalLink, docsReferences } from 'common/utils';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { NumerableBlock } from 'pages/common/numerableBlock';
+import { VariablesAndDatasets } from './variablesAndDatasets';
 import { FormattedDescription, TabDescription } from '../../../content/elements';
-import { VariablesControl } from './variablesControl';
-import { Datasets } from './datasets';
 import { SettingsPageContent } from '../../settingsPageContent';
 import { HeaderControls } from './headerControls';
 import { messages } from './messages';
@@ -67,10 +67,7 @@ export const TestData = ({ setHeaderTitleNode }) => {
           })}
         />
       </TabDescription>
-      <div className={cx('test-data-page__datasets-wrapper')}>
-        <VariablesControl />
-        <Datasets isEmpty />
-      </div>
+      <VariablesAndDatasets />
       <NumerableBlock
         title={formatMessage(messages.howToGetStarted)}
         items={howToGetStartedItems}
