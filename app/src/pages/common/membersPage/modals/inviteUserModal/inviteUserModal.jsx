@@ -121,7 +121,7 @@ const inviteFormSelector = formValueSelector(INVITE_USER_FORM);
 @connect(
   (state, ownProps) => ({
     selectedProject: ownProps.data.isProjectSelector
-      ? inviteFormSelector(state, 'project') || activeProjectSelector(state)
+      ? inviteFormSelector(state, 'project') || activeProjectSelector(state)?.projectSlug
       : urlProjectSlugSelector(state),
     projectName: projectNameSelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
