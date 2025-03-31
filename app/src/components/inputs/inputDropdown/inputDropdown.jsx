@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Manager, Reference, Popper } from 'react-popper';
+import { FormattedMessage } from 'react-intl';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 import styles from './inputDropdown.scss';
 
@@ -278,7 +279,9 @@ export class InputDropdown extends Component {
                 >
                   {multiple && selectAll && (
                     <div className={cx('select-all-block')} onClick={this.handleAllClick}>
-                      <span className={cx('select-all')}>All</span>
+                      <span className={cx('select-all')}>
+                        <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
+                      </span>
                     </div>
                   )}
                   <ScrollWrapper autoHeight autoHeightMax={300}>
