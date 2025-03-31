@@ -314,7 +314,7 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isIntegrationsAllowed && (
+        {isIntegrationsAllowed && isEnabled && (
           <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>
@@ -327,7 +327,7 @@ export class InstancesSection extends Component {
                   onItemClick={onItemClick}
                   isGlobal={isGlobal}
                 />
-                {this.multiple && !disabled && isEnabled && (
+                {this.multiple && !disabled && (
                   <div className={cx('add-integration-button')}>
                     <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                       {formatMessage(messages.addIntegrationButtonTitle)}
@@ -361,7 +361,7 @@ export class InstancesSection extends Component {
                 {formatMessage(messages.noGlobalIntegrationMessage)}
               </p>
             )}
-            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && isEnabled && (
+            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
               <div className={cx('add-integration-button')}>
                 <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                   {formatMessage(messages.addIntegrationButtonTitle)}
