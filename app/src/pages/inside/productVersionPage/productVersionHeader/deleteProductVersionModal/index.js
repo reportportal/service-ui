@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { PopoverTools } from './popoverTools';
+export { DELETE_PRODUCT_VERSION_MODAL } from './deleteProductVersionModal';

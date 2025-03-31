@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { useEffect } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
+import PropTypes from 'prop-types';
 import { Modal, FieldText } from '@reportportal/ui-kit';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { FieldProvider } from 'components/fields';
@@ -26,32 +28,40 @@ import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 
 const messages = defineMessages({
-  createDataset: {
-    id: 'TestData.createDataset',
-    defaultMessage: 'Create Dataset',
+  renameProductVersion: {
+    id: 'ProductVersionPage.renameProductVersion',
+    defaultMessage: 'Rename product version',
   },
 });
 
-export const CREATE_DATASET_MODAL_KEY = 'createDatasetModal';
+export const RENAME_PRODUCT_VERSION_MODAL = 'renameProductVersionModal';
 
-export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
+const RenameProductVersionModal = ({
+  data: { productVersionName, onSubmit },
+  initialize,
+  handleSubmit,
+}) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children: formatMessage(COMMON_LOCALE_KEYS.RENAME),
     onClick: handleSubmit(onSubmit),
   };
 
+  useEffect(() => {
+    initialize({ productVersionName });
+  }, [initialize, productVersionName]);
+
   return (
     <Modal
-      title={formatMessage(messages.createDataset)}
+      title={formatMessage(messages.renameProductVersion)}
       okButton={okButton}
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={() => dispatch(hideModalAction())}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FieldProvider name="datasetName">
+        <FieldProvider name="productVersionName">
           <FieldErrorHint provideHint={false}>
             <FieldText label={formatMessage(COMMON_LOCALE_KEYS.NAME)} defaultWidth={false} />
           </FieldErrorHint>
@@ -61,18 +71,20 @@ export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
   );
 };
 
-CreateDataset.propTypes = {
+RenameProductVersionModal.propTypes = {
   data: PropTypes.shape({
+    productVersionName: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
   }),
   handleSubmit: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
 };
 
-export const CreateDatasetModal = withModal(CREATE_DATASET_MODAL_KEY)(
+withModal(RENAME_PRODUCT_VERSION_MODAL)(
   reduxForm({
-    form: 'createDatasetForm',
-    validate: ({ datasetName }) => ({
-      datasetName: commonValidators.requiredField(datasetName),
+    form: 'renameProductVersionForm',
+    validate: ({ productVersionName }) => ({
+      productVersionName: commonValidators.requiredField(productVersionName),
     }),
-  })(CreateDataset),
+  })(RenameProductVersionModal),
 );
