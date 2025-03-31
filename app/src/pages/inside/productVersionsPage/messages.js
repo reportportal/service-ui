@@ -29,4 +29,8 @@ export const messages = defineMessages({
     id: 'ProductVersionsPage.generalDocumentation',
     defaultMessage: 'General documentation',
   },
+  addProductVersionButtonText: {
+    id: 'ProductVersionsPage.addProductVersionButtonText',
+    defaultMessage: 'Add Product version',
+  },
 });

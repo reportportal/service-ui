@@ -18,6 +18,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import isEmpty from 'lodash.isempty';
+import { Button } from '@reportportal/ui-kit';
+
 import {
   payloadSelector,
   PRODUCT_VERSIONS_TAB_PAGE,
@@ -29,10 +33,14 @@ import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { MarkdownEditor } from 'components/main/markdown';
-import { ListOfVersions } from './listOfVersions';
-import { LIST_OF_VERSIONS, GENERAL_DOCUMENTATION } from './constants';
-import { messages } from './messages';
+import { hideModalAction, showModalAction } from 'controllers/modal';
+import { CREATE_PRODUCT_VERSION_MODAL_KEY } from 'pages/inside/productVersionsPage/listOfVersions/createProductVersionModal';
+import PlusIcon from 'common/img/plus-button-inline.svg';
+
 import styles from './productVersionsPage.scss';
+import { messages } from './messages';
+import { LIST_OF_VERSIONS, GENERAL_DOCUMENTATION } from './constants';
+import { ListOfVersions } from './listOfVersions';
 
 const cx = classNames.bind(styles);
 
@@ -40,7 +48,7 @@ export const ProductVersionsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const [headerNodes, setHeaderNodes] = useState({});
+  const [versions, setVersions] = useState([]);
   const { subPage: activeSubPage } = useSelector(payloadSelector);
   const { subPage } = useSelector(querySelector);
 
@@ -56,12 +64,33 @@ export const ProductVersionsPage = () => {
     [organizationSlug, projectSlug],
   );
 
+  const handleModalSubmit = (data) => {
+    setVersions((prevState) => [...prevState, { ...data, timestamp: new Date() }]);
+    dispatch(hideModalAction());
+  };
+
+  const openCreateProductVersionModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_PRODUCT_VERSION_MODAL_KEY,
+        data: {
+          onSubmit: handleModalSubmit,
+        },
+      }),
+    );
+  };
+
   const tabsConfig = useMemo(
     () => ({
       [LIST_OF_VERSIONS]: {
         name: formatMessage(messages.listOfVersions),
         link: createTabLink(LIST_OF_VERSIONS),
-        component: <ListOfVersions />,
+        component: (
+          <ListOfVersions
+            versions={versions}
+            openCreateProductVersionModal={openCreateProductVersionModal}
+          />
+        ),
       },
       [GENERAL_DOCUMENTATION]: {
         name: formatMessage(messages.generalDocumentation),
@@ -69,25 +98,15 @@ export const ProductVersionsPage = () => {
         component: <MarkdownEditor placeholder="Simple example" />,
       },
     }),
-    [createTabLink],
+    [createTabLink, versions],
   );
 
   useEffect(() => {
-    setHeaderNodes({
-      children: (
-        <div className={cx('product-versions-page__tabs')}>
-          <Tabs config={tabsConfig} activeTab={activeSubPage} withContent={false} />
-        </div>
-      ),
-    });
-
     if (!activeSubPage || !tabsConfig[activeSubPage]) {
       const firstTabConfigKey = Object.keys(tabsConfig)[0];
       dispatch(tabsConfig[firstTabConfigKey].link);
     }
-
-    return () => setHeaderNodes(null);
-  }, [activeSubPage]);
+  }, [activeSubPage, versions]);
 
   return (
     <SettingsLayout>
@@ -95,11 +114,23 @@ export const ProductVersionsPage = () => {
         <div className={cx('product-versions-page')}>
           {!subPage && (
             <div className={cx('product-versions-page__header')}>
-              <Header
-                title={formatMessage(messages.productVersions)}
-                titleNode={headerNodes.titleNode}
-              >
-                {headerNodes.children}
+              <Header title={formatMessage(messages.productVersions)}>
+                <div className={cx('product-versions-page__navigation-panel')}>
+                  <div className={cx('product-versions-page__tabs')}>
+                    <Tabs config={tabsConfig} activeTab={activeSubPage} withContent={false} />
+                  </div>
+                  {!isEmpty(versions) && (
+                    <Button
+                      adjustWidthOn={'wide-content'}
+                      onClick={openCreateProductVersionModal}
+                      data-automation-id="addProductVersionButton"
+                      icon={Parser(PlusIcon)}
+                      className={cx('product-versions-page__button')}
+                    >
+                      {formatMessage(messages.addProductVersionButtonText)}
+                    </Button>
+                  )}
+                </div>
               </Header>
             </div>
           )}

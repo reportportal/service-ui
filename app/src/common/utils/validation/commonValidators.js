@@ -88,3 +88,9 @@ export const createDescriptionValidator = bindMessageToValidator(
 
 export const createKeywordMatcherValidator = (keyword) =>
   bindMessageToValidator(validate.keywordMatcher(keyword), 'keywordMatcherHint');
+
+export const createProjectVersionValidator = () =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.projectVersionLength, 'projectVersionLengthHint'),
+  ]);

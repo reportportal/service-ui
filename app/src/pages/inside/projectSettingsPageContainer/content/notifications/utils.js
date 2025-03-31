@@ -48,10 +48,6 @@ export const convertNotificationCaseForSubmission = (obj) => {
   };
 };
 
-export const isInternalLink = (to) => {
-  return typeof to === 'object' && to.type;
-};
-
 export const flatRule = (notification) => {
   return { ...notification, ...notification?.ruleDetails };
 };

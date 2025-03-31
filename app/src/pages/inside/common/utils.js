@@ -186,3 +186,7 @@ export const getGroupedDefectTypesOptions = (
 
   return defectTypesOptions;
 };
+
+export const isInternalLink = (to) => {
+  return typeof to === 'object' && to.type;
+};

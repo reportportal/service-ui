@@ -268,6 +268,10 @@ const messages = defineMessages({
     id: 'DeleteProjectModal.keywordMatcherHint',
     defaultMessage: 'The entered text does not match the required keyword',
   },
+  projectVersionLengthHint: {
+    id: 'ListOfVersionsPage.projectVersionLengthHint',
+    defaultMessage: 'Name must not exceed 60 characters',
+  },
 });
 
 @injectIntl
