@@ -1,0 +1,41 @@
+
+.popover-tools {
+  padding: 8px 0;
+  font-size: 13px;
+
+  &__item-button {
+    font-family: $FONT-ROBOTO-REGULAR;
+    color: var(--rp-ui-base-almost-black);
+    width: 100%;
+    padding: 8px 16px;
+    border-radius: 0;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: var(--rp-ui-base-almost-black);
+    }
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &-red {
+      color: var(--rp-ui-base-error);
+
+      &:hover {
+        color: var(--rp-ui-base-error);
+      }
+    }
+  }
+
+  &__meatball-button {
+    padding: 17px;
+    min-width: auto;
+    margin-bottom: 10px;
+  }
+}

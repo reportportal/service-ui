@@ -37,7 +37,6 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
-import { ProductVersionsPage } from 'pages/inside/productVersionsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -58,6 +57,8 @@ import {
   ORGANIZATION_USERS_PAGE,
   PRODUCT_VERSIONS_PAGE,
   PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -69,6 +70,7 @@ import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
+import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -177,6 +179,16 @@ export const pageRendering = {
     rawContent: true,
   },
   [PRODUCT_VERSIONS_TAB_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,

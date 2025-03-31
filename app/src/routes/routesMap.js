@@ -66,6 +66,7 @@ import {
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
   PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSIONS_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -103,6 +104,8 @@ import {
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
+import { PRODUCT_VERSION_PAGE, PRODUCT_VERSION_TAB_PAGE } from 'controllers/pages/constants';
+import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -332,7 +335,7 @@ const routesMap = {
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
-  PRODUCT_VERSIONS_PAGE: redirectRoute(
+  [PRODUCT_VERSIONS_PAGE]: redirectRoute(
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
     (payload) => ({
       type: PRODUCT_VERSIONS_TAB_PAGE,
@@ -340,7 +343,16 @@ const routesMap = {
     }),
   ),
   [PRODUCT_VERSIONS_TAB_PAGE]:
-    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage*',
+    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
+  [PRODUCT_VERSION_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
+    (payload) => ({
+      type: PRODUCT_VERSION_TAB_PAGE,
+      payload: { ...payload, productVersionTab: DOCUMENTATION },
+    }),
+  ),
+  [PRODUCT_VERSION_TAB_PAGE]:
+    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

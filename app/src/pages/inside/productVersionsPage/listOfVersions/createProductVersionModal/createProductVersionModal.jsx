@@ -45,7 +45,7 @@ const CreateProductVersionModal = ({ data: { onSubmit }, handleSubmit }) => {
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={() => dispatch(hideModalAction())}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldProvider name="productVersion" placeholder={formatMessage(messages.namePlaceholder)}>
           <FieldErrorHint provideHint={false}>
             <FieldText label={formatMessage(messages.name)} defaultWidth={false} />
