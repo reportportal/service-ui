@@ -194,6 +194,7 @@ export class NotificationList extends PureComponent {
                   )}
                   onClose={() => this.props.hideNotification(uid)}
                   className={cx('notification-item')}
+                  dataAutomationId="notificationItem"
                 />
               </div>
             </CSSTransition>

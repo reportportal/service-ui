@@ -33,6 +33,20 @@ const messages = defineMessages({
     defaultMessage:
       'Full name may contain only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot. Space is permitted (from 3 to 256 symbols)',
   },
+  nameCreateUserHint: {
+    id: 'CreateUserModal.nameCreateUserHint',
+    defaultMessage:
+      'Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)',
+  },
+  passwordCreateUserHint: {
+    id: 'CreateUserModal.passwordCreateUserHint',
+    defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+  emailCreateUserHint: {
+    id: 'CreateUserModal.emailCreateUserHint',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
+  },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
     defaultMessage:
@@ -259,6 +273,10 @@ const messages = defineMessages({
   apiKeyNameUniqueHint: {
     id: 'GenerateApiKeyModal.apiKeyNameUniqueHint',
     defaultMessage: 'API Key with the same name already exists',
+  },
+  apiKeyNameShouldMatch: {
+    id: 'GenerateApiKeyModal.apiKeyNameShouldMatch',
+    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, =',
   },
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',

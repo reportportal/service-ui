@@ -61,6 +61,24 @@ export const createPatternNameValidator = (patterns, patternId) =>
     ),
   ]);
 
+export const emailCreateUserValidator = () =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.requiredEmail, 'emailCreateUserHint'),
+  ]);
+
+export const createPatternCreateUserNameValidator = () =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.userCreateName, 'nameCreateUserHint'),
+  ]);
+
+export const createPatternCreateUserPasswordValidator = () =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.passwordCreateUser, 'passwordCreateUserHint'),
+  ]);
+
 export const createNumberOfLaunchesValidator = (message) =>
   bindMessageToValidator(validate.widgetNumberOfLaunches, message);
 export const createWidgetContentFieldsValidator = (message) =>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { urlOrganizationAndProjectSelector, userRolesSelector } from 'controllers/pages';
+import { userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
+import { getDashboardItemPageLinkSelector } from 'controllers/dashboard';
 import { messages } from './messages';
 import {
   NameColumn,
@@ -39,17 +40,17 @@ const cx = classNames.bind(styles);
 
 @injectIntl
 @connect((state) => ({
-  slugs: urlOrganizationAndProjectSelector(state),
   userRoles: userRolesSelector(state),
+  getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    getDashboardItemPageLink: PropTypes.func.isRequired,
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
     onDuplicate: PropTypes.func,
     onAddItem: PropTypes.func,
-    projectId: PropTypes.string,
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
@@ -65,7 +66,6 @@ export class DashboardTable extends Component {
     onEditItem: () => {},
     onDuplicate: () => {},
     onAddItem: () => {},
-    projectId: '',
     dashboardItems: [],
     loading: false,
     userRoles: {},
@@ -77,10 +77,9 @@ export class DashboardTable extends Component {
       onDeleteItem,
       onEditItem,
       intl,
-      projectId,
       userRoles,
       onDuplicate,
-      slugs: { organizationSlug, projectSlug },
+      getDashboardItemPageLink,
     } = this.props;
 
     const columns = [
@@ -91,9 +90,7 @@ export class DashboardTable extends Component {
         },
         component: NameColumn,
         customProps: {
-          projectId,
-          organizationSlug,
-          projectSlug,
+          getLink: getDashboardItemPageLink,
         },
       },
       {

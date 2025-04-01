@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,11 +111,15 @@ export class WidgetWizardContent extends Component {
       step: 0,
     };
     const {
-      fetchDashboards,
       intl: { formatMessage },
     } = this.props;
-    fetchDashboards();
     this.widgets = getWidgets(formatMessage);
+  }
+
+  componentDidMount() {
+    if (!this.props.activeDashboardId) {
+      this.props.fetchDashboards();
+    }
   }
 
   onClickNextStep = () => {

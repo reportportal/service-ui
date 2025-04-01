@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -35,13 +35,11 @@ export class DashboardGrid extends Component {
     const { dashboardItems, intl, ...rest } = this.props;
 
     return (
-      <Fragment>
-        <DashboardGridList
-          dashboardList={dashboardItems}
-          nameEventInfo={DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK}
-          {...rest}
-        />
-      </Fragment>
+      <DashboardGridList
+        dashboardList={dashboardItems}
+        nameEventInfo={DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK}
+        {...rest}
+      />
     );
   }
 }

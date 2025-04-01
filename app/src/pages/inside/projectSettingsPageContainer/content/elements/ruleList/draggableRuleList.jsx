@@ -29,6 +29,7 @@ const DraggableRuleListComponent = ({
   onRuleNameClick,
   onRuleDrop,
   dragControlTooltipContent,
+  readMode,
 }) => {
   const onDrop = (fromIndex, toIndex) => {
     const updatedItems = [...items];
@@ -53,6 +54,7 @@ const DraggableRuleListComponent = ({
           onRuleNameClick={onRuleNameClick}
           onDrop={onDrop}
           dragControlTooltipContent={dragControlTooltipContent}
+          readMode={readMode}
         />
       ))}
     </Fragment>

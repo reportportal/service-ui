@@ -92,7 +92,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
-    "swagger-ui-react": "5.18.2",
+    "swagger-ui-react": "5.19.0",
     "video.js": "7.17.0"
   },
   "devDependencies": {
