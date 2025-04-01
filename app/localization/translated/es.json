@@ -2079,6 +2079,7 @@
   "UpdateAutoPatternAnalysisSettings.description": "cambiando el valor de {oldValue} a {newValue}.",
   "UpdateAutoPatternAnalysisSettings.linkText": "parámetros de Análisis-Patrón:",
   "UpdateAutoPatternAnalysisSettings.updated": "actualizó",
+  "UpdateItem.autoAnalyzer": "Auto-Analyzer",
   "UpdateItem.statusChanged": "status changed from",
   "UpdateItem.typeChanged": "defect type changed from",
   "UpdateItem.updateItem": "updated item",

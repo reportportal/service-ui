@@ -2079,6 +2079,7 @@
   "UpdateAutoPatternAnalysisSettings.description": "пераключыў значэнне з {oldValue} на {newValue}.",
   "UpdateAutoPatternAnalysisSettings.linkText": "параметры Аналізу-Шаблонаў:",
   "UpdateAutoPatternAnalysisSettings.updated": "абнавіў",
+  "UpdateItem.autoAnalyzer": "Аўта-Аналіз",
   "UpdateItem.statusChanged": "статус зменены з",
   "UpdateItem.typeChanged": "тып дэфекту зменены з",
   "UpdateItem.updateItem": "абноўлены элемент",
