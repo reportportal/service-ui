@@ -61,7 +61,7 @@ import {
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
   const query = yield select(querySelector);
-  console.log('fetchDashboards -> query', query, params, 'params');
+
   yield put(
     fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject), {
       params: {
