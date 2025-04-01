@@ -116,6 +116,10 @@ const messages = defineMessages({
     id: 'DashboardForm.removeConfigurationHint',
     defaultMessage: 'You can remove the pasted dashboard configuration.',
   },
+  invalidConfig: {
+    id: 'DashboardForm.invalidConfig',
+    defaultMessage: "Dashboard can't be created. Please check the pasted configuration.",
+  },
 });
 
 const LABEL_WIDTH = 90;

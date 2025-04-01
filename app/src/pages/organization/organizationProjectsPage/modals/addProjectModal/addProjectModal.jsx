@@ -29,6 +29,7 @@ import { useDispatch } from 'react-redux';
 import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
+
 export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();

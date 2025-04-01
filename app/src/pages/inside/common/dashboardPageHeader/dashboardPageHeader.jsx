@@ -22,6 +22,7 @@ import classNames from 'classnames/bind';
 import {
   urlOrganizationAndProjectSelector,
   activeDashboardIdSelector,
+  pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
   userRolesSelector,
@@ -31,6 +32,7 @@ import {
   dashboardItemPropTypes,
   totalDashboardsSelector,
   loadingSelector,
+  getDashboardItemPageLinkSelector,
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
@@ -57,11 +59,14 @@ const DASHBOARDS_LIMIT = 3000;
   totalDashboards: totalDashboardsSelector(state),
   isLoading: loadingSelector(state),
   userRoles: userRolesSelector(state),
+  getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
+  query: pagePropertiesSelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    getDashboardItemPageLink: PropTypes.func.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
     isLoading: PropTypes.bool,
@@ -71,6 +76,7 @@ export class DashboardPageHeader extends Component {
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
     }),
+    query: PropTypes.object,
   };
 
   static defaultProps = {
@@ -79,11 +85,14 @@ export class DashboardPageHeader extends Component {
     isLoading: true,
     totalDashboards: 0,
     userRoles: {},
+    query: {},
   };
 
   getDashboardPageItem = () => {
     const {
       slugs: { organizationSlug, projectSlug },
+      query,
+      intl: { formatMessage },
     } = this.props;
 
     return {
@@ -93,11 +102,14 @@ export class DashboardPageHeader extends Component {
           to={{
             type: PROJECT_DASHBOARD_PAGE,
             payload: { organizationSlug, projectSlug },
+            meta: {
+              query,
+            },
           }}
           className={cx('link')}
           activeClassName={cx('active-link')}
         >
-          {this.props.intl.formatMessage(messages.allDashboardsTitle)}
+          {formatMessage(messages.allDashboardsTitle)}
         </NavLink>
       ),
       value: DASHBOARD_PAGE_ITEM_VALUE,
@@ -120,7 +132,7 @@ export class DashboardPageHeader extends Component {
       this.props.dashboardsToDisplay.map((item) => ({
         label: (
           <NavLink
-            to={this.createDashboardLink(item.id)}
+            to={this.props.getDashboardItemPageLink(item.id)}
             className={cx('link')}
             activeClassName={cx('active-link')}
           >

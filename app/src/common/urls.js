@@ -269,7 +269,8 @@ export const URLS = {
   getFileById: (projectKey, dataId, loadThumbnail) =>
     `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  authSettings: (authTypeOrId, id = '') => `${uatBase}settings/auth/${authTypeOrId}/${id}`,
+  authSettings: (authTypeOrId, id = '') =>
+    removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlBase}activities/searches`,

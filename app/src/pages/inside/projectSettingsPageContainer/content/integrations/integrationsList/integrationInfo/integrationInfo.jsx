@@ -270,11 +270,17 @@ export const IntegrationInfo = (props) => {
         </>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noGlobalIntegrationsMessage)}
+          title={formatMessage(
+            isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
+          )}
           handleButton={onAddProjectIntegration}
-          description={formatMessage(messages.noGlobalIntegrationsDescription)}
+          description={formatMessage(
+            isAbleToClick
+              ? messages.noGlobalIntegrationsDescription
+              : messages.noGlobalIntegrationsYetDescription,
+          )}
           handleDocumentationClick={handleDocumentationClick}
-          buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+          buttonName={isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null}
           disableButton={!isAbleToClick}
           buttonDataAutomationId="addProjectIntegrationButton"
         />
@@ -291,7 +297,7 @@ export const IntegrationInfo = (props) => {
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable}
+            withButton={isAtLeastOneIntegrationAvailable && isAbleToClick}
             breadcrumbs={integrationListBreadcrumbs}
           />
           {renderIntegrationList()}
@@ -314,6 +320,7 @@ export const IntegrationInfo = (props) => {
     </>
   );
 };
+
 IntegrationInfo.propTypes = {
   plugin: PropTypes.shape({
     creationDate: PropTypes.number,
@@ -330,6 +337,7 @@ IntegrationInfo.propTypes = {
   }).isRequired,
   integrationId: PropTypes.string,
 };
+
 IntegrationInfo.defaultProps = {
   integrationId: '',
 };
