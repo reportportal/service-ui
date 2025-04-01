@@ -15,6 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
+import { formatSortingString, SORTING_DESC } from 'controllers/sorting';
 
 export const dashboardItemPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
@@ -49,3 +50,5 @@ export const CHANGE_FULL_SCREEN_MODE = 'changeFullScreenMode';
 export const TOGGLE_FULL_SCREEN_MODE = 'toggleFullScreenMode';
 export const INCREASE_TOTAL_DASHBOARDS_LOCALLY = 'increaseTotalDashboardsLocally';
 export const DECREASE_TOTAL_DASHBOARDS_LOCALLY = 'decreaseTotalDashboardsLocally';
+export const DEFAULT_SORT_COLUMN = 'creation date';
+export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_DESC);
