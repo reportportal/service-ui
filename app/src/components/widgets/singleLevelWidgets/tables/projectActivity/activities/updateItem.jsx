@@ -49,6 +49,7 @@ const messages = defineMessages({
 export const UpdateItem = ({ activity }) => {
   const { formatMessage } = useIntl();
   const {
+    actionType,
     details: {
       history: [{ newValue, oldValue, field }],
     },
@@ -57,7 +58,7 @@ export const UpdateItem = ({ activity }) => {
 
   return (
     <>
-      {activity.actionType === UPDATE_ITEM ? (
+      {actionType === UPDATE_ITEM ? (
         <span className={cx('user-name')}>{activity.user} </span>
       ) : (
         <span className={cx('user-name')}>{formatMessage(messages.autoAnalyzer)} </span>
