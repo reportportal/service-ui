@@ -92,7 +92,7 @@
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
     "swagger-ui-react": "5.19.0",
-    "video.js": "7.17.0"
+    "video.js": "7.21.6"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
