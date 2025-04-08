@@ -84,6 +84,7 @@ const lengthAndUniqueNameValidator = (existNames) =>
     commonValidators.requiredField,
     bindMessageToValidator(validate.apiKeyName, 'apiKeyNameWrongSizeHint'),
     bindMessageToValidator(validate.uniqueApiKeyName(existNames), 'apiKeyNameUniqueHint'),
+    bindMessageToValidator(validate.apiKeyNameShouldMatch, 'apiKeyNameShouldMatch'),
   ]);
 
 const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {

@@ -54,6 +54,18 @@ describe('validate.url', () => {
   });
 });
 
+describe('validate.rallyUrl', () => {
+  test('validation should be correct', () => {
+    expect(validate.rallyUrl('https://rally1.rallydev.com/8888')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.rallyUrl(undefined)).toBe(false);
+    expect(validate.rallyUrl('')).toBe(false);
+    expect(validate.rallyUrl('  ')).toBe(false);
+    expect(validate.rallyUrl('example')).toBe(false);
+  });
+});
+
 describe('validate.email', () => {
   test('validation should be correct', () => {
     expect(validate.email('email@example.com')).toBe(true);
@@ -615,6 +627,18 @@ describe('validate.apiKeyName', () => {
     expect(validate.apiKeyName('  ')).toBe(false);
     const textLonger40 = '11111111111111111111111111111111111111111';
     expect(validate.apiKeyName(textLonger40)).toBe(false);
+  });
+});
+
+describe('validate.apiKeyNameShouldMatch', () => {
+  test('validation should be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('abc')).toBe(true);
+    expect(validate.apiKeyNameShouldMatch('Az1-._~+/')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('api key name')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('apiKeyName!')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('$apiKeyName')).toBe(false);
   });
 });
 

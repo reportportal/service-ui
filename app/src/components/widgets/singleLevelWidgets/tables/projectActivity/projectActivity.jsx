@@ -24,7 +24,7 @@ import { START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
 import { langSelector } from 'controllers/lang';
 import {
   ACTION_TO_GROUP_MAP,
-  ACTIONS_WITH_ISSUES,
+  ACTIONS_WITH_BTS_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
   ACTIONS_WITH_FILTERS,
@@ -32,6 +32,7 @@ import {
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
+  ACTIONS_UPDATE_TEST_ITEM,
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
@@ -61,6 +62,7 @@ import { AnalysisConfigurations } from './activities/analysisConfigurations';
 import { Integration } from './activities/integration';
 import { Launch } from './activities/launch';
 import { TestItem } from './activities/testItem';
+import { UpdateItem } from './activities/updateItem';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
@@ -157,8 +159,10 @@ export class ProjectActivity extends Component {
     const actionGroup = ACTION_TO_GROUP_MAP[activity.actionType] || activity.actionType;
 
     switch (actionGroup) {
-      case ACTIONS_WITH_ISSUES:
+      case ACTIONS_WITH_BTS_ISSUES:
         return <TestItem activity={activity} />;
+      case ACTIONS_UPDATE_TEST_ITEM:
+        return <UpdateItem activity={activity} />;
       case ACTIONS_WITH_DASHBOARDS:
       case ACTIONS_WITH_WIDGETS:
       case ACTIONS_WITH_FILTERS:

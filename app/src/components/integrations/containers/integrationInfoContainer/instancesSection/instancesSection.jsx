@@ -28,6 +28,7 @@ import {
   removePluginAction,
   addIntegrationAction,
   removeProjectIntegrationsByTypeAction,
+  enabledPluginSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import {
@@ -115,10 +116,11 @@ const messages = defineMessages({
 });
 
 @connect(
-  (state) => ({
+  (state, ownProps) => ({
     projectId: projectIdSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    isEnabled: enabledPluginSelector(state, ownProps.instanceType),
   }),
   {
     showModalAction,
@@ -142,6 +144,7 @@ export class InstancesSection extends Component {
     removePluginAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -297,6 +300,7 @@ export class InstancesSection extends Component {
       userRole,
       isGlobal,
       pluginDetails: { metadata },
+      isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
     const disabled = !canUpdateSettings(accountRole, userRole);
@@ -310,7 +314,7 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isIntegrationsAllowed && (
+        {isIntegrationsAllowed && isEnabled && (
           <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>

@@ -29,6 +29,10 @@ import {
 export const required = isNotEmpty;
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
 export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
+export const rallyUrl = composeValidators([
+  isNotEmpty,
+  regex(/^(https:\/\/rally1.rallydev.com).*/),
+]);
 export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128}$/)]);
@@ -133,5 +137,6 @@ export const notificationLaunchNames = (value) =>
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);
 export const uniqueApiKeyName = (names) => (value) =>
   names.every((name) => name.toLowerCase() !== value.trim().toLowerCase());
+export const apiKeyNameShouldMatch = composeValidators([regex(/^[A-Za-z0-9-._~+/]+$/)]);
 export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
