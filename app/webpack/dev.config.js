@@ -92,6 +92,7 @@ module.exports = () => {
         {
           context: ['/composite', '/api/', '/uat/'],
           target: process.env.PROXY_PATH,
+          changeOrigin: true,
           bypass(req) {
             console.log(`proxy url: ${req.url}`);
           },

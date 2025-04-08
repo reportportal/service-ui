@@ -18,21 +18,25 @@
   display: inline-block;
   width: 100%;
 }
+
 .dropdown {
   position: relative;
   display: inline-block;
   width: 100%;
   height: 30px;
 }
+
 .opened {
   .arrow {
     transform: rotate(180deg);
   }
+
   .select-block {
     border-color: $COLOR--topaz;
     box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 }
+
 .select-block {
   display: inline-block;
   width: 100%;
@@ -42,6 +46,7 @@
   border: 1px solid $COLOR--gray-80;
   background-color: $COLOR--white-two;
   cursor: pointer;
+
   &.dark-view {
     border: none;
     border-radius: 4px;
@@ -61,17 +66,21 @@
   &.disabled {
     background-color: $COLOR--gray-91;
     cursor: default;
+
     & .value.dark-view {
       color: $COLOR--dirty-gray;
     }
+
     &.dark-view {
       background-color: $COLOR--black-1;
     }
+
     &:hover {
       border-color: $COLOR--gray-80;
     }
   }
 }
+
 .value {
   display: inline-block;
   height: 100%;
@@ -83,10 +92,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: $COLOR--charcoal-grey;
+
   &.dark-view {
     color: $COLOR--white-two;
   }
+
+  &.placeholder {
+    color: $COLOR--gray-47;
+  }
 }
+
 .arrow {
   position: absolute;
   right: 12px;
@@ -101,10 +116,12 @@
   box-sizing: border-box;
   color: $COLOR--charcoal-grey;
   transition: transform 200ms linear;
+
   &.dark-view {
     color: $COLOR--white-two;
   }
 }
+
 .select-list {
   position: absolute;
   top: 100%;
@@ -119,16 +136,19 @@
   box-shadow: 0 6px 12px $COLOR--gray-80;
   z-index: $Z-INDEX-POPUP;
   cursor: pointer;
+
   &.dark-view {
     background-color: $COLOR--darkmode-gray-400;
     color: $COLOR--darkmode-gray-100;
     box-shadow: none;
     border: 0;
   }
+
   &.opened {
     display: block;
   }
 }
+
 .select-all-block {
   width: 100%;
   height: 37px;
@@ -144,6 +164,7 @@
     box-sizing: border-box;
   }
 }
+
 .select-all {
   display: inline-block;
   width: 100%;
@@ -159,6 +180,7 @@
     background-color: $COLOR--tealish-hover;
   }
 }
+
 .select-item {
   width: 100%;
   height: 30px;
@@ -168,6 +190,7 @@
     background-color: $COLOR--tealish-hover;
   }
 }
+
 .mobile-disabled {
   @media (max-width: $SCREEN_XS_MAX) {
     background-color: $COLOR--gray-91;

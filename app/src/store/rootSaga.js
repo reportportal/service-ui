@@ -35,11 +35,13 @@ import { initialDataSagas } from 'controllers/initialData';
 import { pageSagas } from 'controllers/pages';
 import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
+import { serverSettingsSagas } from 'controllers/appInfo';
 
 const sagas = [
   notificationSagas,
   authSagas,
   fetchSagas,
+  serverSettingsSagas,
   launchSagas,
   groupOperationsSagas,
   suiteSagas,

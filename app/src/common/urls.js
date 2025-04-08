@@ -190,6 +190,9 @@ export const URLS = {
       'filter.eq.id': id,
     })}`,
   testItemsInfo: (activeProject) => `${urlBase}${activeProject}/item/info`,
+  testItemSearch: (activeProject, searchParam = {}) => {
+    return `${urlBase}${activeProject}/item/search${getQueryParams(searchParam)}`;
+  },
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
   testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') =>

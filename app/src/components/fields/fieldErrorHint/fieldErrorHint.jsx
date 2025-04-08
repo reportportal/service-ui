@@ -36,6 +36,11 @@ const messages = defineMessages({
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
     defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+  oldPasswordHint: {
+    id: 'RegistrationForm.oldPasswordHint',
+    defaultMessage:
       'Password should contain at least 4 characters; a special symbol; upper-case (A - Z); lower-case',
   },
   emailHint: {

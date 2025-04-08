@@ -20,6 +20,7 @@ import {
   getSessionItem,
   getStorageItem,
   removeSessionItem,
+  removeStorageItem,
   setStorageItem,
   updateStorageItem,
 } from 'common/utils/storageUtils';
@@ -56,6 +57,7 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
+import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -91,6 +93,7 @@ function* handleLogout({ payload }) {
       type: NOTIFICATION_TYPES.INFO,
     }),
   );
+  removeStorageItem(ACTIVITY_TIMESTAMP);
 }
 
 function* watchLogout() {
@@ -104,6 +107,7 @@ function* loginSuccessHandler({ payload }) {
       type: NOTIFICATION_TYPES.SUCCESS,
     }),
   );
+  setStorageItem(ACTIVITY_TIMESTAMP, Date.now());
 
   yield put(
     setTokenAction({

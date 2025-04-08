@@ -32,7 +32,11 @@ export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[
 export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128}$/)]);
-export const password = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
+export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
+export const password = composeValidators([
+  isNotEmpty,
+  regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,256}$/),
+]);
 export const userName = composeValidators([
   isNotEmpty,
   regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),

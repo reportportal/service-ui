@@ -26,6 +26,9 @@ export const getBasicClickEventParameters = (category) =>
 export const getBasicChooseEventParameters = (category) =>
   getBasicEventParameters('choose', category);
 
+export const getBasicPerformanceEventParameters = (category) =>
+  getBasicEventParameters('performance', category);
+
 export const normalizeEventParameter = (parameter = '') =>
   parameter
     .toLowerCase()

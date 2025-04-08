@@ -30,6 +30,7 @@ import {
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
+import { Toggle } from '@reportportal/ui-kit';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -56,6 +57,8 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    isDisplayedLaunches: PropTypes.bool,
+    onDisplayLaunchesToggle: PropTypes.func,
   };
   static defaultProps = {
     data: {},
@@ -65,6 +68,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
+    isDisplayedLaunches: false,
   };
 
   renderMetaInfo = () =>
@@ -88,8 +92,10 @@ export class WidgetHeader extends Component {
       onDelete,
       onEdit,
       onForceUpdate,
+      onDisplayLaunchesToggle,
       customClass,
       isPrintMode,
+      isDisplayedLaunches,
     } = this.props;
 
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
@@ -124,6 +130,15 @@ export class WidgetHeader extends Component {
             <div
               className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
             >
+              {onDisplayLaunchesToggle && (
+                <Toggle
+                  value={isDisplayedLaunches}
+                  onChange={onDisplayLaunchesToggle}
+                  className={cx('display-launches-wrapper')}
+                >
+                  <span className={cx('title')}>Display launches</span>
+                </Toggle>
+              )}
               {isForceUpdateAvailable && (
                 <div className={cx('force-update', 'mobile-hide')}>
                   {data.lastRefresh && (

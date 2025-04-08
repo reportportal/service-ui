@@ -24,7 +24,7 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -32,8 +32,14 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
+import {
+  CHARTS,
+  MULTI_LEVEL_WIDGETS_MAP,
+  NoDataAvailable,
+  WIDGETS_WITH_INTERNAL_EMPTY_STATE,
+} from 'components/widgets';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { refreshSearchedItemsAction } from 'controllers/testItem';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
@@ -69,6 +75,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   }),
   {
     showModalAction,
+    refreshSearchedItemsAction,
   },
 )
 @track()
@@ -79,6 +86,7 @@ export class SimpleWidget extends Component {
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    refreshSearchedItemsAction: PropTypes.func.isRequired,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
@@ -120,6 +128,7 @@ export class SimpleWidget extends Component {
       userSettings: {},
       hasError: false,
       error: null,
+      displayLaunchesValue: false,
     };
   }
 
@@ -161,8 +170,7 @@ export class SimpleWidget extends Component {
 
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
-    const { widget, queryParameters, userSettings } = this.state;
-
+    const { widget, queryParameters, userSettings, displayLaunchesValue } = this.state;
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
@@ -175,7 +183,10 @@ export class SimpleWidget extends Component {
       );
     }
 
-    if (!isWidgetDataAvailable(widget) && (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)) {
+    if (
+      !isWidgetDataAvailable(widget) &&
+      (!WIDGETS_WITH_INTERNAL_EMPTY_STATE.includes(widgetType) || !widget.id)
+    ) {
       return <NoDataAvailable />;
     }
 
@@ -196,6 +207,7 @@ export class SimpleWidget extends Component {
           userSettings={userSettings}
           onChangeUserSettings={this.onChangeUserSettings}
           isPrintMode={isPrintMode}
+          isDisplayedLaunches={displayLaunchesValue}
         />
       )
     );
@@ -335,6 +347,11 @@ export class SimpleWidget extends Component {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.fetchWidget();
   };
+  refreshWidgetSearch = () => {
+    const { widgetId } = this.props;
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
+    this.props.refreshSearchedItemsAction(widgetId);
+  };
 
   showDeleteWidgetModal = () => {
     const { tracking, isAnalyticsEnabled, onDelete, baseEventParameters } = this.props;
@@ -399,7 +416,7 @@ export class SimpleWidget extends Component {
   };
 
   render() {
-    const { widget, visible } = this.state;
+    const { widget, visible, displayLaunchesValue } = this.state;
     const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
@@ -414,7 +431,18 @@ export class SimpleWidget extends Component {
     if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
       headerData.meta.push(widgetOptions.latest || true);
     }
+    const isTestCaseSearch = widget.widgetType === TEST_CASE_SEARCH;
 
+    const handleDisplayLaunchesToggleChange = () => {
+      const {
+        activeDashboardId,
+        tracking: { trackEvent },
+      } = this.props;
+      this.setState({
+        displayLaunchesValue: !displayLaunchesValue,
+      });
+      trackEvent(WIDGETS_EVENTS.onDisplayLaunchesToggle(!displayLaunchesValue, activeDashboardId));
+    };
     return (
       <div className={cx('widget-container', { disabled: isFullscreen })}>
         <div
@@ -424,12 +452,14 @@ export class SimpleWidget extends Component {
         >
           <WidgetHeader
             data={headerData}
-            onRefresh={this.refreshWidget}
+            onRefresh={isTestCaseSearch ? this.refreshWidgetSearch : this.refreshWidget}
             onDelete={this.showDeleteWidgetModal}
             onEdit={this.showEditWidgetModal}
             onForceUpdate={this.showForceUpdateWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
+            isDisplayedLaunches={this.state.displayLaunchesValue}
+            onDisplayLaunchesToggle={isTestCaseSearch ? handleDisplayLaunchesToggleChange : null}
           />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
