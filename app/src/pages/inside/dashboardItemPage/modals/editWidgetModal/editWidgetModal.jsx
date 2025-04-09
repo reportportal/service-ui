@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   editWidgetSuccess: {
     id: 'EditWidgetModal.editWidgetSuccess',
-    defaultMessage: 'Widget has been updated',
+    defaultMessage: 'Widget has been updated successfully',
   },
 });
 
@@ -122,10 +122,12 @@ export class EditWidgetModal extends Component {
     this.widgetInfo = getWidgets(formatMessage).find((item) => item.id === widget.widgetType);
     this.initialValues = {
       ...widget,
-      filters: widget.appliedFilters.map(({ id, name }) => ({ value: id.toString(), name })),
+      ...(widget.appliedFilters && {
+        filters: widget.appliedFilters.map(({ id, name }) => ({ value: id.toString(), name })),
+      }),
     };
     this.initialValues = this.preprocessInputData(this.initialValues);
-    delete this.initialValues.appliedFilters;
+    delete this.initialValues?.appliedFilters;
     delete this.initialValues.content;
     delete this.initialValues.id;
 
@@ -134,9 +136,9 @@ export class EditWidgetModal extends Component {
         mode: FORM_APPEARANCE_MODE_LOCKED,
         isMainControlsLocked: false,
         filter: {},
-        predefinedFilter: widget.appliedFilters[0] || null,
+        predefinedFilter: widget.appliedFilters?.[0] || null,
       },
-      previousFilter: this.initialValues.filters,
+      previousFilter: this.initialValues?.filters,
     };
   }
 
@@ -161,7 +163,7 @@ export class EditWidgetModal extends Component {
     const isForceUpdateNeeded =
       !isEqual(widget.contentParameters, contentParameters) ||
       !isEqual(
-        widget.appliedFilters.map((filter) => filter.id.toString()),
+        widget.appliedFilters?.map((filter) => filter.id.toString()),
         filterIds,
       );
 
@@ -209,7 +211,7 @@ export class EditWidgetModal extends Component {
     }
 
     const widgetMode =
-      widgetSettings.contentParameters &&
+      widgetSettings.contentParameters?.widgetOptions &&
       getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
     if (widgetMode) {
       this.props.tracking.trackEvent(this.props.data.eventsInfo.selectToggleButtons(widgetMode));

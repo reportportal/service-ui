@@ -70,7 +70,7 @@ PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }) => {
+export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates, events }) => {
   const { trackEvent } = useTracking();
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const onClickEdit = (event) => {
@@ -93,14 +93,17 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
           <DefectTypeItem
             type={issue.issueType}
             onClick={() => onClickEdit(events.onEditEvent?.(eventData))}
+            className={cx({ 'view-only': hideEdit })}
           />
         )}
-        <div
-          className={cx('edit-icon')}
-          onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
-        >
-          {Parser(PencilIcon)}
-        </div>
+        {!hideEdit && (
+          <div
+            className={cx('edit-icon')}
+            onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
+          >
+            {Parser(PencilIcon)}
+          </div>
+        )}
       </div>
       <div className={cx('issues')}>
         <IssueList issues={issue.externalSystemIssues} onClick={onClickIssue} onRemove={onRemove} />
@@ -117,6 +120,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
+  hideEdit: PropTypes.bool,
   onRemove: PropTypes.func,
   patternTemplates: PropTypes.array,
   events: PropTypes.object,
@@ -126,4 +130,5 @@ DefectType.defaultProps = {
   onRemove: () => {},
   patternTemplates: [],
   events: {},
+  hideEdit: false,
 };

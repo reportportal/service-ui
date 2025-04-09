@@ -87,15 +87,23 @@ const messages = defineMessages({
   },
 });
 
+const getRandomChar = (chars, n) => chars.charAt(Math.floor(Math.random() * n));
+
 const generatePassword = () => {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-  const passSize = 6;
+  const charsLowerCase = 'abcdefghijklmnopqrstuvwxyz';
+  const charsAperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const charsDigit = '1234567890';
+  const charsSpecialSymbol = `~!@#$%^&*_-+=\`|(){}[]:;"'<>,.?/ `;
+  const passSize = 3;
   let pass = '';
-  let i;
-  let n;
-  for (i = 0, n = chars.length; i < passSize; i += 1) {
-    pass += chars.charAt(Math.floor(Math.random() * n));
+
+  for (let i = 0; i < passSize; i += 1) {
+    pass += getRandomChar(charsLowerCase, charsLowerCase.length);
+    pass += getRandomChar(charsAperCase, charsAperCase.length);
+    pass += getRandomChar(charsDigit, charsDigit.length);
+    pass += getRandomChar(charsSpecialSymbol, charsSpecialSymbol.length);
   }
+
   return pass;
 };
 

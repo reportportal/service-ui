@@ -17,11 +17,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { getStorageItem, setStorageItem } from 'common/utils';
+import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
+import { sessionExpirationTimeSelector } from 'controllers/appInfo';
+import { logoutAction } from 'controllers/auth';
 import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
 
+@connect(
+  (state) => ({
+    sessionExpirationConfig: sessionExpirationTimeSelector(state),
+  }),
+  {
+    logout: logoutAction,
+  },
+)
 export class Layout extends Component {
   static propTypes = {
     children: PropTypes.node,
@@ -30,6 +43,8 @@ export class Layout extends Component {
     Sidebar: PropTypes.elementType,
     rawContent: PropTypes.bool,
     isExtensionPage: PropTypes.bool,
+    sessionExpirationConfig: PropTypes.number.isRequired,
+    logout: PropTypes.func.isRequired,
   };
   static defaultProps = {
     children: null,
@@ -47,6 +62,7 @@ export class Layout extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.windowResizeHandler, false);
+    if (this.props.sessionExpirationConfig !== Infinity) this.addActivityListener();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,6 +86,7 @@ export class Layout extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeHandler, false);
+    this.removeActivityListener();
   }
 
   windowResizeHandler = () => {
@@ -80,6 +97,27 @@ export class Layout extends Component {
 
   toggleSideMenu = () => {
     this.setState({ sideMenuOpened: !this.state.sideMenuOpened });
+  };
+
+  addActivityListener() {
+    const events = ['mousemove', 'keydown', 'scroll', 'click', 'resize'];
+    events.forEach((event) => window.addEventListener(event, this.onActivityChange));
+  }
+  removeActivityListener() {
+    const events = ['mousemove', 'keydown', 'scroll', 'click', 'resize'];
+    events.forEach((event) => window.removeEventListener(event, this.onActivityChange));
+  }
+
+  onActivityChange = () => {
+    const { sessionExpirationConfig, logout } = this.props;
+    const currentTime = Date.now();
+
+    const lastActivityTimestamp = Number(getStorageItem(ACTIVITY_TIMESTAMP));
+    if (currentTime - lastActivityTimestamp >= sessionExpirationConfig) {
+      logout();
+    } else {
+      setStorageItem(ACTIVITY_TIMESTAMP, currentTime);
+    }
   };
 
   render() {
