@@ -119,7 +119,9 @@ export class PluginsItem extends Component {
           enabled
             ? ''
             : disabledPluginTooltip ||
-              formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], { name: displayName })
+              formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
+                name: displayName,
+              })
         }
       >
         <div className={cx('plugins-info-block')}>

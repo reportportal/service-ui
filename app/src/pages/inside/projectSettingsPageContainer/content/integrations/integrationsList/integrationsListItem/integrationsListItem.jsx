@@ -51,7 +51,11 @@ export const IntegrationsListItem = (props) => {
       onClick={itemClickHandler}
       data-automation-id="listItem"
     >
-      <PluginIcon className={cx('integration-image')} pluginData={integrationType} alt={displayName} />
+      <PluginIcon
+        className={cx('integration-image')}
+        pluginData={integrationType}
+        alt={displayName}
+      />
       <div className={cx('integration-info-block')}>
         <div className={cx('integration-data-block')}>
           <span className={cx('integration-name')}>{displayName}</span>
