@@ -201,12 +201,21 @@ export const URLS = {
   },
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
-  testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') =>
-    `${urlBase}${activeProject}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=${searchTerm}`,
-  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') => (searchTerm = '') =>
-    `${urlBase}${activeProject}/item/attribute/values?launch=${launch}${
-      key ? `&filter.eq.attributeKey=${key}` : ''
-    }&filter.cnt.attributeValue=${searchTerm}`,
+  testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') => {
+    const params = {
+      ...(launch ? { launch } : {}),
+      'filter.cnt.attributeKey': searchTerm,
+    };
+    return `${urlBase}${activeProject}/item/attribute/keys${getQueryParams(params)}`;
+  },
+  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') => (searchTerm = '') => {
+    const params = {
+      ...(launch ? { launch } : {}),
+      ...(key ? { 'filter.eq.attributeKey': key } : {}),
+      'filter.cnt.attributeValue': searchTerm,
+    };
+    return `${urlBase}${activeProject}/item/attribute/values${getQueryParams(params)}`;
+  },
   testItemBTSIssuesSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/item/ticket/ids/all?term=${searchTerm}`,
 
