@@ -132,7 +132,7 @@ export const IntegrationSettings = (props) => {
     isGlobal,
   } = props;
   const pluginName = data.integrationType?.name;
-  const isLdap = data.integrationType?.name === LDAP;
+  const isLdap = pluginName === LDAP;
 
   return (
     <div className={cx('integration-settings')}>
