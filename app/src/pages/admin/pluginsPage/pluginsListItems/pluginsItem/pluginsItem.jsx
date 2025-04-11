@@ -90,10 +90,10 @@ export class PluginsItem extends Component {
 
   onChangeHandler = () => {
     const {
-      data: { name, enabled, details: { pluginLocation } = {} },
+      data: { name, enabled, details: { name: displayName, pluginLocation } = {} },
       showToggleConfirmationModal,
     } = this.props;
-    const pluginName = PLUGIN_NAME_TITLES[name] || name;
+    const pluginName = displayName || name;
 
     showToggleConfirmationModal(enabled, pluginName, this.toggleActiveHandler, pluginLocation);
   };
@@ -106,11 +106,11 @@ export class PluginsItem extends Component {
         uploadedBy,
         enabled,
         groupType,
-        details: { version, disabledPluginTooltip } = {},
+        details: { name: displayName, version, disabledPluginTooltip } = {},
       },
       toggleable,
     } = this.props;
-    const pluginName = PLUGIN_NAME_TITLES[name] || name;
+    const pluginName = displayName || name;
 
     return (
       <div
