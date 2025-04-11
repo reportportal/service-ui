@@ -131,7 +131,6 @@ export class AddEditModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -142,7 +141,6 @@ export class AddEditModal extends Component {
     },
     initialize: () => {},
     handleSubmit: () => {},
-    showNotification: () => {},
   };
 
   state = {
