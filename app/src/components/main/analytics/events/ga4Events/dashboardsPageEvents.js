@@ -203,12 +203,12 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
-  clickOnButtonInModalAddNewDashboard: (dashboardId, linkName) => ({
+  clickOnButtonInModalAddNewDashboard: (dashboardId, linkName, condition = 'standard') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'add',
     modal: 'add_new_dashboard',
     link_name: linkName,
-    condition: 'standard',
+    condition,
     number: dashboardId,
   }),
 
