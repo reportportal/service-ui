@@ -1,11 +1,14 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       version:
         description: 'Release version'
-        required: true
+        required: false
 
 env:
   UI_BUILD_REACT: 'app/'
@@ -40,7 +43,23 @@ jobs:
 
       - name: Generate Build info
         run: |
-          echo '{"build": { "version": "${{ github.event.inputs.version }}", "branch": "${{ github.ref_name }}-${{ github.sha }}", "build_date": "${{ env.BUILD_DATE }}", "name": "Service UI", "repo": "${{ github.repository }}"}}' > ./${{ env.UI_BUILD_REACT }}build/${{ env.BUILD_INFO_FILE }}
+          RELEASE_VERSION_INPUT="${{ github.event.inputs.version }}"
+          if [ -z "$RELEASE_VERSION_INPUT" ]; then
+          REF_NAME="${{ github.ref_name }}"
+          
+          if [[ "$REF_NAME" == rc/* ]]; then
+          RELEASE_VERSION="${REF_NAME#rc/}"
+          elif [[ "$REF_NAME" == hotfix/* ]]; then
+          RELEASE_VERSION="${REF_NAME#hotfix/}"
+          else
+          echo "Error: Only 'rc/' or 'hotfix/' sub-branches can be used for releases. Found: $REF_NAME"
+          exit 1
+          fi
+          else
+          RELEASE_VERSION="$RELEASE_VERSION_INPUT"
+          fi
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+          echo '{"build": { "version": "'$RELEASE_VERSION'", "branch": "${{ github.ref_name }}-${{ github.sha }}", "build_date": "${{ env.BUILD_DATE }}", "name": "Service UI", "repo": "${{ github.repository }}"}}' > ./${{ env.UI_BUILD_REACT }}build/${{ env.BUILD_INFO_FILE }}
 
       - name: Create release directory
         run: mkdir -v ${{ github.workspace }}/${{ env.RELEASE_DIR }}
@@ -58,7 +77,7 @@ jobs:
       - name: Tag release
         id: tagRelease
         run: |
-          git tag -a ${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
+          git tag -a "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
           git push --tags
 
       - name: Create Release
@@ -67,8 +86,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: "Release ${{ env.RELEASE_VERSION }}"
           draft: false
           prerelease: false
 
