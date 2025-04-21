@@ -1,7 +1,8 @@
 name: Release
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - master
   workflow_dispatch:
@@ -45,16 +46,16 @@ jobs:
         run: |
           RELEASE_VERSION_INPUT="${{ github.event.inputs.version }}"
           if [ -z "$RELEASE_VERSION_INPUT" ]; then
-          REF_NAME="${{ github.ref_name }}"
-          
-          if [[ "$REF_NAME" == rc/* ]]; then
-          RELEASE_VERSION="${REF_NAME#rc/}"
-          elif [[ "$REF_NAME" == hotfix/* ]]; then
-          RELEASE_VERSION="${REF_NAME#hotfix/}"
-          else
-          echo "Error: Only 'rc/' or 'hotfix/' sub-branches can be used for releases. Found: $REF_NAME"
-          exit 1
-          fi
+          REF_NAME="${{ github.head_ref }}"
+
+            if [[ "$REF_NAME" == rc/* ]]; then
+            RELEASE_VERSION="${REF_NAME#rc/}"
+            elif [[ "$REF_NAME" == hotfix/* ]]; then
+            RELEASE_VERSION="${REF_NAME#hotfix/}"
+            else
+            echo "Error: Only 'rc/' or 'hotfix/' sub-branches can be used for releases. Found: $REF_NAME"
+            exit 1
+            fi
           else
           RELEASE_VERSION="$RELEASE_VERSION_INPUT"
           fi
