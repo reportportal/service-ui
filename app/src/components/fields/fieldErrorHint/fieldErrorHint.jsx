@@ -263,7 +263,7 @@ const messages = defineMessages({
   },
   apiKeyNameShouldMatch: {
     id: 'GenerateApiKeyModal.apiKeyNameShouldMatch',
-    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, =',
+    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +',
   },
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',
