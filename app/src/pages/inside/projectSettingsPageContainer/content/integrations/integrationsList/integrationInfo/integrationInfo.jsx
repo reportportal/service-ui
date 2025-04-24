@@ -28,7 +28,6 @@ import {
 } from 'controllers/user';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
@@ -118,7 +117,7 @@ export const IntegrationInfo = (props) => {
     const newData = {
       enabled: true,
       integrationParameters: updatedFormData,
-      name: updatedFormData.integrationName || PLUGIN_NAME_TITLES[pluginName],
+      name: updatedFormData.integrationName || details.name,
     };
     trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(pluginName));
     dispatch(addIntegrationAction(newData, false, pluginName, openIntegration, metaData));
@@ -205,7 +204,7 @@ export const IntegrationInfo = (props) => {
     },
     {
       id: pluginName,
-      title: `${PLUGIN_NAME_TITLES[pluginName] || pluginName} ${formatMessage(messages.settings)}`,
+      title: `${details.name || pluginName} ${formatMessage(messages.settings)}`,
       link: pluginIntegrationListLink,
     },
     {
