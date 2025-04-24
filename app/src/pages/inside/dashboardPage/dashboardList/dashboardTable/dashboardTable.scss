@@ -67,7 +67,7 @@
   }
 }
 
-.edit-cell, 
+.edit-cell,
 .delete-cell {
   .icon-holder {
     border-left: 1px solid $COLOR--gray-91;
@@ -139,14 +139,14 @@
 
 .duplicate-menu {
   position: absolute;
-  top: 100%;
-  right: -25px;
+  width: 290px;
+  top: 25px;
+  right: -21px;
   z-index: $Z-INDEX-POPUP;
   margin-top: 4px;
   background: $COLOR--white-two;
   border: 1px solid $COLOR--gray-91;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
   min-width: max-content;
   white-space: nowrap;
   display: none;
@@ -160,8 +160,9 @@
   all: unset;
   display: block;
   width: 100%;
-  padding: 8px 15px;
+  padding: 8px;
   font-size: 13px;
+  line-height: 20px;
   color: $COLOR--charcoal-grey;
   text-align: left;
   cursor: pointer;
