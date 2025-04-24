@@ -104,7 +104,7 @@ describe('validate.requiredEmail', () => {
 describe('validate.login', () => {
   test('validation should be correct', () => {
     expect(validate.login('login')).toBe(true);
-    expect(validate.login('login-test_123.foo')).toBe(true);
+    expect(validate.login('login-test_123@foo.bar')).toBe(true);
   });
   test('validation should not be correct', () => {
     expect(validate.login(undefined)).toBe(false);
