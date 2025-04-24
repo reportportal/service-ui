@@ -117,7 +117,7 @@ export const IntegrationInfo = (props) => {
     const newData = {
       enabled: true,
       integrationParameters: updatedFormData,
-      name: updatedFormData.integrationName,
+      name: updatedFormData.integrationName || details.name,
     };
     trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(pluginName));
     dispatch(addIntegrationAction(newData, false, pluginName, openIntegration, metaData));
