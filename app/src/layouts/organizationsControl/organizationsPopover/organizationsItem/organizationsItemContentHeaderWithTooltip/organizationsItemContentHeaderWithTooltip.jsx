@@ -44,5 +44,6 @@ export const OrganizationsItemContentHeaderWithTooltip = withTooltip({
   customClassName: cx('custom'),
   side: 'left',
   dark: true,
-  leftOffset: 165,
+  leftOffset: 4,
+  isFloating: false,
 })(({ children }) => children);

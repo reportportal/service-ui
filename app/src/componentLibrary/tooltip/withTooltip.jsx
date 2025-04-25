@@ -35,6 +35,7 @@ export const withTooltip = ({
   side,
   noArrow,
   dataAutomationId,
+  isFloating = true,
 }) => (WrappedComponent) => (props) => {
   const [isOpened, setOpened] = useState(false);
   const timeoutId = useRef(null);
@@ -55,6 +56,21 @@ export const withTooltip = ({
     timeoutId.current = setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS);
   };
 
+  const modifiers = [
+    {
+      name: 'flip',
+      enabled: false,
+    },
+    {
+      name: 'preventOverflow',
+      enabled: false,
+    },
+    {
+      name: 'hide',
+      enabled: false,
+    },
+  ];
+
   return (
     <Manager>
       <Reference>
@@ -72,7 +88,7 @@ export const withTooltip = ({
       </Reference>
       {isOpened &&
         ReactDOM.createPortal(
-          <Popper placement={side} eventsEnabled>
+          <Popper placement={side} eventsEnabled modifiers={isFloating ? undefined : modifiers}>
             {({ placement, ref, style, arrowProps }) => (
               <div
                 className={cx('tooltip')}
