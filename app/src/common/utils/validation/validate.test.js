@@ -103,15 +103,25 @@ describe('validate.requiredEmail', () => {
 
 describe('validate.login', () => {
   test('validation should be correct', () => {
-    expect(validate.login('login')).toBe(true);
-    expect(validate.login('login-test_123.foo')).toBe(true);
+    expect(validate.login('email@example.com')).toBe(true);
+    expect(validate.login('firstname.lastname@example.com')).toBe(true);
+    expect(validate.login('email@subdomain.example.com')).toBe(true);
+    expect(validate.login('firstname+lastname@example.com')).toBe(true);
+    expect(validate.login('email@123.123.123.123')).toBe(true);
+    expect(validate.login('1234567890@example.com')).toBe(true);
+    expect(validate.login('firstname-lastname@example.com')).toBe(true);
+    expect(validate.login('email@example.co.jp')).toBe(true);
   });
-  test('validation should not be correct', () => {
-    expect(validate.login(undefined)).toBe(false);
-    expect(validate.login('')).toBe(false);
-    expect(validate.login('  ')).toBe(false);
-    expect(validate.login('login^test')).toBe(false);
-    expect(validate.login('логин')).toBe(false);
+  test('validation should be not correct', () => {
+    expect(validate.login('plainaddress')).toBe(false);
+    expect(validate.login('#@%^%#$@#$@#.com')).toBe(false);
+    expect(validate.login('@example.com')).toBe(false);
+    expect(validate.login('Joe Smith <email@example.com>')).toBe(false);
+    expect(validate.login('email.example.com')).toBe(false);
+    expect(validate.login('email@example@example.com')).toBe(false);
+    expect(validate.login('email@example.com (Joe Smith)')).toBe(false);
+    expect(validate.login('email@example')).toBe(false);
+    expect(validate.login('あいうえお@example.com')).toBe(false);
   });
 });
 
