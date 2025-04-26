@@ -57,8 +57,7 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
-import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
-import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
+import { SET_ACTIVE_PROJECT_KEY, ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
   resetTokenAction,

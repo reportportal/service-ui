@@ -85,7 +85,16 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc, readOnly } }) => {
+const StatusColumn = ({
+  className,
+  value,
+  customProps: {
+    viewOnly,
+    onChange,
+    fetchFunc,
+    readOnly,
+  },
+}) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -396,6 +405,8 @@ StepGrid.propTypes = {
   }),
   onStatusUpdate: PropTypes.func.isRequired,
   modifyColumnsFunc: PropTypes.func,
+  isTestSearchView: PropTypes.bool,
+  errorMessage: PropTypes.string,
 };
 
 StepGrid.defaultProps = {
@@ -420,4 +431,6 @@ StepGrid.defaultProps = {
     highlightedRowId: null,
   },
   modifyColumnsFunc: null,
+  isTestSearchView: false,
+  errorMessage: null,
 };
