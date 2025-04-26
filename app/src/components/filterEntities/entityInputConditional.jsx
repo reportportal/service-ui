@@ -47,6 +47,8 @@ export class EntityInputConditional extends Component {
     error: PropTypes.string,
     onBlur: PropTypes.func,
     onFocus: PropTypes.func,
+    disabled: PropTypes.bool,
+    browserTooltipTitle: PropTypes.string,
   };
   static defaultProps = {
     title: '',
@@ -60,6 +62,8 @@ export class EntityInputConditional extends Component {
     maxLength: 128,
     customProps: {},
     error: null,
+    disabled: false,
+    browserTooltipTitle: '',
   };
   render() {
     const {
@@ -74,6 +78,8 @@ export class EntityInputConditional extends Component {
       maxLength,
       placeholder,
       error,
+      disabled,
+      browserTooltipTitle,
       ...rest
     } = this.props;
     return (
@@ -93,6 +99,8 @@ export class EntityInputConditional extends Component {
             touched
             onBlur={this.props.onBlur}
             onFocus={this.props.onFocus}
+            disabled={disabled}
+            browserTooltipTitle={browserTooltipTitle}
             {...customProps}
           />
         </FieldFilterEntity>

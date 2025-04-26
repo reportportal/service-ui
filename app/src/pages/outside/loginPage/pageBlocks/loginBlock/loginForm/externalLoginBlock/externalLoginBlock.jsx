@@ -17,9 +17,11 @@
 import React, { PureComponent } from 'react';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE } from 'controllers/pages';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
@@ -27,9 +29,14 @@ import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ExternalLoginBlock extends PureComponent {
   static propTypes = {
     externalAuth: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     externalAuth: {},
@@ -44,6 +51,11 @@ export class ExternalLoginBlock extends PureComponent {
     setWindowLocationToNewPath(normalizePathWithPrefix(path));
   };
 
+  clickEventHandler = (authType) => {
+    const { tracking } = this.props;
+    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
+  };
+
   renderButtons = () => {
     const { externalAuth } = this.props;
     return Object.keys(externalAuth).map((authType) => {
@@ -51,21 +63,19 @@ export class ExternalLoginBlock extends PureComponent {
 
       return (
         <div className={cx('external-auth-btn')} key={authType}>
-          {val.providers ? (
-            <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
-              <BigButton roundedCorners color="booger">
+          <BigButton
+            roundedCorners
+            color="booger"
+            onClick={val.providers ? null : () => this.clickEventHandler(authType)}
+          >
+            {val.providers ? (
+              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
                 {Parser(val.button)}
-              </BigButton>
-            </Link>
-          ) : (
-            <BigButton
-              roundedCorners
-              color="booger"
-              onClick={this.getExternalAuthClickHandler(val.path)}
-            >
-              <span>{Parser(val.button)}</span>
-            </BigButton>
-          )}
+              </Link>
+            ) : (
+              <span onClick={this.getExternalAuthClickHandler(val.path)}>{Parser(val.button)}</span>
+            )}
+          </BigButton>
         </div>
       );
     });

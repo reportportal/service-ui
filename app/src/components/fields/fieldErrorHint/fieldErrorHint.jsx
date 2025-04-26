@@ -50,6 +50,11 @@ const messages = defineMessages({
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
     defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+  oldPasswordHint: {
+    id: 'RegistrationForm.oldPasswordHint',
+    defaultMessage:
       'Password should contain at least 4 characters; a special symbol; upper-case (A - Z); lower-case',
   },
   emailHint: {
@@ -276,7 +281,7 @@ const messages = defineMessages({
   },
   apiKeyNameShouldMatch: {
     id: 'GenerateApiKeyModal.apiKeyNameShouldMatch',
-    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, =',
+    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +',
   },
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',

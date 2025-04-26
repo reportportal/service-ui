@@ -19,7 +19,7 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 const FILTER_PREFIX = 'filter.';
 const PREDEFINED_FILTER_PREFIX = 'predefinedFilter.';
 
-const getFilterKey = (entity, key, predefinedPrefixKey = PREDEFINED_FILTER_PREFIX) =>
+export const getFilterKey = (entity, key, predefinedPrefixKey = PREDEFINED_FILTER_PREFIX) =>
   entity.condition ? `${FILTER_PREFIX}${entity.condition}.${key}` : `${predefinedPrefixKey}${key}`;
 
 export const resetOldCondition = (entity, oldEntity, key, predefinedPrefixKey) => {

@@ -24,7 +24,6 @@ import track from 'react-tracking';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
-import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SystemMessage } from 'componentLibrary/systemMessage';
@@ -107,6 +106,7 @@ export class ConnectionSection extends Component {
       integrationParameters: PropTypes.object,
       integrationType: PropTypes.object,
       projectId: PropTypes.number,
+      details: PropTypes.object,
     }).isRequired,
   };
 
@@ -162,7 +162,7 @@ export class ConnectionSection extends Component {
       projectIntegrations,
       pluginName,
       isEditable,
-      data: { name, creator, creationDate },
+      data: { name, creator, creationDate, details },
     } = this.props;
 
     const availableProjectIntegrations = projectIntegrations[pluginName] || [];
@@ -177,7 +177,7 @@ export class ConnectionSection extends Component {
               caption={formatMessage(messages.connectionFailedCapture)}
             >
               {formatMessage(messages.connectionFailedDescription, {
-                pluginName: PLUGIN_NAME_TITLES[pluginName] || pluginName,
+                pluginName: details.name || pluginName,
               })}
             </SystemMessage>
           </div>

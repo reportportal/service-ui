@@ -115,16 +115,30 @@ describe('validate.login', () => {
   });
 });
 
+describe('validate.oldPassword', () => {
+  test('validation should be correct', () => {
+    expect(validate.oldPassword('1234')).toBe(true);
+    expect(validate.oldPassword('1234567890123456789012345')).toBe(true);
+    expect(validate.oldPassword('Aa1@3@.?n&()*^HFU')).toBe(true);
+    expect(validate.oldPassword('firstname+lastname@ex')).toBe(true);
+  });
+  test('validation should be not correct', () => {
+    expect(validate.oldPassword(undefined)).toBe(false);
+    expect(validate.oldPassword('123')).toBe(false);
+  });
+});
+
 describe('validate.password', () => {
   test('validation should be correct', () => {
-    expect(validate.password('1234')).toBe(true);
-    expect(validate.password('1234567890123456789012345')).toBe(true);
+    expect(validate.password('aA1!5678')).toBe(true);
     expect(validate.password('Aa1@3@.?n&()*^HFU')).toBe(true);
-    expect(validate.password('firstname+lastname@ex')).toBe(true);
+    expect(validate.password('Firstname+lastname@ex1')).toBe(true);
   });
   test('validation should be not correct', () => {
     expect(validate.password(undefined)).toBe(false);
     expect(validate.password('123')).toBe(false);
+    expect(validate.password('12345678ADd123456789012345')).toBe(false);
+    expect(validate.password('aA1_567')).toBe(false);
   });
 });
 

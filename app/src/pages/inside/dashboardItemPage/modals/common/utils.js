@@ -19,18 +19,21 @@ import {
   COMPONENT_HEALTH_CHECK,
   COMPONENT_HEALTH_CHECK_TABLE,
   CUMULATIVE_TREND,
+  TEST_CASE_SEARCH,
 } from 'common/constants/widgetTypes';
-import { DEFAULT_WIDGET_CONFIG, CUMULATIVE_TREND_CHART_WIDGET_CONFIG } from './constants';
+import { DEFAULT_WIDGET_CONFIG, FULLSIZED_WIDGET_CONFIG } from './constants';
 
 export const isWidgetDataAvailable = (data) => data.content && Object.keys(data.content).length;
 
 export const prepareWidgetDataForSubmit = (data) => ({
   ...data,
-  filterIds: (data.filters || []).map((item) => item.value),
+  ...(data.filters && { filterIds: data.filters.map((item) => item.value) }),
 });
 
 export const getDefaultWidgetConfig = (widgetType) =>
-  widgetType === CUMULATIVE_TREND ? CUMULATIVE_TREND_CHART_WIDGET_CONFIG : DEFAULT_WIDGET_CONFIG;
+  [CUMULATIVE_TREND, TEST_CASE_SEARCH].includes(widgetType)
+    ? FULLSIZED_WIDGET_CONFIG
+    : DEFAULT_WIDGET_CONFIG;
 
 export const getUpdatedWidgetsList = (oldWidgets, newWidget) => {
   const {

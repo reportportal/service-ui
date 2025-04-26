@@ -18,12 +18,23 @@ import PropTypes from 'prop-types';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
 
-export const GroupedGridBody = ({ data, groupFunction, groupHeader: GroupHeader, ...rest }) => {
+export const GroupedGridBody = ({
+  data,
+  groupFunction,
+  groupHeader: GroupHeader,
+  isViewOnly,
+  ...rest
+}) => {
   const groupedData = groupFunction(data) || [];
   return Object.keys(groupedData).reduce(
     (rows, groupId) => [
       ...rows,
-      <GroupHeader key={groupId} groupId={groupId} data={groupedData[groupId]} />,
+      <GroupHeader
+        key={groupId}
+        groupId={groupId}
+        data={groupedData[groupId]}
+        isViewOnly={isViewOnly}
+      />,
       ...groupedData[groupId].map((row, i) => <GridRow key={row.id || i} value={row} {...rest} />),
     ],
     [],

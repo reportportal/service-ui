@@ -22,6 +22,9 @@ import {
   createFetchPredicate,
 } from 'controllers/fetch';
 import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
+import { activeFilterSelector } from 'controllers/filter';
+import { activeProjectSelector } from 'controllers/user';
+import { put, select, all, takeEvery, take, call, takeLatest } from 'redux-saga/effects';
 import {
   urlOrganizationAndProjectSelector,
   testItemIdsArraySelector,
@@ -52,11 +55,17 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { FILTER_ENTITY_ID_TO_TYPE_MAP } from 'components/main/analytics/events/common/testItemPages/constants';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { formatSortingString, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import {
   setLevelAction,
   setPageLoadingAction,
   setDefaultItemStatisticsAction,
   fetchParentLaunchSuccessAction,
+  searchItemWidgetDetailsAction,
+  testItemsSearchAction,
 } from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
@@ -70,6 +79,9 @@ import {
   PROVIDER_TYPE_LAUNCH,
   PROVIDER_TYPE_FILTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
+  SEARCH_TEST_ITEMS,
+  REFRESH_SEARCHED_ITEMS,
+  LOAD_MORE_SEARCHED_ITEMS,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -84,6 +96,7 @@ import {
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
   launchSelector,
+  searchedTestItemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -349,11 +362,105 @@ function* watchDeleteTestItems() {
   yield takeEvery(DELETE_TEST_ITEMS, deleteTestItems);
 }
 
+function* fetchSearchedItems(searchCriteria, sortingDirection = SORTING_DESC, pageNumber = 1) {
+  const activeProject = yield select(activeProjectSelector);
+  const query = createFilterQuery(searchCriteria);
+  const sorting = formatSortingString(
+    [FILTER_ENTITY_ID_TO_TYPE_MAP[ENTITY_START_TIME]],
+    sortingDirection,
+  );
+  return yield call(
+    fetch,
+    URLS.testItemSearch(activeProject, {
+      ...query,
+      [SORTING_KEY]: sorting,
+      [PAGE_KEY]: pageNumber,
+    }),
+  );
+}
+const updateSearchedItemsState = (widgetId) => (state) =>
+  put(searchItemWidgetDetailsAction({ [widgetId]: state }));
+
+function* searchTestItemsFromWidget({
+  payload: { widgetId, searchParams, trackPerformance = () => {} },
+}) {
+  const startTime = performance.now();
+  const { searchCriteria, sortingDirection = SORTING_DESC } = searchParams;
+  yield updateSearchedItemsState(widgetId)({ loading: true });
+  try {
+    const result = yield call(fetchSearchedItems, searchCriteria, sortingDirection);
+    yield updateSearchedItemsState(widgetId)({
+      searchCriteria,
+      sortingDirection,
+      loading: false,
+      ...result,
+    });
+  } catch (error) {
+    yield updateSearchedItemsState(widgetId)({ loading: false, error });
+  }
+  const endTime = performance.now();
+  trackPerformance(endTime - startTime);
+}
+
+function* refreshSearchedItemsFromWidget({ payload: widgetId }) {
+  const searchDetails = yield select(searchedTestItemsSelector);
+  const targetWidgetSearch = searchDetails[widgetId] || {};
+  const { searchCriteria } = targetWidgetSearch;
+  yield put(testItemsSearchAction({ widgetId, searchParams: { searchCriteria } }));
+}
+
+function* loadMoreSearchedItemsFromWidget({
+  payload: { widgetId, trackPerformance = () => {}, isDisplayedLaunches = false },
+}) {
+  const startTime = performance.now();
+  const searchDetails = yield select(searchedTestItemsSelector);
+  const targetWidgetSearch = searchDetails[widgetId] || {};
+  const { searchCriteria, sortingDirection, page, content = [] } = targetWidgetSearch;
+  const currentPageNumber = page?.number;
+  yield updateSearchedItemsState(widgetId)({ ...targetWidgetSearch, loadingMore: true });
+  const result = yield call(
+    fetchSearchedItems,
+    searchCriteria,
+    sortingDirection,
+    currentPageNumber + 1,
+  );
+  yield updateSearchedItemsState(widgetId)({
+    searchCriteria,
+    sortingDirection,
+    content: [...content, ...result.content],
+    page: result.page,
+    loadingMore: false,
+  });
+  if (isDisplayedLaunches) {
+    yield put(
+      showNotification({
+        messageId: 'loadedItemsWithDisplayedLaunches',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  }
+  const endTime = performance.now();
+  trackPerformance(endTime - startTime);
+}
+
+function* watchTestItemsFromWidget() {
+  yield takeLatest(SEARCH_TEST_ITEMS, searchTestItemsFromWidget);
+}
+function* watchRefreshSearchedItems() {
+  yield takeEvery(REFRESH_SEARCHED_ITEMS, refreshSearchedItemsFromWidget);
+}
+function* watchLoadMoreSearchedItems() {
+  yield takeEvery(LOAD_MORE_SEARCHED_ITEMS, loadMoreSearchedItemsFromWidget);
+}
+
 export function* testItemsSagas() {
   yield all([
     watchFetchTestItems(),
     watchRestorePath(),
     watchTestItemsFromLogPage(),
     watchDeleteTestItems(),
+    watchTestItemsFromWidget(),
+    watchRefreshSearchedItems(),
+    watchLoadMoreSearchedItems(),
   ]);
 }

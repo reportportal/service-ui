@@ -49,7 +49,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { omit } from 'common/utils';
+import { isEmptyObject, omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
@@ -97,6 +97,11 @@ export const isTestItemsListSelector = createSelector(
   testItemIdsSelector,
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
+
+export const searchedTestItemsSelector = (state) => domainSelector(state).searchedItems;
+
+export const isSearchWidgetItemsExistSelector = (state) =>
+  !isEmptyObject(searchedTestItemsSelector(state));
 
 export const isFilterParamsExistsSelector = (state) => {
   const namespace = namespaceSelector(state);
@@ -268,6 +273,9 @@ export const breadcrumbsSelector = createSelector(
 export const nameLinkSelector = (state, ownProps) => {
   const { ownLinkParams, itemId, uniqueId } = ownProps;
   const payload = ownLinkParams?.payload || payloadSelector(state);
+  if (payload.dashboardId && !payload.filterId) {
+    payload.filterId = ALL;
+  }
   let testItemIds = ownLinkParams?.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
@@ -292,7 +300,6 @@ export const nameLinkSelector = (state, ownProps) => {
       clusterId: ownLinkParams.testItem.clusterId,
     };
   }
-
   return createLink(testItemIds, itemId, payload, query, page);
 };
 

@@ -135,6 +135,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
+  hideEdit: PropTypes.bool,
   onRemove: PropTypes.func,
   patternTemplates: PropTypes.array,
   events: PropTypes.object,
@@ -146,4 +147,5 @@ DefectType.defaultProps = {
   patternTemplates: [],
   events: {},
   disabled: false,
+  hideEdit: false,
 };

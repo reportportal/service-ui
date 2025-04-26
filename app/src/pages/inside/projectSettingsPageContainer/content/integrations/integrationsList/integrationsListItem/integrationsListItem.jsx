@@ -19,7 +19,6 @@ import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import styles from './integrationsListItem.scss';
@@ -36,10 +35,12 @@ export const messages = defineMessages({
 export const IntegrationsListItem = (props) => {
   const { formatMessage } = useIntl();
   const {
-    integrationType: { name, details = {} },
+    integrationType: { name, details = { name } },
     integrationType,
     onItemClick,
   } = props;
+
+  const displayName = details.name || name;
 
   const itemClickHandler = () => {
     onItemClick(integrationType);
@@ -50,10 +51,14 @@ export const IntegrationsListItem = (props) => {
       onClick={itemClickHandler}
       data-automation-id="listItem"
     >
-      <PluginIcon className={cx('integration-image')} pluginData={integrationType} alt={name} />
+      <PluginIcon
+        className={cx('integration-image')}
+        pluginData={integrationType}
+        alt={displayName}
+      />
       <div className={cx('integration-info-block')}>
         <div className={cx('integration-data-block')}>
-          <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
+          <span className={cx('integration-name')}>{displayName}</span>
           <span className={cx('integration-version')}>
             {details.version && `${formatMessage(messages.version)} ${details.version}`}
           </span>

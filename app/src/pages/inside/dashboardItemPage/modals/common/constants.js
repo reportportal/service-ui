@@ -31,7 +31,7 @@ export const DEFAULT_WIDGET_CONFIG = {
   widgetSize: DEFAULT_WIDGET_SIZE,
 };
 
-export const CUMULATIVE_TREND_CHART_WIDGET_CONFIG = {
+export const FULLSIZED_WIDGET_CONFIG = {
   widgetPosition: DEFAULT_WIDGET_POSITION,
   widgetSize: {
     width: 12,

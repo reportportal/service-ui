@@ -39,6 +39,8 @@ export class EntityDropdown extends Component {
     vertical: PropTypes.bool,
     customProps: PropTypes.object,
     events: PropTypes.object,
+    disabled: PropTypes.bool,
+    browserTooltipTitle: PropTypes.string,
   };
   static defaultProps = {
     entityId: '',
@@ -51,6 +53,8 @@ export class EntityDropdown extends Component {
     vertical: false,
     customProps: {},
     events: {},
+    disabled: false,
+    browserTooltipTitle: '',
   };
 
   formatActionTypes = ({ value }, actionToGroup = {}) =>
@@ -99,7 +103,17 @@ export class EntityDropdown extends Component {
   };
 
   render() {
-    const { onRemove, removable, entityId, smallSize, title, vertical, customProps } = this.props;
+    const {
+      onRemove,
+      removable,
+      entityId,
+      smallSize,
+      title,
+      vertical,
+      disabled,
+      customProps,
+      browserTooltipTitle,
+    } = this.props;
     return (
       <FieldFilterEntity
         title={title || entityId}
@@ -108,7 +122,13 @@ export class EntityDropdown extends Component {
         onRemove={onRemove}
         vertical={vertical}
       >
-        <InputDropdown value={this.getValue()} onChange={this.handleChange} {...customProps} />
+        <InputDropdown
+          value={this.getValue()}
+          onChange={this.handleChange}
+          disabled={disabled}
+          title={browserTooltipTitle}
+          {...customProps}
+        />
       </FieldFilterEntity>
     );
   }

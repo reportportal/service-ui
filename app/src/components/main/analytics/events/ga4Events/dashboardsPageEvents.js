@@ -15,7 +15,11 @@
  */
 
 import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import {
+  getBasicClickEventParameters,
+  getBasicPerformanceEventParameters,
+  normalizeEventParameter,
+} from '../common/ga4Utils';
 
 const DASHBOARDS = 'dashboards';
 
@@ -64,7 +68,60 @@ export const WIDGETS_EVENTS = {
       ...actionType,
     };
   },
-
+  clickOnLoadMoreSearchItems: (dashboardId, isSearchedByName) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'load_more',
+    type: 'search_widget',
+    number: dashboardId,
+    status: isSearchedByName ? 'test_name' : 'attribute',
+  }),
+  clickOnSearchedItemName: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'test_name',
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  clickOnIssueTicket: (dashboardId) => (pluginName) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'issue_ticket',
+    place: 'search_widget',
+    number: dashboardId,
+    type: normalizeEventParameter(pluginName || 'BTS'),
+  }),
+  clickOnExpandDescription: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    icon_name: 'expand',
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onSearchWidgetDocumentLinkClick: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    link_name: 'documentation',
+    place: 'search_widget',
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onDisplayLaunchesToggle: (isDisplayedLaunches, dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'display_launches',
+    switcher: isDisplayedLaunches ? 'on' : 'off',
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onLoadCompletion: (dashboardId, time, type, isSearchedByName, statusValues) => ({
+    ...getBasicPerformanceEventParameters(DASHBOARDS),
+    element_name: 'response_time',
+    type: 'search_widget',
+    number: dashboardId,
+    icon_name: type,
+    switcher: Math.round(time),
+    status:
+      (isSearchedByName ? 'test_name' : 'attribute') +
+      (statusValues ? '#test_execution_status' : ''),
+    ...(statusValues && {
+      condition: statusValues.length === 5 ? 'All' : statusValues.join('#').toLowerCase(),
+    }),
+  }),
   ON_DRAG_WIDGET: {
     ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: 'drag_widget',

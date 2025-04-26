@@ -77,3 +77,7 @@ export const servicesUpdate = {
   ui: 'https://github.com/reportportal/service-ui/releases',
   analyzer: 'https://github.com/reportportal/service-auto-analyzer/releases',
 };
+
+export const widgetDocsReferences = {
+  testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch',
+};
