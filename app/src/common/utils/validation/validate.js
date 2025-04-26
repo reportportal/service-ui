@@ -35,7 +35,7 @@ export const rallyUrl = composeValidators([
 ]);
 export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
-export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128}$/)]);
+export const login = composeValidators([isNotEmpty, email]);
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
 export const password = composeValidators([
   isNotEmpty,

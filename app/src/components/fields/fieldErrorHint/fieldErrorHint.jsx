@@ -25,8 +25,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
-    defaultMessage:
-      'User name may contain only Latin, numeric characters, hyphen, underscore, dot (from 1 to 128 symbols)',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',

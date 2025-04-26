@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -24,8 +25,9 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { copyDashboardConfigAction } from 'controllers/dashboard';
+import { userRolesSelector } from 'controllers/pages';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -92,6 +94,7 @@ export const DuplicateColumn = track()(
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
+    const userRoles = useSelector(userRolesSelector);
 
     useEffect(() => {
       if (opened) {
@@ -142,9 +145,11 @@ export const DuplicateColumn = track()(
                 <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
                   {intl.formatMessage(messages.duplicate)}
                 </button>
-                <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
-                  {intl.formatMessage(messages.copyConfig)}
-                </button>
+                {canWorkWithDashboard(userRoles) && (
+                  <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                    {intl.formatMessage(messages.copyConfig)}
+                  </button>
+                )}
               </div>
             )}
           </button>
