@@ -88,12 +88,7 @@ NameColumn.defaultProps = {
 const StatusColumn = ({
   className,
   value,
-  customProps: {
-    viewOnly,
-    onChange,
-    fetchFunc,
-    readOnly,
-  },
+  customProps: { viewOnly, onChange, fetchFunc, readOnly },
 }) => {
   const { id, status, attributes, description } = value;
   return (

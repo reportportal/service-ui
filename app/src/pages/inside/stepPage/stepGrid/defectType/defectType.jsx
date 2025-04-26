@@ -147,5 +147,4 @@ DefectType.defaultProps = {
   patternTemplates: [],
   events: {},
   disabled: false,
-  hideEdit: false,
 };

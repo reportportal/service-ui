@@ -15,6 +15,7 @@
  */
 
 import { redirect } from 'redux-first-router';
+import { put, select, all, takeEvery, take, call, takeLatest } from 'redux-saga/effects';
 import {
   fetchDataAction,
   fetchSuccessAction,
@@ -24,7 +25,6 @@ import {
 import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { put, select, all, takeEvery, take, call, takeLatest } from 'redux-saga/effects';
 import {
   urlOrganizationAndProjectSelector,
   testItemIdsArraySelector,
@@ -39,8 +39,6 @@ import {
   testItemIdsSelector,
   LAUNCHES_PAGE,
 } from 'controllers/pages';
-import { activeFilterSelector } from 'controllers/filter';
-import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
