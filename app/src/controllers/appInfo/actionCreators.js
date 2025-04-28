@@ -16,7 +16,12 @@
 
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { APP_INFO_NAMESPACE, UPDATE_EXPIRATION_SESSION, UPDATE_SERVER_SETTINGS } from './constants';
+import {
+  APP_INFO_NAMESPACE,
+  UPDATE_EXPIRATION_SESSION,
+  UPDATE_SERVER_FOOTER_LINKS,
+  UPDATE_SERVER_SETTINGS,
+} from './constants';
 
 export const fetchAppInfoAction = () =>
   fetchDataAction(APP_INFO_NAMESPACE, true)(URLS.appInfo(), {
@@ -31,4 +36,9 @@ export const updateServerSettingsAction = (settings) => ({
 export const updateExpirationSessionAction = (expiration) => ({
   type: UPDATE_EXPIRATION_SESSION,
   payload: expiration,
+});
+
+export const updateServerFooterLinksAction = (footerLinks) => ({
+  type: UPDATE_SERVER_FOOTER_LINKS,
+  payload: footerLinks,
 });

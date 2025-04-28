@@ -33,6 +33,7 @@ import {
   USER_SUGGESTIONS,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
+  SERVER_FOOTER_LINKS_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -62,7 +63,11 @@ export const authExtensionsSelector = (state) => uatInfoSelector(state).authExte
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
-  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
+  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || 86400000;
+export const serverFooterLinksSelector = createSelector(
+  extensionsConfigSelector,
+  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_FOOTER_LINKS_KEY] || `[]`),
+);
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;

@@ -19,6 +19,7 @@ export {
   fetchAppInfoAction,
   updateServerSettingsAction,
   updateExpirationSessionAction,
+  updateServerFooterLinksAction,
 } from './actionCreators';
 export {
   appInfoSelector,
@@ -31,10 +32,16 @@ export {
   isOldHistorySelector,
   flushDataInSelector,
   isDemoInstanceSelector,
+  instanceTypeSelector,
   areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,
+  serverFooterLinksSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
-export { ANALYTICS_ALL_KEY, SERVER_SESSION_EXPIRATION_KEY } from './constants';
+export {
+  ANALYTICS_ALL_KEY,
+  SERVER_SESSION_EXPIRATION_KEY,
+  SERVER_FOOTER_LINKS_KEY,
+} from './constants';

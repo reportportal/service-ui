@@ -22,4 +22,5 @@ export const ANALYSIS = 'analyzer';
 export const DEMO_DATA = 'demoData';
 export const AUTHORIZATION_CONFIGURATION = 'auth';
 export const ANALYTICS = 'analytics';
+export const LINKS_AND_BRANDING = 'linksAndBranding';
 export const PATTERN_ANALYSIS = 'patternAnalysis';

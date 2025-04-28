@@ -50,6 +50,7 @@ export const FieldText = ({
   hasDoubleMessage,
   type,
   variant,
+  labelClassName,
 }) => {
   const clearInput = () => onChange('');
 
@@ -58,7 +59,7 @@ export const FieldText = ({
   return (
     <>
       {label && (
-        <span className={cx(variant, 'label', { disabled })}>
+        <span className={cx(variant, 'label', { disabled }, labelClassName)}>
           {label}
           {isRequired && <span className={cx('asterisk')}>*</span>}
         </span>
@@ -154,6 +155,7 @@ FieldText.propTypes = {
   hasDoubleMessage: PropTypes.bool,
   type: PropTypes.string,
   variant: PropTypes.oneOf([LIGHT_VARIANT, DARK_VARIANT]),
+  labelClassName: PropTypes.string,
 };
 FieldText.defaultProps = {
   value: '',
@@ -180,4 +182,5 @@ FieldText.defaultProps = {
   hasDoubleMessage: false,
   type: 'text',
   variant: LIGHT_VARIANT,
+  labelClassName: '',
 };

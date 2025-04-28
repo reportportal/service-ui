@@ -118,6 +118,9 @@ export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
+export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(1, 30)]);
+export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
+export const urlOrEmailValidator = (value) => email(value) || url(value);
 export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
   if (!informOwner && !value.length) {
     return false;

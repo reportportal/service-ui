@@ -20,8 +20,10 @@ import { call, takeEvery, all, put } from 'redux-saga/effects';
 import { fetchAppInfoAction, updateServerSettingsAction } from 'controllers/appInfo/actionCreators';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import {
+  SERVER_FOOTER_LINKS_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   UPDATE_EXPIRATION_SESSION,
+  UPDATE_SERVER_FOOTER_LINKS,
   UPDATE_SERVER_SETTINGS,
 } from './constants';
 
@@ -43,6 +45,13 @@ function* updateSessionExpiration({ payload: value }) {
   );
 }
 
+function* updateFooterLinks({ payload }) {
+  yield put(
+    updateServerSettingsAction({ key: SERVER_FOOTER_LINKS_KEY, value: JSON.stringify(payload) }),
+  );
+  yield put(fetchAppInfoAction());
+}
+
 function* watchUpdateServerSettings() {
   yield takeEvery(UPDATE_SERVER_SETTINGS, updateServerSettings);
 }
@@ -51,6 +60,14 @@ function* watchUpdateSessionExpiration() {
   yield takeEvery(UPDATE_EXPIRATION_SESSION, updateSessionExpiration);
 }
 
+function* watchUpdateFooterLinks() {
+  yield takeEvery(UPDATE_SERVER_FOOTER_LINKS, updateFooterLinks);
+}
+
 export function* serverSettingsSagas() {
-  yield all([watchUpdateServerSettings(), watchUpdateSessionExpiration()]);
+  yield all([
+    watchUpdateServerSettings(),
+    watchUpdateSessionExpiration(),
+    watchUpdateFooterLinks(),
+  ]);
 }

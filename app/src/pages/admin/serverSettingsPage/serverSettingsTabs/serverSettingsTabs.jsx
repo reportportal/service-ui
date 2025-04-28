@@ -19,11 +19,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
-import { AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
+import {
+  AUTHORIZATION_CONFIGURATION,
+  ANALYTICS,
+  LINKS_AND_BRANDING,
+} from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { AnalyticsTab } from './analyticsTab';
+import { LinksAndBrandingTab } from './linksAndBrandingTab';
 
 const messages = defineMessages({
   authConfiguration: {
@@ -33,6 +38,10 @@ const messages = defineMessages({
   statistics: {
     id: 'ServerSettingsTabs.analytics',
     defaultMessage: 'Analytics',
+  },
+  linksAndBranding: {
+    id: 'ServerSettingsTabs.linksAndBranding',
+    defaultMessage: 'Links & Branding',
   },
 });
 
@@ -75,6 +84,12 @@ export class ServerSettingsTabs extends Component {
       component: <AnalyticsTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ANALYTICS_TAB,
+    },
+    [LINKS_AND_BRANDING]: {
+      name: this.props.intl.formatMessage(messages.linksAndBranding),
+      link: this.createTabLink(LINKS_AND_BRANDING),
+      component: <LinksAndBrandingTab />,
+      mobileDisabled: true,
     },
   });
 

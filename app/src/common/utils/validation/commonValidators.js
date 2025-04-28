@@ -75,6 +75,20 @@ export const createRuleNameValidator = (notifications, notificationId) =>
     ),
   ]);
 
+export const createFooterLinkNameValidator = (links) =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.footerLinkNameLength, 'footerLinkNameLengthHint'),
+    bindMessageToValidator(validate.isUniqueByKey(links, 'name'), 'footerLinkNameDuplicateHint'),
+  ]);
+
+export const createFooterLinkURLValidator = (links) =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.urlOrEmailValidator, 'footerLinkUrlHint'),
+    bindMessageToValidator(validate.isUniqueByKey(links, 'url'), 'footerLinkURLDuplicateHint'),
+  ]);
+
 export const createDescriptionValidator = bindMessageToValidator(
   validate.descriptionField,
   'descriptionHint',
