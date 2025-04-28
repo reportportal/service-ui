@@ -9,7 +9,7 @@ on:
     inputs:
       version:
         description: 'Release version'
-        required: false
+        required: true
 
 env:
   UI_BUILD_REACT: 'app/'
