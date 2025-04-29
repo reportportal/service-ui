@@ -29,6 +29,8 @@ export class EntityInputConditionalAttributes extends PureComponent {
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
     customProps: PropTypes.object,
+    disabled: PropTypes.bool,
+    browserTooltipTitle: PropTypes.string,
   };
   static defaultProps = {
     title: '',
@@ -36,10 +38,21 @@ export class EntityInputConditionalAttributes extends PureComponent {
     onChange: () => {},
     onRemove: () => {},
     customProps: {},
+    disabled: false,
+    browserTooltipTitle: '',
   };
 
   render() {
-    const { value, onRemove, onChange, removable, title, customProps } = this.props;
+    const {
+      value,
+      onRemove,
+      onChange,
+      removable,
+      title,
+      disabled,
+      browserTooltipTitle,
+      customProps,
+    } = this.props;
     const { projectKey, keyURLCreator, valueURLCreator } = customProps;
 
     return (
@@ -51,6 +64,9 @@ export class EntityInputConditionalAttributes extends PureComponent {
           valueURLCreator={valueURLCreator}
           projectKey={projectKey}
           isAttributeValueRequired={false}
+          disabled={disabled}
+          browserTooltipTitle={browserTooltipTitle}
+          {...customProps}
         />
       </FieldFilterEntity>
     );

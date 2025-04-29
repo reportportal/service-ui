@@ -13,4 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+export { AddIntegrationModal } from 'components/integrations/modals/addIntegrationModal';
+export { AddLdapIntegrationModal } from 'components/integrations/modals/addLdapIntegrationModal';
+export { DeleteIntegrationModal } from 'components/integrations/modals/deleteIntegrationModal';
+
 export { IntegrationInfo } from './integrationInfo';

@@ -19,16 +19,17 @@
   box-sizing: border-box;
   padding-top: 20px;
 }
+
 .widget-title {
   display: inline-block;
   width: 100%;
-  margin-bottom: 10px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
   line-height: 17px;
   color: $COLOR--charcoal-grey;
   text-align: center;
 }
+
 .widget-description {
   display: inline-block;
   box-sizing: border-box;
@@ -37,4 +38,11 @@
   font-size: 13px;
   line-height: 22px;
   color: $COLOR--gray-47;
+  margin: 10px 0;
+}
+
+.link {
+  font-family: $FONT-REGULAR;
+  line-height: 22px;
+  font-size: 13px;
 }

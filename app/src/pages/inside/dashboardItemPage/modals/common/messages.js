@@ -35,6 +35,7 @@ import {
   PASSING_RATE_PER_LAUNCH,
   PASSING_RATE_SUMMARY,
   PROJECT_ACTIVITY,
+  TEST_CASE_SEARCH,
   TEST_CASES_GROWTH_TREND,
   UNIQUE_BUGS_TABLE,
 } from 'common/constants/widgetTypes';
@@ -123,6 +124,10 @@ export const widgetTypesMessages = defineMessages({
   [MOST_TIME_CONSUMING]: {
     id: 'Widgets.Name.mostTimeConsuming',
     defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
+  },
+  [TEST_CASE_SEARCH]: {
+    id: 'Widgets.Name.testCaseSearchTable',
+    defaultMessage: 'Test case search',
   },
   /*
   [PRODUCT_STATUS]: {

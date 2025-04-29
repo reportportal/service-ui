@@ -15,10 +15,12 @@
  */
 
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Toggle } from '@reportportal/ui-kit';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
@@ -31,7 +33,6 @@ import {
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
-import { connect } from 'react-redux';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
@@ -64,6 +65,8 @@ export class WidgetHeader extends Component {
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
     userRoles: userRolesType,
+    isDisplayedLaunches: PropTypes.bool,
+    onDisplayLaunchesToggle: PropTypes.func,
   };
   static defaultProps = {
     data: {},
@@ -74,6 +77,7 @@ export class WidgetHeader extends Component {
     customClass: null,
     isPrintMode: false,
     userRoles: {},
+    isDisplayedLaunches: false,
   };
 
   renderMetaInfo = () =>
@@ -97,9 +101,11 @@ export class WidgetHeader extends Component {
       onDelete,
       onEdit,
       onForceUpdate,
+      onDisplayLaunchesToggle,
       customClass,
       isPrintMode,
       userRoles,
+      isDisplayedLaunches,
     } = this.props;
 
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
@@ -135,6 +141,15 @@ export class WidgetHeader extends Component {
             <div
               className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
             >
+              {onDisplayLaunchesToggle && (
+                <Toggle
+                  value={isDisplayedLaunches}
+                  onChange={onDisplayLaunchesToggle}
+                  className={cx('display-launches-wrapper')}
+                >
+                  <span className={cx('title')}>Display launches</span>
+                </Toggle>
+              )}
               {isForceUpdateAvailable && (
                 <div className={cx('force-update', 'mobile-hide')}>
                   {data.lastRefresh && (

@@ -457,6 +457,10 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
             validate[validationType],
             errorMessage,
           )(inputDetails?.[field.name]);
+        } else if (field.required) {
+          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(
+            inputDetails?.[field.name],
+          );
         }
         return acc;
       },

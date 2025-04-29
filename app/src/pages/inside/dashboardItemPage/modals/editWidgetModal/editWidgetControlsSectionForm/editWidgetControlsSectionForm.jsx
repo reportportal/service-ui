@@ -92,14 +92,16 @@ export class EditWidgetControlsSectionForm extends Component {
 
     return (
       <form className={cx('edit-widget-controls-section-form')}>
-        <ControlsForm
-          widgetType={widget.id}
-          formAppearance={formAppearance}
-          onFormAppearanceChange={handleFormAppearanceChange}
-          initializeControlsForm={initializeWidgetControls}
-          widgetSettings={widgetSettings}
-          eventsInfo={eventsInfo}
-        />
+        {widget.controls && (
+          <ControlsForm
+            widgetType={widget.id}
+            formAppearance={formAppearance}
+            onFormAppearanceChange={handleFormAppearanceChange}
+            initializeControlsForm={initializeWidgetControls}
+            widgetSettings={widgetSettings}
+            eventsInfo={eventsInfo}
+          />
+        )}
         {!formAppearance.isMainControlsLocked && (
           <div className={cx('common-controls-wrapper')}>
             <CommonWidgetControls

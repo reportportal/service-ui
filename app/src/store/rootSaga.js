@@ -37,11 +37,13 @@ import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 import { organizationsSagas } from 'controllers/instance/organizations';
 import { organizationSagas } from 'controllers/organization';
+import { serverSettingsSagas } from 'controllers/appInfo';
 
 const sagas = [
   notificationSagas,
   authSagas,
   fetchSagas,
+  serverSettingsSagas,
   launchSagas,
   groupOperationsSagas,
   suiteSagas,

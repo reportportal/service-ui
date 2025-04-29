@@ -93,12 +93,10 @@ export class WizardThirdStepForm extends Component {
   generateWidgetName = () => {
     const {
       filters,
-      contentParameters: {
-        widgetOptions: { launchNameFilter },
-      },
+      contentParameters: { widgetOptions: { launchNameFilter } = {} } = {},
     } = this.props.formValues;
     const filterBasedName =
-      (filters.length &&
+      (filters?.length &&
         filters.reduce((acc, item) => `${acc}${acc.length ? '.' : ''}${item.name}`, '')) ||
       '';
     let generatedName = filterBasedName || launchNameFilter || this.props.widgetTitle;
