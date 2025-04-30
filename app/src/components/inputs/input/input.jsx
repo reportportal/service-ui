@@ -93,7 +93,6 @@ Input.propTypes = {
   onKeyUp: PropTypes.func,
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
-  displayError: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -111,7 +110,6 @@ Input.defaultProps = {
   variant: VARIANT_STANDARD,
   style: {},
   title: '',
-  displayError: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
