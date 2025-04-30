@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,4 @@
  * limitations under the License.
  */
 
-.two-steps-footer {
-  display: flex;
-  flex-direction: row;
-  gap: 18px;
-  padding-top: 16px;
-}
-
-.cancel-button,
-.discard-button {
-  margin-left: auto;
-}
-
-.right-icon > svg {
-  height: 32px;
-  width: 16px;
-  fill: $COLOR--bg-000;
-  vertical-align: middle;
-  margin-left: 8px;
-}
-
-.left-icon > svg {
-  height: 32px;
-  width: 16px;
-  fill: $COLOR--e-400;
-  vertical-align: middle;
-  margin-right: 8px;
-  transform: rotate(180deg);
-}
+export { AddLinkForm } from './addLinkForm';
