@@ -39,7 +39,12 @@ export class InputConditionalAttributes extends Component {
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
     projectKey: PropTypes.string.isRequired,
+    isAttributeKeyRequired: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
+    canAddSinglePair: PropTypes.bool,
+    disabled: PropTypes.bool,
+    browserTooltipTitle: PropTypes.string,
+    withValidationMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,7 +53,12 @@ export class InputConditionalAttributes extends Component {
     valueURLCreator: () => {},
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
+    browserTooltipTitle: '',
+    isAttributeKeyRequired: false,
     isAttributeValueRequired: true,
+    canAddSinglePair: false,
+    disabled: false,
+    withValidationMessage: true,
   };
 
   constructor(props) {
@@ -92,7 +102,7 @@ export class InputConditionalAttributes extends Component {
   };
 
   onChangeAttributes = (attribute) => {
-    const { value } = this.props.value;
+    const { value = '' } = this.props.value;
     const newAttributes = [
       ...this.state.attributes,
       { key: attribute.key || '', value: attribute.value || '' },
@@ -140,12 +150,24 @@ export class InputConditionalAttributes extends Component {
       keyURLCreator,
       valueURLCreator,
       projectKey,
+      isAttributeKeyRequired,
       isAttributeValueRequired,
+      canAddSinglePair,
+      disabled,
+      browserTooltipTitle,
+      withValidationMessage,
     } = this.props;
     const inputConditions = this.getConditions();
+    const hideEdit = canAddSinglePair && this.state?.attributes?.length;
 
     return (
-      <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
+      <div
+        className={cx('input-conditional-attributes', {
+          opened: this.state.opened,
+          disabled,
+        })}
+        title={browserTooltipTitle}
+      >
         <div className={cx('attributes-block')}>
           <AttributeListField
             value={this.state.attributes}
@@ -153,14 +175,18 @@ export class InputConditionalAttributes extends Component {
             editable={false}
             onChange={this.onRemove}
           />
-          <AttributeEditor
-            keyURLCreator={keyURLCreator}
-            valueURLCreator={valueURLCreator}
-            projectKey={projectKey}
-            onConfirm={this.onChangeAttributes}
-            nakedView
-            isAttributeValueRequired={isAttributeValueRequired}
-          />
+          {!hideEdit && (
+            <AttributeEditor
+              keyURLCreator={keyURLCreator}
+              valueURLCreator={valueURLCreator}
+              projectKey={projectKey}
+              onConfirm={this.onChangeAttributes}
+              nakedView
+              isAttributeKeyRequired={isAttributeKeyRequired}
+              isAttributeValueRequired={isAttributeValueRequired}
+              withValidationMessage={withValidationMessage}
+            />
+          )}
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>

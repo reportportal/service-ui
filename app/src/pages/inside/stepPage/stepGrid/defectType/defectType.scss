@@ -52,6 +52,10 @@
   @media (max-width: $SCREEN_XS_MAX) {
     pointer-events: none;
   }
+
+  .view-only {
+    pointer-events: none;
+  }
 }
 
 .ignore-aa-label {

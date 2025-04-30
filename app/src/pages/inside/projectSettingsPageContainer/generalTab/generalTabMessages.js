@@ -71,6 +71,10 @@ export const Messages = defineMessages({
     id: 'GeneralTab.updateErrorNotification',
     defaultMessage: 'Failed to update project settings',
   },
+  minutes15: {
+    id: 'GeneralTab.minutes15',
+    defaultMessage: '15 minutes',
+  },
   hour1: {
     id: 'GeneralTab.hour1',
     defaultMessage: '1 hour',
@@ -86,6 +90,10 @@ export const Messages = defineMessages({
   hour12: {
     id: 'GeneralTab.hour12',
     defaultMessage: '12 hours',
+  },
+  hour24: {
+    id: 'GeneralTab.hour24',
+    defaultMessage: '24 hours',
   },
   day1: {
     id: 'GeneralTab.day1',

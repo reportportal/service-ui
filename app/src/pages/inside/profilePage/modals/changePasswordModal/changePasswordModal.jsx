@@ -72,7 +72,7 @@ const messages = defineMessages({
 @reduxForm({
   form: 'changePasswordForm',
   validate: ({ oldPassword, newPassword, confirmPassword }) => ({
-    oldPassword: commonValidators.password(oldPassword),
+    oldPassword: commonValidators.oldPassword(oldPassword),
     newPassword: commonValidators.password(newPassword),
     confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
   }),
@@ -143,13 +143,11 @@ export class ChangePasswordModal extends Component {
             labelWidth={LABEL_WIDTH}
           >
             <FieldProvider name="oldPassword">
-              <FieldErrorHint>
-                <Input
-                  placeholder={intl.formatMessage(messages.oldPasswordPlaceholder)}
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="256"
-                />
-              </FieldErrorHint>
+              <Input
+                placeholder={intl.formatMessage(messages.oldPasswordPlaceholder)}
+                type={this.state.showPassword ? 'text' : 'password'}
+                maxLength="256"
+              />
             </FieldProvider>
           </ModalField>
           <ModalField

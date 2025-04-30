@@ -42,7 +42,6 @@ import {
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
-import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { EMAIL, LDAP } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom } from 'common/utils';
 import { InstancesList } from './instancesList';
@@ -192,12 +191,12 @@ export class InstancesSection extends Component {
     );
 
   createIntegration = (formData, metaData) => {
-    const { isGlobal, instanceType } = this.props;
+    const { isGlobal, instanceType, pluginDetails } = this.props;
     const updatedFormData = instanceType === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const data = {
       enabled: true,
       integrationParameters: updatedFormData,
-      name: updatedFormData.integrationName || PLUGIN_NAME_TITLES[instanceType],
+      name: updatedFormData.integrationName || pluginDetails.name,
     };
 
     this.props.addIntegrationAction(
@@ -214,6 +213,7 @@ export class InstancesSection extends Component {
       intl: { formatMessage },
       instanceType,
       tracking,
+      pluginDetails,
     } = this.props;
     tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType));
 
@@ -221,7 +221,7 @@ export class InstancesSection extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: PLUGIN_NAME_TITLES[instanceType] || instanceType,
+          pluginName: pluginDetails.name || instanceType,
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
@@ -310,7 +310,7 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isIntegrationsAllowed && (
+        {isIntegrationsAllowed && isEnabled && (
           <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>
@@ -323,7 +323,7 @@ export class InstancesSection extends Component {
                   onItemClick={onItemClick}
                   isGlobal={isGlobal}
                 />
-                {this.multiple && !disabled && isEnabled && (
+                {this.multiple && !disabled && (
                   <div className={cx('add-integration-button')}>
                     <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                       {formatMessage(messages.addIntegrationButtonTitle)}
@@ -357,7 +357,7 @@ export class InstancesSection extends Component {
                 {formatMessage(messages.noGlobalIntegrationMessage)}
               </p>
             )}
-            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && isEnabled && (
+            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
               <div className={cx('add-integration-button')}>
                 <GhostButton icon={PlusIcon} onClick={this.addIntegrationClickHandler}>
                   {formatMessage(messages.addIntegrationButtonTitle)}
