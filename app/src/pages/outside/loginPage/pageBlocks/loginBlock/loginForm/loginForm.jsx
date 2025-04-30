@@ -48,7 +48,7 @@ const LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION = 30;
 const messages = defineMessages({
   login: {
     id: 'LoginForm.loginPlaceholder',
-    defaultMessage: 'Login',
+    defaultMessage: 'Email',
   },
   password: {
     id: 'LoginForm.passwordPlaceholder',
