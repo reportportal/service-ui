@@ -27,7 +27,8 @@
     display: flex;
     gap: 24px;
 
-    .field-name, .field-url {
+    .field-name,
+    .field-url {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -62,11 +63,11 @@
     justify-content: flex-end;
     gap: 8px;
 
-    .cancel-button, .submit-button {
+    .cancel-button,
+    .submit-button {
       width: 90px;
       font-family: $FONT-REGULAR;
       font-size: 13px;
     }
   }
-
 }
