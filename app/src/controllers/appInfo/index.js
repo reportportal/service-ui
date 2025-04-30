@@ -18,6 +18,7 @@ export { appInfoReducer } from './reducer';
 export {
   fetchAppInfoAction,
   updateServerSettingsAction,
+  updateServerSettingsSuccessAction,
   updateExpirationSessionAction,
   updateServerFooterLinksAction,
 } from './actionCreators';
@@ -44,4 +45,5 @@ export {
   ANALYTICS_ALL_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_FOOTER_LINKS_KEY,
+  UPDATE_SERVER_SETTINGS_SUCCESS,
 } from './constants';

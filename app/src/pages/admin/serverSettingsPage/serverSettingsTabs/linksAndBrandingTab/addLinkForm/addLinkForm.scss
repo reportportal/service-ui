@@ -17,16 +17,23 @@
 .add-link-form {
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 16px;
   margin-top: 1rem;
   border: 1px solid $COLOR--gray-91;
   background: $COLOR--white-four;
-  gap: 16px;
+  gap: 20px;
 
   .form-fields {
     display: flex;
     gap: 24px;
+
+    .field-name, .field-url {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin: 0;
+      gap: 5px;
+    }
 
     .field-name {
       width: 233px;
@@ -38,8 +45,15 @@
     }
 
     .field-label {
-      font-family: $FONT-REGULAR;
-      width: 233px;
+      width: 100%;
+      text-align: start;
+      padding: 0;
+      line-height: 20px;
+    }
+
+    .field-wrapper {
+      width: 100%;
+      padding: 0;
     }
   }
 

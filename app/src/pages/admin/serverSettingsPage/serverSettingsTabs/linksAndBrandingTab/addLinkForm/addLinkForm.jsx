@@ -16,10 +16,8 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { FieldProvider } from 'components/fields';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import classNames from 'classnames/bind';
-import { FieldText } from 'componentLibrary/fieldText';
 import React from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { BigButton } from 'components/buttons/bigButton';
@@ -29,6 +27,8 @@ import { useDispatch } from 'react-redux';
 import { updateServerFooterLinksAction } from 'controllers/appInfo';
 import { email } from 'common/utils/validation/validate';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { FormField } from 'components/fields/formField';
+import { Input } from 'components/inputs/input';
 import styles from './addLinkForm.scss';
 
 const cx = classNames.bind(styles);
@@ -51,54 +51,47 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const handleAddLink = (values) => {
-    customLinks.push({ ...values, url: email(values.url) ? `mailto:${values.url}` : values.url });
+    const targetLink = { ...values, url: email(values.url) ? `mailto:${values.url}` : values.url };
+    dispatch(
+      updateServerFooterLinksAction([...customLinks, targetLink], () => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.addedFooterLinkSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          }),
+        );
 
-    try {
-      dispatch(updateServerFooterLinksAction(customLinks));
-      dispatch(
-        showNotification({
-          message: formatMessage(messages.addedFooterLinkSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        }),
-      );
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: formatMessage(COMMON_LOCALE_KEYS.SOMETHING_WENT_WRONG),
-          type: NOTIFICATION_TYPES.ERROR,
-        }),
-      );
-    }
-
-    onClose();
+        onClose();
+      }),
+    );
   };
   return (
     <form className={cx('add-link-form')} onSubmit={handleSubmit(handleAddLink)}>
       <div className={cx('form-fields')}>
-        <div className={cx('field-name')}>
-          <FieldProvider name="name">
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.linkName)}
-                defaultWidth={false}
-                isRequired
-                labelClassName={cx('field-label')}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
-        <div className={cx('field-url')}>
-          <FieldProvider name="url">
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.urlOrEmail)}
-                defaultWidth={false}
-                isRequired
-                labelClassName={cx('field-label')}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
+        <FormField
+          name="name"
+          label={formatMessage(messages.linkName)}
+          required
+          labelClassName={cx('field-label')}
+          containerClassName={cx('field-name')}
+          fieldWrapperClassName={cx('field-wrapper')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <Input displayError />
+          </FieldErrorHint>
+        </FormField>
+        <FormField
+          name="url"
+          label={formatMessage(messages.urlOrEmail)}
+          required
+          labelClassName={cx('field-label')}
+          containerClassName={cx('field-url')}
+          fieldWrapperClassName={cx('field-wrapper')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <Input displayError />
+          </FieldErrorHint>
+        </FormField>
       </div>
       <div className={cx('form-footer')}>
         <BigButton color={'gray-60'} onClick={onClose} className={cx('cancel-button')}>

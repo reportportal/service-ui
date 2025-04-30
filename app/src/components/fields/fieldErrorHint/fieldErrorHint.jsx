@@ -238,11 +238,11 @@ const messages = defineMessages({
     defaultMessage: "Link name should have a size from '3' to 30' characters",
   },
   footerLinkNameDuplicateHint: {
-    id: 'LinkIssueModal.footerLinkNameDuplicateHint',
+    id: 'FooterLink.footerLinkNameDuplicateHint',
     defaultMessage: 'Link with the same name already exists',
   },
   footerLinkURLDuplicateHint: {
-    id: 'LinkIssueModal.footerLinkURLDuplicateHint',
+    id: 'FooterLink.footerLinkURLDuplicateHint',
     defaultMessage: 'Link with the same URL or Email already exists',
   },
   footerLinkUrlHint: {

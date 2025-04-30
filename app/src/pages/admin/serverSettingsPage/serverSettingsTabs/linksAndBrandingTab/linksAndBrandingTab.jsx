@@ -79,22 +79,16 @@ export const LinksAndBrandingTab = () => {
   const dispatch = useDispatch();
   const handleDeleteLink = (linkName) => {
     const updatedLinks = customLinks.filter((link) => link.name !== linkName);
-    try {
-      dispatch(updateServerFooterLinksAction(updatedLinks));
-      dispatch(
-        showNotification({
-          message: formatMessage(messages.deleteFooterLinkSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        }),
-      );
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: error.message,
-          type: NOTIFICATION_TYPES.ERROR,
-        }),
-      );
-    }
+    dispatch(
+      updateServerFooterLinksAction(updatedLinks, () => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.deleteFooterLinkSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          }),
+        );
+      }),
+    );
   };
   const handleDeleteIconClick = (linkName) => {
     dispatch(

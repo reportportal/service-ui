@@ -63,7 +63,7 @@ export const authExtensionsSelector = (state) => uatInfoSelector(state).authExte
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
-  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || 86400000;
+  Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
 export const serverFooterLinksSelector = createSelector(
   extensionsConfigSelector,
   (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_FOOTER_LINKS_KEY] || `[]`),

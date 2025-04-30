@@ -45,32 +45,39 @@ export const Input = ({
   variant,
   style,
   title,
-}) => (
-  <input
-    ref={refFunction}
-    type={type}
-    style={style}
-    title={title}
-    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
-      'mobile-disabled': mobileDisabled,
-      disabled,
-      error,
-      touched,
-      readonly,
-      asyncValidating,
-    })}
-    value={value}
-    placeholder={placeholder}
-    maxLength={maxLength}
-    disabled={disabled}
-    readOnly={readonly}
-    onChange={onChange}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    onKeyUp={onKeyUp}
-    onKeyPress={onKeyPress}
-  />
-);
+  displayError,
+}) => {
+  const showError = displayError && error && touched;
+  return (
+    <>
+      <input
+        ref={refFunction}
+        type={type}
+        style={style}
+        title={title}
+        className={cx('input', `type-${type}`, className, `variant-${variant}`, {
+          'mobile-disabled': mobileDisabled,
+          disabled,
+          error,
+          touched,
+          readonly,
+          asyncValidating,
+        })}
+        value={value}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        disabled={disabled}
+        readOnly={readonly}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyUp={onKeyUp}
+        onKeyPress={onKeyPress}
+      />
+      {showError && <span className={cx('error-text')}>{error}</span>}
+    </>
+  );
+};
 
 Input.propTypes = {
   type: PropTypes.string,
@@ -93,6 +100,7 @@ Input.propTypes = {
   onKeyUp: PropTypes.func,
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
+  displayError: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -110,6 +118,7 @@ Input.defaultProps = {
   variant: VARIANT_STANDARD,
   style: {},
   title: '',
+  displayError: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
