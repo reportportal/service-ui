@@ -80,13 +80,16 @@ export const LinksAndBrandingTab = () => {
   const handleDeleteLink = (linkName) => {
     const updatedLinks = customLinks.filter((link) => link.name !== linkName);
     dispatch(
-      updateServerFooterLinksAction(updatedLinks, () => {
-        dispatch(
-          showNotification({
-            message: formatMessage(messages.deleteFooterLinkSuccess),
-            type: NOTIFICATION_TYPES.SUCCESS,
-          }),
-        );
+      updateServerFooterLinksAction({
+        footerLinks: updatedLinks,
+        onSuccess: () => {
+          dispatch(
+            showNotification({
+              message: formatMessage(messages.deleteFooterLinkSuccess),
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+        },
       }),
     );
   };

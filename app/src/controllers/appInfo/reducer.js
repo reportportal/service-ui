@@ -16,11 +16,11 @@
 
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils';
-import { APP_INFO_NAMESPACE, UPDATE_SERVER_SETTINGS_SUCCESS } from './constants';
+import { APP_INFO_NAMESPACE, UPDATE_API_EXTENSIONS_RESULT } from './constants';
 
-const serverSettingsReducer = (state = {}, { type, payload }) => {
+const apiExtensionResultReducer = (state = {}, { type, payload }) => {
   switch (type) {
-    case UPDATE_SERVER_SETTINGS_SUCCESS:
+    case UPDATE_API_EXTENSIONS_RESULT:
       return {
         ...state,
         api: {
@@ -41,5 +41,5 @@ const serverSettingsReducer = (state = {}, { type, payload }) => {
 
 export const appInfoReducer = queueReducers(
   fetchReducer(APP_INFO_NAMESPACE, { initialState: {} }),
-  serverSettingsReducer,
+  apiExtensionResultReducer,
 );

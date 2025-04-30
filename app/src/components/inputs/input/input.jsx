@@ -45,39 +45,32 @@ export const Input = ({
   variant,
   style,
   title,
-  displayError,
-}) => {
-  const showError = displayError && error && touched;
-  return (
-    <>
-      <input
-        ref={refFunction}
-        type={type}
-        style={style}
-        title={title}
-        className={cx('input', `type-${type}`, className, `variant-${variant}`, {
-          'mobile-disabled': mobileDisabled,
-          disabled,
-          error,
-          touched,
-          readonly,
-          asyncValidating,
-        })}
-        value={value}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        disabled={disabled}
-        readOnly={readonly}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyUp={onKeyUp}
-        onKeyPress={onKeyPress}
-      />
-      {showError && <span className={cx('error-text')}>{error}</span>}
-    </>
-  );
-};
+}) => (
+  <input
+    ref={refFunction}
+    type={type}
+    style={style}
+    title={title}
+    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
+      'mobile-disabled': mobileDisabled,
+      disabled,
+      error,
+      touched,
+      readonly,
+      asyncValidating,
+    })}
+    value={value}
+    placeholder={placeholder}
+    maxLength={maxLength}
+    disabled={disabled}
+    readOnly={readonly}
+    onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    onKeyUp={onKeyUp}
+    onKeyPress={onKeyPress}
+  />
+);
 
 Input.propTypes = {
   type: PropTypes.string,

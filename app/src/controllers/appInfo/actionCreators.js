@@ -21,7 +21,7 @@ import {
   UPDATE_EXPIRATION_SESSION,
   UPDATE_SERVER_FOOTER_LINKS,
   UPDATE_SERVER_SETTINGS,
-  UPDATE_SERVER_SETTINGS_SUCCESS,
+  UPDATE_API_EXTENSIONS_RESULT,
 } from './constants';
 
 export const fetchAppInfoAction = () =>
@@ -35,7 +35,7 @@ export const updateServerSettingsAction = (settings) => ({
 });
 
 export const updateServerSettingsSuccessAction = (settings) => ({
-  type: UPDATE_SERVER_SETTINGS_SUCCESS,
+  type: UPDATE_API_EXTENSIONS_RESULT,
   payload: settings,
 });
 
@@ -44,7 +44,7 @@ export const updateExpirationSessionAction = ({ expiration, onSuccess = () => {}
   payload: { expiration, onSuccess },
 });
 
-export const updateServerFooterLinksAction = (footerLinks, onSuccess = () => {}) => ({
+export const updateServerFooterLinksAction = ({ footerLinks, onSuccess = () => {} }) => ({
   type: UPDATE_SERVER_FOOTER_LINKS,
   payload: { footerLinks, onSuccess },
 });

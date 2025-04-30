@@ -53,15 +53,17 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
   const handleAddLink = (values) => {
     const targetLink = { ...values, url: email(values.url) ? `mailto:${values.url}` : values.url };
     dispatch(
-      updateServerFooterLinksAction([...customLinks, targetLink], () => {
-        dispatch(
-          showNotification({
-            message: formatMessage(messages.addedFooterLinkSuccess),
-            type: NOTIFICATION_TYPES.SUCCESS,
-          }),
-        );
-
-        onClose();
+      updateServerFooterLinksAction({
+        footerLinks: [...customLinks, targetLink],
+        onSuccess: () => {
+          dispatch(
+            showNotification({
+              message: formatMessage(messages.addedFooterLinkSuccess),
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+          onClose();
+        },
       }),
     );
   };
@@ -76,8 +78,8 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
           containerClassName={cx('field-name')}
           fieldWrapperClassName={cx('field-wrapper')}
         >
-          <FieldErrorHint provideHint={false}>
-            <Input displayError />
+          <FieldErrorHint>
+            <Input />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -88,8 +90,8 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
           containerClassName={cx('field-url')}
           fieldWrapperClassName={cx('field-wrapper')}
         >
-          <FieldErrorHint provideHint={false}>
-            <Input displayError />
+          <FieldErrorHint>
+            <Input />
           </FieldErrorHint>
         </FormField>
       </div>
