@@ -249,6 +249,10 @@ const messages = defineMessages({
     id: 'FooterLink.footerLinkUrlHint',
     defaultMessage: 'Please provide a valid URL or Email',
   },
+  footerLinkURLLengthHint: {
+    id: 'FooterLink.footerLinkURLLengthHint',
+    defaultMessage: 'URL or Email should have size not more than 1024 symbols',
+  },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',
     defaultMessage: 'Duplicated column names are prohibited',

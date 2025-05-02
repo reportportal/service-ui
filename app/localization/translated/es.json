@@ -888,6 +888,7 @@
   "Footer.slack": "Charla con nosotros en Slack",
   "FooterLink.footerLinkNameLengthHint": "Link name should have a size from '3' to 30' characters",
   "FooterLink.footerLinkUrlHint": "Please provide a valid URL or Email",
+  "FooterLink.footerLinkURLLengthHint": "URL or Email should have size not more than 1024 symbols",
   "ForceUpdateModal.additionalText": "Por favor, vuelva a iniciar sesión para aplicar los cambios.",
   "ForceUpdateModal.header": "¡Atención!",
   "ForceUpdateModal.relogin": "Volver a iniciar sesión",

@@ -119,6 +119,7 @@ export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3, 30)]);
+export const footerLinkUrlLength = maxLength(1024);
 export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
 export const urlOrEmailValidator = (value) => email(value) || url(value);
 export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {

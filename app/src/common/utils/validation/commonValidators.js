@@ -86,6 +86,7 @@ export const createFooterLinkURLValidator = (links) =>
   composeBoundValidators([
     requiredField,
     bindMessageToValidator(validate.urlOrEmailValidator, 'footerLinkUrlHint'),
+    bindMessageToValidator(validate.footerLinkUrlLength, 'footerLinkURLLengthHint'),
     bindMessageToValidator(validate.isUniqueByKey(links, 'url'), 'footerLinkURLDuplicateHint'),
   ]);
 
