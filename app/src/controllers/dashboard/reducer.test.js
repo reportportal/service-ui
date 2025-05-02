@@ -50,6 +50,7 @@ describe('dashboard reducer', () => {
     expect(newState).toEqual({
       ...oldState,
       dashboards: [...oldState.dashboards, payload],
+      activeDashboardItem: payload,
     });
   });
 
@@ -66,6 +67,7 @@ describe('dashboard reducer', () => {
     expect(newState).toEqual({
       ...oldState,
       dashboards: [{ id: 0 }],
+      activeDashboardItem: {},
     });
   });
 
@@ -82,6 +84,7 @@ describe('dashboard reducer', () => {
     expect(newState).toEqual({
       ...oldState,
       dashboards: [{ id: 0 }, payload],
+      activeDashboardItem: payload,
     });
   });
 
