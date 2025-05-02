@@ -24,6 +24,7 @@ export const dashboardItemPropTypes = PropTypes.shape({
 
 export const INITIAL_STATE = {
   dashboards: [],
+  activeDashboardItem: {},
   gridType: '',
   fullScreenMode: false,
   loading: false,
