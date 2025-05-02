@@ -887,6 +887,7 @@
   "Footer.slack": "在Slack上与我们沟通",
   "FooterLink.footerLinkNameLengthHint": "Link name should have a size from '3' to 30' characters",
   "FooterLink.footerLinkUrlHint": "Please provide a valid URL or Email",
+  "FooterLink.footerLinkURLLengthHint": "URL or Email should have size not more than 1024 symbols",
   "ForceUpdateModal.additionalText": "请重新登录以应用更改！",
   "ForceUpdateModal.header": "警告！",
   "ForceUpdateModal.relogin": "重新登录",

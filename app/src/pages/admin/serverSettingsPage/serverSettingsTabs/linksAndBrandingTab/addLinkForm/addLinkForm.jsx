@@ -91,7 +91,7 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
           fieldWrapperClassName={cx('field-wrapper')}
         >
           <FieldErrorHint>
-            <Input />
+            <Input maxLength={Infinity} />
           </FieldErrorHint>
         </FormField>
       </div>

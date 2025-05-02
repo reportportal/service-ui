@@ -645,7 +645,6 @@ describe('validate.footerLinkNameLength', () => {
   test('validation should be correct', () => {
     expect(validate.footerLinkNameLength('abc')).toBe(true);
     expect(validate.footerLinkNameLength('footer link name')).toBe(true);
-    expect(validate.footerLinkNameLength('a'.repeat(30))).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.footerLinkNameLength(undefined)).toBe(false);
@@ -654,6 +653,7 @@ describe('validate.footerLinkNameLength', () => {
     expect(validate.footerLinkNameLength('  ')).toBe(false);
     const textLonger30 = 'longlonglonglonglonglonglonglonglong';
     expect(validate.footerLinkNameLength(textLonger30)).toBe(false);
+    expect(validate.footerLinkNameLength('aa'.repeat(30))).toBe(false);
   });
 });
 

@@ -888,6 +888,7 @@
   "Footer.slack": "Поспілкуйтеся з нами на слабину",
   "FooterLink.footerLinkNameLengthHint": "Назва посилання повинна містити від 3 до 30 символів",
   "FooterLink.footerLinkUrlHint": "Будь ласка, введіть правильний URL або Ел. пошту",
+  "FooterLink.footerLinkURLLengthHint": "URL or Ел. пошта повинні мати розмір не більше ніж 1024 символи",
   "ForceUpdateModal.additionalText": "Будь ласка, авторизуйтеся заново, щоб застосувати зміни!",
   "ForceUpdateModal.header": "Увага!",
   "ForceUpdateModal.relogin": "Аторизуйтесь заново",

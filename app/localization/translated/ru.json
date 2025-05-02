@@ -888,6 +888,7 @@
   "Footer.slack": "Пообщайтесь с нами на Slack",
   "FooterLink.footerLinkNameLengthHint": "Название ссылки должно содержать от 3 до 30 символов",
   "FooterLink.footerLinkUrlHint": "Пожалуйста, укажите правильный URL или Эл. почту",
+  "FooterLink.footerLinkURLLengthHint": "URL or Эл. почта должны иметь размер не более 1024 символов",
   "ForceUpdateModal.additionalText": "Пожалуйста, авторизуйтесь заново, чтобы применить изменения!",
   "ForceUpdateModal.header": "Внимание!",
   "ForceUpdateModal.relogin": "Аторизуйтесь заново",
