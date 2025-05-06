@@ -34,8 +34,8 @@ const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url
 
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
-
-  dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
+  dataPhoto: (userId, at, loadThumbnail) =>
+    `${urlCommonBase}users/${userId}/avatar${getQueryParams({ at, loadThumbnail })}`,
   userAvatar: (userId, thumbnail, timestamp) =>
     `${urlCommonBase}users/${userId}/avatar${getQueryParams({ thumbnail, ts: timestamp })}`,
 
