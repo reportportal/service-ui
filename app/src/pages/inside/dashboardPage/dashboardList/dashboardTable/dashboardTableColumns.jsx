@@ -142,14 +142,14 @@ export const DuplicateColumn = track()(
             <i className={cx('arrow', { opened })} />
             {opened && (
               <div className={cx('duplicate-menu', 'shown')}>
-                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
-                  {intl.formatMessage(messages.duplicate)}
-                </button>
                 {canWorkWithDashboard(userRoles) && (
-                  <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
-                    {intl.formatMessage(messages.copyConfig)}
+                  <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
+                    {intl.formatMessage(messages.duplicate)}
                   </button>
                 )}
+                <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                  {intl.formatMessage(messages.copyConfig)}
+                </button>
               </div>
             )}
           </button>
