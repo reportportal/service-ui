@@ -41,6 +41,7 @@ export const PRIVACY_POLICY_LINK = {
   name: 'Privacy Policy',
   url: referenceDictionary.rpEpamPolicy,
 };
+const MAX_HEIGHT_ONE_LINE = 35;
 
 export const Footer = ({ className = '' }) => {
   const buildVersion = useSelector(uiBuildVersionSelector);
@@ -57,7 +58,7 @@ export const Footer = ({ className = '' }) => {
   useEffect(() => {
     const checkIsSingleLine = () => {
       if (footerRef.current) {
-        setIsSingleLine(footerRef.current.offsetHeight <= 35);
+        setIsSingleLine(footerRef.current.offsetHeight <= MAX_HEIGHT_ONE_LINE);
       }
     };
     checkIsSingleLine();
