@@ -21,8 +21,6 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { serverFooterLinksSelector, uiBuildVersionSelector } from 'controllers/appInfo';
-import { instanceTypeSelector } from 'controllers/appInfo/selectors';
-import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './footer.scss';
@@ -39,21 +37,12 @@ export const DEFAULT_FOOTER_LINKS = [
   },
 ];
 
-export const PRIVACY_POLICY_LINK = {
-  name: 'Privacy Policy',
-  url: referenceDictionary.rpEpamPolicy,
-};
 const MAX_HEIGHT_ONE_LINE = 35;
 
 export const Footer = ({ className = '', isPreview = false }) => {
   const buildVersion = useSelector(uiBuildVersionSelector);
-  const instanceType = useSelector(instanceTypeSelector);
   const customLinks = useSelector(serverFooterLinksSelector);
-  const links = [
-    ...DEFAULT_FOOTER_LINKS,
-    ...customLinks,
-    ...(instanceType === EPAM || instanceType === SAAS ? [PRIVACY_POLICY_LINK] : []),
-  ];
+  const links = [...DEFAULT_FOOTER_LINKS, ...customLinks];
   const footerRef = useRef(null);
   const [isSingleLine, setIsSingleLine] = useState(true);
   const { trackEvent } = useTracking();

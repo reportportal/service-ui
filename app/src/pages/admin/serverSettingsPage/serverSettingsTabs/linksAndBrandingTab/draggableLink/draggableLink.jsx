@@ -26,7 +26,7 @@ import styles from '../linksAndBrandingTab.scss';
 
 const cx = classNames.bind(styles);
 const FOOTER_LINK_DRAG_SOURCE_TYPE = 'FOOTER_LINK';
-export const DraggableLink = ({ item, onDrop, handleDeleteIconClick, disabled, disabledTitle }) => {
+export const DraggableLink = ({ item, onDrop, onDelete, disabled, disabledTitle }) => {
   const [isDragging, setIsDragging] = useState(false);
   const { trackEvent } = useTracking();
   const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
@@ -86,7 +86,7 @@ export const DraggableLink = ({ item, onDrop, handleDeleteIconClick, disabled, d
         <Icon
           type="icon-delete"
           className={cx('icon-delete')}
-          onClick={() => handleDeleteIconClick(item.name)}
+          onClick={() => onDelete(item.name)}
         />
       )}
       <DragControl
@@ -109,7 +109,7 @@ DraggableLink.propTypes = {
     index: PropTypes.number.isRequired,
   }).isRequired,
   onDrop: PropTypes.func.isRequired,
-  handleDeleteIconClick: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   disabledTitle: PropTypes.string,
 };

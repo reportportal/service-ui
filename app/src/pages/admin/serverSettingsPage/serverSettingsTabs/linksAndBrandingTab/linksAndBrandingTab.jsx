@@ -18,18 +18,13 @@ import { SectionHeader } from 'components/main/sectionHeader';
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { Footer, DEFAULT_FOOTER_LINKS, PRIVACY_POLICY_LINK } from 'layouts/common/footer';
+import { Footer, DEFAULT_FOOTER_LINKS } from 'layouts/common/footer';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  serverFooterLinksSelector,
-  updateServerFooterLinksAction,
-  instanceTypeSelector,
-} from 'controllers/appInfo';
+import { serverFooterLinksSelector, updateServerFooterLinksAction } from 'controllers/appInfo';
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import DOMPurify from 'dompurify';
-import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -83,7 +78,6 @@ const MAX_LINKS_COUNT = 5;
 export const LinksAndBrandingTab = () => {
   const { formatMessage } = useIntl();
   const customLinks = useSelector(serverFooterLinksSelector);
-  const instanceType = useSelector(instanceTypeSelector);
   const [isAddLinkFormVisible, setIsAddLinkFormVisible] = useState(false);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -172,12 +166,6 @@ export const LinksAndBrandingTab = () => {
                 <div className={cx('link-item-url')}>{link.url}</div>
               </div>
             ))}
-            {(instanceType === EPAM || instanceType === SAAS) && (
-              <div className={cx('link-item')}>
-                <div className={cx('link-item-name')}>{PRIVACY_POLICY_LINK.name}</div>
-                <div className={cx('link-item-url')}>{PRIVACY_POLICY_LINK.url}</div>
-              </div>
-            )}
           </div>
           <div className={cx('custom-links')}>
             {customLinks.slice(0, MAX_LINKS_COUNT).map((link, index) => (
@@ -185,7 +173,7 @@ export const LinksAndBrandingTab = () => {
                 key={link.name}
                 item={{ ...link, index }}
                 onDrop={handleLinkDrop}
-                handleDeleteIconClick={handleDeleteIconClick}
+                onDelete={handleDeleteIconClick}
                 disabled={customLinks.length === 1}
                 disabledTitle={formatMessage(messages.disabledOrderChange)}
               />

@@ -15,14 +15,11 @@
  */
 
 
-////////////////////////////
 @mixin drawDropArea {
   content: '';
   position: absolute;
-  //width: calc(100% - 80px);
   width: 100%;
   left: 0;
-  //height: 2px;
   border-radius: 2px;
 }
 
@@ -88,6 +85,7 @@
         flex: 1;
         display: flex;
         gap: 24px;
+        max-width: calc(100% - 84px);
 
         &.is-dragging {
           width: 300px;
