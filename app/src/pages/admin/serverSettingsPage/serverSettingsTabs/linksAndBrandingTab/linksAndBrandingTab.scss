@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
+
+////////////////////////////
+@mixin drawDropArea {
+  content: '';
+  position: absolute;
+  //width: calc(100% - 80px);
+  width: 100%;
+  left: 0;
+  //height: 2px;
+  border-radius: 2px;
+}
+
+
 .links-and-branding-tab {
   max-width: 850px;
   padding-left: 65px;
@@ -68,6 +81,35 @@
       display: flex;
       gap: 24px;
       align-items: center;
+      position: relative;
+      justify-content: flex-end;
+
+      .content {
+        flex: 1;
+        display: flex;
+        gap: 24px;
+
+        &.is-dragging {
+          width: 300px;
+          flex: 0;
+
+          .link-item-name {
+            width: max-content;
+          }
+        }
+      }
+
+      &.drop-target-top::after {
+        @include drawDropArea;
+        top: 0;
+        border-top: 2px solid $COLOR--topaz-focused;
+      }
+
+      &.drop-target-bottom::after {
+        @include drawDropArea;
+        bottom: 0;
+        border-bottom: 2px solid $COLOR--topaz-focused;
+      }
 
       .link-item-name,
       .link-item-url {

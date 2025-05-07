@@ -25,14 +25,15 @@ import {
   updateServerFooterLinksAction,
   instanceTypeSelector,
 } from 'controllers/appInfo';
-import { DragControl } from 'pages/inside/projectSettingsPageContainer/content/elements/ruleList/ruleItem/draggable/dragControl';
-import { Icon } from 'components/main/icon';
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import DOMPurify from 'dompurify';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { useTracking } from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { DraggableLink } from './draggableLink';
 import { AddLinkForm } from './addLinkForm';
 import styles from './linksAndBrandingTab.scss';
 
@@ -67,6 +68,14 @@ const messages = defineMessages({
     id: 'LinksAndBrandingTab.deleteFooterLinkSuccess',
     defaultMessage: 'The link has been deleted successfully',
   },
+  orderChangedSuccessfully: {
+    id: 'LinksAndBrandingTab.orderChangedSuccessfully',
+    defaultMessage: 'The links order has been changed successfully',
+  },
+  disabledOrderChange: {
+    id: 'LinksAndBrandingTab.disabledOrderChange',
+    defaultMessage: 'Add at least one more link to change the order',
+  },
 });
 
 const MAX_LINKS_COUNT = 5;
@@ -77,7 +86,9 @@ export const LinksAndBrandingTab = () => {
   const instanceType = useSelector(instanceTypeSelector);
   const [isAddLinkFormVisible, setIsAddLinkFormVisible] = useState(false);
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const handleDeleteLink = (linkName) => {
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.onDeleteFooterLink(linkName));
     const updatedLinks = customLinks.filter((link) => link.name !== linkName);
     dispatch(
       updateServerFooterLinksAction({
@@ -113,10 +124,30 @@ export const LinksAndBrandingTab = () => {
   };
 
   const handleAddLinkButtonClick = () => {
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ADD_NEW_FOOTER_LINK);
     setIsAddLinkFormVisible(!isAddLinkFormVisible);
   };
   const handleAddLinkFormClose = () => {
     setIsAddLinkFormVisible(false);
+  };
+
+  const handleLinkDrop = (fromIndex, toIndex) => {
+    const updatedLinks = [...customLinks];
+    updatedLinks.splice(fromIndex, 1);
+    updatedLinks.splice(toIndex, 0, customLinks[fromIndex]);
+    dispatch(
+      updateServerFooterLinksAction({
+        footerLinks: updatedLinks,
+        onSuccess: () => {
+          dispatch(
+            showNotification({
+              message: formatMessage(messages.orderChangedSuccessfully),
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+        },
+      }),
+    );
   };
 
   return (
@@ -129,7 +160,7 @@ export const LinksAndBrandingTab = () => {
           {formatMessage(messages.previewDescription)}
         </div>
         <div className={cx('preview-block')}>
-          <Footer className={cx('preview-footer')} />
+          <Footer className={cx('preview-footer')} isPreview />
         </div>
       </div>
       <div className={cx('links-panel')}>
@@ -149,19 +180,15 @@ export const LinksAndBrandingTab = () => {
             )}
           </div>
           <div className={cx('custom-links')}>
-            {customLinks.slice(0, MAX_LINKS_COUNT).map((link) => (
-              <div key={link.name} className={cx('link-item')}>
-                <div className={cx('link-item-name')}>{link.name}</div>
-                <div className={cx('link-item-url')}>
-                  {link.url.startsWith('mailto:') ? link.url.slice(7) : link.url}
-                </div>
-                <Icon
-                  type="icon-delete"
-                  className={cx('icon-delete')}
-                  onClick={() => handleDeleteIconClick(link.name)}
-                />
-                <DragControl />
-              </div>
+            {customLinks.slice(0, MAX_LINKS_COUNT).map((link, index) => (
+              <DraggableLink
+                key={link.name}
+                item={{ ...link, index }}
+                onDrop={handleLinkDrop}
+                handleDeleteIconClick={handleDeleteIconClick}
+                disabled={customLinks.length === 1}
+                disabledTitle={formatMessage(messages.disabledOrderChange)}
+              />
             ))}
           </div>
         </div>

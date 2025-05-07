@@ -29,6 +29,8 @@ import { email } from 'common/utils/validation/validate';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { FormField } from 'components/fields/formField';
 import { Input } from 'components/inputs/input';
+import { useTracking } from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addLinkForm.scss';
 
 const cx = classNames.bind(styles);
@@ -49,9 +51,12 @@ const messages = defineMessages({
 
 const AddLink = ({ onClose, handleSubmit, customLinks }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const handleAddLink = (values) => {
     const targetLink = { ...values, url: email(values.url) ? `mailto:${values.url}` : values.url };
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SAVE_NEW_FOOTER_LINK);
+
     dispatch(
       updateServerFooterLinksAction({
         footerLinks: [...customLinks, targetLink],

@@ -23,6 +23,8 @@ import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { serverFooterLinksSelector, uiBuildVersionSelector } from 'controllers/appInfo';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
+import { useTracking } from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
@@ -43,7 +45,7 @@ export const PRIVACY_POLICY_LINK = {
 };
 const MAX_HEIGHT_ONE_LINE = 35;
 
-export const Footer = ({ className = '' }) => {
+export const Footer = ({ className = '', isPreview = false }) => {
   const buildVersion = useSelector(uiBuildVersionSelector);
   const instanceType = useSelector(instanceTypeSelector);
   const customLinks = useSelector(serverFooterLinksSelector);
@@ -54,7 +56,7 @@ export const Footer = ({ className = '' }) => {
   ];
   const footerRef = useRef(null);
   const [isSingleLine, setIsSingleLine] = useState(true);
-
+  const { trackEvent } = useTracking();
   useEffect(() => {
     const checkIsSingleLine = () => {
       if (footerRef.current) {
@@ -65,7 +67,9 @@ export const Footer = ({ className = '' }) => {
     window.addEventListener('resize', checkIsSingleLine);
     return () => window.removeEventListener('resize', checkIsSingleLine);
   }, [customLinks]);
-
+  const handleLinkClick = (linkName) => {
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.onClickFooterLink(linkName, isPreview));
+  };
   return (
     <footer className={cx('footer', { 'one-line': isSingleLine }, className)} ref={footerRef}>
       <div className={cx('text-wrapper')}>
@@ -80,7 +84,12 @@ export const Footer = ({ className = '' }) => {
       </div>
       <div className={cx('footer-links', { 'one-line': isSingleLine })}>
         {links.map((link) => (
-          <a key={link.name} href={link.url} target="_blank">
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            onClick={() => handleLinkClick(link.name)}
+          >
             {link.name}
           </a>
         ))}
@@ -91,4 +100,5 @@ export const Footer = ({ className = '' }) => {
 
 Footer.propTypes = {
   className: PropTypes.string,
+  isPreview: PropTypes.bool,
 };
