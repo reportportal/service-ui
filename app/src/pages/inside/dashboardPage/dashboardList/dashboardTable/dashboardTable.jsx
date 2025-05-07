@@ -120,28 +120,6 @@ export class DashboardTable extends Component {
         },
         align: ALIGN_CENTER,
       },
-      {
-        title: {
-          full: intl.formatMessage(messages.edit),
-          short: intl.formatMessage(messages.edit),
-        },
-        component: EditColumn,
-        customProps: {
-          onEdit: onEditItem,
-        },
-        align: ALIGN_CENTER,
-      },
-      {
-        title: {
-          full: intl.formatMessage(messages.deleteDashboard),
-          short: intl.formatMessage(messages.deleteDashboard),
-        },
-        component: DeleteColumn,
-        customProps: {
-          onDelete: onDeleteItem,
-        },
-        align: ALIGN_CENTER,
-      },
     ];
 
     if (canWorkWithDashboard(userRoles)) {
