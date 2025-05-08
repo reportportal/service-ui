@@ -90,6 +90,7 @@ export class ServerSettingsTabs extends Component {
       link: this.createTabLink(LINKS_AND_BRANDING),
       component: <LinksAndBrandingTab />,
       mobileDisabled: true,
+      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.LINKS_AND_BRANDING_TAB,
     },
   });
 

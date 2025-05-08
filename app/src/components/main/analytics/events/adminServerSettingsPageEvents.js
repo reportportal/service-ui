@@ -28,6 +28,13 @@ export const submitAnalyticsBtn = (status) => ({
   status,
 });
 
+const DEFAULT_FOOTER_LINK_NAMES = [
+  'Contact us',
+  'Privacy Policy',
+  'Documentation',
+  'Slack Channel',
+];
+
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
   toggleSsoUsers: (switcherValue) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
@@ -39,10 +46,40 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'session_inactivity_timeout',
     condition,
   }),
+  LINKS_AND_BRANDING_TAB: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'links_branding',
+  },
   ANALYTICS_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'analytics',
   },
+  ADD_NEW_FOOTER_LINK: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    icon_name: 'add_new_link',
+    place: 'section_footer_links',
+  },
+  SAVE_NEW_FOOTER_LINK: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'save',
+    place: 'section_footer_links',
+  },
+  DRAG_END_FOOTER_LINK: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    place: 'section_footer_links',
+    icon_name: 'drag_link',
+  },
+  onDeleteFooterLink: (linkName) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'delete',
+    place: 'section_footer_links',
+    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
+  }),
+  onClickFooterLink: (linkName, isPreview) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    place: isPreview ? 'preview_footer' : 'footer',
+    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
+  }),
   // GA3 events
   AUTHORIZATION_CONFIGURATION_TAB: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
