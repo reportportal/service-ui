@@ -78,7 +78,7 @@ export const DraggableLink = ({ item, onDrop, onDelete, disabled, disabledTitle 
     >
       <div className={cx('content', { 'is-dragging': isDragging })}>
         <div className={cx('link-item-name')}>{item.name}</div>
-        <div className={cx('link-item-url')}>
+        <div className={cx('link-item-url')} title={item.url}>
           {item.url.startsWith('mailto:') ? item.url.slice(7) : item.url}
         </div>
       </div>
