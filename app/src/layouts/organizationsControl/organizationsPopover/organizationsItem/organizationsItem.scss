@@ -149,3 +149,14 @@
     color: $COLOR--darkmode-gray-100;
   }
 }
+
+.no-project-assignments {
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--darkmode-gray-150;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.tooltip {
+  margin-left: 4px;
+}

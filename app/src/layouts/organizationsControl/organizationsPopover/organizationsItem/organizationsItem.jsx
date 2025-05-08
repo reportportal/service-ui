@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Tooltip } from '@reportportal/ui-kit';
 import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { useTracking } from 'react-tracking';
@@ -27,7 +28,6 @@ import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
 import { ProjectItem } from './projectItem';
-import { OrganizationsItemContentHeaderWithTooltip } from './organizationsItemContentHeaderWithTooltip';
 import styles from './organizationsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -36,6 +36,10 @@ const messages = defineMessages({
   open: {
     id: 'OrganizationsItem.open',
     defaultMessage: 'open',
+  },
+  noProjectAssignments: {
+    id: 'OrganizationsItem.noProjectAssignments',
+    defaultMessage: 'No project assignments',
   },
 });
 
@@ -141,6 +145,8 @@ export const OrganizationsItem = ({
     </div>
   );
 
+  const tooltipRoot = document.getElementById('tooltip-root');
+
   return (
     <div ref={organizationItemRef} className={cx('organization-item')}>
       <button
@@ -150,9 +156,19 @@ export const OrganizationsItem = ({
         tabIndex={-1}
       >
         {isDisabled ? (
-          <OrganizationsItemContentHeaderWithTooltip>
+          <Tooltip
+            content={
+              <div className={cx('no-project-assignments')}>
+                {formatMessage(messages.noProjectAssignments)}
+              </div>
+            }
+            tooltipClassName={cx('tooltip')}
+            portalRoot={tooltipRoot}
+            isFloating={false}
+            placement={'right'}
+          >
             {getOrganizationItemContentHeader()}
-          </OrganizationsItemContentHeaderWithTooltip>
+          </Tooltip>
         ) : (
           getOrganizationItemContentHeader()
         )}
