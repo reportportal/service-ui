@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import {
   AUTHORIZATION_CONFIGURATION,
@@ -25,7 +26,10 @@ import {
   LINKS_AND_BRANDING,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
-import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  getServerSettingsPageViewEvent,
+  ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
+} from 'components/main/analytics/events/adminServerSettingsPageEvents';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { AnalyticsTab } from './analyticsTab';
 import { LinksAndBrandingTab } from './linksAndBrandingTab';
@@ -45,61 +49,68 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    activeTab: settingsTabSelector(state),
-  }),
-  {
-    onChangeTab: (linkAction) => linkAction,
-  },
-)
-@injectIntl
-export class ServerSettingsTabs extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    activeTab: PropTypes.string,
-    onChangeTab: PropTypes.func,
-  };
-  static defaultProps = {
-    activeTab: AUTHORIZATION_CONFIGURATION,
-    onChangeTab: () => {},
-  };
+const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
+  const { trackEvent } = useTracking();
 
-  createTabLink = (tabName) => ({
+  useEffect(() => {
+    if (activeTab) {
+      trackEvent(getServerSettingsPageViewEvent(activeTab));
+    }
+  }, [activeTab, trackEvent]);
+
+  const createTabLink = (tabName) => ({
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: tabName },
   });
 
-  createTabsConfig = () => ({
+  const createTabsConfig = () => ({
     [AUTHORIZATION_CONFIGURATION]: {
-      name: this.props.intl.formatMessage(messages.authConfiguration),
-      link: this.createTabLink(AUTHORIZATION_CONFIGURATION),
+      name: intl.formatMessage(messages.authConfiguration),
+      link: createTabLink(AUTHORIZATION_CONFIGURATION),
       component: <AuthConfigurationTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.AUTHORIZATION_CONFIGURATION_TAB,
     },
     [ANALYTICS]: {
-      name: this.props.intl.formatMessage(messages.statistics),
-      link: this.createTabLink(ANALYTICS),
+      name: intl.formatMessage(messages.statistics),
+      link: createTabLink(ANALYTICS),
       component: <AnalyticsTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ANALYTICS_TAB,
     },
     [LINKS_AND_BRANDING]: {
-      name: this.props.intl.formatMessage(messages.linksAndBranding),
-      link: this.createTabLink(LINKS_AND_BRANDING),
+      name: intl.formatMessage(messages.linksAndBranding),
+      link: createTabLink(LINKS_AND_BRANDING),
       component: <LinksAndBrandingTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.LINKS_AND_BRANDING_TAB,
     },
   });
 
-  render = () => (
+  return (
     <NavigationTabs
-      config={this.createTabsConfig()}
-      activeTab={this.props.activeTab}
-      onChangeTab={this.props.onChangeTab}
+      config={createTabsConfig()}
+      activeTab={activeTab}
+      onChangeTab={onChangeTab}
       mobileDisabled
     />
   );
-}
+};
+ServerSettingsTabs.propTypes = {
+  intl: PropTypes.object.isRequired,
+  activeTab: PropTypes.string,
+  onChangeTab: PropTypes.func,
+};
+ServerSettingsTabs.defaultProps = {
+  activeTab: AUTHORIZATION_CONFIGURATION,
+  onChangeTab: () => {},
+};
+
+export const ServerSettingsTabsWrapper = connect(
+  (state) => ({
+    activeTab: settingsTabSelector(state),
+  }),
+  {
+    onChangeTab: (linkAction) => linkAction,
+  },
+)(injectIntl(ServerSettingsTabs));

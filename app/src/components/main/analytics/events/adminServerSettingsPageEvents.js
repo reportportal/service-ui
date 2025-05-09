@@ -37,6 +37,12 @@ const DEFAULT_FOOTER_LINK_NAMES = [
   'EPAM',
 ];
 
+export const getServerSettingsPageViewEvent = (activeTab) => ({
+  action: 'pageview',
+  page: ADMIN_SERVER_SETTINGS_PAGE,
+  place: `${ADMIN_SERVER_SETTINGS_PAGE}_${activeTab.toLowerCase()}`,
+});
+
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
   toggleSsoUsers: (switcherValue) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
