@@ -29,10 +29,12 @@ export const submitAnalyticsBtn = (status) => ({
 });
 
 const DEFAULT_FOOTER_LINK_NAMES = [
+  'Fork us on GitHub',
   'Contact us',
   'Privacy Policy',
   'Documentation',
-  'Slack Channel',
+  'Chat with us on Slack',
+  'EPAM',
 ];
 
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
@@ -46,9 +48,13 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'session_inactivity_timeout',
     condition,
   }),
+  AUTHORIZATION_CONFIGURATION_TAB: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'auth_configuration',
+  },
   LINKS_AND_BRANDING_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
-    element_name: 'links_branding',
+    element_name: 'links_and_branding',
   },
   ANALYTICS_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
@@ -78,14 +84,9 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
   onClickFooterLink: (linkName, isPreview) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
     place: isPreview ? 'preview_footer' : 'footer',
-    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
+    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? linkName : 'custom_link',
   }),
   // GA3 events
-  AUTHORIZATION_CONFIGURATION_TAB: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on tab Authorization Configuration',
-    label: 'Open tab Authorization Configuration',
-  },
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Click on switcher Activate Github authorization on tab Authorization Configuration',
