@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-.datasets {
-  &__empty-state {
-    flex: 1;
+.popover-control {
+  padding: 8px 0;
+  font-size: 13px;
 
-    div {
-      width: auto;
-    }
-  }
-
-  &__wrapper {
-    width: 100%;
-  }
-
-  &__list {
-    margin-bottom: 12px;
-  }
-
-  &__no-variables-message {
-    background-color: var(--rp-ui-base-bg-200);
-    border-radius: 8px;
+  &__item-button {
+    display: flex;
+    column-gap: 8px;
     font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    color: var(--rp-ui-base-e-400);
-    padding: 12px 16px;
+    color: var(--rp-ui-base-almost-black);
+    width: 100%;
+    padding: 8px 16px;
+    border-radius: 0;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: var(--rp-ui-base-almost-black);
+    }
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
   }
 }

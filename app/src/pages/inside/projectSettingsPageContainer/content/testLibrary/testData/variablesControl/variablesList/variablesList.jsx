@@ -13,31 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 
-.datasets {
-  &__empty-state {
-    flex: 1;
+import { Variable } from '../variable';
 
-    div {
-      width: auto;
-    }
-  }
+import styles from './variablesList.scss';
 
-  &__wrapper {
-    width: 100%;
-  }
+const cx = classNames.bind(styles);
 
-  &__list {
-    margin-bottom: 12px;
-  }
+export const VariablesList = ({ variables }) => (
+  <div className={cx('variables-list')}>
+    {variables.map((variable) => (
+      <Variable key={variable.label} variable={variable} />
+    ))}
+  </div>
+);
 
-  &__no-variables-message {
-    background-color: var(--rp-ui-base-bg-200);
-    border-radius: 8px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    color: var(--rp-ui-base-e-400);
-    padding: 12px 16px;
-  }
-}
+VariablesList.propTypes = {
+  variables: PropTypes.array,
+};

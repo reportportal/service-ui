@@ -27,7 +27,11 @@ import styles from './variablesAndDatasets.scss';
 const cx = classNames.bind(styles);
 
 export const VariablesAndDatasets = () => {
-  const [variables] = useState([]);
+  const [variables] = useState([
+    { name: 'My variable' },
+    { name: 'Transaction Transaction ID 123', areValuesHidden: true },
+    { name: 'Very long name of a very long variable' },
+  ]);
   const [datasets, setDatasets] = useState([]);
   const username = useSelector(fullNameSelector);
 
@@ -37,7 +41,7 @@ export const VariablesAndDatasets = () => {
 
   return (
     <div className={cx('variables-and-datasets')}>
-      <VariablesControl />
+      <VariablesControl variables={variables} />
       <Datasets datasets={datasets} variables={variables} onDatasetAdd={handleDatasetAdd} />
     </div>
   );
