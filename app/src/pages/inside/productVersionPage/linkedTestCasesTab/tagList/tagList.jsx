@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -53,7 +53,7 @@ export const TagList = ({ tags }) => {
       console.error(`Element with ID not found.`);
       return;
     }
-
+    // It is needed because script executes earlier than font-family applies to the text
     const timeoutId = setTimeout(() => {
       getOffset();
     }, 500);
@@ -65,6 +65,8 @@ export const TagList = ({ tags }) => {
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
+
+  const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
 
   return (
     <div className={cx('tag-list-wrapper')}>
@@ -81,16 +83,12 @@ export const TagList = ({ tags }) => {
           </div>
         ))}
         {isExpanded && (
-          <Button
-            className={cx('tag-list__item--button')}
-            onClick={toggleExpanded}
-            variant={'text'}
-          >
+          <Button className={cx('tag-list__item--button')} onClick={toggleExpanded} variant="text">
             {formatMessage(messages.showLess)}
           </Button>
         )}
       </div>
-      {count > 0 && !isExpanded ? (
+      {isCounterButtonVisible ? (
         <div className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
           +{count}
         </div>

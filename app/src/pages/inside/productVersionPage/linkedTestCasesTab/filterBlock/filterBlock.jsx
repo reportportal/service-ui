@@ -40,7 +40,7 @@ export const FilterBlock = ({ filters, clearAllFilters }) => {
           </div>
         </div>
       )}
-      <Button className={cx('filter-block__add-button')} icon={<PlusIcon />} variant={'text'}>
+      <Button className={cx('filter-block__add-button')} icon={<PlusIcon />} variant="text">
         {formatMessage(messages.addNew)}
       </Button>
       <Button

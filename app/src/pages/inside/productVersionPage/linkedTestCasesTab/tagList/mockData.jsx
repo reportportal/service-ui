@@ -54,7 +54,7 @@ export const getData = () => [
     defaultVersion: 'Password changing 2.1',
     setDefault: {
       component: (
-        <Button className={cx('table-cell__default-button')} icon={<FlagIcon />} variant={'text'}>
+        <Button className={cx('table-cell__default-button')} icon={<FlagIcon />} variant="text">
           Set as Default
         </Button>
       ),
@@ -74,7 +74,7 @@ export const getData = () => [
     defaultVersion: 'Password changing 2.1',
     setDefault: {
       component: (
-        <Button className={cx('table-cell__default-button')} icon={<FlagIcon />} variant={'text'}>
+        <Button className={cx('table-cell__default-button')} icon={<FlagIcon />} variant="text">
           Set as Default
         </Button>
       ),
