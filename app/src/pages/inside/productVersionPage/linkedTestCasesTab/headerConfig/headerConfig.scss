@@ -1,0 +1,194 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.header-config {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+
+  &__filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 13px;
+
+    &--search-input {
+      background-color: inherit;
+
+      &:hover {
+        background-color: inherit;
+      }
+    }
+
+    &--filter-icon-wrapper {
+      height: 15px;
+    }
+
+    .filters-icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 57px;
+      border-radius: 20px;
+
+      &:focus-visible {
+        outline: 2px solid var(--rp-ui-base-dark-topaz-main);
+      }
+
+      &:hover {
+        i.filter-icon {
+          svg {
+            path {
+              fill: var(--rp-ui-base-e-400);
+            }
+          }
+        }
+      }
+
+      &.opened {
+        i.filter-icon {
+          svg {
+            path {
+              fill: var(--rp-ui-base-topaz-pressed);
+            }
+          }
+        }
+
+        &:hover {
+          i.filter-icon {
+            svg {
+              path {
+                fill: var(--rp-ui-base-topaz-hover);
+              }
+            }
+          }
+        }
+      }
+
+      &.with-applied {
+        gap: 8px;
+        height: 36px;
+        background-color: var(--rp-ui-base-bg-200);
+
+        i.filter-icon {
+          svg {
+            path {
+              fill: var(--rp-ui-base-topaz);
+              stroke: var(--rp-ui-base-topaz);
+            }
+          }
+        }
+
+        .filters-count {
+          font-size: 13px;
+          line-height: 20px;
+          color: var(--rp-ui-base-topaz);
+          font-family: $FONT-ROBOTO-MEDIUM;
+        }
+
+        &:hover {
+          div i.filter-icon {
+            svg {
+              path {
+                fill: var(--rp-ui-base-topaz-hover);
+                stroke: var(--rp-ui-base-topaz-hover);
+              }
+            }
+          }
+
+          span.filters-count {
+            color: var(--rp-ui-base-topaz-hover);
+          }
+        }
+
+        &.opened {
+          i.filter-icon {
+            svg {
+              path {
+                fill: var(--rp-ui-base-topaz-pressed);
+                stroke: var(--rp-ui-base-topaz-pressed);
+              }
+            }
+          }
+
+          .filters-count {
+            color: var(--rp-ui-base-topaz-pressed);
+          }
+        }
+      }
+    }
+  }
+
+  &__toggle {
+    min-width: 130px;
+
+    .name-wrapper {
+      flex: 1;
+      width: 0;
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-size: 15px;
+      line-height: 24px;
+      color: var(--rp-ui-base-almost-black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .filter-popover {
+    padding: 8px 0;
+
+    .popover-wrapper {
+      width: 100%;
+    }
+
+    &__item {
+      padding: 8px 16px;
+      width: 136px;
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-size: 13px;
+      line-height: 20px;
+      text-indent: 1px;
+      letter-spacing: 0;
+      color: var(--rp-ui-base-almost-black);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--rp-ui-base-bg-200);
+      }
+
+      &--popover {
+        position: relative;
+
+        &::after {
+          position: absolute;
+          top: 6px;
+          right: 3px;
+          content: '\203A';
+          display: block;
+          width: 23px;
+          height: 23px;
+          font-size: 22px;
+          color: var(--rp-ui-base-e-300);
+        }
+
+        &-open {
+          background-color: var(--rp-ui-base-bg-200);
+        }
+      }
+    }
+  }
+}

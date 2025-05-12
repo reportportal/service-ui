@@ -30,6 +30,7 @@ import {
   LINKED_TEST_CASES,
   REQUIREMENTS,
 } from './constants';
+import { LinkedTestCasesTab } from './linkedTestCasesTab';
 import { messages } from './messages';
 
 export const ProductVersionPage = () => {
@@ -60,7 +61,7 @@ export const ProductVersionPage = () => {
       [LINKED_TEST_CASES]: {
         name: formatMessage(messages.linkedTestCases),
         link: createTabLink(LINKED_TEST_CASES),
-        component: <div>{formatMessage(messages.linkedTestCases)}</div>,
+        component: <LinkedTestCasesTab />,
       },
       [REQUIREMENTS]: {
         name: formatMessage(messages.requirements),
@@ -85,7 +86,7 @@ export const ProductVersionPage = () => {
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <ProductVersionHeader tabsConfig={tabsConfig} />
-        {currentTab ?? tabsConfig[currentTab]?.component}
+        {currentTab && tabsConfig[currentTab]?.component}
       </ScrollWrapper>
     </SettingsLayout>
   );
