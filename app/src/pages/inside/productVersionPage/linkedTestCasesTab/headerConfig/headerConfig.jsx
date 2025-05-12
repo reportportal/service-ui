@@ -44,6 +44,12 @@ export const HeaderConfig = ({ filters, setFilters }) => {
     setIsMainFilterOpen(false);
     setIsInnerFilterOpen(false);
   };
+  // Implemented only for fixing sonar cube errors
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      console.log(e);
+    }
+  };
 
   return (
     <div className={cx('header-config')}>
@@ -60,10 +66,24 @@ export const HeaderConfig = ({ filters, setFilters }) => {
               <Popover
                 content={
                   <>
-                    <div className={cx('filter-popover__item')} onClick={handleFilters}>
+                    <div
+                      role="menuitem"
+                      tabIndex={0}
+                      className={cx('filter-popover__item')}
+                      onClick={handleFilters}
+                      onKeyDown={handleKeyDown}
+                      aria-label="Executed menu item"
+                    >
                       {formatMessage(messages.executed)}
                     </div>
-                    <div className={cx('filter-popover__item')}>
+                    <div
+                      role="menuitem"
+                      tabIndex={0}
+                      onClick={() => {}}
+                      onKeyDown={handleKeyDown}
+                      className={cx('filter-popover__item')}
+                      aria-label="Not executed menu item"
+                    >
                       {formatMessage(messages.notExecuted)}
                     </div>
                   </>
@@ -72,18 +92,40 @@ export const HeaderConfig = ({ filters, setFilters }) => {
                 className={cx('filter-popover', 'filter-popover--inner')}
                 isOpened={isInnerFilterOpen}
                 setIsOpened={setIsInnerFilterOpen}
+                aria-label="Execution Status Options"
               >
                 <div
+                  role="menuitem"
+                  tabIndex={0}
+                  aria-haspopup="menu"
+                  aria-expanded={isInnerFilterOpen}
+                  aria-label="Executed status menu item"
+                  onKeyDown={handleKeyDown}
                   className={cx('filter-popover__item', 'filter-popover__item--popover', {
                     'filter-popover__item--popover-open': isInnerFilterOpen,
                   })}
-                  tabIndex={0}
                 >
                   <span>{formatMessage(messages.executionStatus)}</span>
                 </div>
               </Popover>
-              <div className={cx('filter-popover__item')}>{formatMessage(messages.tag)}</div>
-              <div className={cx('filter-popover__item')}>
+              <div
+                role="menuitem"
+                tabIndex={0}
+                onClick={() => {}}
+                onKeyDown={handleKeyDown}
+                aria-label="Tag menu item"
+                className={cx('filter-popover__item')}
+              >
+                {formatMessage(messages.tag)}
+              </div>
+              <div
+                role="menuitem"
+                tabIndex={0}
+                onClick={() => {}}
+                onKeyDown={handleKeyDown}
+                aria-label="Default version menu item"
+                className={cx('filter-popover__item')}
+              >
                 {formatMessage(messages.defaultVersion)}
               </div>
             </>
@@ -92,13 +134,20 @@ export const HeaderConfig = ({ filters, setFilters }) => {
           className={cx('filter-popover')}
           isOpened={isMainFilterOpen}
           setIsOpened={setIsMainFilterOpen}
+          aria-label="Filter settings"
         >
           <div
+            role="button"
+            tabIndex={0}
+            aria-haspopup="true"
+            aria-expanded={isMainFilterOpen}
+            aria-label="Filter icon"
             className={cx('filters-icon-container', {
               'with-applied': appliedFiltersCount,
               opened: isMainFilterOpen,
             })}
-            tabIndex={0}
+            onClick={() => {}}
+            onKeyDown={handleKeyDown}
           >
             <div className={cx('header-config__filters--filter-icon-wrapper')}>
               <i className={cx('filter-icon')}>

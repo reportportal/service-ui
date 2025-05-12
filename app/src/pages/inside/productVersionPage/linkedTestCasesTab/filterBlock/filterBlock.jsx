@@ -35,7 +35,18 @@ export const FilterBlock = ({ filters, clearAllFilters }) => {
       {filters.status && (
         <div className={cx('filter-block__status')}>
           {filters.status}
-          <div className={cx('filter-block__status-icon')} onClick={clearAllFilters}>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Close button"
+            className={cx('filter-block__status-icon')}
+            onClick={clearAllFilters}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                clearAllFilters();
+              }
+            }}
+          >
             <CloseIcon />
           </div>
         </div>
