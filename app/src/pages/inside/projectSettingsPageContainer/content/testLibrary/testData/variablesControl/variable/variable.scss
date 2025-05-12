@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-.variables-control-wrapper {
+.variable {
   display: flex;
-  flex-direction: column;
-  box-shadow: $BOX_SHADOW--item;
-  width: 232px;
-  box-sizing: border-box;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: $COLOR--bg-000;
-  margin-bottom: 8px;
-  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--rp-ui-base-bg-200);
+  border-radius: 4px;
+  padding: 8px 12px;
+  column-gap: 8px;
 
-  &__title-wrapper {
-    display: flex;
-    justify-content: space-between;
+  &__tools {
+    visibility: hidden;
+    border: 0;
 
-    h4 {
-      line-height: 24px;
+    button svg {
+      width: 16px;
+      height: 100%;
     }
 
-    &--tool-red {
+    &--shown {
+      visibility: visible;
+    }
+
+    &--red {
       color: var(--rp-ui-base-error);
 
       &:hover {
@@ -47,26 +49,24 @@
     }
   }
 
-  &__description {
-    font-size: 11px;
-    line-height: 16px;
-    color: $COLOR--e-400;
-    font-family: $FONT-ROBOTO-REGULAR;
-    margin-top: 4px;
-    margin-bottom: 16px;
+  &__meatball {
+    svg path {
+      fill: var(--rp-ui-base-topaz);
+    }
   }
 
-  &__sort-wrapper {
+  &__name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 0
+  }
+
+  &__name-wrapper {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  &__add-button {
+    flex: 1;
+    min-width: 0;
     column-gap: 8px;
-  }
-
-  &__search {
-    max-width: 100%;
+    align-items: center;
   }
 }

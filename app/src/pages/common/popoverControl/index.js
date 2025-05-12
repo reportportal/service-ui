@@ -14,30 +14,4 @@
  * limitations under the License.
  */
 
-.datasets {
-  &__empty-state {
-    flex: 1;
-
-    div {
-      width: auto;
-    }
-  }
-
-  &__wrapper {
-    width: 100%;
-  }
-
-  &__list {
-    margin-bottom: 12px;
-  }
-
-  &__no-variables-message {
-    background-color: var(--rp-ui-base-bg-200);
-    border-radius: 8px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    color: var(--rp-ui-base-e-400);
-    padding: 12px 16px;
-  }
-}
+export { PopoverControl } from './popoverControl';

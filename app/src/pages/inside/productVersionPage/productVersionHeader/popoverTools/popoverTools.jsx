@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
-import { Popover, MeatballMenuIcon, Button } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
@@ -30,6 +30,7 @@ import {
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
+import { PopoverControl } from 'pages/common/popoverControl';
 import { DELETE_PRODUCT_VERSION_MODAL } from '../deleteProductVersionModal';
 import { RENAME_PRODUCT_VERSION_MODAL } from '../renameProductVersionModal';
 
@@ -97,30 +98,23 @@ export const PopoverTools = () => {
   };
 
   return (
-    <Popover
-      className={cx('popover-tools')}
-      content={
-        <ul>
-          <li>
-            <button className={cx('popover-tools__item-button')} onClick={openRenameModal}>
-              {formatMessage(COMMON_LOCALE_KEYS.RENAME)}
-            </button>
-          </li>
-          <li>
-            <button
-              className={cx('popover-tools__item-button', 'popover-tools__item-button-red')}
-              onClick={openDeleteModal}
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-            </button>
-          </li>
-        </ul>
-      }
+    <PopoverControl
+      items={[
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+          onClick: openRenameModal,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          className: cx('popover-tools__item-button-red'),
+          onClick: openDeleteModal,
+        },
+      ]}
       placement="bottom-end"
     >
       <Button variant="ghost" className={cx('popover-tools__meatball-button')}>
         <MeatballMenuIcon />
       </Button>
-    </Popover>
+    </PopoverControl>
   );
 };

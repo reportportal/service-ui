@@ -70,14 +70,16 @@ export const Datasets = ({ datasets, variables, onDatasetAdd }) => {
   };
 
   return datasets.length === 0 ? (
-    <InfoBlockWithControl
-      label={formatMessage(messages.noDatasetsCreatedYet)}
-      control={
-        <Button variant="text" icon={Parser(plusIcon)} onClick={openCreateDatasetModal}>
-          {formatMessage(messages.createDataset)}
-        </Button>
-      }
-    />
+    <div className={cx('datasets__empty-state')}>
+      <InfoBlockWithControl
+        label={formatMessage(messages.noDatasetsCreatedYet)}
+        control={
+          <Button variant="text" icon={Parser(plusIcon)} onClick={openCreateDatasetModal}>
+            {formatMessage(messages.createDataset)}
+          </Button>
+        }
+      />
+    </div>
   ) : (
     <div className={cx('datasets__wrapper')}>
       <div className={cx('datasets__list')}>
