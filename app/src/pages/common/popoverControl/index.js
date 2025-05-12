@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-.popover-tools {
-  &__item-button {
-    &-red {
-      color: var(--rp-ui-base-error);
-
-      &:hover {
-        color: var(--rp-ui-base-error);
-      }
-    }
-  }
-
-  &__meatball-button {
-    padding: 17px;
-    min-width: auto;
-    margin-bottom: 10px;
-  }
-}
+export { PopoverControl } from './popoverControl';
