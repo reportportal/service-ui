@@ -37,7 +37,6 @@ import {
 } from 'components/integrations/containers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
@@ -302,7 +301,7 @@ export class InstalledTab extends Component {
     this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: PLUGIN_NAME_TITLES[pageData.name] || pageData.name,
+      title: pageData.details.name || pageData.name,
     });
 
   renderFilterMobileBlock = () => (

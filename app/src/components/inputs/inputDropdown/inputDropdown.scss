@@ -102,6 +102,10 @@
   &.dark-view {
     color: $COLOR--white-two;
   }
+
+  &.placeholder {
+    color: $COLOR--gray-47;
+  }
 }
 
 .arrow {

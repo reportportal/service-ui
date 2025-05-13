@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-.no-project-assignments {
-  font-size: 11px;
-  line-height: 16px;
-  color: $COLOR--darkmode-gray-150;
-  font-family: $FONT-ROBOTO-REGULAR;
-}
-
-.tooltip {
-  width: 100%;
-}
-
-// TODO: Remove after adding the middle arrow position in the Tooltip component
-.custom {
-  div:last-child {
-    top: 15px !important;
-  }
-}
+export { InactivityTimeoutForm } from './inactivityTimeoutForm';

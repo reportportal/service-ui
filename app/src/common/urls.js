@@ -34,8 +34,8 @@ const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url
 
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
-
-  dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
+  dataPhoto: (userId, at, loadThumbnail) =>
+    `${urlCommonBase}users/${userId}/avatar${getQueryParams({ at, loadThumbnail })}`,
   userAvatar: (userId, thumbnail, timestamp) =>
     `${urlCommonBase}users/${userId}/avatar${getQueryParams({ thumbnail, ts: timestamp })}`,
 
@@ -203,14 +203,26 @@ export const URLS = {
       'filter.eq.id': id,
     })}`,
   testItemsInfo: (projectKey) => `${urlBase}${projectKey}/item/info`,
+  testItemSearch: (projectKey, searchParam = {}) => {
+    return `${urlBase}${projectKey}/item/search${getQueryParams(searchParam)}`;
+  },
   testItemsLinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/link`,
   testItemsUnlinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/unlink`,
-  testItemAttributeKeysSearch: (projectKey, launch = '') => (searchTerm = '') =>
-    `${urlBase}${projectKey}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=${searchTerm}`,
-  testItemAttributeValuesSearch: (projectKey, launch = '', key = '') => (searchTerm = '') =>
-    `${urlBase}${projectKey}/item/attribute/values?launch=${launch}${
-      key ? `&filter.eq.attributeKey=${key}` : ''
-    }&filter.cnt.attributeValue=${searchTerm}`,
+  testItemAttributeKeysSearch: (projectKey, launch = '') => (searchTerm = '') => {
+    const params = {
+      ...(launch ? { launch } : {}),
+      'filter.cnt.attributeKey': searchTerm,
+    };
+    return `${urlBase}${projectKey}/item/attribute/keys${getQueryParams(params)}`;
+  },
+  testItemAttributeValuesSearch: (projectKey, launch = '', key = '') => (searchTerm = '') => {
+    const params = {
+      ...(launch ? { launch } : {}),
+      ...(key ? { 'filter.eq.attributeKey': key } : {}),
+      'filter.cnt.attributeValue': searchTerm,
+    };
+    return `${urlBase}${projectKey}/item/attribute/values${getQueryParams(params)}`;
+  },
   testItemBTSIssuesSearch: (projectKey) => (searchTerm = '') =>
     `${urlBase}${projectKey}/item/ticket/ids/all?term=${searchTerm}`,
 

@@ -25,8 +25,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
-    defaultMessage:
-      'User name may contain only Latin, numeric characters, hyphen, underscore, dot (from 1 to 128 symbols)',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
@@ -49,6 +48,11 @@ const messages = defineMessages({
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
+    defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+  oldPasswordHint: {
+    id: 'RegistrationForm.oldPasswordHint',
     defaultMessage:
       'Password should contain at least 4 characters; a special symbol; upper-case (A - Z); lower-case',
   },
@@ -276,7 +280,7 @@ const messages = defineMessages({
   },
   apiKeyNameShouldMatch: {
     id: 'GenerateApiKeyModal.apiKeyNameShouldMatch',
-    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +, =',
+    defaultMessage: 'Enter a valid API key: use letters, numbers, -, ., _, ~, /, +',
   },
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',

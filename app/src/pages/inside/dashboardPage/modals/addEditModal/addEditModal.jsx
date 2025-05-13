@@ -21,7 +21,6 @@ import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -29,11 +28,6 @@ import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
-import { GhostButton } from 'components/buttons/ghostButton';
-import { NOTIFICATION_TYPES } from 'controllers/notification';
-import PasteIcon from 'common/img/paste-configuration-inline.svg';
-import StorageIcon from 'common/img/storage-message-inline.svg';
-import RemovePastedIcon from 'common/img/remove-pasted-inline.svg';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -100,26 +94,6 @@ const messages = defineMessages({
     id: 'DashboardForm.showDashboardConfiguration',
     defaultMessage: 'Show dashboard configuration',
   },
-  configurationPasted: {
-    id: 'DashboardForm.configurationPasted',
-    defaultMessage: 'Dashboard configuration pasted',
-  },
-  canAdjustNameDesc: {
-    id: 'DashboardForm.canAdjustNameDesc',
-    defaultMessage: 'Name and description can still be adjusted.',
-  },
-  removeConfiguration: {
-    id: 'DashboardForm.removeConfiguration',
-    defaultMessage: 'Remove configuration',
-  },
-  removeConfigurationHint: {
-    id: 'DashboardForm.removeConfigurationHint',
-    defaultMessage: 'You can remove the pasted dashboard configuration.',
-  },
-  invalidConfig: {
-    id: 'DashboardForm.invalidConfig',
-    defaultMessage: "Dashboard can't be created. Please check the pasted configuration.",
-  },
 });
 
 const LABEL_WIDTH = 90;
@@ -157,7 +131,6 @@ export class AddEditModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -168,12 +141,10 @@ export class AddEditModal extends Component {
     },
     initialize: () => {},
     handleSubmit: () => {},
-    showNotification: () => {},
   };
 
   state = {
     showConfig: false,
-    pastedConfig: null,
     isSubmitting: false,
   };
 
@@ -186,37 +157,6 @@ export class AddEditModal extends Component {
   handleShowDashboardConfig = () => {
     this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_SHOW_DASHBOARD_CONFIG);
     this.setState({ showConfig: true });
-  };
-
-  handlePasteConfiguration = async () => {
-    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_PASTE_CONFIGURATION);
-    try {
-      const clipboardText = await navigator.clipboard.readText();
-      if (!clipboardText.trim()) {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.invalidConfig),
-          type: NOTIFICATION_TYPES.ERROR,
-        });
-        return;
-      }
-
-      this.setState({
-        pastedConfig: clipboardText,
-      });
-    } catch (error) {
-      this.props.showNotification({
-        message: this.props.intl.formatMessage(messages.invalidConfig),
-        type: NOTIFICATION_TYPES.ERROR,
-      });
-    }
-  };
-
-  handleRemoveConfiguration = () => {
-    this.tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_REMOVE_CONFIGURATION);
-    this.setState({
-      pastedConfig: null,
-      isSubmitting: false,
-    });
   };
 
   handleTrackSuccess = (dashboardId, isChangedDescription) => {
@@ -255,13 +195,10 @@ export class AddEditModal extends Component {
           isChangedDescription,
         );
       default:
-        return this.pastedConfig
-          ? null
-          : DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
-              dashboardId,
-              isChangedDescription,
-              'standard',
-            );
+        return DASHBOARD_EVENTS.clickOnButtonInModalAddNewDashboard(
+          dashboardId,
+          isChangedDescription,
+        );
     }
   };
 
@@ -271,14 +208,12 @@ export class AddEditModal extends Component {
       dirty,
     } = this.props;
 
-    const { pastedConfig } = this.state;
-
     if (type === 'duplicate' || dirty) {
       const dashboardId = dashboardItem?.id;
       const isChangedDescription =
         formData.description !== this.props.data.dashboardItem?.description;
 
-      if (!pastedConfig) {
+      if (!formData.configuration) {
         this.tracking.trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
         onSubmit(formData);
         closeModal();
@@ -292,7 +227,7 @@ export class AddEditModal extends Component {
           {
             name: formData.name,
             description: formData.description,
-            config: pastedConfig,
+            config: formData.configuration,
             onSuccess: () => this.handleTrackSuccess(dashboardId, isChangedDescription),
             onError: () => this.handleTrackError(dashboardId, isChangedDescription),
           },
@@ -338,7 +273,7 @@ export class AddEditModal extends Component {
 
   render() {
     const { intl, handleSubmit, data } = this.props;
-    const { showConfig, pastedConfig } = this.state;
+    const { showConfig } = this.state;
     const { title, submitText } = this.getModalTexts();
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
     const isAddModal = data.type !== 'edit' && data.type !== 'duplicate';
@@ -402,42 +337,15 @@ export class AddEditModal extends Component {
               label={intl.formatMessage(messages.configurationTitle)}
               labelWidth={LABEL_WIDTH}
             >
-              <div className={cx('configuration-content')}>
-                {!pastedConfig ? (
-                  <>
-                    <GhostButton icon={PasteIcon} onClick={this.handlePasteConfiguration}>
-                      {intl.formatMessage(messages.pasteConfiguration)}
-                    </GhostButton>
-                    <div className={cx('configuration-hint')}>
-                      {intl.formatMessage(messages.pasteConfigHint)}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className={cx('configuration-pasted')}>
-                      <span className={cx('pasted-icon')}>{Parser(StorageIcon)}</span>
-                      <span className={cx('pasted-text')}>
-                        {intl.formatMessage(messages.configurationPasted)}
-                      </span>
-                    </div>
-                    <div className={cx('configuration-hint')}>
-                      {intl.formatMessage(messages.canAdjustNameDesc)}
-                    </div>
-                    <div className={cx('remove-configuration')}>
-                      <GhostButton
-                        icon={RemovePastedIcon}
-                        onClick={this.handleRemoveConfiguration}
-                        className={cx('remove-button')}
-                        color="red"
-                      >
-                        {intl.formatMessage(messages.removeConfiguration)}
-                      </GhostButton>
-                      <div className={cx('configuration-hint')}>
-                        {intl.formatMessage(messages.removeConfigurationHint)}
-                      </div>
-                    </div>
-                  </>
-                )}
+              <FieldProvider
+                name="configuration"
+                maxLength="INFINITY"
+                placeholder={intl.formatMessage(messages.pasteConfiguration)}
+              >
+                <InputTextArea />
+              </FieldProvider>
+              <div className={cx('configuration-hint')}>
+                {intl.formatMessage(messages.pasteConfigHint)}
               </div>
             </ModalField>
           )}

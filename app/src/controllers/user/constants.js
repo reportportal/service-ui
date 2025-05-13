@@ -17,6 +17,7 @@
 export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USER_ERROR = 'fetchUserError';
 export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
+export const ACTIVITY_TIMESTAMP = 'activityTimestamp';
 export const SET_ACTIVE_PROJECT = 'setActiveProject';
 export const SET_ACTIVE_PROJECT_KEY = 'setActiveProjectKey';
 export const SET_START_TIME_FORMAT = 'setStartTimeFormat';

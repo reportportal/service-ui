@@ -22,7 +22,6 @@ import {
   namedProjectIntegrationsSelector,
   namedGlobalIntegrationsSelector,
 } from 'controllers/plugins';
-import { PLUGIN_NAME_TITLES } from '../../constants';
 import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
@@ -70,7 +69,7 @@ export class IntegrationInfoContainer extends Component {
       showToggleConfirmationModal,
       events,
     } = this.props;
-    const pluginTitle = PLUGIN_NAME_TITLES[name] || name;
+    const pluginTitle = details.name || name;
 
     return (
       <Fragment>

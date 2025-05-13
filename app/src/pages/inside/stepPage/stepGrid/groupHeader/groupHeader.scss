@@ -26,14 +26,19 @@
   transition: background-color 0.2s ease 0s;
   word-break: break-all;
 
+  &.disabled {
+    background: $COLOR--gray-light;
+  }
+
   @supports (word-break: break-word) {
     word-break: break-word;
   }
 
-  &:hover {
+  &:not(.disabled):hover {
     background-color: $COLOR--tealish-hover;
   }
 }
+
 .link {
   color: $COLOR--topaz;
   text-decoration: none;

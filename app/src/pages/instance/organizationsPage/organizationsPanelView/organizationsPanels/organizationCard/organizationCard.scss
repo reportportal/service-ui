@@ -91,4 +91,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &:hover:not(.disabled) {
+    color: $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    color: $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--topaz-focused;
+  }
 }
