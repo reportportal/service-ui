@@ -23,7 +23,6 @@ import {
   getPluginItemClickEvent,
   getDisablePluginItemClickEvent,
 } from 'components/main/analytics/events';
-import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -90,12 +89,12 @@ export class PluginsItem extends Component {
 
   onChangeHandler = () => {
     const {
-      data: { name, enabled, details: { pluginLocation } = {} },
+      data: { name, enabled, details: { name: detailsName, pluginLocation } = {} },
       showToggleConfirmationModal,
     } = this.props;
-    const pluginName = PLUGIN_NAME_TITLES[name] || name;
+    const displayName = detailsName || name;
 
-    showToggleConfirmationModal(enabled, pluginName, this.toggleActiveHandler, pluginLocation);
+    showToggleConfirmationModal(enabled, displayName, this.toggleActiveHandler, pluginLocation);
   };
 
   render() {
@@ -106,11 +105,11 @@ export class PluginsItem extends Component {
         uploadedBy,
         enabled,
         groupType,
-        details: { version, disabledPluginTooltip } = {},
+        details: { name: detailsName, version, disabledPluginTooltip } = {},
       },
       toggleable,
     } = this.props;
-    const pluginName = PLUGIN_NAME_TITLES[name] || name;
+    const displayName = detailsName || name;
 
     return (
       <div
@@ -120,17 +119,19 @@ export class PluginsItem extends Component {
           enabled
             ? ''
             : disabledPluginTooltip ||
-              formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], { name: pluginName })
+              formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
+                name: displayName,
+              })
         }
       >
         <div className={cx('plugins-info-block')}>
           <PluginIcon
             className={cx('plugins-image')}
             pluginData={this.props.data}
-            alt={pluginName}
+            alt={displayName}
           />
           <div className={cx('plugins-info')}>
-            <span className={cx('plugins-name')}>{pluginName}</span>
+            <span className={cx('plugins-name')}>{displayName}</span>
             <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
             <span
               className={cx('plugins-version')}

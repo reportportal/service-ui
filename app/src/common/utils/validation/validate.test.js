@@ -103,28 +103,52 @@ describe('validate.requiredEmail', () => {
 
 describe('validate.login', () => {
   test('validation should be correct', () => {
-    expect(validate.login('login')).toBe(true);
-    expect(validate.login('login-test_123.foo')).toBe(true);
+    expect(validate.login('email@example.com')).toBe(true);
+    expect(validate.login('firstname.lastname@example.com')).toBe(true);
+    expect(validate.login('email@subdomain.example.com')).toBe(true);
+    expect(validate.login('firstname+lastname@example.com')).toBe(true);
+    expect(validate.login('email@123.123.123.123')).toBe(true);
+    expect(validate.login('1234567890@example.com')).toBe(true);
+    expect(validate.login('firstname-lastname@example.com')).toBe(true);
+    expect(validate.login('email@example.co.jp')).toBe(true);
   });
-  test('validation should not be correct', () => {
-    expect(validate.login(undefined)).toBe(false);
-    expect(validate.login('')).toBe(false);
-    expect(validate.login('  ')).toBe(false);
-    expect(validate.login('login^test')).toBe(false);
-    expect(validate.login('логин')).toBe(false);
+  test('validation should be not correct', () => {
+    expect(validate.login('plainaddress')).toBe(false);
+    expect(validate.login('#@%^%#$@#$@#.com')).toBe(false);
+    expect(validate.login('@example.com')).toBe(false);
+    expect(validate.login('Joe Smith <email@example.com>')).toBe(false);
+    expect(validate.login('email.example.com')).toBe(false);
+    expect(validate.login('email@example@example.com')).toBe(false);
+    expect(validate.login('email@example.com (Joe Smith)')).toBe(false);
+    expect(validate.login('email@example')).toBe(false);
+    expect(validate.login('あいうえお@example.com')).toBe(false);
+  });
+});
+
+describe('validate.oldPassword', () => {
+  test('validation should be correct', () => {
+    expect(validate.oldPassword('1234')).toBe(true);
+    expect(validate.oldPassword('1234567890123456789012345')).toBe(true);
+    expect(validate.oldPassword('Aa1@3@.?n&()*^HFU')).toBe(true);
+    expect(validate.oldPassword('firstname+lastname@ex')).toBe(true);
+  });
+  test('validation should be not correct', () => {
+    expect(validate.oldPassword(undefined)).toBe(false);
+    expect(validate.oldPassword('123')).toBe(false);
   });
 });
 
 describe('validate.password', () => {
   test('validation should be correct', () => {
-    expect(validate.password('1234')).toBe(true);
-    expect(validate.password('1234567890123456789012345')).toBe(true);
+    expect(validate.password('aA1!5678')).toBe(true);
     expect(validate.password('Aa1@3@.?n&()*^HFU')).toBe(true);
-    expect(validate.password('firstname+lastname@ex')).toBe(true);
+    expect(validate.password('Firstname+lastname@ex1')).toBe(true);
   });
   test('validation should be not correct', () => {
     expect(validate.password(undefined)).toBe(false);
     expect(validate.password('123')).toBe(false);
+    expect(validate.password('12345678ADd123456789012345')).toBe(false);
+    expect(validate.password('aA1_567')).toBe(false);
   });
 });
 

@@ -29,6 +29,9 @@ export const getBasicChooseEventParameters = (category) =>
 export const getBasicSearchEventParameters = (category) =>
   getBasicEventParameters('search', category);
 
+export const getBasicPerformanceEventParameters = (category) =>
+  getBasicEventParameters('performance', category);
+
 export const normalizeEventParameter = (parameter = '') =>
   parameter
     .toLowerCase()

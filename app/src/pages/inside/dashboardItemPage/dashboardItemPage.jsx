@@ -89,7 +89,7 @@ const messages = defineMessages({
   },
   addWidgetSuccess: {
     id: 'DashboardItemPage.addWidgetSuccess',
-    defaultMessage: 'Widget has been added',
+    defaultMessage: 'Widget has been added successfully',
   },
   deleteModalWarningMessage: {
     id: 'DashboardPage.modal.deleteModalWarningMessage',

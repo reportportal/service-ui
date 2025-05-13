@@ -24,17 +24,6 @@ import LdapIcon from 'common/img/plugins/ldap.png';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
-// Constants for plugins that do not provide UI extensions in their bundles
-export const PLUGIN_NAME_TITLES = {
-  [JIRA]: 'JIRA Server',
-  [RALLY]: 'RALLY',
-  [EMAIL]: 'Email Server',
-  [SAUCE_LABS]: 'Sauce Labs',
-  [SAML]: 'SAML',
-  [LDAP]: 'LDAP',
-  [AD]: 'Active Directory',
-};
-
 export const PLUGIN_IMAGES_MAP = {
   [JIRA]: JiraIcon,
   [RALLY]: RallyIcon,

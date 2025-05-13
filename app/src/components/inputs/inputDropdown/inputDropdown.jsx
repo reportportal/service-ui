@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Manager, Reference, Popper } from 'react-popper';
+import { FormattedMessage } from 'react-intl';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 import styles from './inputDropdown.scss';
 
@@ -46,6 +47,7 @@ export class InputDropdown extends Component {
     customClasses: PropTypes.object,
     title: PropTypes.string,
     readOnly: PropTypes.bool,
+    placeholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -69,20 +71,22 @@ export class InputDropdown extends Component {
       selectList: '',
       dropdownOption: '',
       opened: '',
+      container: '',
     },
     title: '',
     readOnly: false,
+    placeholder: '',
   };
   state = {
     opened: false,
   };
 
   componentDidMount() {
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener('click', this.handleClickOutside, true);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('click', this.handleClickOutside, true);
   }
 
   onClickSelectBlock = (e) => {
@@ -108,7 +112,7 @@ export class InputDropdown extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (this.node && !this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node?.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -220,10 +224,16 @@ export class InputDropdown extends Component {
       selectAll,
       customClasses,
       title,
+      placeholder,
     } = this.props;
+    const displayedValue = this.displayedValue();
     return (
       <Manager>
-        <div ref={this.setRef} className={cx('dropdown-container')} title={title}>
+        <div
+          ref={this.setRef}
+          className={cx('dropdown-container', customClasses.container)}
+          title={title}
+        >
           <Reference>
             {({ ref }) => (
               <div
@@ -242,7 +252,11 @@ export class InputDropdown extends Component {
                   })}
                   onClick={this.props.readOnly ? () => {} : this.onClickSelectBlock}
                 >
-                  <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
+                  <span
+                    className={cx('value', customClasses.value, { placeholder: !displayedValue })}
+                  >
+                    {displayedValue || placeholder}
+                  </span>
                   {!this.props.readOnly && <span className={cx('arrow', customClasses.arrow)} />}
                 </div>
               </div>
@@ -271,9 +285,9 @@ export class InputDropdown extends Component {
                     })}
                   >
                     {multiple && selectAll && (
-                      <div className={cx('select-all-block')} onClick={this.handleAllClick}>
-                        <span className={cx('select-all')}>All</span>
-                      </div>
+                      <span className={cx('select-all')}>
+                        <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
+                      </span>
                     )}
                     <ScrollWrapper autoHeight autoHeightMax={300}>
                       {this.renderOptions()}

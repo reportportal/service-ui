@@ -189,7 +189,7 @@ export class PersonalInfoBlock extends Component {
   };
 
   removeImage = () => {
-    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
+    this.setState({ avatarSource: URLS.dataPhoto(this.props.userId, Date.now()) });
   };
 
   render() {

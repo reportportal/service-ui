@@ -19,21 +19,33 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import Parser from 'html-react-parser';
+import { connect } from 'react-redux';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
+import { injectIntl } from 'react-intl';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 
 const cx = classNames.bind(styles);
 
+@connect((state) => ({
+  dashboardId: activeDashboardIdSelector(state),
+}))
+@injectIntl
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
     projectKey: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
     customCondition: PropTypes.bool,
+    dashboardId: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -68,7 +80,7 @@ export class WidgetInfoBlock extends PureComponent {
     if (
       this.props.customCondition &&
       !isEqual(prevData, newData) &&
-      (filterIds.length || contentParameters.widgetOptions.launchNameFilter) &&
+      (filterIds.length || contentParameters.widgetOptions?.launchNameFilter) &&
       !WIDGETS_STATIC_PREVIEWS[this.props.activeWidget.id]
     ) {
       this.fetchWidget(this.props.widgetSettings);
@@ -110,7 +122,11 @@ export class WidgetInfoBlock extends PureComponent {
   }, 300);
 
   render() {
-    const { activeWidget } = this.props;
+    const {
+      activeWidget,
+      intl: { formatMessage },
+      dashboardId,
+    } = this.props;
     const { loading, widgetData } = this.state;
 
     return (
@@ -119,6 +135,17 @@ export class WidgetInfoBlock extends PureComponent {
           <div className={cx('widget-info-block')}>
             <div className={cx('widget-title')}>{activeWidget.title}</div>
             <div className={cx('widget-description')}>{activeWidget.description}</div>
+            {activeWidget.documentationLink && (
+              <LinkComponent
+                to={activeWidget.documentationLink}
+                icon={ExternalLinkIcon}
+                event={activeWidget?.documentationClickEventInfo(dashboardId)}
+              >
+                <span className={cx('link')}>
+                  {formatMessage(COMMON_LOCALE_KEYS.documentation)}
+                </span>
+              </LinkComponent>
+            )}
           </div>
         )}
         <WidgetPreview

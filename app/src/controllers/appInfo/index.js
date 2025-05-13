@@ -15,7 +15,11 @@
  */
 
 export { appInfoReducer } from './reducer';
-export { fetchAppInfoAction } from './actionCreators';
+export {
+  fetchAppInfoAction,
+  updateServerSettingsAction,
+  updateExpirationSessionAction,
+} from './actionCreators';
 export {
   appInfoSelector,
   apiBuildVersionSelector,
@@ -30,5 +34,7 @@ export {
   areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
+  sessionExpirationTimeSelector,
 } from './selectors';
-export { ANALYTICS_ALL_KEY } from './constants';
+export { serverSettingsSagas } from './sagas';
+export { ANALYTICS_ALL_KEY, SERVER_SESSION_EXPIRATION_KEY } from './constants';
