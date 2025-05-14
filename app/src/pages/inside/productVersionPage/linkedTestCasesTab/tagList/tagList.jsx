@@ -66,12 +66,6 @@ export const TagList = ({ tags }) => {
     setIsExpanded((prevState) => !prevState);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      toggleExpanded();
-    }
-  };
-
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
 
   return (
@@ -89,27 +83,15 @@ export const TagList = ({ tags }) => {
           </div>
         ))}
         {isExpanded && (
-          <Button
-            className={cx('tag-list__item--button')}
-            onClick={toggleExpanded}
-            onKeyDown={handleKeyDown}
-            variant="text"
-          >
+          <Button className={cx('tag-list__item--button')} onClick={toggleExpanded} variant="text">
             {formatMessage(messages.showLess)}
           </Button>
         )}
       </div>
       {isCounterButtonVisible ? (
-        <div
-          role="button"
-          tabIndex={0}
-          aria-label="Counter button"
-          className={cx('tag-list__item', 'tag-list__item--count')}
-          onClick={toggleExpanded}
-          onKeyDown={handleKeyDown}
-        >
+        <button className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
           +{count}
-        </div>
+        </button>
       ) : null}
     </div>
   );

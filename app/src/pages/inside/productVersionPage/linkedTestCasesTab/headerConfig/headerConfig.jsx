@@ -21,6 +21,7 @@ import { useIntl } from 'react-intl';
 import { FilterFilledIcon, FilterOutlineIcon, Popover, Toggle } from '@reportportal/ui-kit';
 
 import { SearchField } from 'components/fields/searchField';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
 
 import { messages } from './messages';
 
@@ -46,7 +47,7 @@ export const HeaderConfig = ({ filters, setFilters }) => {
   };
   // Implemented only for fixing sonar cube errors
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.keyCode === ENTER_KEY_CODE || e.keyCode === SPACE_KEY_CODE) {
       console.log(e);
     }
   };
@@ -136,18 +137,12 @@ export const HeaderConfig = ({ filters, setFilters }) => {
           setIsOpened={setIsMainFilterOpen}
           aria-label="Filter settings"
         >
-          <div
-            role="button"
-            tabIndex={0}
-            aria-haspopup="true"
-            aria-expanded={isMainFilterOpen}
-            aria-label="Filter icon"
+          <button
             className={cx('filters-icon-container', {
               'with-applied': appliedFiltersCount,
               opened: isMainFilterOpen,
             })}
             onClick={() => {}}
-            onKeyDown={handleKeyDown}
           >
             <div className={cx('header-config__filters--filter-icon-wrapper')}>
               <i className={cx('filter-icon')}>
@@ -157,7 +152,7 @@ export const HeaderConfig = ({ filters, setFilters }) => {
             {appliedFiltersCount ? (
               <span className={cx('filters-count')}>{appliedFiltersCount}</span>
             ) : null}
-          </div>
+          </button>
         </Popover>
       </div>
       <div className={cx('header-config__toggle')}>
