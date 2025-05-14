@@ -15,11 +15,13 @@
  */
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
+import { showModalAction } from 'controllers/modal';
 
 import { SettingsPageContent } from '../../settingsPageContent';
 import { EmptyStatePage } from '../../emptyStatePage';
@@ -37,6 +39,16 @@ const benefits = [
 
 export const Environments = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
+  const onCreateEnvironment = () => {
+    dispatch(
+      showModalAction({
+        id: 'createEnvironmentModal',
+        data: { onSave: () => {} },
+      }),
+    );
+  };
 
   return (
     <SettingsPageContent>
@@ -48,6 +60,7 @@ export const Environments = () => {
           documentationLink="https://reportportal.io/docs/"
           imageType="lines"
           buttonDataAutomationId="createEnvironmentButton"
+          handleButton={onCreateEnvironment}
         />
         <NumerableBlock
           items={benefits.map(formatMessage)}

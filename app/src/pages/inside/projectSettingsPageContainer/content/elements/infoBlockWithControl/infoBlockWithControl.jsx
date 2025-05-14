@@ -20,8 +20,8 @@ import styles from './infoBlockWithControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const InfoBlockWithControl = ({ label, control }) => (
-  <div className={cx('info-block-with-control')}>
+export const InfoBlockWithControl = ({ label, control, className = '' }) => (
+  <div className={cx('info-block-with-control', className)}>
     <span className={cx('info-block-with-control__label')}>{label}</span>
     <div className={cx('info-block-with-control__button')}>{control}</div>
   </div>
@@ -30,4 +30,5 @@ export const InfoBlockWithControl = ({ label, control }) => (
 InfoBlockWithControl.propTypes = {
   label: PropTypes.string.isRequired,
   control: PropTypes.node,
+  className: PropTypes.string,
 };
