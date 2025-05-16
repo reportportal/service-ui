@@ -1,5 +1,5 @@
-/*
- * Copyright 2022 EPAM Systems
+/*!
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,44 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: $COLOR--e-400;
-  max-width: 420px;
-  margin: 0 auto;
-}
-.img {
-  width: 168px;
-  height: 123px;
-  margin: 65px 0 32px 0;
-}
-
-.title {
-  font-family: $FONT-REGULAR;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 31px;
-}
-
-.description {
-  margin-top: 16px;
-  margin-bottom: 24px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  text-align: center;
+@mixin link-state($color) {
+  color: $color;
+  svg {
+    path {
+      fill: $color;
+    }
+  }
 }
 
 .link {
-  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+  outline: none;
+
+  @include link-state(var(--rp-ui-color-primary));
+
+  &:hover {
+    text-decoration: underline;
+
+    @include link-state(var(--rp-ui-color-primary-hover));
+  }
+
+  &:active {
+    @include link-state(var(--rp-ui-color-primary-pressed));
+  }
+
+  &:focus {
+    @include link-state(var(--rp-ui-color-primary-focused));
+  }
+
+  .icon {
+    width: 13px;
+    height: 13px;
+    margin-left: 10px;
+    padding-bottom: 3px;
+  }
 }

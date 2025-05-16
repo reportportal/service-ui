@@ -16,13 +16,15 @@
 
 import React from 'react';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
+
 import { Button } from '@reportportal/ui-kit';
 import { withTooltip } from 'componentLibrary/tooltip';
-import Parser from 'html-react-parser';
-import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
-import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import PropTypes from 'prop-types';
+import { ExternalLink } from 'pages/inside/common/externalLink';
+
 import styles from './emptyStatePage.scss';
 import plus from './img/empty-state-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
@@ -92,16 +94,14 @@ export const EmptyStatePage = ({
           </Button>
         ))}
       {documentationLink && (
-        <a
-          href={documentationLink}
-          onClick={handleDocumentationClick}
-          target="_blank"
+        <ExternalLink
           className={cx('link')}
-          data-automation-id={documentationDataAutomationId}
+          href={documentationLink}
+          dataAutomationId={documentationDataAutomationId}
+          onClick={handleDocumentationClick}
         >
-          <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
-          <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
-        </a>
+          {formatMessage(COMMON_LOCALE_KEYS.documentation)}
+        </ExternalLink>
       )}
     </div>
   );

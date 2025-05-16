@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { Environments } from './environments';
-export { CreateEnvironmentModal } from './createEnvironmentModal';
+export { default as CreateEnvironmentModal } from './createEnvironmentModal';

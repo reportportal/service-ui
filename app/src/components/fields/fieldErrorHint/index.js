@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-import { FieldErrorHint } from './fieldErrorHint';
-
-export { FieldErrorHint };
-
-export default FieldErrorHint;
+export { FieldErrorHint } from './fieldErrorHint';
