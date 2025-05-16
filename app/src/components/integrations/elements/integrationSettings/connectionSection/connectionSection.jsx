@@ -40,12 +40,12 @@ const messages = defineMessages({
     id: 'ConnectionSection.connectedMessage',
     defaultMessage: 'Connected',
   },
-  connectionFailedMessage: {
-    id: 'ConnectionSection.connectionFailedMessage',
-    defaultMessage: 'Connection Failed',
+  connectionErrorMessage: {
+    id: 'ConnectionSection.connectionErrorMessage',
+    defaultMessage: 'Connection Error',
   },
-  connectionFailedHeader: {
-    id: 'ConnectionSection.connectionFailedHeader',
+  connectionErrorHeader: {
+    id: 'ConnectionSection.connectionErrorHeader',
     defaultMessage: 'Connection Error',
   },
   connectionFailedDescription: {
@@ -172,7 +172,7 @@ export class ConnectionSection extends Component {
         {!connected && (
           <div className={cx({ 'with-global-message': blocked })}>
             <SystemMessage
-              header={formatMessage(messages.connectionFailedHeader)}
+              header={formatMessage(messages.connectionErrorHeader)}
               mode="error"
               caption={formatMessage(messages.connectionFailedCapture)}
             >
@@ -212,7 +212,7 @@ export class ConnectionSection extends Component {
                 {Parser(connected ? Tick : ErrorIcon)}
                 <p>
                   {formatMessage(
-                    connected ? messages.connectedMessage : messages.connectionFailedMessage,
+                    connected ? messages.connectedMessage : messages.connectionErrorMessage,
                   )}
                 </p>
               </div>
