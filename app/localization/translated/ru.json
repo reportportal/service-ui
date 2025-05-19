@@ -425,7 +425,6 @@
   "Conditions.withoutAny": "Без любого",
   "Conditions.withoutAnyShort": "!люб",
   "ConnectionSection.connectedMessage": "Соединено",
-  "ConnectionSection.connectionErrorHeader": "Ошибка соединения",
   "ConnectionSection.connectionErrorMessage": "Ошибка соединения",
   "ConnectionSection.connectionFailedCapture": "Пожалуйста, проверьте настройки интеграции или попробуйте подключиться позже.",
   "ConnectionSection.connectionFailedDescription": "Не удалось подключиться к {pluginName}",

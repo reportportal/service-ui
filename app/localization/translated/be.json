@@ -425,7 +425,6 @@
   "Conditions.withoutAny": "Без аніякога",
   "Conditions.withoutAnyShort": "!люб",
   "ConnectionSection.connectedMessage": "Падключана",
-  "ConnectionSection.connectionErrorHeader": "Памылка злучэння",
   "ConnectionSection.connectionErrorMessage": "Памылка злучэння",
   "ConnectionSection.connectionFailedCapture": "Калі ласка, праверце настройкі інтэграцыі або паспрабуйце падключыцца пазней.",
   "ConnectionSection.connectionFailedDescription": "Не ўдалося падключыцца да {pluginName}",

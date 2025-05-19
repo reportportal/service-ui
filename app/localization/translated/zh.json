@@ -425,7 +425,6 @@
   "Conditions.withoutAny": "没有任何",
   "Conditions.withoutAnyShort": "非任何",
   "ConnectionSection.connectedMessage": "已连接",
-  "ConnectionSection.connectionErrorHeader": "连接错误",
   "ConnectionSection.connectionErrorMessage": "连接错误",
   "ConnectionSection.connectionFailedCapture": "请检查集成设置，或稍后再尝试连接。",
   "ConnectionSection.connectionFailedDescription": "未能连接至{pluginName}.",

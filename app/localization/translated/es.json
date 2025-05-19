@@ -425,7 +425,6 @@
   "Conditions.withoutAny": "Sin ninguno",
   "Conditions.withoutAnyShort": "!cualquiera",
   "ConnectionSection.connectedMessage": "Conectado",
-  "ConnectionSection.connectionErrorHeader": "Error de conexión",
   "ConnectionSection.connectionErrorMessage": "Error de conexión",
   "ConnectionSection.connectionFailedCapture": "Por favor, compruebe la configuración de la integración o intente conectarse más tarde.",
   "ConnectionSection.connectionFailedDescription": "No se pudo conectar con {pluginName}",
