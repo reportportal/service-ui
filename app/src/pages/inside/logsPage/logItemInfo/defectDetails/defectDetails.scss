@@ -115,6 +115,8 @@
 
 .expand-more {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   line-height: 16px;
   padding-right: 16px;
   color: $COLOR--topaz;
@@ -124,7 +126,7 @@
 
   .icon {
     width: 13px;
-    height: 13px;
+    height: auto;
     margin-right: 10px;
 
     svg {
