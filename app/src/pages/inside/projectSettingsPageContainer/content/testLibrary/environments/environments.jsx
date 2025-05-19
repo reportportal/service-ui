@@ -56,11 +56,15 @@ export const Environments = () => {
         <EmptyStatePage
           title={formatMessage(messages.emptyPageTitle)}
           description={Parser(formatMessage(messages.emptyPageDescription))}
-          buttonName={formatMessage(messages.emptyPageButtonText)}
           documentationLink="https://reportportal.io/docs/"
           imageType="lines"
-          buttonDataAutomationId="createEnvironmentButton"
-          handleButton={onCreateEnvironment}
+          buttons={[
+            {
+              name: formatMessage(messages.emptyPageButtonText),
+              dataAutomationId: 'createEnvironmentButton',
+              handleButton: onCreateEnvironment,
+            },
+          ]}
         />
         <NumerableBlock
           items={benefits.map(formatMessage)}

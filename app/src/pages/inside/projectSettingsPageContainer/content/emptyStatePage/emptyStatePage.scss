@@ -47,3 +47,13 @@
 .link {
   margin-top: 18px;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  &__button--compact {
+    padding: 9px 20px 7px;
+  }
+}

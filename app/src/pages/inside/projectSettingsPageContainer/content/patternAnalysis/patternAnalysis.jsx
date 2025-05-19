@@ -99,11 +99,15 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
               ? messages.noPatternAnalysisDescription
               : messages.noPatternsAppearDescription,
           )}
-          buttonName={isAbleToCreate && formatMessage(messages.create)}
-          buttonDataAutomationId="createPatternButton"
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
-          handleButton={onAddPattern}
           handleDocumentationClick={handleDocumentationClick}
+          buttons={[
+            {
+              name: isAbleToCreate && formatMessage(messages.create),
+              dataAutomationId: 'createPatternButton',
+              handleButton: onAddPattern,
+            },
+          ]}
         />
       )}
     </>

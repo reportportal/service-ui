@@ -272,16 +272,20 @@ export const IntegrationInfo = (props) => {
           title={formatMessage(
             isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
           )}
-          handleButton={onAddProjectIntegration}
           description={formatMessage(
             isAbleToClick
               ? messages.noGlobalIntegrationsDescription
               : messages.noGlobalIntegrationsYetDescription,
           )}
           handleDocumentationClick={handleDocumentationClick}
-          buttonName={isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null}
-          disableButton={!isAbleToClick}
-          buttonDataAutomationId="addProjectIntegrationButton"
+          buttons={[
+            {
+              name: isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null,
+              isDisabled: !isAbleToClick,
+              dataAutomationId: 'addProjectIntegrationButton',
+              handleButton: onAddProjectIntegration,
+            },
+          ]}
         />
       )}
     </>
