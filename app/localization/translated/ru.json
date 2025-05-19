@@ -503,6 +503,7 @@
   "DashboardPage.noResults": "Ничего не найдено",
   "DashboardPage.print": "Печать",
   "DashboardPage.title": "Все панели управления",
+  "DashboardPage.updateDashboardSuccess": "Панель управления успешно обновлена",
   "DashboardPageHeader.allDashboardsTitle": "Все панели управления",
   "DashboardPageToolbar.searchPlaceholder": "Поиск по названию",
   "DashboardPrintPage.dashboardTitle": "Панель управления:",

@@ -503,6 +503,7 @@
   "DashboardPage.noResults": "No se encontraron resultados",
   "DashboardPage.print": "Imprimir",
   "DashboardPage.title": "Todos los paneles de control",
+  "DashboardPage.updateDashboardSuccess": "Dashboard has been updated successfully",
   "DashboardPageHeader.allDashboardsTitle": "Todos los paneles de control",
   "DashboardPageToolbar.searchPlaceholder": "Buscar por nombre",
   "DashboardPrintPage.dashboardTitle": "Panel de control:",

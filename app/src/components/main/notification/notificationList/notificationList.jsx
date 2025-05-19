@@ -103,6 +103,10 @@ const messages = defineMessages({
     id: 'DashboardPage.addDashboardSuccess',
     defaultMessage: 'Dashboard has been created successfully.',
   },
+  updateDashboardSuccess: {
+    id: 'DashboardPage.updateDashboardSuccess',
+    defaultMessage: 'Dashboard has been updated successfully',
+  },
   deleteDashboardSuccess: {
     id: 'DashboardPage.deleteDashboardSuccess',
     defaultMessage: 'Dashboard has been deleted',

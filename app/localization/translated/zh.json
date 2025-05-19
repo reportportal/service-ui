@@ -503,6 +503,7 @@
   "DashboardPage.noResults": "未找到结果",
   "DashboardPage.print": "打印",
   "DashboardPage.title": "全部报告面板",
+  "DashboardPage.updateDashboardSuccess": "Dashboard has been updated successfully",
   "DashboardPageHeader.allDashboardsTitle": "全部报告面板",
   "DashboardPageToolbar.searchPlaceholder": "按名称搜索",
   "DashboardPrintPage.dashboardTitle": "报告面板：",

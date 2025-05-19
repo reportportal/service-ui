@@ -229,6 +229,12 @@ function* updateDashboard({ payload: dashboard }) {
     data: { name, description },
   });
   yield put(updateDashboardItemSuccessAction(dashboard));
+  yield put(
+    showNotification({
+      messageId: 'updateDashboardSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
 }
 
 function* updateDashboardWidgets({ payload: dashboard }) {
