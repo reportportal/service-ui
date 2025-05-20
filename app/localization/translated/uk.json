@@ -502,6 +502,7 @@
   "DashboardPage.noResults": "Нічого не знайдено",
   "DashboardPage.print": "Друк",
   "DashboardPage.title": "Всі панелі управління",
+  "DashboardPage.updateDashboardSuccess": "Панель управління успішно оновлена",
   "DashboardPageHeader.allDashboardsTitle": "Всі панелі управління",
   "DashboardPageToolbar.searchPlaceholder": "Пошук за назвою",
   "DashboardPrintPage.dashboardTitle": "Панель управління:",
