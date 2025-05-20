@@ -123,6 +123,10 @@ const messages = defineMessages({
     id: 'Notifications.dashboardConfigurationCopied',
     defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
   },
+  dashboardExists: {
+    id: 'DashboardPage.dashboardExists',
+    defaultMessage: "Dashboard with the same name ''{name}'' already exists on the project",
+  },
   addPatternSuccess: {
     id: 'PatternAnalysis.addPatternSuccess',
     defaultMessage: 'Pattern rule has been created',

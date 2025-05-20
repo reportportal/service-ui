@@ -493,6 +493,7 @@
   "DashboardItemPage.notMyDashboardEmptyHeader": "此报告面板上没有小部件",
   "DashboardPage.addDashboardSuccess": "Dashboard has been created successfully.",
   "DashboardPage.addPreconfigDashboardError": "Dashboard can't be created. Please check the pasted configuration.",
+  "DashboardPage.dashboardExists": "Dashboard with the same name ''{name}'' already exists on the project",
   "DashboardPage.deleteDashboardSuccess": "报告面板已删除",
   "DashboardPage.modal.deleteModalConfirmationText": "您确定要删除报告面板“<b>{name}</b>”吗？它将被永久删除。",
   "DashboardPage.modal.deleteModalSubmitButtonText": "删除",
