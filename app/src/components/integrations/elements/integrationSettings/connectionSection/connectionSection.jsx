@@ -177,7 +177,7 @@ export class ConnectionSection extends Component {
               caption={formatMessage(messages.connectionFailedCapture)}
             >
               {formatMessage(messages.connectionFailedDescription, {
-                pluginName: details.name || pluginName,
+                pluginName: details?.name || pluginName,
               })}
             </SystemMessage>
           </div>
