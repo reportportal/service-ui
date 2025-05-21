@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { useSelector } from 'react-redux';
@@ -22,8 +23,9 @@ import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useEffect, useState } from 'react';
+import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import { FilterInput } from './filterInput/filterInput';
+import { LAST_RUN_DATE_FILTER_NAME } from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -42,6 +44,8 @@ export const FilterContentWrapped = ({
   handleSubmit,
   getClearButtonState,
   getApplyButtonState,
+  customValueField,
+  clearTimeRange,
   event,
 }) => {
   const { formatMessage } = useIntl();
@@ -54,12 +58,15 @@ export const FilterContentWrapped = ({
     initialize(initialState);
   }, []);
 
-  const clearAll = () => initialize(defaultState);
+  const clearAll = () => {
+    initialize(defaultState);
+    clearTimeRange();
+  };
 
   useEffect(() => {
     setIsClear(getClearButtonState(formValues));
     setIsApply(getApplyButtonState(formValues));
-  }, [formValues]);
+  }, [formValues, customValueField]);
 
   const closePopover = () => {
     setIsOpen(false);
@@ -78,6 +85,16 @@ export const FilterContentWrapped = ({
 
       return acc;
     }, {});
+
+    if (customValueField && fields[LAST_RUN_DATE_FILTER_NAME].value) {
+      fields[LAST_RUN_DATE_FILTER_NAME].value = customValueField;
+    } else if (customValueField) {
+      fields[LAST_RUN_DATE_FILTER_NAME] = {
+        value: customValueField,
+        condition: CONDITION_BETWEEN.toUpperCase(),
+      };
+      appliedFiltersCount += 1;
+    }
 
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
@@ -133,10 +150,14 @@ FilterContentWrapped.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
+  customValueField: PropTypes.string,
+  clearTimeRange: PropTypes.func,
   event: PropTypes.func,
 };
 
 FilterContentWrapped.defaultProps = {
+  customValueField: '',
+  clearTimeRange: () => {},
   event: null,
 };
 

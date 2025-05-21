@@ -18,6 +18,7 @@ import moment from 'moment/moment';
 import { getMinutesFromTimestamp } from 'common/utils';
 import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
+import { TIME_RANGE_DIVIDER } from 'components/main/timeRange';
 
 export function bindDefaultValue(key, options = {}) {
   const { filterValues } = this.props;
@@ -31,18 +32,31 @@ export function bindDefaultValue(key, options = {}) {
   };
 }
 
+const getTimeRange = (value) => {
+  const [from, to] = value.split(TIME_RANGE_DIVIDER);
+  const [fromMonth, fromDay, fromYear] = from.split('-').map(Number);
+  const start = new Date(fromYear, fromMonth - 1, fromDay).getTime();
+  const [toMonth, toDay, toYear] = to.split('-').map(Number);
+  const endOfToday = new Date(toYear, toMonth - 1, toDay).getTime();
+
+  return [start, endOfToday];
+};
+
 const getFormattedDate = (value) => {
   const utcString = moment().format('ZZ');
+
   const calculateStartDate = (days) =>
     moment()
       .startOf('day')
       .subtract(days - 1, 'days')
       .valueOf();
-  const endOfToday = moment()
+
+  let endOfToday = moment()
     .add(1, 'days')
     .startOf('day')
     .valueOf();
   let start = null;
+
   switch (value) {
     case 'today':
       start = calculateStartDate(1);
@@ -57,8 +71,10 @@ const getFormattedDate = (value) => {
       start = calculateStartDate(30);
       break;
     default:
+      [start, endOfToday] = getTimeRange(value);
       break;
   }
+
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(endOfToday)};${utcString}`;
 };
 

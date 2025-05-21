@@ -17,6 +17,7 @@
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
   FilterButton,
@@ -32,12 +33,13 @@ import {
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
+import { TimeRange, useTimeRangeState } from 'components/main/timeRange';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import styles from './projectsFilter.scss';
 
 const cx = classNames.bind(styles);
+
 export const ProjectsFilter = ({
   entities,
   onFilterChange,
@@ -49,6 +51,16 @@ export const ProjectsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
+
+  const {
+    customStartTimeRange,
+    setCustomStartTimeRange,
+    customEndTimeRange,
+    setCustomEndTimeRange,
+    customTimeRange,
+    customDisplayedValue,
+    clearTimeRange,
+  } = useTimeRangeState(entities);
 
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
@@ -63,6 +75,17 @@ export const ProjectsFilter = ({
             value: timeRange[0].value,
             options: timeRange,
             placeholder: formatMessage(messages.lastRunDatePlaceholder),
+            customDisplayedValue,
+            notScrollable: true,
+            onChange: clearTimeRange,
+            footer: (
+              <TimeRange
+                startDate={customStartTimeRange}
+                setStartDate={setCustomStartTimeRange}
+                endDate={customEndTimeRange}
+                setEndDate={setCustomEndTimeRange}
+              />
+            ),
           },
         },
       ],
@@ -181,6 +204,10 @@ export const ProjectsFilter = ({
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
     }
 
+    if (customTimeRange) {
+      isApply = customTimeRange === initialFilterState[LAST_RUN_DATE_FILTER_NAME];
+    }
+
     return isApply;
   };
 
@@ -195,7 +222,9 @@ export const ProjectsFilter = ({
       defaultState={defaultFilterState}
       filteredAction={() => dispatch(fetchFilteredProjectAction())}
       getClearButtonState={getClearButtonState}
+      customValueField={customTimeRange}
       getApplyButtonState={getApplyButtonState}
+      clearTimeRange={clearTimeRange}
       event={eventHandler}
     />
   );
