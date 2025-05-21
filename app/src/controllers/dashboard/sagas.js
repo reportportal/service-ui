@@ -50,7 +50,6 @@ import {
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
   DUPLICATE_DASHBOARD,
   COPY_DASHBOARD_CONFIG,
-  ERROR_CODES,
 } from './constants';
 import { querySelector } from './selectors';
 import {
@@ -58,6 +57,7 @@ import {
   deleteDashboardSuccessAction,
   updateDashboardItemSuccessAction,
 } from './actionCreators';
+import { getDashboardNotificationAction, tryParseConfig } from './utils';
 
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
@@ -105,26 +105,6 @@ function* fetchDashboard() {
   }
 }
 
-function tryParsePreconfiguredConfig(config) {
-  try {
-    return JSON.parse(config);
-  } catch {
-    return null;
-  }
-}
-
-function getDashboardNotificationAction(error, name) {
-  const dashboardExists = error.errorCode === ERROR_CODES.DASHBOARD_EXISTS;
-
-  return dashboardExists
-    ? showNotification({
-        messageId: 'dashboardExists',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { name },
-      })
-    : showDefaultErrorNotification(error);
-}
-
 function* addDashboard({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const owner = yield select(userIdSelector);
@@ -136,7 +116,7 @@ function* addDashboard({ payload }) {
     let data = payload;
 
     if (isPreconfigured) {
-      parsedConfig = tryParsePreconfiguredConfig(payload.config);
+      parsedConfig = tryParseConfig(payload.config);
 
       if (!parsedConfig) {
         if (onError) {
