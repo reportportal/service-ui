@@ -493,6 +493,7 @@
   "DashboardItemPage.notMyDashboardEmptyHeader": "На гэтай панэлі кіравання няма віджэтаў",
   "DashboardPage.addDashboardSuccess": "Дашбард быў паспяхова створаны.",
   "DashboardPage.addPreconfigDashboardError": "Немагчыма стварыць дашборд. Калі ласка, праверце ўстаўленую канфігурацыю.",
+  "DashboardPage.dashboardExists": "У праекце ўжо існуе панэль кіравання з назвай ''{name}''",
   "DashboardPage.deleteDashboardSuccess": "Панэль кіравання была выдаленая",
   "DashboardPage.modal.deleteModalConfirmationText": "Вы ўпэўнены, што хочаце выдаліць панэль кіравання  '<b>{name}</b>'? Яна больш не будзе існаваць.",
   "DashboardPage.modal.deleteModalSubmitButtonText": "Выдаліць",
