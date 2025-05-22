@@ -162,7 +162,12 @@ export class ConnectionSection extends Component {
       projectIntegrations,
       pluginName,
       isEditable,
-      data: { name, creator, creationDate, details },
+      data: {
+        name,
+        creator,
+        creationDate,
+        integrationType: { details },
+      },
     } = this.props;
 
     const availableProjectIntegrations = projectIntegrations[pluginName] || [];
@@ -177,7 +182,7 @@ export class ConnectionSection extends Component {
               caption={formatMessage(messages.connectionFailedCapture)}
             >
               {formatMessage(messages.connectionFailedDescription, {
-                pluginName: details?.name || pluginName,
+                pluginName: details.name || pluginName,
               })}
             </SystemMessage>
           </div>
