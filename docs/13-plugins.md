@@ -1,5 +1,7 @@
 # Plugins
 
+TBU
+
 From version 5 Report Portal supports custom plugins that can be uploaded to the system as `.jar` files on _plugins_ page (_https://your_server/ui/#administrate/plugins_) or via API.
 
 ## UI plugin engine

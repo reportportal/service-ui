@@ -17,7 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Footer } from 'layouts/settingsLayout/footer';
+import { Footer } from 'layouts/common/footer';
 import styles from './settingsLayout.scss';
 
 const cx = classNames.bind(styles);

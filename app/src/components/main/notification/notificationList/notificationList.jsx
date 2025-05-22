@@ -107,6 +107,10 @@ const messages = defineMessages({
     id: 'DashboardPage.addDashboardSuccess',
     defaultMessage: 'Dashboard has been created successfully.',
   },
+  updateDashboardSuccess: {
+    id: 'DashboardPage.updateDashboardSuccess',
+    defaultMessage: 'Dashboard has been updated successfully',
+  },
   deleteDashboardSuccess: {
     id: 'DashboardPage.deleteDashboardSuccess',
     defaultMessage: 'Dashboard has been deleted',
@@ -122,6 +126,10 @@ const messages = defineMessages({
   dashboardConfigurationCopied: {
     id: 'Notifications.dashboardConfigurationCopied',
     defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
+  },
+  dashboardExists: {
+    id: 'DashboardPage.dashboardExists',
+    defaultMessage: "Dashboard with the same name ''{name}'' already exists on the project",
   },
   addPatternSuccess: {
     id: 'PatternAnalysis.addPatternSuccess',

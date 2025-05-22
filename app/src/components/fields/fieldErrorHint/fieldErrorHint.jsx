@@ -250,6 +250,26 @@ const messages = defineMessages({
     id: 'Notifications.ruleNameDuplicateHint',
     defaultMessage: 'Rule with the same name already exists for this communication channel',
   },
+  footerLinkNameLengthHint: {
+    id: 'FooterLink.footerLinkNameLengthHint',
+    defaultMessage: "Link name should have a size from '3' to 30' characters",
+  },
+  footerLinkNameDuplicateHint: {
+    id: 'FooterLink.footerLinkNameDuplicateHint',
+    defaultMessage: 'Link with the same name already exists',
+  },
+  footerLinkURLDuplicateHint: {
+    id: 'FooterLink.footerLinkURLDuplicateHint',
+    defaultMessage: 'Link with the same URL or Email already exists',
+  },
+  footerLinkUrlHint: {
+    id: 'FooterLink.footerLinkUrlHint',
+    defaultMessage: 'Please provide a valid URL or Email',
+  },
+  footerLinkURLLengthHint: {
+    id: 'FooterLink.footerLinkURLLengthHint',
+    defaultMessage: 'URL or Email should have size not more than 1024 symbols',
+  },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',
     defaultMessage: 'Duplicated column names are prohibited',
