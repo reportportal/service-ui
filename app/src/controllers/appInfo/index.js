@@ -31,7 +31,6 @@ export {
   isOldHistorySelector,
   flushDataInSelector,
   isDemoInstanceSelector,
-  areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,
