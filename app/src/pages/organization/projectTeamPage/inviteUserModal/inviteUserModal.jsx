@@ -125,7 +125,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
       );
       onInvite();
 
-      return inviteUser;
+      return invitedUser;
     } catch (err) {
       dispatch(
         showNotification({
@@ -207,12 +207,13 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
       </p>
       <form className={cx('invite-form')}>
         <ModalField label={formatMessage(messages.email)} className={cx('label')} noMinHeight>
-          <FieldProvider name="email" type="email">
+          <FieldProvider name="email">
             <FieldErrorHint provideHint={false}>
               <FieldText
                 maxLength={'128'}
                 placeholder={formatMessage(messages.email)}
                 defaultWidth={false}
+                type="email"
               />
             </FieldErrorHint>
           </FieldProvider>
