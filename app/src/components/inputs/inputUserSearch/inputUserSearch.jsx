@@ -40,7 +40,8 @@ export const makeOptions = (projectId, isAdmin) => ({ content: options }) =>
     email: option.email || '',
     disabled: isAdmin ? !!option.assignedProjects[projectId] : false,
     isAssigned: isAdmin ? !!option.assignedProjects[projectId] : false,
-    userAvatar: URLS.dataUserPhoto(projectId, isAdmin ? option.userId : option.login, true),
+    projectId,
+    userId: isAdmin ? option.userId : option.login,
     assignedProjects: option.assignedProjects || {},
   }));
 
