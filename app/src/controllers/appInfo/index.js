@@ -34,7 +34,6 @@ export {
   flushDataInSelector,
   isDemoInstanceSelector,
   instanceTypeSelector,
-  areUserSuggestionsAllowedSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,

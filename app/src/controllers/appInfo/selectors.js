@@ -31,7 +31,6 @@ import {
   INSTANCE_TYPE,
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
-  USER_SUGGESTIONS,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_FOOTER_LINKS_KEY,
@@ -79,8 +78,6 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
-export const areUserSuggestionsAllowedSelector = (state) =>
-  (environmentSelector(state)[USER_SUGGESTIONS] || 'true') === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
