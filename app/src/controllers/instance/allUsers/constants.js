@@ -22,5 +22,5 @@ export const TOGGLE_USER_ROLE_FORM = 'toggleUserRoleFormAction';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_SORT_COLUMN = 'fullName';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
-export const SEARCH_KEY = 'filter.EQ.full_name';
+export const SEARCH_KEY = 'filter.CNT.full_name';
 export const SORTING_KEY = 'order';

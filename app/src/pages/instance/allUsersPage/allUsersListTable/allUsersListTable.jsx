@@ -79,26 +79,26 @@ const AllUsersListTableComponent = ({
   const data = useMemo(
     () =>
       users.map((user) => {
-        const organizationsCount = Object.keys(user.assignedOrganizations || {}).length;
+        const organizationsCount = Object.keys(user.organizations || {}).length;
         const isCurrentUser = user.id === currentUser.id;
-        const memberBadges = getRoleBadgesData(user.userRole, null, isCurrentUser);
+        const memberBadges = getRoleBadgesData(user.instance_role, null, isCurrentUser);
 
         return {
           id: user.id,
           fullName: {
-            content: user.fullName,
+            content: user.full_name,
             component: <UserNameCell user={user} badges={memberBadges} />,
           },
           email: user.email,
           lastLogin: {
-            content: user.metadata?.last_login,
-            component: user.metadata?.last_login ? (
-              <AbsRelTime startTime={user.metadata.last_login} customClass={cx('date')} />
+            content: user.last_login_at,
+            component: user.last_login_at ? (
+              <AbsRelTime startTime={user.last_login_at} customClass={cx('date')} />
             ) : (
               <span>n/a</span>
             ),
           },
-          accountType: getDisplayAccountType(user.accountType),
+          accountType: getDisplayAccountType(user.account_type),
           organizations: organizationsCount,
         };
       }),
