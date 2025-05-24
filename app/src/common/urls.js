@@ -163,6 +163,7 @@ export const URLS = {
     `${urlBase}users/search${getQueryParams({
       term,
     })}`,
+  searchAllUsers: () => `${urlCommonBase}users/searches`,
   projectAddPattern: (projectKey) => `${urlBase}${projectKey}/settings/pattern`,
   projectUpdatePattern: (projectKey, patternId) =>
     `${urlBase}${projectKey}/settings/pattern/${patternId}`,
@@ -289,7 +290,6 @@ export const URLS = {
   events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlBase}users/all`,
 
   exportUsers: (filterEntities) =>
     `${urlBase}users/export${getQueryParams({

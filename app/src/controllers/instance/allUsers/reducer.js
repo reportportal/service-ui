@@ -40,7 +40,7 @@ const toggleUserRoleFormReducer = (state = [], { type = '', payload = {} }) => {
 
 const reducer = combineReducers({
   allUsers: queueReducers(
-    fetchReducer(NAMESPACE, { contentPath: 'content' }),
+    fetchReducer(NAMESPACE, { contentPath: 'items' }),
     toggleUserRoleFormReducer,
   ),
   pagination: paginationReducer(NAMESPACE),

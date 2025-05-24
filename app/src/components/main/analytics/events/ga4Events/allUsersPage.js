@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
-export const FETCH_ALL_USERS = 'fetchAllUsers';
-export const NAMESPACE = 'allUsers';
-export const TOGGLE_USER_ROLE_FORM = 'toggleUserRoleFormAction';
-export const DEFAULT_PAGE_SIZE = 50;
-export const DEFAULT_SORT_COLUMN = 'fullName';
-export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
-export const SEARCH_KEY = 'filter.EQ.full_name';
-export const SORTING_KEY = 'order';
+const ALL_USERS_PAGE = 'all_users';
+
+const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ALL_USERS_PAGE);
+
+export const ALL_USERS_PAGE_EVENTS = {
+  SEARCH_ALL_USERS_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'search',
+  },
+};

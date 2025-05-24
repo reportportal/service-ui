@@ -17,14 +17,17 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
+import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { querySelector } from './selectors';
 import { NAMESPACE, FETCH_ALL_USERS } from './constants';
 
 function* fetchAllUsers() {
-  const query = yield select(querySelector);
+  const filtersParams = yield select(querySelector);
+  const data = prepareQueryFilters(filtersParams);
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.allUsers(), {
-      params: { ...query },
+    fetchDataAction(NAMESPACE)(URLS.searchAllUsers(), {
+      method: 'post',
+      data,
     }),
   );
 }

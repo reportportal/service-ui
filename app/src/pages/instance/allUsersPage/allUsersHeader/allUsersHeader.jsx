@@ -19,13 +19,11 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import {
-  MeatballMenuIcon,
-  FilterOutlineIcon,
-  Button,
-  SearchIcon,
-  Popover,
-} from '@reportportal/ui-kit';
+import { MeatballMenuIcon, FilterOutlineIcon, Button, Popover } from '@reportportal/ui-kit';
+import { NAMESPACE, SEARCH_KEY } from 'controllers/instance/allUsers/constants';
+import { SearchField } from 'components/fields/searchField';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
+import { withFilter } from 'controllers/filter';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { showModalAction } from 'controllers/modal';
 import styles from './allUsersHeader.scss';
@@ -55,7 +53,11 @@ const messages = defineMessages({
   },
 });
 
-export const AllUsersHeader = ({ onInvite }) => {
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
+  SearchField,
+);
+
+export const AllUsersHeader = ({ onInvite, isLoading, searchValue, setSearchValue }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(false);
@@ -76,10 +78,18 @@ export const AllUsersHeader = ({ onInvite }) => {
         <span className={cx('title')}>{formatMessage(messages.allUsersTitle)}</span>
         <div className={cx('actions')}>
           <div className={cx('icons')}>
-            <SearchIcon />
-            <i className={cx('filter-icon')}>
-              <FilterOutlineIcon />
-            </i>
+            <div className={cx('filters')}>
+              <SearchFieldWithFilter
+                isLoading={isLoading}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                event={ALL_USERS_PAGE_EVENTS.SEARCH_ALL_USERS_FIELD}
+              />
+              <i className={cx('filter-icon')}>
+                <FilterOutlineIcon />
+              </i>
+            </div>
             {!ssoUsersOnly && (
               <>
                 <Button variant="ghost" onClick={onInvite}>
@@ -110,6 +120,9 @@ export const AllUsersHeader = ({ onInvite }) => {
 
 AllUsersHeader.propTypes = {
   onInvite: PropTypes.func,
+  isLoading: PropTypes.bool.isRequired,
+  searchValue: PropTypes.string.isRequired,
+  setSearchValue: PropTypes.func.isRequired,
 };
 
 AllUsersHeader.defaultProps = {
