@@ -22,8 +22,17 @@ export {
   TEAMMATES_FILTER_NAME_CONDITION,
   LAUNCHES_FILTER_NAME_CONDITION,
   ORGANIZATION_TYPE_FILTER_NAME,
+  USERS_PERMISSIONS_FILTER_NAME,
+  ACCOUNT_TYPE_FILTER_NAME,
+  LAST_LOGIN_FILTER_NAME,
+  EMAIL_FILTER_NAME,
+  EMAIL_FILTER_NAME_CONDITION,
   getRangeComparisons,
   getTimeRange,
   getOrganizationTypes,
+  getLastLogin,
+  getEmailComparisons,
+  getPermissions,
+  getAccountTypes,
 } from './constants';
 export { messages } from './messages';

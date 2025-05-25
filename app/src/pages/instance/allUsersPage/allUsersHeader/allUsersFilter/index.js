@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
-
-const ALL_USERS_PAGE = 'all_users';
-
-const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ALL_USERS_PAGE);
-
-export const ALL_USERS_PAGE_EVENTS = {
-  SEARCH_ALL_USERS_FIELD: {
-    ...BASIC_EVENT_PARAMETERS,
-    place: 'all_users_page',
-    element_name: 'search',
-  },
-  clickApplyFilterButton: (type, condition) => ({
-    ...BASIC_EVENT_PARAMETERS,
-    modal: 'filter_all_users',
-    element_name: 'apply',
-    condition,
-    type,
-  }),
-};
+export { AllUsersFilter } from './allUsersFilter';
