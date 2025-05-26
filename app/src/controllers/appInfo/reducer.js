@@ -15,6 +15,31 @@
  */
 
 import { fetchReducer } from 'controllers/fetch';
-import { APP_INFO_NAMESPACE } from './constants';
+import { queueReducers } from 'common/utils';
+import { APP_INFO_NAMESPACE, UPDATE_API_EXTENSIONS_RESULT } from './constants';
 
-export const appInfoReducer = fetchReducer(APP_INFO_NAMESPACE, { initialState: {} });
+const apiExtensionResultReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case UPDATE_API_EXTENSIONS_RESULT:
+      return {
+        ...state,
+        api: {
+          ...state.api,
+          extensions: {
+            ...state.api?.extensions,
+            result: {
+              ...state.api?.extensions?.result,
+              [payload.key]: payload.value,
+            },
+          },
+        },
+      };
+    default:
+      return state;
+  }
+};
+
+export const appInfoReducer = queueReducers(
+  fetchReducer(APP_INFO_NAMESPACE, { initialState: {} }),
+  apiExtensionResultReducer,
+);

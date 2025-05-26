@@ -196,6 +196,7 @@ export const ProjectsFilter = ({
       filteredAction={() => dispatch(fetchFilteredProjectAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
+      searchProp="name"
       event={eventHandler}
     />
   );

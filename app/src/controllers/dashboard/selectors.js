@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { createSelector } from 'reselect';
 import {
-  activeDashboardIdSelector,
   pagePropertiesSelector,
   createQueryParametersSelector,
   PROJECT_DASHBOARD_ITEM_PAGE,
@@ -30,12 +28,7 @@ export const dashboardItemsSelector = (state) => domainSelector(state).dashboard
 
 export const dashboardGridTypeSelector = (state) => domainSelector(state).gridType;
 
-export const activeDashboardItemSelector = createSelector(
-  dashboardItemsSelector,
-  activeDashboardIdSelector,
-  (dashboardItems, activeDashboardId) =>
-    dashboardItems.find((item) => item.id === activeDashboardId) || {},
-);
+export const activeDashboardItemSelector = (state) => domainSelector(state).activeDashboardItem;
 
 export const totalDashboardsSelector = (state) =>
   domainSelector(state).pagination.totalElements || 0;
