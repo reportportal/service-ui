@@ -29,7 +29,6 @@ export {
   EMAIL_FILTER_NAME_CONDITION,
   getRangeComparisons,
   getTimeRange,
-  getOrganizationTypes,
   getLastLogin,
   getEmailComparisons,
   getPermissions,

@@ -30,7 +30,6 @@ import {
   ORGANIZATION_TYPE_FILTER_NAME,
   getRangeComparisons,
   getTimeRange,
-  getOrganizationTypes,
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
@@ -52,7 +51,11 @@ export const OrganizationsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
-  const organizationTypes = getOrganizationTypes(formatMessage);
+  const organizationTypes = [
+    { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
+    { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
+    { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
+  ];
 
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {

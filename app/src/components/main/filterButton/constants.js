@@ -66,12 +66,6 @@ export const getEmailComparisons = (formatMessage) => [
   { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ.toUpperCase() },
 ];
 
-export const getOrganizationTypes = (formatMessage) => [
-  { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
-  { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
-  { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
-];
-
 export const getPermissions = (formatMessage) => [
   { label: formatMessage(messages.all), value: '' },
   { label: formatMessage(messages.adminsOnly), value: ADMINISTRATOR },

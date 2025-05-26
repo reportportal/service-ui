@@ -73,10 +73,6 @@ export const messages = defineMessages({
     id: 'FilterButton.helpText',
     defaultMessage: 'Only digits are allowed',
   },
-  typePersonal: {
-    id: 'FilterButton.typePersonal',
-    defaultMessage: 'Personal',
-  },
   typeInternal: {
     id: 'FilterButton.typeInternal',
     defaultMessage: 'Internal',
