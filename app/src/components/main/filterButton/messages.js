@@ -37,6 +37,14 @@ export const messages = defineMessages({
     id: 'FilterButton.last30days',
     defaultMessage: 'Last 30 days',
   },
+  last90days: {
+    id: 'FilterButton.last90days',
+    defaultMessage: 'Last 90 days',
+  },
+  moreThanYearAgo: {
+    id: 'FilterButton.moreThanYearAgo',
+    defaultMessage: 'More than a year ago',
+  },
   equals: {
     id: 'FilterButton.equals',
     defaultMessage: 'Equals',
@@ -51,7 +59,7 @@ export const messages = defineMessages({
   },
   notEqual: {
     id: 'FilterButton.notEqual',
-    defaultMessage: 'Not equal',
+    defaultMessage: 'Not equals',
   },
   contains: {
     id: 'FilterButton.contains',
@@ -65,16 +73,40 @@ export const messages = defineMessages({
     id: 'FilterButton.helpText',
     defaultMessage: 'Only digits are allowed',
   },
-  typePersonal: {
-    id: 'OrganizationsFilter.typePersonal',
-    defaultMessage: 'Personal',
-  },
   typeInternal: {
-    id: 'OrganizationsFilter.typeInternal',
+    id: 'FilterButton.typeInternal',
     defaultMessage: 'Internal',
   },
   typeSynched: {
-    id: 'OrganizationsFilter.typeSynced',
+    id: 'FilterButton.typeSynced',
     defaultMessage: 'Synched',
+  },
+  all: {
+    id: 'FilterButton.all',
+    defaultMessage: 'All',
+  },
+  adminsOnly: {
+    id: 'FilterButton.adminsOnly',
+    defaultMessage: 'Admins only',
+  },
+  nonAdmins: {
+    id: 'FilterButton.nonAdmins',
+    defaultMessage: 'Non-Admins',
+  },
+  gitHub: {
+    id: 'FilterButton.gitHub',
+    defaultMessage: 'GitHub',
+  },
+  ldap: {
+    id: 'FilterButton.ldap',
+    defaultMessage: 'Ldap',
+  },
+  saml: {
+    id: 'FilterButton.saml',
+    defaultMessage: 'Saml',
+  },
+  scim: {
+    id: 'FilterButton.scim',
+    defaultMessage: 'SCIM',
   },
 });
