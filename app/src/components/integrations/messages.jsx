@@ -41,7 +41,7 @@ export const PLUGIN_DESCRIPTIONS_MAP = {
   [JIRA]: (
     <FormattedMessage
       id="Integrations.Jira.description"
-      defaultMessage="The integration provides an exchange of information between ReportPortal and the JIRA Server, such as posting issues and linking issues, getting updates on their statuses."
+      defaultMessage="The integration provides an exchange of information between ReportPortal and the Jira Server, such as posting issues and linking issues, getting updates on their statuses."
     />
   ),
   [RALLY]: (
