@@ -34,12 +34,13 @@ export const FilterButton = ({
   filteredAction,
   getClearButtonState,
   getApplyButtonState,
+  searchProp,
   event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const { name, ...filters } = definedFilters;
+    const { [searchProp]: value, ...filters } = definedFilters;
     setAppliedFiltersCount(Object.keys(filters).length);
     filteredAction();
   }, []);
@@ -102,6 +103,7 @@ FilterButton.propTypes = {
   filteredAction: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
+  searchProp: PropTypes.string.isRequired,
   event: PropTypes.func,
 };
 

@@ -32,7 +32,7 @@ export const UserNameCell = ({ user, badges }) => {
     <div className={cx('user-name-cell')}>
       <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
       <div className={cx('name-badge-wrapper')}>
-        <div className={cx('full-name')}>{user.fullName}</div>
+        <div className={cx('full-name')}>{user.full_name}</div>
         {badges.length > 0 && (
           <div className={cx('badges')}>
             {badges.map(({ title, type }) => {
@@ -65,7 +65,7 @@ export const UserNameCell = ({ user, badges }) => {
 UserNameCell.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    fullName: PropTypes.string.isRequired,
+    full_name: PropTypes.string.isRequired,
   }).isRequired,
   badges: PropTypes.arrayOf(
     PropTypes.shape({

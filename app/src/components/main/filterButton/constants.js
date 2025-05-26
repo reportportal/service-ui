@@ -33,7 +33,7 @@ export const TEAMMATES_FILTER_NAME = 'users';
 export const TEAMMATES_FILTER_NAME_CONDITION = 'users_condition';
 export const USERS_PERMISSIONS_FILTER_NAME = 'instance_role';
 export const ACCOUNT_TYPE_FILTER_NAME = 'account_type';
-export const LAST_LOGIN_FILTER_NAME = 'last_login_at';
+export const LAST_LOGIN_FILTER_NAME = 'lastLogin';
 export const EMAIL_FILTER_NAME = 'email';
 export const EMAIL_FILTER_NAME_CONDITION = 'email_condition';
 
