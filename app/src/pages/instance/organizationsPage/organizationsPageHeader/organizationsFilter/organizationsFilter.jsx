@@ -16,7 +16,9 @@
 
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -33,8 +35,7 @@ import {
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+import { TimeRange, useTimeRangeState } from 'components/main/timeRange';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
 
@@ -56,6 +57,16 @@ export const OrganizationsFilter = ({
     { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
     { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
   ];
+
+  const {
+    customStartTimeRange,
+    setCustomStartTimeRange,
+    customEndTimeRange,
+    setCustomEndTimeRange,
+    customTimeRange,
+    customDisplayedValue,
+    clearTimeRange,
+  } = useTimeRangeState(entities);
 
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {
@@ -87,6 +98,17 @@ export const OrganizationsFilter = ({
             value: timeRange[0].value,
             options: timeRange,
             placeholder: formatMessage(messages.lastRunDatePlaceholder),
+            customDisplayedValue,
+            notScrollable: true,
+            onChange: clearTimeRange,
+            footer: (
+              <TimeRange
+                startDate={customStartTimeRange}
+                setStartDate={setCustomStartTimeRange}
+                endDate={customEndTimeRange}
+                setEndDate={setCustomEndTimeRange}
+              />
+            ),
           },
         },
       ],
@@ -218,6 +240,10 @@ export const OrganizationsFilter = ({
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
     }
 
+    if (customTimeRange) {
+      isApply = customTimeRange === initialFilterState[LAST_RUN_DATE_FILTER_NAME];
+    }
+
     return isApply;
   };
 
@@ -233,6 +259,8 @@ export const OrganizationsFilter = ({
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
+      customValueField={customTimeRange}
+      clearTimeRange={clearTimeRange}
       event={eventHandler}
     />
   );
