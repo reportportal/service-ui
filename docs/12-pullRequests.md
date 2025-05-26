@@ -7,21 +7,23 @@ Every UI developer should have one copy of our [GitHub repository](https://githu
 Repositories definitions:
 
 - _`upstream`_ - remote repository of Report Portal.
-- _`origin`_ - your remote forked version of _`upstream`_ if exists.
+- _`origin`_ - your remote forked version of _`upstream`_, if exists.
 - _`local`_ - copy on your local machine.
 
 Main branches:
 
 - `develop` - main development branch.
-- `{versionNumber}` (eg `5.7`) - frozen branch with next release version.
+- `rc/{versionNumber}` or `hotfix/5.12.3` (e.g. `rc/5.20.1`) - frozen branch with next release version.
 - `master` - release branch (contains last released version).
 
-Main code reviewer is UI Team Leader. His code review is mandatory for each PR. But every developer and contributor are able to provide review for others PRs, it will be very helpful for us.
+**Follow** the [Code review principles](https://kb.epam.com/display/EPMRPP/Code+review+process) defined in the team.
+
+Code review from at least one UI team members is mandatory. But every developer and contributor are able to provide review for others PRs, it will be very helpful for us.
 
 Commits and PRs naming format - `JIRA task id || Short task description` (for example "EPMRPP-123 || Awesome functionality implementation.")
 All existing PRs you can find [here](https://github.com/reportportal/service-ui/pulls).
 
-Critical amount of PRs is 5. It's means that Code Review task gets a highest priority for Team Leader.
+Critical amount of sprint-scoped PRs is 5. It's means that Code Review task gets a highest priority for the team.
 
 > It's recommended to define equal names for PR and its main commit.
 

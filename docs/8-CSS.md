@@ -8,11 +8,10 @@ On our project we are using [SCSS syntax](https://sass-lang.com/guide) and [CSS 
 
 '/src/common/css/variables/' - color, font, z-index and screen breakpoint variables.
 
-As far as usually components has small size, it's preferable to do not use css selectors nesting (exclude pseudo elements, pseudo classes and state-classes).
-
-It's allowed to use flex-box properties.
-
-It's recommended to define class name the same as component's name, but in lowercase and dash-notation (ComponentName / component-name).
+- As far as usually components has small size, it's preferable to do not use css selectors nesting (exclude pseudo elements, pseudo classes and state-classes).
+- It's allowed to use flex-box properties.
+- It's recommended to define class name the same as component's name, but in lowercase and dash-notation (ComponentName / component-name).
+- Prefer to use the CSS Custom Properties for colors from the [ui-kit](https://github.com/reportportal/ui-kit?tab=readme-ov-file#theming-1) were possible instead of locally defined SCSS variables (the reason is that the color pallette in ui-kit will be in sync with Figma in the future).
 
 We are strongly recommend to follow next order of CSS properties:
 

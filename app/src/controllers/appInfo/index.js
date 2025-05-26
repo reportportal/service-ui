@@ -18,7 +18,9 @@ export { appInfoReducer } from './reducer';
 export {
   fetchAppInfoAction,
   updateServerSettingsAction,
+  updateServerSettingsSuccessAction,
   updateExpirationSessionAction,
+  updateServerFooterLinksAction,
 } from './actionCreators';
 export {
   appInfoSelector,
@@ -31,9 +33,16 @@ export {
   isOldHistorySelector,
   flushDataInSelector,
   isDemoInstanceSelector,
+  instanceTypeSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,
+  serverFooterLinksSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
-export { ANALYTICS_ALL_KEY, SERVER_SESSION_EXPIRATION_KEY } from './constants';
+export {
+  ANALYTICS_ALL_KEY,
+  SERVER_SESSION_EXPIRATION_KEY,
+  SERVER_FOOTER_LINKS_KEY,
+  UPDATE_API_EXTENSIONS_RESULT,
+} from './constants';
