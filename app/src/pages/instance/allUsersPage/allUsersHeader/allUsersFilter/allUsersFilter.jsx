@@ -204,6 +204,7 @@ export const AllUsersFilter = ({
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
+      searchProp="full_name"
       event={eventHandler}
     />
   );

@@ -233,6 +233,7 @@ export const OrganizationsFilter = ({
       filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
+      searchProp="name"
       event={eventHandler}
     />
   );
