@@ -110,7 +110,7 @@
   "AllUsersPage.createUser": "Створити користувача",
   "AllUsersPage.export": "Експортувати",
   "AllUsersPage.invite": "Запросити користувача",
-  "AllUsersPage.noResultsDescription": "Користувачів за вашим запитом не знайдено",
+  "AllUsersPage.noResultsDescription": "Результати пошуку або фільтрації не співпали з жодним із критеріїв. Будь ласка, спробуйте використовувати інші ключові слова або змініть налаштування фільтра.",
   "AllUsersPage.searchPlaceholder": "Введіть для пошуку за назвою",
   "AllUsersPage.title": "Усі користувачі",
   "AnalysisConfigurations.analysisConfigurations": "конфігурацію Авто-Аналізу",
