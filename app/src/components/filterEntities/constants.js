@@ -16,6 +16,7 @@
 
 export const CONDITION_CNT = 'cnt';
 export const CONDITION_NOT_CNT = '!cnt';
+export const CONDITION_NOT_CNT_KEY = 'not_cnt';
 export const CONDITION_NOT_CNT_EVENTS = 'non_cnt';
 export const CONDITION_EQ = 'eq';
 // TODO export const CONDITION_NOT_EQ = '!eq';

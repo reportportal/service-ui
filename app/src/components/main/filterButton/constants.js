@@ -19,7 +19,7 @@ import {
   CONDITION_EQ,
   CONDITION_GREATER_EQ,
   CONDITION_LESS_EQ,
-  CONDITION_NOT_CNT,
+  CONDITION_NOT_CNT_KEY,
   CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
@@ -62,7 +62,7 @@ export const getRangeComparisons = (formatMessage) => [
 
 export const getEmailComparisons = (formatMessage) => [
   { label: formatMessage(messages.contains), value: CONDITION_CNT.toUpperCase() },
-  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT.toUpperCase() },
+  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT_KEY.toUpperCase() },
   { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
   { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ.toUpperCase() },
 ];
