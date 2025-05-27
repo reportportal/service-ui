@@ -76,7 +76,11 @@ import {
   querySelector,
   payloadSelector,
 } from 'controllers/pages';
-import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
+import {
+  attributesArray,
+  isNotEmptyArray,
+  urlOrEmailValidator,
+} from 'common/utils/validation/validate';
 import {
   requiredField,
   btsUrl,
@@ -89,6 +93,8 @@ import {
 import {
   composeValidators,
   bindMessageToValidator,
+  lengthRange,
+  composeBoundValidators,
 } from 'common/utils/validation/validatorHelpers';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -198,6 +204,7 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { FormField } from 'components/fields/formField';
 
 const BUTTONS = {
   GhostButton,
@@ -258,6 +265,7 @@ export const createImportProps = (pluginName) => ({
     ModalLayout,
     ModalField,
     FieldProvider,
+    FormField,
     FieldErrorHint,
     SimpleBreadcrumbs,
     Link,
@@ -388,13 +396,14 @@ export const createImportProps = (pluginName) => ({
   validators: {
     attributesArray,
     isNotEmptyArray,
+    urlOrEmailValidator,
     requiredField,
     btsUrl,
     btsProjectKey,
     btsProjectId,
     btsBoardId,
     btsIntegrationName,
-    helpers: { composeValidators, bindMessageToValidator },
+    helpers: { composeValidators, composeBoundValidators, bindMessageToValidator, lengthRange },
     email,
   },
 });
