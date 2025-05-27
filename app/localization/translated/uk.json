@@ -111,7 +111,7 @@
   "AllUsersPage.export": "Експортувати",
   "AllUsersPage.invite": "Запросити користувача",
   "AllUsersPage.noResultsDescription": "Користувачів за вашим запитом не знайдено",
-  "AllUsersPage.searchPlaceholder": "Пошук за ім'ям",
+  "AllUsersPage.searchPlaceholder": "Введіть для пошуку за назвою",
   "AllUsersPage.title": "Усі користувачі",
   "AnalysisConfigurations.analysisConfigurations": "конфігурацію Авто-Аналізу",
   "AnalysisConfigurations.generateIndex": "індекс був згенерований",
