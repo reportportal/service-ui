@@ -63,6 +63,7 @@ export const AllUsersFilter = ({
         {
           component: Dropdown,
           name: USERS_PERMISSIONS_FILTER_NAME,
+          containerClassName: cx('placeholder'),
           props: {
             options: permissions,
             value: [],
@@ -96,6 +97,7 @@ export const AllUsersFilter = ({
         {
           component: Dropdown,
           name: LAST_LOGIN_FILTER_NAME,
+          containerClassName: cx('placeholder'),
           props: {
             value: '',
             options: lastLogin,

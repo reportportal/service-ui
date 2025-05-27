@@ -65,27 +65,29 @@ export const OrganizationsPageHeader = ({
         <div className={cx('actions')}>
           {!isEmpty && (
             <div className={cx('icons')}>
-              <SearchFieldWithFilter
-                isLoading={projectsLoading}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
-              />
-              {canWorkWithOrganizationFilter(userRoles) && (
-                <FilterEntitiesURLContainer
-                  debounced={false}
-                  additionalFilter="name"
-                  render={({ entities, onChange }) => (
-                    <OrganizationsFilter
-                      appliedFiltersCount={appliedFiltersCount}
-                      setAppliedFiltersCount={setAppliedFiltersCount}
-                      entities={entities}
-                      onFilterChange={onChange}
-                    />
-                  )}
+              <div className={cx('filters')}>
+                <SearchFieldWithFilter
+                  isLoading={projectsLoading}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
                 />
-              )}
+                {canWorkWithOrganizationFilter(userRoles) && (
+                  <FilterEntitiesURLContainer
+                    debounced={false}
+                    additionalFilter="name"
+                    render={({ entities, onChange }) => (
+                      <OrganizationsFilter
+                        appliedFiltersCount={appliedFiltersCount}
+                        setAppliedFiltersCount={setAppliedFiltersCount}
+                        entities={entities}
+                        onFilterChange={onChange}
+                      />
+                    )}
+                  />
+                )}
+              </div>
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
                 onClick={openPanelView}

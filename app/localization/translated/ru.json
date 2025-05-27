@@ -111,7 +111,7 @@
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.invite": "Пригласить пользователя",
   "AllUsersPage.noResultsDescription": "Пользователи по вашему запросу не найдены",
-  "AllUsersPage.searchPlaceholder": "Поиск по имени",
+  "AllUsersPage.searchPlaceholder": "Введите для поиска по названию",
   "AllUsersPage.title": "Все пользователи",
   "AnalysisConfigurations.analysisConfigurations": "конфигурацию Авто-Анализа",
   "AnalysisConfigurations.generateIndex": "индекс был сгенерирован",

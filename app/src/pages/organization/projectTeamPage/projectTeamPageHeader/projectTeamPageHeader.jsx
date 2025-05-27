@@ -58,16 +58,18 @@ export const ProjectTeamPageHeader = ({
         {isNotEmptyMembers && (
           <>
             <div className={cx('icons')}>
-              <SearchFieldWithFilter
-                isLoading={isMembersLoading}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
-              />
-              <i className={cx('filters-icon')}>
-                <FilterOutlineIcon />
-              </i>
+              <div className={cx('filters')}>
+                <SearchFieldWithFilter
+                  isLoading={isMembersLoading}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
+                />
+                <i className={cx('filters-icon')}>
+                  <FilterOutlineIcon />
+                </i>
+              </div>
             </div>
             {hasPermission && (
               <Button variant={'ghost'} onClick={onInvite}>
