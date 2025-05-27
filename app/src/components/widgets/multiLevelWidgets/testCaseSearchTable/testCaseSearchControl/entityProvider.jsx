@@ -53,8 +53,8 @@ export const useEntityConfig = (entityType, filterValues) => {
       removable: false,
       customProps: {
         projectId,
-        keyURLCreator: URLS.launchAttributeKeysSearch,
-        valueURLCreator: URLS.launchAttributeValuesSearch,
+        keyURLCreator: URLS.testItemAttributeKeysSearch,
+        valueURLCreator: (project, key) => URLS.testItemAttributeValuesSearch(project, '', key),
         conditions: [CONDITION_HAS],
         canAddSinglePair: true,
         isAttributeValueRequired: true,

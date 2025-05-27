@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ServerSettingsTabs } from './serverSettingsTabs';
+export { ServerSettingsTabsWrapper as ServerSettingsTabs } from './serverSettingsTabs';

@@ -57,7 +57,12 @@ import {
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
 } from 'controllers/pages';
-import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
+import {
+  GENERAL,
+  AUTHORIZATION_CONFIGURATION,
+  ANALYTICS,
+  LINKS_AND_BRANDING,
+} from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { MEMBERS, MONITORING } from 'common/constants/projectSections';
@@ -143,7 +148,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/administrate/plugins',
     () => ({

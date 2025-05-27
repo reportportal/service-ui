@@ -54,6 +54,22 @@ const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type = '', payloa
   }
 };
 
+const activeDashboardReducer = (
+  state = INITIAL_STATE.activeDashboardItem,
+  { type = '', payload = {} },
+) => {
+  switch (type) {
+    case ADD_DASHBOARD_SUCCESS:
+      return payload;
+    case UPDATE_DASHBOARD_SUCCESS:
+      return payload;
+    case REMOVE_DASHBOARD_SUCCESS:
+      return {};
+    default:
+      return state;
+  }
+};
+
 const gridTypeReducer = (state = INITIAL_STATE.gridType, { type = '', payload = {} }) =>
   type === CHANGE_VISIBILITY_TYPE ? payload : state;
 
@@ -84,6 +100,7 @@ const totalDashboardsReducer = (state = INITIAL_STATE.pagination, { type = '' })
 
 const reducer = combineReducers({
   dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
+  activeDashboardItem: activeDashboardReducer,
   gridType: gridTypeReducer,
   fullScreenMode: fullScreenModeReducer,
   loading: loadingReducer(NAMESPACE),

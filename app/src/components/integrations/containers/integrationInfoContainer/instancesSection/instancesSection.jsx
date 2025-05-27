@@ -28,6 +28,7 @@ import {
   removePluginAction,
   addIntegrationAction,
   removeProjectIntegrationsByTypeAction,
+  enabledPluginSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import {
@@ -41,7 +42,6 @@ import {
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
-import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { EMAIL, LDAP } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom } from 'common/utils';
 import { InstancesList } from './instancesList';
@@ -115,10 +115,11 @@ const messages = defineMessages({
 });
 
 @connect(
-  (state) => ({
+  (state, ownProps) => ({
     projectId: projectIdSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    isEnabled: enabledPluginSelector(state, ownProps.instanceType),
   }),
   {
     showModalAction,
@@ -142,6 +143,7 @@ export class InstancesSection extends Component {
     removePluginAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -192,12 +194,12 @@ export class InstancesSection extends Component {
     );
 
   createIntegration = (formData, metaData) => {
-    const { isGlobal, instanceType } = this.props;
+    const { isGlobal, instanceType, pluginDetails } = this.props;
     const updatedFormData = instanceType === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
     const data = {
       enabled: true,
       integrationParameters: updatedFormData,
-      name: updatedFormData.integrationName || PLUGIN_NAME_TITLES[instanceType],
+      name: updatedFormData.integrationName || pluginDetails.name,
     };
 
     this.props.addIntegrationAction(
@@ -214,6 +216,7 @@ export class InstancesSection extends Component {
       intl: { formatMessage },
       instanceType,
       tracking,
+      pluginDetails,
     } = this.props;
     tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType));
 
@@ -221,7 +224,7 @@ export class InstancesSection extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: PLUGIN_NAME_TITLES[instanceType] || instanceType,
+          pluginName: pluginDetails.name || instanceType,
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
@@ -297,6 +300,7 @@ export class InstancesSection extends Component {
       userRole,
       isGlobal,
       pluginDetails: { metadata },
+      isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
     const disabled = !canUpdateSettings(accountRole, userRole);
@@ -310,7 +314,7 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isIntegrationsAllowed && (
+        {isIntegrationsAllowed && isEnabled && (
           <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>

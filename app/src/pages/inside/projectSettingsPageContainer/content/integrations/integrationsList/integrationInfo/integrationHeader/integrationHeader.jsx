@@ -20,7 +20,6 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Button } from '@reportportal/ui-kit';
-import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -38,7 +37,7 @@ export const IntegrationHeader = (props) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const {
-    data: { name, details = {} },
+    data: { name, details = { name } },
     data,
     onAddProjectIntegration,
     onResetProjectIntegration,
@@ -48,9 +47,11 @@ export const IntegrationHeader = (props) => {
     breadcrumbs,
   } = props;
 
+  const displayName = details.name || name;
   const isProjectIntegrationAddLimited =
     [EMAIL, SAUCE_LABS].includes(name) && availableProjectIntegrations.length > 0;
-  const { documentationLink = '' } = details;
+
+  const documentationLink = details.documentation || details.documentationLink || '';
   const analyticsData = withButton ? 'integrations' : 'no_integrations';
 
   const handleDocumentationClick = () => {
@@ -92,7 +93,7 @@ export const IntegrationHeader = (props) => {
           <PluginIcon className={cx('integration-image')} pluginData={data} alt={name} />
           <div className={cx('integration-info-block')}>
             <div className={cx('integration-data-block')}>
-              <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
+              <span className={cx('integration-name')}>{displayName}</span>
               <span className={cx('integration-version')}>
                 {details.version && `${formatMessage(messages.version)} ${details.version}`}
               </span>

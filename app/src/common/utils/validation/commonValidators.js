@@ -37,6 +37,7 @@ export const descriptionEntity = bindMessageToValidator(
 );
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
+export const btsRallyUrl = bindMessageToValidator(validate.rallyUrl, 'btsUrlHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,
   'btsIntegrationNameHint',
@@ -72,6 +73,21 @@ export const createRuleNameValidator = (notifications, notificationId) =>
       validate.createNameUniqueValidator(notificationId, notifications),
       'ruleNameDuplicateHint',
     ),
+  ]);
+
+export const createFooterLinkNameValidator = (links) =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.footerLinkNameLength, 'footerLinkNameLengthHint'),
+    bindMessageToValidator(validate.isUniqueByKey(links, 'name'), 'footerLinkNameDuplicateHint'),
+  ]);
+
+export const createFooterLinkURLValidator = (links) =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.urlOrEmailValidator, 'footerLinkUrlHint'),
+    bindMessageToValidator(validate.footerLinkUrlLength, 'footerLinkURLLengthHint'),
+    bindMessageToValidator(validate.isUniqueByKey(links, 'url'), 'footerLinkURLDuplicateHint'),
   ]);
 
 export const createDescriptionValidator = bindMessageToValidator(

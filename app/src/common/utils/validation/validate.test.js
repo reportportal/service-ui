@@ -54,6 +54,18 @@ describe('validate.url', () => {
   });
 });
 
+describe('validate.rallyUrl', () => {
+  test('validation should be correct', () => {
+    expect(validate.rallyUrl('https://rally1.rallydev.com/8888')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.rallyUrl(undefined)).toBe(false);
+    expect(validate.rallyUrl('')).toBe(false);
+    expect(validate.rallyUrl('  ')).toBe(false);
+    expect(validate.rallyUrl('example')).toBe(false);
+  });
+});
+
 describe('validate.email', () => {
   test('validation should be correct', () => {
     expect(validate.email('email@example.com')).toBe(true);
@@ -615,6 +627,90 @@ describe('validate.apiKeyName', () => {
     expect(validate.apiKeyName('  ')).toBe(false);
     const textLonger40 = '11111111111111111111111111111111111111111';
     expect(validate.apiKeyName(textLonger40)).toBe(false);
+  });
+});
+
+describe('validate.apiKeyNameShouldMatch', () => {
+  test('validation should be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('abc')).toBe(true);
+    expect(validate.apiKeyNameShouldMatch('Az1-._~+/')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.apiKeyNameShouldMatch('api key name')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('apiKeyName!')).toBe(false);
+    expect(validate.apiKeyNameShouldMatch('$apiKeyName')).toBe(false);
+  });
+});
+describe('validate.footerLinkNameLength', () => {
+  test('validation should be correct', () => {
+    expect(validate.footerLinkNameLength('abc')).toBe(true);
+    expect(validate.footerLinkNameLength('footer link name')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.footerLinkNameLength(undefined)).toBe(false);
+    expect(validate.footerLinkNameLength()).toBe(false);
+    expect(validate.footerLinkNameLength('')).toBe(false);
+    expect(validate.footerLinkNameLength('  ')).toBe(false);
+    const textLonger30 = 'longlonglonglonglonglonglonglonglong';
+    expect(validate.footerLinkNameLength(textLonger30)).toBe(false);
+    expect(validate.footerLinkNameLength('aa'.repeat(30))).toBe(false);
+  });
+});
+
+describe('validate.isUniqueByKey', () => {
+  const users = [
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Jane' },
+    { id: 3, name: 'Doe' },
+  ];
+
+  const isUniqueByName = validate.isUniqueByKey(users, 'name');
+
+  test('should return false if the value is not unique', () => {
+    expect(isUniqueByName('John')).toBe(false);
+    expect(isUniqueByName('Jane')).toBe(false);
+  });
+
+  test('should return true if the value is unique', () => {
+    expect(isUniqueByName('Alice')).toBe(true);
+    expect(isUniqueByName('Bob')).toBe(true);
+  });
+});
+
+describe('validate.urlOrEmailValidator', () => {
+  test('validation should be correct for email', () => {
+    expect(validate.urlOrEmailValidator('email@example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('firstname.lastname@example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('email@subdomain.example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('firstname+lastname@example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('email@123.123.123.123')).toBe(true);
+    expect(validate.urlOrEmailValidator('1234567890@example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('firstname-lastname@example.com')).toBe(true);
+    expect(validate.urlOrEmailValidator('email@example.co.jp')).toBe(true);
+  });
+
+  test('validation should be correct for URL', () => {
+    expect(validate.urlOrEmailValidator('https://example.com/')).toBe(true);
+    expect(validate.urlOrEmailValidator('http://example.com/')).toBe(true);
+    expect(validate.urlOrEmailValidator('https://subdomain.example.com/')).toBe(true);
+    expect(validate.urlOrEmailValidator('http://example.com/path/to/resource')).toBe(true);
+  });
+
+  test('validation should be not correct for invalid email and url', () => {
+    expect(validate.urlOrEmailValidator('plainaddress')).toBe(false);
+    expect(validate.urlOrEmailValidator('#@%^%#$@#$@#.com')).toBe(false);
+    expect(validate.urlOrEmailValidator('@example.com')).toBe(false);
+    expect(validate.urlOrEmailValidator('Joe Smith <email@example.com>')).toBe(false);
+    expect(validate.urlOrEmailValidator('email.example.com')).toBe(false);
+    expect(validate.urlOrEmailValidator('email@example@example.com')).toBe(false);
+    expect(validate.urlOrEmailValidator('email@example.com (Joe Smith)')).toBe(false);
+    expect(validate.urlOrEmailValidator('email@example')).toBe(false);
+    expect(validate.urlOrEmailValidator('あいうえお@example.com')).toBe(false);
+
+    expect(validate.urlOrEmailValidator(undefined)).toBe(false);
+    expect(validate.urlOrEmailValidator('   ')).toBe(false);
+    expect(validate.urlOrEmailValidator('example/example')).toBe(false);
+    expect(validate.urlOrEmailValidator('http:/example.com/')).toBe(false);
   });
 });
 

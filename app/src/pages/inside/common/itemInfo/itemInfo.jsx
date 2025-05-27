@@ -22,7 +22,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
-import { SAUCE_LABS } from 'common/constants/pluginNames';
+import { SAUCE_LABS, SAUCE_LABS_TITLE } from 'common/constants/pluginNames';
+
 import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
 import {
   availableIntegrationsByPluginNameSelector,
@@ -33,7 +34,6 @@ import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -123,7 +123,7 @@ export class ItemInfo extends Component {
     const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
     if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
       return (
-        <i className={cx('sauce-labs-label')} title={PLUGIN_NAME_TITLES[SAUCE_LABS]}>
+        <i className={cx('sauce-labs-label')} title={SAUCE_LABS_TITLE}>
           {Parser(SauceLabsIcon)}
         </i>
       );

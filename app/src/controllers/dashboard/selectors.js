@@ -14,39 +14,28 @@
  * limitations under the License.
  */
 
-import { createSelector } from 'reselect';
 import {
-  activeDashboardIdSelector,
   pagePropertiesSelector,
   createQueryParametersSelector,
   PROJECT_DASHBOARD_ITEM_PAGE,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
+import { DEFAULT_SORTING } from './constants';
 
 const domainSelector = (state) => state.dashboards || {};
 export const loadingSelector = (state) => domainSelector(state).loading || false;
-export const dashboardItemsUnsortedSelector = (state) => domainSelector(state).dashboards;
-
-export const dashboardItemsSelector = createSelector(
-  dashboardItemsUnsortedSelector,
-  (dashboardItems) => dashboardItems.sort((a, b) => a.name.localeCompare(b.name)),
-);
+export const dashboardItemsSelector = (state) => domainSelector(state).dashboards;
 
 export const dashboardGridTypeSelector = (state) => domainSelector(state).gridType;
 
-export const activeDashboardItemSelector = createSelector(
-  dashboardItemsUnsortedSelector,
-  activeDashboardIdSelector,
-  (dashboardItems, activeDashboardId) =>
-    dashboardItems.find((item) => item.id === activeDashboardId) || {},
-);
+export const activeDashboardItemSelector = (state) => domainSelector(state).activeDashboardItem;
 
 export const totalDashboardsSelector = (state) =>
   domainSelector(state).pagination.totalElements || 0;
 
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
-export const querySelector = createQueryParametersSelector();
+export const querySelector = createQueryParametersSelector({ defaultSorting: DEFAULT_SORTING });
 
 export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;
 

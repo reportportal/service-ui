@@ -14,93 +14,80 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
-import track from 'react-tracking';
-import { connect } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
-import { uiBuildVersionSelector } from 'controllers/appInfo';
-import { instanceTypeSelector } from 'controllers/appInfo/selectors';
-import { EPAM, SAAS } from 'controllers/appInfo/constants';
+import { serverFooterLinksSelector, uiBuildVersionSelector } from 'controllers/appInfo';
+import { useTracking } from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
+export const DEFAULT_FOOTER_LINKS = [
+  {
+    name: 'Fork us on GitHub',
+    url: referenceDictionary.rpGitHub,
+  },
+  {
+    name: 'Documentation',
+    url: referenceDictionary.rpDoc,
+  },
+];
 
-@connect((state) => ({
-  buildVersion: uiBuildVersionSelector(state),
-  instanceType: instanceTypeSelector(state),
-}))
-@track()
-export class Footer extends Component {
-  static propTypes = {
-    buildVersion: PropTypes.string.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    instanceType: PropTypes.string.isRequired,
+const MAX_HEIGHT_ONE_LINE = 35;
+
+export const Footer = ({ className = '', isPreview = false }) => {
+  const buildVersion = useSelector(uiBuildVersionSelector);
+  const customLinks = useSelector(serverFooterLinksSelector);
+  const links = [...DEFAULT_FOOTER_LINKS, ...customLinks];
+  const footerRef = useRef(null);
+  const [isSingleLine, setIsSingleLine] = useState(true);
+  const { trackEvent } = useTracking();
+  useEffect(() => {
+    const checkIsSingleLine = () => {
+      if (footerRef.current) {
+        setIsSingleLine(footerRef.current.offsetHeight <= MAX_HEIGHT_ONE_LINE);
+      }
+    };
+    checkIsSingleLine();
+    window.addEventListener('resize', checkIsSingleLine);
+    return () => window.removeEventListener('resize', checkIsSingleLine);
+  }, [customLinks]);
+  const handleLinkClick = (linkName) => {
+    trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.onClickFooterLink(linkName, isPreview));
   };
-  render() {
-    const { buildVersion, tracking, instanceType } = this.props;
-    return (
-      <footer className={cx('footer')}>
-        <div className={cx('footer-links')}>
-          <a
-            href={referenceDictionary.rpGitHub}
-            target="_blank"
-            onClick={() => tracking.trackEvent(FOOTER_EVENTS.FORK_US_CLICK)}
-          >
-            <FormattedMessage id={'Footer.git'} defaultMessage={'Fork us on GitHub'} />
-          </a>
-          <a
-            href={referenceDictionary.rpSlack}
-            target="_blank"
-            onClick={() => tracking.trackEvent(FOOTER_EVENTS.SLACK_LINK)}
-          >
-            <FormattedMessage id={'Footer.slack'} defaultMessage={'Chat with us on Slack'} />
-          </a>
-          <a
-            href={referenceDictionary.rpEmail}
-            onClick={() => tracking.trackEvent(FOOTER_EVENTS.CONTACT_US_LINK)}
-          >
-            <FormattedMessage id={'Footer.contact'} defaultMessage={'Contact us'} />
-          </a>
-          <a
-            href={referenceDictionary.rpEpam}
-            target="_blank"
-            onClick={() => tracking.trackEvent(FOOTER_EVENTS.EPAM_LINK)}
-          >
-            EPAM
-          </a>
-          <a
-            href={referenceDictionary.rpDoc}
-            target="_blank"
-            onClick={() => tracking.trackEvent(FOOTER_EVENTS.DOCUMENTATION_LINK)}
-          >
-            <FormattedMessage id={'Footer.documentation'} defaultMessage={'Documentation'} />
-          </a>
-          {(instanceType === EPAM || instanceType === SAAS) && (
-            <Fragment>
-              <a href={referenceDictionary.rpEpamPolicy} target="_blank">
-                <FormattedMessage id={'Footer.privacy'} defaultMessage={'Privacy Policy'} />
-              </a>
-            </Fragment>
-          )}
+  return (
+    <footer className={cx('footer', { 'one-line': isSingleLine }, className)} ref={footerRef}>
+      <div className={cx('text-wrapper')}>
+        <div className={cx('footer-text')}>
+          <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
+          <span>: {buildVersion}</span>
         </div>
-        <div className={cx('text-wrapper')}>
-          <div className={cx('footer-text')}>
-            <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
-            <span>: {buildVersion}</span>
-          </div>
-          <div className={cx('footer-text')}>
-            <span> &copy; Report Portal {new Date().getFullYear()} </span>
-            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
-          </div>
+        <div className={cx('footer-text')}>
+          <span> &copy; Report Portal {new Date().getFullYear()} </span>
+          <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
         </div>
-      </footer>
-    );
-  }
-}
+      </div>
+      <div className={cx('footer-links', { 'one-line': isSingleLine })}>
+        {links.map((link) => (
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            onClick={() => handleLinkClick(link.name)}
+          >
+            {link.name}
+          </a>
+        ))}
+      </div>
+    </footer>
+  );
+};
+
+Footer.propTypes = {
+  className: PropTypes.string,
+  isPreview: PropTypes.bool,
+};

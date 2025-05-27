@@ -25,6 +25,7 @@ export const JIRA = 'jira';
 export const RALLY = 'rally';
 export const EMAIL = 'email';
 export const SAUCE_LABS = 'saucelabs';
+export const SAUCE_LABS_TITLE = 'Sauce Labs';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const AD = 'ad';

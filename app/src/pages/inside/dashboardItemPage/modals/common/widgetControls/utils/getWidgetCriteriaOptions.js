@@ -39,7 +39,7 @@ import {
   FINISH_LAUNCH,
   DELETE_LAUNCH,
   UPDATE_PROJECT,
-  ACTIONS_WITH_ISSUES,
+  ACTIONS_WITH_BTS_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
   ACTIONS_WITH_FILTERS,
@@ -58,6 +58,7 @@ import {
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
+  ACTIONS_UPDATE_TEST_ITEM,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -111,9 +112,13 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.unmarkLaunchAsImportant',
     defaultMessage: 'Unmark launch as important',
   },
-  [ACTIONS_WITH_ISSUES]: {
+  [ACTIONS_WITH_BTS_ISSUES]: {
     id: 'WidgetCriteriaOption.issues_actions',
-    defaultMessage: 'Actions with issues',
+    defaultMessage: 'Actions with BTS issues',
+  },
+  [ACTIONS_UPDATE_TEST_ITEM]: {
+    id: 'WidgetCriteriaOption.updateTestItem',
+    defaultMessage: 'Update test item',
   },
   [ASSIGN_USER]: {
     id: 'WidgetCriteriaOption.assign_user',
@@ -266,7 +271,8 @@ const getUserActionOptions = (formatMessage) => [
   { value: DELETE_LAUNCH, label: formatMessage(messages[DELETE_LAUNCH]) },
   { value: MARK_LAUNCH_AS_IMPORTANT, label: formatMessage(messages[MARK_LAUNCH_AS_IMPORTANT]) },
   { value: UNMARK_LAUNCH_AS_IMPORTANT, label: formatMessage(messages[UNMARK_LAUNCH_AS_IMPORTANT]) },
-  { value: ACTIONS_WITH_ISSUES, label: formatMessage(messages[ACTIONS_WITH_ISSUES]) },
+  { value: ACTIONS_WITH_BTS_ISSUES, label: formatMessage(messages[ACTIONS_WITH_BTS_ISSUES]) },
+  { value: ACTIONS_UPDATE_TEST_ITEM, label: formatMessage(messages[ACTIONS_UPDATE_TEST_ITEM]) },
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
   { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },
