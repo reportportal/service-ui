@@ -110,7 +110,7 @@
   "AllUsersPage.createUser": "Create user",
   "AllUsersPage.export": "Exportar",
   "AllUsersPage.invite": "Invite user",
-  "AllUsersPage.noResultsDescription": "No users found for your search",
+  "AllUsersPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   "AllUsersPage.searchPlaceholder": "Type to search by name",
   "AllUsersPage.title": "All users",
   "AnalysisConfigurations.analysisConfigurations": "configuración de análisis automático",
