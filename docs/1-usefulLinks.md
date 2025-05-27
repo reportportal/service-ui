@@ -1,8 +1,10 @@
 # Useful links
 
-[Landing page](http://reportportal.io/)
+[Website](https://reportportal.io)
 
-[Official documentation](http://reportportal.io/docs)
+[Official documentation](https://reportportal.io/docs/)
+
+[EPAM Knowledge Base Frontend documentation](https://kb.epam.com/display/EPMRPP/Frontend+documentation)
 
 [EPAM Knowledge Base](https://kb.epam.com/display/EPMRPP/Knowledge+Transfer) - information about dev instances, inner communication channels, Jira board, etc
 

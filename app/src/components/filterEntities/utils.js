@@ -16,7 +16,6 @@
 
 import moment from 'moment/moment';
 import { getMinutesFromTimestamp } from 'common/utils';
-import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
 
 export function bindDefaultValue(key, options = {}) {
@@ -56,24 +55,33 @@ const getFormattedDate = (value) => {
     case 'last30days':
       start = calculateStartDate(30);
       break;
+    case 'last90days':
+      start = calculateStartDate(90);
+      break;
+    case 'moreThanYearAgo':
+      start = calculateStartDate(365);
+      break;
     default:
       break;
   }
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(endOfToday)};${utcString}`;
 };
 
-export const prepareQueryFilters = (filtersParams) => {
+export const prepareQueryFilters = (filtersParams, dateProp) => {
   const { limit, sort, offset, order, ...rest } = filtersParams;
 
   const searchCriteria = getAppliedFilters(rest)?.search_criterias;
 
-  const lastRunDateFilterIndex = Object.values(searchCriteria).findIndex(
-    (el) => el.filter_key === LAST_RUN_DATE_FILTER_NAME,
-  );
-  if (lastRunDateFilterIndex !== -1) {
-    searchCriteria[lastRunDateFilterIndex].value = getFormattedDate(
-      searchCriteria[lastRunDateFilterIndex].value,
+  if (dateProp) {
+    const dateFilterIndex = Object.values(searchCriteria).findIndex(
+      (el) => el.filter_key === dateProp,
     );
+
+    if (dateFilterIndex !== -1) {
+      searchCriteria[dateFilterIndex].value = getFormattedDate(
+        searchCriteria[dateFilterIndex].value,
+      );
+    }
   }
 
   return {

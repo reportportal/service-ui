@@ -49,4 +49,16 @@ export const messages = defineMessages({
     id: 'OrganizationsFilter.organizationTypePlaceholder',
     defaultMessage: 'Select organization type',
   },
+  typePersonal: {
+    id: 'OrganizationsFilter.typePersonal',
+    defaultMessage: 'Personal',
+  },
+  typeInternal: {
+    id: 'OrganizationsFilter.typeInternal',
+    defaultMessage: 'Internal',
+  },
+  typeSynched: {
+    id: 'OrganizationsFilter.typeSynced',
+    defaultMessage: 'Synched',
+  },
 });

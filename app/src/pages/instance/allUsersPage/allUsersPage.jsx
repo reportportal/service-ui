@@ -40,6 +40,7 @@ export const AllUsersPage = () => {
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
+  const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
 
   return (
     <div className={cx('all-users-page')}>
@@ -47,6 +48,8 @@ export const AllUsersPage = () => {
         isLoading={isLoading}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        appliedFiltersCount={appliedFiltersCount}
+        setAppliedFiltersCount={setAppliedFiltersCount}
       />
       {users.length === 0 && !isLoading ? (
         <EmptyPageState

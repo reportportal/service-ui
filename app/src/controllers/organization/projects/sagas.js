@@ -21,6 +21,7 @@ import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
+import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import {
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
@@ -37,7 +38,7 @@ import { fetchOrganizationProjectsAction } from './actionCreators';
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const filtersParams = yield select(querySelector);
-  const data = prepareQueryFilters(filtersParams);
+  const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {

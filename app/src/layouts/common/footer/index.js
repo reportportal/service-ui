@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Footer } from './footer';
+export { Footer, DEFAULT_FOOTER_LINKS } from './footer';

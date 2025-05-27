@@ -24,6 +24,7 @@ import { sessionExpirationTimeSelector, updateExpirationSessionAction } from 'co
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Messages } from 'pages/inside/projectSettingsPageContainer/generalTab/generalTabMessages';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import styles from './inactivityTimeoutForm.scss';
 
 const cx = classNames.bind(styles);
@@ -61,9 +62,21 @@ export const InactivityTimeoutForm = () => {
 
   const handleTimeoutChange = (value) => {
     const label = timeoutOptions.find((option) => option.value === value).label;
-    setInactivityTimeout(value);
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.changeSessionInactivity(label));
-    dispatch(updateExpirationSessionAction(value));
+    dispatch(
+      updateExpirationSessionAction({
+        expiration: value,
+        onSuccess: () => {
+          dispatch(
+            showNotification({
+              messageId: 'updateSessionExpirationSuccess',
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+          setInactivityTimeout(value);
+        },
+      }),
+    );
   };
 
   return (

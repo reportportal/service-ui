@@ -24,6 +24,7 @@ export const dashboardItemPropTypes = PropTypes.shape({
 
 export const INITIAL_STATE = {
   dashboards: [],
+  activeDashboardItem: {},
   gridType: '',
   fullScreenMode: false,
   loading: false,
@@ -52,3 +53,6 @@ export const INCREASE_TOTAL_DASHBOARDS_LOCALLY = 'increaseTotalDashboardsLocally
 export const DECREASE_TOTAL_DASHBOARDS_LOCALLY = 'decreaseTotalDashboardsLocally';
 export const DEFAULT_SORT_COLUMN = 'creationDate';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_DESC);
+export const ERROR_CODES = {
+  DASHBOARD_EXISTS: 4091,
+};

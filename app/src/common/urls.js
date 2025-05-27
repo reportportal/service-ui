@@ -163,6 +163,7 @@ export const URLS = {
     `${urlBase}users/search${getQueryParams({
       term,
     })}`,
+  searchAllUsers: () => `${urlCommonBase}users/searches`,
   projectAddPattern: (projectKey) => `${urlBase}${projectKey}/settings/pattern`,
   projectUpdatePattern: (projectKey, patternId) =>
     `${urlBase}${projectKey}/settings/pattern/${patternId}`,
@@ -276,6 +277,7 @@ export const URLS = {
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
   userInviteExternal: () => `${urlBase}users/bid`,
   userUnassign: (projectKey) => `${urlBase}project/${projectKey}/unassign`,
+  userInvitations: () => `${urlCommonBase}invitations`,
 
   generateDemoData: (projectKey) => `${urlBase}demo/${projectKey}/generate`,
   getFileById: (projectKey, dataId, loadThumbnail) =>
@@ -288,7 +290,6 @@ export const URLS = {
   events: () => `${urlBase}activities/searches`,
   searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
     `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlBase}users/all`,
 
   exportUsers: (filterEntities) =>
     `${urlBase}users/export${getQueryParams({

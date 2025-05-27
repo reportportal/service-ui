@@ -15,9 +15,10 @@
  */
 
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
-import { createQueryParametersSelector } from 'controllers/pages';
+import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { createSelectedItemsSelector } from 'controllers/groupOperations';
-import { DEFAULT_SORTING, NAMESPACE } from './constants';
+import { SORTING_ASC } from 'controllers/sorting';
+import { NAMESPACE, SORTING_KEY } from './constants';
 import { administrateDomainSelector } from '../selectors';
 
 const domainSelector = (state) => administrateDomainSelector(state).allUsers || {};
@@ -29,8 +30,9 @@ export const loadingSelector = (state) => domainSelector(state).loading || false
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
 export const selectedUsersSelector = createSelectedItemsSelector(groupOperationsSelector);
 
-export const querySelector = createQueryParametersSelector({
+export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
-  defaultSorting: DEFAULT_SORTING,
+  defaultSorting: SORTING_ASC,
+  sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
 });

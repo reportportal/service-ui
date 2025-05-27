@@ -15,10 +15,14 @@
  */
 
 import {
+  CONDITION_CNT,
   CONDITION_EQ,
   CONDITION_GREATER_EQ,
   CONDITION_LESS_EQ,
+  CONDITION_NOT_CNT,
+  CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
+import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { messages } from './messages';
 
 export const ORGANIZATION_TYPE_FILTER_NAME = 'type';
@@ -27,6 +31,11 @@ export const LAUNCHES_FILTER_NAME = 'launches';
 export const LAUNCHES_FILTER_NAME_CONDITION = 'launches_condition';
 export const TEAMMATES_FILTER_NAME = 'users';
 export const TEAMMATES_FILTER_NAME_CONDITION = 'users_condition';
+export const USERS_PERMISSIONS_FILTER_NAME = 'instance_role';
+export const ACCOUNT_TYPE_FILTER_NAME = 'account_type';
+export const LAST_LOGIN_FILTER_NAME = 'lastLogin';
+export const EMAIL_FILTER_NAME = 'email';
+export const EMAIL_FILTER_NAME_CONDITION = 'email_condition';
 
 export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
@@ -36,14 +45,38 @@ export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.last30days), value: 'last30days' },
 ];
 
+export const getLastLogin = (formatMessage) => [
+  { label: formatMessage(messages.any), value: '' },
+  { label: formatMessage(messages.last7days), value: 'last7days' },
+  { label: formatMessage(messages.last30days), value: 'last30days' },
+  { label: formatMessage(messages.last90days), value: 'last90days' },
+  { label: formatMessage(messages.moreThanYearAgo), value: 'moreThanYearAgo' },
+];
+
 export const getRangeComparisons = (formatMessage) => [
   { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
   { label: formatMessage(messages.greaterOrEqual), value: CONDITION_GREATER_EQ.toUpperCase() },
   { label: formatMessage(messages.lessOrEqual), value: CONDITION_LESS_EQ.toUpperCase() },
 ];
 
-export const getOrganizationTypes = (formatMessage) => [
-  { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
-  { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
-  { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
+export const getEmailComparisons = (formatMessage) => [
+  { label: formatMessage(messages.contains), value: CONDITION_CNT.toUpperCase() },
+  { label: formatMessage(messages.notContains), value: CONDITION_NOT_CNT.toUpperCase() },
+  { label: formatMessage(messages.equals), value: CONDITION_EQ.toUpperCase() },
+  { label: formatMessage(messages.notEqual), value: CONDITION_NOT_EQ.toUpperCase() },
+];
+
+export const getPermissions = (formatMessage) => [
+  { label: formatMessage(messages.all), value: '' },
+  { label: formatMessage(messages.adminsOnly), value: ADMINISTRATOR },
+  { label: formatMessage(messages.nonAdmins), value: USER },
+];
+
+export const getAccountTypes = (formatMessage) => [
+  { label: formatMessage(messages.typeInternal), value: 'internal' },
+  { label: formatMessage(messages.typeSynched), value: 'synched' },
+  { label: formatMessage(messages.gitHub), value: 'github' },
+  { label: formatMessage(messages.ldap), value: 'ldap' },
+  { label: formatMessage(messages.saml), value: 'saml' },
+  { label: formatMessage(messages.scim), value: 'scim' },
 ];

@@ -32,19 +32,23 @@
   box-shadow: none;
   flex-grow: 1;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
   &.dark-view {
     border: 1px solid $COLOR--dark-gray;
     border-radius: 4px;
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
     background-color: transparent;
     color: $COLOR--white-two;
+
     &.touched {
       border: none;
       background-color: $COLOR--black-1;
     }
+
     &.error.touched {
       background-color: transparent;
     }
+
     &.disabled {
       background-color: transparent;
       border: solid 1px $COLOR--dark-gray;
@@ -55,6 +59,7 @@
   &:hover {
     border-color: $COLOR--gray-47;
   }
+
   &:focus {
     background-color: inherit;
     border-color: $COLOR--topaz;
@@ -64,12 +69,14 @@
   &.error.touched {
     border-color: $COLOR--orange-red;
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
+
     &.dark-view {
       border: 1px solid $COLOR--darkmode-error-default;
       box-shadow: none;
       color: $COLOR--white-two;
     }
   }
+
   &.disabled {
     background-color: $COLOR--gray-91;
     border-color: $COLOR--gray-80;
@@ -95,6 +102,7 @@
   &:-webkit-autofill {
     box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
   }
+
   &.type-number::-webkit-inner-spin-button,
   &.type-number::-webkit-outer-spin-button {
     appearance: none;
