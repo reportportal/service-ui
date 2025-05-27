@@ -110,8 +110,13 @@
   "AllUsersPage.createUser": "Створити користувача",
   "AllUsersPage.export": "Експортувати",
   "AllUsersPage.invite": "Запросити користувача",
+<<<<<<< Updated upstream
   "AllUsersPage.noResultsDescription": "Користувачів за вашим запитом не знайдено",
   "AllUsersPage.searchPlaceholder": "Пошук за ім'ям",
+=======
+  "AllUsersPage.noResultsDescription": "Результати пошуку або фільтрації не співпали з жодним із критеріїв. Будь ласка, спробуйте використовувати інші ключові слова або змініть налаштування фільтра.",
+  "AllUsersPage.searchPlaceholder": "Введіть для пошуку за назвою",
+>>>>>>> Stashed changes
   "AllUsersPage.title": "Усі користувачі",
   "AnalysisConfigurations.analysisConfigurations": "конфігурацію Авто-Аналізу",
   "AnalysisConfigurations.generateIndex": "індекс був згенерований",

@@ -110,8 +110,13 @@
   "AllUsersPage.createUser": "Create user",
   "AllUsersPage.export": "Exportar",
   "AllUsersPage.invite": "Invite user",
+<<<<<<< Updated upstream
   "AllUsersPage.noResultsDescription": "No users found for your search",
   "AllUsersPage.searchPlaceholder": "Search by name",
+=======
+  "AllUsersPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
+  "AllUsersPage.searchPlaceholder": "Type to search by name",
+>>>>>>> Stashed changes
   "AllUsersPage.title": "All users",
   "AnalysisConfigurations.analysisConfigurations": "configuración de análisis automático",
   "AnalysisConfigurations.generateIndex": "generar el índice",

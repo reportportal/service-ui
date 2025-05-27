@@ -110,8 +110,13 @@
   "AllUsersPage.createUser": "Создать пользователя",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.invite": "Пригласить пользователя",
+<<<<<<< Updated upstream
   "AllUsersPage.noResultsDescription": "Пользователи по вашему запросу не найдены",
   "AllUsersPage.searchPlaceholder": "Поиск по имени",
+=======
+  "AllUsersPage.noResultsDescription": "Результаты поиска или фильтрации не совпали ни с одним из критериев. Пожалуйста, попробуйте использовать другие ключевые слова или измените настройки фильтра.",
+  "AllUsersPage.searchPlaceholder": "Введите для поиска по названию",
+>>>>>>> Stashed changes
   "AllUsersPage.title": "Все пользователи",
   "AnalysisConfigurations.analysisConfigurations": "конфигурацию Авто-Анализа",
   "AnalysisConfigurations.generateIndex": "индекс был сгенерирован",
