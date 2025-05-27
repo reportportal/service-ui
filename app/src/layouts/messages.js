@@ -57,6 +57,10 @@ export const messages = defineMessages({
     id: 'Sidebar.productVersions',
     defaultMessage: 'Product Versions',
   },
+  testCaseLibrary: {
+    id: 'Sidebar.testCaseLibrary',
+    defaultMessage: 'Test Case Library',
+  },
   organizations: {
     id: 'InstanceSidebar.organizations',
     defaultMessage: 'Organizations',

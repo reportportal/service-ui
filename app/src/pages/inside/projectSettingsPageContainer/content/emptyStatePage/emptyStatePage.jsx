@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import isEmpty from 'lodash.isempty';
 
 import { Button } from '@reportportal/ui-kit';
 import { withTooltip } from 'componentLibrary/tooltip';
@@ -31,6 +32,7 @@ import bell from './img/notifications-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
+import docs from './img/test-case-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -40,6 +42,7 @@ const images = {
   plus,
   lines,
   branches,
+  docs,
 };
 
 const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
@@ -52,19 +55,14 @@ const ButtonWithTooltip = withTooltip({
 })(Button);
 
 export const EmptyStatePage = ({
-  handleButton,
-  buttonName,
-  buttonIcon,
   description,
   documentationLink,
   title,
-  disableButton,
   descriptionClassName,
   handleDocumentationClick,
   imageType,
-  buttonDataAutomationId,
   documentationDataAutomationId,
-  buttonTooltip,
+  buttons,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -72,27 +70,46 @@ export const EmptyStatePage = ({
       <span className={cx('img')}>{Parser(images[imageType])}</span>
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
-      {buttonName &&
-        (buttonTooltip ? (
-          <ButtonWithTooltip
-            disabled={disableButton}
-            onClick={disableButton ? null : handleButton}
-            dataAutomationId={buttonDataAutomationId}
-            tooltip={buttonTooltip}
-          >
-            {buttonName}
-          </ButtonWithTooltip>
-        ) : (
-          <Button
-            disabled={disableButton}
-            adjustWidthOn={'wide-content'}
-            onClick={disableButton ? null : handleButton}
-            data-automation-id={buttonDataAutomationId}
-            {...(buttonIcon && { icon: Parser(buttonIcon) })}
-          >
-            {buttonName}
-          </Button>
-        ))}
+      {!isEmpty(buttons) && (
+        <div className={cx('buttons')}>
+          {buttons.map(
+            ({
+              name,
+              dataAutomationId,
+              tooltip,
+              isDisabled,
+              handleButton,
+              icon,
+              variant,
+              isCompact,
+            }) =>
+              tooltip ? (
+                <ButtonWithTooltip
+                  disabled={isDisabled}
+                  onClick={isDisabled ? null : handleButton}
+                  dataAutomationId={dataAutomationId}
+                  tooltip={tooltip}
+                  key={name}
+                >
+                  {name}
+                </ButtonWithTooltip>
+              ) : (
+                <Button
+                  disabled={isDisabled}
+                  adjustWidthOn={'wide-content'}
+                  onClick={isDisabled ? null : handleButton}
+                  data-automation-id={dataAutomationId}
+                  key={name}
+                  variant={variant}
+                  className={cx({ 'buttons__button--compact': isCompact })}
+                  {...(icon && { icon: Parser(icon) })}
+                >
+                  {name}
+                </Button>
+              ),
+          )}
+        </div>
+      )}
       {documentationLink && (
         <ExternalLink
           className={cx('link')}
@@ -108,32 +125,32 @@ export const EmptyStatePage = ({
 };
 
 EmptyStatePage.propTypes = {
-  handleButton: PropTypes.func,
   title: PropTypes.string,
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  buttonName: PropTypes.string,
   documentationLink: PropTypes.string,
-  disableButton: PropTypes.bool,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches']),
-  buttonDataAutomationId: PropTypes.string,
+  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches', 'docs']),
   documentationDataAutomationId: PropTypes.string,
-  buttonTooltip: PropTypes.string,
-  buttonIcon: PropTypes.string,
+  buttons: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      dataAutomationId: PropTypes.string,
+      tooltip: PropTypes.string,
+      isDisabled: PropTypes.bool,
+      handleButton: PropTypes.func,
+      icon: PropTypes.string,
+      isCompact: PropTypes.bool,
+    }),
+  ),
 };
 
 EmptyStatePage.defaultProps = {
-  handleButton: () => {},
   title: '',
   description: '',
-  buttonName: '',
   documentationLink: '',
-  disableButton: false,
   descriptionClassName: '',
   handleDocumentationClick: null,
   imageType: 'plus',
-  buttonDataAutomationId: '',
   documentationDataAutomationId: 'emptyStatePageDocsLink',
-  buttonTooltip: null,
 };
