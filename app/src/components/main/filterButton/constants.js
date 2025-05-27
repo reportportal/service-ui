@@ -23,6 +23,7 @@ import {
   CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
+import { GITHUB, INTERNAL, LDAP, SAML, SCIM, UPSA } from 'common/constants/accountType';
 import { messages } from './messages';
 
 export const ORGANIZATION_TYPE_FILTER_NAME = 'type';
@@ -73,10 +74,10 @@ export const getPermissions = (formatMessage) => [
 ];
 
 export const getAccountTypes = (formatMessage) => [
-  { label: formatMessage(messages.typeInternal), value: 'internal' },
-  { label: formatMessage(messages.typeSynched), value: 'synched' },
-  { label: formatMessage(messages.gitHub), value: 'github' },
-  { label: formatMessage(messages.ldap), value: 'ldap' },
-  { label: formatMessage(messages.saml), value: 'saml' },
-  { label: formatMessage(messages.scim), value: 'scim' },
+  { label: formatMessage(messages.typeInternal), value: INTERNAL },
+  { label: formatMessage(messages.typeSynched), value: UPSA },
+  { label: formatMessage(messages.gitHub), value: GITHUB },
+  { label: formatMessage(messages.ldap), value: LDAP },
+  { label: formatMessage(messages.saml), value: SAML },
+  { label: formatMessage(messages.scim), value: SCIM },
 ];
