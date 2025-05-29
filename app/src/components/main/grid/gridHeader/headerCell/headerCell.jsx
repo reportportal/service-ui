@@ -67,7 +67,7 @@ export const HeaderCell = track()(
     };
     const sortingClickHandler = () => {
       tracking.trackEvent(sortingEventInfo);
-      onChangeSorting(id);
+      sortingEventInfo && onChangeSorting(id);
     };
     const TitleComponent = title.component;
     const titleComponentProps = title.componentProps;
