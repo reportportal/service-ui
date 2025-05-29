@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-.timeout-dropdown {
-  width: 100px;
-}
-
-.timeout-select-list {
-  width: 184px;
-}
+export { FeaturesTab } from './featuresTab';

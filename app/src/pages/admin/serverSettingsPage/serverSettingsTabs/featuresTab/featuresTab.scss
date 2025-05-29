@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-.timeout-dropdown {
-  width: 100px;
-}
-
-.timeout-select-list {
-  width: 184px;
+.features-tab {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+  overflow: hidden;
 }

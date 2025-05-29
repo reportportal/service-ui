@@ -34,6 +34,7 @@ import {
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_FOOTER_LINKS_KEY,
+  IMPORTANT_LAUNCHES_FEATURE_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -62,6 +63,8 @@ export const analyzerExtensionsSelector = (state) => extensionsSelector(state).a
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
+export const importantLaunchesEnabledSelector = (state) =>
+  extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
 export const serverFooterLinksSelector = createSelector(

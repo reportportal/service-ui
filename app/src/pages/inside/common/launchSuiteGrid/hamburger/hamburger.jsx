@@ -36,7 +36,7 @@ import {
   activeProjectSelector,
 } from 'controllers/user';
 import { enabledPattersSelector } from 'controllers/project';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { analyzerExtensionsSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -108,6 +108,7 @@ const messages = defineMessages({
     projectId: activeProjectSelector(state),
     enabledPatterns: enabledPattersSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
+    areImportantLaunchesEnabled: importantLaunchesEnabledSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -132,6 +133,7 @@ export class Hamburger extends Component {
     showModal: PropTypes.func,
     updateLaunchLocallyAction: PropTypes.func,
     analyzerExtensions: PropTypes.array,
+    areImportantLaunchesEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -141,6 +143,7 @@ export class Hamburger extends Component {
     showModal: () => {},
     updateLaunchLocallyAction: () => {},
     analyzerExtensions: [],
+    areImportantLaunchesEnabled: false,
   };
 
   state = {
@@ -280,6 +283,7 @@ export class Hamburger extends Component {
       customProps,
       enabledPatterns,
       tracking,
+      areImportantLaunchesEnabled,
     } = this.props;
 
     const clusterTitle = this.getClusterTitle();
@@ -355,23 +359,25 @@ export class Hamburger extends Component {
                 customProps.onForceFinish(launch);
               }}
             />
-            <HamburgerMenuItem
-              disabled={!canUpdateImportant}
-              title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
-              text={intl.formatMessage(
-                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                  ? messages.unmarkAsImportant
-                  : messages.markAsImportant,
-              )}
-              onClick={() => {
-                tracking.trackEvent(
+            {areImportantLaunchesEnabled && (
+              <HamburgerMenuItem
+                disabled={!canUpdateImportant}
+                title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
+                text={intl.formatMessage(
                   launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                    ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
-                    : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
-                );
-                this.changeImportantState(launch.retentionPolicy);
-              }}
-            />
+                    ? messages.unmarkAsImportant
+                    : messages.markAsImportant,
+                )}
+                onClick={() => {
+                  tracking.trackEvent(
+                    launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                      ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                      : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                  );
+                  this.changeImportantState(launch.retentionPolicy);
+                }}
+              />
+            )}
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
                 text={intl.formatMessage(messages.analysis)}

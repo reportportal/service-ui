@@ -49,6 +49,11 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'sso',
     switcher: switcherValue ? 'on' : 'off',
   }),
+  toggleImportantLaunches: (switcherValue) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'important_launches',
+    switcher: switcherValue ? 'on' : 'off',
+  }),
   changeSessionInactivity: (condition) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'session_inactivity_timeout',
@@ -57,6 +62,10 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
   AUTHORIZATION_CONFIGURATION_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'auth_configuration',
+  },
+  FEATURES_TAB: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'features',
   },
   LINKS_AND_BRANDING_TAB: {
     ...basicClickEventParametersAdminServerSettingsPage,
