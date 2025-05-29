@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { NavMenu } from '../navMenu';
+import { NavMenu } from './navMenu';
 import styles from './navigation.scss';
 
 const cx = classNames.bind(styles);

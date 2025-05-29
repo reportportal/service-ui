@@ -42,9 +42,9 @@ import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/d
 import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
+import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { GeneralTab } from './generalTab';
@@ -190,7 +190,7 @@ export const ProjectSettingsPageContainer = () => {
       return null;
     }
     return config[activeTab].component;
-  }, [activeTab, config]);
+  }, [activeTab, config, dispatch]);
 
   return (
     <ProjectSettingsAnalyticsWrapper>

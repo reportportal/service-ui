@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,4 @@
  * limitations under the License.
  */
 
-.header {
-  position: sticky;
-  top: 0;
-  padding: 48px 16px 18px;
-  background: $COLOR--bg-000;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 15px;
-  line-height: 24px;
-  color: $COLOR--almost-black;
-  z-index: $Z_INDEX-STICKY-TOOLBAR;
-}
+export { GeneralTab } from './generalTab';

@@ -58,6 +58,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
   USER_PROFILE_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
@@ -202,9 +203,15 @@ const routesMap = {
     },
   },
 
-  [ORGANIZATION_SETTINGS_PAGE]: {
-    path: '/organizations/:organizationSlug/settings',
-  },
+  [ORGANIZATION_SETTINGS_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/settings',
+    (payload) => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
+  ),
+
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: `/organizations/:organizationSlug/settings/:settingsTab`,
 
   [PROJECT_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug',

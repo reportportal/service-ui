@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,6 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  height: 100%;
-  background: $COLOR--bg-000;
-}
-
-.navigation {
-  flex-shrink: 0;
-  width: 360px;
-  border-right: 1px solid $COLOR--e-100;
-  box-sizing: border-box;
-}
-
-.section {
-  width: 100%;
-  background: $COLOR--bg-100;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 0;
-}
-
-.section-content {
-  width: 100%;
-  flex: 1 0 auto;
-}
+export const GeneralTab = () => {
+  return null;
+};

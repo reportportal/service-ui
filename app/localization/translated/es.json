@@ -1607,6 +1607,8 @@
   "OrganizationProjectsTableColumn.launches": "Launches",
   "OrganizationProjectsTableColumn.projectName": "Project name",
   "OrganizationProjectsTableColumn.teammates": "Teammates",
+  "OrganizationSettingsPage.general": "General",
+  "OrganizationSettingsPage.title": "Organization Settings",
   "OrganizationSidebar.membersBtn": "Organization Users",
   "OrganizationSidebar.projectsBtn": "Projects",
   "OrganizationSidebar.settingsBtn": "Organization Settings",
