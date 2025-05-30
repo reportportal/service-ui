@@ -1606,6 +1606,8 @@
   "OrganizationProjectsTableColumn.launches": "Launches",
   "OrganizationProjectsTableColumn.projectName": "Project name",
   "OrganizationProjectsTableColumn.teammates": "Teammates",
+  "OrganizationSettingsPage.general": "Общие",
+  "OrganizationSettingsPage.title": "Настройки Организации",
   "OrganizationSidebar.membersBtn": "Пользователи Организации",
   "OrganizationSidebar.projectsBtn": "Проекты",
   "OrganizationSidebar.settingsBtn": "Настройки Организации",

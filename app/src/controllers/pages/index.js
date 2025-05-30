@@ -96,6 +96,7 @@ export {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';
