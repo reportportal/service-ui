@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-.timeout-dropdown {
-  width: 100px;
-}
+.section-layout {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 65px;
+  margin-bottom: 40px;
 
-.timeout-select-list {
-  width: 184px;
+  .content {
+    padding-top: 25px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+  }
 }

@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-.timeout-dropdown {
-  width: 100px;
-}
+import React from 'react';
+import classNames from 'classnames/bind';
+import { ImportantLaunches } from './importantLaunches';
+import styles from './featuresTab.scss';
 
-.timeout-select-list {
-  width: 184px;
-}
+const cx = classNames.bind(styles);
+
+export const FeaturesTab = () => {
+  return (
+    <div className={cx('features-tab')}>
+      <ImportantLaunches />
+    </div>
+  );
+};

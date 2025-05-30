@@ -62,6 +62,7 @@ import {
   AUTHORIZATION_CONFIGURATION,
   ANALYTICS,
   LINKS_AND_BRANDING,
+  FEATURES,
 } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
@@ -148,7 +149,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/administrate/plugins',
     () => ({
