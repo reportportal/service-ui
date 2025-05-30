@@ -191,6 +191,9 @@ export class ProjectsAndRolesColumn extends Component {
       tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.PROJECT_AND_ROLES_BTN);
     }
     this.props.toggleUserRoleFormAction(userId, !expandRoleSelection);
+    this.setState({
+      assignRole: false,
+    });
   };
   toggleAssignRole = () => {
     this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_PROJECT_AND_ROLES);
@@ -367,7 +370,6 @@ export class ProjectsAndRolesColumn extends Component {
                       className={cx('projects-and-roles-popover')}
                     >
                       <ScrollWrapper autoHeight autoHeightMax={233}>
-                        {this.renderDropdown()}
                         {assignRole && (
                           <RolesRow
                             onAssignProjectRole={this.onAssignProjectRole}
@@ -375,6 +377,7 @@ export class ProjectsAndRolesColumn extends Component {
                             createNew
                           />
                         )}
+                        {this.renderDropdown()}
                       </ScrollWrapper>
                       <div className={cx('projects-and-roles-toolbar')}>
                         <div
