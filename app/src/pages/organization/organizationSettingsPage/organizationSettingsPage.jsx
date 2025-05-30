@@ -30,11 +30,11 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import classNames from 'classnames';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
-import styles from './organizationSettingsPageContainer.scss';
+import styles from './organizationSettingsPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationSettingsPageContainer = () => {
+export const OrganizationSettingsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);

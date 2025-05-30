@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OrganizationSettingsPageContainer } from './organizationSettingsPageContainer';
+export { OrganizationSettingsPage } from './organizationSettingsPage';
