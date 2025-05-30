@@ -44,7 +44,7 @@ const messages = defineMessages({
   uploadTip: {
     id: 'UploadPluginModal.tip',
     defaultMessage:
-      'Drop only <b>.jar</b> file under 128 MB to upload or <span>click</span> to add it',
+      'Drop only <b>.jar</b> or <b>.json</b> file under 128 MB to upload or <span>click</span> to add it',
   },
   incorrectFileSize: {
     id: 'UploadPluginModal.incorrectFileSize',
@@ -57,7 +57,7 @@ const messages = defineMessages({
 });
 
 const MAX_FILE_SIZE = 134217728;
-const ACCEPT_FILE_MIME_TYPES = ['.jar'];
+const ACCEPT_FILE_MIME_TYPES = ['.jar', '.json'];
 
 export const UploadPluginModal = ({ data: { onImport } }) => {
   const {

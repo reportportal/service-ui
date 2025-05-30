@@ -2104,7 +2104,7 @@
   "UploadPluginModal.importConfirmationWarning": "Ви впевнені, що хочете перервати процес завантаження плагіна?",
   "UploadPluginModal.incorrectFileSize": "Розмір перевищує 128 Мб",
   "UploadPluginModal.modalTitle": "Завантажити плагін",
-  "UploadPluginModal.tip": "Завантажте банку файли розміром менше 128 Мб",
+  "UploadPluginModal.tip": "Перетягніть <b>.jar</b> або <b>.json</b> файл розміром менше 128 Mb або <span>натисніть</span>, щоб додати",
   "UploadPluginModal.uploadButton": "Завантажити",
   "UserBlock.adminBadge": "Адміністратор",
   "UserBlock.administrate": "Адмініструвати",
