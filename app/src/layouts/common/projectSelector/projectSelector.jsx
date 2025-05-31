@@ -90,7 +90,7 @@ export class ProjectSelector extends Component {
   }
 
   onClickProjectName = () => {
-    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME_LINK);
+    setTimeout(() => this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME_LINK), 1000);
   };
 
   toggleShowList = () => {
