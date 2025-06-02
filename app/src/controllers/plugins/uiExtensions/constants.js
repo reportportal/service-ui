@@ -54,4 +54,6 @@ export const ICON_FILE_KEY = 'icon';
 export const FETCH_EXTENSION_MANIFESTS_SUCCESS = 'fetchExtensionManifestsSuccess';
 export const UPDATE_EXTENSION_MANIFEST = 'updateExtensionManifest';
 
-export const PLUGIN_TYPE_REMOTE = 'remote';
+export const PLUGIN_TYPE_REMOTE = 'REMOTE';
+export const PLUGIN_TYPE_EXTENSION = 'EXTENSION';
+export const PLUGIN_TYPE_BUILTIN = 'BUILTIN';
