@@ -24,6 +24,7 @@ import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { HelpPanel } from 'pages/inside/common/helpPanel';
 import settingsIcon from 'common/img/settings-icon-inline.svg';
+import { referenceDictionary } from 'common/utils';
 
 import { FilterBlock } from './filterBlock';
 import { HeaderConfig } from './headerConfig';
@@ -78,7 +79,7 @@ export const LinkedTestCasesTab = () => {
       description: formatMessage(messages.whatIsDefaultTestDescription),
       openIcon: openInNewTabIcon,
       automationId: 'whatIsDefaultTest',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
     {
       title: formatMessage(messages.howMilestonesWorkTitle),
@@ -86,7 +87,7 @@ export const LinkedTestCasesTab = () => {
       description: formatMessage(messages.howMilestonesWorkDescription),
       openIcon: openInNewTabIcon,
       automationId: 'howMilestonesWork',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
     {
       title: formatMessage(messages.howManageTestChangesTitle),
@@ -94,7 +95,7 @@ export const LinkedTestCasesTab = () => {
       description: formatMessage(messages.howManageTestChangesDescription),
       openIcon: openInNewTabIcon,
       automationId: 'howManageTestChanges',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
   ];
 

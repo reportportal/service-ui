@@ -185,7 +185,7 @@ import {
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';

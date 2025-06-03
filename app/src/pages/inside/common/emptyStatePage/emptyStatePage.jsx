@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
 import isEmpty from 'lodash.isempty';
 
 import { Button } from '@reportportal/ui-kit';
-import { withTooltip } from 'componentLibrary/tooltip';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 
@@ -45,15 +44,6 @@ const images = {
   docs,
 };
 
-const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
-TooltipComponent.propTypes = {
-  tooltip: PropTypes.string.isRequired,
-};
-
-const ButtonWithTooltip = withTooltip({
-  ContentComponent: TooltipComponent,
-})(Button);
-
 export const EmptyStatePage = ({
   description,
   documentationLink,
@@ -73,40 +63,20 @@ export const EmptyStatePage = ({
       {!isEmpty(buttons) && (
         <div className={cx('buttons')}>
           {buttons.map(
-            ({
-              name,
-              dataAutomationId,
-              tooltip,
-              isDisabled,
-              handleButton,
-              icon,
-              variant,
-              isCompact,
-            }) =>
-              tooltip ? (
-                <ButtonWithTooltip
-                  disabled={isDisabled}
-                  onClick={isDisabled ? null : handleButton}
-                  dataAutomationId={dataAutomationId}
-                  tooltip={tooltip}
-                  key={name}
-                >
-                  {name}
-                </ButtonWithTooltip>
-              ) : (
-                <Button
-                  disabled={isDisabled}
-                  adjustWidthOn={'wide-content'}
-                  onClick={isDisabled ? null : handleButton}
-                  data-automation-id={dataAutomationId}
-                  key={name}
-                  variant={variant}
-                  className={cx({ 'buttons__button--compact': isCompact })}
-                  {...(icon && { icon: Parser(icon) })}
-                >
-                  {name}
-                </Button>
-              ),
+            ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
+              <Button
+                disabled={isDisabled}
+                adjustWidthOn={'wide-content'}
+                onClick={isDisabled ? null : handleButton}
+                data-automation-id={dataAutomationId}
+                key={name}
+                variant={variant}
+                className={cx({ 'buttons__button--compact': isCompact })}
+                {...(icon && { icon: Parser(icon) })}
+              >
+                {name}
+              </Button>
+            ),
           )}
         </div>
       )}
@@ -136,7 +106,6 @@ EmptyStatePage.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       dataAutomationId: PropTypes.string,
-      tooltip: PropTypes.string,
       isDisabled: PropTypes.bool,
       handleButton: PropTypes.func,
       icon: PropTypes.string,

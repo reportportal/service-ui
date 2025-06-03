@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 
 import { messages as parentMessage } from '../../messages';
 import { messages } from './messages';

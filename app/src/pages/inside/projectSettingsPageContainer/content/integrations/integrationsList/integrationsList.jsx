@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { docsReferences } from 'common/utils';
 import { userRolesSelector } from 'controllers/pages';
 import { canUpdateSettings } from 'common/utils/permissions';

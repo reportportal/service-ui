@@ -19,7 +19,8 @@ import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { referenceDictionary } from 'common/utils';
 
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { messages } from './messages';
@@ -41,7 +42,7 @@ export const EmptyState = () => {
         title={formatMessage(messages.emptyPageTitle)}
         description={Parser(formatMessage(messages.emptyPageDescription))}
         imageType="docs"
-        documentationLink="https://reportportal.io/docs/"
+        documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
             name: formatMessage(messages.createTestCase),

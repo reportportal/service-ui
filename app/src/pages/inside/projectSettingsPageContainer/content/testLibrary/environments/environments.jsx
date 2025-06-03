@@ -21,10 +21,11 @@ import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { showModalAction } from 'controllers/modal';
+import { referenceDictionary } from 'common/utils';
 
 import { SettingsPageContent } from '../../settingsPageContent';
-import { EmptyStatePage } from '../../emptyStatePage';
 import { messages } from './messages';
 
 import styles from './environments.scss';
@@ -56,7 +57,7 @@ export const Environments = () => {
         <EmptyStatePage
           title={formatMessage(messages.emptyPageTitle)}
           description={Parser(formatMessage(messages.emptyPageDescription))}
-          documentationLink="https://reportportal.io/docs/"
+          documentationLink={referenceDictionary.rpDoc}
           imageType="lines"
           buttons={[
             {
