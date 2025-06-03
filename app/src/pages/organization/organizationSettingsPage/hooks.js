@@ -57,11 +57,11 @@ export const useRetentionUtils = (formValues, retention = null) => {
 
   const formatRetention = createValueFormatter(getRetentionOptions());
 
-  const formatInputValues = () => {
-    if (!formValues) {
+  const formatInputValues = (values) => {
+    if (!values) {
       return [];
     }
-    const arrValues = Object.entries(formValues).map((elem) => {
+    const arrValues = Object.entries(values).map((elem) => {
       const [key, value] = elem;
       return value === 0 ? [key, Infinity] : elem;
     });
