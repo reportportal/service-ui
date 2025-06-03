@@ -93,7 +93,7 @@ const OrgTeamListTableWrapped = ({
           const memberBadges = getRoleBadgesData(instanceRole, null, isCurrentUser);
           const user = {
             id: id.toString(),
-            fullName,
+            full_name: fullName,
           };
 
           return {
