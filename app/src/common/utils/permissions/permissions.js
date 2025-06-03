@@ -16,7 +16,7 @@
 
 import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { MANAGER } from 'common/constants/projectRoles';
+import { MANAGER, MEMBER } from 'common/constants/projectRoles';
 
 export const createCheckPermission = (permissionMap) => (permission) => ({
   userRole,
@@ -28,6 +28,10 @@ export const createCheckPermission = (permissionMap) => (permission) => ({
   }
 
   if (organizationRole === MANAGER) {
+    return !!permissionMap[organizationRole][permission];
+  }
+
+  if (organizationRole === MEMBER && permissionMap[organizationRole]?.[permission] !== undefined) {
     return !!permissionMap[organizationRole][permission];
   }
 
@@ -77,6 +81,7 @@ export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
 export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
 export const canReportLaunches = checkPermission(ACTIONS.REPORT_LAUNCHES);
 export const canSeeOrganizationSettings = checkPermission(ACTIONS.SEE_ORGANIZATION_SETTINGS);
+export const canUpdateOrganizationSettings = checkPermission(ACTIONS.UPDATE_ORGANIZATION_SETTINGS);
 export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
 export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
 export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);

@@ -22,10 +22,16 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
-import moment from 'moment';
 import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
-import { fetch, secondsToDays } from 'common/utils';
+import {
+  daysToSeconds,
+  fetch,
+  hoursToDays,
+  hoursToSeconds,
+  secondsToDays,
+  secondsToHours,
+} from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
@@ -51,11 +57,7 @@ import { Messages } from './generalTabMessages';
 
 const cx = classNames.bind(styles);
 
-const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
-const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
 const selector = formValueSelector('generalForm');
-const secondsToHours = (seconds) => moment.duration(seconds, 'seconds').asHours();
-const hoursToDays = (hours) => moment.duration(hours, 'hours').asDays();
 
 const getInactivityTimeoutAnalytics = (inactivityTimeoutSeconds) => {
   const inactivityTimeoutHours = secondsToHours(inactivityTimeoutSeconds);

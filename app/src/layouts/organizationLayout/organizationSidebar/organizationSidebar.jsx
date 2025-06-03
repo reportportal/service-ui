@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeMembers, canSeeSettings } from 'common/utils/permissions';
+import { canSeeMembers, canSeeOrganizationSettings } from 'common/utils/permissions';
 import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
@@ -81,7 +81,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.users),
       });
     }
-    if (canSeeSettings(userRoles)) {
+    if (canSeeOrganizationSettings(userRoles)) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({
