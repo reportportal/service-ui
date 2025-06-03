@@ -2104,7 +2104,7 @@
   "UploadPluginModal.importConfirmationWarning": "¿Está seguro de que quiere interrumpir el proceso de carga del complemento?",
   "UploadPluginModal.incorrectFileSize": "El tamaño excede 128 Mb",
   "UploadPluginModal.modalTitle": "Cargar complemento",
-  "UploadPluginModal.tip": "Cargue archivos jar de menos de 128 Mb",
+  "UploadPluginModal.tip": "Drop only <b>.jar</b> or <b>.json</b> file under 128 MB to upload or <span>click</span> to add it",
   "UploadPluginModal.uploadButton": "Cargar",
   "UserBlock.adminBadge": "Administrador",
   "UserBlock.administrate": "Administrar",

@@ -2104,7 +2104,7 @@
   "UploadPluginModal.importConfirmationWarning": "Are you sure you want to interrupt the plugin uploading?",
   "UploadPluginModal.incorrectFileSize": "文件大小超过128Mb",
   "UploadPluginModal.modalTitle": "上传插件",
-  "UploadPluginModal.tip": "请点击添加或直接拖拽128MB以下的<b>.jar</b>文件以上传",
+  "UploadPluginModal.tip": "Drop only <b>.jar</b> or <b>.json</b> file under 128 MB to upload or <span>click</span> to add it",
   "UploadPluginModal.uploadButton": "上传",
   "UserBlock.adminBadge": "管理",
   "UserBlock.administrate": "管理",

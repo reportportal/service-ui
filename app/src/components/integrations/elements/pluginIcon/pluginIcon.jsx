@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
-import { ICON_FILE_KEY } from 'controllers/plugins/uiExtensions/constants';
+import { ICON_FILE_KEY, PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
+import { RemotePluginIcon } from './remotePluginIcon';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
-  const { details, name } = pluginData;
+  const { details, name, pluginType } = pluginData;
   const isDynamicIconAvailable = details?.binaryData?.[ICON_FILE_KEY];
 
   const calculateIconUrl = () => {
@@ -33,18 +34,20 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
     return PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE;
   };
 
-  const url = calculateIconUrl();
-
   return (
     <div className={className}>
-      <Image
-        src={url}
-        fallback={PLUGIN_DEFAULT_IMAGE}
-        isStatic={!isDynamicIconAvailable}
-        preloaderColor="charcoal"
-        className={className}
-        {...rest}
-      />
+      {pluginType === PLUGIN_TYPE_REMOTE ? (
+        <RemotePluginIcon icon={details.icon} className={className} {...rest} />
+      ) : (
+        <Image
+          src={calculateIconUrl()}
+          fallback={PLUGIN_DEFAULT_IMAGE}
+          isStatic={!isDynamicIconAvailable}
+          preloaderColor="charcoal"
+          className={className}
+          {...rest}
+        />
+      )}
     </div>
   );
 };
