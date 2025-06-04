@@ -25,26 +25,26 @@ import styles from './userNameCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserNameCell = ({ user, badges }) => {
+export const UserNameCell = ({ userId, fullName, badges }) => {
   const { formatMessage } = useIntl();
 
   return (
     <div className={cx('user-name-cell')}>
-      <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
+      <UserAvatar className={cx('user-avatar')} userId={userId} thumbnail />
       <div className={cx('name-badge-wrapper')}>
-        <div className={cx('full-name')}>{user.full_name}</div>
+        <div className={cx('full-name')}>{fullName}</div>
         {badges.length > 0 && (
           <div className={cx('badges')}>
             {badges.map(({ title, type }) => {
               const badgeContent = (
-                <div key={`${user.id}-${type}`} className={cx('badge', type)}>
+                <div key={`${userId}-${type}`} className={cx('badge', type)}>
                   {formatMessage(title)}
                 </div>
               );
 
               return type === ADMIN_TYPE ? (
                 <Tooltip
-                  key={`${user.id}-${type}-tooltip`}
+                  key={`${userId}-${type}-tooltip`}
                   content={formatMessage(messages.adminAccessInfo)}
                   placement="top"
                   width={248}
@@ -63,10 +63,8 @@ export const UserNameCell = ({ user, badges }) => {
 };
 
 UserNameCell.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    full_name: PropTypes.string.isRequired,
-  }).isRequired,
+  userId: PropTypes.number.isRequired,
+  fullName: PropTypes.string.isRequired,
   badges: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.object.isRequired,
