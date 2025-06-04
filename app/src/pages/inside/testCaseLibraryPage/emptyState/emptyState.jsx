@@ -17,26 +17,23 @@
 import React from 'react';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
-import PlusIcon from 'common/img/plus-button-inline.svg';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { referenceDictionary } from 'common/utils';
 
-import { messages as parentMessage } from '../../messages';
+import ImportIcon from 'common/img/import-thin-inline.svg';
 import { messages } from './messages';
 
-export const EmptyState = ({ openCreateProductVersionModal }) => {
+export const EmptyState = () => {
   const { formatMessage } = useIntl();
 
-  const benefits = [
-    messages.stayOrganizedBenefit,
-    messages.beUpToDateBenefit,
-    messages.enhanceTrackingBenefit,
-  ].map((translation) =>
-    formatMessage(translation, {
-      strong: (chunks) => <strong>{chunks}</strong>,
-    }),
+  const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
+    (translation) =>
+      formatMessage(translation, {
+        strong: (chunks) => <strong>{chunks}</strong>,
+        br: <br />,
+      }),
   );
 
   return (
@@ -44,13 +41,20 @@ export const EmptyState = ({ openCreateProductVersionModal }) => {
       <EmptyStatePage
         title={formatMessage(messages.emptyPageTitle)}
         description={Parser(formatMessage(messages.emptyPageDescription))}
-        imageType="branches"
+        imageType="docs"
+        documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
-            name: formatMessage(parentMessage.addProductVersionButtonText),
-            icon: PlusIcon,
-            dataAutomationId: 'addProductVersionButton',
-            handleButton: openCreateProductVersionModal,
+            name: formatMessage(messages.createTestCase),
+            dataAutomationId: 'createTestCaseButton',
+            isCompact: true,
+          },
+          {
+            name: formatMessage(messages.importTestCases),
+            dataAutomationId: 'createTestCaseButton',
+            variant: 'ghost',
+            icon: ImportIcon,
+            isCompact: true,
           },
         ]}
       />
@@ -61,8 +65,4 @@ export const EmptyState = ({ openCreateProductVersionModal }) => {
       />
     </>
   );
-};
-
-EmptyState.propTypes = {
-  openCreateProductVersionModal: PropTypes.func.isRequired,
 };

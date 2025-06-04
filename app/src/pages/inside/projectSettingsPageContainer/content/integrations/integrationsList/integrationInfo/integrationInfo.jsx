@@ -39,7 +39,7 @@ import {
 } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { EMAIL } from 'common/constants/pluginNames';
@@ -272,16 +272,20 @@ export const IntegrationInfo = (props) => {
           title={formatMessage(
             isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
           )}
-          handleButton={onAddProjectIntegration}
           description={formatMessage(
             isAbleToClick
               ? messages.noGlobalIntegrationsDescription
               : messages.noGlobalIntegrationsYetDescription,
           )}
           handleDocumentationClick={handleDocumentationClick}
-          buttonName={isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null}
-          disableButton={!isAbleToClick}
-          buttonDataAutomationId="addProjectIntegrationButton"
+          buttons={[
+            {
+              name: isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null,
+              isDisabled: !isAbleToClick,
+              dataAutomationId: 'addProjectIntegrationButton',
+              handleButton: onAddProjectIntegration,
+            },
+          ]}
         />
       )}
     </>

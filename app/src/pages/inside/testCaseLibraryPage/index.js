@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,4 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: $COLOR--e-400;
-  max-width: 420px;
-  margin: 0 auto;
-}
-.img {
-  width: 168px;
-  height: 123px;
-  margin: 65px 0 32px 0;
-}
-
-.title {
-  font-family: $FONT-REGULAR;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 31px;
-}
-
-.description {
-  margin-top: 16px;
-  margin-bottom: 24px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  text-align: center;
-}
-
-.link {
-  margin-top: 18px;
-}
+export { TestCaseLibraryPage } from './testCaseLibraryPage';

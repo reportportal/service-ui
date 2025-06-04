@@ -34,6 +34,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
   PRODUCT_VERSIONS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -48,6 +49,7 @@ import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
+import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -126,6 +128,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     }
 
     sidebarItems.push(
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.testCaseLibrary.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: TEST_CASE_LIBRARY_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: TestCaseIcon,
+        message: formatMessage(messages.testCaseLibrary),
+      },
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),

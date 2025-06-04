@@ -18,17 +18,17 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
-
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { HelpPanel } from 'pages/inside/common/helpPanel';
+import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
+import { PRODUCT_VERSION_TAB_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
+import { referenceDictionary } from 'common/utils';
 
-import { PRODUCT_VERSION_TAB_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
-import Link from 'redux-first-router-link';
 import styles from './content.scss';
 import { messages } from './messages';
 
@@ -45,7 +45,7 @@ export const Content = ({ versions }) => {
       description: formatMessage(messages.productVersionWorkDescription),
       openIcon: openInNewTabIcon,
       automationId: 'productVersionWorkLink',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
     {
       title: formatMessage(messages.manageProductVersionsTitle),
@@ -53,7 +53,7 @@ export const Content = ({ versions }) => {
       description: formatMessage(messages.manageProductVersionsDescription),
       openIcon: openInNewTabIcon,
       automationId: 'manageProductVersionLink',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
     {
       title: formatMessage(messages.linkToTestCaseVersionTitle),
@@ -61,7 +61,7 @@ export const Content = ({ versions }) => {
       description: formatMessage(messages.linkToTestCaseVersionDescription),
       openIcon: openInNewTabIcon,
       automationId: 'testCaseVersionLink',
-      link: 'https://reportportal.io/docs/',
+      link: referenceDictionary.rpDoc,
     },
   ];
 
