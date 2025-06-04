@@ -78,44 +78,38 @@ const OrgTeamListTableWrapped = ({
 
   const data = useMemo(
     () =>
-      users.map(
-        ({
+      users.map((user) => {
+        const {
           id,
           email,
-          full_name: fullName,
           stats,
           instance_role: instanceRole,
           last_login_at: lastLogin,
           org_role: orgRole,
-        }) => {
-          const projectsCount = stats.project_stats.total_count;
-          const isCurrentUser = id === currentUser.id;
-          const memberBadges = getRoleBadgesData(instanceRole, null, isCurrentUser);
-          const user = {
-            id: id.toString(),
-            full_name: fullName,
-          };
+        } = user;
+        const projectsCount = stats.project_stats.total_count;
+        const isCurrentUser = id === currentUser.id;
+        const memberBadges = getRoleBadgesData(instanceRole, null, isCurrentUser);
 
-          return {
-            id,
-            fullName: {
-              content: fullName,
-              component: <UserNameCell user={user} badges={memberBadges} />,
-            },
-            email,
-            lastLogin: {
-              content: lastLogin,
-              component: lastLogin ? (
-                <AbsRelTime startTime={lastLogin} customClass={cx('date')} />
-              ) : (
-                <span>n/a</span>
-              ),
-            },
-            permissions: orgRole,
-            projects: projectsCount,
-          };
-        },
-      ),
+        return {
+          id,
+          fullName: {
+            content: user.full_name,
+            component: <UserNameCell user={user} badges={memberBadges} />,
+          },
+          email,
+          lastLogin: {
+            content: lastLogin,
+            component: lastLogin ? (
+              <AbsRelTime startTime={lastLogin} customClass={cx('date')} />
+            ) : (
+              <span>n/a</span>
+            ),
+          },
+          permissions: orgRole,
+          projects: projectsCount,
+        };
+      }),
     [users, organizationSlug, currentUser.id],
   );
 

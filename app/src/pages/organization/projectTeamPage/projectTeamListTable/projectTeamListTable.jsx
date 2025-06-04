@@ -82,7 +82,7 @@ const ProjectTeamListTableWrapped = ({
             currentUserId === userId,
           );
           const user = {
-            id: id.toString(),
+            id,
             full_name: fullName,
           };
           return {

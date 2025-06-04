@@ -65,7 +65,7 @@ export const UserNameCell = ({ user, badges }) => {
 
 UserNameCell.propTypes = {
   user: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    id: PropTypes.number.isRequired,
     full_name: PropTypes.string.isRequired,
   }).isRequired,
   badges: PropTypes.arrayOf(
