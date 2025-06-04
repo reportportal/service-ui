@@ -995,7 +995,7 @@
   "ImportModal.incorrectFileFormat": "Неправильный формат файла",
   "ImportPluginSelector.ReportType": "Тип отчёта:",
   "ImportantLaunches.description": "Важные запуски продлевают период хранения запусков сверх стандартных настроек политики хранения. Вы можете отметить запуск как важный с помощью меню запуска.",
-  "ImportantLaunches.formHeader": "Важный запуски",
+  "ImportantLaunches.formHeader": "Важные запуски",
   "ImportantLaunches.successNotification": "Настройки для важных запусков были успешно обновлены",
   "ImportantLaunches.switcherLabel": "Важные Запуски",
   "IncludeInAAModal.includeButton": "Включить",
