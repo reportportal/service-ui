@@ -27,25 +27,24 @@ const cx = classNames.bind(styles);
 
 export const UserNameCell = ({ user, badges }) => {
   const { formatMessage } = useIntl();
-  const userId = String(user.id);
 
   return (
     <div className={cx('user-name-cell')}>
-      <UserAvatar className={cx('user-avatar')} userId={userId} thumbnail />
+      <UserAvatar className={cx('user-avatar')} userId={user.id} thumbnail />
       <div className={cx('name-badge-wrapper')}>
         <div className={cx('full-name')}>{user.full_name}</div>
         {badges.length > 0 && (
           <div className={cx('badges')}>
             {badges.map(({ title, type }) => {
               const badgeContent = (
-                <div key={`${userId}-${type}`} className={cx('badge', type)}>
+                <div key={`${user.id}-${type}`} className={cx('badge', type)}>
                   {formatMessage(title)}
                 </div>
               );
 
               return type === ADMIN_TYPE ? (
                 <Tooltip
-                  key={`${userId}-${type}-tooltip`}
+                  key={`${user.id}-${type}-tooltip`}
                   content={formatMessage(messages.adminAccessInfo)}
                   placement="top"
                   width={248}
