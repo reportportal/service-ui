@@ -1800,7 +1800,7 @@
   "ProjectsPage.deleteProjectSuccess": "Праект ''{name}'' быў паспяхова выдалены",
   "ProjectsPage.noResultsDescription": "Вашым крытэрам пошуку або фільтра не знойдзена ніводнага выніку. Калі ласка, паспрабуйце іншыя ключавыя словы або змяніце налады фільтра.",
   "ProjectsPage.projectDuplicateHint": "Праект з дадзеным найменнем ўжо існуе ў сістэме",
-  "ProjectsPage.projectExists": "Праект з такой назвай ужо існуе ў гэтай арганізацыі",
+  "ProjectsPage.projectExists": "Праект з назвай ''{name}'' ужо існуе ў гэтай арганізацыі",
   "ProjectsPage.projectNameLabel": "Імя",
   "ProjectsPage.projectNameLengthHint": "Поўнае імя можа змяшчаць толькі лацінку, лічбы, злучок, падкрэсленне, кропку. Прабел дапускаецца",
   "ProjectsPage.projectNamePatternHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted",
