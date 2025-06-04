@@ -51,6 +51,34 @@ export const settingsMessages = defineMessages({
     id: 'GeneralTab.keepScreenshotsDescription',
     defaultMessage: 'How long to keep attachments in system',
   },
+  minutes15: {
+    id: 'GeneralTab.minutes15',
+    defaultMessage: '15 minutes',
+  },
+  hour1: {
+    id: 'GeneralTab.hour1',
+    defaultMessage: '1 hour',
+  },
+  hour3: {
+    id: 'GeneralTab.hour3',
+    defaultMessage: '3 hours',
+  },
+  hour6: {
+    id: 'GeneralTab.hour6',
+    defaultMessage: '6 hours',
+  },
+  hour12: {
+    id: 'GeneralTab.hour12',
+    defaultMessage: '12 hours',
+  },
+  hour24: {
+    id: 'GeneralTab.hour24',
+    defaultMessage: '24 hours',
+  },
+  day1: {
+    id: 'GeneralTab.day1',
+    defaultMessage: '1 day',
+  },
   week1: {
     id: 'GeneralTab.week1',
     defaultMessage: '7 days',

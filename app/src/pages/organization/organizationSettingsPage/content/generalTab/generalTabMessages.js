@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { defineMessages } from 'react-intl';
 
-export const messages = {
-  ...settingsMessages,
-  ...defineMessages({
-    organizationNameLabel: {
-      id: 'OrganizationSettings.generalTab.organizationNameLabel',
-      defaultMessage: 'Name',
-    },
-    informationTitle: {
-      id: 'OrganizationSettings.generalTab.informationTitle',
-      defaultMessage: 'Information',
-    },
-    informationMessage: {
-      id: 'OrganizationSettings.generalTab.informationMessage',
-      defaultMessage:
-        'Changes made at the Organization level affect the settings of your project(s).',
-    },
-  }),
-};
+export const messages = defineMessages({
+  organizationNameLabel: {
+    id: 'OrganizationSettings.generalTab.organizationNameLabel',
+    defaultMessage: 'Name',
+  },
+  informationTitle: {
+    id: 'OrganizationSettings.generalTab.informationTitle',
+    defaultMessage: 'Information',
+  },
+  informationMessage: {
+    id: 'OrganizationSettings.generalTab.informationMessage',
+    defaultMessage:
+      'Changes made at the Organization level affect the settings of your project(s).',
+  },
+});

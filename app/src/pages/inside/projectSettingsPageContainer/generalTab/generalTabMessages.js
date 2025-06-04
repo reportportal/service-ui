@@ -14,59 +14,27 @@
  * limitations under the License.
  */
 
-import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { defineMessages } from 'react-intl';
 
-export const Messages = {
-  ...settingsMessages,
-  ...defineMessages({
-    projectNameLabel: {
-      id: 'GeneralTab.projectNameLabel',
-      defaultMessage: 'Name',
-    },
-    interruptedJob: {
-      id: 'GeneralTab.interruptedJob',
-      defaultMessage: 'Launch inactivity timeout',
-    },
-    interruptedJobDescription: {
-      id: 'GeneralTab.interruptedJobDescription',
-      defaultMessage: 'Schedule time for Job to interrupt inactive launches',
-    },
-    updateSuccessNotification: {
-      id: 'GeneralTab.updateSuccessNotification',
-      defaultMessage: 'Project settings were successfully updated',
-    },
-    updateErrorNotification: {
-      id: 'GeneralTab.updateErrorNotification',
-      defaultMessage: 'Failed to update project settings',
-    },
-    minutes15: {
-      id: 'GeneralTab.minutes15',
-      defaultMessage: '15 minutes',
-    },
-    hour1: {
-      id: 'GeneralTab.hour1',
-      defaultMessage: '1 hour',
-    },
-    hour3: {
-      id: 'GeneralTab.hour3',
-      defaultMessage: '3 hours',
-    },
-    hour6: {
-      id: 'GeneralTab.hour6',
-      defaultMessage: '6 hours',
-    },
-    hour12: {
-      id: 'GeneralTab.hour12',
-      defaultMessage: '12 hours',
-    },
-    hour24: {
-      id: 'GeneralTab.hour24',
-      defaultMessage: '24 hours',
-    },
-    day1: {
-      id: 'GeneralTab.day1',
-      defaultMessage: '1 day',
-    },
-  }),
-};
+export const messages = defineMessages({
+  projectNameLabel: {
+    id: 'GeneralTab.projectNameLabel',
+    defaultMessage: 'Name',
+  },
+  interruptedJob: {
+    id: 'GeneralTab.interruptedJob',
+    defaultMessage: 'Launch inactivity timeout',
+  },
+  interruptedJobDescription: {
+    id: 'GeneralTab.interruptedJobDescription',
+    defaultMessage: 'Schedule time for Job to interrupt inactive launches',
+  },
+  updateSuccessNotification: {
+    id: 'GeneralTab.updateSuccessNotification',
+    defaultMessage: 'Project settings were successfully updated',
+  },
+  updateErrorNotification: {
+    id: 'GeneralTab.updateErrorNotification',
+    defaultMessage: 'Failed to update project settings',
+  },
+});

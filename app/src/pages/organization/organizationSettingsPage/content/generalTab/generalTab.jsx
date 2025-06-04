@@ -17,7 +17,7 @@
 import { BubblesLoader, Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { FormField } from 'components/fields/formField';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { formValueSelector, reduxForm } from 'redux-form';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { useEffect, useState } from 'react';
@@ -27,26 +27,26 @@ import { canUpdateOrganizationSettings } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { useRetentionUtils } from '../../hooks';
+import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
-import { GENERAL_TAB_FORM } from '../../constants';
+import { GENERAL_TAB_FORM } from './constants';
 
 const cx = classNames.bind(styles);
 
 const selector = formValueSelector(GENERAL_TAB_FORM);
 
-const GeneralTabForm = ({ initialize, handleSubmit, change }) => {
+const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const organizationName = useSelector(activeOrganizationNameSelector);
   const userRoles = useSelector(userRolesSelector);
   const canPerformUpdate = canUpdateOrganizationSettings(userRoles);
   const [processingData] = useState(false);
   const [isLoading] = useState(false);
-  const keepLaunches = useSelector((state) => selector(state, 'keepLaunches'));
-  const keepLogs = useSelector((state) => selector(state, 'keepLogs'));
-  const keepScreenshots = useSelector((state) => selector(state, 'keepScreenshots'));
-  const formValues = { keepLaunches, keepLogs, keepScreenshots };
+  const formValues = useSelector((state) =>
+    selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
+  );
   const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } = useRetentionUtils(
     formValues,
   );
@@ -75,61 +75,41 @@ const GeneralTabForm = ({ initialize, handleSubmit, change }) => {
         <SystemMessage header={formatMessage(messages.informationTitle)}>
           {formatMessage(messages.informationMessage)}
         </SystemMessage>
-        <FormField
+        <FieldElement
           name="name"
-          fieldWrapperClassName={cx('field-input')}
-          containerClassName={cx('field-container')}
-          labelClassName={cx('label')}
+          className={cx('field-container')}
           label={formatMessage(messages.organizationNameLabel)}
           disabled
         >
           <FieldText />
-        </FormField>
-        <FormField
+        </FieldElement>
+        <FieldElement
           name="keepLaunches"
-          fieldWrapperClassName={cx('field-input')}
-          containerClassName={cx('field-container')}
-          labelClassName={cx('label')}
-          label={formatMessage(messages.keepLaunches)}
-          customBlock={{
-            wrapperClassName: cx('hint'),
-            node: <p>{formatMessage(messages.keepLaunchesDescription)}</p>,
-          }}
+          className={cx('field-container')}
+          label={formatMessage(settingsMessages.keepLaunches)}
+          description={formatMessage(settingsMessages.keepLaunchesDescription)}
           disabled={isDisabled}
-          change={change}
         >
           <Dropdown className={cx('dropdown')} options={getLaunchesOptions()} mobileDisabled />
-        </FormField>
-        <FormField
+        </FieldElement>
+        <FieldElement
           name="keepLogs"
-          fieldWrapperClassName={cx('field-input')}
-          containerClassName={cx('field-container')}
-          labelClassName={cx('label')}
-          label={formatMessage(messages.keepLogs)}
-          customBlock={{
-            wrapperClassName: cx('hint'),
-            node: <p>{formatMessage(messages.keepLogsDescription)}</p>,
-          }}
+          className={cx('field-container')}
+          label={formatMessage(settingsMessages.keepLogs)}
+          description={formatMessage(settingsMessages.keepLogsDescription)}
           disabled={isDisabled}
-          change={change}
         >
           <Dropdown className={cx('dropdown')} options={getLogOptions()} mobileDisabled />
-        </FormField>
-        <FormField
+        </FieldElement>
+        <FieldElement
           name="keepScreenshots"
-          fieldWrapperClassName={cx('field-input')}
-          containerClassName={cx('field-container')}
-          labelClassName={cx('label')}
-          label={formatMessage(messages.keepScreenshots)}
-          customBlock={{
-            wrapperClassName: cx('hint'),
-            node: <p>{formatMessage(messages.keepScreenshotsDescription)}</p>,
-          }}
+          className={cx('field-container')}
+          label={formatMessage(settingsMessages.keepScreenshots)}
+          description={formatMessage(settingsMessages.keepScreenshotsDescription)}
           disabled={isDisabled}
-          change={change}
         >
           <Dropdown className={cx('dropdown')} options={getScreenshotsOptions()} mobileDisabled />
-        </FormField>
+        </FieldElement>
         <div className={cx('submit-block')}>
           <Button type="submit" disabled={isDisabled}>
             {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
@@ -151,7 +131,6 @@ const GeneralTabForm = ({ initialize, handleSubmit, change }) => {
 GeneralTabForm.propTypes = {
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  change: PropTypes.func.isRequired,
 };
 
 export const GeneralTab = reduxForm({

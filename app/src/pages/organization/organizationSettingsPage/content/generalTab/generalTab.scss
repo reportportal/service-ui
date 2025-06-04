@@ -22,32 +22,7 @@
 }
 
 .field-container {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
   margin: 0;
-}
-
-.field-input {
-  padding: 0;
-  order: 1;
-}
-
-.label {
-  padding: 0;
-  text-align: start;
-  color: $COLOR--almost-black;
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-}
-
-.hint {
-  padding: 0;
-  color: $COLOR--e-300;
-  font-size: 11px;
-  line-height: 16px;
-  font-family: $FONT-ROBOTO-REGULAR;
 }
 
 .dropdown {

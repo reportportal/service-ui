@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sessionExpirationTimeSelector, updateExpirationSessionAction } from 'controllers/appInfo';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { Messages } from 'pages/inside/projectSettingsPageContainer/generalTab/generalTabMessages';
+import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import styles from './inactivityTimeoutForm.scss';
 
@@ -54,10 +54,10 @@ export const InactivityTimeoutForm = () => {
   const getMilliseconds = (hour) => hour * 60 * 60 * 1000;
 
   const timeoutOptions = [
-    { value: getMilliseconds(15 / 60), label: formatMessage(Messages.minutes15) },
-    { value: getMilliseconds(1), label: formatMessage(Messages.hour1) },
-    { value: getMilliseconds(12), label: formatMessage(Messages.hour12) },
-    { value: getMilliseconds(24), label: formatMessage(Messages.hour24) },
+    { value: getMilliseconds(15 / 60), label: formatMessage(settingsMessages.minutes15) },
+    { value: getMilliseconds(1), label: formatMessage(settingsMessages.hour1) },
+    { value: getMilliseconds(12), label: formatMessage(settingsMessages.hour12) },
+    { value: getMilliseconds(24), label: formatMessage(settingsMessages.hour24) },
   ];
 
   const handleTimeoutChange = (value) => {
