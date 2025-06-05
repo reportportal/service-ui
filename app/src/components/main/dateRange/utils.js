@@ -29,7 +29,6 @@ export const displayedValueFormatter = ({ startDate, endDate } = {}) => {
   return `${formattedStartTimeRange || ''} — ${formattedEndTimeRange || ''}`;
 };
 
-// eslint-disable-next-line consistent-return
 export const parseFormattedDate = (formatted) => {
   if (!formatted) {
     return null;
