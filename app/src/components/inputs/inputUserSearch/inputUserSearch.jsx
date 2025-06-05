@@ -60,6 +60,8 @@ export const makeOptions = (isAdmin, projectKey, { organizationSlug, projectSlug
       assignedProjects: option.assignedProjects || {},
       assignedOrganizations: option.assignedOrganizations || {},
       userRole: option.userRole,
+      projectKey,
+      userId: isAdmin ? option.userId : option.login,
     };
   });
 

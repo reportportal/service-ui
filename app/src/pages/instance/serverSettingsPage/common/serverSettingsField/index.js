@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-.user-avatar {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 52px;
-}
-
-.avatar {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
+export { ServerSettingsField } from './serverSettingsField';

@@ -43,7 +43,6 @@ export class InfoSection extends Component {
     intl: PropTypes.object.isRequired,
     description: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string]),
     title: PropTypes.string.isRequired,
-    version: PropTypes.string,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func,
     showToggleConfirmationModal: PropTypes.func,
@@ -53,7 +52,6 @@ export class InfoSection extends Component {
 
   static defaultProps = {
     description: '',
-    version: '',
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
     isGlobal: false,
@@ -120,10 +118,9 @@ export class InfoSection extends Component {
       intl: { formatMessage },
       data: { groupType, name },
       title,
-      version,
       description,
       isGlobal,
-      pluginDetails: { disabledPluginTooltip },
+      pluginDetails: { disabledPluginTooltip, version },
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
