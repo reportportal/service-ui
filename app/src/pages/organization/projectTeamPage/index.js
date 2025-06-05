@@ -15,4 +15,4 @@
  */
 
 export { ProjectTeamPage } from './projectTeamPage';
-export { InviteUserModal } from 'pages/common/membersPage/modals/inviteUserModal';
+export { InviteUserModal } from './inviteUserModal';

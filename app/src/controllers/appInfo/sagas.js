@@ -17,28 +17,56 @@
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { call, takeEvery, all, put } from 'redux-saga/effects';
-import { fetchAppInfoAction, updateServerSettingsAction } from 'controllers/appInfo/actionCreators';
+import {
+  updateServerSettingsAction,
+  updateServerSettingsSuccessAction,
+} from 'controllers/appInfo/actionCreators';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import {
+  SERVER_FOOTER_LINKS_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   UPDATE_EXPIRATION_SESSION,
+  UPDATE_SERVER_FOOTER_LINKS,
   UPDATE_SERVER_SETTINGS,
 } from './constants';
 
 function* updateServerSettings({ payload }) {
-  yield call(fetch, URLS.instanceSettings(), {
-    method: 'put',
-    data: payload,
-  });
+  const { key, value, onSuccess = () => {} } = payload;
+  const data = { key, value };
+  try {
+    yield call(fetch, URLS.instanceSettings(), {
+      method: 'put',
+      data,
+    });
+    yield put(updateServerSettingsSuccessAction(data));
+    onSuccess();
+  } catch (error) {
+    yield put(
+      showNotification({
+        message: error.message || error,
+        type: NOTIFICATION_TYPES.ERROR,
+      }),
+    );
+  }
 }
 
-function* updateSessionExpiration({ payload: value }) {
-  yield put(updateServerSettingsAction({ key: SERVER_SESSION_EXPIRATION_KEY, value }));
-  yield put(fetchAppInfoAction());
+function* updateSessionExpiration({ payload: { expiration, onSuccess } }) {
   yield put(
-    showNotification({
-      messageId: 'updateSessionExpirationSuccess',
-      type: NOTIFICATION_TYPES.SUCCESS,
+    updateServerSettingsAction({
+      key: SERVER_SESSION_EXPIRATION_KEY,
+      value: expiration,
+      onSuccess,
+    }),
+  );
+}
+
+function* updateFooterLinks({ payload }) {
+  const { footerLinks, onSuccess } = payload;
+  yield put(
+    updateServerSettingsAction({
+      key: SERVER_FOOTER_LINKS_KEY,
+      value: JSON.stringify(footerLinks),
+      onSuccess,
     }),
   );
 }
@@ -51,6 +79,14 @@ function* watchUpdateSessionExpiration() {
   yield takeEvery(UPDATE_EXPIRATION_SESSION, updateSessionExpiration);
 }
 
+function* watchUpdateFooterLinks() {
+  yield takeEvery(UPDATE_SERVER_FOOTER_LINKS, updateFooterLinks);
+}
+
 export function* serverSettingsSagas() {
-  yield all([watchUpdateServerSettings(), watchUpdateSessionExpiration()]);
+  yield all([
+    watchUpdateServerSettings(),
+    watchUpdateSessionExpiration(),
+    watchUpdateFooterLinks(),
+  ]);
 }

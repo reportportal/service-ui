@@ -65,7 +65,7 @@ export const OrganizationsPageHeader = ({
         <div className={cx('actions')}>
           {!isEmpty && (
             <div className={cx('icons')}>
-              <div className={cx('search-icons')}>
+              <div className={cx('filters')}>
                 <SearchFieldWithFilter
                   isLoading={projectsLoading}
                   searchValue={searchValue}

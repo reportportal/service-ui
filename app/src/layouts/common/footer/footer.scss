@@ -17,9 +17,9 @@
 .footer {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   min-height: 35px;
   width: 100%;
   padding: 0 25px;
@@ -28,6 +28,11 @@
   font-size: 11px;
   color: $COLOR--gray-47;
   z-index: -1;
+  gap: 3px;
+
+  &.one-line {
+    justify-content: space-between;
+  }
 
   @media (max-width: $SCREEN_MD_MAX) {
     justify-content: center;
@@ -45,11 +50,16 @@
 .footer-links {
   display: flex;
   flex-wrap: wrap;
-  order: 2;
+  min-height: 17px;
+  justify-content: center;
+
+  &.one-line {
+    flex-grow: 1;
+    justify-content: flex-end;
+  }
 
   @media (max-width: $SCREEN_MD_MAX) {
     justify-content: center;
-    order: 1;
     width: 100%;
   }
 
@@ -63,6 +73,7 @@
   a {
     text-decoration: none;
     color: inherit;
+    line-height: 1.6;
 
     &:after {
       content: ' | ';
@@ -82,7 +93,6 @@
 
 .text-wrapper {
   display: flex;
-  order: 1;
 
   @media (max-width: $SCREEN_XS_MAX) {
     flex-wrap: wrap;
@@ -92,6 +102,7 @@
 
 .footer-text {
   margin-right: 10px;
+  line-height: 1.6;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;

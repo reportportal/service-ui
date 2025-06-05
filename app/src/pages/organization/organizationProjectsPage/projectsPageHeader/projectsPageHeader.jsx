@@ -95,25 +95,27 @@ export const ProjectsPageHeader = ({
         <div className={cx('actions')}>
           {isNotEmpty && (
             <div className={cx('icons')}>
-              <SearchFieldWithFilter
-                isLoading={projectsLoading}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                event={PROJECTS_PAGE_EVENTS.SEARCH_PROJECTS_FIELD}
-              />
-              <FilterEntitiesURLContainer
-                debounced={false}
-                additionalFilter="name"
-                render={({ entities, onChange }) => (
-                  <ProjectsFilter
-                    appliedFiltersCount={appliedFiltersCount}
-                    setAppliedFiltersCount={setAppliedFiltersCount}
-                    entities={entities}
-                    onFilterChange={onChange}
-                  />
-                )}
-              />
+              <div className={cx('filters')}>
+                <SearchFieldWithFilter
+                  isLoading={projectsLoading}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  event={PROJECTS_PAGE_EVENTS.SEARCH_PROJECTS_FIELD}
+                />
+                <FilterEntitiesURLContainer
+                  debounced={false}
+                  additionalFilter="name"
+                  render={({ entities, onChange }) => (
+                    <ProjectsFilter
+                      appliedFiltersCount={appliedFiltersCount}
+                      setAppliedFiltersCount={setAppliedFiltersCount}
+                      entities={entities}
+                      onFilterChange={onChange}
+                    />
+                  )}
+                />
+              </div>
             </div>
           )}
           {isNotEmpty && hasPermission && (

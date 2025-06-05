@@ -216,7 +216,6 @@ export class AddEditModal extends Component {
       if (!formData.configuration) {
         this.tracking.trackEvent(this.getTrackingEvent(dashboardId, isChangedDescription));
         onSubmit(formData);
-        closeModal();
       } else {
         if (this.state.isSubmitting) {
           return;

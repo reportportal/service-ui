@@ -19,6 +19,7 @@ import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
+import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import { querySelector } from './selectors';
 import { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
 
@@ -38,7 +39,7 @@ function* watchFetchOrganizations() {
 
 function* fetchFilteredOrganizations() {
   const filtersParams = yield select(querySelector);
-  const data = prepareQueryFilters(filtersParams);
+  const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationSearches(), {
