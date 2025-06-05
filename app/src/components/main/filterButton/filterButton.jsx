@@ -34,8 +34,6 @@ export const FilterButton = ({
   filteredAction,
   getClearButtonState,
   getApplyButtonState,
-  customValueField,
-  clearTimeRange,
   event,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,8 +57,6 @@ export const FilterButton = ({
           defaultState={defaultState}
           getClearButtonState={getClearButtonState}
           getApplyButtonState={getApplyButtonState}
-          customValueField={customValueField}
-          clearTimeRange={clearTimeRange}
           event={event}
         />
       }
@@ -106,13 +102,9 @@ FilterButton.propTypes = {
   filteredAction: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
-  customValueField: PropTypes.string,
-  clearTimeRange: PropTypes.func,
   event: PropTypes.func,
 };
 
 FilterButton.defaultProps = {
-  customValueField: '',
-  clearTimeRange: () => {},
   event: null,
 };

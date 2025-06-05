@@ -18,26 +18,26 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import { DatePicker } from '@reportportal/ui-kit';
-import styles from './timeRange.scss';
+import styles from './dateRange.scss';
 
 const cx = classNames.bind(styles);
 
 export const messages = defineMessages({
   customRange: {
-    id: 'TimeRange.customRange',
+    id: 'DateRange.customRange',
     defaultMessage: 'Custom range',
   },
   from: {
-    id: 'TimeRange.from',
+    id: 'DateRange.from',
     defaultMessage: 'From',
   },
   to: {
-    id: 'TimeRange.to',
+    id: 'DateRange.to',
     defaultMessage: 'To',
   },
 });
 
-export const TimeRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
+export const DateRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -69,7 +69,7 @@ export const TimeRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
   );
 };
 
-TimeRange.propTypes = {
+DateRange.propTypes = {
   startDate: PropTypes.string.isRequired,
   setStartDate: PropTypes.func.isRequired,
   endDate: PropTypes.string.isRequired,

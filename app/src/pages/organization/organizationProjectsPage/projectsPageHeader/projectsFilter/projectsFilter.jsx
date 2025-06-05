@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Field, getFormValues } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
@@ -33,7 +34,11 @@ import {
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import { TimeRange, useTimeRangeState } from 'components/main/timeRange';
+import {
+  DateRangeFormField,
+  displayedValueFormatter,
+  parseFormattedDate,
+} from 'components/main/dateRange';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import styles from './projectsFilter.scss';
@@ -51,16 +56,9 @@ export const ProjectsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
-
-  const {
-    customStartTimeRange,
-    setCustomStartTimeRange,
-    customEndTimeRange,
-    setCustomEndTimeRange,
-    customTimeRange,
-    customDisplayedValue,
-    clearTimeRange,
-  } = useTimeRangeState(entities);
+  const lastRunDate = useSelector(
+    (state) => getFormValues('filter')(state)?.[LAST_RUN_DATE_FILTER_NAME],
+  );
 
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
@@ -75,17 +73,9 @@ export const ProjectsFilter = ({
             value: timeRange[0].value,
             options: timeRange,
             placeholder: formatMessage(messages.lastRunDatePlaceholder),
-            customDisplayedValue,
+            customDisplayedValue: displayedValueFormatter(lastRunDate),
             notScrollable: true,
-            onChange: clearTimeRange,
-            footer: (
-              <TimeRange
-                startDate={customStartTimeRange}
-                setStartDate={setCustomStartTimeRange}
-                endDate={customEndTimeRange}
-                setEndDate={setCustomEndTimeRange}
-              />
-            ),
+            footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
           },
         },
       ],
@@ -169,7 +159,10 @@ export const ProjectsFilter = ({
   };
 
   const initialFilterState = {
-    [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
+    [LAST_RUN_DATE_FILTER_NAME]:
+      parseFormattedDate(entities[LAST_RUN_DATE_FILTER_NAME]?.value) ||
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value ||
+      timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:
       entities[LAUNCHES_FILTER_NAME]?.condition || rangeComparisons[0].value,
@@ -189,7 +182,11 @@ export const ProjectsFilter = ({
       return false;
     }
 
-    let isApply = [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
+      return true;
+    }
+
+    let isApply = [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
       (prop) => formValues[prop] === initialFilterState[prop],
     );
 
@@ -204,8 +201,14 @@ export const ProjectsFilter = ({
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
     }
 
-    if (customTimeRange) {
-      isApply = customTimeRange === initialFilterState[LAST_RUN_DATE_FILTER_NAME];
+    if (typeof lastRunDate === 'object') {
+      const initialDate = displayedValueFormatter(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
+      const currentDate = displayedValueFormatter(lastRunDate);
+      isApply = initialDate === currentDate && isApply;
+    } else {
+      isApply =
+        formValues[LAST_RUN_DATE_FILTER_NAME] === initialFilterState[LAST_RUN_DATE_FILTER_NAME] &&
+        isApply;
     }
 
     return isApply;
@@ -222,9 +225,7 @@ export const ProjectsFilter = ({
       defaultState={defaultFilterState}
       filteredAction={() => dispatch(fetchFilteredProjectAction())}
       getClearButtonState={getClearButtonState}
-      customValueField={customTimeRange}
       getApplyButtonState={getApplyButtonState}
-      clearTimeRange={clearTimeRange}
       event={eventHandler}
     />
   );

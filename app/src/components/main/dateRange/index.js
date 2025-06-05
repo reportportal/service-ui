@@ -14,5 +14,6 @@
  * limitations under the License.
  */
 
-export { TimeRange } from './timeRange';
-export { useTimeRangeState, TIME_RANGE_DIVIDER } from './hooks';
+export { DateRange } from './dateRange';
+export { DateRangeFormField } from './dateRangeFormField';
+export { displayedValueFormatter, parseFormattedDate } from './utils';

@@ -23,9 +23,8 @@ import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
+import { getFormattedDate } from 'components/filterEntities/utils';
 import { FilterInput } from './filterInput/filterInput';
-import { LAST_RUN_DATE_FILTER_NAME } from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -44,8 +43,6 @@ export const FilterContentWrapped = ({
   handleSubmit,
   getClearButtonState,
   getApplyButtonState,
-  customValueField,
-  clearTimeRange,
   event,
 }) => {
   const { formatMessage } = useIntl();
@@ -60,13 +57,12 @@ export const FilterContentWrapped = ({
 
   const clearAll = () => {
     initialize(defaultState);
-    clearTimeRange();
   };
 
   useEffect(() => {
     setIsClear(getClearButtonState(formValues));
     setIsApply(getApplyButtonState(formValues));
-  }, [formValues, customValueField]);
+  }, [formValues]);
 
   const closePopover = () => {
     setIsOpen(false);
@@ -76,7 +72,9 @@ export const FilterContentWrapped = ({
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const value = formData[filterName].toString();
+      const field = formData[filterName];
+      const value = field?.startDate && field?.endDate ? getFormattedDate(field) : field.toString();
+
       acc[filterName] = {
         value,
         condition: defaultCondition || formData[`${filterName}_condition`],
@@ -85,16 +83,6 @@ export const FilterContentWrapped = ({
 
       return acc;
     }, {});
-
-    if (customValueField && fields[LAST_RUN_DATE_FILTER_NAME].value) {
-      fields[LAST_RUN_DATE_FILTER_NAME].value = customValueField;
-    } else if (customValueField) {
-      fields[LAST_RUN_DATE_FILTER_NAME] = {
-        value: customValueField,
-        condition: CONDITION_BETWEEN.toUpperCase(),
-      };
-      appliedFiltersCount += 1;
-    }
 
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
@@ -150,14 +138,10 @@ FilterContentWrapped.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
-  customValueField: PropTypes.string,
-  clearTimeRange: PropTypes.func,
   event: PropTypes.func,
 };
 
 FilterContentWrapped.defaultProps = {
-  customValueField: '',
-  clearTimeRange: () => {},
   event: null,
 };
 
