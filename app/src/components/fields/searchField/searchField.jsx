@@ -32,6 +32,7 @@ export const SearchField = ({
   isLoading,
   event,
   className,
+  isTransparent,
 }) => {
   const { trackEvent } = useTracking();
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -81,7 +82,7 @@ export const SearchField = ({
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
       startIcon={<SearchIcon />}
-      className={cx('search-field', className)}
+      className={cx('search-field', { 'search-field--transparent': isTransparent }, className)}
       maxLength={256}
       collapsible
       clearable
@@ -98,10 +99,12 @@ SearchField.propTypes = {
   placeholder: PropTypes.string,
   isLoading: PropTypes.bool,
   event: PropTypes.object,
+  isTransparent: PropTypes.bool,
 };
 
 SearchField.defaultProps = {
   placeholder: '',
   isLoading: false,
   event: null,
+  isTransparent: false,
 };

@@ -37,18 +37,26 @@
     font-family: $FONT-ROBOTO-REGULAR;
     line-height: 20px;
 
-    &-icon, svg {
+    &-icon,
+    svg {
       height: 16px;
     }
   }
 
   &__content {
+    flex-grow: 1;
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    padding: 32px 32px 60px;
-    gap: 80px;
+  }
+
+  &__pagination {
+    position: sticky;
+    bottom: 0;
+    background: $COLOR--bg-100;
+    padding: 5px 32px;
+    border-top: 1px solid var(--rp-ui-base-e-100);
+    margin-top: auto;
+    height: 64px;
   }
 }
