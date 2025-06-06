@@ -14,38 +14,4 @@
  * limitations under the License.
  */
 
-.test-case-library-page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  &__header {
-    position: sticky;
-    top: 0;
-    z-index: $Z-INDEX-PAGE-CONTAINER-HEADER;
-  }
-
-  &__breadcrumb {
-    position: absolute;
-    top: 16px;
-    left: 34px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--rp-ui-base-e-300);
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    line-height: 20px;
-
-    &-icon,
-    svg {
-      height: 16px;
-    }
-  }
-
-  &__content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-}
+export { TestCaseListWrapper } from './testCaseListWrapper';

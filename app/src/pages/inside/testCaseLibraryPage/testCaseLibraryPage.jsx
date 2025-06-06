@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import { TestCaseList, mockTestCases } from 'components/testCaseList';
-import { Pagination, BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
-import { ITEMS_PER_PAGE_OPTIONS } from 'components/testCaseList/mockData';
-import {
-  DEFAULT_CURRENT_PAGE,
-  DEFAULT_ITEMS_PER_PAGE,
-} from 'components/testCaseList/testCaseList.constants';
+import { mockTestCases } from 'components/testCaseList';
+import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 
+import { TestCaseListWrapper } from './testCaseListWrapper';
 import { EmptyState } from './emptyState';
 
 import styles from './testCaseLibraryPage.scss';
@@ -40,10 +36,6 @@ export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const [testCases, setTestCases] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activePage, setActivePage] = useState(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState(DEFAULT_ITEMS_PER_PAGE);
-  const [filteredTestCases, setFilteredTestCases] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
 
   // Simulate data loading
   useEffect(() => {
@@ -55,80 +47,10 @@ export const TestCaseLibraryPage = () => {
       // For demo purposes, use mock data
       // In real implementation, you would fetch from API
       setTestCases(mockTestCases);
-      setFilteredTestCases(mockTestCases);
       setLoading(false);
     };
 
     loadTestCases();
-  }, []);
-
-  // Calculate pagination values
-  const totalItems = filteredTestCases.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-
-  const handleEdit = useCallback(() => {
-    // Here you would implement edit logic
-  }, []);
-
-  const handleDelete = useCallback(
-    (testCase) => {
-      // Here you would typically show confirmation modal
-      const confirmationMessage = formatMessage(messages.deleteConfirmation, {
-        name: testCase.name,
-      });
-      if (window.confirm(confirmationMessage)) {
-        setTestCases((prev) => prev.filter((tc) => tc.id !== testCase.id));
-        setFilteredTestCases((prev) => prev.filter((tc) => tc.id !== testCase.id));
-      }
-    },
-    [formatMessage],
-  );
-
-  const handleDuplicate = useCallback(
-    (testCase) => {
-      // Here you would implement duplication logic
-      const duplicatedTestCase = {
-        ...testCase,
-        id: Date.now(),
-        name: `${testCase.name} ${formatMessage(messages.copySuffix)}`,
-      };
-      setTestCases((prev) => [...prev, duplicatedTestCase]);
-      setFilteredTestCases((prev) => [...prev, duplicatedTestCase]);
-    },
-    [formatMessage],
-  );
-
-  const handleMove = useCallback(() => {
-    // Here you would implement move logic (show modal with folder selection, etc.)
-  }, []);
-
-  const handleSearchChange = useCallback(
-    (targetSearchValue) => {
-      setSearchValue(targetSearchValue);
-      let filtered = testCases;
-
-      if (targetSearchValue.trim()) {
-        const searchTerm = targetSearchValue.toLowerCase();
-        filtered = filtered.filter(
-          (testCase) =>
-            testCase.name.toLowerCase().includes(searchTerm) ||
-            testCase.tags.some((tag) => tag.toLowerCase().includes(searchTerm)),
-        );
-      }
-
-      setFilteredTestCases(filtered);
-      setActivePage(DEFAULT_CURRENT_PAGE);
-    },
-    [testCases],
-  );
-
-  const changePage = useCallback((page) => {
-    setActivePage(page);
-  }, []);
-
-  const changePageSize = useCallback((size) => {
-    setPageSize(size);
-    setActivePage(DEFAULT_CURRENT_PAGE);
   }, []);
 
   const hasTestCases = testCases && testCases.length > 0;
@@ -148,44 +70,15 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div className={cx('test-case-library-page__content')}>
             {hasTestCases ? (
-              <TestCaseList
-                testCases={filteredTestCases}
+              <TestCaseListWrapper
+                testCases={testCases}
+                setTestCases={setTestCases}
                 loading={loading}
-                currentPage={activePage}
-                itemsPerPage={pageSize}
-                searchValue={searchValue}
-                onSearchChange={handleSearchChange}
-                onFilterChange={handleSearchChange}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onDuplicate={handleDuplicate}
-                onMove={handleMove}
               />
             ) : (
               <EmptyState />
             )}
           </div>
-          {hasTestCases && totalItems > 0 && (
-            <div className={cx('test-case-library-page__pagination')}>
-              <Pagination
-                pageSize={pageSize}
-                activePage={activePage}
-                totalItems={totalItems}
-                totalPages={totalPages}
-                pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-                changePage={changePage}
-                changePageSize={changePageSize}
-                captions={{
-                  items: formatMessage(messages.items),
-                  of: formatMessage(messages.of),
-                  page: formatMessage(messages.page),
-                  goTo: formatMessage(messages.goToPage),
-                  goAction: formatMessage(messages.go),
-                  perPage: formatMessage(messages.perPage),
-                }}
-              />
-            </div>
-          )}
         </div>
       </ScrollWrapper>
     </SettingsLayout>
