@@ -81,15 +81,11 @@ const ProjectTeamListTableWrapped = ({
             organizationRole,
             currentUserId === userId,
           );
-          const user = {
-            id: id.toString(),
-            fullName,
-          };
           return {
             id,
             fullName: {
               content: fullName,
-              component: <UserNameCell user={user} badges={memberBadges} />,
+              component: <UserNameCell userId={id} fullName={fullName} badges={memberBadges} />,
             },
             email,
             lastLogin: {

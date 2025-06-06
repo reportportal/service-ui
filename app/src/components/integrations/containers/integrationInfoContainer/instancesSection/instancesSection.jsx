@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import {
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import {
+  arePluginIntegrationsAllowed,
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
@@ -132,6 +133,7 @@ export class InstancesSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
+    pluginType: PropTypes.string.isRequired,
     onItemClick: PropTypes.func.isRequired,
     removePluginSuccessCallback: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -296,6 +298,7 @@ export class InstancesSection extends Component {
       userRoles,
       isGlobal,
       pluginDetails: { metadata },
+      pluginType,
       isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
@@ -303,10 +306,7 @@ export class InstancesSection extends Component {
     const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;
-    const isIntegrationsAllowed =
-      metadata && metadata.isIntegrationsAllowed !== undefined
-        ? metadata.isIntegrationsAllowed
-        : true;
+    const isIntegrationsAllowed = arePluginIntegrationsAllowed(pluginType, metadata);
 
     return (
       <div className={cx('instances-section')}>

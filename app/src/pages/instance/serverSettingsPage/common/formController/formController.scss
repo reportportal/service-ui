@@ -35,8 +35,11 @@
   justify-content: center;
   align-items: flex-end;
   width: 600px;
+  padding-left: 35px;
+
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding-left: 0;
   }
 }
 

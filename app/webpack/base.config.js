@@ -38,7 +38,7 @@ module.exports = {
     },
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
       components: path.resolve(__dirname, '../src/components'),
       componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
@@ -57,7 +57,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx|mjs)$/,
+        test: /\.(js|jsx|ts|tsx|mjs)$/,
         use: [
           {
             loader: 'babel-loader',

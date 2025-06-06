@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { columnPropTypes } from 'components/main/grid/propTypes';
 import { SORTING_ASC } from 'controllers/sorting';
+import { isEmptyObject } from 'common/utils';
 import { ALIGN_LEFT } from '../../constants';
 import ArrowIcon from './img/arrow-down-inline.svg';
 import FilterIcon from './img/icon-filter-inline.svg';
@@ -66,7 +67,7 @@ export const HeaderCell = track()(
       filterEventInfo && tracking.trackEvent(filterEventInfo);
     };
     const sortingClickHandler = () => {
-      tracking.trackEvent(sortingEventInfo);
+      sortingEventInfo && !isEmptyObject(sortingEventInfo) && tracking.trackEvent(sortingEventInfo);
       onChangeSorting(id);
     };
     const TitleComponent = title.component;

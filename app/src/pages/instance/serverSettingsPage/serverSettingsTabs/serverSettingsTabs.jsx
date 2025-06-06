@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
@@ -24,15 +24,18 @@ import {
   AUTHORIZATION_CONFIGURATION,
   ANALYTICS,
   LINKS_AND_BRANDING,
+  FEATURES,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   getServerSettingsPageViewEvent,
   ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
 } from 'components/main/analytics/events/adminServerSettingsPageEvents';
+import { fetchAppInfoAction } from 'controllers/appInfo';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { AnalyticsTab } from './analyticsTab';
 import { LinksAndBrandingTab } from './linksAndBrandingTab';
+import { FeaturesTab } from './featuresTab';
 
 const messages = defineMessages({
   authConfiguration: {
@@ -47,10 +50,19 @@ const messages = defineMessages({
     id: 'ServerSettingsTabs.linksAndBranding',
     defaultMessage: 'Links & Branding',
   },
+  features: {
+    id: 'ServerSettingsTabs.features',
+    defaultMessage: 'Features',
+  },
 });
 
 const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
   const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAppInfoAction());
+  }, [dispatch]);
 
   useEffect(() => {
     if (activeTab) {
@@ -70,6 +82,13 @@ const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
       component: <AuthConfigurationTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.AUTHORIZATION_CONFIGURATION_TAB,
+    },
+    [FEATURES]: {
+      name: intl.formatMessage(messages.features),
+      link: createTabLink(FEATURES),
+      component: <FeaturesTab />,
+      mobileDisabled: true,
+      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.FEATURES_TAB,
     },
     [ANALYTICS]: {
       name: intl.formatMessage(messages.statistics),

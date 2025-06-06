@@ -52,20 +52,6 @@
   gap: 8px;
 }
 
-.filter-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  color: $COLOR--gray-60;
-
-  &:hover {
-    color: $COLOR--topaz-hover;
-  }
-}
-
 .menu-icon {
   svg {
     margin-bottom: 3px;
@@ -91,6 +77,6 @@
 .filters {
   display: flex;
   align-items: center;
-  margin-right: 30px;
+  margin-right: 24px;
   gap: 10px;
 }

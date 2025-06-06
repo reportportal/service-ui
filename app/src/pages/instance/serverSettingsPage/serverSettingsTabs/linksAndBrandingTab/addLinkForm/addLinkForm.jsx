@@ -24,13 +24,14 @@ import { BigButton } from 'components/buttons/bigButton';
 import { commonValidators } from 'common/utils/validation';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { updateServerFooterLinksAction } from 'controllers/appInfo';
+import { updateServerSettingsAction } from 'controllers/appInfo';
 import { email } from 'common/utils/validation/validate';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { FormField } from 'components/fields/formField';
 import { Input } from 'components/inputs/input';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { prepareFooterLinksData } from '../utils';
 import styles from './addLinkForm.scss';
 
 const cx = classNames.bind(styles);
@@ -58,8 +59,8 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SAVE_NEW_FOOTER_LINK);
 
     dispatch(
-      updateServerFooterLinksAction({
-        footerLinks: [...customLinks, targetLink],
+      updateServerSettingsAction({
+        data: prepareFooterLinksData([...customLinks, targetLink]),
         onSuccess: () => {
           dispatch(
             showNotification({

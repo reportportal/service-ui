@@ -127,6 +127,7 @@ export const AllUsersFilter = ({
             placeholder: formatMessage(messages.emailPlaceholder),
             clearable: true,
             defaultWidth: false,
+            maxLength: 256,
           },
         },
       ],

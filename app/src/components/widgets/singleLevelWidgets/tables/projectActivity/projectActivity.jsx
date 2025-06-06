@@ -160,7 +160,7 @@ export class ProjectActivity extends Component {
       case ACTIONS_WITH_BTS_ISSUES:
         return <TestItem activity={activity} />;
       case ACTIONS_UPDATE_TEST_ITEM:
-        return <UpdateItem activity={activity} />;
+        return activity.details?.history?.length > 0 && <UpdateItem activity={activity} />;
       case ACTIONS_WITH_DASHBOARDS:
       case ACTIONS_WITH_WIDGETS:
       case ACTIONS_WITH_FILTERS:

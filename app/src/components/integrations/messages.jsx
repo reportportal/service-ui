@@ -35,13 +35,13 @@ export const PLUGIN_DESCRIPTIONS_MAP = {
   [EMAIL]: (
     <FormattedMessage
       id="Integrations.Email.description"
-      defaultMessage="Reinforce your ReportPortal instance with E-mail server integration. Be informed about test result finish in real time and easily configure list of recipients."
+      defaultMessage="Reinforce your ReportPortal instance with Email Server integration. Be informed about test result finish in real time and easily configure list of recipients."
     />
   ),
   [JIRA]: (
     <FormattedMessage
       id="Integrations.Jira.description"
-      defaultMessage="The integration provides an exchange of information between ReportPortal and the JIRA Server, such as posting issues and linking issues, getting updates on their statuses."
+      defaultMessage="The integration provides an exchange of information between ReportPortal and the Jira Server, such as posting issues and linking issues, getting updates on their statuses."
     />
   ),
   [RALLY]: (

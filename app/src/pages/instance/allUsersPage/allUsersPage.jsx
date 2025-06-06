@@ -31,7 +31,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   noResultsDescription: {
     id: 'AllUsersPage.noResultsDescription',
-    defaultMessage: 'No users found for your search',
+    defaultMessage: `Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.`,
   },
 });
 

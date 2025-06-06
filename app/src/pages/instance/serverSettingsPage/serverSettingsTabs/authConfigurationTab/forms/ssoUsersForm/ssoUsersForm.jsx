@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { SectionHeader } from 'components/main/sectionHeader';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { ssoUsersOnlySelector, fetchAppInfoAction } from 'controllers/appInfo';
-import formStyles from 'pages/instance/serverSettingsPage/common/formController/formController.scss';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { fetch } from 'common/utils/fetch';
-import { URLS } from 'common/urls';
-import styles from './ssoUsersForm.scss';
-
-const formCx = classNames.bind(formStyles);
-const cx = classNames.bind(styles);
+import {
+  ssoUsersOnlySelector,
+  updateServerSettingsAction,
+  SSO_USERS_ONLY_KEY,
+} from 'controllers/appInfo';
+import { showSuccessNotification } from 'controllers/notification';
+import { SectionLayout, ServerSettingsField } from 'pages/instance/serverSettingsPage/common';
 
 const messages = defineMessages({
   switcherLabel: {
@@ -54,10 +50,6 @@ const messages = defineMessages({
     id: 'SsoUsersForm.successNotification',
     defaultMessage: 'SSO settings have been updated successfully',
   },
-  errorNotification: {
-    id: 'SsoUsersForm.errorNotification',
-    defaultMessage: 'Failed to update SSO settings',
-  },
 });
 
 export const SsoUsersForm = () => {
@@ -65,16 +57,7 @@ export const SsoUsersForm = () => {
   const dispatch = useDispatch();
   const enabledFromStore = useSelector(ssoUsersOnlySelector);
   const [enabled, setEnabled] = useState(enabledFromStore);
-  const inputId = 'ssoUsersToggle';
   const { trackEvent } = useTracking();
-
-  useEffect(() => {
-    dispatch(fetchAppInfoAction());
-  }, [dispatch]);
-
-  useEffect(() => {
-    setEnabled(enabledFromStore);
-  }, [enabledFromStore]);
 
   const getDescription = () =>
     formatMessage(enabled ? messages.ssoOnlyDescription : messages.manualInvitesDescription);
@@ -83,48 +66,32 @@ export const SsoUsersForm = () => {
     setEnabled(value);
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.toggleSsoUsers(value));
 
-    try {
-      await fetch(URLS.instanceSettings(), {
-        method: 'PUT',
+    dispatch(
+      updateServerSettingsAction({
         data: {
-          key: 'server.users.sso',
+          key: SSO_USERS_ONLY_KEY,
           value: value.toString(),
         },
-      });
-
-      await dispatch(fetchAppInfoAction());
-      dispatch(showSuccessNotification({ message: formatMessage(messages.successNotification) }));
-    } catch (error) {
-      setEnabled(!value);
-      dispatch(showErrorNotification({ message: formatMessage(messages.errorNotification) }));
-    }
+        onSuccess: () => {
+          dispatch(
+            showSuccessNotification({ message: formatMessage(messages.successNotification) }),
+          );
+        },
+        onError: () => {
+          setEnabled(!value);
+        },
+      }),
+    );
   };
 
   return (
-    <div className={formCx('form-controller')}>
-      <div className={formCx('heading-wrapper')}>
-        <SectionHeader text={formatMessage(messages.formHeader)} />
-      </div>
-      <div className={formCx('form')}>
-        <div className={cx('form-group')}>
-          <label htmlFor={inputId} className={cx('form-group-label')}>
-            {formatMessage(messages.switcherLabel)}
-          </label>
-          <div className={cx('form-group-content')}>
-            <div className={cx('input-container')}>
-              <InputBigSwitcher
-                id={inputId}
-                value={enabled}
-                onChange={handleToggle}
-                mobileDisabled
-              />
-              <div className={cx('description')} aria-live="polite">
-                {getDescription()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <SectionLayout header={formatMessage(messages.formHeader)}>
+      <ServerSettingsField
+        label={formatMessage(messages.switcherLabel)}
+        description={getDescription()}
+      >
+        <InputBigSwitcher value={enabled} onChange={handleToggle} mobileDisabled />
+      </ServerSettingsField>
+    </SectionLayout>
   );
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LocalizationContainer } from 'components/containers/localizationContainer';
-import { InitialDataContainer } from 'components/containers/initialDataContainer';
-import PageSwitcher from 'routes/pageSwitcher';
+import classNames from 'classnames/bind';
+import { SectionHeader } from 'components/main/sectionHeader';
+import styles from './sectionLayout.scss';
 
-const App = ({ initialDispatch }) => (
-  <InitialDataContainer initialDispatch={initialDispatch}>
-    <LocalizationContainer>
-      <PageSwitcher />
-    </LocalizationContainer>
-  </InitialDataContainer>
-);
-App.propTypes = {
-  initialDispatch: PropTypes.func.isRequired,
+const cx = classNames.bind(styles);
+
+export const SectionLayout = ({ children, header }) => {
+  return (
+    <div className={cx('section-layout')}>
+      <div className={cx('header')}>
+        <SectionHeader text={header} />
+      </div>
+      <div className={cx('content')}>{children}</div>
+    </div>
+  );
 };
-
-export default App;
+SectionLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+  header: PropTypes.string.isRequired,
+};
