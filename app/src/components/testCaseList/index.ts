@@ -16,5 +16,4 @@
 
 export { TestCaseList } from './testCaseList';
 export { TestCaseCard } from './testCaseCard/testCaseCard';
-export { Pagination } from './pagination/pagination';
 export { mockTestCases, STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS, FILTER_OPTIONS } from './mockData';
