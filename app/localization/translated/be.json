@@ -1108,7 +1108,7 @@
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Элементы",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",
   "InviteUserModal.canEditProject": "Можна рэдагаваць праект",
-  "InviteUserModal.description": "Калі ласка, звярніце ўвагу, што новыя карыстальнікі далучацца да арганізацыі з роляй “Удзельнік”, а існуючыя карыстальнікі захаваюць сваю бягучую арганізацыйную ролю.",
+  "InviteUserModal.description": "Калі ласка, звярніце ўвагу, што новым карыстальнікам, якія далучаюцца да арганізацыі гэтага праекта, будзе прысвоена роля ‘Удзельнік’, а існуючыя карыстальнікі захаваюць свае бягучыя арганізацыйныя ролі і дазволы.",
   "InviteUserModal.descriptionAssign": "Прызначыць карыстальніка на праект",
   "InviteUserModal.email": "Электронная пошта",
   "InviteUserModal.headerAssignUserModal": "Прызначыць карыстальніка",

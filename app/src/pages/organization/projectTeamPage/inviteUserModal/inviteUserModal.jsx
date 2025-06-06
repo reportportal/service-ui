@@ -58,8 +58,7 @@ const messages = defineMessages({
   },
   description: {
     id: 'InviteUserModal.description',
-    defaultMessage:
-      'Please note, users new to the organization will join it with “Member” role, whereas existing users will maintain their current organizational role.',
+    defaultMessage: `Please note, that new users joining this project's organization will be assigned the ‘Member’ role, while existing users will retain their current organizational roles and permissions.`,
   },
   email: {
     id: 'InviteUserModal.email',
@@ -173,8 +172,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
   };
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.INVITE),
-    text: formatMessage(ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE),
+    children: formatMessage(ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE),
     onClick: () => {
       handleSubmit(inviteUserAndCloseModal)();
     },
@@ -253,10 +251,8 @@ InviteUser.propTypes = {
 export const InviteUserModal = withModal('inviteUserModal')(
   reduxForm({
     form: INVITE_USER_FORM,
-    validate: ({ user, project, email }) => ({
-      user: commonValidators.requiredField(user),
-      project: commonValidators.requiredField(project),
-      email: commonValidators.email(email),
+    validate: ({ email }) => ({
+      email: commonValidators.emailCreateUserValidator()(email?.trim()),
     }),
     enableReinitialize: true,
   })(InviteUser),
