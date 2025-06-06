@@ -42,7 +42,7 @@
       }
 
       &.filters-icon {
-        width: 40px;
+        width: 57px;
         height: 36px;
 
         svg {
@@ -52,4 +52,10 @@
       }
     }
   }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

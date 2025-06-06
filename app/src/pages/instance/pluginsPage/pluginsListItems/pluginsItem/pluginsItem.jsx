@@ -132,7 +132,7 @@ export class PluginsItem extends Component {
           />
           <div className={cx('plugins-info')}>
             <span className={cx('plugins-name')}>{displayName}</span>
-            <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
+            <span className={cx('plugins-author')}>{`by ${uploadedBy || 'ReportPortal'}`}</span>
             <span
               className={cx('plugins-version')}
               title={

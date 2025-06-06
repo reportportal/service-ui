@@ -42,7 +42,7 @@ export const UserAvatar = ({ className, userId, thumbnail }) => {
 
 UserAvatar.propTypes = {
   className: PropTypes.string,
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   thumbnail: PropTypes.bool,
 };
 

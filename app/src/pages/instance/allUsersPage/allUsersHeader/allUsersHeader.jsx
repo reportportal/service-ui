@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
   searchPlaceholder: {
     id: 'AllUsersPage.searchPlaceholder',
-    defaultMessage: 'Search by name',
+    defaultMessage: 'Type to search by name',
   },
   export: {
     id: 'AllUsersPage.export',
