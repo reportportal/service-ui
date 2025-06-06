@@ -21,9 +21,15 @@ import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { fetchFilteredProjectAction, projectsSagas } from './projects';
-import { FETCH_ORGANIZATION_BY_SLUG, PREPARE_ACTIVE_ORGANIZATION_PROJECTS } from './constants';
+import {
+  FETCH_ORGANIZATION_BY_SLUG,
+  FETCH_ORGANIZATION_SETTINGS,
+  PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
+  PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
+} from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
+import { fetchOrganizationSettingsAction } from './actionCreators';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -58,10 +64,43 @@ function* watchFetchOrganizationBySlug() {
   yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
 }
 
+function* fetchOrganizationSettings({ payload: organizationId }) {
+  yield put(
+    fetchDataAction(FETCH_ORGANIZATION_SETTINGS)(URLS.organizationSettings(organizationId)),
+  );
+}
+
+function* watchFetchOrganizationSettings() {
+  yield takeEvery(FETCH_ORGANIZATION_SETTINGS, fetchOrganizationSettings);
+}
+
+function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
+  let activeOrganization = yield select(activeOrganizationSelector);
+  try {
+    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
+      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
+      activeOrganization = yield select(activeOrganizationSelector);
+    }
+    yield put(fetchOrganizationSettingsAction(activeOrganization.id));
+  } catch (error) {
+    yield put(
+      redirect({
+        type: ORGANIZATIONS_PAGE,
+      }),
+    );
+  }
+}
+
+function* watchPrepareActiveOrganizationSettings() {
+  yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_SETTINGS, prepareActiveOrganizationSettings);
+}
+
 export function* organizationSagas() {
   yield all([
     watchFetchOrganizationProjects(),
     watchFetchOrganizationBySlug(),
+    watchFetchOrganizationSettings(),
+    watchPrepareActiveOrganizationSettings(),
     projectsSagas(),
     usersSagas(),
   ]);

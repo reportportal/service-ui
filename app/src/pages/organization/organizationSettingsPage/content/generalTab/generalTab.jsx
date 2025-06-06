@@ -28,6 +28,8 @@ import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { activeOrganizationSettingsSelector } from 'controllers/organization/selectors';
+import { daysToSeconds } from 'common/utils';
 import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
@@ -40,6 +42,7 @@ const selector = formValueSelector(GENERAL_TAB_FORM);
 const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const organizationName = useSelector(activeOrganizationNameSelector);
+  const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
   const userRoles = useSelector(userRolesSelector);
   const canPerformUpdate = canUpdateOrganizationSettings(userRoles);
   const [processingData] = useState(false);
@@ -56,12 +59,12 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
     if (organizationName) {
       initialize({
         name: organizationName,
-        keepLaunches: 0,
-        keepLogs: 0,
-        keepScreenshots: 0,
+        keepLaunches: daysToSeconds(launches?.period || 0),
+        keepLogs: daysToSeconds(logs?.period || 0),
+        keepScreenshots: daysToSeconds(attachments?.period || 0),
       });
     }
-  }, [initialize, organizationName]);
+  }, [attachments, initialize, launches, logs, organizationName]);
 
   const onFormSubmit = () => {
     // ToDo: Implement form submission logic
