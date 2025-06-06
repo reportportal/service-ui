@@ -1,0 +1,197 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  gap: 16px;
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  width: 100%;
+}
+
+.items-count {
+  display: flex;
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+.count-text {
+  font-size: 13px;
+  color: $COLOR--almost-black;
+}
+
+.page-navigation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  justify-content: center;
+}
+
+.page-info {
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  white-space: nowrap;
+}
+
+.current-page-number {
+  color: $COLOR--topaz-2;
+  font-weight: 700;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: $COLOR--e-300;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+
+  &:hover:not(:disabled) {
+    color: $COLOR--almost-black;
+
+    .vertical-line {
+      background-color: $COLOR--almost-black;
+    }
+  }
+
+  &:disabled {
+    color: $COLOR--e-100;
+    cursor: not-allowed;
+  }
+}
+
+.vertical-line {
+  width: 2px;
+  height: 14px;
+  background-color: $COLOR--e-300;
+  margin: 0 2px;
+  display: inline-block;
+
+  &.disabled {
+    background-color: $COLOR--e-100;
+  }
+}
+
+.total-pages {
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  white-space: nowrap;
+}
+
+.status-bar {
+  width: 200px;
+  height: 8px;
+  background: $COLOR--gray-91;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.status-fill {
+  height: 100%;
+  background: $COLOR--topaz;
+  transition: width 0.3s ease-in-out;
+  border-radius: 3px;
+}
+
+.items-per-page {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.per-page-label {
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .items-count,
+  .page-navigation,
+  .items-per-page {
+    justify-content: center;
+  }
+
+  .status-bar {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    padding: 12px 0;
+  }
+
+  .page-navigation {
+    gap: 12px;
+  }
+
+  .nav-controls {
+    gap: 6px;
+  }
+
+  .nav-button {
+    min-width: 18px;
+    height: 18px;
+    font-size: 12px;
+  }
+
+  .status-bar {
+    width: 120px;
+    height: 6px;
+  }
+
+  .count-text,
+  .per-page-label,
+  .page-info,
+  .total-pages {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .status-bar {
+    width: 100px;
+  }
+}
