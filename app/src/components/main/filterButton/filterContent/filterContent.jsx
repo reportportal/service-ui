@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { useSelector } from 'react-redux';
@@ -22,7 +23,7 @@ import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useEffect, useState } from 'react';
+import { getFormattedDate } from 'components/filterEntities/utils';
 import { FilterInput } from './filterInput/filterInput';
 import { messages } from './messages';
 import styles from './filterContent.scss';
@@ -54,7 +55,9 @@ export const FilterContentWrapped = ({
     initialize(initialState);
   }, []);
 
-  const clearAll = () => initialize(defaultState);
+  const clearAll = () => {
+    initialize(defaultState);
+  };
 
   useEffect(() => {
     setIsClear(getClearButtonState(formValues));
@@ -69,7 +72,9 @@ export const FilterContentWrapped = ({
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const value = formData[filterName].toString();
+      const field = formData[filterName];
+      const value = field?.startDate && field?.endDate ? getFormattedDate(field) : field.toString();
+
       acc[filterName] = {
         value,
         condition: defaultCondition || formData[`${filterName}_condition`],
