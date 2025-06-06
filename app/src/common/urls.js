@@ -140,6 +140,8 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
   projectDelete: ({ organizationId, projectId }) =>
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
+  organizationSettings: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/settings`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,

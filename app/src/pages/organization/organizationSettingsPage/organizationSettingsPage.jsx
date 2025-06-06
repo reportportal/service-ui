@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from 'pages/inside/common/navigation';
 import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
 import styles from './organizationSettingsPage.scss';

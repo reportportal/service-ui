@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,17 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  projectNameLabel: {
-    id: 'GeneralTab.projectNameLabel',
+  organizationNameLabel: {
+    id: 'OrganizationSettings.generalTab.organizationNameLabel',
     defaultMessage: 'Name',
   },
-  interruptedJob: {
-    id: 'GeneralTab.interruptedJob',
-    defaultMessage: 'Launch inactivity timeout',
+  informationTitle: {
+    id: 'OrganizationSettings.generalTab.informationTitle',
+    defaultMessage: 'Information',
   },
-  interruptedJobDescription: {
-    id: 'GeneralTab.interruptedJobDescription',
-    defaultMessage: 'Schedule time for Job to interrupt inactive launches',
-  },
-  updateSuccessNotification: {
-    id: 'GeneralTab.updateSuccessNotification',
-    defaultMessage: 'Project settings were successfully updated',
-  },
-  updateErrorNotification: {
-    id: 'GeneralTab.updateErrorNotification',
-    defaultMessage: 'Failed to update project settings',
+  informationMessage: {
+    id: 'OrganizationSettings.generalTab.informationMessage',
+    defaultMessage:
+      'Changes made at the Organization level affect the settings of your project(s).',
   },
 });
