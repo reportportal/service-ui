@@ -43,24 +43,21 @@ export const Pagination = ({
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
-  const handlePrevious = useCallback(() => {
+  const handlePrevious = () => {
     if (currentPage > FIRST_PAGE) {
       onPageChange(currentPage - PAGE_INCREMENT);
     }
-  }, [currentPage, onPageChange]);
+  };
 
-  const handleNext = useCallback(() => {
+  const handleNext = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + PAGE_INCREMENT);
     }
-  }, [currentPage, totalPages, onPageChange]);
+  };
 
-  const handlePageClick = useCallback(
-    (page) => {
-      onPageChange(page);
-    },
-    [onPageChange],
-  );
+  const handlePageClick = (page) => {
+    onPageChange(page);
+  };
 
   const handleItemsPerPageChange = useCallback(
     (value) => {

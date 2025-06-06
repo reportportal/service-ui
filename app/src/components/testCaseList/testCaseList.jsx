@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -52,13 +51,6 @@ export const TestCaseList = ({
   const endIndex = startIndex + itemsPerPage;
   const currentData = testCases.slice(startIndex, endIndex);
 
-  const handleSearchChange = useCallback(
-    (value) => {
-      onSearchChange?.(value);
-    },
-    [onSearchChange],
-  );
-
   if (loading) {
     return (
       <div className={cx('test-case-list', 'loading')}>
@@ -77,7 +69,7 @@ export const TestCaseList = ({
             <SearchFieldWithFilter
               isLoading={loading}
               searchValue={searchValue}
-              setSearchValue={handleSearchChange}
+              setSearchValue={onSearchChange}
               placeholder={formatMessage(messages.searchPlaceholder)}
               isTransparent
             />
