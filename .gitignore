@@ -8,6 +8,7 @@
 .vscode
 .devcontainer
 .scannerwork
+.cursor
 
 ## Compiled
 build/

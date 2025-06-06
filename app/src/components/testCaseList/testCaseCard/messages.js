@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,20 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
+  duplicate: {
+    id: 'TestCaseCard.duplicate',
+    defaultMessage: 'Duplicate',
   },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
+  editTestCase: {
+    id: 'TestCaseCard.editTestCase',
+    defaultMessage: 'Edit test case',
+  },
+  moveTestCaseTo: {
+    id: 'TestCaseCard.moveTestCaseTo',
+    defaultMessage: 'Move test case to',
+  },
+  deleteTestCase: {
+    id: 'TestCaseCard.deleteTestCase',
+    defaultMessage: 'Delete test case',
   },
 });

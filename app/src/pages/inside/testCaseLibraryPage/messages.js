@@ -21,4 +21,12 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseLibraryHeader',
     defaultMessage: 'Test Case Library',
   },
+  deleteConfirmation: {
+    id: 'TestCaseLibraryPage.deleteConfirmation',
+    defaultMessage: 'Are you sure you want to delete "{name}"?',
+  },
+  copySuffix: {
+    id: 'TestCaseLibraryPage.copySuffix',
+    defaultMessage: '(Copy)',
+  },
 });

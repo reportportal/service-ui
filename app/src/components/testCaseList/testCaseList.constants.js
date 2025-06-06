@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+// Component namespace and filter keys
+export const NAMESPACE = 'TEST_CASE_LIST';
+export const SEARCH_KEY = 'search';
 
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+// Default values
+export const DEFAULT_FILTER_VALUE = 'all';
+export const DEFAULT_CURRENT_PAGE = 1;
+export const DEFAULT_ITEMS_PER_PAGE = 10;

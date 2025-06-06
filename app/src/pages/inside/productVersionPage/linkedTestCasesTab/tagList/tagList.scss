@@ -23,13 +23,18 @@
   gap: 8px 18px;
   flex-wrap: wrap;
   padding-left: 11px;
-  max-width: 450px;
+  max-width: 420px;
   height: 22px;
   overflow: hidden;
 
   &--expanded {
     height: auto;
     max-width: none;
+  }
+
+  &--no-tags {
+    padding-left: 0;
+    height: auto;
   }
 
   &__item {
@@ -79,5 +84,39 @@
       cursor: pointer;
       color: var(--rp-ui-base-e-400);
     }
+
+    &--count-button {
+      height: 18px;
+      margin-left: 0px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        position: absolute;
+        top: 1px;
+        left: -7px;
+        content: '';
+        display: block;
+        width: 14px;
+        height: 15px;
+        border: 1px solid var(--rp-ui-base-e-200);
+        border-right: none;
+        border-top: none;
+        border-radius: 3px;
+        transform: rotate(45deg);
+      }
+    }
+
+    &--button-custom {
+      color: $COLOR--topaz-2;
+      font-weight: 400;
+    }
   }
+}
+
+.no-tags-message {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--rp-ui-base-e-400);
 }
