@@ -1107,7 +1107,7 @@
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "测试项",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "测试项的数量应为1到600个",
   "InviteUserModal.canEditProject": "Can edit the Project",
-  "InviteUserModal.description": "Please note, users new to the organization will join it with “Member” role, whereas existing users will maintain their current organizational role.",
+  "InviteUserModal.description": "Please note, that new users joining this project's organization will be assigned the ‘Member’ role, while existing users will retain their current organizational roles and permissions.",
   "InviteUserModal.descriptionAssign": "Assign user to the project",
   "InviteUserModal.email": "邮箱",
   "InviteUserModal.headerAssignUserModal": "Assign user",

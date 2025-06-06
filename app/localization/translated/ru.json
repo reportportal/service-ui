@@ -1108,7 +1108,7 @@
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Элементы",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",
   "InviteUserModal.canEditProject": "Может редактировать проект",
-  "InviteUserModal.description": "Пожалуйста, обратите внимание, что новые пользователи присоединятся к организации с ролью “Участник”, в то время как существующие пользователи сохранят свою текущую организационную роль.",
+  "InviteUserModal.description": "Пожалуйста, обратите внимание, что новым пользователям, присоединяющимся к организации этого проекта, будет присвоена роль ‘Участник’, в то время как существующие пользователи сохранят свои текущие организационные роли и разрешения.",
   "InviteUserModal.descriptionAssign": "Назначить пользователя на проект",
   "InviteUserModal.email": "Электронная почта",
   "InviteUserModal.headerAssignUserModal": "Назначить пользователя",
