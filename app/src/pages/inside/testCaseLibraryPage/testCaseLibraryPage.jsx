@@ -22,14 +22,13 @@ import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { TestCaseList, mockTestCases } from 'components/testCaseList';
-import { Pagination } from 'components/testCaseList/pagination/pagination';
+import { Pagination, BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 import { ITEMS_PER_PAGE_OPTIONS } from 'components/testCaseList/mockData';
 import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_ITEMS_PER_PAGE,
 } from 'components/testCaseList/testCaseList.constants';
 
-import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 import { EmptyState } from './emptyState';
 
 import styles from './testCaseLibraryPage.scss';
@@ -41,8 +40,8 @@ export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const [testCases, setTestCases] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(DEFAULT_CURRENT_PAGE);
-  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
+  const [activePage, setActivePage] = useState(DEFAULT_CURRENT_PAGE);
+  const [pageSize, setPageSize] = useState(DEFAULT_ITEMS_PER_PAGE);
   const [filteredTestCases, setFilteredTestCases] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
@@ -65,7 +64,7 @@ export const TestCaseLibraryPage = () => {
 
   // Calculate pagination values
   const totalItems = filteredTestCases.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   const handleEdit = useCallback(() => {
     // Here you would implement edit logic
@@ -118,18 +117,18 @@ export const TestCaseLibraryPage = () => {
       }
 
       setFilteredTestCases(filtered);
-      setCurrentPage(DEFAULT_CURRENT_PAGE);
+      setActivePage(DEFAULT_CURRENT_PAGE);
     },
     [testCases],
   );
 
-  const handlePageChange = useCallback((page) => {
-    setCurrentPage(page);
+  const changePage = useCallback((page) => {
+    setActivePage(page);
   }, []);
 
-  const handleItemsPerPageChange = useCallback((items) => {
-    setItemsPerPage(items);
-    setCurrentPage(DEFAULT_CURRENT_PAGE);
+  const changePageSize = useCallback((size) => {
+    setPageSize(size);
+    setActivePage(DEFAULT_CURRENT_PAGE);
   }, []);
 
   const hasTestCases = testCases && testCases.length > 0;
@@ -152,10 +151,11 @@ export const TestCaseLibraryPage = () => {
               <TestCaseList
                 testCases={filteredTestCases}
                 loading={loading}
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
+                currentPage={activePage}
+                itemsPerPage={pageSize}
                 searchValue={searchValue}
                 onSearchChange={handleSearchChange}
+                onFilterChange={handleSearchChange}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
@@ -168,13 +168,21 @@ export const TestCaseLibraryPage = () => {
           {hasTestCases && totalItems > 0 && (
             <div className={cx('test-case-library-page__pagination')}>
               <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
+                pageSize={pageSize}
+                activePage={activePage}
                 totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                itemsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-                onPageChange={handlePageChange}
-                onItemsPerPageChange={handleItemsPerPageChange}
+                totalPages={totalPages}
+                pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+                changePage={changePage}
+                changePageSize={changePageSize}
+                captions={{
+                  items: formatMessage(messages.items),
+                  of: formatMessage(messages.of),
+                  page: formatMessage(messages.page),
+                  goTo: formatMessage(messages.goToPage),
+                  goAction: formatMessage(messages.go),
+                  perPage: formatMessage(messages.perPage),
+                }}
               />
             </div>
           )}

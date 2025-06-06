@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-// Component namespace and filter keys
-export const NAMESPACE = 'TEST_CASE_LIST';
-export const SEARCH_KEY = 'search';
-
 // Default values
 export const DEFAULT_FILTER_VALUE = 'all';
 export const DEFAULT_CURRENT_PAGE = 1;

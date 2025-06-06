@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { withFilter } from 'controllers/filter';
-import { TestCaseCard } from './testCaseCard/testCaseCard';
+import { TestCaseCard, TestCase } from './testCaseCard/testCaseCard';
 import { mockTestCases } from './mockData';
-import { NAMESPACE, SEARCH_KEY, DEFAULT_CURRENT_PAGE } from './testCaseList.constants';
+import { DEFAULT_CURRENT_PAGE } from './testCaseList.constants';
 import { messages } from './messages';
 import styles from './testCaseList.scss';
 
 const cx = classNames.bind(styles);
 
-const SearchFieldWithFilter = withFilter({
-  filterKey: SEARCH_KEY,
-  namespace: NAMESPACE,
-})(SearchField);
+interface TestCaseListProps {
+  testCases?: TestCase[];
+  loading?: boolean;
+  currentPage?: number;
+  itemsPerPage: number;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  onFilterChange?: (value: string) => void;
+  onEdit?: (testCase: TestCase) => void;
+  onDelete?: (testCase: TestCase) => void;
+  onDuplicate?: (testCase: TestCase) => void;
+  onMove?: (testCase: TestCase) => void;
+}
 
 export const TestCaseList = ({
   testCases = mockTestCases,
@@ -40,11 +47,12 @@ export const TestCaseList = ({
   itemsPerPage,
   searchValue = '',
   onSearchChange,
+  onFilterChange,
   onEdit,
   onDelete,
   onDuplicate,
   onMove,
-}) => {
+}: TestCaseListProps) => {
   const { formatMessage } = useIntl();
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -66,10 +74,11 @@ export const TestCaseList = ({
         <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
         <div className={cx('controls-actions')}>
           <div className={cx('search-section')}>
-            <SearchFieldWithFilter
+            <SearchField
               isLoading={loading}
               searchValue={searchValue}
               setSearchValue={onSearchChange}
+              onFilterChange={onFilterChange}
               placeholder={formatMessage(messages.searchPlaceholder)}
               isTransparent
             />
@@ -109,37 +118,4 @@ export const TestCaseList = ({
       </div>
     </div>
   );
-};
-
-TestCaseList.propTypes = {
-  testCases: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      tags: PropTypes.arrayOf(PropTypes.string),
-      lastExecution: PropTypes.string.isRequired,
-    }),
-  ),
-  loading: PropTypes.bool,
-  currentPage: PropTypes.number,
-  itemsPerPage: PropTypes.number.isRequired,
-  searchValue: PropTypes.string,
-  onSearchChange: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onDuplicate: PropTypes.func,
-  onMove: PropTypes.func,
-};
-
-TestCaseList.defaultProps = {
-  testCases: mockTestCases,
-  loading: false,
-  currentPage: DEFAULT_CURRENT_PAGE,
-  searchValue: '',
-  onSearchChange: () => {},
-  onEdit: () => {},
-  onDelete: () => {},
-  onDuplicate: () => {},
-  onMove: () => {},
 };

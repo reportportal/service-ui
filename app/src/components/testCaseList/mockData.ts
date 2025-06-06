@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-export const mockTestCases = [
+import { TestCase, FilterOption } from './testCaseCard/testCaseCard';
+
+export const mockTestCases: TestCase[] = [
   {
     id: 1,
     name: 'User Authentication Scenario Alpha',
@@ -310,11 +312,11 @@ export const STATUS_TYPES = {
   FAILED: 'failed',
   SKIPPED: 'skipped',
   IN_PROGRESS: 'in_progress',
-};
+} as const;
 
-export const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
+export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 25, 50, 100];
 
-export const FILTER_OPTIONS = [
+export const FILTER_OPTIONS: FilterOption[] = [
   { label: 'All Statuses', value: 'all' },
   { label: 'Passed', value: STATUS_TYPES.PASSED },
   { label: 'Failed', value: STATUS_TYPES.FAILED },

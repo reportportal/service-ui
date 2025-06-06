@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -27,8 +26,41 @@ import styles from './testCaseCard.scss';
 
 const cx = classNames.bind(styles);
 
-const StatusIcon = ({ status }) => {
-  const iconMap = {
+export type TestCaseStatus = 'passed' | 'failed' | 'skipped' | 'in_progress';
+
+export interface TestCase {
+  id: string | number;
+  name: string;
+  status: TestCaseStatus;
+  tags: string[];
+  lastExecution: string;
+}
+
+export interface FilterOption {
+  label: string;
+  value: string;
+}
+
+interface StatusIconProps {
+  status: TestCaseStatus;
+}
+
+interface TestCaseCardProps {
+  testCase: TestCase;
+  onEdit?: (testCase: TestCase) => void;
+  onDelete?: (testCase: TestCase) => void;
+  onDuplicate?: (testCase: TestCase) => void;
+  onMove?: (testCase: TestCase) => void;
+}
+
+interface MenuItem {
+  label: string;
+  onClick: () => void;
+  className?: string;
+}
+
+const StatusIcon = ({ status }: StatusIconProps) => {
+  const iconMap: Record<TestCaseStatus, React.ReactNode> = {
     passed: <div className={cx('priority-icon')}>{Parser(PriorityIcon)}</div>,
     failed: '✗',
     skipped: '○',
@@ -40,30 +72,32 @@ const StatusIcon = ({ status }) => {
   );
 };
 
-StatusIcon.propTypes = {
-  status: PropTypes.string.isRequired,
-};
-
-export const TestCaseCard = ({ testCase, onEdit, onDelete, onDuplicate, onMove }) => {
+export const TestCaseCard = ({
+  testCase,
+  onEdit,
+  onDelete,
+  onDuplicate,
+  onMove,
+}: TestCaseCardProps) => {
   const { formatMessage } = useIntl();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       label: formatMessage(messages.duplicate),
-      onClick: () => onDuplicate(testCase),
+      onClick: () => onDuplicate?.(testCase),
     },
     {
       label: formatMessage(messages.editTestCase),
-      onClick: () => onEdit(testCase),
+      onClick: () => onEdit?.(testCase),
     },
     {
       label: formatMessage(messages.moveTestCaseTo),
-      onClick: () => onMove(testCase),
+      onClick: () => onMove?.(testCase),
     },
     {
       label: formatMessage(messages.deleteTestCase),
-      onClick: () => onDelete(testCase),
+      onClick: () => onDelete?.(testCase),
       className: 'delete-menu-item',
     },
   ];
@@ -95,7 +129,9 @@ export const TestCaseCard = ({ testCase, onEdit, onDelete, onDuplicate, onMove }
                 isOpened={isMenuOpen}
                 setIsOpened={setIsMenuOpen}
               >
-                <button className={cx('dots-menu-trigger')}>⋯</button>
+                <button type="button" className={cx('dots-menu-trigger')}>
+                  ⋯
+                </button>
               </PopoverControl>
             </div>
           </div>
@@ -103,25 +139,4 @@ export const TestCaseCard = ({ testCase, onEdit, onDelete, onDuplicate, onMove }
       </div>
     </div>
   );
-};
-
-TestCaseCard.propTypes = {
-  testCase: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    name: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string),
-    lastExecution: PropTypes.string.isRequired,
-  }).isRequired,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onDuplicate: PropTypes.func,
-  onMove: PropTypes.func,
-};
-
-TestCaseCard.defaultProps = {
-  onEdit: () => {},
-  onDelete: () => {},
-  onDuplicate: () => {},
-  onMove: () => {},
 };
