@@ -66,7 +66,13 @@ import {
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
 } from 'controllers/pages';
-import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
+import {
+  GENERAL,
+  AUTHORIZATION_CONFIGURATION,
+  ANALYTICS,
+  LINKS_AND_BRANDING,
+  FEATURES,
+} from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -161,7 +167,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/plugins',
     () => ({

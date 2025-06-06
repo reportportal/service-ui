@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,28 @@
  * limitations under the License.
  */
 
-.user-avatar {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 52px;
+.server-settings-field {
+  align-items: flex-start;
 }
 
-.avatar {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+.label {
+  width: 245px;
+  padding-right: 11px;
+  margin-top: 8px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+    margin-top: 0;
+  }
+}
+
+.description {
+  max-width: 350px;
+  padding-left: 11px;
+  margin-top: 8px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+    margin-top: 0;
+  }
 }

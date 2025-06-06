@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { Footer, DEFAULT_FOOTER_LINKS } from 'layouts/common/footer';
 import { useDispatch, useSelector } from 'react-redux';
-import { serverFooterLinksSelector, updateServerFooterLinksAction } from 'controllers/appInfo';
+import { serverFooterLinksSelector, updateServerSettingsAction } from 'controllers/appInfo';
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
@@ -30,6 +30,7 @@ import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DraggableLink } from './draggableLink';
 import { AddLinkForm } from './addLinkForm';
+import { prepareFooterLinksData } from './utils';
 import styles from './linksAndBrandingTab.scss';
 
 const cx = classNames.bind(styles);
@@ -81,12 +82,13 @@ export const LinksAndBrandingTab = () => {
   const [isAddLinkFormVisible, setIsAddLinkFormVisible] = useState(false);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
+
   const handleDeleteLink = (linkName) => {
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.onDeleteFooterLink(linkName));
     const updatedLinks = customLinks.filter((link) => link.name !== linkName);
     dispatch(
-      updateServerFooterLinksAction({
-        footerLinks: updatedLinks,
+      updateServerSettingsAction({
+        data: prepareFooterLinksData(updatedLinks),
         onSuccess: () => {
           dispatch(
             showNotification({
@@ -130,8 +132,8 @@ export const LinksAndBrandingTab = () => {
     updatedLinks.splice(fromIndex, 1);
     updatedLinks.splice(toIndex, 0, customLinks[fromIndex]);
     dispatch(
-      updateServerFooterLinksAction({
-        footerLinks: updatedLinks,
+      updateServerSettingsAction({
+        data: prepareFooterLinksData(updatedLinks),
         onSuccess: () => {
           dispatch(
             showNotification({

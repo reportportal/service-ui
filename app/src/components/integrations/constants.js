@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,3 +39,9 @@ export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;
 export const PLUGINS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
 export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP, AD];
+
+export const PLUGIN_ICON_TYPES = {
+  BASE_64: 'base64',
+  URL: 'url',
+  SVG: 'svg',
+};

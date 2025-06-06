@@ -32,7 +32,7 @@ export class NavigationTabs extends Component {
       PropTypes.shape({
         name: PropTypes.node,
         link: PropTypes.object,
-        component: PropTypes.Element,
+        component: PropTypes.node,
         eventInfo: PropTypes.object,
         mobileDisabled: PropTypes.bool,
       }),

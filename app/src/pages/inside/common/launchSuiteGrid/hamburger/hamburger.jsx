@@ -35,7 +35,7 @@ import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
 import { userRolesSelector } from 'controllers/pages';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { analyzerExtensionsSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -104,6 +104,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
+  const areImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -270,23 +271,25 @@ export const Hamburger = ({ launch, customProps }) => {
                 customProps.onForceFinish(launch);
               }}
             />
-            <HamburgerMenuItem
-              disabled={!canUpdateImportant}
-              title={canUpdateImportant ? '' : formatMessage(messages.noPermissions)}
-              text={formatMessage(
-                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                  ? messages.unmarkAsImportant
-                  : messages.markAsImportant,
-              )}
-              onClick={() => {
-                trackEvent(
+            {areImportantLaunchesEnabled && (
+              <HamburgerMenuItem
+                disabled={!canUpdateImportant}
+                title={canUpdateImportant ? '' : formatMessage(messages.noPermissions)}
+                text={formatMessage(
                   launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                    ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
-                    : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
-                );
-                changeImportantState(launch.retentionPolicy);
-              }}
-            />
+                    ? messages.unmarkAsImportant
+                    : messages.markAsImportant,
+                )}
+                onClick={() => {
+                  trackEvent(
+                    launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                      ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                      : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                  );
+                  changeImportantState(launch.retentionPolicy);
+                }}
+              />
+            )}
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
                 disabled={!canStartAnalysis(userRoles)}
