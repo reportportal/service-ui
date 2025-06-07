@@ -14,52 +14,52 @@
   * limitations under the License.
   */
 
-  .inactivity-timeout-form {
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 65px;
-    margin-bottom: 40px;
+.inactivity-timeout-form {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 65px;
+  margin-bottom: 40px;
 
-    .content {
-      display: flex;
-      gap: 26px;
-      padding-top: 25px;
-      justify-content: center;
-      align-items: center;
+  .content {
+    display: flex;
+    gap: 26px;
+    padding-top: 25px;
+    justify-content: center;
+    align-items: center;
 
-      .label {
-        width: 154px;
-        color: $COLOR__charcoal-grey;
-        font-family: $FONT-REGULAR;
-        font-size: 13px;
-      }
-
-      .timeout-dropdown {
-        width: 100px;
-      }
-
-      .timeout-select-list{
-        width: 184px;
-      }
-
-      .description {
-        color:$COLOR--gray-60;
-        font-family: $FONT-REGULAR;
-        font-size: 12px;
-        line-height: 14px;
-        width: 300px;
-      }
+    .label {
+      width: 154px;
+      color: $COLOR__charcoal-grey;
+      font-family: $FONT-REGULAR;
+      font-size: 13px;
     }
 
-    @media (max-width: $SCREEN_XS_MAX) {
-      padding-left: 0;
+    .timeout-dropdown {
+      width: 100px;
+    }
 
-      .content {
-        flex-direction: column;
-        justify-content: start;
-        align-items: start;
-        gap: 10px;
-      }
+    .timeout-select-list {
+      width: 184px;
+    }
+
+    .description {
+      color: $COLOR--gray-60;
+      font-family: $FONT-REGULAR;
+      font-size: 12px;
+      line-height: 14px;
+      width: 300px;
     }
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+
+    .content {
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+      gap: 10px;
+    }
+  }
+}

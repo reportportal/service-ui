@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
- @mixin fill-svg($color) {
+@mixin fill-svg($color) {
   svg {
     path {
       fill: $color;
