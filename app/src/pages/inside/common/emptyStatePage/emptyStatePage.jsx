@@ -108,8 +108,9 @@ EmptyStatePage.propTypes = {
       dataAutomationId: PropTypes.string,
       isDisabled: PropTypes.bool,
       handleButton: PropTypes.func,
-      icon: PropTypes.string,
+      icon: PropTypes.elementType,
       isCompact: PropTypes.bool,
+      variant: PropTypes.oneOf(['primary', 'ghost', 'danger', 'text']),
     }),
   ),
 };

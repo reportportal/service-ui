@@ -6,7 +6,13 @@
     "plugin:prettier/recommended",
     "prettier/react"
   ],
-  "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "babel"],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "jsx-a11y",
+    "prettier",
+    "babel"
+  ],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -28,8 +34,24 @@
   "rules": {
     "prettier/prettier": 2,
     "jsx-a11y/no-static-element-interactions": 0,
-    "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
-    "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true,
+        "allowShortCircuit": true
+      }
+    ],
+    "jsx-a11y/label-has-for": [
+      "error",
+      {
+        "required": {
+          "some": [
+            "nesting",
+            "id"
+          ]
+        }
+      }
+    ],
     "jsx-a11y/tabindex-no-positive": 0,
     "jsx-a11y/no-noninteractive-tabindex": 0,
     "jsx-a11y/anchor-is-valid": 0,
@@ -79,7 +101,10 @@
   "parserOptions": {
     "requireConfigFile": true,
     "babelOptions": {
-      "presets": ["@babel/preset-react", "@babel/preset-env"]
+      "presets": [
+        "@babel/preset-react",
+        "@babel/preset-env"
+      ]
     },
     "ecmaFeatures": {
       "jsx": true,
@@ -88,7 +113,10 @@
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
       "parser": "@typescript-eslint/parser",
       "extends": [
         "airbnb",
@@ -96,16 +124,45 @@
         "plugin:prettier/recommended",
         "prettier/react"
       ],
-      "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "@typescript-eslint"],
+      "plugins": [
+        "react",
+        "react-hooks",
+        "jsx-a11y",
+        "prettier",
+        "@typescript-eslint"
+      ],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-empty-interface": "off",
         "react/prop-types": "off",
         "react/require-default-props": "off",
-        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }]
+        "react/jsx-filename-extension": [
+          "error",
+          {
+            "extensions": [
+              ".tsx"
+            ]
+          }
+        ],
+        "import/prefer-default-export": "off",
+        "import/extensions": [
+          "error",
+          "ignorePackages",
+          {
+            "js": "never",
+            "jsx": "never",
+            "ts": "never",
+            "tsx": "never"
+          }
+        ]
       }
     }
   ]
