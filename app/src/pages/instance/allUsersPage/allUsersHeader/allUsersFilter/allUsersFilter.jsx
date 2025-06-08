@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Field, getFormValues } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_CNT } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
@@ -31,10 +33,15 @@ import {
   getPermissions,
   LAST_LOGIN_FILTER_NAME,
   USERS_PERMISSIONS_FILTER_NAME,
+  FILTER_FORM,
 } from 'components/main/filterButton';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import classNames from 'classnames/bind';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+} from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
@@ -53,6 +60,9 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
+  const lastRunDate = useSelector(
+    (state) => getFormValues(FILTER_FORM)(state)?.[LAST_LOGIN_FILTER_NAME],
+  );
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {
@@ -100,6 +110,9 @@ export const AllUsersFilter = ({
             value: '',
             options: lastLogin,
             placeholder: formatMessage(messages.lastLoginPlaceholder),
+            formatDisplayedValue,
+            notScrollable: true,
+            footer: <Field name={LAST_LOGIN_FILTER_NAME} component={DateRangeFormField} />,
           },
         },
       ],
@@ -155,7 +168,10 @@ export const AllUsersFilter = ({
   const initialFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: entities[USERS_PERMISSIONS_FILTER_NAME]?.value || '',
     [ACCOUNT_TYPE_FILTER_NAME]: entities[ACCOUNT_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_LOGIN_FILTER_NAME]: entities[LAST_LOGIN_FILTER_NAME]?.value || '',
+    [LAST_LOGIN_FILTER_NAME]:
+      parseFormattedDate(entities[LAST_LOGIN_FILTER_NAME]?.value) ||
+      entities[LAST_LOGIN_FILTER_NAME]?.value ||
+      '',
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',
@@ -174,6 +190,10 @@ export const AllUsersFilter = ({
       return false;
     }
 
+    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
+      return true;
+    }
+
     let isApply =
       [USERS_PERMISSIONS_FILTER_NAME, LAST_LOGIN_FILTER_NAME, EMAIL_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
@@ -188,6 +208,16 @@ export const AllUsersFilter = ({
       isApply =
         formValues[EMAIL_FILTER_NAME_CONDITION] ===
           initialFilterState[EMAIL_FILTER_NAME_CONDITION] && isApply;
+    }
+
+    if (typeof lastRunDate === 'object') {
+      const initialDate = formatDisplayedValue(initialFilterState[LAST_LOGIN_FILTER_NAME]);
+      const currentDate = formatDisplayedValue(lastRunDate);
+      isApply = initialDate === currentDate && isApply;
+    } else {
+      isApply =
+        formValues[LAST_LOGIN_FILTER_NAME] === initialFilterState[LAST_LOGIN_FILTER_NAME] &&
+        isApply;
     }
 
     return isApply;

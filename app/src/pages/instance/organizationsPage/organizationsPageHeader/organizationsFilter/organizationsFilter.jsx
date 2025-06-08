@@ -25,6 +25,7 @@ import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizat
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
+  FILTER_FORM,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
@@ -38,7 +39,7 @@ import {
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import {
   DateRangeFormField,
-  displayedValueFormatter,
+  formatDisplayedValue,
   parseFormattedDate,
 } from 'components/main/dateRange';
 import { messages } from './messages';
@@ -63,7 +64,7 @@ export const OrganizationsFilter = ({
     { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
   ];
   const lastRunDate = useSelector(
-    (state) => getFormValues('filter')(state)?.[LAST_RUN_DATE_FILTER_NAME],
+    (state) => getFormValues(FILTER_FORM)(state)?.[LAST_RUN_DATE_FILTER_NAME],
   );
 
   const filters = {
@@ -96,7 +97,7 @@ export const OrganizationsFilter = ({
             value: timeRange[0].value,
             options: timeRange,
             placeholder: formatMessage(messages.lastRunDatePlaceholder),
-            customDisplayedValue: displayedValueFormatter(lastRunDate),
+            formatDisplayedValue,
             notScrollable: true,
             footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
           },
@@ -238,8 +239,8 @@ export const OrganizationsFilter = ({
     }
 
     if (typeof lastRunDate === 'object') {
-      const initialDate = displayedValueFormatter(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
-      const currentDate = displayedValueFormatter(lastRunDate);
+      const initialDate = formatDisplayedValue(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
+      const currentDate = formatDisplayedValue(lastRunDate);
       isApply = initialDate === currentDate && isApply;
     } else {
       isApply =

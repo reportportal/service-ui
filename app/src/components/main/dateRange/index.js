@@ -16,4 +16,4 @@
 
 export { DateRange } from './dateRange';
 export { DateRangeFormField } from './dateRangeFormField';
-export { displayedValueFormatter, parseFormattedDate } from './utils';
+export { formatDisplayedValue, parseFormattedDate } from './utils';

@@ -25,6 +25,7 @@ import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { getFormattedDate } from 'components/filterEntities/utils';
 import { FilterInput } from './filterInput/filterInput';
+import { FILTER_FORM } from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -47,7 +48,7 @@ export const FilterContentWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const formValues = useSelector((state) => getFormValues('filter')(state));
+  const formValues = useSelector((state) => getFormValues(FILTER_FORM)(state));
   const [isClear, setIsClear] = useState(true);
   const [isApply, setIsApply] = useState(true);
 
@@ -146,5 +147,5 @@ FilterContentWrapped.defaultProps = {
 };
 
 export const FilterContent = reduxForm({
-  form: 'filter',
+  form: FILTER_FORM,
 })(FilterContentWrapped);

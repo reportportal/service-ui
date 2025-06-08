@@ -17,7 +17,7 @@
 import moment from 'moment';
 import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
 
-export const displayedValueFormatter = ({ startDate, endDate } = {}) => {
+export const formatDisplayedValue = ({ startDate, endDate } = {}) => {
   if (!startDate && !endDate) {
     return '';
   }
