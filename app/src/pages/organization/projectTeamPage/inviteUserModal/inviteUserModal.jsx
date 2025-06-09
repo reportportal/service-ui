@@ -205,13 +205,14 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
         {formatMessage(ssoUsersOnly ? messages.descriptionAssign : messages.description)}
       </p>
       <form className={cx('invite-form')}>
-        <ModalField label={formatMessage(messages.email)} className={cx('label')} noMinHeight>
+        <ModalField noMinHeight>
           <FieldProvider name="email">
             <FieldErrorHint provideHint={false}>
               <FieldText
                 maxLength={'128'}
                 placeholder={formatMessage(messages.inputPlaceholder)}
                 defaultWidth={false}
+                label={formatMessage(messages.email)}
                 type="email"
               />
             </FieldErrorHint>
