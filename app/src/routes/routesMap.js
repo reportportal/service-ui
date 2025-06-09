@@ -100,6 +100,7 @@ import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizat
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
+  prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -211,7 +212,15 @@ const routesMap = {
     }),
   ),
 
-  [ORGANIZATION_SETTINGS_TAB_PAGE]: `/organizations/:organizationSlug/settings/:settingsTab`,
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/settings/:settingsTab`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
+  },
 
   [PROJECT_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug',

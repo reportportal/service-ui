@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,4 @@
  * limitations under the License.
  */
 
-export const PROJECTS_NAMESPACE = 'projects';
-
-export const PREPARE_ACTIVE_ORGANIZATION_PROJECTS = 'prepareActiveOrganizationProjects';
-
-export const FETCH_ORGANIZATION_BY_SLUG = 'fetchOrganizationBySlug';
-
-export const SET_ACTIVE_ORGANIZATION = 'setActiveOrganization';
-
-export const FETCH_ORGANIZATION_SETTINGS = 'fetchOrganizationSettings';
-
-export const PREPARE_ACTIVE_ORGANIZATION_SETTINGS = 'prepareActiveOrganizationSettings';
+export const GENERAL_TAB_FORM = 'organizationGeneralTabForm';
