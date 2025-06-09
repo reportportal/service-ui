@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { memo } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
@@ -35,117 +36,117 @@ interface TestCaseListProps {
   itemsPerPage: number;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
-  onFilterChange?: (value: string) => void;
   onEdit?: (testCase: TestCase) => void;
   onDelete?: (testCase: TestCase) => void;
   onDuplicate?: (testCase: TestCase) => void;
   onMove?: (testCase: TestCase) => void;
 }
 
-export const TestCaseList = ({
-  testCases = mockTestCases,
-  loading = false,
-  currentPage = DEFAULT_CURRENT_PAGE,
-  itemsPerPage,
-  searchValue = '',
-  onSearchChange,
-  onFilterChange,
-  onEdit,
-  onDelete,
-  onDuplicate,
-  onMove,
-}: TestCaseListProps) => {
-  const { formatMessage } = useIntl();
+export const TestCaseList = memo(
+  ({
+    testCases = mockTestCases,
+    loading = false,
+    currentPage = DEFAULT_CURRENT_PAGE,
+    itemsPerPage,
+    searchValue = '',
+    onSearchChange,
+    onEdit,
+    onDelete,
+    onDuplicate,
+    onMove,
+  }: TestCaseListProps) => {
+    const { formatMessage } = useIntl();
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = testCases.slice(startIndex, endIndex);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentData = testCases.slice(startIndex, endIndex);
 
-  if (loading) {
-    return (
-      <div className={cx('test-case-list', 'loading')}>
-        <div className={cx('loading-message')}>{formatMessage(messages.loadingMessage)}</div>
-      </div>
-    );
-  }
+    if (loading) {
+      return (
+        <div className={cx('test-case-list', 'loading')}>
+          <div className={cx('loading-message')}>{formatMessage(messages.loadingMessage)}</div>
+        </div>
+      );
+    }
 
-  const tableData = currentData.map((testCase) => ({
-    id: testCase.id,
-    name: {
-      content: testCase.name,
-      component: (
-        <TestCaseNameCell status={testCase.status} name={testCase.name} tags={testCase.tags} />
-      ),
-    },
-    lastExecution: {
-      content: testCase.lastExecution,
-      component: (
-        <TestCaseExecutionCell
-          lastExecution={testCase.lastExecution}
-          onEdit={() => onEdit?.(testCase)}
-          onDelete={() => onDelete?.(testCase)}
-          onDuplicate={() => onDuplicate?.(testCase)}
-          onMove={() => onMove?.(testCase)}
-        />
-      ),
-    },
-  }));
+    const tableData = currentData.map((testCase) => ({
+      id: testCase.id,
+      name: {
+        content: testCase.name,
+        component: (
+          <TestCaseNameCell status={testCase.status} name={testCase.name} tags={testCase.tags} />
+        ),
+      },
+      lastExecution: {
+        content: testCase.lastExecution,
+        component: (
+          <TestCaseExecutionCell
+            lastExecution={testCase.lastExecution}
+            onEdit={() => onEdit?.(testCase)}
+            onDelete={() => onDelete?.(testCase)}
+            onDuplicate={() => onDuplicate?.(testCase)}
+            onMove={() => onMove?.(testCase)}
+          />
+        ),
+      },
+    }));
 
-  const primaryColumn = {
-    key: 'name',
-    header: formatMessage(messages.nameHeader),
-    width: 'auto',
-    align: 'left' as const,
-  };
-
-  const fixedColumns = [
-    {
-      key: 'lastExecution',
-      header: formatMessage(messages.executionHeader),
-      width: 164,
+    const primaryColumn = {
+      key: 'name',
+      header: formatMessage(messages.nameHeader),
+      width: 'auto',
       align: 'left' as const,
-    },
-  ];
+    };
 
-  return (
-    <div className={cx('test-case-list')}>
-      <div className={cx('controls')}>
-        <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
-        <div className={cx('controls-actions')}>
-          <div className={cx('search-section')}>
-            <SearchField
-              isLoading={loading}
-              searchValue={searchValue}
-              setSearchValue={onSearchChange}
-              onFilterChange={onFilterChange}
-              placeholder={formatMessage(messages.searchPlaceholder)}
-            />
-            <div className={cx('filter-icon')}>
-              <FilterOutlineIcon />
+    const fixedColumns = [
+      {
+        key: 'lastExecution',
+        header: formatMessage(messages.executionHeader),
+        width: 164,
+        align: 'left' as const,
+      },
+    ];
+
+    return (
+      <div className={cx('test-case-list')}>
+        <div className={cx('controls')}>
+          <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
+          <div className={cx('controls-actions')}>
+            <div className={cx('search-section')}>
+              <SearchField
+                isLoading={loading}
+                searchValue={searchValue}
+                setSearchValue={onSearchChange}
+                onFilterChange={onSearchChange}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+              />
+              <div className={cx('filter-icon')}>
+                <FilterOutlineIcon />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {currentData.length > 0 ? (
-        <Table
-          data={tableData}
-          fixedColumns={fixedColumns}
-          primaryColumn={primaryColumn}
-          sortingColumn={undefined}
-          sortableColumns={[]}
-          className={cx('test-case-table')}
-          rowClassName={cx('test-case-table-row')}
-        />
-      ) : (
-        <div className={cx('no-results')}>
-          <div className={cx('no-results-message')}>
-            {searchValue
-              ? formatMessage(messages.noResultsFilteredMessage)
-              : formatMessage(messages.noResultsEmptyMessage)}
+        {currentData.length > 0 ? (
+          <Table
+            data={tableData}
+            fixedColumns={fixedColumns}
+            primaryColumn={primaryColumn}
+            sortingColumn={undefined}
+            sortableColumns={[]}
+            className={cx('test-case-table')}
+            rowClassName={cx('test-case-table-row')}
+          />
+        ) : (
+          <div className={cx('no-results')}>
+            <div className={cx('no-results-message')}>
+              {searchValue
+                ? formatMessage(messages.noResultsFilteredMessage)
+                : formatMessage(messages.noResultsEmptyMessage)}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-};
+        )}
+      </div>
+    );
+  },
+);

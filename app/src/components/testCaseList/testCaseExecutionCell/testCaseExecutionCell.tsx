@@ -31,10 +31,10 @@ interface MenuItem {
 
 interface TestCaseExecutionCellProps {
   lastExecution: string;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  onDuplicate?: () => void;
-  onMove?: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onDuplicate: () => void;
+  onMove: () => void;
 }
 
 export const TestCaseExecutionCell = ({
@@ -50,19 +50,19 @@ export const TestCaseExecutionCell = ({
   const menuItems: MenuItem[] = [
     {
       label: formatMessage(testCaseCardMessages.duplicate),
-      onClick: () => onDuplicate?.(),
+      onClick: () => onDuplicate(),
     },
     {
       label: formatMessage(testCaseCardMessages.editTestCase),
-      onClick: () => onEdit?.(),
+      onClick: () => onEdit(),
     },
     {
       label: formatMessage(testCaseCardMessages.moveTestCaseTo),
-      onClick: () => onMove?.(),
+      onClick: () => onMove(),
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      onClick: () => onDelete?.(),
+      onClick: () => onDelete(),
       className: 'delete-menu-item',
     },
   ];

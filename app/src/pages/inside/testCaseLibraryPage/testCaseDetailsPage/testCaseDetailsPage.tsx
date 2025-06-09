@@ -103,7 +103,6 @@ export const TestCaseDetailsPage = ({
           itemsPerPage={pageSize}
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
-          onFilterChange={handleSearchChange}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onDuplicate={handleDuplicate}
