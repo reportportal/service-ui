@@ -14,10 +14,36 @@
  * limitations under the License.
  */
 
-import { MANIFEST_FILE_KEY } from './constants';
+import { MANIFEST_FILE_KEY, PLUGIN_TYPE_EXTENSION, PLUGIN_TYPE_REMOTE } from './constants';
 
 export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
   enabled && details?.commonCommands?.length && details.commonCommands.includes(command);
 
 export const isPluginManifestAvailable = ({ enabled, details }) =>
   enabled && details?.binaryData?.[MANIFEST_FILE_KEY];
+
+export const normalizeExtensionPluginModules = (modules, { pluginName, url }) =>
+  modules.map((module) => ({
+    pluginName,
+    url,
+    pluginType: PLUGIN_TYPE_EXTENSION,
+    extensionPoint: module.type,
+    payload: module,
+    name: module.name,
+  }));
+
+export const normalizeRemotePluginModules = (moduleGroups, { pluginName, url }) =>
+  Object.keys(moduleGroups)
+    .map((moduleType) => {
+      const modules = moduleGroups[moduleType];
+
+      return modules.map((module) => ({
+        pluginName,
+        url,
+        pluginType: PLUGIN_TYPE_REMOTE,
+        extensionPoint: moduleType,
+        payload: module,
+        name: module.name,
+      }));
+    })
+    .flat();

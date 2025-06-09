@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-// extension types
+// extension points
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
 export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
@@ -38,6 +38,7 @@ export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAdd
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
+export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';
 // plugin commands
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
 export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
@@ -54,6 +55,7 @@ export const ICON_FILE_KEY = 'icon';
 export const FETCH_EXTENSION_MANIFESTS_SUCCESS = 'fetchExtensionManifestsSuccess';
 export const UPDATE_EXTENSION_MANIFEST = 'updateExtensionManifest';
 
+// plugin types
 export const PLUGIN_TYPE_REMOTE = 'REMOTE';
 export const PLUGIN_TYPE_EXTENSION = 'EXTENSION';
 export const PLUGIN_TYPE_BUILTIN = 'BUILTIN';

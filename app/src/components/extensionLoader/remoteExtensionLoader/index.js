@@ -14,4 +14,4 @@
  *  limitations under the License.
  */
 
-export { StandaloneExtensionLoader } from './standaloneExtensionLoader';
+export { RemoteExtensionLoader } from './remoteExtensionLoader';

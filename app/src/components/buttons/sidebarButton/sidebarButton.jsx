@@ -38,7 +38,7 @@ const SidebarButtonComponent = ({ onClick, icon, children, link, bottom, isNav, 
 
   const linkBody = (
     <span className={cx('wrapper')}>
-      <i className={cx('btn-icon')}>{Parser(icon)}</i>
+      <i className={cx('btn-icon')}>{typeof icon === 'string' ? Parser(icon) : icon}</i>
       <span className={cx('btn-title-mobile')}>{children}</span>
     </span>
   );
@@ -64,7 +64,7 @@ const SidebarButtonComponent = ({ onClick, icon, children, link, bottom, isNav, 
 };
 SidebarButtonComponent.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  icon: PropTypes.string,
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   bottom: PropTypes.bool,
   children: PropTypes.node,
   isNav: PropTypes.bool,
