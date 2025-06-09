@@ -80,7 +80,6 @@ export const TestCaseList = ({
               setSearchValue={onSearchChange}
               onFilterChange={onFilterChange}
               placeholder={formatMessage(messages.searchPlaceholder)}
-              isTransparent
             />
             <div className={cx('filter-icon')}>
               <FilterOutlineIcon />

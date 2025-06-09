@@ -26,7 +26,6 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
 } from 'components/testCaseList/testCaseList.constants';
 import { messages } from '../messages';
-import { EmptyState } from '../emptyState';
 import styles from './testCaseListWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -48,7 +47,6 @@ export const TestCaseListWrapper = ({
   const [filteredTestCases, setFilteredTestCases] = useState<TestCase[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
-  // Update filtered test cases when testCases state changes
   const updateFilteredTestCases = useCallback(
     (searchTerm: string = searchValue) => {
       let filtered = testCases;
@@ -68,7 +66,6 @@ export const TestCaseListWrapper = ({
     [testCases, searchValue],
   );
 
-  // Update filtered test cases when testCases state changes
   useMemo(() => {
     updateFilteredTestCases();
   }, [updateFilteredTestCases]);
@@ -129,14 +126,6 @@ export const TestCaseListWrapper = ({
     setPageSize(size);
     setActivePage(DEFAULT_CURRENT_PAGE);
   }, []);
-
-  // Check if we have test cases to determine what to show
-  const hasTestCases = testCases && testCases.length > 0;
-
-  // Show empty state if no test cases and not loading
-  if (!loading && !hasTestCases) {
-    return <EmptyState />;
-  }
 
   return (
     <>

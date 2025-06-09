@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import { mockTestCases } from 'components/testCaseList';
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 
 import { TestCaseListWrapper } from './testCaseListWrapper';
 import { EmptyState } from './emptyState';
+import { useTestCases } from './hooks/useTestCases';
 
 import styles from './testCaseLibraryPage.scss';
 import { messages } from './messages';
@@ -34,26 +33,7 @@ const cx = classNames.bind(styles);
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
-  const [testCases, setTestCases] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Simulate data loading
-  useEffect(() => {
-    const loadTestCases = async () => {
-      setLoading(true);
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // For demo purposes, use mock data
-      // In real implementation, you would fetch from API
-      setTestCases(mockTestCases);
-      setLoading(false);
-    };
-
-    loadTestCases();
-  }, []);
-
-  const hasTestCases = testCases && testCases.length > 0;
+  const { testCases, loading, hasTestCases, setTestCases } = useTestCases();
 
   return (
     <SettingsLayout>
