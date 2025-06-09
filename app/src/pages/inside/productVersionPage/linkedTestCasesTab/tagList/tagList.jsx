@@ -26,7 +26,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const TagList = ({ tags, isCustom }) => {
+export const TagList = ({ tags }) => {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
@@ -68,7 +68,7 @@ export const TagList = ({ tags, isCustom }) => {
 
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
 
-  if (isCustom && !tags.length) {
+  if (!tags.length) {
     return (
       <div className={cx('tag-list-wrapper')}>
         <div className={cx('tag-list', 'tag-list--no-tags')}>
@@ -93,22 +93,13 @@ export const TagList = ({ tags, isCustom }) => {
           </div>
         ))}
         {isExpanded && (
-          <Button
-            className={cx('tag-list__item--button', { 'tag-list__item--button-custom': isCustom })}
-            onClick={toggleExpanded}
-            variant="text"
-          >
+          <Button className={cx('tag-list__item--button')} onClick={toggleExpanded} variant="text">
             {formatMessage(messages.showLess)}
           </Button>
         )}
       </div>
       {isCounterButtonVisible ? (
-        <div
-          className={cx('tag-list__item', 'tag-list__item--count', {
-            'tag-list__item--count-button': isCustom,
-          })}
-          onClick={toggleExpanded}
-        >
+        <div className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
           +{count}
         </div>
       ) : null}
@@ -118,5 +109,4 @@ export const TagList = ({ tags, isCustom }) => {
 
 TagList.propTypes = {
   tags: PropTypes.array,
-  isCustom: PropTypes.bool,
 };

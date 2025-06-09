@@ -73,17 +73,19 @@ export const TestCaseList = ({
     id: testCase.id,
     name: {
       content: testCase.name,
-      component: <TestCaseNameCell testCase={testCase} />,
+      component: (
+        <TestCaseNameCell status={testCase.status} name={testCase.name} tags={testCase.tags} />
+      ),
     },
     lastExecution: {
       content: testCase.lastExecution,
       component: (
         <TestCaseExecutionCell
-          testCase={testCase}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onDuplicate={onDuplicate}
-          onMove={onMove}
+          lastExecution={testCase.lastExecution}
+          onEdit={() => onEdit?.(testCase)}
+          onDelete={() => onDelete?.(testCase)}
+          onDuplicate={() => onDuplicate?.(testCase)}
+          onMove={() => onMove?.(testCase)}
         />
       ),
     },

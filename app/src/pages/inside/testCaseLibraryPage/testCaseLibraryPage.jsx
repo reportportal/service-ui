@@ -22,7 +22,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 
-import { TestCaseListWrapper } from './testCaseListWrapper';
+import { TestCaseDetailsPage } from './testCaseDetailsPage';
 import { EmptyState } from './emptyState';
 import { useTestCases } from './hooks/useTestCases';
 
@@ -33,7 +33,15 @@ const cx = classNames.bind(styles);
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
-  const { testCases, loading, hasTestCases, setTestCases } = useTestCases();
+  const {
+    filteredTestCases,
+    loading,
+    hasTestCases,
+    searchValue,
+    setSearchValue,
+    deleteTestCase,
+    duplicateTestCase,
+  } = useTestCases();
 
   return (
     <SettingsLayout>
@@ -50,9 +58,12 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div className={cx('test-case-library-page__content')}>
             {hasTestCases ? (
-              <TestCaseListWrapper
-                testCases={testCases}
-                setTestCases={setTestCases}
+              <TestCaseDetailsPage
+                testCases={filteredTestCases}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                deleteTestCase={deleteTestCase}
+                duplicateTestCase={duplicateTestCase}
                 loading={loading}
               />
             ) : (

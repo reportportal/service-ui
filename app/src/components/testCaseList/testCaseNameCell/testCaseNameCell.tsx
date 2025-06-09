@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import PriorityIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCase, TestCaseStatus } from '../types';
+import { TestCaseStatus } from '../types';
 import styles from '../testCaseCell.scss';
 
 const cx = classNames.bind(styles);
@@ -42,19 +42,21 @@ const StatusIcon = ({ status }: StatusIconProps) => {
 };
 
 interface TestCaseNameCellProps {
-  testCase: TestCase;
+  status: TestCaseStatus;
+  name: string;
+  tags: string[];
 }
 
-export const TestCaseNameCell = ({ testCase: testCaseData }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({ status, name, tags }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      <StatusIcon status={testCaseData.status} />
+      <StatusIcon status={status} />
       <div className={cx('name-content')}>
-        <div className={cx('test-name')} title={testCaseData.name}>
-          {testCaseData.name}
+        <div className={cx('test-name')} title={name}>
+          {name}
         </div>
         <div className={cx('tags-section')}>
-          <TagList tags={testCaseData.tags} isCustom />
+          <TagList tags={tags} />
         </div>
       </div>
     </div>

@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-.test-case-list-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 32px 32px 0 32px;
-}
-
-.pagination {
-  position: sticky;
-  bottom: 0;
-  background: $COLOR--bg-100;
-  padding: 5px 32px;
-  border-top: 1px solid var(--rp-ui-base-e-100);
-  margin-top: auto;
-  height: 64px;
-}
+export { TestCaseDetailsPage } from './testCaseDetailsPage';

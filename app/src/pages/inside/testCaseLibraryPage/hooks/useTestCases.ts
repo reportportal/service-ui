@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
-import { TestCase } from 'components/testCaseList/testCaseCard/testCaseCard';
+import { useState, useEffect, useMemo } from 'react';
+import { TestCase } from 'components/testCaseList/types';
 import { mockTestCases } from 'components/testCaseList';
 
 interface UseTestCasesResult {
   testCases: TestCase[];
+  filteredTestCases: TestCase[];
   loading: boolean;
   hasTestCases: boolean;
-  setTestCases: (testCases: TestCase[] | ((prev: TestCase[]) => TestCase[])) => void;
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  deleteTestCase: (id: string | number) => void;
+  duplicateTestCase: (testCase: TestCase, copySuffix: string) => void;
+  updateTestCase: (id: string | number, updates: Partial<TestCase>) => void;
 }
 
 export const useTestCases = (): UseTestCasesResult => {
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   // Simulate data loading
   useEffect(() => {
@@ -45,12 +51,49 @@ export const useTestCases = (): UseTestCasesResult => {
     loadTestCases();
   }, []);
 
-  const hasTestCases = testCases && testCases.length > 0;
+  const filteredTestCases = useMemo(() => {
+    if (!searchValue.trim()) {
+      return testCases;
+    }
+
+    const term = searchValue.toLowerCase();
+    return testCases.filter(
+      (testCase) =>
+        testCase.name.toLowerCase().includes(term) ||
+        testCase.tags.some((tag) => tag.toLowerCase().includes(term)),
+    );
+  }, [testCases, searchValue]);
+
+  const deleteTestCase = (id: string | number) => {
+    setTestCases((prev) => prev.filter((tc) => tc.id !== id));
+  };
+
+  const duplicateTestCase = (testCase: TestCase, copySuffix: string) => {
+    const duplicatedTestCase: TestCase = {
+      ...testCase,
+      id: Date.now(),
+      name: `${testCase.name} ${copySuffix}`,
+    };
+    setTestCases((prev) => [...prev, duplicatedTestCase]);
+  };
+
+  const updateTestCase = (id: string | number, updates: Partial<TestCase>) => {
+    setTestCases((prev) => prev.map((tc) => (tc.id === id ? { ...tc, ...updates } : tc)));
+  };
+
+  const hasTestCases = useMemo(() => filteredTestCases && filteredTestCases.length > 0, [
+    filteredTestCases,
+  ]);
 
   return {
     testCases,
+    filteredTestCases,
     loading,
     hasTestCases,
-    setTestCases,
+    searchValue,
+    setSearchValue,
+    deleteTestCase,
+    duplicateTestCase,
+    updateTestCase,
   };
 };

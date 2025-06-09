@@ -31,14 +31,6 @@
 .test-case-table-row {
   height: max-content;
 
-  :global([class*='_table-row-content_']) {
-    padding: 16px 0;
-  }
-
-  :global([class*='_table-cell_']) {
-    align-self: flex-start;
-  }
-
   &:hover {
     border: 2px solid var(--rp-ui-base-topaz-focused);
     border-radius: 4px;

@@ -14,64 +14,45 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Pagination } from '@reportportal/ui-kit';
 import { TestCaseList } from 'components/testCaseList';
-import { TestCase } from 'components/testCaseList/testCaseCard/testCaseCard';
 import { ITEMS_PER_PAGE_OPTIONS } from 'components/testCaseList/mockData';
 import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_ITEMS_PER_PAGE,
 } from 'components/testCaseList/testCaseList.constants';
+import { TestCase } from 'components/testCaseList/types';
 import { messages } from '../messages';
-import styles from './testCaseListWrapper.scss';
+import styles from './testCaseDetailsPage.scss';
 
 const cx = classNames.bind(styles);
 
-interface TestCaseListWrapperProps {
+interface TestCaseDetailsPageProps {
   testCases: TestCase[];
   loading: boolean;
-  setTestCases: (testCases: TestCase[] | ((prev: TestCase[]) => TestCase[])) => void;
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+  deleteTestCase: (id: string | number) => void;
+  duplicateTestCase: (testCase: TestCase, copySuffix: string) => void;
 }
 
-export const TestCaseListWrapper = ({
+export const TestCaseDetailsPage = ({
   testCases,
   loading,
-  setTestCases,
-}: TestCaseListWrapperProps) => {
+  searchValue,
+  setSearchValue,
+  deleteTestCase,
+  duplicateTestCase,
+}: TestCaseDetailsPageProps) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
-  const [filteredTestCases, setFilteredTestCases] = useState<TestCase[]>([]);
-  const [searchValue, setSearchValue] = useState<string>('');
-
-  const updateFilteredTestCases = useCallback(
-    (searchTerm: string = searchValue) => {
-      let filtered = testCases;
-
-      if (searchTerm.trim()) {
-        const term = searchTerm.toLowerCase();
-        filtered = filtered.filter(
-          (testCase) =>
-            testCase.name.toLowerCase().includes(term) ||
-            testCase.tags.some((tag) => tag.toLowerCase().includes(term)),
-        );
-      }
-
-      setFilteredTestCases(filtered);
-      setActivePage(DEFAULT_CURRENT_PAGE);
-    },
-    [testCases, searchValue],
-  );
-
-  useMemo(() => {
-    updateFilteredTestCases();
-  }, [updateFilteredTestCases]);
 
   // Calculate pagination values
-  const totalItems = filteredTestCases.length;
+  const totalItems = testCases.length;
   const totalPages = Math.ceil(totalItems / pageSize);
 
   const handleEdit = useCallback(() => {
@@ -81,29 +62,18 @@ export const TestCaseListWrapper = ({
   const handleDelete = useCallback(
     (testCase: TestCase) => {
       // Here you would typically show confirmation modal
-      const confirmationMessage = formatMessage(messages.deleteConfirmation, {
-        name: testCase.name,
-      });
-      if (window.confirm(confirmationMessage)) {
-        setTestCases((prev) => prev.filter((tc) => tc.id !== testCase.id));
-        setFilteredTestCases((prev) => prev.filter((tc) => tc.id !== testCase.id));
-      }
+      deleteTestCase(testCase.id);
     },
-    [formatMessage, setTestCases],
+    [deleteTestCase],
   );
 
   const handleDuplicate = useCallback(
     (testCase: TestCase) => {
       // Here you would implement duplication logic
-      const duplicatedTestCase: TestCase = {
-        ...testCase,
-        id: Date.now(),
-        name: `${testCase.name} ${formatMessage(messages.copySuffix)}`,
-      };
-      setTestCases((prev) => [...prev, duplicatedTestCase]);
-      setFilteredTestCases((prev) => [...prev, duplicatedTestCase]);
+      const copySuffix = formatMessage(messages.copySuffix);
+      duplicateTestCase(testCase, copySuffix);
     },
-    [formatMessage, setTestCases],
+    [formatMessage, duplicateTestCase],
   );
 
   const handleMove = useCallback(() => {
@@ -113,25 +83,21 @@ export const TestCaseListWrapper = ({
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
       setSearchValue(targetSearchValue);
-      updateFilteredTestCases(targetSearchValue);
+      setActivePage(DEFAULT_CURRENT_PAGE);
     },
-    [updateFilteredTestCases],
+    [setSearchValue],
   );
 
-  const changePage = useCallback((page: number) => {
-    setActivePage(page);
-  }, []);
-
-  const changePageSize = useCallback((size: number) => {
+  const changePageSize = (size: number) => {
     setPageSize(size);
     setActivePage(DEFAULT_CURRENT_PAGE);
-  }, []);
+  };
 
   return (
     <>
-      <div className={cx('test-case-list-wrapper')}>
+      <div className={cx('test-case-details-page')}>
         <TestCaseList
-          testCases={filteredTestCases}
+          testCases={testCases}
           loading={loading}
           currentPage={activePage}
           itemsPerPage={pageSize}
@@ -152,7 +118,7 @@ export const TestCaseListWrapper = ({
             totalItems={totalItems}
             totalPages={totalPages}
             pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-            changePage={changePage}
+            changePage={setActivePage}
             changePageSize={changePageSize}
             captions={{
               items: formatMessage(messages.items),

@@ -1332,7 +1332,6 @@
   "TestCaseList.editTestCase": "Editar caso de prueba",
   "TestCaseList.moveTestCaseTo": "Mover caso de prueba a",
   "TestCaseLibraryPage.copySuffix": "(Copia)",
-  "TestCaseLibraryPage.deleteConfirmation": "¿Está seguro de que desea eliminar \"{name}\"?",
   "TestCaseList.allTestCasesTitle": "Todos los casos de prueba",
   "TestCaseList.executionHeader": "Última ejecución",
   "TestCaseList.loadingMessage": "Cargando casos de prueba...",

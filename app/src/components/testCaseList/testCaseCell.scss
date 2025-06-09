@@ -18,6 +18,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  padding: 16px 0;
 }
 
 .status-icon {
@@ -99,21 +100,23 @@
 
 .execution-content {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
   width: 100%;
+  height: 64px;
 }
 
 .execution-time {
   font-size: 13px;
   color: var(--rp-ui-base-e-400);
   line-height: 16px;
+  align-items: flex-start;
+  padding-top: 16px;
 }
 
 .menu-section {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 16px;
 }
 
 .dots-menu-trigger {

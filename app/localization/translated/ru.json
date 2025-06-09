@@ -1331,7 +1331,6 @@
   "TestCaseList.editTestCase": "Редактировать тестовый случай",
   "TestCaseList.moveTestCaseTo": "Переместить тестовый случай в",
   "TestCaseLibraryPage.copySuffix": "(Копия)",
-  "TestCaseLibraryPage.deleteConfirmation": "Вы уверены, что хотите удалить \"{name}\"?",
   "TestCaseList.allTestCasesTitle": "Все тестовые случаи",
   "TestCaseList.executionHeader": "Последнее выполнение",
   "TestCaseList.loadingMessage": "Загрузка тестовых случаев...",

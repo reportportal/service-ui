@@ -18,7 +18,6 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TestCase } from '../types';
 import { messages as testCaseCardMessages } from '../messages';
 import styles from '../testCaseCell.scss';
 
@@ -31,15 +30,15 @@ interface MenuItem {
 }
 
 interface TestCaseExecutionCellProps {
-  testCase: TestCase;
-  onEdit?: (testCase: TestCase) => void;
-  onDelete?: (testCase: TestCase) => void;
-  onDuplicate?: (testCase: TestCase) => void;
-  onMove?: (testCase: TestCase) => void;
+  lastExecution: string;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onDuplicate?: () => void;
+  onMove?: () => void;
 }
 
 export const TestCaseExecutionCell = ({
-  testCase: testCaseData,
+  lastExecution,
   onEdit,
   onDelete,
   onDuplicate,
@@ -51,26 +50,26 @@ export const TestCaseExecutionCell = ({
   const menuItems: MenuItem[] = [
     {
       label: formatMessage(testCaseCardMessages.duplicate),
-      onClick: () => onDuplicate?.(testCaseData),
+      onClick: () => onDuplicate?.(),
     },
     {
       label: formatMessage(testCaseCardMessages.editTestCase),
-      onClick: () => onEdit?.(testCaseData),
+      onClick: () => onEdit?.(),
     },
     {
       label: formatMessage(testCaseCardMessages.moveTestCaseTo),
-      onClick: () => onMove?.(testCaseData),
+      onClick: () => onMove?.(),
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      onClick: () => onDelete?.(testCaseData),
+      onClick: () => onDelete?.(),
       className: 'delete-menu-item',
     },
   ];
 
   return (
     <div className={cx('execution-content')}>
-      <div className={cx('execution-time')}>{testCaseData.lastExecution}</div>
+      <div className={cx('execution-time')}>{lastExecution}</div>
       <div className={cx('menu-section')}>
         <PopoverControl
           items={menuItems}

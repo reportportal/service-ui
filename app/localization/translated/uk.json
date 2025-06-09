@@ -1330,7 +1330,6 @@
   "TestCaseList.editTestCase": "Редагувати тестовий випадок",
   "TestCaseList.moveTestCaseTo": "Перемістити тестовий випадок до",
   "TestCaseLibraryPage.copySuffix": "(Копія)",
-  "TestCaseLibraryPage.deleteConfirmation": "Ви впевнені, що хочете видалити \"{name}\"?",
   "TestCaseList.allTestCasesTitle": "Всі тестові випадки",
   "TestCaseList.executionHeader": "Останнє виконання",
   "TestCaseList.loadingMessage": "Завантаження тестових випадків...",

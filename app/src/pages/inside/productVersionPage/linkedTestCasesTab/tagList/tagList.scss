@@ -84,35 +84,6 @@
       cursor: pointer;
       color: var(--rp-ui-base-e-400);
     }
-
-    &--count-button {
-      height: 20px;
-      margin-left: 0px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      font-weight: 400;
-
-      &::before {
-        position: absolute;
-        top: 1px;
-        left: -7px;
-        content: '';
-        display: block;
-        width: 14px;
-        height: 15px;
-        border: 1px solid var(--rp-ui-base-e-200);
-        border-right: none;
-        border-top: none;
-        border-radius: 3px;
-        transform: rotate(45deg);
-      }
-    }
-
-    &--button-custom {
-      color: $COLOR--topaz-2;
-      font-weight: 400;
-    }
   }
 }
 

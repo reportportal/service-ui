@@ -1330,7 +1330,6 @@
   "TestCaseList.editTestCase": "编辑测试用例",
   "TestCaseList.moveTestCaseTo": "移动测试用例到",
   "TestCaseLibraryPage.copySuffix": "(副本)",
-  "TestCaseLibraryPage.deleteConfirmation": "您确定要删除\"{name}\"吗？",
   "TestCaseList.allTestCasesTitle": "所有测试用例",
   "TestCaseList.executionHeader": "最后执行",
   "TestCaseList.loadingMessage": "正在加载测试用例...",
