@@ -199,7 +199,7 @@ function* fetchUserWorker() {
     }
 
     const activeProject =
-      isAssignedToTargetProject || projectKey
+      targetActiveProject && (isAssignedToTargetProject || projectKey)
         ? targetActiveProject
         : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
 
