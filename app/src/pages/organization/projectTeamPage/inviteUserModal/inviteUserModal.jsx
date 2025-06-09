@@ -46,7 +46,7 @@ const INVITE_USER_FORM = 'inviteUserForm';
 const messages = defineMessages({
   headerInviteUserModal: {
     id: 'InviteUserModal.headerInviteUserModal',
-    defaultMessage: 'Invite user to',
+    defaultMessage: 'Invite User to',
   },
   canEditProject: {
     id: 'InviteUserModal.canEditProject',
@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   headerAssignUserModal: {
     id: 'InviteUserModal.headerAssignUserModal',
-    defaultMessage: 'Assign user',
+    defaultMessage: 'Assign User to',
   },
   description: {
     id: 'InviteUserModal.description',
@@ -66,7 +66,8 @@ const messages = defineMessages({
   },
   descriptionAssign: {
     id: 'InviteUserModal.descriptionAssign',
-    defaultMessage: 'Assign user to the project',
+    defaultMessage:
+      'Please be aware that only users who are present on the instance can be assigned to the project.',
   },
   inputPlaceholder: {
     id: 'InviteUserModal.inputPlaceholder',
@@ -191,8 +192,8 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
     <Modal
       title={
         ssoUsersOnly
-          ? formatMessage(messages.headerAssignUserModal)
-          : `${formatMessage(messages.headerInviteUserModal)} "${projectName}"`
+          ? `${formatMessage(messages.headerAssignUserModal)} ${projectName}`
+          : `${formatMessage(messages.headerInviteUserModal)} ${projectName}`
       }
       okButton={okButton}
       cancelButton={cancelButton}
@@ -204,13 +205,14 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
         {formatMessage(ssoUsersOnly ? messages.descriptionAssign : messages.description)}
       </p>
       <form className={cx('invite-form')}>
-        <ModalField label={formatMessage(messages.email)} className={cx('label')} noMinHeight>
+        <ModalField noMinHeight>
           <FieldProvider name="email">
             <FieldErrorHint provideHint={false}>
               <FieldText
                 maxLength={'128'}
-                placeholder={formatMessage(messages.email)}
+                placeholder={formatMessage(messages.inputPlaceholder)}
                 defaultWidth={false}
+                label={formatMessage(messages.email)}
                 type="email"
               />
             </FieldErrorHint>

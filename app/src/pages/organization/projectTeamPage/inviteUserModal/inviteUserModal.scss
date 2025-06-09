@@ -27,21 +27,6 @@
   margin-top: 16px;
 }
 
-.label {
-  display: flex;
-  flex-direction: column;
-
-  &:first-child {
-    width: 100%;
-
-    span {
-      font-family: $FONT-ROBOTO-MEDIUM;
-      line-height: 20px;
-      margin-bottom: 4px;
-    }
-  }
-}
-
 .can-edit {
   &:last-child span {
     font-size: 13px;
