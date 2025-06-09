@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,6 @@ export const TestCaseList = ({
     );
   }
 
-  // Transform data to include component property for custom rendering
   const tableData = currentData.map((testCase) => ({
     id: testCase.id,
     name: {
@@ -108,7 +107,6 @@ export const TestCaseList = ({
 
   return (
     <div className={cx('test-case-list')}>
-      {/* Controls with title and search */}
       <div className={cx('controls')}>
         <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
         <div className={cx('controls-actions')}>
