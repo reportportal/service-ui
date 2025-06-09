@@ -29,10 +29,11 @@ interface StatusIconProps {
 
 const StatusIcon = ({ status }: StatusIconProps) => {
   const iconMap: Record<TestCaseStatus, React.ReactNode> = {
-    passed: <div className={cx('priority-icon')}>{Parser(PriorityIcon)}</div>,
-    failed: <div className={cx('priority-icon')}>{Parser(PriorityIcon)}</div>,
-    skipped: <div className={cx('priority-icon')}>{Parser(PriorityIcon)}</div>,
-    in_progress: <div className={cx('priority-icon')}>{Parser(PriorityIcon)}</div>,
+    low: <div className={cx('priority-icon', 'priority-icon--low')}>{Parser(PriorityIcon)}</div>,
+    normal: (
+      <div className={cx('priority-icon', 'priority-icon--normal')}>{Parser(PriorityIcon)}</div>
+    ),
+    high: <div className={cx('priority-icon', 'priority-icon--high')}>{Parser(PriorityIcon)}</div>,
   };
 
   return (

@@ -52,6 +52,25 @@
   svg {
     fill: var(--rp-ui-base-bg-000);
   }
+
+  &--low {
+    svg {
+      fill: #4d70ed;
+      transform: rotate(180deg);
+    }
+  }
+
+  &--normal {
+    svg {
+      fill: #fdc63a;
+    }
+  }
+
+  &--high {
+    svg {
+      fill: #dc5959;
+    }
+  }
 }
 
 .name-content {

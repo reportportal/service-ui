@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export type TestCaseStatus = 'passed' | 'failed' | 'skipped' | 'in_progress';
+export type TestCaseStatus = 'low' | 'normal' | 'high';
 
 export interface TestCase {
   id: string | number;
