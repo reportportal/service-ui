@@ -16,7 +16,6 @@
 
 import {
   FETCH_ORGANIZATION_BY_SLUG,
-  FETCH_ORGANIZATION_SETTINGS,
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
   PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
   SET_ACTIVE_ORGANIZATION,
@@ -39,10 +38,5 @@ export const setActiveOrganizationAction = (payload) => ({
 
 export const prepareActiveOrganizationSettingsAction = (payload) => ({
   type: PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
-  payload,
-});
-
-export const fetchOrganizationSettingsAction = (payload) => ({
-  type: FETCH_ORGANIZATION_SETTINGS,
   payload,
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, take } from 'redux-saga/effects';
+import { takeEvery, all, put, select, take, call } from 'redux-saga/effects';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
@@ -29,7 +29,6 @@ import {
 } from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
-import { fetchOrganizationSettingsAction } from './actionCreators';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -39,14 +38,14 @@ function* fetchOrganizationBySlug({ payload: slug }) {
   }
 }
 
-function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
+export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
     if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
       activeOrganization = yield select(activeOrganizationSelector);
     }
-    yield put(fetchFilteredProjectAction(activeOrganization.id));
+    yield* onActiveOrgReady(activeOrganization.id);
   } catch (error) {
     yield put(
       redirect({
@@ -54,6 +53,12 @@ function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
       }),
     );
   }
+}
+
+function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    yield put(fetchFilteredProjectAction(organizationId));
+  });
 }
 
 function* watchFetchOrganizationProjects() {
@@ -75,20 +80,9 @@ function* watchFetchOrganizationSettings() {
 }
 
 function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
-  let activeOrganization = yield select(activeOrganizationSelector);
-  try {
-    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      activeOrganization = yield select(activeOrganizationSelector);
-    }
-    yield put(fetchOrganizationSettingsAction(activeOrganization.id));
-  } catch (error) {
-    yield put(
-      redirect({
-        type: ORGANIZATIONS_PAGE,
-      }),
-    );
-  }
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    yield call(fetchOrganizationSettings, { payload: organizationId });
+  });
 }
 
 function* watchPrepareActiveOrganizationSettings() {
