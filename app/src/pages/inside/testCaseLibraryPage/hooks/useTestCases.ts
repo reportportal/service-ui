@@ -18,19 +18,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { TestCase } from 'components/testCaseList/types';
 import { mockTestCases } from 'components/testCaseList';
 
-interface UseTestCasesResult {
-  testCases: TestCase[];
-  filteredTestCases: TestCase[];
-  loading: boolean;
-  hasTestCases: boolean;
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-  deleteTestCase: (id: string | number) => void;
-  duplicateTestCase: (testCase: TestCase, copySuffix: string) => void;
-  updateTestCase: (id: string | number, updates: Partial<TestCase>) => void;
-}
-
-export const useTestCases = (): UseTestCasesResult => {
+export const useTestCases = () => {
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>('');
