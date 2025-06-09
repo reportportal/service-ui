@@ -26,6 +26,7 @@ import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { GITHUB, INTERNAL, LDAP, SAML, SCIM, UPSA } from 'common/constants/accountType';
 import { messages } from './messages';
 
+export const FILTER_FORM = 'filter';
 export const ORGANIZATION_TYPE_FILTER_NAME = 'type';
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
