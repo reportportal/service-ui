@@ -15,7 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Field, getFormValues } from 'redux-form';
+import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -47,6 +47,8 @@ import styles from './allUsersFilter.scss';
 
 const cx = classNames.bind(styles);
 
+const selector = formValueSelector(FILTER_FORM);
+
 export const AllUsersFilter = ({
   entities,
   onFilterChange,
@@ -60,9 +62,7 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
-  const lastRunDate = useSelector(
-    (state) => getFormValues(FILTER_FORM)(state)?.[LAST_LOGIN_FILTER_NAME],
-  );
+  const lastRunDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {

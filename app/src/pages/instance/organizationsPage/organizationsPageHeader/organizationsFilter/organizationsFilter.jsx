@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Field, getFormValues } from 'redux-form';
+import { Field, formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
@@ -47,6 +47,8 @@ import styles from './organizationFilter.scss';
 
 const cx = classNames.bind(styles);
 
+const selector = formValueSelector(FILTER_FORM);
+
 export const OrganizationsFilter = ({
   entities,
   onFilterChange,
@@ -63,9 +65,7 @@ export const OrganizationsFilter = ({
     { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
     { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
   ];
-  const lastRunDate = useSelector(
-    (state) => getFormValues(FILTER_FORM)(state)?.[LAST_RUN_DATE_FILTER_NAME],
-  );
+  const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {

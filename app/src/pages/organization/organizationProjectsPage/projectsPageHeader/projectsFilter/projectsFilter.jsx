@@ -15,7 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Field, getFormValues } from 'redux-form';
+import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
@@ -46,6 +46,8 @@ import styles from './projectsFilter.scss';
 
 const cx = classNames.bind(styles);
 
+const selector = formValueSelector(FILTER_FORM);
+
 export const ProjectsFilter = ({
   entities,
   onFilterChange,
@@ -57,9 +59,7 @@ export const ProjectsFilter = ({
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
-  const lastRunDate = useSelector(
-    (state) => getFormValues(FILTER_FORM)(state)?.[LAST_RUN_DATE_FILTER_NAME],
-  );
+  const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
