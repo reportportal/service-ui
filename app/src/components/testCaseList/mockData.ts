@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TestCase, FilterOption } from './testCaseCard/testCaseCard';
+import { TestCase, FilterOption } from './types';
 
 export const mockTestCases: TestCase[] = [
   {

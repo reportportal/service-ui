@@ -45,4 +45,20 @@ export const messages = defineMessages({
     id: 'TestCaseList.executionHeader',
     defaultMessage: 'Last execution',
   },
+  duplicate: {
+    id: 'TestCaseList.duplicate',
+    defaultMessage: 'Duplicate',
+  },
+  editTestCase: {
+    id: 'TestCaseList.editTestCase',
+    defaultMessage: 'Edit test case',
+  },
+  moveTestCaseTo: {
+    id: 'TestCaseList.moveTestCaseTo',
+    defaultMessage: 'Move test case to',
+  },
+  deleteTestCase: {
+    id: 'TestCaseList.deleteTestCase',
+    defaultMessage: 'Delete test case',
+  },
 });

@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { TestCaseList } from './testCaseList';
-export { mockTestCases, STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS, FILTER_OPTIONS } from './mockData';
+export { TestCaseNameCell } from './testCaseNameCell';

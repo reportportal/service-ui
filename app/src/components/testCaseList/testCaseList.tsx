@@ -16,9 +16,11 @@
 
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { FilterOutlineIcon } from '@reportportal/ui-kit';
+import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TestCaseCard, TestCase } from './testCaseCard/testCaseCard';
+import { TestCase } from './types';
+import { TestCaseNameCell } from './testCaseNameCell';
+import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { mockTestCases } from './mockData';
 import { DEFAULT_CURRENT_PAGE } from './testCaseList.constants';
 import { messages } from './messages';
@@ -67,6 +69,43 @@ export const TestCaseList = ({
     );
   }
 
+  // Transform data to include component property for custom rendering
+  const tableData = currentData.map((testCase) => ({
+    id: testCase.id,
+    name: {
+      content: testCase.name,
+      component: <TestCaseNameCell testCase={testCase} />,
+    },
+    lastExecution: {
+      content: testCase.lastExecution,
+      component: (
+        <TestCaseExecutionCell
+          testCase={testCase}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onDuplicate={onDuplicate}
+          onMove={onMove}
+        />
+      ),
+    },
+  }));
+
+  const primaryColumn = {
+    key: 'name',
+    header: formatMessage(messages.nameHeader),
+    width: 'auto',
+    align: 'left' as const,
+  };
+
+  const fixedColumns = [
+    {
+      key: 'lastExecution',
+      header: formatMessage(messages.executionHeader),
+      width: 164,
+      align: 'left' as const,
+    },
+  ];
+
   return (
     <div className={cx('test-case-list')}>
       {/* Controls with title and search */}
@@ -88,33 +127,25 @@ export const TestCaseList = ({
         </div>
       </div>
 
-      <div className={cx('column-headers')}>
-        <div className={cx('name-header')}>{formatMessage(messages.nameHeader)}</div>
-        <div className={cx('execution-header')}>{formatMessage(messages.executionHeader)}</div>
-      </div>
-
-      <div className={cx('cards-container')}>
-        {currentData.length > 0 ? (
-          currentData.map((testCase) => (
-            <TestCaseCard
-              key={testCase.id}
-              testCase={testCase}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onDuplicate={onDuplicate}
-              onMove={onMove}
-            />
-          ))
-        ) : (
-          <div className={cx('no-results')}>
-            <div className={cx('no-results-message')}>
-              {searchValue
-                ? formatMessage(messages.noResultsFilteredMessage)
-                : formatMessage(messages.noResultsEmptyMessage)}
-            </div>
+      {currentData.length > 0 ? (
+        <Table
+          data={tableData}
+          fixedColumns={fixedColumns}
+          primaryColumn={primaryColumn}
+          sortingColumn={undefined}
+          sortableColumns={[]}
+          className={cx('test-case-table')}
+          rowClassName={cx('test-case-table-row')}
+        />
+      ) : (
+        <div className={cx('no-results')}>
+          <div className={cx('no-results-message')}>
+            {searchValue
+              ? formatMessage(messages.noResultsFilteredMessage)
+              : formatMessage(messages.noResultsEmptyMessage)}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

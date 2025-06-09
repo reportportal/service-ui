@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  duplicate: {
-    id: 'TestCaseCard.duplicate',
-    defaultMessage: 'Duplicate',
-  },
-  editTestCase: {
-    id: 'TestCaseCard.editTestCase',
-    defaultMessage: 'Edit test case',
-  },
-  moveTestCaseTo: {
-    id: 'TestCaseCard.moveTestCaseTo',
-    defaultMessage: 'Move test case to',
-  },
-  deleteTestCase: {
-    id: 'TestCaseCard.deleteTestCase',
-    defaultMessage: 'Delete test case',
-  },
-});
+export { TestCaseExecutionCell } from './testCaseExecutionCell';

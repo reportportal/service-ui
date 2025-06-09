@@ -14,5 +14,17 @@
  * limitations under the License.
  */
 
-export { TestCaseList } from './testCaseList';
-export { mockTestCases, STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS, FILTER_OPTIONS } from './mockData';
+export type TestCaseStatus = 'passed' | 'failed' | 'skipped' | 'in_progress';
+
+export interface TestCase {
+  id: string | number;
+  name: string;
+  status: TestCaseStatus;
+  tags: string[];
+  lastExecution: string;
+}
+
+export interface FilterOption {
+  label: string;
+  value: string;
+}

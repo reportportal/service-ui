@@ -83,7 +83,6 @@ export const TagList = ({ tags, isCustom }) => {
       <div
         className={cx('tag-list', {
           'tag-list--expanded': isExpanded,
-          'tag-list--custom': isCustom,
         })}
         ref={listRef}
       >
