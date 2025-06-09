@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  height: 100%;
+.header {
+  position: sticky;
+  top: 0;
+  padding: 48px 16px 24px;
   background: $COLOR--bg-000;
-}
-
-.navigation {
-  flex-shrink: 0;
-  width: 360px;
-  border-right: 1px solid $COLOR--e-100;
-  box-sizing: border-box;
-}
-
-.section {
-  width: 100%;
-  background: $COLOR--bg-100;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 0;
-}
-
-.section-content {
-  width: 100%;
-  flex: 1 0 auto;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+  color: $COLOR--almost-black;
+  z-index: $Z_INDEX-STICKY-TOOLBAR;
 }

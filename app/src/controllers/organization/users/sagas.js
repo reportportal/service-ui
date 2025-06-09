@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { all, put, select, take, takeEvery } from 'redux-saga/effects';
-import { activeOrganizationSelector } from '../selectors';
+import { all, put, select, takeEvery } from 'redux-saga/effects';
 import { querySelector } from './selectors';
-import { FETCH_ORGANIZATION_BY_SLUG } from '../constants';
 import { fetchOrganizationUsersAction } from './actionCreators';
+import { withActiveOrganization } from '../sagas';
 import {
   FETCH_ORGANIZATION_USERS,
   NAMESPACE,
@@ -38,16 +37,9 @@ function* watchFetchUsers() {
 }
 
 function* prepareActiveOrganizationUsers({ payload: { organizationSlug } }) {
-  let activeOrganization = yield select(activeOrganizationSelector);
-  try {
-    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      activeOrganization = yield select(activeOrganizationSelector);
-    }
-    yield put(fetchOrganizationUsersAction(activeOrganization.id));
-  } catch (error) {
-    throw new Error(error);
-  }
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    yield put(fetchOrganizationUsersAction(organizationId));
+  });
 }
 
 function* watchFetchOrganizationUsers() {

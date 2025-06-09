@@ -58,6 +58,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
   USER_PROFILE_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
@@ -105,6 +106,7 @@ import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizat
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
+  prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -208,8 +210,22 @@ const routesMap = {
     },
   },
 
-  [ORGANIZATION_SETTINGS_PAGE]: {
-    path: '/organizations/:organizationSlug/settings',
+  [ORGANIZATION_SETTINGS_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/settings',
+    (payload) => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
+  ),
+
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/settings/:settingsTab`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
   },
 
   [PROJECT_PAGE]: {

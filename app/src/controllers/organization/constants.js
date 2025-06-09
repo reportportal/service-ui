@@ -21,3 +21,7 @@ export const PREPARE_ACTIVE_ORGANIZATION_PROJECTS = 'prepareActiveOrganizationPr
 export const FETCH_ORGANIZATION_BY_SLUG = 'fetchOrganizationBySlug';
 
 export const SET_ACTIVE_ORGANIZATION = 'setActiveOrganization';
+
+export const FETCH_ORGANIZATION_SETTINGS = 'fetchOrganizationSettings';
+
+export const PREPARE_ACTIVE_ORGANIZATION_SETTINGS = 'prepareActiveOrganizationSettings';
