@@ -141,16 +141,6 @@ export const ProjectsFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_RUN_DATE_FILTER_NAME,
-    );
-
-    return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [LAST_RUN_DATE_FILTER_NAME]: '',
     [LAUNCHES_FILTER_NAME]: '',
@@ -170,6 +160,17 @@ export const ProjectsFilter = ({
     [TEAMMATES_FILTER_NAME]: entities[TEAMMATES_FILTER_NAME]?.value || '',
     [TEAMMATES_FILTER_NAME_CONDITION]:
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value,
+      LAST_RUN_DATE_FILTER_NAME,
+    );
+
+    return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {

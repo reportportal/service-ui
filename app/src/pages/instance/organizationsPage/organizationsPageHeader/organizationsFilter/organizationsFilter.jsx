@@ -166,16 +166,6 @@ export const OrganizationsFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_RUN_DATE_FILTER_NAME,
-    );
-
-    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]: [],
     [LAST_RUN_DATE_FILTER_NAME]: '',
@@ -198,6 +188,17 @@ export const OrganizationsFilter = ({
     [TEAMMATES_FILTER_NAME]: entities[TEAMMATES_FILTER_NAME]?.value || '',
     [TEAMMATES_FILTER_NAME_CONDITION]:
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value,
+      LAST_RUN_DATE_FILTER_NAME,
+    );
+
+    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {

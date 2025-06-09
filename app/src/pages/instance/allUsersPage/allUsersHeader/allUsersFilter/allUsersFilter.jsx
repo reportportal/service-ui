@@ -147,16 +147,6 @@ export const AllUsersFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_LOGIN_FILTER_NAME,
-    );
-
-    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: '',
     [ACCOUNT_TYPE_FILTER_NAME]: [],
@@ -175,6 +165,17 @@ export const AllUsersFilter = ({
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_LOGIN_FILTER_NAME]?.value,
+      LAST_LOGIN_FILTER_NAME,
+    );
+
+    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {
