@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+import DOMPurify from 'dompurify';
 import { URLS } from 'common/urls';
 
 const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
@@ -27,7 +28,7 @@ export const getExtensionUrl = (extension) => {
   const fileName = DEFAULT_EXTENSION_FILE_NAME;
 
   if (baseUrl) {
-    return `${baseUrl}${url || `/${fileName}`}`;
+    return DOMPurify.sanitize(new URL(url || `/${fileName}`, baseUrl));
   }
 
   return URLS.pluginPublicFile(pluginName, fileName);

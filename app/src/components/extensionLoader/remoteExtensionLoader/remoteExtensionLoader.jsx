@@ -16,8 +16,8 @@
 
 import classNames from 'classnames/bind';
 import React, { useState } from 'react';
-import DOMPurify from 'dompurify';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { getExtensionUrl } from '../utils';
 import { ExtensionError } from '../extensionError';
 import { extensionType } from '../extensionTypes';
 import styles from './remoteExtensionLoader.scss';
@@ -27,7 +27,7 @@ const cx = classNames.bind(styles);
 export function RemoteExtensionLoader({ extension }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const src = DOMPurify.sanitize(new URL(extension.payload.url, extension.url));
+  const url = getExtensionUrl(extension);
 
   const onLoad = () => {
     setIsLoaded(true);
@@ -44,13 +44,13 @@ export function RemoteExtensionLoader({ extension }) {
       <iframe
         name={extension.pluginName}
         title={extension.pluginName}
-        src={src}
+        src={url}
         className={cx('remote-extension-loader')}
         onLoad={onLoad}
         onError={onError}
         loading="lazy"
         referrerPolicy="no-referrer"
-        sandbox="allow-scripts allow-popups"
+        sandbox="allow-same-origin allow-scripts allow-popups"
       />
     </div>
   );
