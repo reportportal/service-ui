@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
-import { BubblesLoader, Button } from '@reportportal/ui-kit';
+import { BubblesLoader, Button, Dropdown } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
 import {
   daysToSeconds,
@@ -49,7 +49,6 @@ import { userRolesSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { FieldElement } from '../content/elements';
@@ -357,13 +356,8 @@ export class GeneralTab extends Component {
             )}
             description={intl.formatMessage(messages.interruptedJobDescription)}
             disabled={isDisabled}
-            format={this.formatInterruptJobTimes}
           >
-            <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
-              options={this.interruptJobTime}
-              mobileDisabled
-            />
+            <Dropdown className={cx('dropdown')} options={this.interruptJobTime} mobileDisabled />
           </FieldElement>
           <FieldElement
             name="keepLaunches"
@@ -371,10 +365,9 @@ export class GeneralTab extends Component {
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLaunchesGeneral)}
             description={intl.formatMessage(settingsMessages.keepLaunchesDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
             <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
+              className={cx('dropdown')}
               options={this.getLaunchesOptions()}
               mobileDisabled
             />
@@ -385,13 +378,8 @@ export class GeneralTab extends Component {
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLogsGeneral)}
             description={intl.formatMessage(settingsMessages.keepLogsDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
-            <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
-              options={this.getLogOptions()}
-              mobileDisabled
-            />
+            <Dropdown className={cx('dropdown')} options={this.getLogOptions()} mobileDisabled />
           </FieldElement>
           <FieldElement
             name="keepScreenshots"
@@ -399,10 +387,9 @@ export class GeneralTab extends Component {
             onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral)}
             description={intl.formatMessage(settingsMessages.keepScreenshotsDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
             <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
+              className={cx('dropdown')}
               options={this.getScreenshotsOptions()}
               mobileDisabled
             />
