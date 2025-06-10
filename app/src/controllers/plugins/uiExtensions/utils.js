@@ -33,17 +33,13 @@ export const normalizeExtensionPluginModules = (modules, { pluginName, url }) =>
   }));
 
 export const normalizeRemotePluginModules = (moduleGroups, { pluginName, url }) =>
-  Object.keys(moduleGroups)
-    .map((moduleType) => {
-      const modules = moduleGroups[moduleType];
-
-      return modules.map((module) => ({
-        pluginName,
-        url,
-        pluginType: PLUGIN_TYPE_REMOTE,
-        extensionPoint: moduleType,
-        payload: module,
-        name: module.name,
-      }));
-    })
-    .flat();
+  Object.entries(moduleGroups).flatMap(([moduleType, modules]) =>
+    modules.map((module) => ({
+      pluginName,
+      url,
+      pluginType: PLUGIN_TYPE_REMOTE,
+      extensionPoint: moduleType,
+      payload: module,
+      name: module.name,
+    })),
+  );
