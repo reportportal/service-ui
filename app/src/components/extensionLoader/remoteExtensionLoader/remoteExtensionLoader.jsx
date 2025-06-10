@@ -14,15 +14,20 @@
  *  limitations under the License.
  */
 
-import React, { useRef, useState } from 'react';
+import classNames from 'classnames/bind';
+import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
+import { BubblesLoader } from '@reportportal/ui-kit';
+import { ExtensionError } from '../extensionError';
 import { extensionType } from '../extensionTypes';
+import styles from './remoteExtensionLoader.scss';
+
+const cx = classNames.bind(styles);
 
 export function RemoteExtensionLoader({ extension }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const src = `${extension.url}${extension.payload.url}`;
-
-  const ref = useRef();
+  const src = DOMPurify.sanitize(new URL(extension.payload.url, extension.url));
 
   const onLoad = () => {
     setIsLoaded(true);
@@ -33,20 +38,19 @@ export function RemoteExtensionLoader({ extension }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      {!isLoaded && !hasError && <div>Загрузка расширения…</div>}
-      {hasError && <div>Ошибка загрузки расширения</div>}
+    <div className={cx('remote-extension-loader')}>
+      {!isLoaded && !hasError && <BubblesLoader />}
+      {hasError && <ExtensionError />}
       <iframe
-        ref={ref}
         name={extension.pluginName}
         title={extension.pluginName}
         src={src}
-        style={{ width: '100%', height: '100%' }}
+        className={cx('remote-extension-loader')}
         onLoad={onLoad}
         onError={onError}
         loading="lazy"
         referrerPolicy="no-referrer"
-        sandbox="allow-scripts allow-same-origin allow-popups"
+        sandbox="allow-scripts allow-popups"
       />
     </div>
   );
