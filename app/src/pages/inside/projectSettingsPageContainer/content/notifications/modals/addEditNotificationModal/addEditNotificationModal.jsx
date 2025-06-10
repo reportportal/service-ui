@@ -455,8 +455,12 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
         const value = inputDetails?.[field.name];
 
         if (regex) {
-          const dynamicRegex = new RegExp(regex);
-          if (!dynamicRegex.test(value)) {
+          try {
+            const dynamicRegex = new RegExp(regex);
+            if (!dynamicRegex.test(value)) {
+              acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
+            }
+          } catch {
             acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
           }
         } else if (validate[validationType]) {
