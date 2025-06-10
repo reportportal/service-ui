@@ -86,7 +86,6 @@ export const OrganizationsFilter = ({
           props: {
             value: timeRange[0].value,
             options: timeRange,
-            placeholder: formatMessage(messages.lastRunDatePlaceholder),
           },
         },
       ],

@@ -21,10 +21,6 @@ export const messages = defineMessages({
     id: 'ProjectsFilter.lastRunDate',
     defaultMessage: 'Last run date',
   },
-  lastRunDatePlaceholder: {
-    id: 'ProjectsFilter.lastRunDatePlaceholder',
-    defaultMessage: 'Any',
-  },
   launches: {
     id: 'ProjectsFilter.launches',
     defaultMessage: 'Launches',

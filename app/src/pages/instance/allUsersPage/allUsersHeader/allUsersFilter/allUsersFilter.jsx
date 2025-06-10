@@ -66,7 +66,6 @@ export const AllUsersFilter = ({
           props: {
             options: permissions,
             value: [],
-            placeholder: formatMessage(messages.permissionsPlaceholder),
           },
         },
       ],
@@ -99,7 +98,6 @@ export const AllUsersFilter = ({
           props: {
             value: '',
             options: lastLogin,
-            placeholder: formatMessage(messages.lastLoginPlaceholder),
           },
         },
       ],
