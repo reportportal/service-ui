@@ -21,14 +21,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal, Checkbox, Toggle } from '@reportportal/ui-kit';
+import { Modal, Checkbox, Toggle, Dropdown } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -394,7 +393,7 @@ const AddEditNotificationModal = ({
           className={cx('input')}
           dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
-          <Dropdown options={caseOptions} defaultWidth={false} />
+          <Dropdown options={caseOptions} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}

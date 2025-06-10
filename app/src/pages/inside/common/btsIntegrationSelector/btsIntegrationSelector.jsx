@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown, ThemeProvider } from '@reportportal/ui-kit';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import styles from './btsIntegrationSelector.scss';
 
@@ -70,36 +70,34 @@ export class BtsIntegrationSelector extends Component {
 
     return (
       <Fragment>
-        <FieldElement
-          className={cx('field-wrapper')}
-          label={intl.formatMessage(messages.btsTitle)}
-          labelClassName={cx('label')}
-          withoutProvider
-        >
-          <Dropdown
-            value={pluginName}
-            options={this.pluginNamesOptions}
-            onChange={onChangePluginName}
-            disabled={!this.isMultipleBtsPlugins()}
-            variant="dark"
-            defaultWidth={false}
-          />
-        </FieldElement>
-        <FieldElement
-          className={cx('field-wrapper')}
-          label={intl.formatMessage(messages.integrationNameTitle)}
-          labelClassName={cx('label')}
-          withoutProvider
-        >
-          <Dropdown
-            value={integrationId}
-            options={this.getIntegrationNamesOptions()}
-            onChange={onChangeIntegration}
-            disabled={!this.isMultipleBtsIntegrations()}
-            variant="dark"
-            defaultWidth={false}
-          />
-        </FieldElement>
+        <ThemeProvider theme="dark">
+          <FieldElement
+            className={cx('field-wrapper')}
+            label={intl.formatMessage(messages.btsTitle)}
+            labelClassName={cx('label')}
+            withoutProvider
+          >
+            <Dropdown
+              value={pluginName}
+              options={this.pluginNamesOptions}
+              onChange={onChangePluginName}
+              disabled={!this.isMultipleBtsPlugins()}
+            />
+          </FieldElement>
+          <FieldElement
+            className={cx('field-wrapper')}
+            label={intl.formatMessage(messages.integrationNameTitle)}
+            labelClassName={cx('label')}
+            withoutProvider
+          >
+            <Dropdown
+              value={integrationId}
+              options={this.getIntegrationNamesOptions()}
+              onChange={onChangeIntegration}
+              disabled={!this.isMultipleBtsIntegrations()}
+            />
+          </FieldElement>
+        </ThemeProvider>
       </Fragment>
     );
   }
