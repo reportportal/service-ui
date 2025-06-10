@@ -18,6 +18,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { messages as testCaseCardMessages } from '../messages';
 import styles from '../testCaseCell.scss';
 
@@ -50,19 +51,19 @@ export const TestCaseExecutionCell = ({
   const menuItems: MenuItem[] = [
     {
       label: formatMessage(testCaseCardMessages.duplicate),
-      onClick: () => onDuplicate(),
+      onClick: onDuplicate,
     },
     {
       label: formatMessage(testCaseCardMessages.editTestCase),
-      onClick: () => onEdit(),
+      onClick: onEdit,
     },
     {
       label: formatMessage(testCaseCardMessages.moveTestCaseTo),
-      onClick: () => onMove(),
+      onClick: onMove,
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      onClick: () => onDelete(),
+      onClick: onDelete,
       className: 'delete-menu-item',
     },
   ];
@@ -78,7 +79,7 @@ export const TestCaseExecutionCell = ({
           setIsOpened={setIsMenuOpen}
         >
           <button type="button" className={cx('dots-menu-trigger')}>
-            ⋯
+            <MeatballMenuIcon />
           </button>
         </PopoverControl>
       </div>
