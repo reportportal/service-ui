@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -69,36 +69,34 @@ export class BtsIntegrationSelector extends Component {
     const { intl, pluginName, onChangePluginName, integrationId, onChangeIntegration } = this.props;
 
     return (
-      <Fragment>
-        <ThemeProvider theme="dark">
-          <FieldElement
-            className={cx('field-wrapper')}
-            label={intl.formatMessage(messages.btsTitle)}
-            labelClassName={cx('label')}
-            withoutProvider
-          >
-            <Dropdown
-              value={pluginName}
-              options={this.pluginNamesOptions}
-              onChange={onChangePluginName}
-              disabled={!this.isMultipleBtsPlugins()}
-            />
-          </FieldElement>
-          <FieldElement
-            className={cx('field-wrapper')}
-            label={intl.formatMessage(messages.integrationNameTitle)}
-            labelClassName={cx('label')}
-            withoutProvider
-          >
-            <Dropdown
-              value={integrationId}
-              options={this.getIntegrationNamesOptions()}
-              onChange={onChangeIntegration}
-              disabled={!this.isMultipleBtsIntegrations()}
-            />
-          </FieldElement>
-        </ThemeProvider>
-      </Fragment>
+      <ThemeProvider theme="dark">
+        <FieldElement
+          className={cx('field-wrapper')}
+          label={intl.formatMessage(messages.btsTitle)}
+          labelClassName={cx('label')}
+          withoutProvider
+        >
+          <Dropdown
+            value={pluginName}
+            options={this.pluginNamesOptions}
+            onChange={onChangePluginName}
+            disabled={!this.isMultipleBtsPlugins()}
+          />
+        </FieldElement>
+        <FieldElement
+          className={cx('field-wrapper')}
+          label={intl.formatMessage(messages.integrationNameTitle)}
+          labelClassName={cx('label')}
+          withoutProvider
+        >
+          <Dropdown
+            value={integrationId}
+            options={this.getIntegrationNamesOptions()}
+            onChange={onChangeIntegration}
+            disabled={!this.isMultipleBtsIntegrations()}
+          />
+        </FieldElement>
+      </ThemeProvider>
     );
   }
 }
