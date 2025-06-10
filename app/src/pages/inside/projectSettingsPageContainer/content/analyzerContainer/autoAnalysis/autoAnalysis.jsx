@@ -168,6 +168,7 @@ const AutoAnalysis = ({
           <Dropdown
             className={cx('dropdown')}
             options={analyzerModeDropdownOptions}
+            isListWidthLimited
             mobileDisabled
           />
         </FieldElement>
