@@ -69,7 +69,7 @@
 
   &--high {
     svg {
-      fill: #dc5959;
+      fill: var(--rp-ui-base-error);
     }
   }
 }

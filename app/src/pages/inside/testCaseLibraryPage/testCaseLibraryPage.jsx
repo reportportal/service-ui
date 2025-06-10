@@ -22,7 +22,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 
-import { TestCaseDetailsPage } from './testCaseDetailsPage';
+import { AllTestCasesPage } from './allTestCasesPage';
 import { EmptyState } from './emptyState';
 import { useTestCases } from './hooks/useTestCases';
 
@@ -58,7 +58,7 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div className={cx('test-case-library-page__content')}>
             {hasTestCases ? (
-              <TestCaseDetailsPage
+              <AllTestCasesPage
                 testCases={filteredTestCases}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}

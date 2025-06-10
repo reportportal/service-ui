@@ -26,11 +26,11 @@ import {
 } from 'components/testCaseList/testCaseList.constants';
 import { TestCase } from 'components/testCaseList/types';
 import { messages } from '../messages';
-import styles from './testCaseDetailsPage.scss';
+import styles from './allTestCasesPage.scss';
 
 const cx = classNames.bind(styles);
 
-interface TestCaseDetailsPageProps {
+interface AllTestCasesPageProps {
   testCases: TestCase[];
   loading: boolean;
   searchValue: string;
@@ -39,14 +39,14 @@ interface TestCaseDetailsPageProps {
   duplicateTestCase: (testCase: TestCase, copySuffix: string) => void;
 }
 
-export const TestCaseDetailsPage = ({
+export const AllTestCasesPage = ({
   testCases,
   loading,
   searchValue,
   setSearchValue,
   deleteTestCase,
   duplicateTestCase,
-}: TestCaseDetailsPageProps) => {
+}: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
@@ -95,7 +95,7 @@ export const TestCaseDetailsPage = ({
 
   return (
     <>
-      <div className={cx('test-case-details-page')}>
+      <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
           loading={loading}

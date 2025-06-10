@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,27 @@
  */
 
 import classNames from 'classnames/bind';
-import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { StatusIcon } from '../statusIcon';
+import Parser from 'html-react-parser';
+import PriorityIcon from 'common/img/newIcons/priority-inline.svg';
 import { TestCaseStatus } from '../types';
 import styles from '../testCaseCell.scss';
 
 const cx = classNames.bind(styles);
 
-interface TestCaseNameCellProps {
+interface StatusIconProps {
   status: TestCaseStatus;
-  name: string;
-  tags: string[];
 }
 
-export const TestCaseNameCell = ({ status, name, tags }: TestCaseNameCellProps) => {
+export const StatusIcon = ({ status }: StatusIconProps) => {
+  const iconMap: Record<TestCaseStatus, React.ReactNode> = {
+    low: <div className={cx('priority-icon', 'priority-icon--low')}>{Parser(PriorityIcon)}</div>,
+    normal: (
+      <div className={cx('priority-icon', 'priority-icon--normal')}>{Parser(PriorityIcon)}</div>
+    ),
+    high: <div className={cx('priority-icon', 'priority-icon--high')}>{Parser(PriorityIcon)}</div>,
+  };
+
   return (
-    <div className={cx('name-section')}>
-      <StatusIcon status={status} />
-      <div className={cx('name-content')}>
-        <div className={cx('test-name')} title={name}>
-          {name}
-        </div>
-        <div className={cx('tags-section')}>
-          <TagList tags={tags} />
-        </div>
-      </div>
-    </div>
+    <div className={cx('status-icon', `status-icon--${status}`)}>{iconMap[status] || '?'}</div>
   );
 };
