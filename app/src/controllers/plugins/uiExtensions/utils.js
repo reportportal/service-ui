@@ -22,13 +22,16 @@ export const isPluginSupportsCommonCommand = ({ enabled, details }, command) =>
 export const isPluginManifestAvailable = ({ enabled, details }) =>
   enabled && details?.binaryData?.[MANIFEST_FILE_KEY];
 
-export const normalizeExtensionPluginModules = (modules, { pluginName, url }) =>
+export const normalizeExtensionPluginModules = (modules, { pluginName, url, scope }) =>
   modules.map((module) => ({
     pluginName,
     url,
     pluginType: PLUGIN_TYPE_EXTENSION,
     extensionPoint: module.type,
-    payload: module,
+    payload: {
+      ...module,
+      scope,
+    },
     name: module.name,
   }));
 

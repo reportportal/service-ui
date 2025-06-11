@@ -75,6 +75,7 @@ const createExtensionSelectorByExtensionPoints = (
               normalizeExtensionPluginModules(manifest.extensions, {
                 pluginName: name,
                 url: manifest.url,
+                scope: manifest.scope,
               }),
             );
           }
