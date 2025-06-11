@@ -28,6 +28,7 @@ export {
 export {
   fetchUserAction,
   setActiveProjectAction,
+  setActiveProjectKeyAction,
   setStartTimeFormatAction,
   setLogTimeFormatAction,
   addApiKeyAction,
@@ -52,11 +53,12 @@ export {
   startTimeFormatSelector,
   isAdminSelector,
   assignedProjectsSelector,
-  activeProjectRoleSelector,
   userAccountRoleSelector,
   photoTimeStampSelector,
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
+  activeProjectKeySelector,
+  assignedOrganizationsSelector,
 } from './selectors';
 export { userSagas } from './sagas';

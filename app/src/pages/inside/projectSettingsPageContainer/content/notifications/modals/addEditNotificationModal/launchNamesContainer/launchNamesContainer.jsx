@@ -20,11 +20,11 @@ import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './launchNamesContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -52,7 +52,7 @@ const messages = defineMessages({
 
 export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [showMessage, setShowMessage] = useState(false);
   const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
 
@@ -67,7 +67,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
   return (
     <>
       <AsyncMultipleAutocomplete
-        getURI={URLS.launchNameSearch(activeProject)}
+        getURI={URLS.launchNameSearch(projectKey)}
         createWithoutConfirmation
         creatable
         editable

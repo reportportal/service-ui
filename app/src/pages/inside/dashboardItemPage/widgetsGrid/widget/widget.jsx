@@ -24,8 +24,8 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
-import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -68,7 +68,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
@@ -82,7 +82,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 export class SimpleWidget extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -214,8 +214,8 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetUrl = (params) => {
-    const { activeProject, widgetId, widgetType } = this.props;
-    let url = URLS.widget(activeProject, widgetId);
+    const { projectKey, widgetId, widgetType } = this.props;
+    let url = URLS.widget(projectKey, widgetId);
 
     if (MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       const { queryParameters } = this.state;
@@ -224,7 +224,7 @@ export class SimpleWidget extends Component {
         ...params,
       });
 
-      url = URLS.widgetMultilevel(activeProject, widgetId, queryParamsString);
+      url = URLS.widgetMultilevel(projectKey, widgetId, queryParamsString);
     }
     return url;
   };

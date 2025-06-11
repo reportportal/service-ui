@@ -63,6 +63,15 @@
     right: 100%;
   }
 
+  &.side-right.position-vertical-top::after {
+    top: var(--arrow-offset, 22px);
+  }
+
+  &.side-right.position-vertical-bottom::after {
+    bottom: var(--arrow-offset, 22px);
+    top: auto;
+  }
+
   &.side-left::after {
     border-left-color: $COLOR--white-two;
     left: 100%;
@@ -73,6 +82,14 @@
     &::after {
       top: calc(100% / 2 - 9px);
     }
+  }
+
+  &.dark.side-right::after {
+    border-right-color: $COLOR--darkmode-gray-475;
+  }
+
+  &.dark {
+    background-color: $COLOR--darkmode-gray-475;
   }
 }
 

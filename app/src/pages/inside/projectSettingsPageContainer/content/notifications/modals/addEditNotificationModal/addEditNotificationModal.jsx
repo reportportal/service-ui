@@ -21,14 +21,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal, Checkbox, Toggle } from '@reportportal/ui-kit';
+import { Modal, Checkbox, Toggle, Dropdown } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -37,7 +36,7 @@ import { EMAIL } from 'common/constants/pluginNames';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { fetchProjectAction } from 'controllers/project/actionCreators';
-import { projectIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { capitalizeWord } from '../util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
@@ -215,14 +214,14 @@ const AddEditNotificationModal = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const attributesValue =
     useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];
 
   useEffect(() => {
     initialize(data.notification);
-    dispatch(fetchProjectAction(projectId, false));
+    dispatch(fetchProjectAction(projectKey, false));
   }, []);
 
   const caseOptions = [
@@ -286,9 +285,9 @@ const AddEditNotificationModal = ({
 
   const okButton = {
     children:
-      actionType === MODAL_ACTION_TYPE_ADD
-        ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
-        : formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      actionType === MODAL_ACTION_TYPE_EDIT
+        ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+        : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => {
       handleSubmit(submitActions)();
     },
@@ -394,7 +393,7 @@ const AddEditNotificationModal = ({
           className={cx('input')}
           dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
-          <Dropdown options={caseOptions} defaultWidth={false} />
+          <Dropdown options={caseOptions} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}

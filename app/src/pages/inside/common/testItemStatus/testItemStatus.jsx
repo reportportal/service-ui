@@ -20,8 +20,8 @@ import styles from './testItemStatus.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestItemStatus = ({ status }) => (
-  <div className={cx('status-container')}>
+export const TestItemStatus = ({ status, className }) => (
+  <div className={cx('status-container', className)}>
     <div className={cx('indicator', status.toLowerCase())} />
     <div className={cx('status')}>{status}</div>
   </div>
@@ -29,8 +29,10 @@ export const TestItemStatus = ({ status }) => (
 
 TestItemStatus.propTypes = {
   status: PropTypes.string,
+  className: PropTypes.string,
 };
 
 TestItemStatus.defaultProps = {
   status: '',
+  className: '',
 };

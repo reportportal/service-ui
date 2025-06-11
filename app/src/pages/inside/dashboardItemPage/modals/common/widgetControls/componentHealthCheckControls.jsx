@@ -16,7 +16,6 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -31,8 +30,8 @@ import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
   CheckboxControl,
@@ -89,9 +88,8 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
   ]);
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
-@track()
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -100,11 +98,8 @@ export class ComponentHealthCheckControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-    }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -136,7 +131,7 @@ export class ComponentHealthCheckControls extends Component {
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
     const {
-      activeProject,
+      projectKey,
       widgetSettings: { contentParameters, filters },
     } = this.props;
     const filterId = filters?.length && filters[0].value;
@@ -150,7 +145,7 @@ export class ComponentHealthCheckControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         getURI={URLS.itemAttributeKeysAllSearch(
-          activeProject,
+          projectKey,
           filterId,
           isLatest,
           DEFAULT_LAUNCHES_LIMIT,

@@ -19,7 +19,6 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
@@ -29,6 +28,7 @@ import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
+const SCROLL_HEIGHT = 800;
 
 @track()
 export class ScrollWrapper extends Component {
@@ -53,6 +53,7 @@ export class ScrollWrapper extends Component {
     resetRequired: PropTypes.bool,
     onReset: PropTypes.func,
     className: PropTypes.string,
+    classNameBackToTop: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -61,6 +62,7 @@ export class ScrollWrapper extends Component {
   static defaultProps = {
     initialScrollRight: false,
     className: '',
+    classNameBackToTop: '',
     children: null,
     autoHide: false,
     autoHeight: false,
@@ -143,7 +145,7 @@ export class ScrollWrapper extends Component {
     const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
-    const isBackToTopVisible = withBackToTop && scrollTop > 100;
+    const isBackToTopVisible = withBackToTop && scrollTop >= SCROLL_HEIGHT;
     if (isBackToTopVisible !== this.state.showButton) {
       this.setState({ showButton: isBackToTopVisible });
     }
@@ -190,12 +192,9 @@ export class ScrollWrapper extends Component {
       >
         {this.props.children}
         {this.state.showButton && (
-          <div className={cx('back-to-top')}>
-            <button className={cx('back-to-top-button')} onClick={this.scrollTop}>
+          <div className={cx('back-to-top', this.props.classNameBackToTop)}>
+            <button className={cx('back-to-top-button')} onClick={this.scrollTop} tabIndex={0}>
               <i className={cx('top-icon')}>{Parser(BackToTopIcon)}</i>
-              <div className={cx('message')}>
-                <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
-              </div>
             </button>
           </div>
         )}

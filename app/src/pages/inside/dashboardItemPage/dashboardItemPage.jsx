@@ -34,11 +34,15 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userInfoSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
+  userRolesSelector,
   pagePropertiesSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
@@ -52,6 +56,7 @@ import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -109,11 +114,13 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
+    projectKey: projectKeySelector(state),
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
+    userRoles: userRolesSelector(state),
     query: pagePropertiesSelector(state),
   }),
   {
@@ -135,7 +142,6 @@ export class DashboardItemPage extends Component {
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     dashboard: PropTypes.object.isRequired,
     userInfo: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
@@ -148,12 +154,19 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     activeDashboardId: PropTypes.number,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
+    projectKey: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     query: PropTypes.object,
   };
 
   static defaultProps = {
     fullScreenMode: false,
     activeDashboardId: undefined,
+    userRoles: {},
     query: {},
   };
 
@@ -210,13 +223,17 @@ export class DashboardItemPage extends Component {
   };
 
   getBreadcrumbs = () => {
-    const { activeProject, query, intl } = this.props;
+    const {
+      intl,
+      query,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     return [
       {
         title: intl.formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
           meta: {
             query,
           },
@@ -234,11 +251,11 @@ export class DashboardItemPage extends Component {
   addWidget = (widget, closeModal) => {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
       dashboard,
     } = this.props;
 
-    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+    return fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
       method: 'put',
       data: { addWidget: widget },
     })
@@ -316,10 +333,14 @@ export class DashboardItemPage extends Component {
     const {
       intl: { formatMessage },
       dashboard,
+      projectKey,
       fullScreenMode,
-      activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
+      slugs: { organizationSlug, projectSlug },
+      userRoles,
     } = this.props;
+
+    const isWorkWithWidgets = canWorkWithWidgets(userRoles);
 
     return (
       <PageLayout>
@@ -330,26 +351,33 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                  {formatMessage(messages.addNewWidget)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                    {formatMessage(messages.addNewWidget)}
+                  </GhostButton>
+                )}
               </div>
               <div className={cx('buttons-block')}>
-                <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                  {formatMessage(messages.editDashboard)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                    {formatMessage(messages.editDashboard)}
+                  </GhostButton>
+                )}
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-                <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                  {formatMessage(messages.delete)}
-                </GhostButton>
+                {isWorkWithWidgets && (
+                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                    {formatMessage(messages.delete)}
+                  </GhostButton>
+                )}
                 <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
-                      projectId: this.props.activeProject,
+                      projectSlug,
                       dashboardId: this.props.activeDashboardId,
+                      organizationSlug,
                     },
                   }}
                   target={'_blank'}
@@ -366,7 +394,7 @@ export class DashboardItemPage extends Component {
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
-                activeProject={activeProject}
+                projectKey={projectKey}
                 showNotification={this.props.showNotification}
                 updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
               />

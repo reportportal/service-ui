@@ -55,6 +55,10 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
   },
+  deleteProjectSuccess: {
+    id: 'ProjectsPage.deleteProjectSuccess',
+    defaultMessage: "The project ''{name}'' has been successfully deleted",
+  },
   addDefectTypeSuccess: {
     id: 'Project.addDefectTypeSuccess',
     defaultMessage: 'Defect Type has been successfully created',
@@ -77,7 +81,7 @@ const messages = defineMessages({
   },
   projectExists: {
     id: 'ProjectsPage.projectExists',
-    defaultMessage: "The project ''{name}'' is already exists",
+    defaultMessage: "Project with the same name ''{name}'' already exists in this organization",
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',

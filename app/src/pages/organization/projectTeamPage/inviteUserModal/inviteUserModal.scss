@@ -1,0 +1,85 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.modal-description {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--almost-black;
+  background-color: $COLOR--white-four;
+}
+
+.invite-form {
+  margin-top: 16px;
+}
+
+.can-edit {
+  &:last-child span {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-REGULAR;
+  }
+}
+
+.can-edit-disabled {
+  width: max-content;
+}
+
+.wrapper-class {
+  width: 16px;
+}
+
+.content-class {
+  width: 240px;
+}
+
+.icon {
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.custom-tooltip {
+  width: 264px;
+}
+
+.tooltip {
+  width: 232px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.tooltip-wrapper {
+  height: 16px;
+  width: 16px;
+}
+
+.modal-field {
+  padding: 0;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    span:last-child {
+      font-weight: 400;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@ import { MAIN_FILE_KEY } from 'controllers/plugins/uiExtensions/constants';
 const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
 
 export const getExtensionUrl = (extension) => {
-  const isDev = process.env.NODE_ENV === 'development';
-  const { pluginName, url: defaultUrl, binaryData = {} } = extension;
+  const { pluginName, url: remoteUrl, binaryData = {} } = extension;
   const fileName = binaryData[MAIN_FILE_KEY] || DEFAULT_EXTENSION_FILE_NAME;
 
-  if (isDev && defaultUrl) {
-    return `${defaultUrl}/${fileName}`;
+  if (remoteUrl) {
+    return `${remoteUrl}/${fileName}`;
   }
 
   return URLS.pluginPublicFile(pluginName, fileName);

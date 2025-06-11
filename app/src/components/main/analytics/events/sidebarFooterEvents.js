@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from './common/ga4Utils';
+import { normalizeEventString } from 'components/main/analytics';
+import { getBasicClickEventParameters, getBasicSearchEventParameters } from './common/ga4Utils';
 
 const SIDEBAR = 'sidebar';
 
@@ -29,6 +30,44 @@ export const SIDEBAR_EVENTS = {
     ...basicEventParameters,
     icon_name: 'launches',
   },
+  CLICK_OPEN_ORGANIZATION_PROJECTS_BTN: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'hover',
+    icon_name: 'open_project_page',
+  },
+  CLICK_ALL_ORGANIZATION_PROJECTS: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'popover',
+    element_name: 'all_organization',
+  },
+  CLICK_PROJECT_NAME: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    place: 'hover',
+    element_name: 'project_name',
+  },
+  CLICK_PRIVACY_POLICY_LINK: {
+    ...getBasicClickEventParameters(SIDEBAR),
+    icon_name: 'privacy_policy',
+  },
+  SEARCH_ORGANIZATION_PROJECTS: {
+    ...getBasicSearchEventParameters(SIDEBAR),
+    element_name: 'search',
+  },
+  onClickLevelHigher: (level) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    element_name: level === 'project' ? 'organization_name' : 'all_organizations',
+  }),
+  onClickUpdateLink: (type) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    element_name: 'update',
+    type: normalizeEventString(type),
+  }),
+  onClickItem: ({ itemName, isSidebarCollapsed }) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    icon_name: normalizeEventString(itemName),
+    place: isSidebarCollapsed ? 'sidebar' : 'sidebar_hover',
+  }),
+
   // GA3 events
   CLICK_MEMBERS_BTN: {
     category: SIDEBAR,
@@ -54,31 +93,6 @@ export const SIDEBAR_EVENTS = {
     category: SIDEBAR,
     action: 'Click on Menu button Debug',
     label: 'Transition on Debug Page',
-  },
-  CLICK_PROFILE_DROPDOWN: {
-    category: SIDEBAR,
-    action: 'Click on Profile Dropdown',
-    label: 'Arise Dropdown Menu',
-  },
-  CLICK_PROFILE_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Profile link on Dropdown',
-    label: 'Transition on Profile Page',
-  },
-  CLICK_ADMINISTRATE_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Administrate link on Dropdown',
-    label: 'Transition to Administrate Mode',
-  },
-  CLICK_API_LINK: {
-    category: SIDEBAR,
-    action: 'Click on link API',
-    label: 'Transition to API page',
-  },
-  CLICK_LOGOUT_LINK: {
-    category: SIDEBAR,
-    action: 'Click on Logout link',
-    label: 'Logout and transition on Landing Page',
   },
 };
 

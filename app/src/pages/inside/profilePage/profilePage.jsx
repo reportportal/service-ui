@@ -22,13 +22,20 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
-import { userProfileRouteSelector, USER_PROFILE_SUB_PAGE } from 'controllers/pages';
+import {
+  userProfileRouteSelector,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
+  USER_PROFILE_SUB_PAGE,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+} from 'controllers/pages';
 import { allowDeleteAccountSelector } from 'controllers/appInfo/selectors';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
-  PROJECT_ASSIGNMENT_ROUTE,
+  ASSIGNMENTS_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
 import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
@@ -48,7 +55,7 @@ const messages = defineMessages({
   },
   profilePageProjectAssignmentTab: {
     id: 'ProfilePage.projectAssignmentTab',
-    defaultMessage: 'Project assignment',
+    defaultMessage: 'Assignments',
   },
   profilePageProjectApiKeysTab: {
     id: 'ProfilePage.apiKeys',
@@ -60,35 +67,11 @@ const messages = defineMessages({
   },
 });
 
-const getProfilePageLink = (profileRoute) => ({
-  type: USER_PROFILE_SUB_PAGE,
-  payload: {
-    profileRoute,
-  },
-});
-
-const getNavigationTabsConfig = (formatMessage) => ({
-  [PROJECT_ASSIGNMENT_ROUTE]: {
-    name: formatMessage(messages.profilePageProjectAssignmentTab),
-    link: getProfilePageLink(PROJECT_ASSIGNMENT_ROUTE),
-    component: <AssignedProjectsBlock />,
-  },
-  [API_KEYS_ROUTE]: {
-    name: formatMessage(messages.profilePageProjectApiKeysTab),
-    link: getProfilePageLink(API_KEYS_ROUTE),
-    component: <ApiKeys />,
-    eventInfo: PROFILE_EVENTS.CLICK_API_KEYS_TAB_EVENT,
-  },
-  [CONFIG_EXAMPLES_ROUTE]: {
-    name: formatMessage(messages.profilePageConfigurationExamplesTab),
-    link: getProfilePageLink(CONFIG_EXAMPLES_ROUTE),
-    component: <ConfigExamplesBlock />,
-  },
-});
-
 @connect((state) => ({
   activeTab: userProfileRouteSelector(state),
   allowDeleteAccount: allowDeleteAccountSelector(state),
+  organizationSlug: urlOrganizationSlugSelector(state),
+  projectSlug: urlProjectSlugSelector(state),
 }))
 @injectIntl
 @track({ page: PROFILE_PAGE })
@@ -98,15 +81,72 @@ export class ProfilePage extends Component {
     activeTab: PropTypes.string,
     dispatch: PropTypes.func,
     allowDeleteAccount: PropTypes.bool,
+    organizationSlug: PropTypes.string.isRequired,
+    projectSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    activeTab: PROJECT_ASSIGNMENT_ROUTE,
+    activeTab: ASSIGNMENTS_ROUTE,
     dispatch: () => {},
     allowDeleteAccount: false,
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
+
+  getRouteLink = (profileRoute) => {
+    const { organizationSlug, projectSlug } = this.props;
+
+    if (projectSlug && organizationSlug) {
+      return {
+        type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          profileRoute,
+        },
+      };
+    } else if (organizationSlug) {
+      return {
+        type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+        payload: {
+          organizationSlug,
+          profileRoute,
+        },
+      };
+    }
+
+    return {
+      type: USER_PROFILE_SUB_PAGE,
+      payload: {
+        profileRoute,
+      },
+    };
+  };
+
+  getNavigationTabsConfig = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    return {
+      [ASSIGNMENTS_ROUTE]: {
+        name: formatMessage(messages.profilePageProjectAssignmentTab),
+        link: this.getRouteLink(ASSIGNMENTS_ROUTE),
+        component: <AssignedProjectsBlock />,
+      },
+      [API_KEYS_ROUTE]: {
+        name: formatMessage(messages.profilePageProjectApiKeysTab),
+        link: this.getRouteLink(API_KEYS_ROUTE),
+        component: <ApiKeys />,
+        eventInfo: PROFILE_EVENTS.CLICK_API_KEYS_TAB_EVENT,
+      },
+      [CONFIG_EXAMPLES_ROUTE]: {
+        name: formatMessage(messages.profilePageConfigurationExamplesTab),
+        link: this.getRouteLink(CONFIG_EXAMPLES_ROUTE),
+        component: <ConfigExamplesBlock />,
+      },
+    };
+  };
 
   render = () => (
     <PageLayout>
@@ -116,7 +156,7 @@ export class ProfilePage extends Component {
           <div className={cx('section-wrapper')}>
             <PersonalInfoBlock />
             <NavigationTabs
-              config={getNavigationTabsConfig(this.props.intl.formatMessage)}
+              config={this.getNavigationTabsConfig()}
               activeTab={this.props.activeTab}
               onChangeTab={this.props.dispatch}
             />

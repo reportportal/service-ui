@@ -15,10 +15,12 @@
  */
 
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Toggle } from '@reportportal/ui-kit';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
@@ -30,7 +32,9 @@ import {
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
-import { Toggle } from '@reportportal/ui-kit';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -46,6 +50,9 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @injectIntl
 export class WidgetHeader extends Component {
   static propTypes = {
@@ -57,6 +64,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    userRoles: userRolesType,
     isDisplayedLaunches: PropTypes.bool,
     onDisplayLaunchesToggle: PropTypes.func,
   };
@@ -68,6 +76,7 @@ export class WidgetHeader extends Component {
     onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
+    userRoles: {},
     isDisplayedLaunches: false,
   };
 
@@ -95,11 +104,13 @@ export class WidgetHeader extends Component {
       onDisplayLaunchesToggle,
       customClass,
       isPrintMode,
+      userRoles,
       isDisplayedLaunches,
     } = this.props;
 
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
     const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
+    const isDisabled = !canWorkWithWidgets(userRoles);
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
@@ -157,7 +168,7 @@ export class WidgetHeader extends Component {
                   </div>
                 </div>
               )}
-              {!isEditControlHidden && data.type && (
+              {!isEditControlHidden && data.type && !isDisabled && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
@@ -167,9 +178,11 @@ export class WidgetHeader extends Component {
                   {Parser(RefreshIcon)}
                 </div>
               )}
-              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                {Parser(CrossIcon)}
-              </div>
+              {!isDisabled && (
+                <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
+                  {Parser(CrossIcon)}
+                </div>
+              )}
             </div>
           </div>
         )}

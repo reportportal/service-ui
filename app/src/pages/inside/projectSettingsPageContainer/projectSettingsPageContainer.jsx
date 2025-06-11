@@ -20,9 +20,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import {
   PROJECT_SETTINGS_TAB_PAGE,
-  projectIdSelector,
   querySelector,
   settingsTabSelector,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
@@ -38,13 +39,12 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
-import { canSeeDemoData } from 'common/utils/permissions';
+import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
+import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { GeneralTab } from './generalTab';
@@ -59,24 +59,23 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
-  const projectId = useSelector(projectIdSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
       type: page,
-      payload: { projectId, settingsTab: tabName, ...extendedParams },
+      payload: { projectSlug, settingsTab: tabName, organizationSlug, ...extendedParams },
     }),
-    [projectId],
+    [projectSlug, organizationSlug],
   );
 
   const extensionsConfig = useMemo(() => {
-    return extensions.reduce((acc, extension) => {
-      return {
+    return extensions.reduce(
+      (acc, extension) => ({
         ...acc,
         [extension.name]: {
           name: extension.title || extension.name,
@@ -96,8 +95,9 @@ export const ProjectSettingsPageContainer = () => {
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),
         },
-      };
-    }, {});
+      }),
+      {},
+    );
   }, [createTabLink, extensions]);
 
   const config = useMemo(() => {
@@ -135,7 +135,9 @@ export const ProjectSettingsPageContainer = () => {
       },
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
-        link: createTabLink(ANALYSIS, { subTab: 'indexSettings' }),
+        link: createTabLink(ANALYSIS, {
+          subTab: canUpdateSettings(userRoles) ? 'indexSettings' : 'autoAnalysis',
+        }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
         ),
@@ -159,7 +161,7 @@ export const ProjectSettingsPageContainer = () => {
         mobileDisabled: true,
       },
     };
-    if (!canSeeDemoData(accountRole, userRole)) {
+    if (!canSeeDemoData(userRoles)) {
       delete navConfig[DEMO_DATA];
     }
     Object.keys(extensionsConfig).forEach((key) => {
@@ -170,7 +172,7 @@ export const ProjectSettingsPageContainer = () => {
       }
     });
     return { ...navConfig, ...extensionsConfig };
-  }, [accountRole, extensionsConfig, createTabLink, userRole]);
+  }, [formatMessage, createTabLink, userRoles, extensionsConfig]);
 
   const navigation = useMemo(() => {
     if (subPage) {
@@ -188,7 +190,7 @@ export const ProjectSettingsPageContainer = () => {
       return null;
     }
     return config[activeTab].component;
-  }, [activeTab, config]);
+  }, [activeTab, config, dispatch]);
 
   return (
     <ProjectSettingsAnalyticsWrapper>

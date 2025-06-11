@@ -33,10 +33,11 @@ import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
 import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
-import { administrateReducer } from 'controllers/administrate';
+import { instanceReducer } from 'controllers/instance';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
+import { organizationsReducer } from 'controllers/instance/organizations';
 
 export default {
   appInfo: appInfoReducer,
@@ -45,6 +46,7 @@ export default {
   form: formReducer,
   modal: modalReducer,
   user: userReducer,
+  organizations: organizationsReducer,
   project: projectReducer,
   notifications: notificationReducer,
   screenLock: screenLockReducer,
@@ -59,7 +61,7 @@ export default {
   log: logReducer,
   uniqueErrors: uniqueErrorsReducer,
   itemsHistory: itemsHistoryReducer,
-  administrate: administrateReducer,
+  administrate: instanceReducer,
   plugins: pluginsReducer,
   initialDataReady: initialDataReadyReducer,
 };

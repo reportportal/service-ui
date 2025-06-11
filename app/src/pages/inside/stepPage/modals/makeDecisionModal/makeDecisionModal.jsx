@@ -23,7 +23,6 @@ import { useTracking } from 'react-tracking';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { activeProjectSelector } from 'controllers/user';
 import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
 import { fetch, isEmptyObject } from 'common/utils';
@@ -34,6 +33,7 @@ import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
+import { projectKeySelector } from 'controllers/project';
 import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
@@ -59,7 +59,7 @@ const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const activeProject = useSelector(activeProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const historyItems = useSelector(historyItemsSelector);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
@@ -121,8 +121,8 @@ const MakeDecision = ({ data }) => {
       setLoadingMLSuggest(true);
       const url =
         clusterIds.length === 1
-          ? URLS.MLSuggestionsByCluster(activeProject, clusterIds[0])
-          : URLS.MLSuggestions(activeProject, itemData.id);
+          ? URLS.MLSuggestionsByCluster(projectKey, clusterIds[0])
+          : URLS.MLSuggestions(projectKey, itemData.id);
       fetch(url)
         .then((resp) => {
           if (resp.length !== 0) {
@@ -202,7 +202,7 @@ const MakeDecision = ({ data }) => {
       }
       return item.suggestRs;
     });
-    fetch(URLS.choiceSuggestedItems(activeProject), {
+    fetch(URLS.choiceSuggestedItems(projectKey), {
       method: 'put',
       data: dataToSend,
     })
@@ -226,7 +226,7 @@ const MakeDecision = ({ data }) => {
   const saveDefect = (options) => {
     const { fetchFunc } = data;
     const issues = prepareDataToSend(options);
-    const url = URLS.testItems(activeProject);
+    const url = URLS.testItems(projectKey);
 
     if (modalState.suggestedItems.length > 0) {
       sendSuggestResponse();
@@ -446,7 +446,7 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             windowSize={windowSize}
             eventsInfo={data.eventsInfo.editDefectsEvents}
-            activeProject={activeProject}
+            projectKey={projectKey}
           />
         ),
       });

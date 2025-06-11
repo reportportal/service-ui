@@ -120,9 +120,15 @@
   line-height: 16px;
   padding-right: 16px;
   color: $COLOR--topaz;
+  background: none;
+  border: none;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
   cursor: pointer;
+
+  &:focus-visible {
+    outline-color: $COLOR--topaz;
+  }
 
   .icon {
     width: 13px;
@@ -148,6 +154,7 @@
 .defect-item {
   border: none;
   cursor: default;
+
   &:hover {
     border: none;
   }

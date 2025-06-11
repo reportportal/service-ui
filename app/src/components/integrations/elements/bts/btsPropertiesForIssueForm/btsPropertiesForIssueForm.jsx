@@ -20,10 +20,9 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, Dropdown } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { projectIdSelector } from 'controllers/pages';
-import { projectInfoSelector } from 'controllers/project';
+import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   COMMAND_GET_ISSUE_TYPES,
@@ -33,7 +32,6 @@ import { URLS } from 'common/urls';
 import { withPopover } from 'componentLibrary/popover';
 import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { InputWithEye } from 'components/inputs/inputWithEye';
@@ -95,8 +93,7 @@ ShowWithPopover.propTypes = {
 
 @connect(
   (state) => ({
-    projectName: projectIdSelector(state),
-    projectInfo: projectInfoSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -108,8 +105,6 @@ export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     integrationId: PropTypes.number.isRequired,
-    projectName: PropTypes.string,
-    projectInfo: PropTypes.object,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
@@ -122,11 +117,10 @@ export class BtsPropertiesForIssueForm extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    projectName: '',
-    projectInfo: {},
     pluginName: '',
     initialData: {
       defectFormFields: [],
@@ -325,14 +319,13 @@ export class BtsPropertiesForIssueForm extends Component {
     });
 
   fetchFieldsSet = (issueTypeValue) => {
+    // TODO: There was a case when projectName (projectKey) was empty using this component on Admin page.
     const {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
-      projectName,
-      projectInfo,
+      projectKey,
     } = this.props;
-    const project = projectName || projectInfo.projectName;
     const isCommandAvailable = allowedCommands
       ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
       : false;
@@ -340,16 +333,16 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_FIELDS);
+      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_FIELDS);
       requestParams.method = 'PUT';
       requestParams.data = {
-        projectId: projectInfo.projectId,
+        projectKey,
         issueType: issueTypeValue,
       };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationFieldsSet(integrationId, issueTypeValue)
-        : URLS.btsIntegrationFieldsSet(project, integrationId, issueTypeValue);
+        : URLS.btsIntegrationFieldsSet(projectKey, integrationId, issueTypeValue);
     }
 
     return fetch(url, requestParams);
@@ -370,26 +363,25 @@ export class BtsPropertiesForIssueForm extends Component {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
-      projectName,
-      projectInfo,
+      projectKey,
     } = this.props;
-    const project = projectName || projectInfo.projectName;
     const isCommandAvailable = allowedCommands
       ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
       : false;
+
     const requestParams = {};
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_TYPES);
+      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_TYPES);
       requestParams.method = 'PUT';
       requestParams.data = {
-        projectId: projectInfo.projectId,
+        projectKey,
       };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationIssueTypes(integrationId)
-        : URLS.btsIntegrationIssueTypes(project, integrationId);
+        : URLS.btsIntegrationIssueTypes(projectKey, integrationId);
     }
 
     return fetch(url, requestParams);
@@ -403,13 +395,12 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled, integrationId, pluginName, projectName, projectInfo } = this.props;
+    const { intl, disabled, integrationId, projectKey } = this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
     const integrationInfo = {
+      projectKey,
       integrationId,
-      projectName: projectName || projectInfo.projectName,
-      pluginName,
     };
 
     return (
@@ -433,7 +424,6 @@ export class BtsPropertiesForIssueForm extends Component {
                         value={this.state.issueType}
                         onChange={this.handleIssueTypeChange}
                         options={this.issueTypeDropdownOptions}
-                        defaultWidth={false}
                       />
                     </FieldErrorHint>
                   </FieldElement>

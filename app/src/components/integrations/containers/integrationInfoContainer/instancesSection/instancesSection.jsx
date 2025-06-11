@@ -22,8 +22,8 @@ import track from 'react-tracking';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import {
   removePluginAction,
   addIntegrationAction,
@@ -117,9 +117,7 @@ const messages = defineMessages({
 
 @connect(
   (state, ownProps) => ({
-    projectId: projectIdSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     isEnabled: enabledPluginSelector(state, ownProps.instanceType),
   }),
   {
@@ -136,14 +134,13 @@ export class InstancesSection extends Component {
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
     pluginType: PropTypes.string.isRequired,
-    projectId: PropTypes.string,
     onItemClick: PropTypes.func.isRequired,
     removePluginSuccessCallback: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
     removePluginAction: PropTypes.func.isRequired,
-    accountRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     userRole: PropTypes.string.isRequired,
     isEnabled: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
@@ -163,11 +160,11 @@ export class InstancesSection extends Component {
     pluginDetails: {},
     projectIntegrations: [],
     globalIntegrations: [],
-    projectId: '',
     isGlobal: false,
     title: '',
     pluginId: null,
     events: {},
+    userRoles: {},
   };
 
   constructor(props) {
@@ -298,15 +295,14 @@ export class InstancesSection extends Component {
       onItemClick,
       projectIntegrations,
       globalIntegrations,
-      accountRole,
-      userRole,
+      userRoles,
       isGlobal,
       pluginDetails: { metadata },
       pluginType,
       isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
-    const disabled = !canUpdateSettings(accountRole, userRole);
+    const disabled = !canUpdateSettings(userRoles);
     const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;

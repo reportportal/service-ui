@@ -19,7 +19,6 @@ import {
   getClickSaveBtnEditAuthorizationEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
-  getPluginConfigureClickSubmitEvent,
   getPluginEditAuthorizationClickEvent,
   getPluginInstanceItemClickEvent,
   getPluginRemoveIntegrationClickEvent,
@@ -119,6 +118,12 @@ export const PLUGINS_PAGE_EVENTS = {
     modal: 'enable_plugin',
     type: normalizeEventParameter(pluginName),
   }),
+  pluginConfigureClickSubmit: (type) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'submit',
+    place: 'configuration_view',
+    type,
+  }),
   // GA 3
   CANCEL_BTN_UPLOAD_MODAL: {
     category: PLUGINS_MODAL,
@@ -158,6 +163,5 @@ export const PLUGINS_PAGE_EVENTS = {
   pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(PLUGINS_PAGE),
   pluginConfigureClick: getPluginConfigureClickEvent(PLUGINS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(PLUGINS_PAGE),
-  pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(PLUGINS_PAGE),
   saveIntegrationModalEvents: getSaveIntegrationModalEvents(PLUGINS_PAGE),
 };

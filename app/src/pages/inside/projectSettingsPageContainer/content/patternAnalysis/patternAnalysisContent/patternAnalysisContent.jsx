@@ -35,6 +35,8 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { canUpdateSettings } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { PatternRuleContent, FieldElement, RuleList, FormattedDescription } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
@@ -53,14 +55,20 @@ export const PatternAnalysisContent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const PAState = useSelector(PAStateSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const canCreatePattern = canUpdateSettings(userRoles);
 
   useEffect(() => {
     setHeaderTitleNode(
-      <span className={cx('button')} onClick={onAddPattern}>
-        <Button disabled={disabled} data-automation-id="createPatternButton">
-          {formatMessage(messages.create)}
-        </Button>
-      </span>,
+      <>
+        {canCreatePattern && (
+          <span className={cx('button')} onClick={onAddPattern}>
+            <Button disabled={disabled} data-automation-id="createPatternButton">
+              {formatMessage(messages.create)}
+            </Button>
+          </span>
+        )}
+      </>,
     );
 
     return () => setHeaderTitleNode(null);

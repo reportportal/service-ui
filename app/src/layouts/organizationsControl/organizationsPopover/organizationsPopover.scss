@@ -1,0 +1,113 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.organizations-popover {
+  width: 300px;
+  background-color: $COLOR--darkmode-gray-475;
+}
+
+.all-organizations {
+  padding: 0px 8px;
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+  }
+
+  a {
+    padding: 8px;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+      border-radius: 4px;
+    }
+  }
+}
+
+.all-organizations-link {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  color: $COLOR--darkmode-gray-100;
+  text-decoration: none;
+  text-align: left;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}
+
+.scroll-wrapper {
+  > div:last-child {
+    width: 4px !important;
+    margin-right: 8px;
+
+    div {
+      background-color: $COLOR--darkmode-gray-200;
+    }
+  }
+}
+
+.divider {
+  border-bottom: 1px solid $COLOR--almost-black;
+  margin: 0 16px 8px 16px;
+}
+
+.active {
+  color: $COLOR--darkmode-topaz-text;
+}
+
+.organizations-assignments {
+  height: 36px;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 8px 16px;
+  color: $COLOR--darkmode-gray-150;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}
+
+.organizations-empty-state {
+  width: 300px;
+  height: 100px;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--darkmode-gray-150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.organizations-search {
+  padding: 4px 8px;
+
+  .field-text {
+    padding: 4px 7px;
+  }
+
+  &:hover {
+    background-color: $COLOR--darkmode-gray-500;
+
+    .field-text {
+      border: 1px solid $COLOR--darkmode-gray-500;
+      background-color: $COLOR--darkmode-gray-500;
+
+      svg path {
+        fill: $COLOR--white-two;
+      }
+    }
+  }
+}

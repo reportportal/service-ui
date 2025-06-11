@@ -20,7 +20,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { regex } from 'common/utils/validation/validatorHelpers';
 import { validate } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
 import { projectInfoSelector } from 'controllers/project/selectors';
 import PropTypes from 'prop-types';
@@ -38,7 +38,8 @@ const messages = defineMessages({
 
 const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
+
   const [recipientsWithError, setRecipientsWithError] = useState([]);
 
   const emailValidation = (email) => {
@@ -86,7 +87,7 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
     <AsyncMultipleAutocomplete
       placeholder={formatMessage(messages.recipientsPlaceholder)}
       minLength={1}
-      getURI={URLS.projectUsernamesSearch(activeProject)}
+      getURI={URLS.projectUsernamesSearch(projectKey)}
       creatable
       editable
       createWithoutConfirmation

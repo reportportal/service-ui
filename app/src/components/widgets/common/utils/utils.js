@@ -131,11 +131,17 @@ export const normalizeChartData = (data, isTimeLine) =>
       }))
     : data;
 
-export const getDefaultTestItemLinkParams = (projectId, filterId, testItemIds) => ({
+export const getDefaultTestItemLinkParams = (
+  projectSlug,
+  filterId,
+  testItemIds,
+  organizationSlug,
+) => ({
   payload: {
-    projectId,
+    projectSlug,
     filterId,
     testItemIds,
+    organizationSlug,
   },
   type: TEST_ITEM_PAGE,
 });

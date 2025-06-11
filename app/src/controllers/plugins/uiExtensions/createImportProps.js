@@ -36,6 +36,7 @@ import {
   Checkbox,
   Toggle,
   Modal as ModalLayoutComponent,
+  Dropdown,
 } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -61,20 +62,27 @@ import {
   CANCELLED,
   STOPPED,
 } from 'common/constants/testStatuses';
+import { isAdminSelector, activeProjectKeySelector } from 'controllers/user';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  isAdminSelector,
-} from 'controllers/user';
+  projectMembersSelector,
+  projectInfoSelector,
+  projectAttributesSelector,
+  fetchProjectAction,
+  projectInfoLoadingSelector,
+  defectTypesSelector,
+  updateConfigurationAttributesAction,
+} from 'controllers/project';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
-  projectIdSelector,
+  urlOrganizationAndProjectSelector,
   querySelector,
   payloadSelector,
+  activeProjectRoleSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -116,15 +124,6 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
-import {
-  projectMembersSelector,
-  projectInfoSelector,
-  projectAttributesSelector,
-  fetchProjectAction,
-  projectInfoLoadingSelector,
-  defectTypesSelector,
-  updateConfigurationAttributesAction,
-} from 'controllers/project';
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -132,7 +131,6 @@ import { AttributeListContainer as AttributeListField } from 'components/contain
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { ProjectName } from 'pages/admin/projectsPage/projectName';
 import { debounce } from 'common/utils/debounce';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -189,7 +187,6 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
@@ -198,6 +195,7 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 
 const BUTTONS = {
   GhostButton,
@@ -340,14 +338,15 @@ export const createImportProps = (pluginName) => ({
   selectors: {
     pluginRouteSelector,
     payloadSelector,
-    activeProjectSelector,
-    projectIdSelector,
+    activeProjectKeySelector,
+    urlOrganizationAndProjectSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
     projectAttributesSelector,
     activeProjectRoleSelector,
+    userRolesSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,

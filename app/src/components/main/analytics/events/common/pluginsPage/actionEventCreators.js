@@ -42,11 +42,6 @@ export const getPluginChoosePropertiesCheckboxClickEvent = (category) => (
   action: `Click on checkboxes to choose properties for issue form in ${pluginName}`,
   label: property,
 });
-export const getPluginConfigureClickSubmitEvent = (category) => (pluginName) => ({
-  category,
-  action: `Click on button Submit in ${pluginName}`,
-  label: `Click on button Submit in ${pluginName}`,
-});
 
 export const getClickSaveBtnEditAuthorizationEvent = (category) => (pluginName) => ({
   category,

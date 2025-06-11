@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
 import {
@@ -34,7 +34,6 @@ import {
 } from 'common/constants/statistics';
 import { ENTITY_START_TIME, ENTITY_STATUS } from 'components/filterEntities/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
@@ -104,8 +103,8 @@ const validators = {
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
-  activeProject: activeProjectSelector(state),
+  filtersSearchUrl: URLS.filtersSearch(projectKeySelector(state)),
+  projectKey: projectKeySelector(state),
 }))
 export class ProductStatusControls extends Component {
   static propTypes = {
@@ -113,8 +112,8 @@ export class ProductStatusControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     filtersSearchUrl: PropTypes.string.isRequired,
-    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -166,7 +165,7 @@ export class ProductStatusControls extends Component {
     const {
       intl: { formatMessage },
       filtersSearchUrl,
-      activeProject,
+      projectKey,
     } = this.props;
 
     return (
@@ -204,7 +203,7 @@ export class ProductStatusControls extends Component {
           parse={this.parseCustomColumns}
           validate={validators.customColumns}
         >
-          <CustomColumnsControl getURI={URLS.launchAttributeKeysSearch(activeProject)} />
+          <CustomColumnsControl getURI={URLS.launchAttributeKeysSearch(projectKey)} />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">
           <TogglerControl

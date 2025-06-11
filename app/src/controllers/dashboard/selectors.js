@@ -40,12 +40,12 @@ export const querySelector = createQueryParametersSelector({ defaultSorting: DEF
 export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;
 
 export const getDashboardItemPageLinkSelector = (state) => (dashboardId) => {
-  const activeProject = activeProjectSelector(state);
+  const { organizationSlug, projectSlug } = activeProjectSelector(state);
   const queryParams = pagePropertiesSelector(state);
 
   return {
     type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectId: activeProject, dashboardId },
+    payload: { organizationSlug, projectSlug, dashboardId },
     meta: {
       query: queryParams,
     },

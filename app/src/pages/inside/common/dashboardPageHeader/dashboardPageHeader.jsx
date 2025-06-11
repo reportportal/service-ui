@@ -19,11 +19,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
 import {
+  urlOrganizationAndProjectSelector,
   activeDashboardIdSelector,
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  userRolesSelector,
 } from 'controllers/pages';
 import {
   dashboardItemsSelector,
@@ -34,6 +36,8 @@ import {
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
@@ -49,11 +53,12 @@ const DASHBOARD_PAGE_ITEM_VALUE = 'All';
 const DASHBOARDS_LIMIT = 3000;
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
   dashboardsToDisplay: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
   totalDashboards: totalDashboardsSelector(state),
   isLoading: loadingSelector(state),
+  userRoles: userRolesSelector(state),
   getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
   query: pagePropertiesSelector(state),
 }))
@@ -61,12 +66,16 @@ const DASHBOARDS_LIMIT = 3000;
 export class DashboardPageHeader extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     getDashboardItemPageLink: PropTypes.func.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
     isLoading: PropTypes.bool,
     totalDashboards: PropTypes.number,
+    userRoles: userRolesType,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
     query: PropTypes.object,
   };
 
@@ -75,22 +84,24 @@ export class DashboardPageHeader extends Component {
     dashboardsToDisplay: [],
     isLoading: true,
     totalDashboards: 0,
+    userRoles: {},
     query: {},
   };
 
   getDashboardPageItem = () => {
     const {
+      slugs: { organizationSlug, projectSlug },
       query,
-      projectId,
       intl: { formatMessage },
     } = this.props;
+
     return {
       label: (
         <NavLink
           exact
           to={{
             type: PROJECT_DASHBOARD_PAGE,
-            payload: { projectId },
+            payload: { organizationSlug, projectSlug },
             meta: {
               query,
             },
@@ -102,6 +113,17 @@ export class DashboardPageHeader extends Component {
         </NavLink>
       ),
       value: DASHBOARD_PAGE_ITEM_VALUE,
+    };
+  };
+
+  createDashboardLink = (dashboardId) => {
+    const {
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
+
+    return {
+      type: PROJECT_DASHBOARD_ITEM_PAGE,
+      payload: { projectSlug, dashboardId, organizationSlug },
     };
   };
 
@@ -122,8 +144,7 @@ export class DashboardPageHeader extends Component {
     );
 
   render() {
-    const { activeItemId, isLoading, totalDashboards } = this.props;
-
+    const { activeItemId, isLoading, totalDashboards, userRoles } = this.props;
     const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
     const disabled = isLoading || isAboveLimit;
 
@@ -135,7 +156,7 @@ export class DashboardPageHeader extends Component {
             value={activeItemId || DASHBOARD_PAGE_ITEM_VALUE}
           />
         </div>
-        <AddDashboardButton disabled={disabled} />
+        {canWorkWithDashboard(userRoles) && <AddDashboardButton disabled={disabled} />}
       </div>
     );
   }

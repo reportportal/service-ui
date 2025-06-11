@@ -32,12 +32,18 @@ export const Popover = ({
   dataAutomationId,
   onClose,
   parentRef,
+  variant,
+  popoverClassName,
+  arrowVerticalPosition,
+  topPosition,
+  arrowVerticalOffset,
 }) => {
   const popoverRef = useRef();
-  const [top, setTop] = useState(0);
+  const [top, setTop] = useState(topPosition);
   const [left, setLeft] = useState(0);
+  const isNotDefaultTopPosition = !topPosition;
 
-  useOnClickOutside(popoverRef, onClose);
+  useOnClickOutside(parentRef, onClose);
 
   useLayoutEffect(() => {
     const { current: parent } = parentRef;
@@ -52,15 +58,18 @@ export const Popover = ({
 
     const setHorizontalPosition = () => {
       switch (arrowPosition) {
-        case 'right':
+        case 'right': {
           setLeft(parentLeft + parentWidth / 2 - popoverWidth + TRIANGLE_SIZE + 16);
           break;
-        case 'middle':
+        }
+        case 'middle': {
           setLeft(parentLeft + parentWidth / 2 - popoverWidth / 2);
           break;
+        }
         case 'left':
-        default:
+        default: {
           setLeft(parentLeft + parentWidth / 2 - TRIANGLE_SIZE - 16);
+        }
       }
     };
 
@@ -68,27 +77,47 @@ export const Popover = ({
       setTop(parentTop + parentHeight / 2 - popoverHeight / 2);
     };
 
-    if (side === 'bottom') {
-      setTop(parentTop + parentHeight + SAFE_ZONE + TRIANGLE_SIZE);
-      setHorizontalPosition();
-    } else if (side === 'top') {
-      setTop(parentTop - SAFE_ZONE - TRIANGLE_SIZE - popoverHeight);
-      setHorizontalPosition();
-    } else if (side === 'right') {
-      setVerticalMiddlePosition();
-      setLeft(parentLeft + parentWidth + SAFE_ZONE + TRIANGLE_SIZE);
-    } else if (side === 'left') {
-      setVerticalMiddlePosition();
-      setLeft(parentLeft - SAFE_ZONE - TRIANGLE_SIZE - popoverWidth);
+    switch (side) {
+      case 'bottom': {
+        isNotDefaultTopPosition && setTop(parentTop + parentHeight + SAFE_ZONE + TRIANGLE_SIZE);
+        setHorizontalPosition();
+        break;
+      }
+      case 'top': {
+        isNotDefaultTopPosition && setTop(parentTop - SAFE_ZONE - TRIANGLE_SIZE - popoverHeight);
+        setHorizontalPosition();
+        break;
+      }
+      case 'right': {
+        isNotDefaultTopPosition && setVerticalMiddlePosition();
+        setLeft(parentLeft + parentWidth + SAFE_ZONE + TRIANGLE_SIZE);
+        break;
+      }
+      case 'left':
+      default: {
+        isNotDefaultTopPosition && setVerticalMiddlePosition();
+        setLeft(parentLeft - SAFE_ZONE - TRIANGLE_SIZE - popoverWidth);
+      }
     }
-  }, [parentRef, side, arrowPosition]);
+  }, [parentRef, side, arrowPosition, isNotDefaultTopPosition]);
+
+  const className = cx(
+    'popover',
+    `side-${side}`,
+    `position-${arrowPosition}`,
+    variant,
+    popoverClassName,
+    {
+      [`position-${arrowVerticalPosition}`]: arrowVerticalPosition,
+    },
+  );
 
   return (
     <div
-      className={cx('popover', `side-${side}`, `position-${arrowPosition}`)}
+      className={className}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
-      style={{ top, left }}
+      style={{ top, left, '--arrow-offset': `${arrowVerticalOffset}px` }}
     >
       {title && <div className={cx('title')}>{title}</div>}
       <div className={cx('content')}>{children}</div>
@@ -104,6 +133,14 @@ Popover.propTypes = {
   dataAutomationId: PropTypes.string,
   onClose: PropTypes.func,
   parentRef: PropTypes.shape({ current: PropTypes.object }),
+  popoverClassName: PropTypes.string,
+  variant: PropTypes.oneOf(['light', 'dark']),
+  arrowVerticalPosition: PropTypes.oneOfType([
+    PropTypes.oneOf(['vertical-top, vertical-bottom']),
+    null,
+  ]),
+  topPosition: PropTypes.number,
+  arrowVerticalOffset: PropTypes.number,
 };
 
 Popover.defaultProps = {
@@ -114,4 +151,9 @@ Popover.defaultProps = {
   dataAutomationId: '',
   onClose: () => {},
   parentRef: null,
+  popoverClassName: '',
+  variant: 'light',
+  arrowVerticalPosition: null,
+  topPosition: 0,
+  arrowVerticalOffset: 22,
 };

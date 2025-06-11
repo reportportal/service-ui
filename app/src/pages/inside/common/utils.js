@@ -15,7 +15,6 @@
  */
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
 import { DEFECT_TYPES_SEQUENCE, DEFAULT_DEFECT_TYPES_LOCATORS } from 'common/constants/defectTypes';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -65,8 +64,6 @@ export const createStepActionDescriptors = (params) => {
     btsIntegrations,
     isBtsPluginsExist,
     enabledBtsPlugins,
-    accountRole,
-    projectRole,
     selectedItems = [],
   } = params;
   const isIssueOperationDisabled = selectedItems.length > ISSUE_OPERATION_MAX_ITEMS;
@@ -81,12 +78,10 @@ export const createStepActionDescriptors = (params) => {
         enabledBtsPlugins,
         isPostIssueUnavailable,
       );
-
   return [
     {
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
       value: 'action-edit',
-      hidden: !canBulkEditItems(accountRole, projectRole),
       onClick: onEditItems,
     },
     {
@@ -148,6 +143,10 @@ export const getGroupedDefectTypesOptions = (
   formatMessage,
   defectTypesSequence = DEFECT_TYPES_SEQUENCE,
 ) => {
+  if (Object.keys(defectTypes).length === 0) {
+    return [];
+  }
+
   let defectTypesOptions = [];
   defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];

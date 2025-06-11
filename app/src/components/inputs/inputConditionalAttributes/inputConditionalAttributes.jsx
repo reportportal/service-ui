@@ -38,7 +38,7 @@ export class InputConditionalAttributes extends Component {
     onChange: PropTypes.func,
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
-    projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     isAttributeKeyRequired: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
     canAddSinglePair: PropTypes.bool,
@@ -53,7 +53,6 @@ export class InputConditionalAttributes extends Component {
     valueURLCreator: () => {},
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
-    projectId: '',
     browserTooltipTitle: '',
     isAttributeKeyRequired: false,
     isAttributeValueRequired: true,
@@ -150,7 +149,7 @@ export class InputConditionalAttributes extends Component {
       value,
       keyURLCreator,
       valueURLCreator,
-      projectId,
+      projectKey,
       isAttributeKeyRequired,
       isAttributeValueRequired,
       canAddSinglePair,
@@ -180,7 +179,7 @@ export class InputConditionalAttributes extends Component {
             <AttributeEditor
               keyURLCreator={keyURLCreator}
               valueURLCreator={valueURLCreator}
-              projectId={projectId}
+              projectKey={projectKey}
               onConfirm={this.onChangeAttributes}
               nakedView
               isAttributeKeyRequired={isAttributeKeyRequired}

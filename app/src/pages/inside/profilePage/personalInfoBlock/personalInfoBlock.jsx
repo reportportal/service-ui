@@ -81,7 +81,8 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    userId: userInfoSelector(state).userId,
+    userLogin: userInfoSelector(state).userId,
+    userId: userInfoSelector(state).id,
     accountType: userInfoSelector(state).accountType,
     isDemoInstance: isDemoInstanceSelector(state),
   }),
@@ -95,7 +96,8 @@ const messages = defineMessages({
 @track()
 export class PersonalInfoBlock extends Component {
   static propTypes = {
-    userId: PropTypes.string,
+    userLogin: PropTypes.string,
+    userId: PropTypes.number,
     accountType: PropTypes.string,
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -108,15 +110,17 @@ export class PersonalInfoBlock extends Component {
     isDemoInstance: PropTypes.bool,
   };
   static defaultProps = {
-    userId: '',
+    userLogin: '',
+    userId: null,
     accountType: '',
     isDemoInstance: false,
   };
 
   state = {
-    avatarSource: URLS.dataPhoto(),
+    avatarSource: URLS.userAvatar(this.props.userId, false),
     forceUpdateInProgress: false,
   };
+
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
     this.props.showModalAction({
@@ -158,7 +162,6 @@ export class PersonalInfoBlock extends Component {
     if (accountType === UPSA) {
       return 'epam';
     }
-
     return accountType.toLowerCase();
   };
 
@@ -180,18 +183,21 @@ export class PersonalInfoBlock extends Component {
         });
       });
   };
+
   uploadNewImage = (image) => {
     this.setState({ avatarSource: image });
   };
+
   removeImage = () => {
-    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
+    this.setState({ avatarSource: URLS.dataPhoto(this.props.userId, Date.now()) });
   };
 
   render() {
-    const { intl, accountType, userId, isDemoInstance } = this.props;
+    const { intl, accountType, userLogin, isDemoInstance, userId } = this.props;
     const { forceUpdateInProgress } = this.state;
-    const isDefaultUser = userId === DEFAULT_USER_ID;
+    const isDefaultUser = userLogin === DEFAULT_USER_ID;
     const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
+
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerBody>
@@ -206,12 +212,13 @@ export class PersonalInfoBlock extends Component {
               />
             </div>
             <div className={cx('info')}>
-              <UserInfo accountType={accountType} userId={userId} />
+              <UserInfo accountType={accountType} userId={userLogin} />
               {accountType === INTERNAL && (
                 <PhotoControls
                   accountType={accountType}
                   uploadNewImage={this.uploadNewImage}
                   removeImage={this.removeImage}
+                  userId={userId}
                 />
               )}
               {accountType === INTERNAL && (

@@ -22,10 +22,11 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  activeProjectRoleSelector,
-  activeProjectSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+  userRolesSelector,
+  urlOrganizationAndProjectSelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { showModalAction } from 'controllers/modal';
@@ -36,7 +37,6 @@ import {
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import { PROJECT_SETTINGS_TAB_PAGE, updatePagePropertiesAction } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
@@ -57,12 +57,11 @@ export const IntegrationInfo = (props) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const userProjectRole = useSelector(activeProjectRoleSelector);
+  const userRoles = useSelector(userRolesSelector);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const activeProject = useSelector(activeProjectSelector);
-  const isAbleToClick = canUpdateSettings(accountRole, userProjectRole);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const isAbleToClick = canUpdateSettings(userRoles);
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
@@ -178,7 +177,7 @@ export const IntegrationInfo = (props) => {
   };
   const allIntegrationListLink = {
     type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+    payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
   };
   const pluginIntegrationListLink = {
     ...allIntegrationListLink,
@@ -270,11 +269,17 @@ export const IntegrationInfo = (props) => {
         </>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noGlobalIntegrationsMessage)}
+          title={formatMessage(
+            isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
+          )}
           handleButton={onAddProjectIntegration}
-          description={formatMessage(messages.noGlobalIntegrationsDescription)}
+          description={formatMessage(
+            isAbleToClick
+              ? messages.noGlobalIntegrationsDescription
+              : messages.noGlobalIntegrationsYetDescription,
+          )}
           handleDocumentationClick={handleDocumentationClick}
-          buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+          buttonName={isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null}
           disableButton={!isAbleToClick}
           buttonDataAutomationId="addProjectIntegrationButton"
         />
@@ -291,7 +296,7 @@ export const IntegrationInfo = (props) => {
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable}
+            withButton={isAtLeastOneIntegrationAvailable && isAbleToClick}
             breadcrumbs={integrationListBreadcrumbs}
           />
           {renderIntegrationList()}
@@ -314,6 +319,7 @@ export const IntegrationInfo = (props) => {
     </>
   );
 };
+
 IntegrationInfo.propTypes = {
   plugin: PropTypes.shape({
     creationDate: PropTypes.number,
@@ -330,6 +336,7 @@ IntegrationInfo.propTypes = {
   }).isRequired,
   integrationId: PropTypes.string,
 };
+
 IntegrationInfo.defaultProps = {
   integrationId: '',
 };

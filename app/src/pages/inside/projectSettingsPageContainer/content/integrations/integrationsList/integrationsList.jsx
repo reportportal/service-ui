@@ -17,14 +17,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { docsReferences } from 'common/utils';
+import { userRolesSelector } from 'controllers/pages';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { IntegrationsListItem } from './integrationsListItem';
-import styles from './integrationsList.scss';
 import { messages } from './messages';
+import styles from './integrationsList.scss';
 
 const cx = classNames.bind(styles);
 
@@ -32,6 +35,8 @@ export const IntegrationsList = (props) => {
   const { formatMessage } = useIntl();
   const { availableIntegrations, onItemClick } = props;
   const { trackEvent } = useTracking();
+  const userRoles = useSelector(userRolesSelector);
+  const isEditor = canUpdateSettings(userRoles);
 
   const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations'));
@@ -60,8 +65,12 @@ export const IntegrationsList = (props) => {
         </div>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noIntegrationsMessage)}
-          description={formatMessage(messages.noIntegrationsDescription)}
+          title={formatMessage(
+            isEditor ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
+          )}
+          description={formatMessage(
+            isEditor ? messages.noIntegrationsDescription : messages.noIntegrationsYetDescription,
+          )}
           documentationLink={docsReferences.emptyStateIntegrationsDocs}
           handleDocumentationClick={handleDocumentationClick}
           descriptionClassName={cx('integration-empty')}

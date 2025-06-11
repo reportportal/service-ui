@@ -23,7 +23,7 @@ import * as validate from 'common/utils/validation/validate';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown } from '@reportportal/ui-kit';
 import { FieldText } from 'componentLibrary/fieldText';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
 import { DEFAULT_FORM_CONFIG } from '../constants';
@@ -121,7 +121,7 @@ export class JiraConnectionFormFields extends Component {
           dataAutomationId="authorizationTypeField"
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.systemAuthTypes} defaultWidth={false} />
+            <Dropdown options={this.systemAuthTypes} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
