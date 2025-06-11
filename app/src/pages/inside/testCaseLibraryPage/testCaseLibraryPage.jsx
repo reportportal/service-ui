@@ -56,7 +56,9 @@ export const TestCaseLibraryPage = () => {
             </div>
             <Header title={formatMessage(messages.testCaseLibraryHeader)} />
           </div>
-          <div className={cx('test-case-library-page__content')}>
+          <div
+            className={cx(hasTestCases ? 'test-cases-content' : 'test-case-library-page__content')}
+          >
             {hasTestCases ? (
               <AllTestCasesPage
                 testCases={filteredTestCases}
