@@ -16,7 +16,7 @@
 
 import classNames from 'classnames/bind';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { StatusIcon } from '../statusIcon';
+import { PriorityIcon } from '../priorityIcon';
 import { TestCaseStatus } from '../types';
 import styles from '../testCaseCell.scss';
 
@@ -31,7 +31,7 @@ interface TestCaseNameCellProps {
 export const TestCaseNameCell = ({ status, name, tags }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      <StatusIcon status={status} />
+      <PriorityIcon status={status} />
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}

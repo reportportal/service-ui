@@ -47,19 +47,3 @@ declare module '*.jpeg' {
   const src: string;
   export default src;
 }
-
-declare module '*.gif' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.webp' {
-  const src: string;
-  export default src;
-}
-
-// JSON imports
-declare module '*.json' {
-  const value: string;
-  export default value;
-}
