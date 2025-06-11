@@ -15,3 +15,4 @@
  */
 
 export { TestCaseLibraryPage } from './testCaseLibraryPage';
+export { TestCaseDetailsPage } from './testCaseDetailsPage';

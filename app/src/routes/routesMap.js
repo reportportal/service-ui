@@ -68,6 +68,7 @@ import {
   PRODUCT_VERSIONS_TAB_PAGE,
   PRODUCT_VERSIONS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  TEST_CASE_DETAILS_PAGE,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -344,6 +345,8 @@ const routesMap = {
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
   [TEST_CASE_LIBRARY_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/testCaseLibrary',
+  [TEST_CASE_DETAILS_PAGE]:
+    '/organizations/:organizationSlug/projects/:projectSlug/testCaseLibrary/:testCaseSlug',
   [PRODUCT_VERSIONS_PAGE]: redirectRoute(
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
     (payload) => ({
