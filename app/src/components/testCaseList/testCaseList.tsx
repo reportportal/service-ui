@@ -36,10 +36,10 @@ interface TestCaseListProps {
   itemsPerPage: number;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
-  onEdit?: (testCase: TestCase) => void;
-  onDelete?: (testCase: TestCase) => void;
-  onDuplicate?: (testCase: TestCase) => void;
-  onMove?: (testCase: TestCase) => void;
+  onEdit: () => void;
+  onDelete: (testCaseId: string | number) => void;
+  onDuplicate: (testCase: TestCase) => void;
+  onMove: () => void;
 }
 
 export const TestCaseList = memo(
@@ -82,10 +82,10 @@ export const TestCaseList = memo(
         component: (
           <TestCaseExecutionCell
             lastExecution={testCase.lastExecution}
-            onEdit={() => onEdit?.(testCase)}
-            onDelete={() => onDelete?.(testCase)}
-            onDuplicate={() => onDuplicate?.(testCase)}
-            onMove={() => onMove?.(testCase)}
+            onEdit={() => onEdit()}
+            onDelete={() => onDelete(testCase.id)}
+            onDuplicate={() => onDuplicate(testCase)}
+            onMove={() => onMove()}
           />
         ),
       },

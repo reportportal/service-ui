@@ -60,9 +60,9 @@ export const AllTestCasesPage = ({
   }, []);
 
   const handleDelete = useCallback(
-    (testCase: TestCase) => {
+    (testCaseId: string) => {
       // Here you would typically show confirmation modal
-      deleteTestCase(testCase.id);
+      deleteTestCase(testCaseId);
     },
     [deleteTestCase],
   );
