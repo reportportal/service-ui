@@ -60,6 +60,7 @@ import {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  TEST_CASE_DETAILS_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -72,7 +73,7 @@ import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
-import { TestCaseLibraryPage } from 'pages/inside/testCaseLibraryPage';
+import { TestCaseLibraryPage, TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -177,6 +178,11 @@ export const pageRendering = {
   },
   [TEST_CASE_LIBRARY_PAGE]: {
     component: TestCaseLibraryPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [TEST_CASE_DETAILS_PAGE]: {
+    component: TestCaseDetailsPage,
     layout: ProjectLayout,
     rawContent: true,
   },

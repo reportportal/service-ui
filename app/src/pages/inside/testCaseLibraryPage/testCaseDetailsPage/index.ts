@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { TestCaseLibraryPage } from './testCaseLibraryPage';
 export { TestCaseDetailsPage } from './testCaseDetailsPage';
