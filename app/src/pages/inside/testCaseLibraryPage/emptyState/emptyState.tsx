@@ -14,27 +14,44 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { redirect } from 'redux-first-router';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
+import { TEST_CASE_DETAILS_PAGE } from 'controllers/pages/constants';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { messages } from './messages';
 
 export const EmptyState = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
-  const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
-    (translation) =>
-      formatMessage(translation, {
-        strong: (chunks) => <strong>{chunks}</strong>,
-        br: <br />,
+  const handleCreateTestCase = () => {
+    dispatch(
+      redirect({
+        type: TEST_CASE_DETAILS_PAGE,
+        payload: {
+          // temporary - will be replaced with actual ID generation
+          testCaseSlug: 'new',
+          organizationSlug,
+          projectSlug,
+        },
       }),
-  );
+    );
+  };
+
+  const benefits = [
+    messages.createFolder,
+    messages.addTestCases,
+    messages.tagTestCases,
+  ].map((translation) => Parser(formatMessage(translation)));
 
   return (
     <>
@@ -48,10 +65,11 @@ export const EmptyState = () => {
             name: formatMessage(messages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
+            handleButton: handleCreateTestCase,
           },
           {
             name: formatMessage(messages.importTestCases),
-            dataAutomationId: 'createTestCaseButton',
+            dataAutomationId: 'importTestCaseButton',
             variant: 'ghost',
             icon: ImportIcon,
             isCompact: true,
