@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { commonValidators } from 'common/utils/validation/index';
 import * as validate from './validate';
 import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
@@ -64,19 +63,19 @@ export const createPatternNameValidator = (patterns, patternId) =>
 
 export const emailCreateUserValidator = () =>
   composeBoundValidators([
-    commonValidators.requiredField,
+    requiredField,
     bindMessageToValidator(validate.requiredEmail, 'emailCreateUserHint'),
   ]);
 
 export const createPatternCreateUserNameValidator = () =>
   composeBoundValidators([
-    commonValidators.requiredField,
+    requiredField,
     bindMessageToValidator(validate.userCreateName, 'nameCreateUserHint'),
   ]);
 
 export const createPatternCreateUserPasswordValidator = () =>
   composeBoundValidators([
-    commonValidators.requiredField,
+    requiredField,
     bindMessageToValidator(validate.passwordCreateUser, 'passwordCreateUserHint'),
   ]);
 
@@ -95,7 +94,7 @@ export const createRuleNameValidator = (notifications, notificationId) =>
   ]);
 export const createProjectNameValidator = () =>
   composeBoundValidators([
-    commonValidators.requiredField,
+    requiredField,
     bindMessageToValidator(validate.projectNameLength, 'projectNameLengthHint'),
     bindMessageToValidator(validate.projectNamePattern, 'projectNamePatternHint'),
   ]);
