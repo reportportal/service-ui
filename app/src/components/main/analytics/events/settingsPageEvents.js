@@ -18,7 +18,6 @@ import {
   getIntegrationAddClickEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
-  getPluginConfigureClickSubmitEvent,
   getPluginEditAuthorizationClickEvent,
   getPluginInstanceItemClickEvent,
   getPluginRemoveIntegrationClickEvent,
@@ -478,7 +477,6 @@ export const SETTINGS_PAGE_EVENTS = {
   pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(SETTINGS_PAGE),
   pluginConfigureClick: getPluginConfigureClickEvent(SETTINGS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(SETTINGS_PAGE),
-  pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(SETTINGS_PAGE),
   integrationAddClickEvent: getIntegrationAddClickEvent(SETTINGS_PAGE),
   saveIntegrationModalEvents: getSaveIntegrationModalEvents(SETTINGS_PAGE),
 };

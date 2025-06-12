@@ -66,9 +66,15 @@ export const Footer = ({ className = '', isPreview = false }) => {
           <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
           <span>: {buildVersion}</span>
         </div>
-        <div className={cx('footer-text')}>
-          <span> &copy; Report Portal {new Date().getFullYear()} </span>
-          <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
+        <div className={cx('text-wrapper')}>
+          <div className={cx('footer-text')}>
+            <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
+            <span>: {buildVersion}</span>
+          </div>
+          <div className={cx('footer-text')}>
+            <span> &copy; ReportPortal 2013-{new Date().getFullYear()}. </span>
+            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved.'} />
+          </div>
         </div>
       </div>
       <div className={cx('footer-links', { 'one-line': isSingleLine })}>

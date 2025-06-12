@@ -61,6 +61,24 @@ export const createPatternNameValidator = (patterns, patternId) =>
     ),
   ]);
 
+export const emailCreateUserValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.requiredEmail, 'emailCreateUserHint'),
+  ]);
+
+export const createPatternCreateUserNameValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.userCreateName, 'nameCreateUserHint'),
+  ]);
+
+export const createPatternCreateUserPasswordValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.passwordCreateUser, 'passwordCreateUserHint'),
+  ]);
+
 export const createNumberOfLaunchesValidator = (message) =>
   bindMessageToValidator(validate.widgetNumberOfLaunches, message);
 export const createWidgetContentFieldsValidator = (message) =>
@@ -73,6 +91,12 @@ export const createRuleNameValidator = (notifications, notificationId) =>
       validate.createNameUniqueValidator(notificationId, notifications),
       'ruleNameDuplicateHint',
     ),
+  ]);
+export const createProjectNameValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.projectNameLength, 'projectNameLengthHint'),
+    bindMessageToValidator(validate.projectNamePattern, 'projectNamePatternHint'),
   ]);
 
 export const createFooterLinkNameValidator = (links) =>
@@ -94,3 +118,6 @@ export const createDescriptionValidator = bindMessageToValidator(
   validate.descriptionField,
   'descriptionHint',
 );
+
+export const createKeywordMatcherValidator = (keyword) =>
+  bindMessageToValidator(validate.keywordMatcher(keyword), 'keywordMatcherHint');

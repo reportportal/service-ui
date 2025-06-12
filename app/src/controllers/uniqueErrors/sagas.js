@@ -16,7 +16,7 @@
 
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
@@ -62,7 +62,7 @@ function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
   const parentLaunch = yield select(launchSelector);
-  const project = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
 
@@ -75,7 +75,7 @@ function* fetchClusters(payload = {}) {
   if (!parentLaunch) {
     yield call(fetchParentItems);
   } else {
-    yield call(fetchParentLaunch, { payload: { project, launchId } });
+    yield call(fetchParentLaunch, { payload: { projectKey, launchId } });
   }
 
   const query = yield select(queryParametersSelector, NAMESPACE);
@@ -83,7 +83,7 @@ function* fetchClusters(payload = {}) {
   const requestParams = {};
   const plugin = yield call(getPlugin);
   if (plugin) {
-    url = URLS.pluginCommandCommon(project, plugin.name, COMMAND_GET_CLUSTERS);
+    url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_CLUSTERS);
     requestParams.method = 'PUT';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
     requestParams.data = {
@@ -94,7 +94,7 @@ function* fetchClusters(payload = {}) {
       pageSort: query[SORTING_KEY],
     };
   } else {
-    url = URLS.clusterByLaunchId(project, launchId, {
+    url = URLS.clusterByLaunchId(projectKey, launchId, {
       [PAGE_KEY]: query[PAGE_KEY],
       [SIZE_KEY]: query[SIZE_KEY],
       [SORTING_KEY]: query[SORTING_KEY],

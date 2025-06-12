@@ -1,0 +1,121 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.plugins-list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 275px;
+  height: 115px;
+  margin: 0 15px 15px 0;
+  padding: 15px;
+  box-sizing: border-box;
+  border: solid 1px $COLOR--gray-91;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 70px;
+  }
+}
+
+.plugins-info-block {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 50%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    align-items: center;
+    height: 100%;
+  }
+}
+
+.plugins-image {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.plugins-info {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: space-between;
+  height: 40px;
+  width: 100%;
+  overflow: hidden;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 34px;
+  }
+}
+
+.plugins-name {
+  margin-bottom: 10px;
+  margin-right: 10px;
+  color: $COLOR--black-2;
+  font-size: 15px;
+  font-family: $FONT-SEMIBOLD;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 5px;
+  }
+}
+
+.plugins-author {
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}
+
+.plugins-version {
+  color: $COLOR--black-2;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}
+
+.plugins-additional-block {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 50%;
+  width: 100%;
+}
+
+.plugins-switcher {
+  all: unset;
+  height: 14px;
+  width: 20px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

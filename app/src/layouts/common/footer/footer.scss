@@ -27,6 +27,7 @@
   font-family: $FONT-REGULAR;
   font-size: 11px;
   color: $COLOR--gray-47;
+  z-index: -1;
   gap: 3px;
 
   &.one-line {

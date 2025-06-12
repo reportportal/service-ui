@@ -1,0 +1,74 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.user-page-location-level {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: $COLOR--e-300;
+  font-size: 13px;
+  margin-bottom: 12px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.tree-button {
+  width: 16px;
+  height: 16px;
+}
+
+.name {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.open {
+  svg path {
+    fill: $COLOR--topaz-pressed;
+  }
+
+  &:hover:not(.disabled) {
+    svg path {
+      fill: $COLOR--topaz-2;
+    }
+  }
+}
+
+.popover {
+  font-size: 13px;
+  line-height: 20px;
+  min-width: 175px;
+}
+
+.project-name,
+.organization-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.project-name {
+  color: $COLOR--topaz-2;
+  margin-left: 16px;
+}
+
+.active {
+  color: $COLOR--topaz-2;
+}

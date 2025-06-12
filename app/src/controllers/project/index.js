@@ -43,6 +43,7 @@ export {
   addProjectNotificationAction,
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
+  fetchProjectSuccessAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -69,7 +70,11 @@ export {
   projectInfoSelector,
   projectInfoLoadingSelector,
   projectAttributesSelector,
+  projectNotificationsLoadingSelector,
   projectNotificationsStateSelector,
+  projectKeySelector,
+  projectNameSelector,
+  projectInfoIdSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

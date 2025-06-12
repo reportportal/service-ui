@@ -20,7 +20,7 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { ChartContainer } from 'components/widgets/common/c3chart';
@@ -36,7 +36,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -50,10 +50,13 @@ export class FailedCasesTrendChart extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -63,15 +66,20 @@ export class FailedCasesTrendChart extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getStatisticsLink, project } = this.props;
+    const {
+      widget,
+      getStatisticsLink,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
     const launchIds = widget.content.result.map((item) => item.id);
     const link = getStatisticsLink({
       statuses: [FAILED, INTERRUPTED],
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectSlug,
       widget.appliedFilters[0].id,
       launchIds[data.index],
+      organizationSlug,
     );
 
     this.props.navigate(Object.assign(link, navigationParams));

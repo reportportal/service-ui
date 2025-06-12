@@ -16,6 +16,7 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
+import { CONDITION_ANY } from 'components/filterEntities/constants';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -47,12 +48,14 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    organizationId,
   } = baseEventParameters;
 
   const eventParameters = {
     instanceID: instanceId,
     version: getAppVersion(buildVersion),
     uid: `${userId}|${instanceId}`,
+    organization_id: `${organizationId}|${instanceId}`,
     auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
@@ -72,3 +75,16 @@ export const baseEventParametersShape = PropTypes.shape({
   projectInfoId: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
+
+export const getApplyFilterEventParams = (fields, initialState, conditionProp) => {
+  const type = Object.keys(fields)
+    .filter((field) => fields[field].value.toString() !== initialState[field].toString())
+    .join('#');
+
+  const condition =
+    fields[conditionProp].value !== initialState[conditionProp]
+      ? fields[conditionProp]?.value || CONDITION_ANY
+      : undefined;
+
+  return { type, condition };
+};

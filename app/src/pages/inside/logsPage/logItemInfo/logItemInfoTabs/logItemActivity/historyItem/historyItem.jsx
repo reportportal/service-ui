@@ -21,7 +21,11 @@ import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { projectIdSelector, filterIdSelector, PROJECT_LOG_PAGE } from 'controllers/pages/index';
+import {
+  urlOrganizationAndProjectSelector,
+  filterIdSelector,
+  PROJECT_LOG_PAGE,
+} from 'controllers/pages/index';
 import { patternsSelector } from 'controllers/project';
 import { getTicketUrlId } from 'common/utils/index';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
@@ -47,7 +51,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  projectId: projectIdSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
   filterId: filterIdSelector(state),
   patterns: patternsSelector(state),
 }))
@@ -59,10 +63,13 @@ export class HistoryItem extends Component {
       newValue: PropTypes.string,
       field: PropTypes.string.isRequired,
     }).isRequired,
-    projectId: PropTypes.string.isRequired,
     filterId: PropTypes.string.isRequired,
     patterns: PropTypes.array,
     onClick: PropTypes.func,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -93,16 +100,22 @@ export class HistoryItem extends Component {
   }
 
   renderRelevantValue(value) {
-    const { projectId, filterId, intl, onClick } = this.props;
+    const {
+      slugs: { organizationSlug, projectSlug },
+      filterId,
+      intl,
+      onClick,
+    } = this.props;
 
     try {
       const relevantItem = normalizeAndParse(value);
       const itemLink = {
         type: PROJECT_LOG_PAGE,
         payload: {
-          projectId,
+          projectSlug,
           filterId,
           testItemIds: [relevantItem.launchId, ...relevantItem.path.split('.')].join('/'),
+          organizationSlug,
         },
       };
 

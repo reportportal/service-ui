@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -24,8 +25,9 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { copyDashboardConfigAction } from 'controllers/dashboard';
+import { userRolesSelector } from 'controllers/pages';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -47,11 +49,13 @@ export const NameColumn = track()(
     );
   },
 );
+
 NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
   className: PropTypes.string,
 };
+
 NameColumn.defaultProps = {
   value: {},
   customProps: {},
@@ -65,6 +69,7 @@ DescriptionColumn.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
 };
+
 DescriptionColumn.defaultProps = {
   value: '',
   className: '',
@@ -73,10 +78,12 @@ DescriptionColumn.defaultProps = {
 export const OwnerColumn = ({ value, className }) => (
   <div className={cx(className, 'owner')}>{value}</div>
 );
+
 OwnerColumn.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
 };
+
 OwnerColumn.defaultProps = {
   value: '',
   className: '',
@@ -87,6 +94,7 @@ export const DuplicateColumn = track()(
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
+    const userRoles = useSelector(userRolesSelector);
 
     useEffect(() => {
       if (opened) {
@@ -134,9 +142,11 @@ export const DuplicateColumn = track()(
             <i className={cx('arrow', { opened })} />
             {opened && (
               <div className={cx('duplicate-menu', 'shown')}>
-                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
-                  {intl.formatMessage(messages.duplicate)}
-                </button>
+                {canWorkWithDashboard(userRoles) && (
+                  <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
+                    {intl.formatMessage(messages.duplicate)}
+                  </button>
+                )}
                 <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
                   {intl.formatMessage(messages.copyConfig)}
                 </button>
@@ -162,7 +172,7 @@ DuplicateColumn.defaultProps = {
 };
 
 export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
-  const { onEdit } = customProps;
+  const { onEdit, disabled } = customProps;
   const { id } = value;
 
   const editItemHandler = () => {
@@ -173,7 +183,7 @@ export const EditColumn = track()(({ value, customProps, className, tracking: { 
   return (
     <div className={cx(className, 'icon-cell', 'with-button', 'edit-cell')}>
       <div className={cx('icon-holder')}>
-        <Icon type="icon-pencil" onClick={editItemHandler} />
+        <Icon type="icon-pencil" onClick={editItemHandler} disabled={disabled} />
       </div>
     </div>
   );
@@ -191,16 +201,17 @@ EditColumn.defaultProps = {
 
 export const DeleteColumn = track()(
   ({ value, customProps, className, tracking: { trackEvent } }) => {
+    const { onDelete, disabled } = customProps;
     const deleteItemHandler = () => {
       const { id } = value;
       trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
-      customProps.onDelete(value);
+      onDelete(value);
     };
 
     return (
       <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
         <div className={cx('icon-holder')}>
-          <Icon type="icon-delete" onClick={deleteItemHandler} />
+          <Icon type="icon-delete" onClick={deleteItemHandler} disabled={disabled} />
         </div>
       </div>
     );

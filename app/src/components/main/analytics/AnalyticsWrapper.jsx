@@ -24,7 +24,7 @@ import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
 import { assignedProjectsSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectSlugSelector } from 'controllers/pages';
 import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
@@ -32,7 +32,7 @@ export const analyticsEventObserver = ReactObserver();
 @connect((state) => ({
   baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
-  entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
+  entryType: assignedProjectsSelector(state)[urlProjectSlugSelector(state)]?.entryType,
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
@@ -48,6 +48,7 @@ export const analyticsEventObserver = ReactObserver();
       projectInfoId,
       isAdmin,
       isAnalyzerAvailable,
+      organizationId,
     } = baseEventParameters;
 
     if ('place' in data) {
@@ -58,6 +59,7 @@ export const analyticsEventObserver = ReactObserver();
           getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
         timestamp: Date.now(),
+        organization_id: `${organizationId}|${instanceId}`,
         uid: `${userId}|${instanceId}`,
         kind: entryType || 'not_set',
         ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import track from 'react-tracking';
+import React from 'react';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
-import { CUSTOMER } from 'common/constants/projectRoles';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
-import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
+import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { isImportPluginsAvailableSelector } from 'controllers/plugins';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -36,6 +35,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { createExternalLink, docsReferences } from 'common/utils';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
@@ -65,264 +65,214 @@ const DisabledImportButtonWithTooltip = withHoverableTooltip({
   },
 })(DisabledImportButton);
 
-@connect(
-  (state) => ({
-    breadcrumbs: breadcrumbsSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    projectRole: activeProjectRoleSelector(state),
-    isImportPluginsAvailable: isImportPluginsAvailableSelector(state),
-  }),
-  {
-    restorePath: restorePathAction,
-  },
-)
-@injectIntl
-@track()
-export class ActionPanel extends Component {
-  static propTypes = {
-    debugMode: PropTypes.bool,
-    onRefresh: PropTypes.func,
-    selectedLaunches: PropTypes.array,
-    hasErrors: PropTypes.bool,
-    showBreadcrumb: PropTypes.bool,
-    intl: PropTypes.object.isRequired,
-    onImportLaunch: PropTypes.func,
-    hasValidItems: PropTypes.bool,
-    accountRole: PropTypes.string,
-    projectRole: PropTypes.string.isRequired,
-    onProceedValidItems: PropTypes.func,
-    onEditItem: PropTypes.func,
-    onEditItems: PropTypes.func,
-    onMerge: PropTypes.func,
-    onCompare: PropTypes.func,
-    onMove: PropTypes.func,
-    onForceFinish: PropTypes.func,
-    onDelete: PropTypes.func,
-    breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
-    restorePath: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    onAddNewWidget: PropTypes.func,
-    finishedLaunchesCount: PropTypes.number,
-    isImportPluginsAvailable: PropTypes.bool.isRequired,
-  };
+export const ActionPanel = ({
+  debugMode,
+  onRefresh,
+  selectedLaunches,
+  hasErrors,
+  showBreadcrumb,
+  onImportLaunch,
+  hasValidItems,
+  onProceedValidItems,
+  onEditItem,
+  onEditItems,
+  onMerge,
+  onCompare,
+  onMove,
+  onForceFinish,
+  onDelete,
+  activeFilterId,
+  onAddNewWidget,
+  finishedLaunchesCount,
+}) => {
+  const breadcrumbs = useSelector(breadcrumbsSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
 
-  static defaultProps = {
-    debugMode: false,
-    onRefresh: () => {},
-    selectedLaunches: [],
-    hasErrors: false,
-    showBreadcrumb: false,
-    onImportLaunch: () => {},
-    hasValidItems: false,
-    onProceedValidItems: () => {},
-    onEditItem: () => {},
-    onEditItems: () => {},
-    onMerge: () => {},
-    onCompare: () => {},
-    onMove: () => {},
-    onForceFinish: () => {},
-    onDelete: () => {},
-    breadcrumbs: [],
-    restorePath: () => {},
-    activeFilterId: null,
-    onAddNewWidget: () => {},
-    finishedLaunchesCount: null,
-    accountRole: '',
-  };
+  const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets(userRoles);
+  const canManageActions = canBulkEditItems(userRoles);
+  const isShowImportButton = canManageActions && !debugMode && !Number.isInteger(activeFilterId);
+  const onClickActionButton = () => trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
 
-  onClickActionButton = () =>
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
-
-  createActionDescriptors = () => {
-    const {
-      intl,
-      debugMode,
-      onMerge,
-      onCompare,
-      onMove,
-      onForceFinish,
-      onDelete,
-      accountRole,
-      projectRole,
-      onEditItems,
-      onEditItem,
-      selectedLaunches,
-    } = this.props;
-
+  const createActionDescriptors = () => {
     return [
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
+        label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canBulkEditItems(accountRole, projectRole),
+        hidden: debugMode || !canManageActions,
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
             : onEditItem(selectedLaunches[0]);
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'));
         },
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
+        label: formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
-        hidden: debugMode,
+        hidden: debugMode || !canManageActions,
         onClick: () => {
           onMerge();
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'));
         },
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.COMPARE),
+        label: formatMessage(COMMON_LOCALE_KEYS.COMPARE),
         value: 'action-compare',
         hidden: debugMode,
         onClick: () => {
           onCompare();
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('compare'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('compare'));
         },
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
+        label: formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode || projectRole === CUSTOMER,
+        hidden: debugMode || !canManageActions,
         onClick: () => {
           onMove();
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'));
         },
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES),
+        label: formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES),
         value: 'action-move-to-all',
         hidden: !debugMode,
         onClick: onMove,
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
+        label: formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
+        hidden: !canManageActions,
         onClick: () => {
           onForceFinish();
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'));
         },
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
+        hidden: !canManageActions,
         onClick: () => {
           onDelete();
-          this.props.tracking.trackEvent(
-            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'),
-          );
+          trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'));
         },
       },
     ];
   };
-  isShowImportButton = () => {
-    const { debugMode, activeFilterId } = this.props;
-    return !debugMode && !Number.isInteger(activeFilterId);
-  };
 
-  isShowWidgetButton = () => {
-    const { activeFilterId } = this.props;
-    return Number.isInteger(activeFilterId);
-  };
+  const renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
 
-  renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
+  const importPluginDisabledMessage = PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[IMPORT_GROUP_TYPE];
 
-  render() {
-    const {
-      intl,
-      showBreadcrumb,
-      onRefresh,
-      hasErrors,
-      selectedLaunches,
-      hasValidItems,
-      onProceedValidItems,
-      onImportLaunch,
-      breadcrumbs,
-      restorePath,
-      onAddNewWidget,
-      finishedLaunchesCount,
-      isImportPluginsAvailable,
-    } = this.props;
-    const actionDescriptors = this.createActionDescriptors();
-    const importPluginDisabledMessage = PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[IMPORT_GROUP_TYPE];
-
-    return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
-        {showBreadcrumb && (
-          <Breadcrumbs
-            descriptors={breadcrumbs}
-            onRestorePath={restorePath}
-            togglerEventInfo={LAUNCHES_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
-          />
-        )}
-        {hasErrors && (
-          <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
-            {intl.formatMessage(messages.proceedButton)}
-          </GhostButton>
-        )}
-        <div className={cx('action-buttons')}>
-          {this.isShowImportButton() && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              {isImportPluginsAvailable ? (
-                <GhostButton icon={ImportIcon} onClick={onImportLaunch} transparentBackground>
-                  <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
-                </GhostButton>
-              ) : (
-                <DisabledImportButtonWithTooltip
-                  tooltipContent={intl.formatMessage(importPluginDisabledMessage, {
-                    name: 'Import',
-                    a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
-                  })}
-                  className={cx('no-import-message')}
-                  preventTargetSanitizing
-                />
-              )}
-            </div>
-          )}
-          {this.isShowWidgetButton() && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
-                <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
+  return (
+    <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
+      {showBreadcrumb && (
+        <Breadcrumbs
+          descriptors={breadcrumbs}
+          onRestorePath={() => dispatch(restorePathAction())}
+          togglerEventInfo={LAUNCHES_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+        />
+      )}
+      {hasErrors && (
+        <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
+          {formatMessage(messages.proceedButton)}
+        </GhostButton>
+      )}
+      <div className={cx('action-buttons')}>
+        {isShowImportButton && (
+          <div className={cx('action-button', 'mobile-hidden')}>
+            {isImportPluginsAvailable ? (
+              <GhostButton icon={ImportIcon} onClick={onImportLaunch} transparentBackground>
+                <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
               </GhostButton>
-            </div>
-          )}
+            ) : (
+              <DisabledImportButtonWithTooltip
+                tooltipContent={formatMessage(importPluginDisabledMessage, {
+                  name: 'Import',
+                  a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
+                })}
+                className={cx('no-import-message')}
+                preventTargetSanitizing
+              />
+            )}
+          </div>
+        )}
+        {isShowWidgetButton && (
+          <div className={cx('action-button', 'mobile-hidden')}>
+            <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
+              <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
+            </GhostButton>
+          </div>
+        )}
+        {(canManageActions || !debugMode) && (
           <div className={cx('action-button', 'tablet-hidden')}>
             <GhostMenuButton
-              tooltip={
-                !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null
-              }
-              title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-              items={actionDescriptors}
+              tooltip={!selectedLaunches.length ? formatMessage(messages.actionsBtnTooltip) : null}
+              title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+              items={createActionDescriptors()}
               disabled={!selectedLaunches.length}
-              onClick={this.onClickActionButton}
+              onClick={onClickActionButton}
             />
           </div>
-          <div className={cx('action-button')}>
-            <GhostButton
-              disabled={!!selectedLaunches.length}
-              icon={RefreshIcon}
-              onClick={onRefresh}
-              transparentBackground
-            >
-              <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
-            </GhostButton>
-            {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
-          </div>
+        )}
+        <div className={cx('action-button')}>
+          <GhostButton
+            disabled={!!selectedLaunches.length}
+            icon={RefreshIcon}
+            onClick={onRefresh}
+            transparentBackground
+          >
+            <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
+          </GhostButton>
+          {finishedLaunchesCount && renderCounterNotification(finishedLaunchesCount)}
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+ActionPanel.propTypes = {
+  debugMode: PropTypes.bool,
+  onRefresh: PropTypes.func,
+  selectedLaunches: PropTypes.array,
+  hasErrors: PropTypes.bool,
+  showBreadcrumb: PropTypes.bool,
+  onImportLaunch: PropTypes.func,
+  hasValidItems: PropTypes.bool,
+  onProceedValidItems: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onEditItems: PropTypes.func,
+  onMerge: PropTypes.func,
+  onCompare: PropTypes.func,
+  onMove: PropTypes.func,
+  onForceFinish: PropTypes.func,
+  onDelete: PropTypes.func,
+  activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onAddNewWidget: PropTypes.func,
+  finishedLaunchesCount: PropTypes.number,
+};
+
+ActionPanel.defaultProps = {
+  debugMode: false,
+  onRefresh: () => {},
+  selectedLaunches: [],
+  hasErrors: false,
+  showBreadcrumb: false,
+  onImportLaunch: () => {},
+  hasValidItems: false,
+  onProceedValidItems: () => {},
+  onEditItem: () => {},
+  onEditItems: () => {},
+  onMerge: () => {},
+  onCompare: () => {},
+  onMove: () => {},
+  onForceFinish: () => {},
+  onDelete: () => {},
+  activeFilterId: null,
+  onAddNewWidget: () => {},
+  finishedLaunchesCount: null,
+};

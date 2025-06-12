@@ -25,9 +25,10 @@ import {
   LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
 
-const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
+export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
 
-const updateUserSettingsInStorage = (userId, data) => updateStorageItem(`${userId}_settings`, data);
+export const updateUserSettingsInStorage = (userId, data) =>
+  updateStorageItem(`${userId}_settings`, data);
 
 const getLogLevelFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];

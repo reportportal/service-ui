@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
@@ -27,6 +26,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
+import { projectKeySelector } from 'controllers/project';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 
@@ -45,7 +45,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    currentProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showMessage: showNotification,
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @injectIntl
 export class StatusDropdown extends Component {
   static propTypes = {
-    currentProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
@@ -65,6 +65,7 @@ export class StatusDropdown extends Component {
     onChange: PropTypes.func,
     withIndicator: PropTypes.bool,
     disabled: PropTypes.bool,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -75,12 +76,13 @@ export class StatusDropdown extends Component {
     onChange: () => {},
     withIndicator: false,
     disabled: false,
+    readOnly: false,
   };
 
   updateItem = (newStatus) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       status: oldStatus,
       itemId,
       attributes,
@@ -103,7 +105,7 @@ export class StatusDropdown extends Component {
 
     onChange(newStatus);
 
-    fetch(URLS.testItemUpdate(currentProject, itemId), { method: 'put', data })
+    fetch(URLS.testItemUpdate(projectKey, itemId), { method: 'put', data })
       .then(() => {
         showMessage({
           message: formatMessage(messages.itemUpdateSuccess),
@@ -129,10 +131,7 @@ export class StatusDropdown extends Component {
     return STATUS_TYPES.map((item) => ({
       label: withIndicator ? (
         <span className={cx('status-container')}>
-          <TestItemStatus
-            status={formatStatus(intl.formatMessage, item)}
-            withIndicator={withIndicator}
-          />
+          <TestItemStatus status={formatStatus(intl.formatMessage, item)} />
         </span>
       ) : (
         formatStatus(intl.formatMessage, item)
@@ -142,25 +141,30 @@ export class StatusDropdown extends Component {
   };
 
   render() {
-    const { status, withIndicator, disabled } = this.props;
+    const { status, withIndicator, disabled, readOnly } = this.props;
     return (
       <div className={cx('status-dropdown')}>
-        <InputDropdown
-          options={this.generateOptions(status)}
-          value={status}
-          onChange={this.updateItem}
-          customClasses={{
-            dropdown: cx('dropdown'),
-            selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
-            arrow: cx('arrow'),
-            value: cx('value'),
-            selectList: cx('select-list'),
-            dropdownOption: (withIndicator && cx('dropdown-option')) || '',
-            opened: (withIndicator && cx('opened')) || '',
-          }}
-          mobileDisabled
-          disabled={disabled}
-        />
+        {readOnly && withIndicator ? (
+          <TestItemStatus status={status} className={cx('defined-status')} />
+        ) : (
+          <InputDropdown
+            options={this.generateOptions(status)}
+            value={status}
+            onChange={this.updateItem}
+            customClasses={{
+              dropdown: cx('dropdown'),
+              selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
+              arrow: cx('arrow'),
+              value: cx('value'),
+              selectList: cx('select-list'),
+              dropdownOption: (withIndicator && cx('dropdown-option')) || '',
+              opened: (withIndicator && cx('opened')) || '',
+            }}
+            disabled={disabled}
+            readOnly={readOnly}
+            mobileDisabled
+          />
+        )}
       </div>
     );
   }

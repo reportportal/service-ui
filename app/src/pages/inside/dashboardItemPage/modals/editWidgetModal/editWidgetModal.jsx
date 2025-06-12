@@ -24,13 +24,13 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { destroy, getFormInitialValues, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import { projectKeySelector } from 'controllers/project';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
@@ -61,12 +61,12 @@ const messages = defineMessages({
 @withModal('editWidgetModal')
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
     initiallyFilledWidgetSettings: getFormInitialValues(WIDGET_WIZARD_FORM)(state),
     activeDashboardId: activeDashboardIdSelector(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
     valid: isValid(WIDGET_WIZARD_FORM)(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showScreenLockAction,
@@ -94,12 +94,12 @@ export class EditWidgetModal extends Component {
       widget: PropTypes.object,
       eventsInfo: PropTypes.object,
     }),
-    projectId: PropTypes.string,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -108,7 +108,6 @@ export class EditWidgetModal extends Component {
       widget: {},
     },
     widgetSettings: {},
-    projectId: '',
     eventsInfo: {},
   };
 
@@ -152,7 +151,7 @@ export class EditWidgetModal extends Component {
       data: { onConfirm, widget },
       intl: { formatMessage },
       widgetSettings,
-      projectId,
+      projectKey,
       initiallyFilledWidgetSettings,
       activeDashboardId,
     } = this.props;
@@ -168,7 +167,7 @@ export class EditWidgetModal extends Component {
       );
 
     this.props.showScreenLockAction();
-    fetch(URLS.widget(projectId, widget.id), {
+    fetch(URLS.widget(projectKey, widget.id), {
       method: 'put',
       data,
     })
@@ -257,7 +256,7 @@ export class EditWidgetModal extends Component {
     const {
       intl: { formatMessage },
       data: { widget, eventsInfo },
-      projectId,
+      projectKey,
       widgetSettings,
       valid,
     } = this.props;
@@ -289,7 +288,7 @@ export class EditWidgetModal extends Component {
       >
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
-            projectId={projectId}
+            projectKey={projectKey}
             widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings))}
             activeWidget={this.widgetInfo}
           />

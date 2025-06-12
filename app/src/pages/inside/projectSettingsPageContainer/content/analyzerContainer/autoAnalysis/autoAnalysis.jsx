@@ -21,15 +21,15 @@ import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button, Checkbox } from '@reportportal/ui-kit';
+import { Button, Checkbox, Dropdown } from '@reportportal/ui-kit';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
+import classNames from 'classnames/bind';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
@@ -40,6 +40,9 @@ import {
   MIN_SHOULD_MATCH,
   NUMBER_OF_LOG_LINES,
 } from '../constants';
+import styles from './autoAnalysis.scss';
+
+const cx = classNames.bind(styles);
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -162,7 +165,12 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={ANALYZER_MODE + FIELD}
         >
-          <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
+          <Dropdown
+            className={cx('dropdown')}
+            options={analyzerModeDropdownOptions}
+            isListWidthLimited
+            mobileDisabled
+          />
         </FieldElement>
         <FieldElement
           name={MIN_SHOULD_MATCH}
@@ -184,7 +192,11 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={NUMBER_OF_LOG_LINES + FIELD}
         >
-          <Dropdown options={numberOfLogDropdownOptions} mobileDisabled />
+          <Dropdown
+            className={cx('dropdown')}
+            options={numberOfLogDropdownOptions}
+            mobileDisabled
+          />
         </FieldElement>
         <FieldElement
           name={ALL_MESSAGES_SHOULD_MATCH}
@@ -195,9 +207,11 @@ const AutoAnalysis = ({
         >
           <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
-          {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-        </Button>
+        {hasPermission && (
+          <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
+            {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+          </Button>
+        )}
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
     </Layout>

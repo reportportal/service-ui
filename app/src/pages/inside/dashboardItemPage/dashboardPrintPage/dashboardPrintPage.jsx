@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
-import { activeProjectSelector } from 'controllers/user';
+import { projectNameSelector } from 'controllers/project';
 import { PageLayout } from 'layouts/pageLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import ExportIcon from 'common/img/export-inline.svg';
@@ -47,14 +47,14 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectName: projectNameSelector(state),
   dashboard: activeDashboardItemSelector(state),
 }))
 @track()
 export class DashboardPrintPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
     dashboard: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -69,7 +69,7 @@ export class DashboardPrintPage extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectName,
       dashboard,
     } = this.props;
 
@@ -85,7 +85,7 @@ export class DashboardPrintPage extends Component {
             <div className={cx('dashboard-printed-header')}>
               <p className={cx('title')}>
                 {formatMessage(messages.projectTitle)}
-                <span className={cx('title-value')}>{activeProject}</span>
+                <span className={cx('title-value')}>{projectName}</span>
               </p>
               <p className={cx('title')}>
                 {formatMessage(messages.dashboardTitle)}

@@ -15,23 +15,20 @@
  */
 
 import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { userIdSelector, userInfoSelector } from './selectors';
 import {
-  ASSIGN_TO_PROJECT,
-  UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
-  ADD_API_KEY,
-  FETCH_API_KEYS,
-  DELETE_API_KEY,
-  FETCH_USER,
-  DELETE_USER_ACCOUNT,
-} from './constants';
+  userAssignedSelector,
+  urlOrganizationAndProjectSelector,
+  ORGANIZATIONS_PAGE,
+} from 'controllers/pages';
+import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
+import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -42,8 +39,20 @@ import {
   setApiKeysAction,
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
+  setActiveProjectKeyAction,
   setLogTimeFormatAction,
 } from './actionCreators';
+import {
+  ASSIGN_TO_PROJECT,
+  UNASSIGN_FROM_PROJECT,
+  SET_ACTIVE_PROJECT,
+  ADD_API_KEY,
+  FETCH_API_KEYS,
+  DELETE_API_KEY,
+  FETCH_USER,
+  DELETE_USER_ACCOUNT,
+} from './constants';
+import { userIdSelector, userInfoSelector } from './selectors';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);
@@ -54,13 +63,13 @@ function* assignToProject({ payload: project }) {
     },
   };
   try {
-    yield call(fetch, URLS.userInviteInternal(project.projectName), {
+    yield call(fetch, URLS.userInviteInternal(project.projectKey), {
       method: 'put',
       data,
     });
     yield put(
       assignToProjectSuccessAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -75,7 +84,7 @@ function* assignToProject({ payload: project }) {
     const error = err.message;
     yield put(
       assignToProjectErrorAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -96,7 +105,7 @@ function* unassignFromProject({ payload: project }) {
     userNames: [userId],
   };
   try {
-    yield call(fetch, URLS.userUnasign(project.projectName), {
+    yield call(fetch, URLS.userUnassign(project), {
       method: 'put',
       data,
     });
@@ -128,21 +137,95 @@ function* fetchUserWorker() {
     yield put(fetchUserErrorAction());
     return;
   }
-  const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProject = userSettings.activeProject;
-  const activeProject =
-    savedActiveProject && savedActiveProject in user.assignedProjects
-      ? savedActiveProject
-      : Object.keys(user.assignedProjects)[0];
-  yield put(setActiveProjectAction(activeProject));
-  const format = getLogTimeFormatFromStorage(user.userId);
+  const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
+  const { userId, assignedOrganizations, assignedProjects } = user;
+
+  const format = getLogTimeFormatFromStorage(userId);
   yield put(setLogTimeFormatAction(format));
+
+  if (
+    Object.keys(assignedOrganizations).length === 0 ||
+    Object.keys(assignedProjects).length === 0
+  ) {
+    yield put(setActiveProjectKeyAction(null));
+    yield put(
+      redirect({
+        type: ORGANIZATIONS_PAGE,
+      }),
+    );
+  } else {
+    const userSettings = getStorageItem(`${userId}_settings`) || {};
+    const targetActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
+    const { organizationSlug: targetOrganizationSlug, projectSlug: targetProjectSlug } =
+      targetActiveProject || {};
+
+    const { assignmentNotRequired, isAssignedToTargetProject } = yield select(
+      userAssignedSelector(targetProjectSlug, targetOrganizationSlug),
+    );
+
+    const defaultProject = Object.keys(assignedProjects)[0];
+    const {
+      projectSlug: defaultProjectSlug,
+      projectKey: defaultProjectKey,
+      organizationId,
+    } = assignedProjects[defaultProject];
+    const defaultOrganization = Object.keys(assignedOrganizations).find(
+      (key) => assignedOrganizations[key].organizationId === organizationId,
+    );
+    const { organizationSlug: defaultOrganizationSlug } = defaultOrganization
+      ? assignedOrganizations[defaultOrganization]
+      : Object.keys(assignedOrganizations)[0];
+
+    let projectKey;
+    let activeOrganization;
+
+    try {
+      const activeOrganizationResponse = yield call(
+        fetch,
+        URLS.organizationList({ slug: targetOrganizationSlug }),
+      );
+
+      activeOrganization = activeOrganizationResponse?.items?.[0];
+    } catch {} // eslint-disable-line no-empty
+
+    if (!isAssignedToTargetProject && assignmentNotRequired) {
+      try {
+        const currentProject = yield call(
+          fetch,
+          URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
+        );
+        projectKey = currentProject?.items?.[0]?.key;
+      } catch {} // eslint-disable-line no-empty
+    }
+
+    const activeProject =
+      targetActiveProject && (isAssignedToTargetProject || projectKey)
+        ? targetActiveProject
+        : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
+
+    if (!projectKey) {
+      const assignedProject = findAssignedProjectByOrganization(
+        assignedProjects,
+        assignedOrganizations[targetOrganizationSlug]?.organizationId,
+        targetProjectSlug,
+      );
+
+      projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
+    }
+
+    yield put(setActiveProjectAction(activeProject));
+    yield put(setActiveProjectKeyAction(projectKey));
+    yield put(setActiveOrganizationAction(activeOrganization));
+  }
 }
 
-function* saveActiveProject({ payload: project }) {
+function* saveActiveProjectWorker({ payload: activeProject }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
+  setStorageItem(`${user.userId}_settings`, {
+    ...currentUserSettings,
+    activeProject,
+  });
 }
 
 function* addApiKey({ payload = {} }) {
@@ -263,8 +346,8 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSetActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
+function* watchSaveActiveProject() {
+  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
 }
 
 function* watchFetchUser() {
@@ -284,7 +367,7 @@ export function* userSagas() {
     watchAssignToProject(),
     watchUnassignFromProject(),
     watchFetchUser(),
-    watchSetActiveProject(),
+    watchSaveActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

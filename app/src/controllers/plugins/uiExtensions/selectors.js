@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import {
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
   EXTENSION_TYPE_PROJECT_PAGE,
   PLUGIN_TYPE_REMOTE,
+  PLUGIN_TYPE_CORE,
 } from './constants';
 import {
   domainSelector,
@@ -50,11 +51,13 @@ const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPlugin
     pluginNamesSelector,
     extensionManifestsSelector,
     (enabledPluginNames, extensionManifests) => {
-      // TODO: update 'pluginType' usage once the backend for remote plugins will be ready
+      // TODO: update 'pluginType' usage once the backend for remote and core plugins will be ready
       const uiExtensions = extensionManifests
         .filter(
           ({ pluginName, pluginType }) =>
-            enabledPluginNames.includes(pluginName) || pluginType === PLUGIN_TYPE_REMOTE,
+            enabledPluginNames.includes(pluginName) ||
+            pluginType === PLUGIN_TYPE_REMOTE ||
+            pluginType === PLUGIN_TYPE_CORE,
         )
         .reduce(
           (acc, { extensions, ...commonManifestProperties }) =>

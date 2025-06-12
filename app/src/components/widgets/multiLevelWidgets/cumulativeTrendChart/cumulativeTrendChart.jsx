@@ -23,6 +23,7 @@ import { injectIntl } from 'react-intl';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -30,7 +31,6 @@ import {
   PROVIDER_TYPE_WIDGET,
 } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
-import { activeProjectSelector } from 'controllers/user';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
@@ -56,10 +56,10 @@ const PRINTED_LEGEND_HEIGHT = 80;
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -73,7 +73,6 @@ export class CumulativeTrendChart extends PureComponent {
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     onChangeLegend: PropTypes.func,
@@ -82,6 +81,10 @@ export class CumulativeTrendChart extends PureComponent {
     isPrintMode: PropTypes.bool,
     onChangeUserSettings: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -289,12 +292,13 @@ export class CumulativeTrendChart extends PureComponent {
       getStatisticsLink,
       getDefectLink,
       defectTypes,
-      project,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectSlug,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
     let link;
 

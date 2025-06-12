@@ -25,6 +25,9 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { canManageBTSIssues, canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
+import { useSelector } from 'react-redux';
+import { userRolesSelector } from 'controllers/pages';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';
@@ -70,8 +73,11 @@ PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates, events }) => {
+export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, disabled }) => {
   const { trackEvent } = useTracking();
+  const userRoles = useSelector(userRolesSelector);
+  const canUnlinkIssue = canManageBTSIssues(userRoles);
+  const canChangeDefectTypes = canWorkWithDefectTypes(userRoles);
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const onClickEdit = (event) => {
     event && trackEvent(event);
@@ -84,7 +90,7 @@ export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates
   };
 
   return (
-    <div className={cx('defect-type')}>
+    <div className={cx('defect-type', { disabled })}>
       <div className={cx('defect-type-labels')}>
         {issue.ignoreAnalyzer && <IgnoredInAALabel />}
         {issue.autoAnalyzed && <AALabel />}
@@ -92,11 +98,15 @@ export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
-            onClick={() => onClickEdit(events.onEditEvent?.(eventData))}
-            className={cx({ 'view-only': hideEdit })}
+            className={cx({ readonly: disabled || !canChangeDefectTypes })}
+            onClick={
+              disabled || !canChangeDefectTypes
+                ? null
+                : () => onClickEdit(events.onEditEvent?.(eventData))
+            }
           />
         )}
-        {!hideEdit && (
+        {canChangeDefectTypes && (
           <div
             className={cx('edit-icon')}
             onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
@@ -106,7 +116,12 @@ export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates
         )}
       </div>
       <div className={cx('issues')}>
-        <IssueList issues={issue.externalSystemIssues} onClick={onClickIssue} onRemove={onRemove} />
+        <IssueList
+          issues={issue.externalSystemIssues}
+          onClick={onClickIssue}
+          onRemove={onRemove}
+          readOnly={!canUnlinkIssue}
+        />
       </div>
       <div className={cx('comment')}>
         <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={90}>
@@ -120,15 +135,15 @@ export const DefectType = ({ issue, hideEdit, onEdit, onRemove, patternTemplates
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
-  hideEdit: PropTypes.bool,
   onRemove: PropTypes.func,
   patternTemplates: PropTypes.array,
   events: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
   onRemove: () => {},
   patternTemplates: [],
   events: {},
-  hideEdit: false,
+  disabled: false,
 };

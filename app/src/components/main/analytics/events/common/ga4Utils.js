@@ -26,6 +26,9 @@ export const getBasicClickEventParameters = (category) =>
 export const getBasicChooseEventParameters = (category) =>
   getBasicEventParameters('choose', category);
 
+export const getBasicSearchEventParameters = (category) =>
+  getBasicEventParameters('search', category);
+
 export const getBasicPerformanceEventParameters = (category) =>
   getBasicEventParameters('performance', category);
 

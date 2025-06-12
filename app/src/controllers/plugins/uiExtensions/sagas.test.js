@@ -59,7 +59,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
     test('should not fetch manifests for disabled plugins', async () => {
       const state = {
         user: {
-          activeProject: 'testProject',
+          activeProjectKey: 'testProject',
         },
         plugins: {
           plugins: [

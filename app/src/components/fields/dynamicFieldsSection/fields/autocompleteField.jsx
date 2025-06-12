@@ -24,7 +24,7 @@ import { DynamicField } from '../dynamicField';
 export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest }) => {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
-      integrationInfo.projectName,
+      integrationInfo.projectKey,
       integrationInfo.integrationId,
       field.commandName,
     );

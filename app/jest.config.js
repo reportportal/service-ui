@@ -30,7 +30,6 @@ module.exports = {
   },
   notify: false,
   collectCoverageFrom: [
-    'src/componentLibrary/dropdown/utils.js',
     'src/common/**/*.js',
     '!src/common/urls.js',
     '!src/common/polyfills.js',

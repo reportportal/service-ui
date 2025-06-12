@@ -14,34 +14,39 @@
  * limitations under the License.
  */
 
-import { PERMISSIONS_MAP, ACTIONS, ALL, OWNER } from 'common/constants/permissions';
+import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { MANAGER } from 'common/constants/projectRoles';
 
-export const createCheckPermission = (permissionMap) => (permission) => (
+export const createCheckPermission = (permissionMap) => (permission) => ({
   userRole,
+  organizationRole,
   projectRole,
-  isOwner,
-) => {
+} = {}) => {
   if (userRole === ADMINISTRATOR) {
     return true;
   }
-  if (permissionMap[projectRole]) {
-    const userPermission = permissionMap[projectRole][permission];
-    if (userPermission) {
-      if (isOwner) {
-        return userPermission === ALL || userPermission === OWNER;
-      }
-      return userPermission === ALL;
-    }
-    return false;
+
+  if (organizationRole === MANAGER) {
+    return !!permissionMap[organizationRole][permission];
   }
+
+  if (permissionMap[organizationRole]?.[projectRole]) {
+    return !!permissionMap[organizationRole][projectRole][permission];
+  }
+
   return false;
 };
+
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 
 export const hasAccessToManagementSystem = checkPermission(ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM);
 export const canCreateProject = checkPermission(ACTIONS.CREATE_PROJECT);
 export const canDeleteProject = checkPermission(ACTIONS.DELETE_PROJECT);
+export const canRenameProject = checkPermission(ACTIONS.RENAME_PROJECT);
+export const canInviteUserToProject = checkPermission(ACTIONS.INVITE_USER_TO_PROJECT);
+export const canChangeAccessProject = checkPermission(ACTIONS.CHANGE_ACCESS_PROJECT);
+export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
 export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);
 export const canSeeSettings = checkPermission(ACTIONS.SEE_SETTINGS);
 export const canCreateInternalUser = checkPermission(ACTIONS.CREATE_INTERNAL_USER);
@@ -52,13 +57,32 @@ export const canDeleteUser = checkPermission(ACTIONS.DELETE_USER);
 export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
 export const canEditOwnAccount = checkPermission(ACTIONS.EDIT_OWN_ACCOUNT);
 export const canDeleteLaunch = checkPermission(ACTIONS.DELETE_LAUNCH);
-export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH); // requires userRole, projectRole, isOwner.
+export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH);
 export const canBulkEditItems = checkPermission(ACTIONS.BULK_EDIT_ITEMS);
 export const canForceFinishLaunch = checkPermission(ACTIONS.FORCE_FINISH_LAUNCH);
+export const canForceFinishRerunLaunch = checkPermission(ACTIONS.FORCE_FINISH_RERUN_LAUNCH);
 export const canStartAnalysis = checkPermission(ACTIONS.START_ANALYSIS);
 export const canDeleteTestItem = checkPermission(ACTIONS.DELETE_TEST_ITEM);
 export const canMoveToDebug = checkPermission(ACTIONS.MOVE_TO_DEBUG);
+export const canChangeTestItemStatus = checkPermission(ACTIONS.CHANGE_TEST_ITEM_STATUS);
+export const canMakeDecision = checkPermission(ACTIONS.MAKE_DECISION);
+export const canManageBTSIssues = checkPermission(ACTIONS.MANAGE_BTS_ISSUES);
 export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
+export const canWorkWithOrganizationFilter = checkPermission(ACTIONS.WORK_WITH_ORGANIZATION_FILTER);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
+export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_WIDGETS);
+export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
+export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
+export const canReportLaunches = checkPermission(ACTIONS.REPORT_LAUNCHES);
+export const canUpdateOrganizationSettings = checkPermission(ACTIONS.UPDATE_ORGANIZATION_SETTINGS);
+export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
+export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
+export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);
+export const canRenameOrganization = checkPermission(ACTIONS.RENAME_ORGANIZATION);
+export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD);
+export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
+export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
+export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
+export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);

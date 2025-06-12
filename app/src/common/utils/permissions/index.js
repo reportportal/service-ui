@@ -36,6 +36,13 @@ export {
   canMoveToDebug,
   canMergeLaunches,
   canWorkWithFilters,
+  canWorkWithOrganizationFilter,
   canReadData,
   canSeeDemoData,
+  canWorkWithTests,
+  canSeeEmailMembers,
+  canSeeSidebarOptions,
+  canCreateOrganization,
+  canUpdateOrganizationSettings,
 } from './permissions';
+export { getRoleTitle, getRoleBadgesData } from './getRoleTitle';

@@ -31,6 +31,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.cancel',
     defaultMessage: 'Cancel',
   },
+  APPLY: {
+    id: 'Common.apply',
+    defaultMessage: 'Apply',
+  },
+  RENAME: {
+    id: 'Common.rename',
+    defaultMessage: 'Rename',
+  },
   CLOSE: {
     id: 'Common.close',
     defaultMessage: 'Close',

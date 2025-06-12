@@ -26,24 +26,21 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-  assignedProjectsSelector,
-} from 'controllers/user';
+import { urlProjectSlugSelector, userRolesSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userIdSelector, assignedProjectsSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
-  anassignUser: {
-    id: 'UnassignButton.anassignUser',
+  unassignUser: {
+    id: 'UnassignButton.unassignUser',
     defaultMessage: 'User has been unassigned from project!',
   },
   btnTitle: {
-    id: 'UnassignButton.anassignBtn',
+    id: 'UnassignButton.unassignBtn',
     defaultMessage: 'Unassign',
   },
   unAssignTitlePersonal: {
@@ -85,10 +82,10 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: projectIdSelector(state),
-    projectRole: activeProjectRoleSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
+    projectSlug: urlProjectSlugSelector(state),
+    userRoles: userRolesSelector(state),
+    entryType: assignedProjectsSelector(state)[urlProjectSlugSelector(state)]?.entryType,
+    projectKey: projectKeySelector(state),
   }),
   { showNotification, showModalAction },
 )
@@ -98,9 +95,8 @@ export class UnassignButton extends Component {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     userId: PropTypes.string,
-    projectId: PropTypes.string,
-    accountRole: PropTypes.string,
-    projectRole: PropTypes.string,
+    projectSlug: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     currentUser: PropTypes.string,
     entryType: PropTypes.string,
     showNotification: PropTypes.func,
@@ -109,12 +105,11 @@ export class UnassignButton extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     userId: '',
-    projectId: '',
-    accountRole: '',
-    projectRole: '',
+    userRoles: {},
     currentUser: '',
     entryType: '',
     showNotification: () => {},
@@ -125,16 +120,16 @@ export class UnassignButton extends Component {
       return this.props.intl.formatMessage(messages.unAssignTitlePersonal);
     } else if (this.props.currentUser === this.props.userId) {
       return this.props.intl.formatMessage(messages.unAssignTitleYou);
-    } else if (!canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole)) {
+    } else if (!canAssignUnassignInternalUser(this.props.userRoles)) {
       return this.props.intl.formatMessage(messages.unAssignTitleNoPermission);
     }
     return this.props.intl.formatMessage(messages.unAssignTitle);
   };
   isPersonalProject = () =>
     this.props.entryType === 'PERSONAL' &&
-    this.props.projectId === `${this.props.userId.replace('.', '_')}_personal`;
+    this.props.projectSlug === `${this.props.userId.replace('.', '_')}_personal`;
   showUnassignModal = () => {
-    const { tracking, intl, userId, projectId } = this.props;
+    const { tracking, intl, userId, projectSlug } = this.props;
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
     this.props.showModalAction({
       id: 'confirmationModal',
@@ -142,7 +137,7 @@ export class UnassignButton extends Component {
         message: intl.formatMessage(messages.modalText, {
           b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           user: userId,
-          project: projectId,
+          project: projectSlug,
         }),
         onConfirm: this.unassignAction,
         title: intl.formatMessage(messages.modalHeader),
@@ -154,14 +149,14 @@ export class UnassignButton extends Component {
   };
 
   unassignAction = () => {
-    const { projectId, userId, intl } = this.props;
-    fetch(URLS.userUnasign(projectId), {
+    const { projectKey, userId, intl } = this.props;
+    fetch(URLS.userUnassign(projectKey), {
       method: 'put',
       data: { userNames: [userId] },
     })
       .then(() => {
         this.props.showNotification({
-          message: intl.formatMessage(messages.anassignUser),
+          message: intl.formatMessage(messages.unassignUser),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.fetchData();
@@ -180,7 +175,7 @@ export class UnassignButton extends Component {
         onClick={this.showUnassignModal}
         title={this.getUnAssignTitle()}
         disabled={
-          !canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole) ||
+          !canAssignUnassignInternalUser(this.props.userRoles) ||
           this.props.currentUser === this.props.userId ||
           this.isPersonalProject()
         }

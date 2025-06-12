@@ -16,8 +16,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import { userRolesSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { DASHBOARD_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
@@ -29,11 +33,15 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   currentUserDashboardsHeadline: {
     id: 'DashboardEmptyResults.currentUserDashboardsHeadline',
-    defaultMessage: 'You have no dashboards',
+    defaultMessage: 'No dashboards yet',
   },
   currentUserDashboardsText: {
     id: 'DashboardEmptyResults.currentUserDashboardsText',
-    defaultMessage: 'Add your first dashboard to analyse statistics',
+    defaultMessage: 'Add your first dashboard and widget to start analyzing the statistics',
+  },
+  currentUserDashboardsTextViewer: {
+    id: 'DashboardEmptyResults.currentUserDashboardsTextViewer',
+    defaultMessage: 'Dashboards will appear here once created by your team',
   },
   currentUserDashboardsActionText: {
     id: 'DashboardEmptyResults.currentUserDashboardsActionText',
@@ -47,11 +55,15 @@ const messages = defineMessages({
 
 @track()
 @injectIntl
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 export class EmptyDashboards extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     filter: PropTypes.string,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -61,6 +73,7 @@ export class EmptyDashboards extends Component {
   static defaultProps = {
     action: () => {},
     filter: '',
+    userRoles: {},
   };
 
   handleAddDashboardAction = () => {
@@ -73,7 +86,8 @@ export class EmptyDashboards extends Component {
   };
 
   render() {
-    const { intl, filter } = this.props;
+    const { intl, filter, userRoles } = this.props;
+    const isWorkWithDashboard = canWorkWithDashboard(userRoles);
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
@@ -85,13 +99,17 @@ export class EmptyDashboards extends Component {
           {intl.formatMessage(messages.currentUserDashboardsHeadline)}
         </p>
         <p className={cx('empty-dashboard-text')}>
-          {intl.formatMessage(messages.currentUserDashboardsText)}
+          {isWorkWithDashboard
+            ? intl.formatMessage(messages.currentUserDashboardsText)
+            : intl.formatMessage(messages.currentUserDashboardsTextViewer)}
         </p>
-        <div className={cx('empty-dashboard-content')}>
-          <GhostButton icon={AddDashboardIcon} onClick={this.handleAddDashboardAction}>
-            {intl.formatMessage(messages.currentUserDashboardsActionText)}
-          </GhostButton>
-        </div>
+        {isWorkWithDashboard && (
+          <div className={cx('empty-dashboard-content')}>
+            <GhostButton icon={AddDashboardIcon} onClick={this.handleAddDashboardAction}>
+              {intl.formatMessage(messages.currentUserDashboardsActionText)}
+            </GhostButton>
+          </div>
+        )}
       </div>
     );
   }

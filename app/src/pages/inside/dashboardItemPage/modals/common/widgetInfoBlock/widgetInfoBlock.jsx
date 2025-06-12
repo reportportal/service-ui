@@ -40,8 +40,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
+    projectKey: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
     customCondition: PropTypes.bool,
@@ -100,7 +100,7 @@ export class WidgetInfoBlock extends PureComponent {
       loading: true,
       widgetData: null,
     });
-    fetch(URLS.widgetPreview(this.props.projectId), {
+    fetch(URLS.widgetPreview(this.props.projectKey), {
       method: 'post',
       data: widgetSettings,
     })

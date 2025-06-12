@@ -16,9 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { PatternNameColumn, TestCasesColumn } from './patternGridColumns';
 import styles from './patternGrid.scss';
@@ -43,16 +41,12 @@ const messages = defineMessages({
 const PATTERN_NAME_COLUMN = 'pattern';
 const TEST_CASES_COLUMN = 'testCases';
 
-@connect((state) => ({
-  projectId: activeProjectSelector(state),
-}))
 @injectIntl
 export class PatternGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object,
     selectedAttribute: PropTypes.string,
-    projectId: PropTypes.string,
     onPatternClick: PropTypes.func,
   };
 
@@ -73,7 +67,6 @@ export class PatternGrid extends Component {
       },
     },
     selectedAttribute: null,
-    projectId: '',
     onPatternClick: () => {},
   };
 

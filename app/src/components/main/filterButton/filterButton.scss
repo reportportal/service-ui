@@ -1,0 +1,129 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.filters-icon-container {
+  all: unset;
+  height: 36px;
+  width: 57px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  i.filter-icon {
+    display: block;
+
+    svg {
+      width: 16px;
+      height: 16px;
+
+      path {
+        fill: $COLOR--e-300;
+      }
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $COLOR--topaz;
+  }
+
+  &:hover {
+    i.filter-icon {
+      svg {
+        path {
+          fill: $COLOR--e-400;
+        }
+      }
+    }
+  }
+
+  &.opened {
+    i.filter-icon {
+      svg {
+        path {
+          fill: $COLOR--topaz-pressed;
+        }
+      }
+    }
+
+    &:hover {
+      i.filter-icon {
+        svg {
+          path {
+            fill: $COLOR--topaz-hover-2;
+          }
+        }
+      }
+    }
+  }
+
+  &.with-applied {
+    gap: 8px;
+    background-color: $COLOR--bg-200;
+
+    i.filter-icon {
+      svg {
+        path {
+          fill: $COLOR--topaz-2;
+          stroke: $COLOR--topaz-2;
+        }
+      }
+    }
+
+    .filters-count {
+      font-size: 13px;
+      line-height: 20px;
+      color: $COLOR--topaz-2;
+      font-family: $FONT-ROBOTO-MEDIUM;
+    }
+
+    &:hover {
+      div i.filter-icon {
+        svg {
+          path {
+            fill: $COLOR--topaz-hover-2;
+            stroke: $COLOR--topaz-hover-2;
+          }
+        }
+      }
+
+      span.filters-count {
+        color: $COLOR--topaz-hover-2;
+      }
+    }
+
+    &.opened {
+      i.filter-icon {
+        svg {
+          path {
+            fill: $COLOR--topaz-pressed;
+            stroke: $COLOR--topaz-pressed;
+          }
+        }
+      }
+
+      .filters-count {
+        color: $COLOR--topaz-pressed;
+      }
+    }
+  }
+}
+
+.filter-popover {
+  max-width: 480px;
+  width: 480px;
+}

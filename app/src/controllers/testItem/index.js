@@ -83,6 +83,5 @@ export {
   getItemLevel,
   isListView,
   groupItemsByParent,
-  isItemOwner,
 } from './utils';
 export { LEVELS } from './levels';
