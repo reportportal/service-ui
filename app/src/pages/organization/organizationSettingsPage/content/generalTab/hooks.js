@@ -59,12 +59,12 @@ export const useRetentionUtils = (formValues, retention = null) => {
 
   const formatInputValues = (values) => {
     if (!values) {
-      return [];
+      return {};
     }
-    const arrValues = Object.entries(values).map((elem) => {
-      const [key, value] = elem;
-      return value === 0 ? [key, Infinity] : elem;
-    });
+    const arrValues = Object.entries(values).map(([key, value]) => [
+      key,
+      value === 0 ? Infinity : value,
+    ]);
     const mapValues = new Map(arrValues);
     const inputValues = Object.fromEntries(mapValues);
     return inputValues;

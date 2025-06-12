@@ -46,7 +46,7 @@ export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
       activeOrganization = yield select(activeOrganizationSelector);
     }
     yield* onActiveOrgReady(activeOrganization.id);
-  } catch (error) {
+  } catch {
     yield put(
       redirect({
         type: ORGANIZATIONS_PAGE,

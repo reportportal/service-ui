@@ -93,12 +93,12 @@ export class CategoriesList extends Component {
               >
                 <Input mobileDisabled />
               </FormField>
-              <span
+              <button
                 className={cx('remove-organization')}
                 onClick={() => this.removeOrganizationHandler(currentItem, index)}
               >
                 {Parser(IconDelete)}
-              </span>
+              </button>
             </div>
           );
         })}

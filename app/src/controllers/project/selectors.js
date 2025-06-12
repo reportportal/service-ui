@@ -145,7 +145,7 @@ export const projectNotificationsEnabledSelector = (state) =>
   projectNotificationsConfigurationSelector(state).enabled || false;
 
 export const projectNotificationsStateSelector = (state) =>
-  !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]?.toString() === 'true');
+  projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]?.toString() === 'true';
 
 export const projectPluginNotificationsStateSelector = (pluginName) =>
   createSelector(

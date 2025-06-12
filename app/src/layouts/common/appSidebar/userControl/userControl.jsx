@@ -36,7 +36,7 @@ const UserControl = ({ onClick }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <div className={cx('user-block-wrapper')} onClick={onClick}>
+    <button className={cx('user-block-wrapper')} onClick={onClick}>
       <button className={cx('avatar-block')}>
         <Image
           className={cx('avatar-img')}
@@ -62,7 +62,7 @@ const UserControl = ({ onClick }) => {
           <div className={cx('user-email')}>{email}</div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

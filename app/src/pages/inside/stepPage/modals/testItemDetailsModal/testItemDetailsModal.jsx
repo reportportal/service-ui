@@ -32,7 +32,6 @@ import { URLS } from 'common/urls';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { clearLogPageStackTrace } from 'controllers/log';
-import { launchSelector } from 'controllers/testItem';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
@@ -70,7 +69,6 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     userRoles: userRolesSelector(state),
-    launch: launchSelector(state),
     projectKey: projectKeySelector(state),
     extensions: testItemDetailsAddonSelector(state),
   }),
@@ -91,7 +89,6 @@ export class TestItemDetailsModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    launch: PropTypes.object,
     userRoles: userRolesType,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
@@ -109,7 +106,6 @@ export class TestItemDetailsModal extends Component {
   };
 
   static defaultProps = {
-    launch: {},
     userRoles: {},
     dirty: false,
     clearLogPageStackTrace: () => {},
