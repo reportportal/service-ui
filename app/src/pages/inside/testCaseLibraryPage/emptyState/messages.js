@@ -30,10 +30,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.numerableBlock.title',
     defaultMessage: 'How to get started?',
   },
-  createTestCase: {
-    id: 'TestCaseLibraryPage.createTestCase',
-    defaultMessage: 'Create Test Case',
-  },
   importTestCases: {
     id: 'TestCaseLibraryPage.importTestCases',
     defaultMessage: 'Import Test Cases',

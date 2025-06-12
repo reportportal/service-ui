@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  testCaseLibraryHeader: {
-    id: 'TestCaseLibraryPage.testCaseLibraryHeader',
-    defaultMessage: 'Test Case Library',
-  },
-});
+export * from './steps';

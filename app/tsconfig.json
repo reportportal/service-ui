@@ -47,7 +47,8 @@
       "analyticsEvents/*": ["components/main/analytics/events/ga4Events/*"]
     },
     "incremental": true,
-    "tsBuildInfoFile": "./.tsbuildinfo"
+    "tsBuildInfoFile": "./.tsbuildinfo",
+    "typeRoots": ["./types.d.ts"]
   },
   "include": [
     "src/**/*",

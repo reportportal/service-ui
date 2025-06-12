@@ -17,16 +17,21 @@
 import React from 'react';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 
+import { hideModalAction, showModalAction } from 'controllers/modal';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
-
 import ImportIcon from 'common/img/import-thin-inline.svg';
+
+import { CREATE_TEST_CASE_MODAL_KEY } from '../createTestCaseModal';
 import { messages } from './messages';
+import { commonMessages } from '../commonMessages';
 
 export const EmptyState = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
     (translation) =>
@@ -35,6 +40,22 @@ export const EmptyState = () => {
         br: <br />,
       }),
   );
+
+  const handleModalSubmit = (formValues) => {
+    console.log('Form submitted with values:', formValues);
+    dispatch(hideModalAction());
+  };
+
+  const openCreateTestCaseModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_TEST_CASE_MODAL_KEY,
+        data: {
+          onSubmit: handleModalSubmit,
+        },
+      }),
+    );
+  };
 
   return (
     <>
@@ -45,9 +66,10 @@ export const EmptyState = () => {
         documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
-            name: formatMessage(messages.createTestCase),
+            name: formatMessage(commonMessages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
+            handleButton: openCreateTestCaseModal,
           },
           {
             name: formatMessage(messages.importTestCases),

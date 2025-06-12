@@ -26,7 +26,7 @@ import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 import { EmptyState } from './emptyState';
 
 import styles from './testCaseLibraryPage.scss';
-import { messages } from './messages';
+import { commonMessages } from './commonMessages';
 
 const cx = classNames.bind(styles);
 
@@ -44,7 +44,7 @@ export const TestCaseLibraryPage = () => {
               </div>
               <div className={cx('test-case-library-page__breadcrumb-name')}>Adi_02</div>
             </div>
-            <Header title={formatMessage(messages.testCaseLibraryHeader)} />
+            <Header title={formatMessage(commonMessages.testCaseLibraryHeader)} />
           </div>
           <div className={cx('test-case-library-page__content')}>
             <EmptyState />

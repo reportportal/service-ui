@@ -105,7 +105,9 @@
         "@typescript-eslint/no-empty-interface": "off",
         "react/prop-types": "off",
         "react/require-default-props": "off",
-        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }]
+        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+        "import/prefer-default-export": "off",
+        "import/extensions": "off"
       }
     }
   ]
