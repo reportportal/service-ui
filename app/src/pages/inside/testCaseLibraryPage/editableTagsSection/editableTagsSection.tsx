@@ -25,13 +25,18 @@ import { messages } from '../testCaseDetailsPage/messages';
 interface EditableTagsSectionProps {
   onAddTag: () => void;
   className?: string;
+  bindClassName?: (className: string) => string;
 }
 
-export const EditableTagsSection = ({ onAddTag, className = '' }: EditableTagsSectionProps) => {
+export const EditableTagsSection = ({
+  onAddTag,
+  className = '',
+  bindClassName,
+}: EditableTagsSectionProps) => {
   const { formatMessage } = useIntl();
 
   const headerControl = (
-    <Button onClick={onAddTag} variant="text">
+    <Button variant="text" adjustWidthOn="content" onClick={onAddTag}>
       <PlusIcon />
       {formatMessage(COMMON_LOCALE_KEYS.ADD)}
     </Button>
@@ -42,6 +47,7 @@ export const EditableTagsSection = ({ onAddTag, className = '' }: EditableTagsSe
       title={formatMessage(messages.tags)}
       headerControl={headerControl}
       className={className}
+      bindClassName={bindClassName}
     >
       <InfoBlock label={formatMessage(messages.noTagsAdded)} />
     </SectionWithHeader>

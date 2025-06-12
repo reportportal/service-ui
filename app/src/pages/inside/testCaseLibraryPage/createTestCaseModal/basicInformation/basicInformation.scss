@@ -14,29 +14,34 @@
  * limitations under the License.
  */
 
-.section {
-  padding: 16px 20px;
-  margin-bottom: 1px;
+.basic-information {
+  max-width: 344px;
+  width: 100%;
+  padding-right: 24px;
+  box-sizing: border-box;
+  border-right: 1px solid var(--rp-ui-base-e-100);
+
+  &__field {
+    height: auto;
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: var(--gray-60);
+    margin-bottom: 4px;
+  }
+
+}
+
+.basic-information-tags {
+  padding: 0;
 
   &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-
-    button {
-      display: flex;
-      column-gap: 8px;
-    }
+    margin-bottom: 8px;
   }
 
-  &__title {
-    color: var(--rp-ui-base-almost-black);
-    font-size: 14px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-weight: 500;
-    margin: 0;
+  &__section div {
+    height: 44px;
   }
-
-
 }
