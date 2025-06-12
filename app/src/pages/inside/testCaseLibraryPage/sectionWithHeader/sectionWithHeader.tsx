@@ -26,6 +26,7 @@ interface SectionWithHeaderProps {
   headerControl?: ReactNode;
   children: ReactNode;
   className?: string;
+  bindClassName?: (className?: string) => string;
 }
 
 export const SectionWithHeader = ({
@@ -33,14 +34,13 @@ export const SectionWithHeader = ({
   headerControl,
   children,
   className = '',
-}: SectionWithHeaderProps) => {
-  return (
-    <div className={cx('section', className)}>
-      <div className={cx('section__header')}>
-        <h3 className={cx('section__title')}>{title}</h3>
-        {headerControl}
-      </div>
-      {children}
+  bindClassName = () => '',
+}: SectionWithHeaderProps) => (
+  <div className={cx('section', className, bindClassName())}>
+    <div className={cx('section__header', bindClassName('__header'))}>
+      <h3 className={cx('section__title')}>{title}</h3>
+      {headerControl}
     </div>
-  );
-};
+    <div className={cx('section__content', bindClassName('__section'))}>{children}</div>
+  </div>
+);

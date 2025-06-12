@@ -32,7 +32,6 @@ import { ExpandedOptions } from './expandedOptions';
 import { commonMessages } from './commonMessages';
 
 import styles from './testCaseLibraryPage.scss';
-import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
@@ -56,7 +55,7 @@ export const TestCaseLibraryPage = () => {
               <Breadcrumbs descriptors={breadcrumbDescriptors} />
             </div>
             <div className={cx('test-case-library-page__title')}>
-              {formatMessage(messages.testCaseLibraryHeader)}
+              {formatMessage(commonMessages.testCaseLibraryHeader)}
               <Toggle
                 className={cx('test-case-library-page__toggle')}
                 value={isEmptyState}

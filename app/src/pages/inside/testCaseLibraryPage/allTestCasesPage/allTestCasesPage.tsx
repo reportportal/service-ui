@@ -25,7 +25,7 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/testCaseLibraryPage/testCaseList/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
-import { messages } from '../messages';
+import { messages } from './messages';
 import styles from './allTestCasesPage.scss';
 
 const cx = classNames.bind(styles);
