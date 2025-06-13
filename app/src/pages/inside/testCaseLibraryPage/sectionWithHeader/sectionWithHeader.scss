@@ -14,9 +14,24 @@
  * limitations under the License.
  */
 
+.section {
+  padding: 16px 20px;
+  margin-bottom: 1px;
 
-// workaround for issue with width
-// until implemented in ui-kit
-:global(.width-content) {
-  min-width: unset;
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    color: var(--rp-ui-base-almost-black);
+    font-size: 14px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-weight: 500;
+    margin: 0;
+  }
+
+
 }

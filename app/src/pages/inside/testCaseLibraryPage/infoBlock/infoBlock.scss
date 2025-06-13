@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
+.info-block {
+  display: flex;
+  height: 64px;
+  padding: 0 16px;
+  border-radius: 8px;
+  justify-content: space-between;
+  background-color: var(--rp-ui-base-bg-200);
+  align-items: center;
 
-// workaround for issue with width
-// until implemented in ui-kit
-:global(.width-content) {
-  min-width: unset;
+  &__label {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-e-400);
+    text-indent: 1px;
+  }
 }

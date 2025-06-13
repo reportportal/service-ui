@@ -14,28 +14,52 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'react-intl';
+import classNames from 'classnames/bind';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-
-import classNames from 'classnames/bind';
-import { messages } from './messages';
+import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import styles from './testCaseDetailsPage.scss';
+import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
+import { EditableTagsSection } from '../editableTagsSection';
+import { EditableDescriptionSection } from '../editableDescriptionSection';
 
 const cx = classNames.bind(styles);
 
+const noopHandler = () => {};
+
 export const TestCaseDetailsPage = () => {
-  const { formatMessage } = useIntl();
+  const testCase = {
+    id: '2775277527',
+    name: '24.2 PV',
+    created: '2025-03-26',
+    tags: [],
+    description: '',
+    hasScenario: false,
+  };
 
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <div className={cx('header-container')}>
-          <div className={cx('header-title')}>{formatMessage(messages.testCaseDetailsHeader)}</div>
-        </div>
-        <div className={cx('content')}>
-          <p>Test Case Details Page</p>
+        <div className={cx('page')}>
+          <TestCaseDetailsHeader
+            className={cx('page__header')}
+            testCase={testCase}
+            onAddToLaunch={noopHandler}
+            onAddToTestPlan={noopHandler}
+            onMenuAction={noopHandler}
+          />
+
+          <div className={cx('page__sidebar')}>
+            <EditableTagsSection onAddTag={noopHandler} />
+            <EditableDescriptionSection onAddDescription={noopHandler} />
+          </div>
+
+          <div className={cx('page__main-content')}>
+            <ScrollWrapper>
+              <DetailsEmptyState />
+            </ScrollWrapper>
+          </div>
         </div>
       </ScrollWrapper>
     </SettingsLayout>

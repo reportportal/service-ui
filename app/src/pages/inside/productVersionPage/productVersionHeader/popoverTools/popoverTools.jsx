@@ -99,6 +99,7 @@ export const PopoverTools = () => {
 
   return (
     <PopoverControl
+      className={cx('popover-tools')}
       items={[
         {
           label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
@@ -106,13 +107,13 @@ export const PopoverTools = () => {
         },
         {
           label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-          className: cx('popover-tools__item-button-red'),
+          variant: 'danger',
           onClick: openDeleteModal,
         },
       ]}
       placement="bottom-end"
     >
-      <Button variant="ghost" className={cx('popover-tools__meatball-button')}>
+      <Button variant="ghost" adjustWidthOn="content">
         <MeatballMenuIcon />
       </Button>
     </PopoverControl>

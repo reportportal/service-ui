@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
+import classNames from 'classnames/bind';
+import styles from './infoBlock.scss';
 
-// workaround for issue with width
-// until implemented in ui-kit
-:global(.width-content) {
-  min-width: unset;
+const cx = classNames.bind(styles);
+
+interface InfoBlockProps {
+  label: string;
+  className?: string;
 }
+
+export const InfoBlock = ({ label, className = '' }: InfoBlockProps) => (
+  <div className={cx('info-block', className)}>
+    <span className={cx('info-block__label')}>{label}</span>
+  </div>
+);
