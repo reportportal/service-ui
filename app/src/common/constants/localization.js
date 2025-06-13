@@ -195,6 +195,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.analyzerDisabled',
     defaultMessage: 'Service analyzer is not running',
   },
+  DUPLICATE: {
+    id: 'Common.duplicate',
+    defaultMessage: 'Duplicate',
+  },
   changesWarning: {
     id: 'Common.changesWarning',
     defaultMessage: 'Field is invalid or changes were not saved',

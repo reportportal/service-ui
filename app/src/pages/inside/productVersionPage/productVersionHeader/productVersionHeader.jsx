@@ -18,12 +18,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { BreadcrumbsTreeIcon, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
 
 import { Tabs } from 'components/main/tabs';
 import { payloadSelector } from 'controllers/pages';
 import { messages } from 'pages/inside/productVersionsPage/messages';
 import { TabsConfigShape } from 'components/main/tabs/tabs';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PopoverTools } from './popoverTools';
 
 import styles from './productVersionHeader.scss';
@@ -34,18 +34,25 @@ export const ProductVersionHeader = ({ tabsConfig }) => {
   const { formatMessage } = useIntl();
   const { productVersionTab: currentTab, productVersionId } = useSelector(payloadSelector);
 
+  const breadcrumbDescriptors = [
+    {
+      id: 'product-versions',
+      title: formatMessage(messages.productVersions),
+      link: {},
+    },
+    {
+      id: productVersionId,
+      title: productVersionId,
+      link: {},
+    },
+  ];
+
   return (
     <div className={cx('product-version-header')}>
-      <div className={cx('product-version-header__breadcrumb')}>
-        <div className={cx('product-version-header__tree-icon')}>
-          <BreadcrumbsTreeIcon />
-        </div>
-        <div className={cx('product-version-header__breadcrumb-name')}>
-          {formatMessage(messages.productVersions)}
-          <ChevronRightBreadcrumbsIcon />
-          {productVersionId}
-        </div>
-      </div>
+      <Breadcrumbs
+        descriptors={breadcrumbDescriptors}
+        className={cx('product-version-header__breadcrumb')}
+      />
       <div className={cx('product-version-header__title')}>{productVersionId}</div>
       <div className={cx('product-version-header__tab-wrapper')}>
         <Tabs config={tabsConfig} activeTab={currentTab} withContent={false} />

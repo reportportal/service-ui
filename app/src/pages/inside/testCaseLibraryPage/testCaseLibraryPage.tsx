@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 
-import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
-import { EmptyState } from './emptyState';
+import { MainPageEmptyState } from './emptyState/mainPage';
 
 import styles from './testCaseLibraryPage.scss';
 import { messages } from './messages';
@@ -33,21 +31,29 @@ const cx = classNames.bind(styles);
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
 
+  const breadcrumbDescriptors = [
+    {
+      id: 'project',
+      title: 'Adi_02',
+    },
+  ];
+
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <div className={cx('test-case-library-page')}>
           <div className={cx('test-case-library-page__header')}>
-            <div className={cx('test-case-library-page__breadcrumb')}>
-              <div className={cx('test-case-library-page__breadcrumb-icon')}>
-                <BreadcrumbsTreeIcon />
-              </div>
-              <div className={cx('test-case-library-page__breadcrumb-name')}>Adi_02</div>
+            <Breadcrumbs
+              descriptors={breadcrumbDescriptors}
+              className={cx('test-case-library-page__breadcrumb')}
+              isRootElement
+            />
+            <div className={cx('test-case-library-page__title')}>
+              {formatMessage(messages.testCaseLibraryHeader)}
             </div>
-            <Header title={formatMessage(messages.testCaseLibraryHeader)} />
           </div>
           <div className={cx('test-case-library-page__content')}>
-            <EmptyState />
+            <MainPageEmptyState />
           </div>
         </div>
       </ScrollWrapper>

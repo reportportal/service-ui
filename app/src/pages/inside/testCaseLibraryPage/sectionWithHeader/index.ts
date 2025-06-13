@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-
-// workaround for issue with width
-// until implemented in ui-kit
-:global(.width-content) {
-  min-width: unset;
-}
+export { SectionWithHeader } from './sectionWithHeader';

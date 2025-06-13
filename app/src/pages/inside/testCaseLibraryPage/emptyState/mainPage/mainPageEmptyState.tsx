@@ -26,9 +26,10 @@ import { TEST_CASE_DETAILS_PAGE } from 'controllers/pages/constants';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 
 import ImportIcon from 'common/img/import-thin-inline.svg';
-import { messages } from './messages';
+import { messages } from '../messages';
+import { commonMessages } from '../../commonMessages';
 
-export const EmptyState = () => {
+export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -51,7 +52,7 @@ export const EmptyState = () => {
     messages.createFolder,
     messages.addTestCases,
     messages.tagTestCases,
-  ].map((translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })));
+  ].map((translation) => Parser(formatMessage(translation)));
 
   return (
     <>
@@ -62,7 +63,7 @@ export const EmptyState = () => {
         documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
-            name: formatMessage(messages.createTestCase),
+            name: formatMessage(commonMessages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
             handleButton: handleCreateTestCase,

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { BackBreadcrumb } from './backBreadcrumb';
@@ -28,7 +27,7 @@ const MEATBALL_WIDTH = 36;
 const ARROW_WIDTH = 20;
 const MAX_SHOWN_DESCRIPTORS = 5;
 
-export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
+export const Breadcrumbs = ({ descriptors, dataAutomationId, isRootElement, className }) => {
   const shownDescriptors = [...descriptors];
 
   const titleTailNumChars = ((breadcrumbsCount) => {
@@ -60,8 +59,8 @@ export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
     shownDescriptors.length;
 
   return (
-    <div className={cx('breadcrumbs-container')} data-automation-id={dataAutomationId}>
-      {descriptors.length === 1 ? (
+    <div className={cx('breadcrumbs-container', className)} data-automation-id={dataAutomationId}>
+      {descriptors.length === 1 && !isRootElement ? (
         <BackBreadcrumb
           maxBreadcrumbWidth={maxBreadcrumbWidth}
           descriptor={descriptors[0]}
@@ -114,6 +113,8 @@ export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
 };
 
 Breadcrumbs.propTypes = {
+  className: PropTypes.string,
+  isRootElement: PropTypes.bool,
   descriptors: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,

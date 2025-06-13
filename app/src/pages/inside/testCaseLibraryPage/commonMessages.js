@@ -16,21 +16,25 @@
 
 import { defineMessages } from 'react-intl';
 
-export const messages = defineMessages({
-  tags: {
-    id: 'EditTestCasePage.tags',
-    defaultMessage: 'Tags',
+export const commonMessages = defineMessages({
+  testCaseLibraryHeader: {
+    id: 'TestCaseLibraryPage.testCaseLibraryHeader',
+    defaultMessage: 'Test Case Library',
   },
-  noTagsAdded: {
-    id: 'EditTestCasePage.noTagsAdded',
-    defaultMessage: 'No tags added yet',
+  createFolder: {
+    id: 'TestCaseLibraryPage.createFolder',
+    defaultMessage: 'Create Folder',
   },
-  description: {
-    id: 'EditTestCasePage.description',
-    defaultMessage: 'Description',
+  createTestCase: {
+    id: 'TestCaseLibraryPage.createTestCase',
+    defaultMessage: 'Create test case',
   },
-  noDescriptionAdded: {
-    id: 'EditTestCasePage.noDescriptionAdded',
-    defaultMessage: 'No description added',
+  allTestCases: {
+    id: 'TestCaseLibraryPage.allTestCases',
+    defaultMessage: 'All Test Cases',
+  },
+  folders: {
+    id: 'TestCaseLibraryPage.folders',
+    defaultMessage: 'Folders',
   },
 });
