@@ -958,6 +958,7 @@
   "Hamburger.notYourLaunch": "Вы не з'яўляецеся уладальнікам запуску",
   "Hamburger.patternAnalysis": "Патэрн-аналіз",
   "Hamburger.serviceAnalyzerDisabledTooltip": "Сэрвіс аналізу не запушчаны",
+  "Hamburger.importantControlsDisabledTooltip": "Гэта функцыя была адключана адміністратарам",
   "Hamburger.uniqueErrorAnalysis": "Аналіз унікальных памылак",
   "Hamburger.uniqueErrorAnalysisIsInProgress": "Аналіз унікальных памылак у працэсе",
   "Hamburger.uniqueErrorAnalysisLaunchesInProgressError": "Аналіз унікальных памылак не можа быць запушчаны для запускаў у працэсе",
