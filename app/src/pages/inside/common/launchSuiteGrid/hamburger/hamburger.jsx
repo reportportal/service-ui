@@ -97,6 +97,10 @@ const messages = defineMessages({
     id: 'Hamburger.serviceAnalyzerDisabledTooltip',
     defaultMessage: 'Service analyzer is not running',
   },
+  importantControlsDisabledTooltip: {
+    id: 'Hamburger.importantControlsDisabledTooltip',
+    defaultMessage: 'The feature was disabled by Administrator',
+  },
 });
 
 @injectIntl
@@ -274,6 +278,26 @@ export class Hamburger extends Component {
     }
   };
 
+  getImportantLaunchesTitle = () => {
+    const {
+      intl: { formatMessage },
+      userId,
+      launch,
+      accountRole,
+      projectRole,
+      areImportantLaunchesEnabled,
+    } = this.props;
+    const canUpdateImportance = canDeleteLaunch(accountRole, projectRole, userId === launch.owner);
+
+    if (!areImportantLaunchesEnabled) {
+      return formatMessage(messages.importantControlsDisabledTooltip);
+    } else if (!canUpdateImportance) {
+      return formatMessage(messages.noPermissions);
+    }
+
+    return '';
+  };
+
   render() {
     const {
       intl,
@@ -283,15 +307,10 @@ export class Hamburger extends Component {
       customProps,
       enabledPatterns,
       tracking,
-      areImportantLaunchesEnabled,
     } = this.props;
 
     const clusterTitle = this.getClusterTitle();
-    const canUpdateImportant = canDeleteLaunch(
-      accountRole,
-      projectRole,
-      this.props.userId === this.props.launch.owner,
-    );
+    const importantLaunchesTitle = this.getImportantLaunchesTitle();
 
     return (
       <div className={cx('hamburger')}>
@@ -359,25 +378,23 @@ export class Hamburger extends Component {
                 customProps.onForceFinish(launch);
               }}
             />
-            {areImportantLaunchesEnabled && (
-              <HamburgerMenuItem
-                disabled={!canUpdateImportant}
-                title={canUpdateImportant ? '' : intl.formatMessage(messages.noPermissions)}
-                text={intl.formatMessage(
+            <HamburgerMenuItem
+              disabled={!!importantLaunchesTitle}
+              title={importantLaunchesTitle}
+              text={intl.formatMessage(
+                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                  ? messages.unmarkAsImportant
+                  : messages.markAsImportant,
+              )}
+              onClick={() => {
+                tracking.trackEvent(
                   launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                    ? messages.unmarkAsImportant
-                    : messages.markAsImportant,
-                )}
-                onClick={() => {
-                  tracking.trackEvent(
-                    launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                      ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
-                      : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
-                  );
-                  this.changeImportantState(launch.retentionPolicy);
-                }}
-              />
-            )}
+                    ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                    : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                );
+                this.changeImportantState(launch.retentionPolicy);
+              }}
+            />
             {launch.mode === 'DEFAULT' && (
               <HamburgerMenuItem
                 text={intl.formatMessage(messages.analysis)}

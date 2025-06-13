@@ -958,6 +958,7 @@
   "Hamburger.notYourLaunch": "您不是测试任务的所有者",
   "Hamburger.patternAnalysis": "模版分析服务",
   "Hamburger.serviceAnalyzerDisabledTooltip": "服务分析器未运行",
+  "Hamburger.importantControlsDisabledTooltip": "The feature was disabled by Administrator",
   "Hamburger.uniqueErrorAnalysis": "独特错误分析",
   "Hamburger.uniqueErrorAnalysisIsInProgress": "独特错误分析进行中",
   "Hamburger.uniqueErrorAnalysisLaunchesInProgressError": "无法为正在进行中的测试任务执行独特错误分析",
