@@ -1601,7 +1601,7 @@
   "OrganizationSettings.generalTab.informationMessage": "Изменения, внесённые на уровне организации, влияют на настройки вашего(-их) проекта(-ов).",
   "OrganizationSettings.generalTab.informationTitle": "Информация",
   "OrganizationSettings.generalTab.organizationNameLabel": "Имя",
-  "OrganizationSettingsPage.general": "Общие",
+  "OrganizationSettingsPage.general": "Общее",
   "OrganizationSettingsPage.title": "Настройки Организации",
   "OrganizationSidebar.membersBtn": "Пользователи Организации",
   "OrganizationSidebar.projectsBtn": "Проекты",
