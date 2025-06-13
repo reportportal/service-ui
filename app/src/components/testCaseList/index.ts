@@ -14,15 +14,5 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+export { TestCaseList } from './testCaseList';
+export { mockTestCases, STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS, FILTER_OPTIONS } from './mockData';
