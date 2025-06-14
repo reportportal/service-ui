@@ -26,6 +26,11 @@ export const messages = defineMessages({
     defaultMessage:
       'Your Test Case Library is empty. Start building comprehensive test cases to streamline your testing process and ensure product quality.',
   },
+  folderEmptyPageDescription: {
+    id: 'TestCaseLibraryPage.folderEmptyPageDescription',
+    defaultMessage:
+      'This folder has no test cases yet. Add some to enhance your testing workflow and maintain quality.',
+  },
   numerableBlockTitle: {
     id: 'TestCaseLibraryPage.numerableBlock.title',
     defaultMessage: 'How to get started?',
@@ -33,6 +38,10 @@ export const messages = defineMessages({
   createTestCase: {
     id: 'TestCaseLibraryPage.createTestCase',
     defaultMessage: 'Create Test Case',
+  },
+  addTestCase: {
+    id: 'TestCaseLibraryPage.addTestCase',
+    defaultMessage: 'Add Test Case',
   },
   importTestCases: {
     id: 'TestCaseLibraryPage.importTestCases',

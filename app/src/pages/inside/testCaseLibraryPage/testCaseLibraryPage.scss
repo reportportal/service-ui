@@ -51,5 +51,24 @@
     flex-grow: 1;
     padding: 32px 32px 60px;
     gap: 80px;
+
+    &--no-padding {
+      padding: 0;
+    }
+  }
+
+  &__actions {
+    position: absolute;
+    top: 40px;
+    right: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__toggle {
+    position: absolute;
+    top: 35px;
+    left: 250px;
   }
 }
