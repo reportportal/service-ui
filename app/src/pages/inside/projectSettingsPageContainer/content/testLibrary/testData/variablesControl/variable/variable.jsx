@@ -56,7 +56,7 @@ export const Variable = ({ variable }) => {
     {
       label: formatMessage(messages.deleteVariable),
       icon: <DeleteIcon />,
-      className: cx('variable__tools--red'),
+      variant: 'destructive',
     },
   ];
 

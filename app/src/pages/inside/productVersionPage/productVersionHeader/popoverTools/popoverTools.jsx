@@ -106,8 +106,8 @@ export const PopoverTools = () => {
         },
         {
           label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-          className: cx('popover-tools__item-button-red'),
           onClick: openDeleteModal,
+          variant: 'destructive',
         },
       ]}
       placement="bottom-end"

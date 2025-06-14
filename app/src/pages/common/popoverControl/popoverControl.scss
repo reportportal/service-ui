@@ -40,5 +40,15 @@
     &:hover {
       background-color: var(--rp-ui-base-bg-200);
     }
+
+    &--destructive {
+      color: var(--rp-ui-base-error);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--rp-ui-base-error);
+      }
+    }
   }
 }
