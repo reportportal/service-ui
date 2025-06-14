@@ -30,8 +30,6 @@ import styles from './expandedOptions.scss';
 
 const cx = classNames.bind(styles);
 
-const defaultActiveFolder = 'All test cases';
-
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState(null);
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
@@ -48,8 +46,7 @@ export const ExpandedOptions = () => {
           <button
             type="button"
             className={cx('sidebar-header__title', {
-              'sidebar-header__title--active':
-                activeFolder === defaultActiveFolder || activeFolder === null,
+              'sidebar-header__title--active': activeFolder === null,
             })}
             onClick={setAllTestCases}
           >
