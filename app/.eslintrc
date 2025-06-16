@@ -86,7 +86,17 @@
     "no-invalid-this": 0,
     "prefer-object-spread": 0,
     "react-hooks/rules-of-hooks": 2,
-    "react-hooks/exhaustive-deps": 1
+    "react-hooks/exhaustive-deps": 1,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   },
   "parserOptions": {
     "requireConfigFile": true,
