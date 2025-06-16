@@ -33,18 +33,6 @@
     h4 {
       line-height: 24px;
     }
-
-    &--tool-red {
-      color: var(--rp-ui-base-error);
-
-      &:hover {
-        color: var(--rp-ui-base-error);
-      }
-
-      path {
-        fill: var(--rp-ui-base-error);
-      }
-    }
   }
 
   &__description {

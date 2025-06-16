@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
+import { ComponentProps, ReactElement, ReactNode } from 'react';
 import classNames from 'classnames/bind';
 
 import { Popover } from '@reportportal/ui-kit';
@@ -23,15 +23,44 @@ import styles from './popoverControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const PopoverControl = ({ items, placement, children, isOpened, setIsOpened }) => (
+interface PopoverItem {
+  label: string;
+  icon?: ReactElement;
+  /** @deprecated Consider defining a variant instead */
+  className?: string;
+  onClick?: () => void;
+  variant?: 'destructive';
+}
+
+interface PopoverControlProps {
+  items: PopoverItem[];
+  placement?: ComponentProps<typeof Popover>['placement'];
+  children?: ReactNode;
+  isOpened?: boolean;
+  setIsOpened?: (isOpened: boolean) => void;
+}
+
+export const PopoverControl = ({
+  items,
+  placement,
+  children,
+  isOpened,
+  setIsOpened,
+}: PopoverControlProps) => (
   <Popover
     className={cx('popover-control')}
     isOpened={isOpened}
     content={
       <ul>
-        {items.map(({ label, icon, className = '', onClick }) => (
+        {items.map(({ label, icon, className = '', onClick, variant }) => (
           <li key={label}>
-            <button className={cx('popover-control__item-button', className)} onClick={onClick}>
+            <button
+              type="button"
+              className={cx('popover-control__item-button', className, {
+                [`popover-control__item-button--${variant}`]: !!variant,
+              })}
+              onClick={onClick}
+            >
               {icon} {label}
             </button>
           </li>
@@ -44,18 +73,3 @@ export const PopoverControl = ({ items, placement, children, isOpened, setIsOpen
     {children}
   </Popover>
 );
-
-PopoverControl.propTypes = {
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      icon: PropTypes.element,
-      className: PropTypes.string,
-      onClick: PropTypes.func,
-    }),
-  ).isRequired,
-  placement: PropTypes.string,
-  children: PropTypes.node,
-  isOpened: PropTypes.bool,
-  setIsOpened: PropTypes.func,
-};

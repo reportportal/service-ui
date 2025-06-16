@@ -78,7 +78,7 @@ export const VariablesControl = ({ variables }) => {
     {
       label: formatMessage(messages.deleteAllVariables),
       icon: <DeleteIcon />,
-      className: cx('variables-control-wrapper__title-wrapper--tool-red'),
+      variant: 'destructive',
     },
   ];
 

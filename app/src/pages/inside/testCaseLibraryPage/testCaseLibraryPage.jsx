@@ -16,32 +16,31 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { BreadcrumbsTreeIcon, Button, Toggle } from '@reportportal/ui-kit';
 
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
+import ExportIcon from 'common/img/export-thin-inline.svg';
+import ImportIcon from 'common/img/import-thin-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
-import { AllTestCasesPage } from './allTestCasesPage';
-import { EmptyState } from './emptyState';
-import { useTestCases } from './hooks/useTestCases';
+import { MainPageEmptyState } from './emptyState/mainPage';
+import { ExpandedOptions } from './expandedOptions';
+import { commonMessages } from './commonMessages';
 
 import styles from './testCaseLibraryPage.scss';
-import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
 export const TestCaseLibraryPage = () => {
+  const [isEmptyState, setEmptyState] = React.useState(true);
   const { formatMessage } = useIntl();
-  const {
-    filteredTestCases,
-    loading,
-    hasTestCases,
-    searchValue,
-    setSearchValue,
-    deleteTestCase,
-    duplicateTestCase,
-  } = useTestCases();
+  // Temporary toggle for BA and designer review
+  const toggleEmptyState = () => {
+    setEmptyState((prevState) => !prevState);
+  };
 
   return (
     <SettingsLayout>
@@ -54,21 +53,44 @@ export const TestCaseLibraryPage = () => {
               </div>
               <div className={cx('test-case-library-page__breadcrumb-name')}>Adi_02</div>
             </div>
-            <Header title={formatMessage(messages.testCaseLibraryHeader)} />
+            <Header title={formatMessage(commonMessages.testCaseLibraryHeader)}>
+              <Toggle
+                className={cx('test-case-library-page__toggle')}
+                value={isEmptyState}
+                data-automation-id=""
+                onChange={toggleEmptyState}
+              >
+                toggle content
+              </Toggle>
+              {isEmptyState || (
+                <div className={cx('test-case-library-page__actions')}>
+                  <Button
+                    variant="text"
+                    icon={Parser(ExportIcon)}
+                    data-automation-id="exportTestCase"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.EXPORT)}
+                  </Button>
+                  <Button
+                    variant="text"
+                    icon={Parser(ImportIcon)}
+                    data-automation-id="importTestCase"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
+                  </Button>
+                  <Button variant="ghost" data-automation-id="createTestCase">
+                    {formatMessage(commonMessages.createTestCase)}
+                  </Button>
+                </div>
+              )}
+            </Header>
           </div>
-          <div className={cx(!hasTestCases && 'test-case-library-page__content')}>
-            {hasTestCases ? (
-              <AllTestCasesPage
-                testCases={filteredTestCases}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                deleteTestCase={deleteTestCase}
-                duplicateTestCase={duplicateTestCase}
-                loading={loading}
-              />
-            ) : (
-              <EmptyState />
-            )}
+          <div
+            className={cx('test-case-library-page__content', {
+              'test-case-library-page__content--no-padding': !isEmptyState,
+            })}
+          >
+            {isEmptyState ? <MainPageEmptyState /> : <ExpandedOptions />}
           </div>
         </div>
       </ScrollWrapper>

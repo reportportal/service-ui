@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-.organizations-panels-wrapper {
-  padding: 0px 96px 32px 96px;
-  width: calc(100% - 192px);
-  flex: 1;
-}
-
-.organizations-panels {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-columns: repeat(auto-fill, minmax(384px, 384px));
-  justify-content: center;
-  gap: 24px;
-  padding-top: 24px;
-  width: 100%;
-}
+export { ExpandedOptions } from './expandedOptions';

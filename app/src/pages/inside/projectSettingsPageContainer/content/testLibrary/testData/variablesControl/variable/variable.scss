@@ -35,18 +35,6 @@
     &--shown {
       visibility: visible;
     }
-
-    &--red {
-      color: var(--rp-ui-base-error);
-
-      &:hover {
-        color: var(--rp-ui-base-error);
-      }
-
-      path {
-        fill: var(--rp-ui-base-error);
-      }
-    }
   }
 
   &__meatball {

@@ -26,6 +26,11 @@ export const messages = defineMessages({
     defaultMessage:
       'Your Test Case Library is empty. Start building comprehensive test cases to streamline your testing process and ensure product quality.',
   },
+  folderEmptyPageDescription: {
+    id: 'TestCaseLibraryPage.folderEmptyPageDescription',
+    defaultMessage:
+      'This folder has no test cases yet. Add some to enhance your testing workflow and maintain quality.',
+  },
   numerableBlockTitle: {
     id: 'TestCaseLibraryPage.numerableBlock.title',
     defaultMessage: 'How to get started?',
@@ -34,6 +39,10 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.createTestCase',
     defaultMessage: 'Create Test Case',
   },
+  addTestCase: {
+    id: 'TestCaseLibraryPage.addTestCase',
+    defaultMessage: 'Add Test Case',
+  },
   importTestCases: {
     id: 'TestCaseLibraryPage.importTestCases',
     defaultMessage: 'Import Test Cases',
@@ -41,16 +50,16 @@ export const messages = defineMessages({
   createFolder: {
     id: 'TestCaseLibraryPage.createFolder',
     defaultMessage:
-      '<strong>Create a folder</strong>{br}Begin by creating a folder to organize your test cases. These folders can correspond to features, user stories, or any other entities that relate to your test cases.',
+      '<strong>Create a folder</strong><br />Begin by creating a folder to organize your test cases. These folders can correspond to features, user stories, or any other entities that relate to your test cases.',
   },
   addTestCases: {
     id: 'TestCaseLibraryPage.addTestCases',
     defaultMessage:
-      '<strong>Add test cases</strong>{br}Within the selected folder, click "Create Test Case" to define your testing scenario. Ensure each test case is clearly described and includes necessary steps.',
+      '<strong>Add test cases</strong><br />Within the selected folder, click "Create Test Case" to define your testing scenario. Ensure each test case is clearly described and includes necessary steps.',
   },
   tagTestCases: {
     id: 'TestCaseLibraryPage.tagTestCases',
     defaultMessage:
-      '<strong>Tag your test cases</strong>{br}Use tags to categorize and identify test cases efficiently. Add relevant tags during or after test case creation to enhance searchability and organization.',
+      '<strong>Tag your test cases</strong><br />Use tags to categorize and identify test cases efficiently. Add relevant tags during or after test case creation to enhance searchability and organization.',
   },
 });

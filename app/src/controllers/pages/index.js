@@ -101,6 +101,7 @@ export {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  TEST_CASE_DETAILS_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';

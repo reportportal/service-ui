@@ -15,6 +15,7 @@ build/
 */**/build/
 */**/sl_instrumented/
 .gradle/
+.tsbuildinfo
 
 ## Coverage
 coverage

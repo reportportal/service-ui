@@ -315,6 +315,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.name',
     defaultMessage: 'Name',
   },
+  IMPORT: {
+    id: 'Common.import',
+    defaultMessage: 'Import',
+  },
+  EXPORT: {
+    id: 'Common.export',
+    defaultMessage: 'Export',
+  },
 });
 
 export const months = [
