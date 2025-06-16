@@ -22,7 +22,7 @@ import styles from '../testCaseCell.scss';
 
 const cx = classNames.bind(styles);
 
-interface StatusIconProps {
+interface PriorityIconProps {
   status: TestCaseStatus;
 }
 
@@ -38,6 +38,10 @@ const iconMap: Record<TestCaseStatus, React.ReactNode> = {
   ),
 };
 
-export const StatusIcon = ({ status }: StatusIconProps) => {
-  return <div className={cx('status-icon', `status-icon--${status}`)}>{iconMap[status]}</div>;
+export const PriorityIcon = ({ status }: PriorityIconProps) => {
+  return (
+    <div className={cx('priority-icon-block', `priority-icon-block--${status}`)}>
+      {iconMap[status]}
+    </div>
+  );
 };

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { StatusIcon } from './statusIcon';
+export { PriorityIcon } from './priorityIcon';
