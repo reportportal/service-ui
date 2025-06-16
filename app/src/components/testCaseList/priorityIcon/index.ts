@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+export { PriorityIcon } from './statusIcon';

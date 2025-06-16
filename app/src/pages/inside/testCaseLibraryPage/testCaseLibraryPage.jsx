@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
+
+import { AllTestCasesPage } from './allTestCasesPage';
 import { EmptyState } from './emptyState';
+import { useTestCases } from './hooks/useTestCases';
 
 import styles from './testCaseLibraryPage.scss';
 import { messages } from './messages';
@@ -32,6 +33,15 @@ const cx = classNames.bind(styles);
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
+  const {
+    filteredTestCases,
+    loading,
+    hasTestCases,
+    searchValue,
+    setSearchValue,
+    deleteTestCase,
+    duplicateTestCase,
+  } = useTestCases();
 
   return (
     <SettingsLayout>
@@ -46,8 +56,19 @@ export const TestCaseLibraryPage = () => {
             </div>
             <Header title={formatMessage(messages.testCaseLibraryHeader)} />
           </div>
-          <div className={cx('test-case-library-page__content')}>
-            <EmptyState />
+          <div className={cx(!hasTestCases && 'test-case-library-page__content')}>
+            {hasTestCases ? (
+              <AllTestCasesPage
+                testCases={filteredTestCases}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                deleteTestCase={deleteTestCase}
+                duplicateTestCase={duplicateTestCase}
+                loading={loading}
+              />
+            ) : (
+              <EmptyState />
+            )}
           </div>
         </div>
       </ScrollWrapper>

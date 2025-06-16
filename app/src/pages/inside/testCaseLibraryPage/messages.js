@@ -21,4 +21,32 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseLibraryHeader',
     defaultMessage: 'Test Case Library',
   },
+  copySuffix: {
+    id: 'TestCaseLibraryPage.copySuffix',
+    defaultMessage: '(Copy)',
+  },
+  items: {
+    id: 'TestCaseLibraryPage.items',
+    defaultMessage: 'items',
+  },
+  of: {
+    id: 'TestCaseLibraryPage.of',
+    defaultMessage: 'of',
+  },
+  page: {
+    id: 'TestCaseLibraryPage.page',
+    defaultMessage: 'Page',
+  },
+  goToPage: {
+    id: 'TestCaseLibraryPage.goToPage',
+    defaultMessage: 'Go to page',
+  },
+  go: {
+    id: 'TestCaseLibraryPage.go',
+    defaultMessage: 'Go',
+  },
+  perPage: {
+    id: 'TestCaseLibraryPage.perPage',
+    defaultMessage: 'per page',
+  },
 });

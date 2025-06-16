@@ -103,6 +103,17 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-empty-interface": "off",
+        "import/prefer-default-export": "off",
+        "import/extensions": [
+          "error",
+          "ignorePackages",
+          {
+            "js": "never",
+            "jsx": "never",
+            "ts": "never",
+            "tsx": "never"
+          }
+        ],
         "react/prop-types": "off",
         "react/require-default-props": "off",
         "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }]
