@@ -3,8 +3,7 @@
   "extends": [
     "airbnb",
     // "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
-    "prettier/react"
+    "plugin:prettier/recommended"
   ],
   "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "babel"],
   "settings": {
@@ -92,9 +91,8 @@
       "parser": "@typescript-eslint/parser",
       "extends": [
         "airbnb",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
-        "prettier/react"
+        "@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
       ],
       "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "@typescript-eslint"],
       "rules": {
