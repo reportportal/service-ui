@@ -74,11 +74,11 @@ import styles from './launchesTable.scss';
 
 const cx = classNames.bind(styles);
 
-const NameColumn = (
+function NameColumn(
   { className, value, ...rest },
   name,
   { linkPayload, onOwnerClick, onClickAttribute },
-) => {
+) {
   const { values, attributes } = value;
   const itemPropValue = {
     id: value.id,
@@ -114,39 +114,43 @@ const NameColumn = (
       </div>
     </>
   );
-};
+}
 NameColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-const StatusColumn = ({ className, value: { values } }, name, { formatMessage }) => (
-  <div className={cx('status-col', className)}>
-    <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
-    {formatStatus(formatMessage, values.status)}
-  </div>
-);
+function StatusColumn({ className, value: { values } }, name, { formatMessage }) {
+  return (
+    <div className={cx('status-col', className)}>
+      <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
+      {formatStatus(formatMessage, values.status)}
+    </div>
+  );
+}
 StatusColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-const TimeColumn = ({ className, value }, name, { formatMessage }) => (
-  <div className={cx('time-col', className)}>
-    <span className={cx('mobile-hint')}>
-      {formatMessage(name === START_TIME ? hintMessages.startTimeHint : hintMessages.endTimeHint)}
-    </span>
-    <AbsRelTime
-      startTime={new Date(name === START_TIME ? value.startTime : value.values.endTime).getTime()}
-    />
-  </div>
-);
+function TimeColumn({ className, value }, name, { formatMessage }) {
+  return (
+    <div className={cx('time-col', className)}>
+      <span className={cx('mobile-hint')}>
+        {formatMessage(name === START_TIME ? hintMessages.startTimeHint : hintMessages.endTimeHint)}
+      </span>
+      <AbsRelTime
+        startTime={new Date(name === START_TIME ? value.startTime : value.values.endTime).getTime()}
+      />
+    </div>
+  );
+}
 TimeColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-const StatisticsColumn = ({ className, value }, name, { linkPayload }) => {
+function StatisticsColumn({ className, value }, name, { linkPayload }) {
   const defaultColumnProps = {
     itemId: Number(value.id),
     statuses: getStatisticsStatuses(name),
@@ -173,13 +177,13 @@ const StatisticsColumn = ({ className, value }, name, { linkPayload }) => {
       </div>
     </div>
   );
-};
+}
 StatisticsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-const DefectsColumn = ({ className, value }, name, { linkPayload }, fieldKeys) => {
+function DefectsColumn({ className, value }, name, { linkPayload }, fieldKeys) {
   const defaultColumnProps = {
     itemId: Number(value.id),
     ownLinkParams: {
@@ -217,7 +221,7 @@ const DefectsColumn = ({ className, value }, name, { linkPayload }, fieldKeys) =
       </div>
     </div>
   );
-};
+}
 DefectsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,

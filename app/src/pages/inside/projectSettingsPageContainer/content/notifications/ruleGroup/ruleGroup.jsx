@@ -76,7 +76,7 @@ const RuleItemDisabledTooltip = withTooltip({
   },
 })(({ children }) => children);
 
-export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled, ruleFields }) => {
+export function RuleGroup({ pluginName, ruleDescription, rules, isPluginEnabled, ruleFields }) {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
@@ -272,7 +272,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
 
   return (
     <div className={cx('rule-section')} data-automation-id={`${pluginNameInCamelCase}RulesSection`}>
-      <Layout description={''} className={cx('rule-section-layout')}>
+      <Layout description="" className={cx('rule-section-layout')}>
         <div className={cx('rule-section-header')}>
           <FieldElement
             className={cx('fieldElement')}
@@ -360,7 +360,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 <Button
                   className={cx('add-rule')}
                   onClick={onAdd}
-                  variant={'text'}
+                  variant="text"
                   icon={Parser(addIcon)}
                   data-automation-id="addRuleButton"
                 >
@@ -375,7 +375,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
       </Layout>
     </div>
   );
-};
+}
 const ruleShape = PropTypes.shape({
   id: PropTypes.number.isRequired,
   ruleName: PropTypes.string.isRequired,

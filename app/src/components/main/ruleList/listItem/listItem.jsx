@@ -25,13 +25,13 @@ import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ListItem = ({
+export function ListItem({
   item,
   getListItemContentData,
   contentWithScroll,
   lineHeightVariant,
   ...rest
-}) => {
+}) {
   const content = getListItemContentData(item).map((itemData, index) => (
     <ItemContent
       // eslint-disable-next-line react/no-array-index-key
@@ -55,7 +55,7 @@ export const ListItem = ({
       </div>
     </div>
   );
-};
+}
 
 ListItem.propTypes = {
   ...ruleListItemPropTypes,

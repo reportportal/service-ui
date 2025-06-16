@@ -25,19 +25,21 @@ import { Content } from './content';
 
 const cx = classNames.bind(styles);
 
-export const ListOfVersions = ({ openCreateProductVersionModal, versions }) => (
-  <div
-    className={cx('list-of-versions', {
-      'list-of-versions--empty': isEmpty(versions),
-    })}
-  >
-    {isEmpty(versions) ? (
-      <EmptyState openCreateProductVersionModal={openCreateProductVersionModal} />
-    ) : (
-      <Content versions={versions} />
-    )}
-  </div>
-);
+export function ListOfVersions({ openCreateProductVersionModal, versions }) {
+  return (
+    <div
+      className={cx('list-of-versions', {
+        'list-of-versions--empty': isEmpty(versions),
+      })}
+    >
+      {isEmpty(versions) ? (
+        <EmptyState openCreateProductVersionModal={openCreateProductVersionModal} />
+      ) : (
+        <Content versions={versions} />
+      )}
+    </div>
+  );
+}
 
 ListOfVersions.propTypes = {
   openCreateProductVersionModal: PropTypes.func.isRequired,

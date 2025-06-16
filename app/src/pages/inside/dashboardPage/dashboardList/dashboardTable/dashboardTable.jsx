@@ -73,14 +73,8 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const {
-      onDeleteItem,
-      onEditItem,
-      intl,
-      userRoles,
-      onDuplicate,
-      getDashboardItemPageLink,
-    } = this.props;
+    const { onDeleteItem, onEditItem, intl, userRoles, onDuplicate, getDashboardItemPageLink } =
+      this.props;
 
     const columns = [
       {
@@ -156,7 +150,7 @@ export class DashboardTable extends Component {
     const { dashboardItems, loading, onAddItem, filter } = this.props;
 
     return (
-      <Fragment>
+      <>
         <Grid
           className={cx('dashboard-table')}
           columns={this.getTableColumns()}
@@ -164,7 +158,7 @@ export class DashboardTable extends Component {
           loading={loading}
         />
         {dashboardItems.length === 0 && <EmptyDashboards filter={filter} action={onAddItem} />}
-      </Fragment>
+      </>
     );
   }
 }

@@ -40,36 +40,38 @@ interface PopoverControlProps {
   setIsOpened?: (isOpened: boolean) => void;
 }
 
-export const PopoverControl = ({
+export function PopoverControl({
   items,
   placement,
   children,
   isOpened,
   setIsOpened,
-}: PopoverControlProps) => (
-  <Popover
-    className={cx('popover-control')}
-    isOpened={isOpened}
-    content={
-      <ul>
-        {items.map(({ label, icon, className = '', onClick, variant }) => (
-          <li key={label}>
-            <button
-              type="button"
-              className={cx('popover-control__item-button', className, {
-                [`popover-control__item-button--${variant}`]: !!variant,
-              })}
-              onClick={onClick}
-            >
-              {icon} {label}
-            </button>
-          </li>
-        ))}
-      </ul>
-    }
-    placement={placement}
-    setIsOpened={setIsOpened}
-  >
-    {children}
-  </Popover>
-);
+}: PopoverControlProps) {
+  return (
+    <Popover
+      className={cx('popover-control')}
+      isOpened={isOpened}
+      content={
+        <ul>
+          {items.map(({ label, icon, className = '', onClick, variant }) => (
+            <li key={label}>
+              <button
+                type="button"
+                className={cx('popover-control__item-button', className, {
+                  [`popover-control__item-button--${variant}`]: !!variant,
+                })}
+                onClick={onClick}
+              >
+                {icon} {label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      }
+      placement={placement}
+      setIsOpened={setIsOpened}
+    >
+      {children}
+    </Popover>
+  );
+}

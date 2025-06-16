@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-export const GenerateDemoDataBlock = ({ className, onSuccess, onGenerate }) => {
+export function GenerateDemoDataBlock({ className, onSuccess, onGenerate }) {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
@@ -94,7 +94,7 @@ export const GenerateDemoDataBlock = ({ className, onSuccess, onGenerate }) => {
       {isLoading && <LabeledPreloader text={formatMessage(messages.preloaderInfo)} />}
     </div>
   );
-};
+}
 GenerateDemoDataBlock.propTypes = {
   className: PropTypes.string,
   onSuccess: PropTypes.func,

@@ -63,7 +63,7 @@ const messages = defineMessages({
   },
 });
 
-const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
+function AddIntegrationModal({ data, initialize, change, handleSubmit, dirty }) {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
@@ -141,7 +141,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       </div>
     </Modal>
   );
-};
+}
 AddIntegrationModal.propTypes = {
   data: PropTypes.object,
   initialize: PropTypes.func.isRequired,

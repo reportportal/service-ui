@@ -47,7 +47,7 @@ export const messages = defineMessages({
   },
 });
 
-export const Datasets = ({ datasets, variables, onDatasetAdd }) => {
+export function Datasets({ datasets, variables, onDatasetAdd }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -94,7 +94,7 @@ export const Datasets = ({ datasets, variables, onDatasetAdd }) => {
       )}
     </div>
   );
-};
+}
 
 Datasets.propTypes = {
   datasets: PropTypes.arrayOf(datasetShape).isRequired,

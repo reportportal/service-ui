@@ -21,9 +21,9 @@ import styles from './iconStateIndicators.scss';
 
 const cx = classNames.bind(styles);
 
-export const InvalidIconTooltip = ({ rejectMessage }) => (
-  <p className={cx('invalid-tooltip')}> {rejectMessage} </p>
-);
+export function InvalidIconTooltip({ rejectMessage }) {
+  return <p className={cx('invalid-tooltip')}> {rejectMessage} </p>;
+}
 InvalidIconTooltip.propTypes = {
   rejectMessage: PropTypes.string,
 };

@@ -22,7 +22,7 @@ import styles from './itemCounter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemCounter = ({ activePage, pageSize, itemCount }) => {
+export function ItemCounter({ activePage, pageSize, itemCount }) {
   const endIndex = activePage * pageSize;
   const startIndex = endIndex - pageSize;
   return (
@@ -31,7 +31,7 @@ export const ItemCounter = ({ activePage, pageSize, itemCount }) => {
       <FormattedMessage id="Common.of" defaultMessage="of" /> {itemCount}
     </div>
   );
-};
+}
 ItemCounter.propTypes = {
   activePage: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,

@@ -75,14 +75,8 @@ class AttachmentsSlider extends Component {
     this.props.carouselStore.setStoreState({ currentSlide: this.props.currentThumb });
 
   nextArrowClickHandler = () => {
-    const {
-      isThumbsView,
-      activeItemId,
-      currentThumb,
-      carouselStore,
-      attachments,
-      visibleThumbs,
-    } = this.props;
+    const { isThumbsView, activeItemId, currentThumb, carouselStore, attachments, visibleThumbs } =
+      this.props;
 
     let nextItemId = activeItemId + 1;
     let thumbConfig = null;
@@ -133,7 +127,7 @@ class AttachmentsSlider extends Component {
   render() {
     const { isThumbsView, attachments, activeItemId, onClickItem, withActions } = this.props;
     return (
-      <Fragment>
+      <>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
           {attachments.map((attachment, index) => (
             <Slide index={index} key={attachment.id}>
@@ -171,7 +165,7 @@ class AttachmentsSlider extends Component {
         <ButtonNext onClick={this.nextArrowClickHandler} className={cx('arrow', 'next-arrow')}>
           {Parser(ArrowIcon)}
         </ButtonNext>
-      </Fragment>
+      </>
     );
   }
 }

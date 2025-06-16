@@ -21,10 +21,10 @@ import styles from './featuresTab.scss';
 
 const cx = classNames.bind(styles);
 
-export const FeaturesTab = () => {
+export function FeaturesTab() {
   return (
     <div className={cx('features-tab')}>
       <ImportantLaunches />
     </div>
   );
-};
+}

@@ -61,14 +61,14 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
-export const AllUsersHeader = ({
+export function AllUsersHeader({
   onInvite,
   isLoading,
   searchValue,
   setSearchValue,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(false);
@@ -116,7 +116,7 @@ export const AllUsersHeader = ({
                   {formatMessage(messages.invite)}
                 </Button>
                 <Popover
-                  placement={'bottom-end'}
+                  placement="bottom-end"
                   isOpened={isOpen}
                   setIsOpened={setIsOpen}
                   content={
@@ -136,7 +136,7 @@ export const AllUsersHeader = ({
       </div>
     </div>
   );
-};
+}
 
 AllUsersHeader.propTypes = {
   onInvite: PropTypes.func,

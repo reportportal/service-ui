@@ -24,7 +24,7 @@ import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
+export function PluginsFilter({ filterItems, onFilterChange, activeItem }) {
   const { trackEvent } = useTracking();
   const getFilterItems = () => getPluginsFilter(filterItems);
 
@@ -50,7 +50,7 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
       ))}
     </ul>
   );
-};
+}
 
 PluginsFilter.propTypes = {
   filterItems: PropTypes.array.isRequired,

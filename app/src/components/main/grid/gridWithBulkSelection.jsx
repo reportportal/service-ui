@@ -24,6 +24,7 @@ export class GridWithBulkSelection extends React.Component {
     onToggleSelection: PropTypes.func,
     onItemsSelect: PropTypes.func,
   };
+
   static defaultProps = {
     data: [],
     selectedItems: [],
@@ -68,7 +69,9 @@ export class GridWithBulkSelection extends React.Component {
     }
   };
 
-  render = () => (
-    <Grid {...this.props} onClickRow={this.props.onItemsSelect ? this.itemSelectHandler : null} />
-  );
+  render() {
+    return (
+      <Grid {...this.props} onClickRow={this.props.onItemsSelect ? this.itemSelectHandler : null} />
+    );
+  }
 }

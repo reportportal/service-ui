@@ -27,7 +27,7 @@ import styles from './multipleAutocomplete.scss';
 
 const cx = classNames.bind(styles);
 
-export const MultipleAutocomplete = ({
+export function MultipleAutocomplete({
   onChange,
   onBlur,
   onFocus,
@@ -57,7 +57,7 @@ export const MultipleAutocomplete = ({
   variant,
   customizeNewSelectedValue,
   ...props
-}) => {
+}) {
   let updatePosition;
   const placeholderIfEmptyField = value.length === 0 && !disabled ? placeholder : '';
   const inputRef = useRef(null);
@@ -70,18 +70,16 @@ export const MultipleAutocomplete = ({
     updatePosition?.();
     onChange(...args);
   };
-  const getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({
-    item,
-    index,
-    ...rest
-  }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      ...rest,
-    });
+  const getOptionProps =
+    (getItemProps, highlightedIndex, selectedItems) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+        ...rest,
+      });
   const removeItemByBackspace = ({ event, removeItem, inputValue }) => {
     if (event.key === 'Backspace' && !inputValue && value.length) {
       removeItem(value[value.length - 1]);
@@ -247,7 +245,7 @@ export const MultipleAutocomplete = ({
       </MultipleDownshift>
     </Manager>
   );
-};
+}
 MultipleAutocomplete.propTypes = {
   options: PropTypes.array,
   loading: PropTypes.bool,

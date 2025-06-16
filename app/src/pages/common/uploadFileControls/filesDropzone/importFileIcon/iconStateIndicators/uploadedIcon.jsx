@@ -22,4 +22,6 @@ import styles from './iconStateIndicators.scss';
 
 const cx = classNames.bind(styles);
 
-export const UploadedIcon = () => <div className={cx('indicator-icon')}>{Parser(SuccessIcon)}</div>;
+export function UploadedIcon() {
+  return <div className={cx('indicator-icon')}>{Parser(SuccessIcon)}</div>;
+}

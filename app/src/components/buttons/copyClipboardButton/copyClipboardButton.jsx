@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
 });
 
-export const ClipboardButton = ({ text }) => {
+export function ClipboardButton({ text }) {
   const { formatMessage } = useIntl();
   const [isCopy, setIsCopy] = useState(false);
 
@@ -58,7 +58,7 @@ export const ClipboardButton = ({ text }) => {
       )}
     </div>
   );
-};
+}
 
 ClipboardButton.propTypes = {
   text: PropTypes.string.isRequired,

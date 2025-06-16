@@ -24,14 +24,16 @@ import styles from './lastLogin.scss';
 
 const cx = classNames.bind(styles);
 
-export const LastLogin = ({ time }) => (
-  <Fragment>
-    <span className={cx('mobile-title', 'mobile-show')}>
-      <FormattedMessage id={'LastLogin.mobileTitle'} defaultMessage={'Last login:'} />
-    </span>
-    <AbsRelTime startTime={time} />
-  </Fragment>
-);
+export function LastLogin({ time }) {
+  return (
+    <>
+      <span className={cx('mobile-title', 'mobile-show')}>
+        <FormattedMessage id="LastLogin.mobileTitle" defaultMessage="Last login:" />
+      </span>
+      <AbsRelTime startTime={time} />
+    </>
+  );
+}
 
 LastLogin.propTypes = {
   time: PropTypes.number,

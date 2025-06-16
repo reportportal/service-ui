@@ -23,14 +23,7 @@ import styles from './dynamicField.scss';
 
 const cx = classNames.bind(styles);
 
-export const DynamicField = ({
-  field,
-  customBlock,
-  withValidation,
-  children,
-  darkView,
-  ...rest
-}) => {
+export function DynamicField({ field, customBlock, withValidation, children, darkView, ...rest }) {
   const fieldChildren = withValidation ? (
     <FieldErrorHint darkView={darkView} provideHint={false}>
       {children}
@@ -62,7 +55,7 @@ export const DynamicField = ({
       {fieldChildren}
     </FieldElement>
   );
-};
+}
 DynamicField.propTypes = {
   field: dynamicFieldShape,
   customBlock: PropTypes.node,

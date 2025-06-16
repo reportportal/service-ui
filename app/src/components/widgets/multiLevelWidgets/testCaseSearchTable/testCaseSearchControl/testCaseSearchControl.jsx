@@ -32,7 +32,7 @@ import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-export const TestCaseSearchControl = ({ filter = {}, onSearchChange, onClear, onStatusChange }) => {
+export function TestCaseSearchControl({ filter = {}, onSearchChange, onClear, onStatusChange }) {
   const isFilterEmpty = !filter || (!filter.name && !filter.compositeAttribute);
   const isSearchByAttribute = !isFilterEmpty && filter.compositeAttribute;
   const isSearchByName = !isFilterEmpty && filter.name;
@@ -106,7 +106,7 @@ export const TestCaseSearchControl = ({ filter = {}, onSearchChange, onClear, on
       })}
     </div>
   );
-};
+}
 
 TestCaseSearchControl.propTypes = {
   filter: PropTypes.object,

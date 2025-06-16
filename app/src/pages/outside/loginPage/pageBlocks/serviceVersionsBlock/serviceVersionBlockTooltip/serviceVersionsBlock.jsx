@@ -27,7 +27,7 @@ const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth 
 
 const cx = classNames.bind(styles);
 
-export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
+export function ServiceVersionsBlock({ isDeprecated, services }) {
   const dispatch = useDispatch();
 
   const hideModal = () => {
@@ -48,7 +48,7 @@ export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
       className={cx('icon', { 'deprecated-icon': isDeprecated })}
     />
   );
-};
+}
 
 ServiceVersionsBlock.propTypes = {
   isDeprecated: PropTypes.bool.isRequired,

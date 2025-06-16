@@ -40,7 +40,7 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({
+export function ItemHeader({
   item,
   selectItem,
   isSelected,
@@ -48,7 +48,7 @@ export const ItemHeader = ({
   onClickLinkEvent,
   mode,
   toggleDetails,
-}) => {
+}) {
   const {
     id,
     name,
@@ -80,8 +80,8 @@ export const ItemHeader = ({
             )}
             {mode === RADIO_TEST_ITEM_DETAILS && (
               <InputRadio
-                size={'small'}
-                mode={'dark'}
+                size="small"
+                mode="dark"
                 value={isSelected}
                 ownValue
                 onChange={() => selectItem(id)}
@@ -130,7 +130,7 @@ export const ItemHeader = ({
       )}
     </div>
   );
-};
+}
 ItemHeader.propTypes = {
   item: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,

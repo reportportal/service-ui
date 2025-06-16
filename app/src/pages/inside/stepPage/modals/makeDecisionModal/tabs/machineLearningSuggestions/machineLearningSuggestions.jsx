@@ -22,7 +22,7 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { TestItemDetails } from '../../elements/testItemDetails';
 import { messages } from '../../messages';
 
-export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo }) => {
+export function MachineLearningSuggestions({ modalState, itemData, eventsInfo }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
@@ -39,21 +39,19 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
   };
 
   return (
-    <>
-      <TestItemDetails
-        item={item}
-        logs={logs}
-        highlightedLogId={suggestRs.relevantLogId}
-        highlightedMessage={formatMessage(messages.similarLog)}
-        showErrorLogs
-        eventsInfo={{
-          onOpenStackTraceEvent,
-          onClickExternalLinkEvent,
-        }}
-      />
-    </>
+    <TestItemDetails
+      item={item}
+      logs={logs}
+      highlightedLogId={suggestRs.relevantLogId}
+      highlightedMessage={formatMessage(messages.similarLog)}
+      showErrorLogs
+      eventsInfo={{
+        onOpenStackTraceEvent,
+        onClickExternalLinkEvent,
+      }}
+    />
   );
-};
+}
 
 MachineLearningSuggestions.propTypes = {
   modalState: PropTypes.object.isRequired,

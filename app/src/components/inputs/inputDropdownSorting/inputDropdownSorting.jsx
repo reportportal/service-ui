@@ -54,15 +54,19 @@ export class InputDropdownSorting extends Component {
     transparent: false,
     positionTop: false,
   };
+
   state = {
     opened: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   }
+
   onClickSelectBlock = (e) => {
     const { disabled, onFocus, onBlur } = this.props;
     const { opened } = this.state;
@@ -123,15 +127,8 @@ export class InputDropdownSorting extends Component {
   }
 
   render() {
-    const {
-      error,
-      touched,
-      disabled,
-      mobileDisabled,
-      transparent,
-      sortingMode,
-      positionTop,
-    } = this.props;
+    const { error, touched, disabled, mobileDisabled, transparent, sortingMode, positionTop } =
+      this.props;
     const { opened } = this.state;
 
     return (

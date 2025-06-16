@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
 });
 
-const GenerateIndexModal = ({ data }) => {
+function GenerateIndexModal({ data }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
@@ -103,7 +103,7 @@ const GenerateIndexModal = ({ data }) => {
       </div>
     </Modal>
   );
-};
+}
 GenerateIndexModal.propTypes = {
   data: PropTypes.shape({
     modalTitle: PropTypes.string,

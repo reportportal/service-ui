@@ -22,23 +22,25 @@ import styles from './filterList.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemoveFilter, intl }) => (
-  <div className={cx('filter-list')}>
-    {filters.map((filter) => (
-      <div key={filter.id} className={cx('item')}>
-        <FilterItem
-          id={filter.id}
-          name={filter.name}
-          description={filter.description}
-          active={filter.id === activeFilterId}
-          unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
-          onRemove={() => onRemoveFilter(filter)}
-          intl={intl}
-        />
-      </div>
-    ))}
-  </div>
-);
+export function FilterList({ filters, activeFilterId, unsavedFilterIds, onRemoveFilter, intl }) {
+  return (
+    <div className={cx('filter-list')}>
+      {filters.map((filter) => (
+        <div key={filter.id} className={cx('item')}>
+          <FilterItem
+            id={filter.id}
+            name={filter.name}
+            description={filter.description}
+            active={filter.id === activeFilterId}
+            unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
+            onRemove={() => onRemoveFilter(filter)}
+            intl={intl}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
 FilterList.propTypes = {
   filters: PropTypes.arrayOf(filterShape),
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

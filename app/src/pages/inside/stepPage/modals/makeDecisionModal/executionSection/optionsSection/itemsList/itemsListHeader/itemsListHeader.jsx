@@ -27,7 +27,7 @@ import styles from './itemsListHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemsListHeader = ({
+export function ItemsListHeader({
   currentTestItem,
   testItems,
   setItems,
@@ -36,7 +36,7 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   eventsInfo,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
@@ -88,7 +88,7 @@ export const ItemsListHeader = ({
       </InputCheckbox>
     </div>
   );
-};
+}
 ItemsListHeader.propTypes = {
   currentTestItem: PropTypes.object,
   testItems: PropTypes.array,

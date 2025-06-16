@@ -37,7 +37,7 @@ import styles from './integrations.scss';
 
 const cx = classNames.bind(styles);
 
-export const Integrations = () => {
+export function Integrations() {
   const loading = useSelector(pluginsLoadingSelector);
   const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const plugins = useSelector(availablePluginsSelector);
@@ -91,4 +91,4 @@ export const Integrations = () => {
       )}
     </>
   );
-};
+}

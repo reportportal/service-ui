@@ -26,7 +26,7 @@ import styles from './variablesAndDatasets.scss';
 
 const cx = classNames.bind(styles);
 
-export const VariablesAndDatasets = () => {
+export function VariablesAndDatasets() {
   const [variables] = useState([
     { name: 'My variable' },
     { name: 'Transaction Transaction ID 123', areValuesHidden: true },
@@ -45,4 +45,4 @@ export const VariablesAndDatasets = () => {
       <Datasets datasets={datasets} variables={variables} onDatasetAdd={handleDatasetAdd} />
     </div>
   );
-};
+}

@@ -23,7 +23,7 @@ import styles from './searchField.scss';
 
 const cx = classNames.bind(styles);
 
-export const SearchField = ({
+export function SearchField({
   searchValue,
   setSearchValue,
   filter,
@@ -32,7 +32,7 @@ export const SearchField = ({
   isLoading,
   event,
   className,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
@@ -87,7 +87,7 @@ export const SearchField = ({
       clearable
     />
   );
-};
+}
 
 SearchField.propTypes = {
   searchValue: PropTypes.string || null,

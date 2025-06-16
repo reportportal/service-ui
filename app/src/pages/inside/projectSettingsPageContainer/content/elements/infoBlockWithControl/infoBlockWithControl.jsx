@@ -20,12 +20,14 @@ import styles from './infoBlockWithControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const InfoBlockWithControl = ({ label, control, className = '' }) => (
-  <div className={cx('info-block-with-control', className)}>
-    <span className={cx('info-block-with-control__label')}>{label}</span>
-    <div className={cx('info-block-with-control__button')}>{control}</div>
-  </div>
-);
+export function InfoBlockWithControl({ label, control, className = '' }) {
+  return (
+    <div className={cx('info-block-with-control', className)}>
+      <span className={cx('info-block-with-control__label')}>{label}</span>
+      <div className={cx('info-block-with-control__button')}>{control}</div>
+    </div>
+  );
+}
 
 InfoBlockWithControl.propTypes = {
   label: PropTypes.string.isRequired,

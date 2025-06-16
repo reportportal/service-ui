@@ -20,4 +20,6 @@ import styles from './divider.scss';
 
 const cx = classNames.bind(styles);
 
-export const Divider = () => <div className={cx('divider')} />;
+export function Divider() {
+  return <div className={cx('divider')} />;
+}

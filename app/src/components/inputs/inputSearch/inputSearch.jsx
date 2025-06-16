@@ -22,7 +22,7 @@ import styles from './inputSearch.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputSearch = ({
+export function InputSearch({
   type,
   value,
   error,
@@ -39,25 +39,27 @@ export const InputSearch = ({
   onBlur,
   onKeyUp,
   active,
-}) => (
-  <div className={cx('input-search', { error, active, disabled }, customClassName)}>
-    <div className={cx('icon', { 'at-right': iconAtRight })}>{Parser(SearchIcon)}</div>
-    <input
-      ref={refFunction}
-      type={type}
-      className={cx('input', `type-${type}`, className)}
-      value={value}
-      disabled={disabled}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onKeyUp={onKeyUp}
-    />
-    {searchHint && <div className={cx('search-hint')}>{searchHint}</div>}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('input-search', { error, active, disabled }, customClassName)}>
+      <div className={cx('icon', { 'at-right': iconAtRight })}>{Parser(SearchIcon)}</div>
+      <input
+        ref={refFunction}
+        type={type}
+        className={cx('input', `type-${type}`, className)}
+        value={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyUp={onKeyUp}
+      />
+      {searchHint && <div className={cx('search-hint')}>{searchHint}</div>}
+    </div>
+  );
+}
 
 InputSearch.propTypes = {
   type: PropTypes.string,

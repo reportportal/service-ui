@@ -49,11 +49,13 @@ const messages = defineMessages({
   newValueCol: { id: 'EventsGrid.newValueCol', defaultMessage: 'New Value' },
 });
 
-const TimeColumn = ({ className, value }) => (
-  <div className={cx('time-col', className)}>
-    <AbsRelTime startTime={value.created_at} />
-  </div>
-);
+function TimeColumn({ className, value }) {
+  return (
+    <div className={cx('time-col', className)}>
+      <AbsRelTime startTime={value.created_at} />
+    </div>
+  );
+}
 TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -62,9 +64,9 @@ TimeColumn.defaultProps = {
   value: {},
 };
 
-const UserColumn = ({ className, value }) => (
-  <div className={cx('user-col', className)}>{value.subject_name}</div>
-);
+function UserColumn({ className, value }) {
+  return <div className={cx('user-col', className)}>{value.subject_name}</div>;
+}
 UserColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -73,13 +75,15 @@ UserColumn.defaultProps = {
   value: {},
 };
 
-const ActionColumn = ({ className, value, customProps: { formatMessage } }) => (
-  <div className={cx('action-col', className)}>
-    {value.event_name && actionMessages[value.event_name]
-      ? formatMessage(actionMessages[value.event_name])
-      : value.event_name}
-  </div>
-);
+function ActionColumn({ className, value, customProps: { formatMessage } }) {
+  return (
+    <div className={cx('action-col', className)}>
+      {value.event_name && actionMessages[value.event_name]
+        ? formatMessage(actionMessages[value.event_name])
+        : value.event_name}
+    </div>
+  );
+}
 ActionColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -92,13 +96,15 @@ ActionColumn.defaultProps = {
   customProps: {},
 };
 
-const ObjectTypeColumn = ({ className, value, customProps: { formatMessage } }) => (
-  <div className={cx('object-type-col', className)}>
-    {value.object_type && objectTypesMessages[value.object_type]
-      ? formatMessage(objectTypesMessages[value.object_type])
-      : value.object_type}
-  </div>
-);
+function ObjectTypeColumn({ className, value, customProps: { formatMessage } }) {
+  return (
+    <div className={cx('object-type-col', className)}>
+      {value.object_type && objectTypesMessages[value.object_type]
+        ? formatMessage(objectTypesMessages[value.object_type])
+        : value.object_type}
+    </div>
+  );
+}
 ObjectTypeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -111,9 +117,9 @@ ObjectTypeColumn.defaultProps = {
   customProps: {},
 };
 
-const ObjectNameColumn = ({ className, value }) => (
-  <div className={cx('object-name-col', className)}>{value.object_name}</div>
-);
+function ObjectNameColumn({ className, value }) {
+  return <div className={cx('object-name-col', className)}>{value.object_name}</div>;
+}
 ObjectNameColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -122,16 +128,18 @@ ObjectNameColumn.defaultProps = {
   value: {},
 };
 
-const ValueColumn = ({ className, value, customProps: { valueType } }) => (
-  <div className={cx('value-col', className)}>
-    {value.details.history.map((item) => (
-      <React.Fragment key={`${item.field}__${item.oldValue}__${item.newValue}`}>
-        <div className={cx('value-field')}>{item.field}:</div>
-        <div className={cx('value')}>{item[valueType]}</div>
-      </React.Fragment>
-    ))}
-  </div>
-);
+function ValueColumn({ className, value, customProps: { valueType } }) {
+  return (
+    <div className={cx('value-col', className)}>
+      {value.details.history.map((item) => (
+        <React.Fragment key={`${item.field}__${item.oldValue}__${item.newValue}`}>
+          <div className={cx('value-field')}>{item.field}:</div>
+          <div className={cx('value')}>{item[valueType]}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
 ValueColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -239,7 +247,7 @@ export class EventsGrid extends PureComponent {
   render() {
     const { data, loading, intl, sortingColumn, sortingDirection, onChangeSorting } = this.props;
     return (
-      <Fragment>
+      <>
         <Grid
           columns={this.COLUMNS}
           data={data}
@@ -254,7 +262,7 @@ export class EventsGrid extends PureComponent {
         {!data.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
         )}
-      </Fragment>
+      </>
     );
   }
 }

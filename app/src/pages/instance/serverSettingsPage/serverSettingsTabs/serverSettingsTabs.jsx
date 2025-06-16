@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
 });
 
-const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
+function ServerSettingsTabs({ activeTab, onChangeTab, intl }) {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
@@ -114,7 +114,7 @@ const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
       mobileDisabled
     />
   );
-};
+}
 ServerSettingsTabs.propTypes = {
   intl: PropTypes.object.isRequired,
   activeTab: PropTypes.string,

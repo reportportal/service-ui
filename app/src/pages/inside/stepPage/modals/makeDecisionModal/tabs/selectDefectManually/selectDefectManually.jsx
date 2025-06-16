@@ -54,14 +54,14 @@ import styles from './selectDefectManually.scss';
 
 const cx = classNames.bind(styles);
 
-export const SelectDefectManually = ({
+export function SelectDefectManually({
   modalState,
   itemData,
   isBulkOperation,
   setModalState,
   windowSize,
   eventsInfo,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const defectCommentExtensions = useSelector(makeDecisionDefectCommentAddonSelector);
@@ -287,7 +287,7 @@ export const SelectDefectManually = ({
       )}
     </div>
   );
-};
+}
 SelectDefectManually.propTypes = {
   modalState: PropTypes.object.isRequired,
   itemData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,

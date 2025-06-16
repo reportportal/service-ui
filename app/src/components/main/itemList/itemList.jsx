@@ -23,16 +23,18 @@ import styles from './itemList.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemList = ({ columns, values }) => (
-  <table className={cx('item-list')}>
-    <ItemListHeader columns={columns} />
-    <tbody>
-      {values.map((value) => (
-        <ItemListRow key={value.id} columns={columns} value={value} />
-      ))}
-    </tbody>
-  </table>
-);
+export function ItemList({ columns, values }) {
+  return (
+    <table className={cx('item-list')}>
+      <ItemListHeader columns={columns} />
+      <tbody>
+        {values.map((value) => (
+          <ItemListRow key={value.id} columns={columns} value={value} />
+        ))}
+      </tbody>
+    </table>
+  );
+}
 ItemList.propTypes = {
   columns: PropTypes.arrayOf(columnShape),
   values: PropTypes.arrayOf(PropTypes.object),

@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
 
-export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
+export function AttributeListContainer({ value, keyURLCreator, valueURLCreator, ...rest }) {
   const projectKey = useSelector(projectKeySelector);
   const getURIKey = keyURLCreator(projectKey);
   const getURIValue = (key) => valueURLCreator(projectKey, key);
@@ -31,7 +31,7 @@ export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, 
       {...rest}
     />
   );
-};
+}
 AttributeListContainer.propTypes = {
   value: PropTypes.array,
   keyURLCreator: PropTypes.func,

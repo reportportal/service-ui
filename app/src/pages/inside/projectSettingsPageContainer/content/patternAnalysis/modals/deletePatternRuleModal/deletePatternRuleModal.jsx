@@ -24,7 +24,7 @@ import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { messages } from './messages';
 
-const DeletePatternRuleModal = ({ data }) => {
+function DeletePatternRuleModal({ data }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -49,7 +49,7 @@ const DeletePatternRuleModal = ({ data }) => {
       {formatMessage(messages.deletePatternMsg)}
     </Modal>
   );
-};
+}
 DeletePatternRuleModal.propTypes = {
   data: PropTypes.shape({
     onDelete: PropTypes.func,

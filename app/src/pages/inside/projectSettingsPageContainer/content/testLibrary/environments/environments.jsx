@@ -38,7 +38,7 @@ const benefits = [
   messages.emptyPageThirdBenefit,
 ];
 
-export const Environments = () => {
+export function Environments() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -74,4 +74,4 @@ export const Environments = () => {
       </div>
     </SettingsPageContent>
   );
-};
+}

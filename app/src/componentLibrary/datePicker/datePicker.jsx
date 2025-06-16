@@ -33,7 +33,7 @@ const currentLanguageToLocale = {
   zh: zhCN,
 };
 
-export const DatePicker = ({
+export function DatePicker({
   value,
   onChange,
   disabled,
@@ -51,7 +51,7 @@ export const DatePicker = ({
   popperClassName,
   calendarClassName,
   fixedHeight,
-}) => {
+}) {
   const language = useSelector(langSelector);
   const startDateToString = startDate?.toDateString();
   const endDateToString = endDate?.toDateString();
@@ -120,7 +120,7 @@ export const DatePicker = ({
       {children}
     </ReactDatePicker>
   );
-};
+}
 DatePicker.propTypes = {
   onChange: PropTypes.func,
   onBlur: PropTypes.func,

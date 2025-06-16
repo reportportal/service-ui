@@ -76,7 +76,7 @@ const messages = defineMessages({
 
 const MAX_LINKS_COUNT = 5;
 
-export const LinksAndBrandingTab = () => {
+export function LinksAndBrandingTab() {
   const { formatMessage } = useIntl();
   const customLinks = useSelector(serverFooterLinksSelector);
   const [isAddLinkFormVisible, setIsAddLinkFormVisible] = useState(false);
@@ -191,7 +191,7 @@ export const LinksAndBrandingTab = () => {
             />
           ) : (
             <Button
-              variant={'text'}
+              variant="text"
               onClick={handleAddLinkButtonClick}
               className={cx('add-new-button')}
               disabled={customLinks.length >= MAX_LINKS_COUNT}
@@ -207,4 +207,4 @@ export const LinksAndBrandingTab = () => {
       </div>
     </div>
   );
-};
+}

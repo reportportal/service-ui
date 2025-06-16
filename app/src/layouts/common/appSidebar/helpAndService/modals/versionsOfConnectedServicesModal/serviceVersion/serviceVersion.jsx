@@ -31,22 +31,24 @@ import styles from './serviceVersion.scss';
 
 const cx = classNames.bind(styles);
 
-const ErrorTooltip = ({ formatMessage }) => (
-  <>
-    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
-    <div className={cx('tooltip-description')}>
-      {formatMessage(messages.serviceIsUnavailableDescription)}
-    </div>
-  </>
-);
+function ErrorTooltip({ formatMessage }) {
+  return (
+    <>
+      <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
+      <div className={cx('tooltip-description')}>
+        {formatMessage(messages.serviceIsUnavailableDescription)}
+      </div>
+    </>
+  );
+}
 
 ErrorTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const ErrorIconShow = () => {
+function ErrorIconShow() {
   return <i>{Parser(ErrorIcon)}</i>;
-};
+}
 
 const ErrorWithTooltip = withTooltip({
   ContentComponent: ErrorTooltip,
@@ -60,22 +62,24 @@ ErrorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const VectorTooltip = ({ formatMessage }) => (
-  <>
-    <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsOutdated)}</div>
-    <div className={cx('tooltip-description')}>
-      {formatMessage(messages.serviceIsOutdatedDescription)}
-    </div>
-  </>
-);
+function VectorTooltip({ formatMessage }) {
+  return (
+    <>
+      <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsOutdated)}</div>
+      <div className={cx('tooltip-description')}>
+        {formatMessage(messages.serviceIsOutdatedDescription)}
+      </div>
+    </>
+  );
+}
 
 VectorTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const VectorIconShow = () => {
+function VectorIconShow() {
   return <i>{Parser(VectorIcon)}</i>;
-};
+}
 
 const VectorWithTooltip = withTooltip({
   ContentComponent: VectorTooltip,
@@ -89,7 +93,7 @@ VectorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-export const ServiceVersion = ({ service, content }) => {
+export function ServiceVersion({ service, content }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { name, version, linkTo, isNewVersion } = service;
@@ -114,7 +118,7 @@ export const ServiceVersion = ({ service, content }) => {
       )}
     </div>
   );
-};
+}
 
 ServiceVersion.propTypes = {
   service: PropTypes.object.isRequired,

@@ -21,7 +21,9 @@ import styles from './emptyLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyLayout = ({ children }) => <div className={cx('empty-layout')}>{children}</div>;
+export function EmptyLayout({ children }) {
+  return <div className={cx('empty-layout')}>{children}</div>;
+}
 
 EmptyLayout.propTypes = {
   children: PropTypes.node,

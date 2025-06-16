@@ -111,6 +111,7 @@ export class MarkdownEditor extends React.Component {
     provideErrorHint: PropTypes.bool,
     controlled: PropTypes.bool,
   };
+
   static defaultProps = {
     value: '',
     placeholder: '',
@@ -148,10 +149,12 @@ export class MarkdownEditor extends React.Component {
     } = this.props;
     this.holder.value = value;
 
-    const toolbarActionWrapper = (action) => (...args) => {
-      action(...args);
-      this.props.tracking.trackEvent(eventsInfo.onClickToolbarIcon);
-    };
+    const toolbarActionWrapper =
+      (action) =>
+      (...args) => {
+        action(...args);
+        this.props.tracking.trackEvent(eventsInfo.onClickToolbarIcon);
+      };
 
     let toolbar = [
       {
@@ -274,9 +277,11 @@ export class MarkdownEditor extends React.Component {
     this.simpleMDE.codemirror.on('change', this.onChangeHandler);
     manipulateEditorOutside(this.simpleMDE.codemirror);
   }
+
   componentWillUnmount() {
     this.simpleMDE.codemirror.off('change', this.onChangeHandler);
   }
+
   onChangeHandler = () => {
     this.props.onChange(this.simpleMDE.value());
     this.props.eventsInfo.onChange &&

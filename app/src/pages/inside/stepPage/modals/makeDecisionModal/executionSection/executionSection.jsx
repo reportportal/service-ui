@@ -40,7 +40,7 @@ import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, eventsInfo }) => {
+export function ExecutionSection({ modalState, setModalState, isBulkOperation, eventsInfo }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -193,7 +193,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
       )}
     </>
   );
-};
+}
 ExecutionSection.propTypes = {
   modalState: PropTypes.object,
   setModalState: PropTypes.func,

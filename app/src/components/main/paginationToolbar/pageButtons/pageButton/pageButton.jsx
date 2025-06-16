@@ -21,14 +21,16 @@ import styles from './pageButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const PageButton = ({ children, disabled, active, hideOnMobile, onClick }) => (
-  <li
-    className={cx('page-button', { active, disabled, hideOnMobile })}
-    onClick={!disabled ? onClick : undefined}
-  >
-    {children}
-  </li>
-);
+export function PageButton({ children, disabled, active, hideOnMobile, onClick }) {
+  return (
+    <li
+      className={cx('page-button', { active, disabled, hideOnMobile })}
+      onClick={!disabled ? onClick : undefined}
+    >
+      {children}
+    </li>
+  );
+}
 
 PageButton.propTypes = {
   children: PropTypes.node,

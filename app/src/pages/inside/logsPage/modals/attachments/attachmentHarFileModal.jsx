@@ -39,7 +39,7 @@ export class AttachmentHarFileModal extends Component {
     onClick: (closeModal) => closeModal(),
   });
 
-  render = () => {
+  render() {
     const {
       intl: { formatMessage },
       data: { harData },
@@ -54,5 +54,5 @@ export class AttachmentHarFileModal extends Component {
         </WithZipJs>
       </ModalLayout>
     );
-  };
+  }
 }

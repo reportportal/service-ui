@@ -23,9 +23,9 @@ import styles from './meatballIconComponent.scss';
 
 const cx = classNames.bind(styles);
 
-export const MeatballIconComponent = ({ isPopoverOpen }) => (
-  <i className={cx('meatball-icon', { active: isPopoverOpen })}>{Parser(MeatballIcon)}</i>
-);
+export function MeatballIconComponent({ isPopoverOpen }) {
+  return <i className={cx('meatball-icon', { active: isPopoverOpen })}>{Parser(MeatballIcon)}</i>;
+}
 
 MeatballIconComponent.propTypes = {
   isPopoverOpen: PropTypes.bool,

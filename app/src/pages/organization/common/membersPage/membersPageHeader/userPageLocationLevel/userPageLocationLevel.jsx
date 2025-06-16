@@ -27,7 +27,7 @@ import styles from './userPageLocationLevel.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserPageLocationLevel = ({ organizationName, projectName }) => {
+export function UserPageLocationLevel({ organizationName, projectName }) {
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -64,7 +64,7 @@ export const UserPageLocationLevel = ({ organizationName, projectName }) => {
       <div className={cx('name')}>{projectName || organizationName}</div>
     </div>
   );
-};
+}
 
 UserPageLocationLevel.propTypes = {
   organizationName: PropTypes.string.isRequired,

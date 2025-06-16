@@ -32,7 +32,7 @@ const MODAL_HEADER_HEIGHT = 32 + 24;
 const MODAL_FOOTER_HEIGHT = 36 + 16 + 16;
 const MODAL_LAYOUT_PADDING = 32 * 2;
 
-const TwoStepsContent = ({
+function TwoStepsContent({
   steps = [],
   handleSubmit,
   onSubmit,
@@ -41,7 +41,7 @@ const TwoStepsContent = ({
   data,
   stepNumber,
   updateMetaData,
-}) => {
+}) {
   const { customProps, initialData } = data;
   const windowSize = useWindowResize();
   const windowHeight = windowSize.height;
@@ -52,7 +52,7 @@ const TwoStepsContent = ({
     <div className={cx('two-steps-content')}>
       <div className={cx('step-list')}>
         {steps.map(({ title, index, onClick, active }) => (
-          <Button key={index} className={cx('step', { active })} onClick={onClick} variant={'text'}>
+          <Button key={index} className={cx('step', { active })} onClick={onClick} variant="text">
             {`${index}. ${title}`}
           </Button>
         ))}
@@ -78,7 +78,7 @@ const TwoStepsContent = ({
       </Scrollbars>
     </div>
   );
-};
+}
 
 TwoStepsContent.propTypes = {
   steps: PropTypes.arrayOf(

@@ -21,7 +21,9 @@ import { PageBreadcrumbs } from './pageBreadcrumbs';
 
 const cx = classNames.bind(styles);
 
-export const PageLayout = ({ children }) => <div className={cx('page-layout')}>{children}</div>;
+export function PageLayout({ children }) {
+  return <div className={cx('page-layout')}>{children}</div>;
+}
 
 PageLayout.propTypes = {
   children: PropTypes.node,
@@ -30,12 +32,14 @@ PageLayout.defaultProps = {
   children: null,
 };
 
-export const PageHeader = ({ children, breadcrumbs }) => (
-  <div className={cx('page-header')}>
-    <PageBreadcrumbs data={breadcrumbs} />
-    <div className={cx('children-container')}>{children}</div>
-  </div>
-);
+export function PageHeader({ children, breadcrumbs }) {
+  return (
+    <div className={cx('page-header')}>
+      <PageBreadcrumbs data={breadcrumbs} />
+      <div className={cx('children-container')}>{children}</div>
+    </div>
+  );
+}
 PageHeader.propTypes = {
   breadcrumbs: PropTypes.array,
   children: PropTypes.node,
@@ -45,7 +49,9 @@ PageHeader.defaultProps = {
   children: null,
 };
 
-export const PageSection = ({ children }) => <div className={cx('page-content')}>{children}</div>;
+export function PageSection({ children }) {
+  return <div className={cx('page-content')}>{children}</div>;
+}
 PageSection.propTypes = {
   children: PropTypes.node,
 };

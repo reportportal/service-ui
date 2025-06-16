@@ -31,7 +31,7 @@ const getYearsFrom = (start, amountYearsToGenerate = 20) => {
   return new Array(yearsFromCurrent - start).fill().map((_, i) => start - i);
 };
 
-export const DatePickerHeader = ({
+export function DatePickerHeader({
   date,
   changeYear,
   changeMonth,
@@ -41,7 +41,7 @@ export const DatePickerHeader = ({
   nextMonthButtonDisabled,
   headerNodes,
   customClassName,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -110,7 +110,7 @@ export const DatePickerHeader = ({
       </div>
     </>
   );
-};
+}
 DatePickerHeader.propTypes = {
   changeYear: PropTypes.func,
   changeMonth: PropTypes.func,

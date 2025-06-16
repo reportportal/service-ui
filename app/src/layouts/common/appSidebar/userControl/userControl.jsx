@@ -31,7 +31,7 @@ import styles from './userControl.scss';
 
 const cx = classNames.bind(styles);
 
-const UserControl = ({ onClick }) => {
+function UserControl({ onClick }) {
   const { userRole, fullName, email, id } = useSelector(userInfoSelector);
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
@@ -53,7 +53,7 @@ const UserControl = ({ onClick }) => {
               {/* TODO: Need to manage this permission via common permission engine */}
               {userRole === ADMINISTRATOR && (
                 <div className={cx('admin-badge')}>
-                  <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+                  <FormattedMessage id="UserBlock.adminBadge" defaultMessage="admin" />
                 </div>
               )}
               {Parser(ArrowRightIcon)}
@@ -64,7 +64,7 @@ const UserControl = ({ onClick }) => {
       </div>
     </div>
   );
-};
+}
 
 UserControl.propTypes = {
   onClick: PropTypes.func.isRequired,

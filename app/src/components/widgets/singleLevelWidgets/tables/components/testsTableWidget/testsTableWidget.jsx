@@ -24,7 +24,7 @@ import styles from './testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTableWidget = ({
+export function TestsTableWidget({
   launch,
   tests,
   issueType,
@@ -32,7 +32,7 @@ export const TestsTableWidget = ({
   getMatrixTooltip,
   hideInfoBlock,
   onItemClick,
-}) => {
+}) {
   const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
 
   return (
@@ -48,7 +48,7 @@ export const TestsTableWidget = ({
       </div>
     </div>
   );
-};
+}
 
 TestsTableWidget.propTypes = {
   launch: object.isRequired,

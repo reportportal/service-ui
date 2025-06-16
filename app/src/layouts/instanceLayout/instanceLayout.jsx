@@ -22,16 +22,18 @@ import { HeaderLayout } from '../headerLayout';
 import { InstanceSidebar } from './instanceSidebar';
 import { DemoBanner } from '../demoBanner';
 
-const InstanceLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
-  <Layout
-    Header={HeaderLayout}
-    Sidebar={InstanceSidebar}
-    Banner={isDemoInstance ? DemoBanner : null}
-    rawContent={rawContent}
-  >
-    {children}
-  </Layout>
-);
+function InstanceLayoutComponent({ children, isDemoInstance, rawContent }) {
+  return (
+    <Layout
+      Header={HeaderLayout}
+      Sidebar={InstanceSidebar}
+      Banner={isDemoInstance ? DemoBanner : null}
+      rawContent={rawContent}
+    >
+      {children}
+    </Layout>
+  );
+}
 
 InstanceLayoutComponent.propTypes = {
   children: PropTypes.node,

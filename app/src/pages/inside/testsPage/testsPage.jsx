@@ -47,7 +47,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { canWorkWithTests } from 'common/utils/permissions/permissions';
 
 // TODO: Refactor to avoid duplication
-export const TestsPageWrapped = ({
+export function TestsPageWrapped({
   deleteItems,
   onEditItem,
   onEditItems,
@@ -66,7 +66,7 @@ export const TestsPageWrapped = ({
   onFilterChange,
   filterErrors,
   filterEntities,
-}) => {
+}) {
   const { trackEvent } = useTracking();
 
   const [highlightedRowId, setHighlightedRowId] = useState(null);
@@ -195,7 +195,7 @@ export const TestsPageWrapped = ({
       </PageSection>
     </PageLayout>
   );
-};
+}
 
 TestsPageWrapped.propTypes = {
   deleteItems: PropTypes.func,

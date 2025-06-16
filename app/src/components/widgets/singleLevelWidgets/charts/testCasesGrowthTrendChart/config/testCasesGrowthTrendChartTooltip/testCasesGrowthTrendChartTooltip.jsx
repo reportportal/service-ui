@@ -22,7 +22,7 @@ import styles from './testCasesGrowthTrendChartTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestCasesGrowthTrendChartTooltip = ({
+export function TestCasesGrowthTrendChartTooltip({
   itemName,
   startTime,
   growthClass,
@@ -30,23 +30,25 @@ export const TestCasesGrowthTrendChartTooltip = ({
   total,
   growTestCasesMessage,
   totalTestCasesMessage,
-}) => (
-  <TooltipContent itemName={itemName}>
-    {startTime && <div className={cx('launch-start-time')}>{startTime}</div>}
-    <div className={cx('item-wrapper')}>
-      <div className={cx('item-cases')}>
-        <div className={cx('item-cases-growth')}>
-          {`${growTestCasesMessage}: `}
-          <span className={cx(growthClass)}>{growth}</span>
-        </div>
-        <div className={cx('item-cases-total')}>
-          {`${totalTestCasesMessage}: `}
-          <span>{total}</span>
+}) {
+  return (
+    <TooltipContent itemName={itemName}>
+      {startTime && <div className={cx('launch-start-time')}>{startTime}</div>}
+      <div className={cx('item-wrapper')}>
+        <div className={cx('item-cases')}>
+          <div className={cx('item-cases-growth')}>
+            {`${growTestCasesMessage}: `}
+            <span className={cx(growthClass)}>{growth}</span>
+          </div>
+          <div className={cx('item-cases-total')}>
+            {`${totalTestCasesMessage}: `}
+            <span>{total}</span>
+          </div>
         </div>
       </div>
-    </div>
-  </TooltipContent>
-);
+    </TooltipContent>
+  );
+}
 TestCasesGrowthTrendChartTooltip.propTypes = {
   itemName: PropTypes.string.isRequired,
   startTime: PropTypes.string,

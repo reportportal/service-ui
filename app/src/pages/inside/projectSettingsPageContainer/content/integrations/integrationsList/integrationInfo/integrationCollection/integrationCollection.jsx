@@ -22,24 +22,26 @@ import styles from './integrationCollection.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationCollection = ({ items, disabled, openIntegration }) => (
-  <div className={cx('instances-list-wrapper')}>
-    <ul className={cx('instances-list')}>
-      {items.map((item) => (
-        <IntegrationCollectionItem
-          key={item.id}
-          item={item}
-          id={item.id}
-          disabled={disabled}
-          title={item.name}
-          creator={item.creator}
-          creationInfo={moment(item.creationDate).format('ll')}
-          openIntegration={openIntegration}
-        />
-      ))}
-    </ul>
-  </div>
-);
+export function IntegrationCollection({ items, disabled, openIntegration }) {
+  return (
+    <div className={cx('instances-list-wrapper')}>
+      <ul className={cx('instances-list')}>
+        {items.map((item) => (
+          <IntegrationCollectionItem
+            key={item.id}
+            item={item}
+            id={item.id}
+            disabled={disabled}
+            title={item.name}
+            creator={item.creator}
+            creationInfo={moment(item.creationDate).format('ll')}
+            openIntegration={openIntegration}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+}
 IntegrationCollection.propTypes = {
   items: PropTypes.array.isRequired,
   disabled: PropTypes.bool,

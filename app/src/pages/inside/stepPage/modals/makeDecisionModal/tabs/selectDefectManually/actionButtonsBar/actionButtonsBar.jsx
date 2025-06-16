@@ -22,28 +22,30 @@ import styles from './actionButtonsBar.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButtonsBar = ({ actionItems, selectedItem }) => (
-  <>
-    <div className={cx('buttons-bar')}>
-      {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
-        return (
-          <ActionButton
-            icon={icon}
-            label={label}
-            hint={hint}
-            isSelected={selectedItem === id}
-            onClick={onClick}
-            disabled={disabled}
-            key={id}
-          />
-        );
-      })}
-    </div>
-    {selectedItem && (
-      <p className={cx('note')}>{actionItems.find(({ id }) => id === selectedItem).noteMsg}</p>
-    )}
-  </>
-);
+export function ActionButtonsBar({ actionItems, selectedItem }) {
+  return (
+    <>
+      <div className={cx('buttons-bar')}>
+        {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
+          return (
+            <ActionButton
+              icon={icon}
+              label={label}
+              hint={hint}
+              isSelected={selectedItem === id}
+              onClick={onClick}
+              disabled={disabled}
+              key={id}
+            />
+          );
+        })}
+      </div>
+      {selectedItem && (
+        <p className={cx('note')}>{actionItems.find(({ id }) => id === selectedItem).noteMsg}</p>
+      )}
+    </>
+  );
+}
 ActionButtonsBar.propTypes = {
   actionItems: PropTypes.arrayOf(
     PropTypes.shape({

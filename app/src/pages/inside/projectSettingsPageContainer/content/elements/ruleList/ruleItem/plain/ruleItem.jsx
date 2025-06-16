@@ -24,7 +24,7 @@ import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const RuleItem = ({
+export function RuleItem({
   item,
   actions,
   onToggle,
@@ -34,7 +34,7 @@ export const RuleItem = ({
   onRuleNameClick,
   isPreview,
   className,
-}) => {
+}) {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
   const isRuleNameClickable = Boolean(onRuleNameClick);
@@ -111,7 +111,7 @@ export const RuleItem = ({
       </div>
     </div>
   );
-};
+}
 
 RuleItem.propTypes = {
   ...ruleItemPropTypes,

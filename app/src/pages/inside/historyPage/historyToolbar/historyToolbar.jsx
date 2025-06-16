@@ -26,7 +26,7 @@ import { canWorkWithTests } from 'common/utils/permissions';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 import { HistoryActionPanel } from './actionPanel';
 
-export const HistoryToolbar = ({
+export function HistoryToolbar({
   selectedItems,
   onUnselect,
   onUnselectAll,
@@ -41,12 +41,12 @@ export const HistoryToolbar = ({
   withGroupOperations,
   userId,
   parentItem,
-}) => {
+}) {
   const userRoles = useSelector(userRolesSelector);
   const canManageTestItems = canWorkWithTests(userRoles);
 
   return (
-    <Fragment>
+    <>
       {canManageTestItems && withGroupOperations ? (
         <ActionPanelWithGroupOperations
           onRefresh={onRefresh}
@@ -75,9 +75,9 @@ export const HistoryToolbar = ({
         filterEntities={filterEntities}
         events={HISTORY_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS}
       />
-    </Fragment>
+    </>
   );
-};
+}
 HistoryToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   userId: PropTypes.string,

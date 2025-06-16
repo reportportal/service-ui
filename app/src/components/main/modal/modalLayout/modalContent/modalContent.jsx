@@ -21,9 +21,9 @@ import styles from './modalContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalContent = ({ className, children }) => (
-  <div className={cx('modal-content', className)}>{children}</div>
-);
+export function ModalContent({ className, children }) {
+  return <div className={cx('modal-content', className)}>{children}</div>;
+}
 ModalContent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,

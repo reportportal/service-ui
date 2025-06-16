@@ -24,15 +24,17 @@ const WARNING_TYPE = 'warning';
 
 const cx = classNames.bind(styles);
 
-export const StripedMessage = ({ image, header, type, children, style }) => (
-  <div style={style} className={cx('striped-message', `type-${type}`)}>
-    {image && <img src={image} alt={type} className={cx('image')} />}
-    <div className={cx('message-content')}>
-      {header && <h3 className={cx('header')}>{header}</h3>}
-      <p className={cx('message')}>{children}</p>
+export function StripedMessage({ image, header, type, children, style }) {
+  return (
+    <div style={style} className={cx('striped-message', `type-${type}`)}>
+      {image && <img src={image} alt={type} className={cx('image')} />}
+      <div className={cx('message-content')}>
+        {header && <h3 className={cx('header')}>{header}</h3>}
+        <p className={cx('message')}>{children}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+}
 StripedMessage.propTypes = {
   children: PropTypes.string.isRequired,
   type: PropTypes.oneOf([INFO_TYPE, WARNING_TYPE]),

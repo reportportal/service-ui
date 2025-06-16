@@ -22,11 +22,13 @@ import styles from './backBreadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-export const BackBreadcrumb = (props) => (
-  <div className={cx('back-breadcrumb')} data-automation-id={'backButton'}>
-    <Breadcrumb {...props} />
-  </div>
-);
+export function BackBreadcrumb(props) {
+  return (
+    <div className={cx('back-breadcrumb')} data-automation-id="backButton">
+      <Breadcrumb {...props} />
+    </div>
+  );
+}
 
 BackBreadcrumb.propTypes = {
   descriptor: PropTypes.shape({

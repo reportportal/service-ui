@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
 });
 
-export const NoApiKeysBlock = () => {
+export function NoApiKeysBlock() {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -87,10 +87,11 @@ export const NoApiKeysBlock = () => {
           className={cx('documentation-link')}
           href={docsReferences.authorizationWithUsersApiKeyForAgents}
           target="_blank"
+          rel="noreferrer"
         >
           {formatMessage(messages.documentation)}
         </a>
       </div>
     </div>
   );
-};
+}

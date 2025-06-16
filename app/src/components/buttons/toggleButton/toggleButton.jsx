@@ -20,7 +20,7 @@ import styles from './toggleButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToggleButton = ({
+export function ToggleButton({
   items,
   value,
   separated,
@@ -28,24 +28,26 @@ export const ToggleButton = ({
   mobileDisabled,
   disabled,
   title,
-}) => (
-  <div className={cx('toggle-button', { separated })} title={title}>
-    {items.map((item) => (
-      <div
-        key={item.value}
-        className={cx('button-item', {
-          active: item.value === value,
-          'mobile-disabled': mobileDisabled,
-          disabled,
-        })}
-        style={{ width: `${100 / items.length}%` }}
-        onClick={!disabled ? () => onChange(item.value) : null}
-      >
-        <span className={cx('item-label')}>{item.label}</span>
-      </div>
-    ))}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('toggle-button', { separated })} title={title}>
+      {items.map((item) => (
+        <div
+          key={item.value}
+          className={cx('button-item', {
+            active: item.value === value,
+            'mobile-disabled': mobileDisabled,
+            disabled,
+          })}
+          style={{ width: `${100 / items.length}%` }}
+          onClick={!disabled ? () => onChange(item.value) : null}
+        >
+          <span className={cx('item-label')}>{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 ToggleButton.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({

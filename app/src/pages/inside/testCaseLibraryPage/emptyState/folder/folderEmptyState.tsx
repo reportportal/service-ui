@@ -23,7 +23,7 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
 import { messages } from '../messages';
 
-export const FolderEmptyState = () => {
+export function FolderEmptyState() {
   const { formatMessage } = useIntl();
 
   return (
@@ -48,4 +48,4 @@ export const FolderEmptyState = () => {
       ]}
     />
   );
-};
+}

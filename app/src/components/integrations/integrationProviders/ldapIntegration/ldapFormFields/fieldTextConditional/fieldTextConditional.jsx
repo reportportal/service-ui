@@ -28,7 +28,7 @@ import styles from './fieldTextConditional.scss';
 
 const cx = classNames.bind(styles);
 
-export const FieldTextConditional = ({
+export function FieldTextConditional({
   value,
   placeholder,
   disabled,
@@ -36,7 +36,7 @@ export const FieldTextConditional = ({
   touched,
   onChange,
   conditions,
-}) => {
+}) {
   const onClickConditionItem = (condition) => {
     if (condition !== value.condition) {
       onChange({ value: value.value, condition });
@@ -67,7 +67,7 @@ export const FieldTextConditional = ({
       </div>
     </div>
   );
-};
+}
 FieldTextConditional.propTypes = {
   value: PropTypes.shape({
     value: PropTypes.string,

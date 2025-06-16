@@ -22,17 +22,19 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ icon, onClick, message, link }) => (
-  <NavLink
-    to={link}
-    className={cx('sidebar-button')}
-    activeClassName={cx('active')}
-    onClick={onClick}
-  >
-    <i className={cx('btn-icon')}>{Parser(icon)}</i>
-    <span className={cx('title')}>{message}</span>
-  </NavLink>
-);
+export function SidebarButton({ icon, onClick, message, link }) {
+  return (
+    <NavLink
+      to={link}
+      className={cx('sidebar-button')}
+      activeClassName={cx('active')}
+      onClick={onClick}
+    >
+      <i className={cx('btn-icon')}>{Parser(icon)}</i>
+      <span className={cx('title')}>{message}</span>
+    </NavLink>
+  );
+}
 
 SidebarButton.propTypes = {
   icon: PropTypes.element.isRequired,

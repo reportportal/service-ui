@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { DraggableRuleItem } from './ruleItem';
 import { ruleListDefaultProps, ruleListPropTypes } from './propTypes';
 
-const DraggableRuleListComponent = ({
+function DraggableRuleListComponent({
   items,
   actions,
   onToggle,
@@ -30,7 +30,7 @@ const DraggableRuleListComponent = ({
   onRuleDrop,
   dragControlTooltipContent,
   readMode,
-}) => {
+}) {
   const onDrop = (fromIndex, toIndex) => {
     const updatedItems = [...items];
     updatedItems.splice(fromIndex, 1);
@@ -41,7 +41,7 @@ const DraggableRuleListComponent = ({
 
   const Content = ruleItemContent;
   return (
-    <Fragment>
+    <>
       {items.map((item, index) => (
         <DraggableRuleItem
           key={item.id}
@@ -57,9 +57,9 @@ const DraggableRuleListComponent = ({
           readMode={readMode}
         />
       ))}
-    </Fragment>
+    </>
   );
-};
+}
 DraggableRuleListComponent.propTypes = {
   ...ruleListPropTypes,
   onRuleDrop: PropTypes.func,

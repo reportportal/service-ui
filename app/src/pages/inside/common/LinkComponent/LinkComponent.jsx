@@ -25,7 +25,7 @@ import { isInternalLink } from '../utils';
 
 const cx = classNames.bind(styles);
 
-export const LinkComponent = ({ to, children, icon, className, event, automationId, target }) => {
+export function LinkComponent({ to, children, icon, className, event, automationId, target }) {
   const { trackEvent } = useTracking();
   const handleLinkTracking = () => {
     trackEvent(event);
@@ -54,7 +54,7 @@ export const LinkComponent = ({ to, children, icon, className, event, automation
       {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
     </a>
   );
-};
+}
 
 LinkComponent.propTypes = {
   to: PropTypes.oneOfType([

@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 
-const AnalyticsWrapper = ({ children }) => children;
+function AnalyticsWrapper({ children }) {
+  return children;
+}
 AnalyticsWrapper.propTypes = {
   children: PropTypes.node,
 };

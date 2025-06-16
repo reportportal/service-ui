@@ -26,7 +26,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const TagList = ({ tags }) => {
+export function TagList({ tags }) {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
@@ -95,7 +95,7 @@ export const TagList = ({ tags }) => {
       ) : null}
     </div>
   );
-};
+}
 
 TagList.propTypes = {
   tags: PropTypes.array,

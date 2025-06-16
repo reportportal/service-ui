@@ -137,12 +137,10 @@ export class PatternGrid extends Component {
     const data = this.getDataByAttribute(selectedAttribute, result);
 
     return (
-      <Fragment>
-        <table className={cx('patterns-table')}>
-          {this.renderHeader(columns)}
-          {this.renderBody(columns, data)}
-        </table>
-      </Fragment>
+      <table className={cx('patterns-table')}>
+        {this.renderHeader(columns)}
+        {this.renderBody(columns, data)}
+      </table>
     );
   }
 }

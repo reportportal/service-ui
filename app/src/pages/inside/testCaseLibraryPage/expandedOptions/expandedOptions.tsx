@@ -30,7 +30,7 @@ import styles from './expandedOptions.scss';
 
 const cx = classNames.bind(styles);
 
-export const ExpandedOptions = () => {
+export function ExpandedOptions() {
   const [activeFolder, setActiveFolder] = useState(null);
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
@@ -102,4 +102,4 @@ export const ExpandedOptions = () => {
       </div>
     </div>
   );
-};
+}

@@ -57,15 +57,17 @@ const LOGS_GRID_EVENTS_INFO = {
   clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
 };
 
-const MessageColumn = ({ className, value, ...rest }) => (
-  <div
-    className={cx('message-column', `level-${value.level}`, className, {
-      console: rest.customProps.consoleView,
-    })}
-  >
-    <LogMessageBlock value={value} {...rest} />
-  </div>
-);
+function MessageColumn({ className, value, ...rest }) {
+  return (
+    <div
+      className={cx('message-column', `level-${value.level}`, className, {
+        console: rest.customProps.consoleView,
+      })}
+    >
+      <LogMessageBlock value={value} {...rest} />
+    </div>
+  );
+}
 MessageColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -76,18 +78,20 @@ MessageColumn.defaultProps = {
   value: {},
 };
 
-const AttachmentColumn = ({ className, value, customProps }) => (
-  <div
-    className={cx('attachment-column', className, {
-      mobile: customProps.mobile,
-      console: customProps.consoleView,
-    })}
-  >
-    {value.binaryContent?.contentType && (
-      <AttachmentBlock customProps={customProps} value={value.binaryContent} />
-    )}
-  </div>
-);
+function AttachmentColumn({ className, value, customProps }) {
+  return (
+    <div
+      className={cx('attachment-column', className, {
+        mobile: customProps.mobile,
+        console: customProps.consoleView,
+      })}
+    >
+      {value.binaryContent?.contentType && (
+        <AttachmentBlock customProps={customProps} value={value.binaryContent} />
+      )}
+    </div>
+  );
+}
 AttachmentColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -98,16 +102,20 @@ AttachmentColumn.defaultProps = {
   value: {},
 };
 
-const StatusColumn = ({ className }) => <div className={className} />;
+function StatusColumn({ className }) {
+  return <div className={className} />;
+}
 StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const TimeColumn = ({ className, value, customProps: { mobile } }) => (
-  <div className={cx('time-column', className, { mobile })}>
-    <FlexibleLogTime time={value.time} />
-  </div>
-);
+function TimeColumn({ className, value, customProps: { mobile } }) {
+  return (
+    <div className={cx('time-column', className, { mobile })}>
+      <FlexibleLogTime time={value.time} />
+    </div>
+  );
+}
 TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -118,11 +126,13 @@ TimeColumn.defaultProps = {
   value: {},
 };
 
-const LogMessageSearchCell = ({ className, rawStylesConfig, ...rest }) => (
-  <div className={className} style={rawStylesConfig}>
-    <LogMessageSearch {...rest} />
-  </div>
-);
+function LogMessageSearchCell({ className, rawStylesConfig, ...rest }) {
+  return (
+    <div className={className} style={rawStylesConfig}>
+      <LogMessageSearch {...rest} />
+    </div>
+  );
+}
 LogMessageSearchCell.propTypes = {
   className: PropTypes.string,
   rawStylesConfig: PropTypes.object,
@@ -131,11 +141,13 @@ LogMessageSearchCell.defaultProps = {
   className: '',
   rawStylesConfig: {},
 };
-const LogStatusCell = ({ className, rawStylesConfig, ...props }) => (
-  <div className={className} style={rawStylesConfig}>
-    <LogStatusBlock {...props} />
-  </div>
-);
+function LogStatusCell({ className, rawStylesConfig, ...props }) {
+  return (
+    <div className={className} style={rawStylesConfig}>
+      <LogStatusBlock {...props} />
+    </div>
+  );
+}
 LogStatusCell.propTypes = {
   className: PropTypes.string,
   rawStylesConfig: PropTypes.object,
@@ -315,14 +327,8 @@ export class LogsGrid extends Component {
 
   renderConsoleViewHeader = (cellProps) => {
     const { className, style: cellClassName } = cellProps;
-    const {
-      intl,
-      sortingColumn,
-      sortingDirection,
-      onChangeSorting,
-      filter,
-      onFilterChange,
-    } = this.props;
+    const { intl, sortingColumn, sortingDirection, onChangeSorting, filter, onFilterChange } =
+      this.props;
 
     return (
       <div className={className} style={cellClassName}>

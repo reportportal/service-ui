@@ -47,7 +47,7 @@ import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
-export const InstanceSidebar = ({ onClickNavBtn }) => {
+export function InstanceSidebar({ onClickNavBtn }) {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
@@ -161,7 +161,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       linkToUserProfilePage={linkToUserProfilePage}
     />
   );
-};
+}
 
 InstanceSidebar.propTypes = {
   onClickNavBtn: PropTypes.func.isRequired,

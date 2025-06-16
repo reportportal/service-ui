@@ -65,6 +65,7 @@ export class NotPassedTestCasesTrendControls extends Component {
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
   formatFilterValue = (value) => value?.[0];
+
   parseFilterValue = (value) => value && [value];
 
   render() {
@@ -76,7 +77,7 @@ export class NotPassedTestCasesTrendControls extends Component {
     } = this.props;
 
     return (
-      <Fragment>
+      <>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
           <FiltersControl
             formAppearance={formAppearance}
@@ -85,25 +86,23 @@ export class NotPassedTestCasesTrendControls extends Component {
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
-          <Fragment>
-            <FieldProvider
-              name="contentParameters.itemsCount"
-              validate={commonValidators.createNumberOfLaunchesValidator(
-                formatMessage(messages.ItemsValidationError),
-              )}
-              format={String}
-              normalize={this.normalizeValue}
-            >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-              />
-            </FieldProvider>
-          </Fragment>
+          <FieldProvider
+            name="contentParameters.itemsCount"
+            validate={commonValidators.createNumberOfLaunchesValidator(
+              formatMessage(messages.ItemsValidationError),
+            )}
+            format={String}
+            normalize={this.normalizeValue}
+          >
+            <InputControl
+              fieldLabel={formatMessage(messages.ItemsFieldLabel)}
+              inputWidth={ITEMS_INPUT_WIDTH}
+              maxLength="3"
+              hintType="top-right"
+            />
+          </FieldProvider>
         )}
-      </Fragment>
+      </>
     );
   }
 }

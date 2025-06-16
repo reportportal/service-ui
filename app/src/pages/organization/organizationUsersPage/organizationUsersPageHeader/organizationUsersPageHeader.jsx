@@ -35,12 +35,12 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-export const OrganizationUsersPageHeader = ({
+export function OrganizationUsersPageHeader({
   onInvite,
   isUsersLoading,
   searchValue,
   setSearchValue,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const usersCount = organization?.relationships?.users?.meta.count;
@@ -63,7 +63,7 @@ export const OrganizationUsersPageHeader = ({
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_USERS_FIELD}
               />
             </div>
-            <Button variant={'ghost'} onClick={onInvite}>
+            <Button variant="ghost" onClick={onInvite}>
               {formatMessage(messages.inviteUser)}
             </Button>
           </>
@@ -71,7 +71,7 @@ export const OrganizationUsersPageHeader = ({
       </div>
     </MembersPageHeader>
   );
-};
+}
 
 OrganizationUsersPageHeader.propTypes = {
   isUsersLoading: PropTypes.bool.isRequired,

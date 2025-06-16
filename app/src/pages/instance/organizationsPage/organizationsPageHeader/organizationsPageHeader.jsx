@@ -44,7 +44,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
-export const OrganizationsPageHeader = ({
+export function OrganizationsPageHeader({
   isEmpty,
   searchValue,
   setSearchValue,
@@ -53,7 +53,7 @@ export const OrganizationsPageHeader = ({
   isOpenTableView,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
   const userRoles = useSelector(userRolesSelector);
@@ -91,14 +91,14 @@ export const OrganizationsPageHeader = ({
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
                 onClick={openPanelView}
-                variant={'text'}
+                variant="text"
               >
                 {Parser(PanelViewIcon)}
               </BaseIconButton>
               <BaseIconButton
                 className={cx('panel-icon', { active: isOpenTableView })}
                 onClick={openTableView}
-                variant={'text'}
+                variant="text"
               >
                 {Parser(TableViewIcon)}
               </BaseIconButton>
@@ -108,7 +108,7 @@ export const OrganizationsPageHeader = ({
       </div>
     </div>
   );
-};
+}
 
 OrganizationsPageHeader.propTypes = {
   isEmpty: PropTypes.bool,

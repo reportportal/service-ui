@@ -21,7 +21,9 @@ import styles from './autocompletePrompt.scss';
 
 const cx = classNames.bind(styles);
 
-export const AutocompletePrompt = ({ children }) => <div className={cx('prompt')}>{children}</div>;
+export function AutocompletePrompt({ children }) {
+  return <div className={cx('prompt')}>{children}</div>;
+}
 
 AutocompletePrompt.propTypes = {
   children: PropTypes.node,

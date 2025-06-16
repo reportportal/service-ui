@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
 });
 
-export const VariablesControl = ({ variables }) => {
+export function VariablesControl({ variables }) {
   const [searchValue, setSearchValue] = useState('');
   const { formatMessage } = useIntl();
 
@@ -119,7 +119,7 @@ export const VariablesControl = ({ variables }) => {
       )}
     </div>
   );
-};
+}
 
 VariablesControl.propTypes = {
   variables: PropTypes.array.isRequired,

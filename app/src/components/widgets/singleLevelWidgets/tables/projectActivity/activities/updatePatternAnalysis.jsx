@@ -28,7 +28,7 @@ const getValue = ({ history: [{ oldValue, newValue }] = [{ oldValue: '', newValu
   return { oldValue: JSON.parse(oldValue), newValue: JSON.parse(newValue) };
 };
 
-export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, details } }) => {
+export function UpdateAutoPatternAnalysis({ activity: { user, projectName, details } }) {
   const { formatMessage } = useIntl();
 
   const { oldValue, newValue } = getValue(details);
@@ -52,6 +52,6 @@ export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, detai
       </span>
     </>
   );
-};
+}
 UpdateAutoPatternAnalysis.propTypes = activityItemPropTypes;
 UpdateAutoPatternAnalysis.defaultProps = activityItemDefaultProps;

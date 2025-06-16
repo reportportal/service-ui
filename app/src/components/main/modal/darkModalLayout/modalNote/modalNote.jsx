@@ -22,14 +22,14 @@ import styles from './modalNote.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalNote = ({ icon, message, status }) => {
+export function ModalNote({ icon, message, status }) {
   return (
     <div className={cx('modal-note', { [`status-${status}`]: status })}>
       <div className={cx('icon', { [`status-${status}`]: status })}>{Parser(icon)}</div>
       <span>{message}</span>
     </div>
   );
-};
+}
 ModalNote.propTypes = {
   icon: PropTypes.string,
   message: PropTypes.string,

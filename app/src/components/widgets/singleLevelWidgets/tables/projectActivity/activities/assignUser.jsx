@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
 });
 
-export const AssignUser = ({ activity: { user, objectName } }) => {
+export function AssignUser({ activity: { user, objectName } }) {
   const { formatMessage } = useIntl();
 
   return (
@@ -49,6 +49,6 @@ export const AssignUser = ({ activity: { user, objectName } }) => {
       )}
     </>
   );
-};
+}
 AssignUser.propTypes = activityItemPropTypes;
 AssignUser.defaultProps = activityItemDefaultProps;

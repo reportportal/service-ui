@@ -30,7 +30,7 @@ import styles from './copyFromHistoryLine.scss';
 
 const cx = classNames.bind(styles);
 
-export const CopyFromHistoryLine = ({
+export function CopyFromHistoryLine({
   items,
   modalState,
   itemData,
@@ -38,7 +38,7 @@ export const CopyFromHistoryLine = ({
   windowSize,
   eventsInfo,
   projectKey,
-}) => {
+}) {
   const dispatch = useDispatch();
   const [composedItems, setComposedItems] = useState(items);
   const { trackEvent } = useTracking();
@@ -120,7 +120,7 @@ export const CopyFromHistoryLine = ({
       ))}
     </>
   );
-};
+}
 CopyFromHistoryLine.propTypes = {
   items: PropTypes.array,
   modalState: PropTypes.object.isRequired,

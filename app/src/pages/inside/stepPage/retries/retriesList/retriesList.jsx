@@ -21,21 +21,23 @@ import styles from './retriesList.scss';
 
 const cx = classNames.bind(styles);
 
-export const RetriesList = ({ retries, selectedId, onRetrySelect }) => (
-  <div className={cx('retries-list')}>
-    {retries.map((retry, i) => (
-      <Retry
-        key={retry.id}
-        retry={retry}
-        index={i}
-        selected={retry.id === selectedId}
-        onClick={() => {
-          onRetrySelect(retry);
-        }}
-      />
-    ))}
-  </div>
-);
+export function RetriesList({ retries, selectedId, onRetrySelect }) {
+  return (
+    <div className={cx('retries-list')}>
+      {retries.map((retry, i) => (
+        <Retry
+          key={retry.id}
+          retry={retry}
+          index={i}
+          selected={retry.id === selectedId}
+          onClick={() => {
+            onRetrySelect(retry);
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 RetriesList.propTypes = {
   retries: PropTypes.arrayOf(PropTypes.object),
   selectedId: PropTypes.number.isRequired,

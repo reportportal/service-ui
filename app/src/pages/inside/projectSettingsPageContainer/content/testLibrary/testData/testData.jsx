@@ -23,7 +23,7 @@ import { createExternalLink, docsReferences } from 'common/utils';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { VariablesAndDatasets } from './variablesAndDatasets';
-import { FormattedDescription, TabDescription } from '../../../content/elements';
+import { FormattedDescription, TabDescription } from '../../elements';
 import { SettingsPageContent } from '../../settingsPageContent';
 import { HeaderControls } from './headerControls';
 import { messages } from './messages';
@@ -31,7 +31,7 @@ import styles from './testData.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestData = ({ setHeaderTitleNode }) => {
+export function TestData({ setHeaderTitleNode }) {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const TestData = ({ setHeaderTitleNode }) => {
       />
     </SettingsPageContent>
   );
-};
+}
 
 TestData.propTypes = {
   setHeaderTitleNode: PropTypes.func.isRequired,

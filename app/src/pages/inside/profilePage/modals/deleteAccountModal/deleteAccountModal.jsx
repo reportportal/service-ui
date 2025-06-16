@@ -58,7 +58,7 @@ const messages = defineMessages({
 
 const DELETE = 'DELETE';
 
-const DeleteAccount = ({ data }) => {
+function DeleteAccount({ data }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -121,7 +121,7 @@ const DeleteAccount = ({ data }) => {
       </div>
     </ModalLayout>
   );
-};
+}
 DeleteAccount.propTypes = {
   data: PropTypes.object,
 };

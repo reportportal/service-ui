@@ -21,14 +21,14 @@ import styles from './defectTypeSelectorItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelectorItem = ({
+export function DefectTypeSelectorItem({
   defectType,
   onClick,
   isSelected,
   className,
   isNarrowView,
   isHighlighted,
-}) => {
+}) {
   return (
     <div
       onClick={onClick}
@@ -48,7 +48,7 @@ export const DefectTypeSelectorItem = ({
       </div>
     </div>
   );
-};
+}
 DefectTypeSelectorItem.propTypes = {
   defectType: PropTypes.object.isRequired,
   onClick: PropTypes.func,

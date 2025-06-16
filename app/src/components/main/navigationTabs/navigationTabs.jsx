@@ -44,6 +44,7 @@ export class NavigationTabs extends Component {
     }).isRequired,
     customBlock: PropTypes.element,
   };
+
   static defaultProps = {
     onChangeTab: () => {},
     config: {},
@@ -98,7 +99,7 @@ export class NavigationTabs extends Component {
       value: item,
     }));
 
-  render = () => {
+  render() {
     const { config, activeTab, customBlock } = this.props;
     const activeConfig = activeTab && config[activeTab];
     return (
@@ -137,5 +138,5 @@ export class NavigationTabs extends Component {
         </div>
       </div>
     );
-  };
+  }
 }

@@ -27,11 +27,11 @@ const MAX_VALUE_LENGTH = 50;
 const CHARACTERS_COUNT_BEFORE_ELLIPSIS = 45;
 const CHARACTERS_COUNT_AFTER_ELLIPSIS = 5;
 
-export const NameColumn = (
+export function NameColumn(
   { className, value },
   name,
   { minPassingRate, formatMessage, onClickAttribute, isClickableAttribute },
-) => {
+) {
   const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
   const { attributeValue } = value;
 
@@ -62,7 +62,7 @@ export const NameColumn = (
       )}
     </div>
   );
-};
+}
 
 NameColumn.propTypes = {
   value: PropTypes.object.isRequired,

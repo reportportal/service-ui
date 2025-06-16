@@ -105,7 +105,8 @@ export class ProfilePage extends Component {
           profileRoute,
         },
       };
-    } else if (organizationSlug) {
+    }
+    if (organizationSlug) {
       return {
         type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
         payload: {
@@ -148,25 +149,27 @@ export class ProfilePage extends Component {
     };
   };
 
-  render = () => (
-    <PageLayout>
-      <PageHeader breadcrumbs={this.getBreadcrumbs()} />
-      <div className={cx('container')}>
-        <section className={cx('content-wrapper')}>
-          <div className={cx('section-wrapper')}>
-            <PersonalInfoBlock />
-            <NavigationTabs
-              config={this.getNavigationTabsConfig()}
-              activeTab={this.props.activeTab}
-              onChangeTab={this.props.dispatch}
-            />
-          </div>
-          <div className={cx('footer')}>
-            <LocalizationBlock />
-            {this.props.allowDeleteAccount && <DeleteAccountBlock />}
-          </div>
-        </section>
-      </div>
-    </PageLayout>
-  );
+  render() {
+    return (
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <div className={cx('container')}>
+          <section className={cx('content-wrapper')}>
+            <div className={cx('section-wrapper')}>
+              <PersonalInfoBlock />
+              <NavigationTabs
+                config={this.getNavigationTabsConfig()}
+                activeTab={this.props.activeTab}
+                onChangeTab={this.props.dispatch}
+              />
+            </div>
+            <div className={cx('footer')}>
+              <LocalizationBlock />
+              {this.props.allowDeleteAccount && <DeleteAccountBlock />}
+            </div>
+          </section>
+        </div>
+      </PageLayout>
+    );
+  }
 }

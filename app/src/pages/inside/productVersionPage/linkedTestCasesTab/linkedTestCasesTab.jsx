@@ -35,7 +35,7 @@ import styles from './linkedTestCasesTab.scss';
 
 const cx = classNames.bind(styles);
 
-export const LinkedTestCasesTab = () => {
+export function LinkedTestCasesTab() {
   const { formatMessage } = useIntl();
   const [filters, setFilters] = useState({});
 
@@ -125,4 +125,4 @@ export const LinkedTestCasesTab = () => {
       <HelpPanel items={infoItems} />
     </div>
   );
-};
+}

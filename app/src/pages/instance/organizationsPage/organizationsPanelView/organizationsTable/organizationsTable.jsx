@@ -33,7 +33,7 @@ import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsTable = ({ organizationsList }) => {
+export function OrganizationsTable({ organizationsList }) {
   const { formatMessage } = useIntl();
   const { userRole } = useSelector(userRolesSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
@@ -131,7 +131,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
 
   const renderRowActions = () => (
     <Popover
-      placement={'bottom-end'}
+      placement="bottom-end"
       content={
         <div className={cx('row-action-menu')}>
           <p className={cx('add')}>Add</p>
@@ -156,7 +156,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
       />
     </div>
   );
-};
+}
 
 OrganizationsTable.propTypes = {
   organizationsList: PropTypes.array,

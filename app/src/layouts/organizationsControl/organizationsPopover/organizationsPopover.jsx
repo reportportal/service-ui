@@ -54,7 +54,7 @@ export const messages = defineMessages({
   },
 });
 
-export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
+export function OrganizationsPopover({ closePopover, closeSidebar }) {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
   const currentOrganization = useSelector(urlOrganizationSlugSelector);
@@ -94,7 +94,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   };
 
   const handleChange = (event) => {
-    const value = event.target.value;
+    const { value } = event.target;
     setValueSearch(value);
 
     if (value.length && !isSearchEventTriggered) {
@@ -183,7 +183,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
       </ScrollWrapper>
     </div>
   );
-};
+}
 
 OrganizationsPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,

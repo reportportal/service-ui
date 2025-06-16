@@ -24,7 +24,7 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, userId, thumbnail }) => {
+export function UserAvatar({ className, userId, thumbnail }) {
   const src = URLS.userAvatar(userId, thumbnail);
 
   return (
@@ -38,7 +38,7 @@ export const UserAvatar = ({ className, userId, thumbnail }) => {
       />
     </div>
   );
-};
+}
 
 UserAvatar.propTypes = {
   className: PropTypes.string,

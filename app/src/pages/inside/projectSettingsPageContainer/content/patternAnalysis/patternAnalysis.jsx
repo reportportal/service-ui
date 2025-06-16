@@ -34,7 +34,7 @@ import { SettingsPageContent } from '../settingsPageContent';
 import { PatternAnalysisContent } from './patternAnalysisContent';
 import { messages } from './messages';
 
-export const PatternAnalysis = ({ setHeaderTitleNode }) => {
+export function PatternAnalysis({ setHeaderTitleNode }) {
   const patterns = useSelector(patternsSelector);
   const userRoles = useSelector(userRolesSelector);
 
@@ -114,7 +114,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
       )}
     </>
   );
-};
+}
 PatternAnalysis.propTypes = {
   setHeaderTitleNode: PropTypes.func.isRequired,
 };

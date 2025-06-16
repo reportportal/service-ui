@@ -54,26 +54,30 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 const MAKE_DECISION = 'make_decision';
 
 const POST_ISSUE_EVENTS_INFO = {
-  postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  postBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 };
 const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  loadBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  addNewIssue:
+    UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
+      MAKE_DECISION,
+    ),
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 };
 const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  unlinkBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
@@ -135,6 +139,7 @@ export class UniqueErrorsPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   static defaultProps = {
     pageLoading: false,
     loading: false,
@@ -158,13 +163,16 @@ export class UniqueErrorsPage extends Component {
     editDefectsAction: () => {},
     reloadClustersAction: () => {},
   };
+
   unselectItem = (item) => {
     this.props.toggleClusterItemSelectionAction(item);
   };
+
   unselectAndFetchItems = () => {
     this.props.unselectAllClusterItemsAction();
     this.props.reloadClustersAction();
   };
+
   onEditItem = (item) => {
     this.props.showModalAction({
       id: 'testItemDetails',
@@ -182,6 +190,7 @@ export class UniqueErrorsPage extends Component {
       },
     });
   };
+
   onEditItems = () => {
     this.props.showModalAction({
       id: 'editItemsModal',
@@ -198,6 +207,7 @@ export class UniqueErrorsPage extends Component {
     });
     this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_ACTION);
   };
+
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
     const items = eventData?.id ? [eventData] : selectedItems;
@@ -220,6 +230,7 @@ export class UniqueErrorsPage extends Component {
       },
     });
   };
+
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
     const items = [
       {
@@ -235,10 +246,12 @@ export class UniqueErrorsPage extends Component {
     this.props.onUnlinkIssue(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
-        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+        unlinkBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
       },
     });
   };
+
   deleteItems = () => {
     const {
       intl: { formatMessage },

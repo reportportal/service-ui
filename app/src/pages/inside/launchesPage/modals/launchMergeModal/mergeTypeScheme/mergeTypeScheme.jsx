@@ -20,9 +20,9 @@ import styles from './mergeTypeScheme.scss';
 
 const cx = classNames.bind(styles);
 
-export const MergeTypeScheme = ({ type }) => (
-  <div className={cx('merge-type-scheme', [type.toLowerCase()])} />
-);
+export function MergeTypeScheme({ type }) {
+  return <div className={cx('merge-type-scheme', [type.toLowerCase()])} />;
+}
 
 MergeTypeScheme.propTypes = {
   type: PropTypes.string,

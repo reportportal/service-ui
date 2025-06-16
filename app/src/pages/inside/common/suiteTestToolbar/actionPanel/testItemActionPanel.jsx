@@ -44,7 +44,7 @@ import styles from './testItemActionPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestItemActionPanel = ({
+export function TestItemActionPanel({
   debugMode,
   onRefresh,
   showBreadcrumbs,
@@ -62,7 +62,7 @@ export const TestItemActionPanel = ({
   onDelete,
   deleteDisabled,
   parentItem,
-}) => {
+}) {
   const breadcrumbs = useSelector(breadcrumbsSelector);
   const level = useSelector(levelSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
@@ -194,7 +194,7 @@ export const TestItemActionPanel = ({
       </div>
     </div>
   );
-};
+}
 
 TestItemActionPanel.propTypes = {
   debugMode: PropTypes.bool,

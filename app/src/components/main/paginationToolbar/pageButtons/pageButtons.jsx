@@ -28,27 +28,33 @@ import styles from './pageButtons.scss';
 
 const cx = classNames.bind(styles);
 
-export const PageButtons = ({ activePage, pageCount, onChangePage }) => (
-  <ul className={cx('page-buttons')}>
-    <PageButton disabled={activePage === 1} hideOnMobile onClick={() => onChangePage(1)}>
-      {Parser(FirstPageArrowIcon)}
-    </PageButton>
-    <PageButton disabled={activePage === 1} onClick={() => onChangePage(activePage - 1)}>
-      {Parser(PreviousPageArrowIcon)}
-    </PageButton>
-    <PageNumberButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
-    <PageButton disabled={activePage === pageCount} onClick={() => onChangePage(activePage + 1)}>
-      {Parser(NextPageArrowIcon)}
-    </PageButton>
-    <PageButton
-      disabled={activePage === pageCount}
-      hideOnMobile
-      onClick={() => onChangePage(pageCount)}
-    >
-      {Parser(LastPageArrowIcon)}
-    </PageButton>
-  </ul>
-);
+export function PageButtons({ activePage, pageCount, onChangePage }) {
+  return (
+    <ul className={cx('page-buttons')}>
+      <PageButton disabled={activePage === 1} hideOnMobile onClick={() => onChangePage(1)}>
+        {Parser(FirstPageArrowIcon)}
+      </PageButton>
+      <PageButton disabled={activePage === 1} onClick={() => onChangePage(activePage - 1)}>
+        {Parser(PreviousPageArrowIcon)}
+      </PageButton>
+      <PageNumberButtons
+        activePage={activePage}
+        pageCount={pageCount}
+        onChangePage={onChangePage}
+      />
+      <PageButton disabled={activePage === pageCount} onClick={() => onChangePage(activePage + 1)}>
+        {Parser(NextPageArrowIcon)}
+      </PageButton>
+      <PageButton
+        disabled={activePage === pageCount}
+        hideOnMobile
+        onClick={() => onChangePage(pageCount)}
+      >
+        {Parser(LastPageArrowIcon)}
+      </PageButton>
+    </ul>
+  );
+}
 PageButtons.propTypes = {
   activePage: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,

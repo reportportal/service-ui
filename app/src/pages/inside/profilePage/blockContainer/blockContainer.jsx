@@ -20,9 +20,9 @@ import styles from './blockContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const BlockContainerHeader = ({ children }) => (
-  <div className={cx('block-header')}>{children}</div>
-);
+export function BlockContainerHeader({ children }) {
+  return <div className={cx('block-header')}>{children}</div>;
+}
 BlockContainerHeader.propTypes = {
   children: PropTypes.node,
 };
@@ -31,9 +31,9 @@ BlockContainerHeader.defaultProps = {
   children: null,
 };
 
-export const BlockContainerBody = ({ children }) => (
-  <div className={cx('block-content')}>{children}</div>
-);
+export function BlockContainerBody({ children }) {
+  return <div className={cx('block-content')}>{children}</div>;
+}
 BlockContainerBody.propTypes = {
   children: PropTypes.node,
 };

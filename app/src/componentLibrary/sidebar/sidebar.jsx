@@ -25,13 +25,13 @@ const cx = classNames.bind(styles);
 
 const COLLAPSED_WIDTH = 48;
 
-export const Sidebar = ({
+export function Sidebar({
   logoBlock,
   createMainBlock,
   items,
   createFooterBlock,
   shouldBeCollapsedOnLeave,
-}) => {
+}) {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const sidebarRef = useRef(null);
@@ -97,7 +97,7 @@ export const Sidebar = ({
       </aside>
     </div>
   );
-};
+}
 
 Sidebar.propTypes = {
   logoBlock: PropTypes.element,

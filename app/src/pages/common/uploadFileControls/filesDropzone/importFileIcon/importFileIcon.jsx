@@ -28,7 +28,7 @@ import styles from './importFileIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const ImportFileIcon = ({
+export function ImportFileIcon({
   file,
   valid,
   uploaded,
@@ -39,7 +39,7 @@ export const ImportFileIcon = ({
   rejectMessage,
   uploadFailed,
   uploadFailReason,
-}) => {
+}) {
   const deleteHandler = (e) => {
     e.stopPropagation();
 
@@ -82,7 +82,7 @@ export const ImportFileIcon = ({
       </div>
     </div>
   );
-};
+}
 ImportFileIcon.propTypes = {
   ...fileTypeFields,
   onDelete: PropTypes.func,

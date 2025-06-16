@@ -26,7 +26,7 @@ import { ServiceVersionsTooltip } from '../serviceVersionBlockTooltip/serviceVer
 
 const cx = classNames.bind(styles);
 
-const FooterNode = ({ hideModal }) => {
+function FooterNode({ hideModal }) {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('modal-footer-node')}>
@@ -35,23 +35,23 @@ const FooterNode = ({ hideModal }) => {
       </BigButton>
     </div>
   );
-};
+}
 FooterNode.propTypes = {
   hideModal: PropTypes.func.isRequired,
 };
 
-export const ServiceVersionsBlockModal = ({ services, hideModal }) => {
+export function ServiceVersionsBlockModal({ services, hideModal }) {
   return (
     <Modal
       onClose={hideModal}
-      overlay={'light-cyan'}
+      overlay="light-cyan"
       className={cx('modal-window-mobile')}
       footerNode={<FooterNode hideModal={hideModal} />}
     >
       <ServiceVersionsTooltip services={services} className={cx('tooltip-modal')} />
     </Modal>
   );
-};
+}
 ServiceVersionsBlockModal.propTypes = {
   services: PropTypes.object.isRequired,
   hideModal: PropTypes.func,

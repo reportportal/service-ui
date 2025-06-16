@@ -28,7 +28,7 @@ const createRemoveClickHandler = (clickHandler) => (e) => {
   clickHandler();
 };
 
-export const Attribute = ({
+export function Attribute({
   attribute,
   onClick,
   onRemove,
@@ -36,36 +36,43 @@ export const Attribute = ({
   customClass,
   backgroundDark,
   maxCellWidth,
-}) => (
-  <div
-    className={cx('attribute', customClass, { disabled }, { [`background-dark`]: backgroundDark })}
-    onClick={disabled ? undefined : onClick}
-  >
-    {!disabled && (
-      <div className={cx('remove-icon')} onClick={createRemoveClickHandler(onRemove)}>
-        {Parser(CrossIcon)}
-      </div>
-    )}
+}) {
+  return (
     <div
-      className={cx('label', { [`background-dark`]: backgroundDark })}
-      title={formatAttributeWithSpacedDivider(attribute)}
-    >
-      {attribute.key ? (
-        <>
-          <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
-            {attribute.key}
-          </div>
-          <div>:</div>
-          <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
-            {attribute.value}
-          </div>
-        </>
-      ) : (
-        <div>{attribute.value}</div>
+      className={cx(
+        'attribute',
+        customClass,
+        { disabled },
+        { [`background-dark`]: backgroundDark },
       )}
+      onClick={disabled ? undefined : onClick}
+    >
+      {!disabled && (
+        <div className={cx('remove-icon')} onClick={createRemoveClickHandler(onRemove)}>
+          {Parser(CrossIcon)}
+        </div>
+      )}
+      <div
+        className={cx('label', { [`background-dark`]: backgroundDark })}
+        title={formatAttributeWithSpacedDivider(attribute)}
+      >
+        {attribute.key ? (
+          <>
+            <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
+              {attribute.key}
+            </div>
+            <div>:</div>
+            <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
+              {attribute.value}
+            </div>
+          </>
+        ) : (
+          <div>{attribute.value}</div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 Attribute.propTypes = {
   attribute: PropTypes.object,

@@ -21,7 +21,7 @@ import { connectRouter, debounce, isEmptyObject } from 'common/utils';
 import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
-const FilterEntitiesURL = ({
+function FilterEntitiesURL({
   entities = {},
   updateFilters = () => {},
   render,
@@ -30,7 +30,7 @@ const FilterEntitiesURL = ({
   defaultPagination,
   prefixQueryKey,
   additionalFilter,
-}) => {
+}) {
   const handleChange = useCallback(
     (newEntities) => {
       if (isEqual(newEntities, entities)) {
@@ -58,7 +58,7 @@ const FilterEntitiesURL = ({
     entities,
     onChange: debounced ? debouncedHandleChange : handleChange,
   });
-};
+}
 
 FilterEntitiesURL.propTypes = {
   entities: PropTypes.object,

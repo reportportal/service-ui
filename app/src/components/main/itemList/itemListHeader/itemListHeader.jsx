@@ -23,22 +23,24 @@ import styles from './itemListHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemListHeader = ({ columns }) => (
-  <thead>
-    <tr>
-      {columns.map((column) => (
-        <td className={cx('cell', `align-${column.align}`)} key={column.name}>
-          <span>{column.label}</span>
-          {column.labelTip && (
-            <div className={cx('cell-icon')} title={column.labelTip}>
-              {Parser(InfoIcon)}
-            </div>
-          )}
-        </td>
-      ))}
-    </tr>
-  </thead>
-);
+export function ItemListHeader({ columns }) {
+  return (
+    <thead>
+      <tr>
+        {columns.map((column) => (
+          <td className={cx('cell', `align-${column.align}`)} key={column.name}>
+            <span>{column.label}</span>
+            {column.labelTip && (
+              <div className={cx('cell-icon')} title={column.labelTip}>
+                {Parser(InfoIcon)}
+              </div>
+            )}
+          </td>
+        ))}
+      </tr>
+    </thead>
+  );
+}
 ItemListHeader.propTypes = {
   columns: PropTypes.arrayOf(columnShape),
 };

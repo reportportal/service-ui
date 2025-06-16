@@ -25,7 +25,7 @@ import styles from './fieldNumber.scss';
 
 const cx = classNames.bind(styles);
 
-export const FieldNumber = ({
+export function FieldNumber({
   value,
   placeholder,
   disabled,
@@ -38,7 +38,7 @@ export const FieldNumber = ({
   max,
   title,
   error,
-}) => {
+}) {
   const inputRef = useRef();
   const handleChange = (event) => {
     const newValue = event.target.value.replace(/^0(?=\d+|^\d)/g, '');
@@ -104,7 +104,7 @@ export const FieldNumber = ({
           <span
             className={cx('sign', { disabled })}
             onClick={disabled ? null : handleDecrease}
-            data-automation-id={'minusIcon'}
+            data-automation-id="minusIcon"
           >
             {Parser(MinusIcon)}
           </span>
@@ -129,7 +129,7 @@ export const FieldNumber = ({
           <span
             className={cx('sign', { disabled })}
             onClick={disabled ? null : handleIncrease}
-            data-automation-id={'plusIcon'}
+            data-automation-id="plusIcon"
           >
             {Parser(PlusIcon)}
           </span>
@@ -142,7 +142,7 @@ export const FieldNumber = ({
       )}
     </>
   );
-};
+}
 FieldNumber.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   placeholder: PropTypes.string,

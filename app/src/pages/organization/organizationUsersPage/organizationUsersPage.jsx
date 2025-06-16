@@ -31,7 +31,7 @@ import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationUsersPage = () => {
+export function OrganizationUsersPage() {
   const { formatMessage } = useIntl();
   const users = useSelector(usersSelector);
   const isUsersLoading = useSelector(loadingSelector);
@@ -63,4 +63,4 @@ export const OrganizationUsersPage = () => {
       </div>
     </ScrollWrapper>
   );
-};
+}

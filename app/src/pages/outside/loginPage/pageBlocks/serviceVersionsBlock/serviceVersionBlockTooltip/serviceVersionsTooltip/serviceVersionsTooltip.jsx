@@ -22,13 +22,13 @@ import { ServiceVersionItem } from '../../serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-export const ServiceVersionsTooltip = ({ services, className }) => {
+export function ServiceVersionsTooltip({ services, className }) {
   return (
     <div className={cx(className)}>
       <span className={cx('current-version')}>
         <FormattedMessage
-          id={'ServiceVersionsBlock.currentVersion'}
-          defaultMessage={'Current version:'}
+          id="ServiceVersionsBlock.currentVersion"
+          defaultMessage="Current version:"
         />
       </span>
       <span className={cx('versions-list')}>
@@ -49,7 +49,7 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
       </span>
     </div>
   );
-};
+}
 ServiceVersionsTooltip.propTypes = {
   services: PropTypes.object,
   className: PropTypes.string,

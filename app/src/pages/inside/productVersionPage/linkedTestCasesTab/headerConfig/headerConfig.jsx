@@ -28,7 +28,7 @@ import styles from './headerConfig.scss';
 
 const cx = classNames.bind(styles);
 
-export const HeaderConfig = ({ filters, setFilters }) => {
+export function HeaderConfig({ filters, setFilters }) {
   const { formatMessage } = useIntl();
   const [isShowFolders, setIsShowFolders] = useState(false);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
@@ -118,7 +118,7 @@ export const HeaderConfig = ({ filters, setFilters }) => {
       </div>
     </div>
   );
-};
+}
 
 HeaderConfig.propTypes = {
   filters: PropTypes.shape({

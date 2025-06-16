@@ -38,7 +38,7 @@ import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationProjectsPage = () => {
+export function OrganizationProjectsPage() {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
@@ -140,4 +140,4 @@ export const OrganizationProjectsPage = () => {
       {renderContent()}
     </div>
   );
-};
+}

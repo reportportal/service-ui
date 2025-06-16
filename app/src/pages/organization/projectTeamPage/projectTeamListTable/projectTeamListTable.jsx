@@ -42,7 +42,7 @@ import { MembersListTable } from '../../../common/users/membersListTable';
 
 const cx = classNames.bind(styles);
 
-const ProjectTeamListTableWrapped = ({
+function ProjectTeamListTableWrapped({
   members,
   onChangeSorting,
   sortingDirection,
@@ -52,7 +52,7 @@ const ProjectTeamListTableWrapped = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
@@ -136,7 +136,7 @@ const ProjectTeamListTableWrapped = ({
 
   const renderRowActions = () => (
     <Popover
-      placement={'bottom-end'}
+      placement="bottom-end"
       content={
         <div className={cx('row-action-menu')}>
           <p className={cx('add')}>Add</p>
@@ -172,7 +172,7 @@ const ProjectTeamListTableWrapped = ({
       onChangePageSize={onChangePageSize}
     />
   );
-};
+}
 
 ProjectTeamListTableWrapped.propTypes = {
   members: PropTypes.array,

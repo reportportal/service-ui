@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
 });
 
-const ImportLaunchModal = ({ data: { onImport }, activeProjectKey, importPlugins }) => {
+function ImportLaunchModal({ data: { onImport }, activeProjectKey, importPlugins }) {
   const {
     files,
     actions: { addFiles, removeFile, updateFile },
@@ -144,7 +144,7 @@ const ImportLaunchModal = ({ data: { onImport }, activeProjectKey, importPlugins
       <p className={cx('note-message')}>{formatMessage(messages.noteMessage)}</p>
     </UploadModalLayout>
   );
-};
+}
 ImportLaunchModal.propTypes = {
   data: PropTypes.shape({
     onImport: PropTypes.func,

@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
 });
 
-const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
+function RecipientsContainerComponent({ projectInfo, error, ...rest }) {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
 
@@ -63,12 +63,11 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
     if (hasError) {
       !recipientsWithError.includes(v) && setRecipientsWithError([...recipientsWithError, v]);
       return 'error';
-    } else {
-      const currentRecipientsWithError = recipientsWithError.filter((login) => login !== v);
-      currentRecipientsWithError.length !== recipientsWithError.length &&
-        setRecipientsWithError(currentRecipientsWithError);
-      return false;
     }
+    const currentRecipientsWithError = recipientsWithError.filter((login) => login !== v);
+    currentRecipientsWithError.length !== recipientsWithError.length &&
+      setRecipientsWithError(currentRecipientsWithError);
+    return false;
   };
 
   const clearItemsError = () => {
@@ -98,7 +97,7 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
       {...rest}
     />
   );
-};
+}
 RecipientsContainerComponent.propTypes = {
   projectInfo: PropTypes.object.isRequired,
   error: PropTypes.string,

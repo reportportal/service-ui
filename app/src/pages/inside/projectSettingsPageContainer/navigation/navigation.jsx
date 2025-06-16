@@ -23,14 +23,14 @@ import styles from './navigation.scss';
 
 const cx = classNames.bind(styles);
 
-export const Navigation = ({ items, title }) => {
+export function Navigation({ items, title }) {
   return (
     <ScrollWrapper>
       {title && <div className={cx('header')}>{title}</div>}
       <NavMenu items={items} />
     </ScrollWrapper>
   );
-};
+}
 Navigation.propTypes = {
   items: PropTypes.objectOf(
     PropTypes.shape({

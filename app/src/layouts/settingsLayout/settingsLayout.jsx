@@ -22,15 +22,17 @@ import styles from './settingsLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const SettingsLayout = ({ navigation, children }) => (
-  <div className={cx('container')}>
-    {navigation && <div className={cx('navigation')}>{navigation}</div>}
-    <div className={cx('section')}>
-      <div className={cx('section-content')}>{children}</div>
-      <Footer />
+export function SettingsLayout({ navigation, children }) {
+  return (
+    <div className={cx('container')}>
+      {navigation && <div className={cx('navigation')}>{navigation}</div>}
+      <div className={cx('section')}>
+        <div className={cx('section-content')}>{children}</div>
+        <Footer />
+      </div>
     </div>
-  </div>
-);
+  );
+}
 SettingsLayout.propTypes = {
   navigation: PropTypes.node,
   children: PropTypes.node,

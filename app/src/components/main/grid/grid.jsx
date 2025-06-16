@@ -31,7 +31,7 @@ const isAllItemsSelected = (items, selectedItems, excludeFromSelection) => {
   return items.every((item) => selectedIds.includes(item.id) || excludedIds.includes(item.id));
 };
 
-export const Grid = ({
+export function Grid({
   columns,
   data,
   sortingColumn,
@@ -55,50 +55,52 @@ export const Grid = ({
   nestedStepHeader,
   nestedView,
   ...rest
-}) => (
-  <Fragment>
-    <div className={cx('grid', className)}>
-      <GridHeader
-        columns={columns}
-        sortingColumn={sortingColumn}
-        sortingDirection={sortingDirection}
-        onChangeSorting={onChangeSorting}
-        onFilterClick={onFilterClick}
-        selectable={selectable}
-        allSelected={
-          !!selectedItems.length && isAllItemsSelected(data, selectedItems, excludeFromSelection)
-        }
-        onToggleSelectAll={onToggleSelectAll}
-        hideHeaderForMobile={changeOnlyMobileLayout}
-        headerClassName={headerClassName}
-      />
-      {!loading && (
-        <GridBody
+}) {
+  return (
+    <>
+      <div className={cx('grid', className)}>
+        <GridHeader
           columns={columns}
-          data={data}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          onFilterClick={onFilterClick}
           selectable={selectable}
-          selectedItems={selectedItems}
-          onToggleSelection={onToggleSelection}
-          changeOnlyMobileLayout={changeOnlyMobileLayout}
-          rowClassMapper={rowClassMapper}
-          groupHeader={groupHeader}
-          groupFunction={groupFunction}
-          grouped={grouped}
-          excludeFromSelection={excludeFromSelection}
-          gridRowClassName={gridRowClassName}
-          nestedStepHeader={nestedStepHeader}
-          nestedView={nestedView}
-          {...rest}
+          allSelected={
+            !!selectedItems.length && isAllItemsSelected(data, selectedItems, excludeFromSelection)
+          }
+          onToggleSelectAll={onToggleSelectAll}
+          hideHeaderForMobile={changeOnlyMobileLayout}
+          headerClassName={headerClassName}
         />
-      )}
-    </div>
-    {loading && (
-      <div className={cx('spinner-block')}>
-        <SpinningPreloader />
+        {!loading && (
+          <GridBody
+            columns={columns}
+            data={data}
+            selectable={selectable}
+            selectedItems={selectedItems}
+            onToggleSelection={onToggleSelection}
+            changeOnlyMobileLayout={changeOnlyMobileLayout}
+            rowClassMapper={rowClassMapper}
+            groupHeader={groupHeader}
+            groupFunction={groupFunction}
+            grouped={grouped}
+            excludeFromSelection={excludeFromSelection}
+            gridRowClassName={gridRowClassName}
+            nestedStepHeader={nestedStepHeader}
+            nestedView={nestedView}
+            {...rest}
+          />
+        )}
       </div>
-    )}
-  </Fragment>
-);
+      {loading && (
+        <div className={cx('spinner-block')}>
+          <SpinningPreloader />
+        </div>
+      )}
+    </>
+  );
+}
 Grid.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   data: PropTypes.arrayOf(PropTypes.object),

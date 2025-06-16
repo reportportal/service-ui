@@ -23,7 +23,7 @@ import styles from './inputDropdownRadio.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputDropdownRadio = ({
+export function InputDropdownRadio({
   outsideClickHandler,
   expanded,
   onToggle,
@@ -33,7 +33,7 @@ export const InputDropdownRadio = ({
   onChangeOption,
   options,
   className,
-}) => {
+}) {
   const ref = useRef();
   useOnClickOutside(ref, outsideClickHandler);
 
@@ -62,7 +62,7 @@ export const InputDropdownRadio = ({
       )}
     </div>
   );
-};
+}
 InputDropdownRadio.propTypes = {
   outsideClickHandler: PropTypes.func,
   expanded: PropTypes.bool,

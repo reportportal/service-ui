@@ -36,7 +36,7 @@ import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
 
-export const NotificationsFooter = ({ isReadOnly }) => {
+export function NotificationsFooter({ isReadOnly }) {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 
@@ -85,7 +85,7 @@ export const NotificationsFooter = ({ isReadOnly }) => {
       <HelpPanel items={footerItems} />
     </div>
   );
-};
+}
 
 NotificationsFooter.defaultProps = {
   isReadOnly: false,

@@ -38,7 +38,7 @@ import styles from './popoverTools.scss';
 
 const cx = classNames.bind(styles);
 
-export const PopoverTools = () => {
+export function PopoverTools() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { productVersionId, productVersionTab } = useSelector(payloadSelector);
@@ -117,4 +117,4 @@ export const PopoverTools = () => {
       </Button>
     </PopoverControl>
   );
-};
+}

@@ -21,7 +21,7 @@ import { URLS } from 'common/urls';
 import { isEmptyObject } from 'common/utils';
 import { DynamicField } from '../dynamicField';
 
-export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest }) => {
+export function AutocompleteField({ field, darkView, integrationInfo, ...rest }) {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
       integrationInfo.projectKey,
@@ -42,9 +42,8 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
             ? []
             : { ...state.selectedItem },
       };
-    } else {
-      return changes;
     }
+    return changes;
   };
 
   return (
@@ -59,7 +58,7 @@ export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest })
       />
     </DynamicField>
   );
-};
+}
 AutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   darkView: PropTypes.bool,

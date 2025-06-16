@@ -23,7 +23,7 @@ import styles from './helpPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const HelpPanel = ({ items }) => {
+export function HelpPanel({ items }) {
   return (
     <div className={cx('help-panel-container')}>
       {items.map(({ title, mainIcon, link, openIcon, automationId, description, event }) => (
@@ -41,7 +41,7 @@ export const HelpPanel = ({ items }) => {
       ))}
     </div>
   );
-};
+}
 HelpPanel.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({

@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
 });
 
-const AddLink = ({ onClose, handleSubmit, customLinks }) => {
+function AddLink({ onClose, handleSubmit, customLinks }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
         </FormField>
       </div>
       <div className={cx('form-footer')}>
-        <BigButton color={'gray-60'} onClick={onClose} className={cx('cancel-button')}>
+        <BigButton color="gray-60" onClick={onClose} className={cx('cancel-button')}>
           {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
         </BigButton>
         <BigButton className={cx('submit-button')} type="submit" mobileDisabled>
@@ -111,7 +111,7 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
       </div>
     </form>
   );
-};
+}
 
 AddLink.propTypes = {
   onClose: PropTypes.func,

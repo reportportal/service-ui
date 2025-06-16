@@ -24,7 +24,7 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({
+export function SidebarButton({
   onClick,
   icon,
   children,
@@ -33,7 +33,7 @@ export const SidebarButton = ({
   isNav,
   mobileHidden,
   isNavbar,
-}) => {
+}) {
   const classes = cx('sidebar-nav-btn', {
     'at-bottom': bottom,
     'mobile-hidden': mobileHidden,
@@ -66,7 +66,7 @@ export const SidebarButton = ({
       )}
     </div>
   );
-};
+}
 
 SidebarButton.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),

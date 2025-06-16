@@ -27,9 +27,9 @@ const getTooltipContent = (testItem = {}) => {
   );
 };
 
-export const ItemPathTooltip = ({ testItem }) => (
-  <TextTooltip tooltipContent={getTooltipContent(testItem)} />
-);
+export function ItemPathTooltip({ testItem }) {
+  return <TextTooltip tooltipContent={getTooltipContent(testItem)} />;
+}
 ItemPathTooltip.propTypes = {
   testItem: PropTypes.object,
 };

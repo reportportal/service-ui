@@ -182,7 +182,7 @@ export class DefectTypeTooltip extends Component {
     return (
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
-          <Fragment>
+          <>
             {!singleDefectView &&
               this.hasTotal(defectConfig, filteredBodyData) &&
               this.renderDefectItem(
@@ -192,17 +192,19 @@ export class DefectTypeTooltip extends Component {
                 cx('total-item'),
                 'total',
               )}
-            {/**
-             * Display defect types in a proper order,
-             * the first is the system type (Product Bug, To investigate, etc.)
-             * that is way they are sorted by ID
-             * Don't display defect subtypes with zero defect's amount,
-             * except system types (i.e. with index=0)
-             */
-            filteredBodyData.map(({ locator, color, longName }) => {
-              return this.renderDefectItem(color, longName, [locator], cx('item'), locator);
-            })}
-          </Fragment>
+            {
+              /**
+               * Display defect types in a proper order,
+               * the first is the system type (Product Bug, To investigate, etc.)
+               * that is way they are sorted by ID
+               * Don't display defect subtypes with zero defect's amount,
+               * except system types (i.e. with index=0)
+               */
+              filteredBodyData.map(({ locator, color, longName }) => {
+                return this.renderDefectItem(color, longName, [locator], cx('item'), locator);
+              })
+            }
+          </>
         )}
       </div>
     );

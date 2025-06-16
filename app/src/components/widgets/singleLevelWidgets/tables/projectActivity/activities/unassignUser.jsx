@@ -21,12 +21,14 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const UnassignUser = ({ activity: { user, objectName } }) => (
-  <>
-    <span className={cx('user-name')}>{objectName}</span>
-    <FormattedMessage id="UnassignUser.by" defaultMessage="was unassigned from the project by" />
-    <span className={cx('user-name')}> {user}</span>
-  </>
-);
+export function UnassignUser({ activity: { user, objectName } }) {
+  return (
+    <>
+      <span className={cx('user-name')}>{objectName}</span>
+      <FormattedMessage id="UnassignUser.by" defaultMessage="was unassigned from the project by" />
+      <span className={cx('user-name')}> {user}</span>
+    </>
+  );
+}
 UnassignUser.propTypes = activityItemPropTypes;
 UnassignUser.defaultProps = activityItemDefaultProps;

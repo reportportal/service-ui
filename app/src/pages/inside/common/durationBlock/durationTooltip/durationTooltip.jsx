@@ -31,7 +31,7 @@ import styles from './durationTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const DurationTooltip = ({ status, timing, type }) => {
+export function DurationTooltip({ status, timing, type }) {
   const { formatMessage } = useIntl();
 
   const getOverApproximateTitle = () => {
@@ -119,7 +119,7 @@ export const DurationTooltip = ({ status, timing, type }) => {
       {formatMessage(messages.tooltipDescribe)}
     </div>
   );
-};
+}
 
 DurationTooltip.propTypes = {
   type: PropTypes.string,

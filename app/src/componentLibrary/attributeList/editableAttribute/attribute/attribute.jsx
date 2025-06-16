@@ -23,7 +23,7 @@ import styles from './attribute.scss';
 
 const cx = classNames.bind(styles);
 
-export const Attribute = ({
+export function Attribute({
   attribute,
   onClick,
   onRemove,
@@ -37,7 +37,7 @@ export const Attribute = ({
   handleAttributeKeyValueKeyDown,
   handleCrossIconKeyDown,
   wrapperRefCallback,
-}) => {
+}) {
   const [isFocused, setIsFocused] = useState(false);
   const onClickRemove = (e) => {
     e.stopPropagation();
@@ -106,7 +106,7 @@ export const Attribute = ({
       )}
     </div>
   );
-};
+}
 
 Attribute.propTypes = {
   attribute: PropTypes.object,

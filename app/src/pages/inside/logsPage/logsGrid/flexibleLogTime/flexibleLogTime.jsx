@@ -29,7 +29,7 @@ import styles from './flexibleLogTime.scss';
 
 const cx = classNames.bind(styles);
 
-export const FlexibleLogTime = ({ time }) => {
+export function FlexibleLogTime({ time }) {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const logTimeFormat = useSelector(logTimeFormatSelector);
@@ -60,7 +60,7 @@ export const FlexibleLogTime = ({ time }) => {
       </span>
     </button>
   );
-};
+}
 
 FlexibleLogTime.propTypes = {
   time: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

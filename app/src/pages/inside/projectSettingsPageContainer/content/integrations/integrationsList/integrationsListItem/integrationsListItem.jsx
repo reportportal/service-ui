@@ -32,7 +32,7 @@ export const messages = defineMessages({
   },
 });
 
-export const IntegrationsListItem = (props) => {
+export function IntegrationsListItem(props) {
   const { formatMessage } = useIntl();
   const {
     integrationType: { name, details = { name } },
@@ -69,7 +69,7 @@ export const IntegrationsListItem = (props) => {
       </div>
     </div>
   );
-};
+}
 IntegrationsListItem.propTypes = {
   integrationType: PropTypes.object.isRequired,
   onItemClick: PropTypes.func,

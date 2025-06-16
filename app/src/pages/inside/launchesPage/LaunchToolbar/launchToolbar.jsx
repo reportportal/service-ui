@@ -22,7 +22,7 @@ import styles from './launchToolbar.scss';
 
 const cx = classNames.bind(styles);
 
-export const LaunchToolbar = ({
+export function LaunchToolbar({
   selectedLaunches,
   errors,
   onUnselect,
@@ -41,39 +41,41 @@ export const LaunchToolbar = ({
   onAddNewWidget,
   activeFilterId,
   finishedLaunchesCount,
-}) => (
-  <div className={cx({ 'sticky-toolbar': selectedLaunches.length })}>
-    {!!selectedLaunches.length && (
-      <SelectedItems
-        selectedItems={selectedLaunches}
-        onUnselect={onUnselect}
-        onClose={onUnselectAll}
-        errors={errors}
-      />
-    )}
+}) {
+  return (
+    <div className={cx({ 'sticky-toolbar': selectedLaunches.length })}>
+      {!!selectedLaunches.length && (
+        <SelectedItems
+          selectedItems={selectedLaunches}
+          onUnselect={onUnselect}
+          onClose={onUnselectAll}
+          errors={errors}
+        />
+      )}
 
-    <ActionPanel
-      debugMode={debugMode}
-      showBreadcrumb={selectedLaunches.length === 0}
-      hasErrors={selectedLaunches.some((launch) => !!errors[launch.id])}
-      hasValidItems={selectedLaunches.length > Object.keys(errors).length}
-      onProceedValidItems={onProceedValidItems}
-      onMove={onMove}
-      onEditItem={onEditItem}
-      onEditItems={onEditItems}
-      onMerge={onMerge}
-      onCompare={onCompare}
-      onForceFinish={onForceFinish}
-      selectedLaunches={selectedLaunches}
-      onImportLaunch={onImportLaunch}
-      onRefresh={onRefresh}
-      onDelete={onDelete}
-      activeFilterId={activeFilterId}
-      onAddNewWidget={onAddNewWidget}
-      finishedLaunchesCount={finishedLaunchesCount}
-    />
-  </div>
-);
+      <ActionPanel
+        debugMode={debugMode}
+        showBreadcrumb={selectedLaunches.length === 0}
+        hasErrors={selectedLaunches.some((launch) => !!errors[launch.id])}
+        hasValidItems={selectedLaunches.length > Object.keys(errors).length}
+        onProceedValidItems={onProceedValidItems}
+        onMove={onMove}
+        onEditItem={onEditItem}
+        onEditItems={onEditItems}
+        onMerge={onMerge}
+        onCompare={onCompare}
+        onForceFinish={onForceFinish}
+        selectedLaunches={selectedLaunches}
+        onImportLaunch={onImportLaunch}
+        onRefresh={onRefresh}
+        onDelete={onDelete}
+        activeFilterId={activeFilterId}
+        onAddNewWidget={onAddNewWidget}
+        finishedLaunchesCount={finishedLaunchesCount}
+      />
+    </div>
+  );
+}
 LaunchToolbar.propTypes = {
   selectedLaunches: PropTypes.arrayOf(PropTypes.object),
   onUnselect: PropTypes.func,

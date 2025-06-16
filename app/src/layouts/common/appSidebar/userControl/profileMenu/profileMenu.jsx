@@ -27,7 +27,7 @@ import styles from './profileMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage }) => {
+export function ProfileMenu({ closePopover, closeSidebar, linkToUserProfilePage }) {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
@@ -46,15 +46,15 @@ export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage 
         }}
       >
         {Parser(MyProfileIcon)}
-        <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
+        <FormattedMessage id="UserBlock.profile" defaultMessage="My profile" />
       </NavLink>
       <div className={cx('menu-item')} onClick={onClickLogout}>
         {Parser(LogoutIcon)}
-        <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
+        <FormattedMessage id="UserBlock.logout" defaultMessage="Log out" />
       </div>
     </>
   );
-};
+}
 
 ProfileMenu.propTypes = {
   closePopover: PropTypes.func.isRequired,

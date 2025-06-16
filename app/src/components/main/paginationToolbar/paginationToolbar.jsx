@@ -24,22 +24,26 @@ import styles from './paginationToolbar.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationToolbar = ({
+export function PaginationToolbar({
   activePage,
   pageCount,
   pageSize,
   itemCount,
   onChangePage,
   onChangePageSize,
-}) => (
-  <div className={cx('pagination-toolbar')}>
-    {itemCount && <ItemCounter activePage={activePage} pageSize={pageSize} itemCount={itemCount} />}
-    {pageCount > 1 && (
-      <PageButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
-    )}
-    {pageSize && <PageSizeControl pageSize={pageSize} onChangePageSize={onChangePageSize} />}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('pagination-toolbar')}>
+      {itemCount && (
+        <ItemCounter activePage={activePage} pageSize={pageSize} itemCount={itemCount} />
+      )}
+      {pageCount > 1 && (
+        <PageButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
+      )}
+      {pageSize && <PageSizeControl pageSize={pageSize} onChangePageSize={onChangePageSize} />}
+    </div>
+  );
+}
 PaginationToolbar.propTypes = {
   activePage: PropTypes.number.isRequired,
   itemCount: PropTypes.number.isRequired,

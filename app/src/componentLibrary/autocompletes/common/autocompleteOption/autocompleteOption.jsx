@@ -25,7 +25,7 @@ import styles from './autocompleteOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const AutocompleteOption = ({
+export function AutocompleteOption({
   isActive,
   isSelected,
   children,
@@ -34,7 +34,7 @@ export const AutocompleteOption = ({
   optionVariant,
   variant,
   ...props
-}) => {
+}) {
   return isNew ? (
     <>
       <div className={cx('divider', variant)} />
@@ -51,7 +51,7 @@ export const AutocompleteOption = ({
           {...(!disabled ? props : {})}
           className={cx({ 'button-active': isActive })}
           icon={Parser(PlusIcon)}
-          variant={'text'}
+          variant="text"
         >
           {optionVariant === 'key-variant' ? 'New key' : 'New value'}
         </Button>
@@ -69,7 +69,7 @@ export const AutocompleteOption = ({
       <span className={cx('label', 'tag')}>{children}</span>
     </li>
   );
-};
+}
 AutocompleteOption.propTypes = {
   isActive: PropTypes.bool,
   isSelected: PropTypes.bool,

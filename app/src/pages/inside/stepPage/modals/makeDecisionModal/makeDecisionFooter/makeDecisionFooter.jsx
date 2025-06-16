@@ -26,14 +26,14 @@ import styles from './makeDecisionFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const MakeDecisionFooter = ({
+export function MakeDecisionFooter({
   buttons,
   modalState,
   isBulkOperation,
   setModalState,
   modalHasChanges,
   eventsInfo,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const [expanded, setExpanded] = useState(false);
   const onToggle = () => {
@@ -71,7 +71,7 @@ export const MakeDecisionFooter = ({
       />
     </div>
   );
-};
+}
 MakeDecisionFooter.propTypes = {
   buttons: PropTypes.object,
   modalState: PropTypes.object,

@@ -51,7 +51,7 @@ import styles from './integrationInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationInfo = (props) => {
+export function IntegrationInfo(props) {
   const [integrationInfo, setIntegrationInfo] = useState({});
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
@@ -69,14 +69,14 @@ export const IntegrationInfo = (props) => {
     integrationId,
   } = props;
 
-  const availableGlobalIntegrations = useMemo(() => globalIntegrations[pluginName] || [], [
-    globalIntegrations,
-    pluginName,
-  ]);
-  const availableProjectIntegrations = useMemo(() => projectIntegrations[pluginName] || [], [
-    projectIntegrations,
-    pluginName,
-  ]);
+  const availableGlobalIntegrations = useMemo(
+    () => globalIntegrations[pluginName] || [],
+    [globalIntegrations, pluginName],
+  );
+  const availableProjectIntegrations = useMemo(
+    () => projectIntegrations[pluginName] || [],
+    [projectIntegrations, pluginName],
+  );
   const isAtLeastOneIntegrationAvailable =
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
@@ -322,7 +322,7 @@ export const IntegrationInfo = (props) => {
       )}
     </>
   );
-};
+}
 
 IntegrationInfo.propTypes = {
   plugin: PropTypes.shape({

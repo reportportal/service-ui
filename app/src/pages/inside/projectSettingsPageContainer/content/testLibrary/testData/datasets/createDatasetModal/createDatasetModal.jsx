@@ -34,7 +34,7 @@ const messages = defineMessages({
 
 export const CREATE_DATASET_MODAL_KEY = 'createDatasetModal';
 
-export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
+export function CreateDataset({ data: { onSubmit }, handleSubmit }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ export const CreateDataset = ({ data: { onSubmit }, handleSubmit }) => {
       </form>
     </Modal>
   );
-};
+}
 
 CreateDataset.propTypes = {
   data: PropTypes.shape({

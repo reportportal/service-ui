@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-export const HeaderControls = () => {
+export function HeaderControls() {
   const { formatMessage } = useIntl();
 
   return (
@@ -56,4 +56,4 @@ export const HeaderControls = () => {
       </Button>
     </div>
   );
-};
+}

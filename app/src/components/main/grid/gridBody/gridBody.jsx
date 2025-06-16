@@ -21,7 +21,7 @@ import { GridRow } from './gridRow';
 import { GroupedGridBody } from './groupedGridBody';
 import { NestedGridBody } from './nestedGridBody';
 
-export const GridBody = ({
+export function GridBody({
   columns,
   data,
   groupFunction,
@@ -31,7 +31,7 @@ export const GridBody = ({
   nestedStepHeader,
   nestedView,
   ...rest
-}) => {
+}) {
   if (nestedView) {
     return (
       <NestedGridBody columns={columns} data={data} nestedStepHeader={nestedStepHeader} {...rest} />
@@ -59,7 +59,7 @@ export const GridBody = ({
       {...rest}
     />
   ));
-};
+}
 
 GridBody.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),

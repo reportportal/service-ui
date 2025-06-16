@@ -21,27 +21,29 @@ import styles from './itemContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemContent = ({ data, lineHeightVariant, elementsDirection }) => (
-  <div
-    className={cx('item-content', `direction-${elementsDirection}`, {
-      [`line-height-${lineHeightVariant}`]: lineHeightVariant,
-    })}
-  >
-    <span className={cx('data-name', `direction-${elementsDirection}`)}>{data.key}</span>
-    {Array.isArray(data.value) ? (
-      <div className={cx('data-value', 'multiple-data', `direction-${elementsDirection}`)}>
-        {data.value.map((valueItem, valueIndex) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <span key={valueIndex} className={cx('data-value-item')}>
-            {valueItem}
-          </span>
-        ))}
-      </div>
-    ) : (
-      <span className={cx('data-value', `direction-${elementsDirection}`)}>{data.value}</span>
-    )}
-  </div>
-);
+export function ItemContent({ data, lineHeightVariant, elementsDirection }) {
+  return (
+    <div
+      className={cx('item-content', `direction-${elementsDirection}`, {
+        [`line-height-${lineHeightVariant}`]: lineHeightVariant,
+      })}
+    >
+      <span className={cx('data-name', `direction-${elementsDirection}`)}>{data.key}</span>
+      {Array.isArray(data.value) ? (
+        <div className={cx('data-value', 'multiple-data', `direction-${elementsDirection}`)}>
+          {data.value.map((valueItem, valueIndex) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <span key={valueIndex} className={cx('data-value-item')}>
+              {valueItem}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <span className={cx('data-value', `direction-${elementsDirection}`)}>{data.value}</span>
+      )}
+    </div>
+  );
+}
 ItemContent.propTypes = {
   data: PropTypes.shape({
     key: PropTypes.any,

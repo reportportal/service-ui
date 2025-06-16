@@ -25,18 +25,20 @@ import styles from './inputControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputControl = ({ fieldLabel, inputWidth, tip, inputBadge, ...rest }) => (
-  <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH} tip={tip}>
-    <div style={{ width: inputWidth || 'unset' }}>
-      <FieldErrorHint {...rest}>
-        <Fragment>
-          <Input {...rest} />
-          {inputBadge && <span className={cx('input-badge')}>{inputBadge}</span>}
-        </Fragment>
-      </FieldErrorHint>
-    </div>
-  </ModalField>
-);
+export function InputControl({ fieldLabel, inputWidth, tip, inputBadge, ...rest }) {
+  return (
+    <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH} tip={tip}>
+      <div style={{ width: inputWidth || 'unset' }}>
+        <FieldErrorHint {...rest}>
+          <>
+            <Input {...rest} />
+            {inputBadge && <span className={cx('input-badge')}>{inputBadge}</span>}
+          </>
+        </FieldErrorHint>
+      </div>
+    </ModalField>
+  );
+}
 InputControl.propTypes = {
   fieldLabel: PropTypes.string,
   tip: PropTypes.string,

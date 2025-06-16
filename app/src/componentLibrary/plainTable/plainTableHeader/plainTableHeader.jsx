@@ -22,24 +22,26 @@ import { TextCell } from '../textCell';
 
 const cx = classNames.bind(styles);
 
-export const PlainTableHeader = ({ columns, hasActions }) => (
-  <div className={cx('header', { 'header-additional-offset': hasActions })}>
-    {columns.map(({ id, title: { component = TextCell, align, full, ...rest } }) => {
-      const HeaderComponent = component;
+export function PlainTableHeader({ columns, hasActions }) {
+  return (
+    <div className={cx('header', { 'header-additional-offset': hasActions })}>
+      {columns.map(({ id, title: { component = TextCell, align, full, ...rest } }) => {
+        const HeaderComponent = component;
 
-      return (
-        <HeaderComponent
-          className={cx('text', {
-            [`align-${align}`]: align,
-          })}
-          value={full}
-          key={id}
-          {...rest}
-        />
-      );
-    })}
-  </div>
-);
+        return (
+          <HeaderComponent
+            className={cx('text', {
+              [`align-${align}`]: align,
+            })}
+            value={full}
+            key={id}
+            {...rest}
+          />
+        );
+      })}
+    </div>
+  );
+}
 PlainTableHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)).isRequired,
   hasActions: PropTypes.bool,

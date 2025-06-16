@@ -22,22 +22,26 @@ import styles from './matrixFactory.scss';
 
 const cx = classNames.bind(styles);
 
-const renderForBool = (id) => (failed, idx) => (
-  <div key={`${id}-square-${idx}`} className={cx('square', { 'most-failed': failed })} />
-);
+const renderForBool = (id) =>
+  function (failed, idx) {
+    return <div key={`${id}-square-${idx}`} className={cx('square', { 'most-failed': failed })} />;
+  };
 
-const renderForString = (id) => (status, idx) => (
-  <div key={`${id}-square-${idx}`} className={cx('square', status.toLowerCase())} />
-);
+const renderForString = (id) =>
+  function (status, idx) {
+    return <div key={`${id}-square-${idx}`} className={cx('square', status.toLowerCase())} />;
+  };
 
 export function matrixFactory(renderBool) {
   const renderFn = renderBool ? renderForBool : renderForString;
 
-  const Matrix = ({ tests, id }) => (
-    <div className={cx('matrix')}>
-      <div className={cx('squares-wrapper')}>{tests.map(renderFn(id))}</div>
-    </div>
-  );
+  function Matrix({ tests, id }) {
+    return (
+      <div className={cx('matrix')}>
+        <div className={cx('squares-wrapper')}>{tests.map(renderFn(id))}</div>
+      </div>
+    );
+  }
 
   Matrix.propTypes = {
     tests: arrayOf(oneOfType([bool, PTStatus])).isRequired,

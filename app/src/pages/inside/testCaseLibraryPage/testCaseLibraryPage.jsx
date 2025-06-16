@@ -35,7 +35,7 @@ import styles from './testCaseLibraryPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestCaseLibraryPage = () => {
+export function TestCaseLibraryPage() {
   const [isEmptyState, setEmptyState] = React.useState(true);
   const { formatMessage } = useIntl();
   // Temporary toggle for BA and designer review
@@ -97,4 +97,4 @@ export const TestCaseLibraryPage = () => {
       </ScrollWrapper>
     </SettingsLayout>
   );
-};
+}

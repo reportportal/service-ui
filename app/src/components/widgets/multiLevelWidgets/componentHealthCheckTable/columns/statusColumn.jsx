@@ -23,20 +23,20 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const StatusColumn = ({ className, value }, name, { minPassingRate, formatMessage }) => {
+export function StatusColumn({ className, value }, name, { minPassingRate, formatMessage }) {
   const status = value.passingRate < minPassingRate ? FAILED : PASSED;
 
   return (
     <div className={cx('status-col', className)}>
       {value.passingRate !== undefined && (
-        <Fragment>
+        <>
           <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
           <span className={cx('status-item', status.toLowerCase())}>{status}</span>
-        </Fragment>
+        </>
       )}
     </div>
   );
-};
+}
 
 StatusColumn.propTypes = {
   value: PropTypes.object.isRequired,

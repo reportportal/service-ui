@@ -57,161 +57,183 @@ import styles from './launchSuiteGrid.scss';
 
 const cx = classNames.bind(styles);
 
-const HamburgerColumn = ({ className, ...rest }) => (
-  <td rowSpan={2} className={cx('hamburger-col', className)}>
-    <Hamburger launch={rest.value} customProps={rest.customProps} />
-  </td>
-);
+function HamburgerColumn({ className, ...rest }) {
+  return (
+    <td rowSpan={2} className={cx('hamburger-col', className)}>
+      <Hamburger launch={rest.value} customProps={rest.customProps} />
+    </td>
+  );
+}
 HamburgerColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const NameColumn = ({ className, ...rest }) => (
-  <>
-    <td rowSpan={2} className={cx('name-col', className)}>
-      <ItemInfo {...rest} hideDescription />
-    </td>
-    <div className={cx('name-col-mobile', className)}>
-      <ItemInfo {...rest} />
-    </div>
-  </>
-);
+function NameColumn({ className, ...rest }) {
+  return (
+    <>
+      <td rowSpan={2} className={cx('name-col', className)}>
+        <ItemInfo {...rest} hideDescription />
+      </td>
+      <div className={cx('name-col-mobile', className)}>
+        <ItemInfo {...rest} />
+      </div>
+    </>
+  );
+}
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
 };
 
-const StartTimeColumn = ({ className, ...rest }) => (
-  <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={rest.value.startTime} />
-  </div>
-);
+function StartTimeColumn({ className, ...rest }) {
+  return (
+    <div className={cx('start-time-col', className)}>
+      <AbsRelTime startTime={rest.value.startTime} />
+    </div>
+  );
+}
 StartTimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const TotalColumn = ({ className, ...rest }) => (
-  <div className={cx('total-col', className)}>
-    <ExecutionStatistics
-      itemId={rest.value.id}
-      title={rest.title}
-      value={rest.value.statistics.executions?.total}
-      bold
-      statuses={[
-        PASSED.toUpperCase(),
-        FAILED.toUpperCase(),
-        SKIPPED.toUpperCase(),
-        INTERRUPTED.toUpperCase(),
-      ]}
-    />
-  </div>
-);
+function TotalColumn({ className, ...rest }) {
+  return (
+    <div className={cx('total-col', className)}>
+      <ExecutionStatistics
+        itemId={rest.value.id}
+        title={rest.title}
+        value={rest.value.statistics.executions?.total}
+        bold
+        statuses={[
+          PASSED.toUpperCase(),
+          FAILED.toUpperCase(),
+          SKIPPED.toUpperCase(),
+          INTERRUPTED.toUpperCase(),
+        ]}
+      />
+    </div>
+  );
+}
 TotalColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const PassedColumn = ({ className, ...rest }) => (
-  <div className={cx('passed-col', className)}>
-    <ExecutionStatistics
-      itemId={rest.value.id}
-      title={rest.title}
-      value={rest.value.statistics.executions?.passed}
-      statuses={[PASSED.toUpperCase()]}
-    />
-  </div>
-);
+function PassedColumn({ className, ...rest }) {
+  return (
+    <div className={cx('passed-col', className)}>
+      <ExecutionStatistics
+        itemId={rest.value.id}
+        title={rest.title}
+        value={rest.value.statistics.executions?.passed}
+        statuses={[PASSED.toUpperCase()]}
+      />
+    </div>
+  );
+}
 PassedColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const FailedColumn = ({ className, ...rest }) => (
-  <div className={cx('failed-col', className)}>
-    <ExecutionStatistics
-      itemId={rest.value.id}
-      title={rest.title}
-      value={rest.value.statistics.executions?.failed}
-      statuses={[FAILED.toUpperCase(), INTERRUPTED.toUpperCase()]}
-    />
-  </div>
-);
+function FailedColumn({ className, ...rest }) {
+  return (
+    <div className={cx('failed-col', className)}>
+      <ExecutionStatistics
+        itemId={rest.value.id}
+        title={rest.title}
+        value={rest.value.statistics.executions?.failed}
+        statuses={[FAILED.toUpperCase(), INTERRUPTED.toUpperCase()]}
+      />
+    </div>
+  );
+}
 FailedColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const SkippedColumn = ({ className, ...rest }) => (
-  <div className={cx('skipped-col', className)}>
-    <ExecutionStatistics
-      itemId={rest.value.id}
-      title={rest.title}
-      value={rest.value.statistics.executions?.skipped}
-      statuses={[SKIPPED.toUpperCase()]}
-    />
-  </div>
-);
+function SkippedColumn({ className, ...rest }) {
+  return (
+    <div className={cx('skipped-col', className)}>
+      <ExecutionStatistics
+        itemId={rest.value.id}
+        title={rest.title}
+        value={rest.value.statistics.executions?.skipped}
+        statuses={[SKIPPED.toUpperCase()]}
+      />
+    </div>
+  );
+}
 SkippedColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const PbColumn = ({ className, ...rest }) => (
-  <div className={cx('pb-col', className)}>
-    <DefectStatistics
-      type={PRODUCT_BUG}
-      customProps={rest.customProps}
-      data={rest.value.statistics.defects?.product_bug}
-      itemId={rest.value.id}
-      eventInfo={rest.customProps.events.CLICK_DONUT_PB}
-      tooltipEventInfo={rest.customProps.events.getClickTooltipPbEvent()}
-    />
-  </div>
-);
+function PbColumn({ className, ...rest }) {
+  return (
+    <div className={cx('pb-col', className)}>
+      <DefectStatistics
+        type={PRODUCT_BUG}
+        customProps={rest.customProps}
+        data={rest.value.statistics.defects?.product_bug}
+        itemId={rest.value.id}
+        eventInfo={rest.customProps.events.CLICK_DONUT_PB}
+        tooltipEventInfo={rest.customProps.events.getClickTooltipPbEvent()}
+      />
+    </div>
+  );
+}
 PbColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const AbColumn = ({ className, ...rest }) => (
-  <div className={cx('ab-col', className)}>
-    <DefectStatistics
-      type={AUTOMATION_BUG}
-      customProps={rest.customProps}
-      data={rest.value.statistics.defects?.automation_bug}
-      itemId={rest.value.id}
-      eventInfo={rest.customProps.events.CLICK_DONUT_AB}
-      tooltipEventInfo={rest.customProps.events.getClickTooltipAbEvent()}
-    />
-  </div>
-);
+function AbColumn({ className, ...rest }) {
+  return (
+    <div className={cx('ab-col', className)}>
+      <DefectStatistics
+        type={AUTOMATION_BUG}
+        customProps={rest.customProps}
+        data={rest.value.statistics.defects?.automation_bug}
+        itemId={rest.value.id}
+        eventInfo={rest.customProps.events.CLICK_DONUT_AB}
+        tooltipEventInfo={rest.customProps.events.getClickTooltipAbEvent()}
+      />
+    </div>
+  );
+}
 AbColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const SiColumn = ({ className, ...rest }) => (
-  <div className={cx('si-col', className)}>
-    <DefectStatistics
-      type={SYSTEM_ISSUE}
-      customProps={rest.customProps}
-      data={rest.value.statistics.defects?.system_issue}
-      itemId={rest.value.id}
-      eventInfo={rest.customProps.events.CLICK_DONUT_SI}
-      tooltipEventInfo={rest.customProps.events.getClickTooltipSiEvent()}
-    />
-  </div>
-);
+function SiColumn({ className, ...rest }) {
+  return (
+    <div className={cx('si-col', className)}>
+      <DefectStatistics
+        type={SYSTEM_ISSUE}
+        customProps={rest.customProps}
+        data={rest.value.statistics.defects?.system_issue}
+        itemId={rest.value.id}
+        eventInfo={rest.customProps.events.CLICK_DONUT_SI}
+        tooltipEventInfo={rest.customProps.events.getClickTooltipSiEvent()}
+      />
+    </div>
+  );
+}
 SiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const TiColumn = ({ className, ...rest }) => (
-  <div className={cx('ti-col', className)}>
-    <DefectStatistics
-      type={TO_INVESTIGATE}
-      customProps={rest.customProps}
-      data={rest.value.statistics.defects?.to_investigate}
-      itemId={rest.value.id}
-      eventInfo={rest.customProps.events.CLICK_DONUT_TI}
-      tooltipEventInfo={rest.customProps.events.getClickTooltipTiEvent()}
-    />
-  </div>
-);
+function TiColumn({ className, ...rest }) {
+  return (
+    <div className={cx('ti-col', className)}>
+      <DefectStatistics
+        type={TO_INVESTIGATE}
+        customProps={rest.customProps}
+        data={rest.value.statistics.defects?.to_investigate}
+        itemId={rest.value.id}
+        eventInfo={rest.customProps.events.CLICK_DONUT_TI}
+        tooltipEventInfo={rest.customProps.events.getClickTooltipTiEvent()}
+      />
+    </div>
+  );
+}
 TiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };

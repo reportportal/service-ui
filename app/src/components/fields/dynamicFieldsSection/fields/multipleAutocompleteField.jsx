@@ -20,13 +20,13 @@ import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncM
 import { URLS } from 'common/urls';
 import { DynamicField } from '../dynamicField';
 
-export const MultipleAutocompleteField = ({
+export function MultipleAutocompleteField({
   field,
   darkView,
   integrationInfo,
   createWithoutConfirmation,
   ...rest
-}) => {
+}) {
   const getUri = () =>
     URLS.projectIntegrationByIdCommand(
       integrationInfo.projectKey,
@@ -39,9 +39,8 @@ export const MultipleAutocompleteField = ({
   const parseValueToString = (option) => {
     if (option) {
       return option.name ? option.name : option;
-    } else {
-      return '';
     }
+    return '';
   };
 
   const customizeNewSelectedValue = (value) =>
@@ -59,7 +58,7 @@ export const MultipleAutocompleteField = ({
       />
     </DynamicField>
   );
-};
+}
 MultipleAutocompleteField.propTypes = {
   field: PropTypes.object.isRequired,
   defaultOptionValueKey: PropTypes.string.isRequired,

@@ -43,14 +43,14 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
-export const ProjectsPageHeader = ({
+export function ProjectsPageHeader({
   hasPermission,
   onCreateProject,
   searchValue,
   setSearchValue,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
@@ -119,7 +119,7 @@ export const ProjectsPageHeader = ({
             </div>
           )}
           {isNotEmpty && hasPermission && (
-            <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateProject}>
+            <Button variant="ghost" icon={<PlusIcon />} onClick={onCreateProject}>
               {formatMessage(messages.createProject)}
             </Button>
           )}
@@ -127,7 +127,7 @@ export const ProjectsPageHeader = ({
       </div>
     </div>
   );
-};
+}
 
 ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,

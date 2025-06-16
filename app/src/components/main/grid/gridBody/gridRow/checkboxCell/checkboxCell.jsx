@@ -21,16 +21,18 @@ import styles from './checkboxCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const CheckboxCell = ({
+export function CheckboxCell({
   className,
   value,
   customProps: { selected, onChange, disabled },
   rowSpan,
-}) => (
-  <td rowSpan={rowSpan} className={cx('checkbox-cell', className)}>
-    <InputCheckbox value={selected} onChange={() => onChange(value)} disabled={disabled} />
-  </td>
-);
+}) {
+  return (
+    <td rowSpan={rowSpan} className={cx('checkbox-cell', className)}>
+      <InputCheckbox value={selected} onChange={() => onChange(value)} disabled={disabled} />
+    </td>
+  );
+}
 CheckboxCell.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object.isRequired,

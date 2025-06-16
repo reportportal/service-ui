@@ -46,7 +46,7 @@ const messages = defineMessages({
   },
 });
 
-const UnmarkAsImportantModal = ({ data }) => {
+function UnmarkAsImportantModal({ data }) {
   const { formatMessage } = useIntl();
 
   const { activeProject, launch, onSuccess } = data;
@@ -86,7 +86,7 @@ const UnmarkAsImportantModal = ({ data }) => {
       </div>
     </ModalLayout>
   );
-};
+}
 UnmarkAsImportantModal.propTypes = {
   data: PropTypes.object,
 };

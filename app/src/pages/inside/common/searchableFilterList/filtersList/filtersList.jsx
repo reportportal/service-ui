@@ -25,7 +25,7 @@ import styles from './filtersList.scss';
 
 const cx = classNames.bind(styles);
 
-export const FiltersList = ({
+export function FiltersList({
   search,
   customClass,
   activeId,
@@ -37,31 +37,33 @@ export const FiltersList = ({
   onLazyLoad,
   noItemsMessage,
   noItemsAdditionalMessage,
-}) => (
-  <div className={cx('filter-list', customClass)}>
-    <ScrollWrapper onLazyLoad={onLazyLoad}>
-      {filters.map((item) => (
-        <FiltersItem
-          search={search || ''}
-          filter={item}
-          activeFilterId={activeId}
-          key={item.id}
-          onChange={onChange}
-          editable={editable}
-          onEdit={(event) => onEdit(event, item)}
-        />
-      ))}
-      {loading && <SpinningPreloader />}
-      {!filters.length && !loading && (
-        <NoResultsForFilter
-          filter={search || ''}
-          notFoundMessage={noItemsMessage}
-          notFoundAdditionalMessage={noItemsAdditionalMessage}
-        />
-      )}
-    </ScrollWrapper>
-  </div>
-);
+}) {
+  return (
+    <div className={cx('filter-list', customClass)}>
+      <ScrollWrapper onLazyLoad={onLazyLoad}>
+        {filters.map((item) => (
+          <FiltersItem
+            search={search || ''}
+            filter={item}
+            activeFilterId={activeId}
+            key={item.id}
+            onChange={onChange}
+            editable={editable}
+            onEdit={(event) => onEdit(event, item)}
+          />
+        ))}
+        {loading && <SpinningPreloader />}
+        {!filters.length && !loading && (
+          <NoResultsForFilter
+            filter={search || ''}
+            notFoundMessage={noItemsMessage}
+            notFoundAdditionalMessage={noItemsAdditionalMessage}
+          />
+        )}
+      </ScrollWrapper>
+    </div>
+  );
+}
 
 FiltersList.propTypes = {
   filters: PropTypes.array.isRequired,

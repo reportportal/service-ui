@@ -41,7 +41,7 @@ const messages = defineMessages({
   },
 });
 
-const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
+function EditPatternModal({ data, handleSubmit, initialize, dirty }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -83,7 +83,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
       </FieldElement>
     </Modal>
   );
-};
+}
 EditPatternModal.propTypes = {
   data: PropTypes.shape({
     onSave: PropTypes.func,

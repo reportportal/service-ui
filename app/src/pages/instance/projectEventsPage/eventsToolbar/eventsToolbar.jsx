@@ -32,7 +32,7 @@ const messages = defineMessages({
 
 const cx = classNames.bind(styles);
 
-export const EventsToolbar = () => {
+export function EventsToolbar() {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('events-toolbar')}>
@@ -51,4 +51,4 @@ export const EventsToolbar = () => {
       />
     </div>
   );
-};
+}

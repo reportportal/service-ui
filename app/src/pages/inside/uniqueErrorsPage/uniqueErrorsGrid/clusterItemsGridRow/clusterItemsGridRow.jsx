@@ -53,22 +53,24 @@ const messages = defineMessages({
   },
 });
 
-const ClusterColumn = ({ cluster }) => (
-  <StackTraceMessageBlock
-    level={'error'}
-    maxHeight={75}
-    customProps={{
-      rowWrapper: cx('cluster-row-wrapper'),
-      row: cx('cluster-row'),
-      accordionBlock: cx('cluster-accordion-block'),
-    }}
-    eventsInfo={{
-      onOpenStackTraceEvent: () => UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPANDED_ERROR_ARROW,
-    }}
-  >
-    <div>{cluster.message}</div>
-  </StackTraceMessageBlock>
-);
+function ClusterColumn({ cluster }) {
+  return (
+    <StackTraceMessageBlock
+      level="error"
+      maxHeight={75}
+      customProps={{
+        rowWrapper: cx('cluster-row-wrapper'),
+        row: cx('cluster-row'),
+        accordionBlock: cx('cluster-accordion-block'),
+      }}
+      eventsInfo={{
+        onOpenStackTraceEvent: () => UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPANDED_ERROR_ARROW,
+      }}
+    >
+      <div>{cluster.message}</div>
+    </StackTraceMessageBlock>
+  );
+}
 ClusterColumn.propTypes = {
   cluster: PropTypes.object,
 };
@@ -76,7 +78,7 @@ ClusterColumn.defaultProps = {
   cluster: {},
 };
 
-export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) => {
+export function ClusterItemsGridRow({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) {
   const { id, matchedTests } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -192,7 +194,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
       )}
     </>
   );
-};
+}
 ClusterItemsGridRow.propTypes = {
   data: PropTypes.object,
   onEditItem: PropTypes.func,

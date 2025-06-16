@@ -24,8 +24,8 @@ import styles from './plainTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const PlainTable = ({ columns, data, actions, isLoading }) =>
-  isLoading ? (
+export function PlainTable({ columns, data, actions, isLoading }) {
+  return isLoading ? (
     <BubblesLoader />
   ) : (
     <div className={cx('table-container')}>
@@ -33,6 +33,7 @@ export const PlainTable = ({ columns, data, actions, isLoading }) =>
       <PlainTableBody data={data} columns={columns} actions={actions} />
     </div>
   );
+}
 PlainTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,

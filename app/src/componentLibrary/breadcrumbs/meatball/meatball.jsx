@@ -24,16 +24,21 @@ import styles from './meatball.scss';
 
 const cx = classNames.bind(styles);
 
-const MeatballPopoverContent = ({ descriptors }) => (
-  <div className={cx('meatball-popover-content')}>
-    {descriptors.map((descriptor, index) => (
-      <div className={cx('meatball-popover-content-row')} style={{ paddingLeft: (index - 1) * 18 }}>
-        {index !== 0 && <div className={cx('next-level-icon')} />}
-        <Breadcrumb key={descriptor.id} maxBreadcrumbWidth={132} descriptor={descriptor} />
-      </div>
-    ))}
-  </div>
-);
+function MeatballPopoverContent({ descriptors }) {
+  return (
+    <div className={cx('meatball-popover-content')}>
+      {descriptors.map((descriptor, index) => (
+        <div
+          className={cx('meatball-popover-content-row')}
+          style={{ paddingLeft: (index - 1) * 18 }}
+        >
+          {index !== 0 && <div className={cx('next-level-icon')} />}
+          <Breadcrumb key={descriptor.id} maxBreadcrumbWidth={132} descriptor={descriptor} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 MeatballPopoverContent.propTypes = {
   descriptors: PropTypes.arrayOf(

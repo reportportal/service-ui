@@ -21,9 +21,9 @@ import styles from './tabDescription.scss';
 
 const cx = className.bind(styles);
 
-export const TabDescription = ({ children }) => (
-  <span className={cx('tab-description')}>{children}</span>
-);
+export function TabDescription({ children }) {
+  return <span className={cx('tab-description')}>{children}</span>;
+}
 TabDescription.propTypes = {
   children: PropTypes.node.isRequired,
 };

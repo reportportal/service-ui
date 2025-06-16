@@ -35,12 +35,12 @@ const cx = classNames.bind(styles);
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
 
-export const DeleteProjectModal = ({
+export function DeleteProjectModal({
   data: { onSave, projectDetails },
   handleSubmit,
   anyTouched,
   invalid,
-}) => {
+}) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -52,7 +52,7 @@ export const DeleteProjectModal = ({
 
   return (
     <Modal
-      title={'Delete Project'}
+      title="Delete Project"
       okButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: () => {
@@ -83,7 +83,7 @@ export const DeleteProjectModal = ({
       </FieldProvider>
     </Modal>
   );
-};
+}
 
 DeleteProjectModal.propTypes = {
   data: PropTypes.object,

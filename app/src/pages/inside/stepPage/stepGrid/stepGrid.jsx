@@ -47,11 +47,13 @@ import styles from './stepGrid.scss';
 
 const cx = classNames.bind(styles);
 
-const MethodTypeColumn = ({ className, value, customProps: { formatMessage } }) => (
-  <div className={cx('method-type-col', className)}>
-    {formatMethodType(formatMessage, value.type)}
-  </div>
-);
+function MethodTypeColumn({ className, value, customProps: { formatMessage } }) {
+  return (
+    <div className={cx('method-type-col', className)}>
+      {formatMethodType(formatMessage, value.type)}
+    </div>
+  );
+}
 MethodTypeColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
@@ -64,18 +66,20 @@ MethodTypeColumn.defaultProps = {
   value: {},
 };
 
-const NameColumn = ({ className, customProps, ...rest }) => (
-  <div className={cx('name-col', className, customProps.className)}>
-    <ItemInfoWithRetries
-      {...rest}
-      hideEdit={customProps?.hideEdit}
-      customProps={{
-        ...customProps,
-        ownLinkParams: { ...customProps.ownLinkParams, testItem: rest.value },
-      }}
-    />
-  </div>
-);
+function NameColumn({ className, customProps, ...rest }) {
+  return (
+    <div className={cx('name-col', className, customProps.className)}>
+      <ItemInfoWithRetries
+        {...rest}
+        hideEdit={customProps?.hideEdit}
+        customProps={{
+          ...customProps,
+          ownLinkParams: { ...customProps.ownLinkParams, testItem: rest.value },
+        }}
+      />
+    </div>
+  );
+}
 NameColumn.propTypes = {
   className: PropTypes.string,
   customProps: PropTypes.object,
@@ -85,11 +89,11 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({
+function StatusColumn({
   className,
   value,
   customProps: { viewOnly, onChange, fetchFunc, readOnly },
-}) => {
+}) {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -108,7 +112,7 @@ const StatusColumn = ({
       )}
     </div>
   );
-};
+}
 StatusColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
@@ -126,11 +130,13 @@ StatusColumn.defaultProps = {
   viewOnly: false,
 };
 
-const StartTimeColumn = ({ className, value }) => (
-  <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={value.startTime} />
-  </div>
-);
+function StartTimeColumn({ className, value }) {
+  return (
+    <div className={cx('start-time-col', className)}>
+      <AbsRelTime startTime={value.startTime} />
+    </div>
+  );
+}
 StartTimeColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
@@ -140,25 +146,27 @@ StartTimeColumn.defaultProps = {
   value: {},
 };
 
-const DefectTypeColumn = ({
+function DefectTypeColumn({
   className,
   value,
   customProps: { onEdit, onUnlinkSingleTicket, events, disabled, hideEdit },
-}) => (
-  <div className={cx('defect-type-col', className)}>
-    {value.issue?.issueType && (
-      <DefectType
-        issue={value.issue}
-        patternTemplates={value.patternTemplates}
-        hideEdit={hideEdit}
-        onEdit={() => onEdit(value)}
-        onRemove={onUnlinkSingleTicket(value)}
-        events={events}
-        disabled={disabled}
-      />
-    )}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('defect-type-col', className)}>
+      {value.issue?.issueType && (
+        <DefectType
+          issue={value.issue}
+          patternTemplates={value.patternTemplates}
+          hideEdit={hideEdit}
+          onEdit={() => onEdit(value)}
+          onRemove={onUnlinkSingleTicket(value)}
+          events={events}
+          disabled={disabled}
+        />
+      )}
+    </div>
+  );
+}
 DefectTypeColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
@@ -175,11 +183,13 @@ DefectTypeColumn.defaultProps = {
   value: {},
 };
 
-const PredefinedFilterSwitcherCell = ({ className }) => (
-  <div className={cx('filter-switcher-col', className)}>
-    <PredefinedFilterSwitcher />
-  </div>
-);
+function PredefinedFilterSwitcherCell({ className }) {
+  return (
+    <div className={cx('filter-switcher-col', className)}>
+      <PredefinedFilterSwitcher />
+    </div>
+  );
+}
 PredefinedFilterSwitcherCell.propTypes = {
   className: PropTypes.string,
 };
@@ -187,7 +197,7 @@ PredefinedFilterSwitcherCell.defaultProps = {
   className: null,
 };
 
-export const StepGrid = ({
+export function StepGrid({
   data,
   selectedItems,
   onItemSelect,
@@ -208,7 +218,7 @@ export const StepGrid = ({
   modifyColumnsFunc,
   isTestSearchView,
   errorMessage,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
@@ -374,7 +384,7 @@ export const StepGrid = ({
       )}
     </>
   );
-};
+}
 
 StepGrid.propTypes = {
   data: PropTypes.array,

@@ -35,18 +35,20 @@ import styles from './commentSection.scss';
 
 const cx = classNames.bind(styles);
 
-const Comment = ({ comment }) => (
-  <div className={cx('comment')}>
-    <ScrollWrapper autoHeight autoHeightMax={145}>
-      {comment}
-    </ScrollWrapper>
-  </div>
-);
+function Comment({ comment }) {
+  return (
+    <div className={cx('comment')}>
+      <ScrollWrapper autoHeight autoHeightMax={145}>
+        {comment}
+      </ScrollWrapper>
+    </div>
+  );
+}
 Comment.propTypes = {
   comment: PropTypes.string.isRequired,
 };
 
-const BulkComment = ({ modalState, setModalState, eventsInfo }) => {
+function BulkComment({ modalState, setModalState, eventsInfo }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [expanded, setExpanded] = useState(false);
@@ -116,7 +118,7 @@ const BulkComment = ({ modalState, setModalState, eventsInfo }) => {
       {bulkComment && <Comment comment={bulkComment} />}
     </>
   );
-};
+}
 BulkComment.propTypes = {
   modalState: PropTypes.object,
   setModalState: PropTypes.func,
@@ -128,7 +130,7 @@ BulkComment.defaultProps = {
   eventsInfo: {},
 };
 
-export const CommentSection = ({ modalState, setModalState, isBulkOperation, eventsInfo }) => {
+export function CommentSection({ modalState, setModalState, isBulkOperation, eventsInfo }) {
   const { formatMessage } = useIntl();
 
   const { decisionType } = modalState;
@@ -168,7 +170,7 @@ export const CommentSection = ({ modalState, setModalState, isBulkOperation, eve
       )}
     </>
   );
-};
+}
 CommentSection.propTypes = {
   modalState: PropTypes.object,
   isBulkOperation: PropTypes.bool,

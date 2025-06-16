@@ -41,7 +41,7 @@ import {
   NUMBER_OF_LOG_LINES,
 } from '../constants';
 
-const AutoAnalysis = ({
+function AutoAnalysis({
   analyzerConfig,
   onFormSubmit,
   initialize,
@@ -49,7 +49,7 @@ const AutoAnalysis = ({
   hasPermission,
   analyzerUnavailableTitle,
   isAnalyzerServiceAvailable,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
   const { trackEvent } = useTracking();
@@ -204,7 +204,7 @@ const AutoAnalysis = ({
       </form>
     </Layout>
   );
-};
+}
 AutoAnalysis.propTypes = {
   analyzerConfig: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,

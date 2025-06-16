@@ -33,7 +33,7 @@ import styles from './FAQContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
+export function FAQContent({ onOpen, closeSidebar, closePopover }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
@@ -141,7 +141,7 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
       </button>
     </>
   );
-};
+}
 
 FAQContent.propTypes = {
   onOpen: PropTypes.func.isRequired,

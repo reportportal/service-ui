@@ -21,12 +21,14 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const ChangeRole = ({ activity: { user, objectName } }) => (
-  <>
-    <span className={cx('user-name')}>{objectName}</span>
-    <FormattedMessage id="ChangeRole" defaultMessage="role was changed on the project by" />
-    <span className={cx('user-name')}> {user}.</span>
-  </>
-);
+export function ChangeRole({ activity: { user, objectName } }) {
+  return (
+    <>
+      <span className={cx('user-name')}>{objectName}</span>
+      <FormattedMessage id="ChangeRole" defaultMessage="role was changed on the project by" />
+      <span className={cx('user-name')}> {user}.</span>
+    </>
+  );
+}
 ChangeRole.propTypes = activityItemPropTypes;
 ChangeRole.defaultProps = activityItemDefaultProps;

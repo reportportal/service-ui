@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
 });
 
-export const FilesDropzone = ({
+export function FilesDropzone({
   files,
   addFiles,
   removeFile,
@@ -45,7 +45,7 @@ export const FilesDropzone = ({
   multiple,
   incorrectFileSizeMessage,
   tip,
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   const isDropZoneDisabled = () =>
@@ -127,7 +127,7 @@ export const FilesDropzone = ({
       )}
     </Dropzone>
   );
-};
+}
 FilesDropzone.propTypes = {
   files: PropTypes.arrayOf(fileType).isRequired,
   addFiles: PropTypes.func.isRequired,

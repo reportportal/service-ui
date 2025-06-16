@@ -23,7 +23,7 @@ import styles from './membersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersListTable = ({
+export function MembersListTable({
   data,
   primaryColumn,
   fixedColumns,
@@ -37,7 +37,7 @@ export const MembersListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-}) => {
+}) {
   return (
     <PaginationWrapper
       showPagination={showPagination}
@@ -63,7 +63,7 @@ export const MembersListTable = ({
       />
     </PaginationWrapper>
   );
-};
+}
 
 MembersListTable.propTypes = {
   data: PropTypes.array.isRequired,

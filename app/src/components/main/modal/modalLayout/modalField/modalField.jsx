@@ -25,7 +25,7 @@ const cx = classname.bind(styles);
 const TIP_POSITION_BOTTOM = 'bottom';
 const TIP_POSITION_RIGHT = 'right';
 
-export const ModalField = ({
+export function ModalField({
   className,
   label,
   children,
@@ -36,23 +36,25 @@ export const ModalField = ({
   noMinHeight,
   labelTip,
   middleBaseline,
-}) => (
-  <div className={cx('modal-field', className, { 'middle-baseline': middleBaseline })}>
-    {label && (
-      <Label
-        label={label}
-        labelWidth={labelWidth}
-        alignLeft={alignLeft}
-        noMinHeight={noMinHeight}
-        labelTip={labelTip}
-      />
-    )}
-    <div className={cx('modal-field-content')}>
-      {children}
-      {tip && <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>}
+}) {
+  return (
+    <div className={cx('modal-field', className, { 'middle-baseline': middleBaseline })}>
+      {label && (
+        <Label
+          label={label}
+          labelWidth={labelWidth}
+          alignLeft={alignLeft}
+          noMinHeight={noMinHeight}
+          labelTip={labelTip}
+        />
+      )}
+      <div className={cx('modal-field-content')}>
+        {children}
+        {tip && <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 ModalField.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
@@ -78,22 +80,24 @@ ModalField.defaultProps = {
   middleBaseline: false,
 };
 
-const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
-  <div
-    className={cx('modal-field-label', {
-      'no-min-height': label === ' ' || noMinHeight,
-      'align-left': alignLeft,
-    })}
-    style={{ width: labelWidth || 'unset' }}
-  >
-    <span className={cx('asterisk')}>{label}</span>
-    {labelTip && (
-      <div className={cx('modal-field-label-icon')} title={labelTip}>
-        {Parser(InfoIcon)}
-      </div>
-    )}
-  </div>
-);
+function Label({ label, labelWidth, alignLeft, noMinHeight, labelTip }) {
+  return (
+    <div
+      className={cx('modal-field-label', {
+        'no-min-height': label === ' ' || noMinHeight,
+        'align-left': alignLeft,
+      })}
+      style={{ width: labelWidth || 'unset' }}
+    >
+      <span className={cx('asterisk')}>{label}</span>
+      {labelTip && (
+        <div className={cx('modal-field-label-icon')} title={labelTip}>
+          {Parser(InfoIcon)}
+        </div>
+      )}
+    </div>
+  );
+}
 Label.propTypes = {
   label: PropTypes.string,
   labelWidth: PropTypes.number,

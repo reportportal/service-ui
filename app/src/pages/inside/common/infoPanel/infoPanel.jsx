@@ -84,14 +84,12 @@ export class InfoPanel extends Component {
         {isTestItemsList || withoutStatistics ? (
           this.renderInfoLineListView()
         ) : (
-          <Fragment>
-            <InfoLine
-              data={data}
-              events={events}
-              detailedView={isFilterParamsExists}
-              detailedStatistics={filteredItemStatistics}
-            />
-          </Fragment>
+          <InfoLine
+            data={data}
+            events={events}
+            detailedView={isFilterParamsExists}
+            detailedStatistics={filteredItemStatistics}
+          />
         )}
       </div>
     );

@@ -24,7 +24,7 @@ import styles from './ruleList.scss';
 
 const cx = classNames.bind(styles);
 
-const PlainRuleList = ({
+function PlainRuleList({
   items,
   actions,
   onToggle,
@@ -34,10 +34,10 @@ const PlainRuleList = ({
   onRuleNameClick,
   className,
   ruleItemContentProps,
-}) => {
+}) {
   const Content = ruleItemContent;
   return (
-    <Fragment>
+    <>
       {items.map((item) => (
         <RuleItem
           key={item.id}
@@ -51,13 +51,13 @@ const PlainRuleList = ({
           className={className}
         />
       ))}
-    </Fragment>
+    </>
   );
-};
+}
 PlainRuleList.propTypes = ruleListPropTypes;
 PlainRuleList.defaultProps = ruleListDefaultProps;
 
-export const RuleList = ({ isDraggable, onRuleDrop, dataAutomationId, data, ...rest }) => {
+export function RuleList({ isDraggable, onRuleDrop, dataAutomationId, data, ...rest }) {
   return (
     <div className={cx('container')} data-automation-id={dataAutomationId}>
       {isDraggable ? (
@@ -67,7 +67,7 @@ export const RuleList = ({ isDraggable, onRuleDrop, dataAutomationId, data, ...r
       )}
     </div>
   );
-};
+}
 RuleList.propTypes = {
   ...ruleListPropTypes,
   data: PropTypes.array,

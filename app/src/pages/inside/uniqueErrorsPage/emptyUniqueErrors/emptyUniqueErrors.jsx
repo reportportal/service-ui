@@ -37,7 +37,7 @@ import styles from './emptyUniqueErrors.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyUniqueErrors = ({ parentLaunch }) => {
+export function EmptyUniqueErrors({ parentLaunch }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const loading = useSelector(loadingSelector);
@@ -124,7 +124,7 @@ export const EmptyUniqueErrors = ({ parentLaunch }) => {
       </div>
     </div>
   );
-};
+}
 
 EmptyUniqueErrors.propTypes = {
   parentLaunch: PropTypes.object,

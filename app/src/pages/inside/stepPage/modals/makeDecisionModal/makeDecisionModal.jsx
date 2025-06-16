@@ -55,7 +55,7 @@ import {
 } from './constants';
 import { ExecutionSection } from './executionSection';
 
-const MakeDecision = ({ data }) => {
+function MakeDecision({ data }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -497,7 +497,7 @@ const MakeDecision = ({ data }) => {
       />
     </DarkModalLayout>
   );
-};
+}
 MakeDecision.propTypes = {
   data: PropTypes.shape({
     items: PropTypes.array,

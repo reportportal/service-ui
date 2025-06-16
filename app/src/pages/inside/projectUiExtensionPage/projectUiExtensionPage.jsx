@@ -20,7 +20,7 @@ import { uiExtensionProjectPagesSelector } from 'controllers/plugins/uiExtension
 import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
 import { ExtensionLoader } from 'components/extensionLoader';
 
-export const ProjectUiExtensionPage = () => {
+export function ProjectUiExtensionPage() {
   const extension = useActivePluginPageExtension(uiExtensionProjectPagesSelector);
 
   return extension ? (
@@ -28,4 +28,4 @@ export const ProjectUiExtensionPage = () => {
   ) : (
     <BubblesLoader />
   );
-};
+}

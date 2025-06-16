@@ -23,7 +23,7 @@ import styles from './gridHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const GridHeader = ({
+export function GridHeader({
   columns,
   sortingColumn,
   sortingDirection,
@@ -34,32 +34,34 @@ export const GridHeader = ({
   onToggleSelectAll,
   hideHeaderForMobile,
   headerClassName,
-}) => (
-  <div className={cx('grid-header', { 'mobile-hide': hideHeaderForMobile }, headerClassName)}>
-    {columns.map((column, i) => (
-      <HeaderCell
-        key={column.id || i}
-        title={column.title}
-        align={column.align}
-        size={column.size}
-        backgroundColor={column.backgroundColor}
-        border={column.border}
-        sortable={column.sortable}
-        id={column.id}
-        withFilter={column.withFilter}
-        filterEventInfo={column.filterEventInfo}
-        sortingEventInfo={column.sortingEventInfo}
-        sortingDirection={sortingDirection}
-        sortingActive={sortingColumn === column.id}
-        onChangeSorting={onChangeSorting}
-        onFilterClick={onFilterClick}
-        paddingRight25={column.paddingRight25}
-        customProps={column.customProps}
-      />
-    ))}
-    {selectable && <CheckboxHeaderCell value={allSelected} onChange={onToggleSelectAll} />}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('grid-header', { 'mobile-hide': hideHeaderForMobile }, headerClassName)}>
+      {columns.map((column, i) => (
+        <HeaderCell
+          key={column.id || i}
+          title={column.title}
+          align={column.align}
+          size={column.size}
+          backgroundColor={column.backgroundColor}
+          border={column.border}
+          sortable={column.sortable}
+          id={column.id}
+          withFilter={column.withFilter}
+          filterEventInfo={column.filterEventInfo}
+          sortingEventInfo={column.sortingEventInfo}
+          sortingDirection={sortingDirection}
+          sortingActive={sortingColumn === column.id}
+          onChangeSorting={onChangeSorting}
+          onFilterClick={onFilterClick}
+          paddingRight25={column.paddingRight25}
+          customProps={column.customProps}
+        />
+      ))}
+      {selectable && <CheckboxHeaderCell value={allSelected} onChange={onToggleSelectAll} />}
+    </div>
+  );
+}
 GridHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   sortingColumn: PropTypes.string,

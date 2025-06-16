@@ -41,7 +41,7 @@ const handleChangeFocus = (node) => {
   }
 };
 
-export const AttributeList = ({
+export function AttributeList({
   attributes,
   onChange,
   onAddNew,
@@ -56,7 +56,7 @@ export const AttributeList = ({
   attributesListClassname,
   editorDefaultOpen,
   autocompleteProps,
-}) => {
+}) {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
 
@@ -247,7 +247,7 @@ export const AttributeList = ({
   };
 
   return (
-    <div className={cx(attributesListClassname)} data-automation-id={'attributesField'}>
+    <div className={cx(attributesListClassname)} data-automation-id="attributesField">
       {editableAttr && (
         <AttributeEditor
           attribute={editableAttr}
@@ -292,9 +292,8 @@ export const AttributeList = ({
                 removeHandler,
                 attributeKeyValueRef,
               );
-              const handleAttributeWrapperKeyDown = createAttributeWrapperKeyDownHandler(
-                keyAttrValue,
-              );
+              const handleAttributeWrapperKeyDown =
+                createAttributeWrapperKeyDownHandler(keyAttrValue);
 
               return (
                 <EditableAttribute
@@ -325,8 +324,8 @@ export const AttributeList = ({
             className={cx('button-focused')}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
-            variant={'text'}
-            data-automation-id={'addAttributeButton'}
+            variant="text"
+            data-automation-id="addAttributeButton"
           >
             {newAttrMessage || (
               <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
@@ -336,7 +335,7 @@ export const AttributeList = ({
       </div>
     </div>
   );
-};
+}
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
   disabled: PropTypes.bool,

@@ -29,8 +29,10 @@ const messages = defineMessages({
   },
 });
 
-export const ForgotPasswordBlock = () => (
-  <PageBlockContainer header={messages.forgotPass} hint={messages.enterEmail}>
-    <ForgotPasswordForm />
-  </PageBlockContainer>
-);
+export function ForgotPasswordBlock() {
+  return (
+    <PageBlockContainer header={messages.forgotPass} hint={messages.enterEmail}>
+      <ForgotPasswordForm />
+    </PageBlockContainer>
+  );
+}

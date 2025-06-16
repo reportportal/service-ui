@@ -25,25 +25,28 @@ import styles from './externalLink.scss';
 
 const cx = classNames.bind(styles);
 
-export const ExternalLink = ({
+export function ExternalLink({
   href,
   icon = ExternalLinkIcon,
   children,
   dataAutomationId = '',
   className = '',
   onClick = () => {},
-}) => (
-  <a
-    href={href}
-    target="_blank"
-    className={cx('link', className)}
-    data-automation-id={dataAutomationId}
-    onClick={onClick}
-  >
-    <span>{children}</span>
-    <div className={cx('icon')}>{Parser(icon)}</div>
-  </a>
-);
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      className={cx('link', className)}
+      data-automation-id={dataAutomationId}
+      onClick={onClick}
+      rel="noreferrer"
+    >
+      <span>{children}</span>
+      <div className={cx('icon')}>{Parser(icon)}</div>
+    </a>
+  );
+}
 
 ExternalLink.propTypes = {
   href: PropTypes.string.isRequired,

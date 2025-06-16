@@ -21,12 +21,14 @@ import styles from './pageBlockContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const PageBlockContainer = ({ header, hint, hintParams, children }) => (
-  <div className={cx('page-block-container')}>
-    <BlockHeader header={header} hint={hint} hintParams={hintParams} />
-    {children}
-  </div>
-);
+export function PageBlockContainer({ header, hint, hintParams, children }) {
+  return (
+    <div className={cx('page-block-container')}>
+      <BlockHeader header={header} hint={hint} hintParams={hintParams} />
+      {children}
+    </div>
+  );
+}
 PageBlockContainer.propTypes = {
   header: PropTypes.object,
   hint: PropTypes.object,

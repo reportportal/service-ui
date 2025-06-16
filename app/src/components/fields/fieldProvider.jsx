@@ -38,11 +38,13 @@ const InnerComponent = ({
     ...rest,
   });
 
-export const FieldProvider = ({ children, ...rest }) => (
-  <Field {...rest} component={InnerComponent}>
-    {children}
-  </Field>
-);
+export function FieldProvider({ children, ...rest }) {
+  return (
+    <Field {...rest} component={InnerComponent}>
+      {children}
+    </Field>
+  );
+}
 
 FieldProvider.propTypes = {
   children: PropTypes.node,

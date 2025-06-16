@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 });
 
-const ApiKeyGenerated = ({ data }) => {
+function ApiKeyGenerated({ data }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -71,7 +71,7 @@ const ApiKeyGenerated = ({ data }) => {
 
   const copyButton = (
     <CopyToClipboard text={apiKey} onCopy={onCopy}>
-      <BigButton color={'booger'}>{formatMessage(COMMON_LOCALE_KEYS.COPY_TO_CLIPBOARD)}</BigButton>
+      <BigButton color="booger">{formatMessage(COMMON_LOCALE_KEYS.COPY_TO_CLIPBOARD)}</BigButton>
     </CopyToClipboard>
   );
 
@@ -93,7 +93,7 @@ const ApiKeyGenerated = ({ data }) => {
       </div>
     </ModalLayout>
   );
-};
+}
 ApiKeyGenerated.propTypes = {
   data: PropTypes.shape({
     apiKey: PropTypes.string.isRequired,

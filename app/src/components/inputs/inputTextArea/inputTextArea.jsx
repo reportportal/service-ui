@@ -20,7 +20,7 @@ import styles from './inputTextArea.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputTextArea = ({
+export function InputTextArea({
   value,
   readonly,
   error,
@@ -35,28 +35,30 @@ export const InputTextArea = ({
   onKeyUp,
   touched,
   className,
-}) => (
-  <textarea
-    ref={refFunction}
-    className={cx('input-text-area', className, {
-      'mobile-disabled': mobileDisabled,
-      disabled,
-      error,
-      touched,
-    })}
-    value={value}
-    placeholder={placeholder}
-    maxLength={maxLength}
-    disabled={disabled}
-    readOnly={readonly}
-    onChange={onChange}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    onKeyUp={onKeyUp}
-  >
-    {value}
-  </textarea>
-);
+}) {
+  return (
+    <textarea
+      ref={refFunction}
+      className={cx('input-text-area', className, {
+        'mobile-disabled': mobileDisabled,
+        disabled,
+        error,
+        touched,
+      })}
+      value={value}
+      placeholder={placeholder}
+      maxLength={maxLength}
+      disabled={disabled}
+      readOnly={readonly}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyUp={onKeyUp}
+    >
+      {value}
+    </textarea>
+  );
+}
 
 InputTextArea.propTypes = {
   value: PropTypes.string,

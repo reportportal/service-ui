@@ -25,7 +25,7 @@ import styles from './apiKeys.scss';
 
 const cx = classNames.bind(styles);
 
-const ApiKeysBase = ({ apiKeys }) => {
+function ApiKeysBase({ apiKeys }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const ApiKeysBase = ({ apiKeys }) => {
       {apiKeys.length ? <ApiKeysBlock apiKeys={apiKeys} /> : <NoApiKeysBlock />}
     </div>
   );
-};
+}
 ApiKeysBase.propTypes = {
   apiKeys: PropTypes.arrayOf(
     PropTypes.shape({

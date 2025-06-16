@@ -24,7 +24,7 @@ import styles from './simpleBreadcrumbs.scss';
 
 const cx = classNames.bind(styles);
 
-export const SimpleBreadcrumbs = ({ descriptors, onClickItem }) => {
+export function SimpleBreadcrumbs({ descriptors, onClickItem }) {
   const descriptorsLastIndex = descriptors.length - 1;
 
   return (
@@ -41,7 +41,7 @@ export const SimpleBreadcrumbs = ({ descriptors, onClickItem }) => {
       ))}
     </div>
   );
-};
+}
 
 SimpleBreadcrumbs.propTypes = {
   descriptors: PropTypes.array,

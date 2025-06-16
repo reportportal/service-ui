@@ -21,11 +21,13 @@ import styles from './progressLoader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProgressLoader = ({ progress }) => (
-  <div className={cx('progress-bar')}>
-    <div className={cx('progress-indicator')} style={{ width: `${progress}%` }} />
-  </div>
-);
+export function ProgressLoader({ progress }) {
+  return (
+    <div className={cx('progress-bar')}>
+      <div className={cx('progress-indicator')} style={{ width: `${progress}%` }} />
+    </div>
+  );
+}
 
 ProgressLoader.propTypes = {
   progress: PropTypes.number,

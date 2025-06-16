@@ -24,15 +24,17 @@ import styles from './messageBadge.scss';
 
 const cx = classNames.bind(styles);
 
-const MessageBadgeToolTip = ({ data }) => (
-  <div className={cx('tooltip-content')}>
-    {data.map((item) => (
-      <div className={cx('content-container')} key={item.comment}>
-        <MarkdownViewer value={item.comment} />
-      </div>
-    ))}
-  </div>
-);
+function MessageBadgeToolTip({ data }) {
+  return (
+    <div className={cx('tooltip-content')}>
+      {data.map((item) => (
+        <div className={cx('content-container')} key={item.comment}>
+          <MarkdownViewer value={item.comment} />
+        </div>
+      ))}
+    </div>
+  );
+}
 MessageBadgeToolTip.propTypes = {
   data: PropTypes.array,
 };

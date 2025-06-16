@@ -20,7 +20,7 @@ import { useTracking } from 'react-tracking';
 import { ModalField } from 'components/main/modal';
 import { FIELD_LABEL_WIDTH } from './constants';
 
-export const CheckboxControl = ({ fieldLabel, text, eventInfo, onChange, ...rest }) => {
+export function CheckboxControl({ fieldLabel, text, eventInfo, onChange, ...rest }) {
   const { trackEvent } = useTracking();
   const onChangeCheckbox = (e) => {
     if (eventInfo.onChangeCheckboxEvent) {
@@ -36,7 +36,7 @@ export const CheckboxControl = ({ fieldLabel, text, eventInfo, onChange, ...rest
       </InputCheckbox>
     </ModalField>
   );
-};
+}
 
 CheckboxControl.propTypes = {
   fieldLabel: PropTypes.string,

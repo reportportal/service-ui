@@ -153,9 +153,8 @@ export const isEmailIntegrationAvailableSelector = (state) => {
   return !!availableIntegrations.length;
 };
 
-export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsByGroupTypeSelector(
-  BTS_GROUP_TYPE,
-);
+export const namedAvailableBtsIntegrationsSelector =
+  namedAvailableIntegrationsByGroupTypeSelector(BTS_GROUP_TYPE);
 
 export const availableBtsIntegrationsSelector = (state) => {
   const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);

@@ -52,7 +52,7 @@ const messages = defineMessages({
   },
 });
 
-export const TwoStepsFooter = ({
+export function TwoStepsFooter({
   stepNumber,
   onStepNumberChange,
   onStepChange,
@@ -63,7 +63,7 @@ export const TwoStepsFooter = ({
   forceConfirm,
   closeModal,
   closeHandler,
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -83,11 +83,11 @@ export const TwoStepsFooter = ({
   const getSubmitButtonText = () => {
     if (isFirstStep) {
       return formatMessage(messages.nextStep);
-    } else if (isEdit) {
-      return formatMessage(messages.saveAndClose);
-    } else {
-      return formatMessage(messages.create);
     }
+    if (isEdit) {
+      return formatMessage(messages.saveAndClose);
+    }
+    return formatMessage(messages.create);
   };
 
   const saveAndClose = () => {
@@ -100,18 +100,14 @@ export const TwoStepsFooter = ({
         <>
           <Button
             className={cx('discard-button')}
-            variant={'ghost'}
+            variant="ghost"
             onClick={onDiscard}
             data-automation-id="discardButton"
           >
             {formatMessage(messages.discardChanges)}
           </Button>
           {isFirstStep && (
-            <Button
-              variant={'ghost'}
-              onClick={saveAndClose}
-              data-automation-id="saveAndCloseButton"
-            >
+            <Button variant="ghost" onClick={saveAndClose} data-automation-id="saveAndCloseButton">
               {formatMessage(messages.saveAndClose)}
             </Button>
           )}
@@ -119,7 +115,7 @@ export const TwoStepsFooter = ({
       ) : (
         <Button
           className={cx('cancel-button')}
-          variant={'ghost'}
+          variant="ghost"
           onClick={closeHandler}
           data-automation-id="cancelButton"
         >
@@ -127,7 +123,7 @@ export const TwoStepsFooter = ({
         </Button>
       )}
       {stepNumber === 2 && (
-        <Button variant={'ghost'} onClick={() => onStepNumberChange(1)}>
+        <Button variant="ghost" onClick={() => onStepNumberChange(1)}>
           <i className={cx('left-icon')}>{Parser(RightArrowIcon)}</i>
           {formatMessage(messages.previousStep)}
         </Button>
@@ -138,7 +134,7 @@ export const TwoStepsFooter = ({
       </Button>
     </div>
   );
-};
+}
 TwoStepsFooter.propTypes = {
   stepNumber: PropTypes.number.isRequired,
   onStepNumberChange: PropTypes.func.isRequired,

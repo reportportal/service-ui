@@ -9,7 +9,7 @@ import styles from './emptyMembersPageState.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyMembersPageState = ({ isLoading, hasPermission, showInviteUserModal }) => {
+export function EmptyMembersPageState({ isLoading, hasPermission, showInviteUserModal }) {
   const { formatMessage } = useIntl();
   return isLoading ? (
     <div className={cx('loader')}>
@@ -25,7 +25,7 @@ export const EmptyMembersPageState = ({ isLoading, hasPermission, showInviteUser
       onClick={showInviteUserModal}
     />
   );
-};
+}
 
 EmptyMembersPageState.propTypes = {
   isLoading: PropTypes.bool,

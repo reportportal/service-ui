@@ -358,9 +358,7 @@ export class ComponentHealthCheckTable extends Component {
           />
         </div>
         {data && state === STATE_READY && !isLoading ? (
-          <Fragment>
-            <Grid columns={columns} data={data} />
-          </Fragment>
+          <Grid columns={columns} data={data} />
         ) : (
           <div className={cx('no-data-wrapper')}>
             <NoDataAvailableMaterializedView state={state} isLoading={isLoading} />

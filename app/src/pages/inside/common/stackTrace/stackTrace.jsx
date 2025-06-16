@@ -198,18 +198,11 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const {
-      items,
-      loadMore,
-      loading,
-      intl,
-      hideAdditionalCells,
-      designMode,
-      extensions,
-    } = this.props;
+    const { items, loadMore, loading, intl, hideAdditionalCells, designMode, extensions } =
+      this.props;
 
     return (
-      <React.Fragment>
+      <>
         {hideAdditionalCells ? (
           <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
             {items.map((item) => (
@@ -256,7 +249,7 @@ export class StackTrace extends Component {
             )}
           </div>
         )}
-      </React.Fragment>
+      </>
     );
   };
 

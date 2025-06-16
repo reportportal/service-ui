@@ -51,12 +51,14 @@ const messages = defineMessages({
   },
 });
 
-const Counter = ({ counter }) => <span className={cx('error-counter')}>{counter}</span>;
+function Counter({ counter }) {
+  return <span className={cx('error-counter')}>{counter}</span>;
+}
 Counter.propTypes = {
   counter: PropTypes.number.isRequired,
 };
 
-export const ErrorLogsControl = ({ errorLogs, highlightErrorLog, errorLogIndex }) => {
+export function ErrorLogsControl({ errorLogs, highlightErrorLog, errorLogIndex }) {
   const { formatMessage } = useIntl();
   const errorLogsLength = useMemo(() => errorLogs.length, [errorLogs]);
   const currentElementNumber = useMemo(() => errorLogIndex + 1, [errorLogIndex]);
@@ -99,7 +101,7 @@ export const ErrorLogsControl = ({ errorLogs, highlightErrorLog, errorLogIndex }
       </span>
     </div>
   );
-};
+}
 ErrorLogsControl.propTypes = {
   errorLogs: PropTypes.array.isRequired,
   highlightErrorLog: PropTypes.func.isRequired,

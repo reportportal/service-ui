@@ -36,6 +36,7 @@ export class LocalizationSwitcher extends PureComponent {
     lang: PropTypes.string.isRequired,
     setLangAction: PropTypes.func.isRequired,
   };
+
   render() {
     return (
       <ul className={cx('container')}>
@@ -64,19 +65,21 @@ export class LocalizationSwitcher extends PureComponent {
   }
 }
 
-const LocalizationSwitcherItem = ({ lang, currentLang, setLang }) => (
-  <li // eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
-    className={cx({
-      active: lang === currentLang,
-      item: true,
-    })}
-    onClick={() => {
-      setLang(currentLang);
-    }}
-  >
-    {currentLang}
-  </li>
-);
+function LocalizationSwitcherItem({ lang, currentLang, setLang }) {
+  return (
+    <li // eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
+      className={cx({
+        active: lang === currentLang,
+        item: true,
+      })}
+      onClick={() => {
+        setLang(currentLang);
+      }}
+    >
+      {currentLang}
+    </li>
+  );
+}
 LocalizationSwitcherItem.propTypes = {
   lang: PropTypes.string.isRequired,
   currentLang: PropTypes.string.isRequired,

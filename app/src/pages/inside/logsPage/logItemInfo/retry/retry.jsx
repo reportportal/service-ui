@@ -21,12 +21,14 @@ import styles from './retry.scss';
 const cx = classNames.bind(styles);
 const formatStatusClassName = (status = '') => `status-${status.toLowerCase()}`;
 
-export const Retry = ({ retry, selected, index, onClick }) => (
-  <div className={cx('retry', { selected })} onClick={onClick}>
-    <span className={cx('name')}>{index}</span>
-    <div className={cx('status-indicator', formatStatusClassName(retry.status))} />
-  </div>
-);
+export function Retry({ retry, selected, index, onClick }) {
+  return (
+    <div className={cx('retry', { selected })} onClick={onClick}>
+      <span className={cx('name')}>{index}</span>
+      <div className={cx('status-indicator', formatStatusClassName(retry.status))} />
+    </div>
+  );
+}
 
 Retry.propTypes = {
   retry: PropTypes.object.isRequired,

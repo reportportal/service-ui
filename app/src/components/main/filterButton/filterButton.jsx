@@ -23,7 +23,7 @@ import styles from './filterButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterButton = ({
+export function FilterButton({
   definedFilters = {},
   onFilterChange,
   appliedFiltersCount,
@@ -36,7 +36,7 @@ export const FilterButton = ({
   getApplyButtonState,
   searchProp,
   event,
-}) => {
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const FilterButton = ({
       </div>
     </Popover>
   );
-};
+}
 
 FilterButton.propTypes = {
   definedFilters: PropTypes.objectOf(

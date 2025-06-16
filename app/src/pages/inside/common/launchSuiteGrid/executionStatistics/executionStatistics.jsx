@@ -22,7 +22,7 @@ import styles from './executionStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionStatistics = ({
+export function ExecutionStatistics({
   value,
   title,
   bold,
@@ -31,23 +31,25 @@ export const ExecutionStatistics = ({
   listViewLinkParams,
   statuses,
   ownLinkParams,
-}) => (
-  <div className={cx('execution-statistics')}>
-    <span className={cx('title')}>{title.full}</span>
-    {!!Number(value) && (
-      <StatisticsLink
-        itemId={itemId}
-        statuses={statuses}
-        target={target}
-        listViewLinkParams={listViewLinkParams}
-        className={cx('value', { bold })}
-        ownLinkParams={ownLinkParams}
-      >
-        {value}
-      </StatisticsLink>
-    )}
-  </div>
-);
+}) {
+  return (
+    <div className={cx('execution-statistics')}>
+      <span className={cx('title')}>{title.full}</span>
+      {!!Number(value) && (
+        <StatisticsLink
+          itemId={itemId}
+          statuses={statuses}
+          target={target}
+          listViewLinkParams={listViewLinkParams}
+          className={cx('value', { bold })}
+          ownLinkParams={ownLinkParams}
+        >
+          {value}
+        </StatisticsLink>
+      )}
+    </div>
+  );
+}
 
 ExecutionStatistics.propTypes = {
   value: PropTypes.number,

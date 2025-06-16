@@ -58,7 +58,7 @@ import { ProjectSettingsAnalyticsWrapper } from './projectSettingsAnalyticsWrapp
 
 const cx = classNames.bind(styles);
 
-export const ProjectSettingsPageContainer = () => {
+export function ProjectSettingsPageContainer() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
@@ -192,10 +192,9 @@ export const ProjectSettingsPageContainer = () => {
   const navigation = useMemo(() => {
     if (subPage) {
       return null;
-    } else {
-      const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-      return <Navigation items={config} title={title} />;
     }
+    const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
+    return <Navigation items={config} title={title} />;
   }, [config, subPage]);
 
   const content = useMemo(() => {
@@ -225,4 +224,4 @@ export const ProjectSettingsPageContainer = () => {
       </SettingsLayout>
     </ProjectSettingsAnalyticsWrapper>
   );
-};
+}

@@ -22,7 +22,7 @@ import styles from './triangles.scss';
 
 const cx = classNames.bind(styles);
 
-export const Triangles = ({ growthDuration }) => {
+export function Triangles({ growthDuration }) {
   const count = calculateTrianglesCount(growthDuration);
   return (
     <div className={cx('triangles')}>
@@ -31,7 +31,7 @@ export const Triangles = ({ growthDuration }) => {
       ))}
     </div>
   );
-};
+}
 Triangles.propTypes = {
   growthDuration: PropTypes.number,
 };

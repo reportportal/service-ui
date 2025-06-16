@@ -22,7 +22,7 @@ import { CURRENT_EXECUTION_ONLY, SHOW_LOGS_BY_DEFAULT } from '../../../constants
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListBody } from './itemsListBody';
 
-export const ItemsList = ({
+export function ItemsList({
   currentTestItem,
   testItems,
   selectedItems,
@@ -30,7 +30,7 @@ export const ItemsList = ({
   loading,
   optionValue,
   eventsInfo,
-}) => {
+}) {
   const [showErrorLogs, setShowErrorLogs] = useState(SHOW_LOGS_BY_DEFAULT);
 
   return loading ? (
@@ -65,7 +65,7 @@ export const ItemsList = ({
       </>
     )
   );
-};
+}
 ItemsList.propTypes = {
   currentTestItem: PropTypes.object,
   testItems: PropTypes.array,

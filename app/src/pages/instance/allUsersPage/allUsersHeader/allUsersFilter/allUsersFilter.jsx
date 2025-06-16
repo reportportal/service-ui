@@ -40,12 +40,12 @@ import styles from './allUsersFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const AllUsersFilter = ({
+export function AllUsersFilter({
   entities,
   onFilterChange,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -209,7 +209,7 @@ export const AllUsersFilter = ({
       event={eventHandler}
     />
   );
-};
+}
 
 AllUsersFilter.propTypes = {
   entities: PropTypes.objectOf(

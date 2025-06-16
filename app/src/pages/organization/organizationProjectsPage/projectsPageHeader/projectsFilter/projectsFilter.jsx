@@ -38,12 +38,12 @@ import { messages } from './messages';
 import styles from './projectsFilter.scss';
 
 const cx = classNames.bind(styles);
-export const ProjectsFilter = ({
+export function ProjectsFilter({
   entities,
   onFilterChange,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -200,7 +200,7 @@ export const ProjectsFilter = ({
       event={eventHandler}
     />
   );
-};
+}
 
 ProjectsFilter.propTypes = {
   entities: PropTypes.objectOf(

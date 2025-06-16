@@ -82,12 +82,14 @@ export class WidgetPreview extends PureComponent {
     );
   };
 
-  render = () => (
-    <div
-      ref={this.widgetContainerRef}
-      className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() })}
-    >
-      {this.getWidgetContent()}
-    </div>
-  );
+  render() {
+    return (
+      <div
+        ref={this.widgetContainerRef}
+        className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() })}
+      >
+        {this.getWidgetContent()}
+      </div>
+    );
+  }
 }

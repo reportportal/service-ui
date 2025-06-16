@@ -28,7 +28,7 @@ import styles from './darkModalLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const DarkModalLayout = ({
+export function DarkModalLayout({
   headerTitle,
   children,
   modalHasChanges,
@@ -36,7 +36,7 @@ export const DarkModalLayout = ({
   modalNote,
   sideSection,
   footer,
-}) => {
+}) {
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const dispatch = useDispatch();
@@ -101,7 +101,7 @@ export const DarkModalLayout = ({
               {children}
               <div className={cx('note-row')}>
                 {modalNote && clickOutside && modalHasChanges && (
-                  <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
+                  <ModalNote message={modalNote} icon={ErrorInlineIcon} status="error" />
                 )}
               </div>
             </ScrollWrapper>
@@ -111,7 +111,7 @@ export const DarkModalLayout = ({
       </div>
     </div>
   );
-};
+}
 DarkModalLayout.propTypes = {
   headerTitle: PropTypes.string,
   children: PropTypes.node,

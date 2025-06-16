@@ -24,28 +24,32 @@ import { SEPARATOR_ITEM, DANGER_ITEM } from './constants';
 
 const cx = classNames.bind(styles);
 
-const Separator = () => <hr className={cx('separator')} />;
+function Separator() {
+  return <hr className={cx('separator')} />;
+}
 
-const MenuItem = ({ item, toggleMenu }) => (
-  <div
-    className={cx('menu-item', {
-      disabled: item.disabled,
-      danger: item.type === DANGER_ITEM,
-    })}
-    title={item.title || ''}
-    onClick={
-      !item.disabled
-        ? (e) => {
-            e.stopPropagation();
-            item.onClick();
-            toggleMenu();
-          }
-        : null
-    }
-  >
-    <span>{item.label}</span>
-  </div>
-);
+function MenuItem({ item, toggleMenu }) {
+  return (
+    <div
+      className={cx('menu-item', {
+        disabled: item.disabled,
+        danger: item.type === DANGER_ITEM,
+      })}
+      title={item.title || ''}
+      onClick={
+        !item.disabled
+          ? (e) => {
+              e.stopPropagation();
+              item.onClick();
+              toggleMenu();
+            }
+          : null
+      }
+    >
+      <span>{item.label}</span>
+    </div>
+  );
+}
 
 MenuItem.propTypes = {
   item: PropTypes.shape({
@@ -78,6 +82,7 @@ export class DotsMenuButton extends Component {
     tooltip: PropTypes.string,
     onClick: PropTypes.func,
   };
+
   static defaultProps = {
     items: [],
     disabled: false,

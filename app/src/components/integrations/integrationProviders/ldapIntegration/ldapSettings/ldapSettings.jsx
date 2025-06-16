@@ -20,7 +20,7 @@ import { IntegrationSettings } from 'components/integrations/elements';
 import { showModalAction } from 'controllers/modal';
 import { LdapFormFields } from '../ldapFormFields';
 
-export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => {
+export function LdapSettings({ data, goToPreviousPage, onUpdate, isGlobal }) {
   const dispatch = useDispatch();
 
   const openEditModal = () => {
@@ -52,7 +52,7 @@ export const LdapSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => 
       editAuthConfig={{ onClick: openEditModal }}
     />
   );
-};
+}
 LdapSettings.propTypes = {
   data: PropTypes.object.isRequired,
   goToPreviousPage: PropTypes.func.isRequired,

@@ -27,7 +27,7 @@ import styles from './previewPopover.scss';
 
 const cx = classNames.bind(styles);
 
-const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
+function PreviewPopover({ title, isFaqTouched, onClick }) {
   return (
     <div className={cx('service-wrapper')} onClick={onClick}>
       <button className={cx('service-block', { untouched: !isFaqTouched })}>
@@ -45,7 +45,7 @@ const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
       </button>
     </div>
   );
-};
+}
 
 PreviewPopover.propTypes = {
   isFaqTouched: PropTypes.bool.isRequired,

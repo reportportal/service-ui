@@ -47,7 +47,7 @@ import styles from './integrationSettings.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationSettings = (props) => {
+export function IntegrationSettings(props) {
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
@@ -168,7 +168,7 @@ export const IntegrationSettings = (props) => {
       )}
     </div>
   );
-};
+}
 IntegrationSettings.propTypes = {
   data: PropTypes.object.isRequired,
   formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,

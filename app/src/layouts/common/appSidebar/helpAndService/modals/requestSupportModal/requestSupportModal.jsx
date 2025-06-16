@@ -42,7 +42,7 @@ const cx = classNames.bind(styles);
 
 const REQUEST_FORM_ID = 'requestFormId';
 
-const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
+function RequestSupport({ handleSubmit, initialize, invalid }) {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -187,7 +187,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       </form>
     </Modal>
   );
-};
+}
 RequestSupport.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,

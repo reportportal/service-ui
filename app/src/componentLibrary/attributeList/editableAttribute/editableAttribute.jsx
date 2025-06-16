@@ -17,9 +17,9 @@
 import PropTypes from 'prop-types';
 import { Attribute } from './attribute';
 
-export const EditableAttribute = ({ attribute, onChange, onEdit, onCancelEdit, ...rest }) => (
-  <Attribute {...rest} attribute={attribute} onClick={onEdit} />
-);
+export function EditableAttribute({ attribute, onChange, onEdit, onCancelEdit, ...rest }) {
+  return <Attribute {...rest} attribute={attribute} onClick={onEdit} />;
+}
 EditableAttribute.propTypes = {
   attribute: PropTypes.object,
   attributes: PropTypes.array,

@@ -39,7 +39,7 @@ const attributeValueValidator = composeBoundValidators([
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
 
-export const AttributeEditor = ({
+export function AttributeEditor({
   attributes,
   onConfirm,
   onCancel,
@@ -50,7 +50,7 @@ export const AttributeEditor = ({
   valuePlaceholder,
   editorDefaultOpen,
   autocompleteProps,
-}) => {
+}) {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
   const getValidationErrors = (key, value) => ({
@@ -132,12 +132,8 @@ export const AttributeEditor = ({
   const handleCancel = () => {
     if (isCancelButtonDisabled) {
       return null;
-    } else if (
-      editorDefaultOpen &&
-      attribute.new &&
-      attributes.length === 1 &&
-      !isAttributeEmpty()
-    ) {
+    }
+    if (editorDefaultOpen && attribute.new && attributes.length === 1 && !isAttributeEmpty()) {
       return clearInputValues();
     }
     return onCancel();
@@ -146,15 +142,17 @@ export const AttributeEditor = ({
 
   const isValidForm = isFormValid();
 
-  const handleKeyDown = (handler) => ({ keyCode }) => {
-    if (keyCode === ENTER_KEY_CODE) {
-      handler();
+  const handleKeyDown =
+    (handler) =>
+    ({ keyCode }) => {
+      if (keyCode === ENTER_KEY_CODE) {
+        handler();
 
-      if (keyEditorRef.current) {
-        keyEditorRef.current.focus();
+        if (keyEditorRef.current) {
+          keyEditorRef.current.focus();
+        }
       }
-    }
-  };
+    };
 
   const refFunction = (node) => {
     keyEditorRef.current = node;
@@ -234,7 +232,7 @@ export const AttributeEditor = ({
       </div>
     </div>
   );
-};
+}
 
 AttributeEditor.propTypes = {
   attributes: PropTypes.array,

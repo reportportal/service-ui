@@ -25,7 +25,7 @@ const BORDER = 2;
 const LIGHT_VARIANT = 'light';
 const DARK_VARIANT = 'dark';
 
-export const FieldTextFlex = ({
+export function FieldTextFlex({
   value,
   readonly,
   error,
@@ -41,7 +41,7 @@ export const FieldTextFlex = ({
   label,
   helpText,
   variant,
-}) => {
+}) {
   const resizeHeight = (e) => {
     e.target.style.height = `${HEIGHT}px`;
     e.target.style.height = `${e.target.scrollHeight + BORDER}px`;
@@ -76,7 +76,7 @@ export const FieldTextFlex = ({
       )}
     </>
   );
-};
+}
 
 FieldTextFlex.propTypes = {
   value: PropTypes.string,

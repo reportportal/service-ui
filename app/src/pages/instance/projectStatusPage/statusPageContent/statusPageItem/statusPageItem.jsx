@@ -20,12 +20,14 @@ import styles from './statusPageItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const StatusPageItem = ({ title, children }) => (
-  <div className={cx('status-page-item')}>
-    <h4 className={cx('item-title')}>{title}</h4>
-    {children}
-  </div>
-);
+export function StatusPageItem({ title, children }) {
+  return (
+    <div className={cx('status-page-item')}>
+      <h4 className={cx('item-title')}>{title}</h4>
+      {children}
+    </div>
+  );
+}
 StatusPageItem.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node,

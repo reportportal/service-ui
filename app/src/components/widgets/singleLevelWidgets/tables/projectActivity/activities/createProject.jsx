@@ -21,11 +21,13 @@ import styles from './common.scss';
 
 const cx = classNames.bind(styles);
 
-export const CreateProject = ({ activity }) => (
-  <>
-    <span className={cx('user-name')}>{activity.objectName}</span>
-    <FormattedMessage id="CreateProject" defaultMessage="is created" />
-  </>
-);
+export function CreateProject({ activity }) {
+  return (
+    <>
+      <span className={cx('user-name')}>{activity.objectName}</span>
+      <FormattedMessage id="CreateProject" defaultMessage="is created" />
+    </>
+  );
+}
 CreateProject.propTypes = activityItemPropTypes;
 CreateProject.defaultProps = activityItemDefaultProps;

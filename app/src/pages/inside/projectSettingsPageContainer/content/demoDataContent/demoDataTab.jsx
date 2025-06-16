@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
 });
 
-export const DemoDataTab = () => {
+export function DemoDataTab() {
   const { formatMessage } = useIntl();
 
   return (
@@ -67,4 +67,4 @@ export const DemoDataTab = () => {
       <GenerateDemoDataBlock />
     </Layout>
   );
-};
+}

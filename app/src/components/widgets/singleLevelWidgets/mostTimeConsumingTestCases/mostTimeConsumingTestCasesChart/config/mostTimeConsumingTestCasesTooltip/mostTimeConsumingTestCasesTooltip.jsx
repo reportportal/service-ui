@@ -25,15 +25,17 @@ import styles from './mostTimeConsumingTestCasesTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const MostTimeConsumingTestCasesTooltip = ({ itemName, duration, date }) => (
-  <TooltipContent itemName={itemName}>
-    <div className={cx('time-wrapper')}>
-      <span className={cx('time-icon')}>{Parser(TimeIcon)}</span>
-      <span>{formatDuration(duration)}</span>
-    </div>
-    <div className={cx('date')}>{date}</div>
-  </TooltipContent>
-);
+export function MostTimeConsumingTestCasesTooltip({ itemName, duration, date }) {
+  return (
+    <TooltipContent itemName={itemName}>
+      <div className={cx('time-wrapper')}>
+        <span className={cx('time-icon')}>{Parser(TimeIcon)}</span>
+        <span>{formatDuration(duration)}</span>
+      </div>
+      <div className={cx('date')}>{date}</div>
+    </TooltipContent>
+  );
+}
 MostTimeConsumingTestCasesTooltip.propTypes = {
   itemName: PropTypes.string.isRequired,
   duration: PropTypes.number,

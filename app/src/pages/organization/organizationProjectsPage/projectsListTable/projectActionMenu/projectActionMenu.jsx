@@ -36,15 +36,9 @@ import styles from './projectActionMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectActionMenu = ({ details }) => {
-  const {
-    projectName,
-    projectKey,
-    projectId,
-    projectSlug,
-    projectRole,
-    organizationSlug,
-  } = details;
+export function ProjectActionMenu({ details }) {
+  const { projectName, projectKey, projectId, projectSlug, projectRole, organizationSlug } =
+    details;
   const roles = useSelector(userRolesSelector);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -89,7 +83,7 @@ export const ProjectActionMenu = ({ details }) => {
 
   return (
     <Popover
-      placement={'bottom-end'}
+      placement="bottom-end"
       content={
         <div className={cx('action-dropdown')}>
           <Link
@@ -134,7 +128,7 @@ export const ProjectActionMenu = ({ details }) => {
       </i>
     </Popover>
   );
-};
+}
 
 ProjectActionMenu.propTypes = {
   details: PropTypes.object,

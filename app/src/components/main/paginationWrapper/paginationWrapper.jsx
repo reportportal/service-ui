@@ -24,7 +24,7 @@ import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationWrapper = ({ children, showPagination, className, ...paginationProps }) => {
+export function PaginationWrapper({ children, showPagination, className, ...paginationProps }) {
   const { formatMessage } = useIntl();
 
   return (
@@ -49,7 +49,7 @@ export const PaginationWrapper = ({ children, showPagination, className, ...pagi
       )}
     </div>
   );
-};
+}
 
 PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,

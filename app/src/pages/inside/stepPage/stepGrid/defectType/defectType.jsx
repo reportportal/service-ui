@@ -57,23 +57,27 @@ IgnoredInAALabel.defaultProps = {
   className: '',
 };
 
-export const AALabel = () => (
-  <div className={cx('aa-label')}>
-    <AutoAnalyzedLabel />
-  </div>
-);
+export function AALabel() {
+  return (
+    <div className={cx('aa-label')}>
+      <AutoAnalyzedLabel />
+    </div>
+  );
+}
 
-export const PALabel = ({ patternTemplates }) => (
-  <div className={cx('pa-label')}>
-    <PatternAnalyzedLabel patternTemplates={patternTemplates} showTooltip />
-  </div>
-);
+export function PALabel({ patternTemplates }) {
+  return (
+    <div className={cx('pa-label')}>
+      <PatternAnalyzedLabel patternTemplates={patternTemplates} showTooltip />
+    </div>
+  );
+}
 
 PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, disabled }) => {
+export function DefectType({ issue, onEdit, onRemove, patternTemplates, events, disabled }) {
   const { trackEvent } = useTracking();
   const userRoles = useSelector(userRolesSelector);
   const canUnlinkIssue = canManageBTSIssues(userRoles);
@@ -130,7 +134,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
       </div>
     </div>
   );
-};
+}
 
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,

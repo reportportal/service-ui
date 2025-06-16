@@ -20,9 +20,9 @@ import styles from './registrationPageSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const RegistrationPageSection = ({ left, children, failed }) => (
-  <div className={cx('registration-page-section', { left, failed })}>{children}</div>
-);
+export function RegistrationPageSection({ left, children, failed }) {
+  return <div className={cx('registration-page-section', { left, failed })}>{children}</div>;
+}
 
 RegistrationPageSection.propTypes = {
   children: PropTypes.node,

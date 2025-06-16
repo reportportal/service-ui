@@ -24,7 +24,7 @@ import styles from './issueTypeStatTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const IssueTypeStatTooltip = ({
+export function IssueTypeStatTooltip({
   itemName,
   itemsCount,
   startTime,
@@ -32,7 +32,7 @@ export const IssueTypeStatTooltip = ({
   issueStatNameProps,
   itemCases,
   wrapperClassName,
-}) => {
+}) {
   const issueStatName = issueStatNameProps.defectTypes
     ? getItemName(issueStatNameProps)
     : issueStatNameProps.itemName;
@@ -48,7 +48,7 @@ export const IssueTypeStatTooltip = ({
       </div>
     </TooltipContent>
   );
-};
+}
 IssueTypeStatTooltip.propTypes = {
   color: PropTypes.string.isRequired,
   itemName: PropTypes.string,

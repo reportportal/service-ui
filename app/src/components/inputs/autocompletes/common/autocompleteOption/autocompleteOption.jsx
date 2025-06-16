@@ -23,22 +23,17 @@ import styles from './autocompleteOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const AutocompleteOption = ({
-  isActive,
-  isSelected,
-  children,
-  isNew,
-  disabled,
-  ...props
-}) => (
-  <li
-    className={cx('item', { active: isActive, selected: isSelected, new: isNew, disabled })}
-    {...(!disabled ? props : {})}
-  >
-    <span className={cx('label')}>{children}</span>
-    {isNew && <div className={cx('new-item-icon')}>{Parser(PlusIcon)}</div>}
-  </li>
-);
+export function AutocompleteOption({ isActive, isSelected, children, isNew, disabled, ...props }) {
+  return (
+    <li
+      className={cx('item', { active: isActive, selected: isSelected, new: isNew, disabled })}
+      {...(!disabled ? props : {})}
+    >
+      <span className={cx('label')}>{children}</span>
+      {isNew && <div className={cx('new-item-icon')}>{Parser(PlusIcon)}</div>}
+    </li>
+  );
+}
 
 AutocompleteOption.propTypes = {
   isActive: PropTypes.bool,

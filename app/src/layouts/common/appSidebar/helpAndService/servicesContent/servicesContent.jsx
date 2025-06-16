@@ -38,7 +38,7 @@ import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
-export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOpen }) => {
+export function ServicesContent({ closePopover, closeSidebar, isFaqTouched, onOpen }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -153,7 +153,7 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
       <p className={cx('menu-item', 'rights')}>{formatMessage(messages.rights, { currentYear })}</p>
     </>
   );
-};
+}
 
 ServicesContent.propTypes = {
   closePopover: PropTypes.func.isRequired,

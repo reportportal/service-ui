@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-export const AccountRemovedPage = () => {
+export function AccountRemovedPage() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -95,4 +95,4 @@ export const AccountRemovedPage = () => {
       </div>
     </div>
   );
-};
+}

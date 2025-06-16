@@ -23,11 +23,13 @@ import styles from './gridCell.scss';
 
 const cx = classNames.bind(styles);
 
-const TextCell = ({ className, value }) => (
-  <div className={cx(className, 'text-cell')}>
-    <span>{value}</span>
-  </div>
-);
+function TextCell({ className, value }) {
+  return (
+    <div className={cx(className, 'text-cell')}>
+      <span>{value}</span>
+    </div>
+  );
+}
 TextCell.propTypes = {
   className: PropTypes.string,
   value: PropTypes.any,

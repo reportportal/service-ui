@@ -18,25 +18,24 @@ import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 
-export const createCheckPermission = (permissionMap) => (permission) => ({
-  userRole,
-  organizationRole,
-  projectRole,
-} = {}) => {
-  if (userRole === ADMINISTRATOR) {
-    return true;
-  }
+export const createCheckPermission =
+  (permissionMap) =>
+  (permission) =>
+  ({ userRole, organizationRole, projectRole } = {}) => {
+    if (userRole === ADMINISTRATOR) {
+      return true;
+    }
 
-  if (organizationRole === MANAGER) {
-    return !!permissionMap[organizationRole][permission];
-  }
+    if (organizationRole === MANAGER) {
+      return !!permissionMap[organizationRole][permission];
+    }
 
-  if (permissionMap[organizationRole]?.[projectRole]) {
-    return !!permissionMap[organizationRole][projectRole][permission];
-  }
+    if (permissionMap[organizationRole]?.[projectRole]) {
+      return !!permissionMap[organizationRole][projectRole][permission];
+    }
 
-  return false;
-};
+    return false;
+  };
 
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 

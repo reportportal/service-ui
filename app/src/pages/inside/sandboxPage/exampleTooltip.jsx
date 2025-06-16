@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export const ExampleTooltip = () => <div>123 sgsdg sdgsdgsdgsdsdgsdgsdgsdgsdgsdg sdgsdgsdg</div>;
+export function ExampleTooltip() {
+  return <div>123 sgsdg sdgsdgsdgsdsdgsdgsdgsdgsdgsdg sdgsdgsdg</div>;
+}

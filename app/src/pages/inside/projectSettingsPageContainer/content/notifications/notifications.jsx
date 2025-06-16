@@ -45,12 +45,14 @@ import { RuleGroup } from './ruleGroup';
 
 const cx = classNames.bind(styles);
 
-const TooltipComponent = ({ tooltip }) => <p>{tooltip}</p>;
+function TooltipComponent({ tooltip }) {
+  return <p>{tooltip}</p>;
+}
 TooltipComponent.propTypes = {
   tooltip: PropTypes.string.isRequired,
 };
 
-export const Notifications = () => {
+export function Notifications() {
   const allNotificationPlugins = useSelector(notificationPluginsSelector);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -110,4 +112,4 @@ export const Notifications = () => {
       <NotificationsFooter isReadOnly={isReadOnly} />
     </SettingsPageContent>
   );
-};
+}

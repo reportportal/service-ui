@@ -38,12 +38,12 @@ const cx = classNames.bind(styles);
 
 const USER_CONTROL = 'User control';
 
-export const AppSidebar = ({
+export function AppSidebar({
   createMainBlock,
   items,
   isOpenOrganizationPopover,
   linkToUserProfilePage,
-}) => {
+}) {
   const userId = useSelector(userIdSelector);
   const { trackEvent } = useTracking();
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
@@ -67,6 +67,7 @@ export const AppSidebar = ({
           href={referenceDictionary.rpEpamPolicy}
           onClick={() => trackEvent(SIDEBAR_EVENTS.CLICK_PRIVACY_POLICY_LINK)}
           target="_blank"
+          rel="noreferrer"
         >
           {formatMessage(messages.privacyPolicy)}
           <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>
@@ -122,7 +123,7 @@ export const AppSidebar = ({
       }
     />
   );
-};
+}
 
 AppSidebar.propTypes = {
   linkToUserProfilePage: PropTypes.object.isRequired,

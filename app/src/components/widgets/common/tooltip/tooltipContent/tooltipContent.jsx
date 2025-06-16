@@ -22,12 +22,14 @@ import styles from './tooltipContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const TooltipContent = ({ itemName, wrapperClassName, children }) => (
-  <TooltipWrapper className={wrapperClassName}>
-    {itemName && <div className={cx('item-name')}>{itemName}</div>}
-    {children}
-  </TooltipWrapper>
-);
+export function TooltipContent({ itemName, wrapperClassName, children }) {
+  return (
+    <TooltipWrapper className={wrapperClassName}>
+      {itemName && <div className={cx('item-name')}>{itemName}</div>}
+      {children}
+    </TooltipWrapper>
+  );
+}
 TooltipContent.propTypes = {
   itemName: PropTypes.string,
   wrapperClassName: PropTypes.string,

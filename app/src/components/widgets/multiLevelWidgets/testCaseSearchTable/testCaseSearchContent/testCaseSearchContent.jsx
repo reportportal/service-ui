@@ -32,7 +32,7 @@ import { messages } from '../messages';
 const MAXIMUM_ITEMS = 300;
 
 const cx = classNames.bind(styles);
-export const TestCaseSearchContent = ({
+export function TestCaseSearchContent({
   isEmptyState,
   data,
   listView,
@@ -42,7 +42,7 @@ export const TestCaseSearchContent = ({
   onLoadMore,
   isLoadingMore,
   error,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dashboardId = useSelector(activeDashboardIdSelector);
   const targetEvents = {
@@ -80,7 +80,7 @@ export const TestCaseSearchContent = ({
             ) : (
               <Button
                 className={cx('load-more', { disabled: isLoadMoreDisabled })}
-                variant={'ghost'}
+                variant="ghost"
                 onClick={onLoadMore}
                 disabled={isLoadMoreDisabled}
               >
@@ -94,7 +94,7 @@ export const TestCaseSearchContent = ({
       )}
     </ScrollWrapper>
   );
-};
+}
 
 TestCaseSearchContent.propTypes = {
   isEmptyState: PropTypes.bool,

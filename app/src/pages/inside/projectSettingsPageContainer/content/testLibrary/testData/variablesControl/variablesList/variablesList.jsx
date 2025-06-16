@@ -22,13 +22,15 @@ import styles from './variablesList.scss';
 
 const cx = classNames.bind(styles);
 
-export const VariablesList = ({ variables }) => (
-  <div className={cx('variables-list')}>
-    {variables.map((variable) => (
-      <Variable key={variable.label} variable={variable} />
-    ))}
-  </div>
-);
+export function VariablesList({ variables }) {
+  return (
+    <div className={cx('variables-list')}>
+      {variables.map((variable) => (
+        <Variable key={variable.label} variable={variable} />
+      ))}
+    </div>
+  );
+}
 
 VariablesList.propTypes = {
   variables: PropTypes.array,

@@ -27,7 +27,7 @@ import styles from './filterBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterBlock = ({ filters, clearAllFilters }) => {
+export function FilterBlock({ filters, clearAllFilters }) {
   const { formatMessage } = useIntl();
 
   return (
@@ -53,7 +53,7 @@ export const FilterBlock = ({ filters, clearAllFilters }) => {
       </Button>
     </div>
   );
-};
+}
 
 FilterBlock.propTypes = {
   filters: PropTypes.shape({

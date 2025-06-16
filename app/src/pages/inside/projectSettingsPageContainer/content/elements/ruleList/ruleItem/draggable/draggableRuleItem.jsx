@@ -26,14 +26,14 @@ import { DragControl } from './dragControl';
 
 const cx = classNames.bind(styles);
 
-export const DraggableRuleItem = ({
+export function DraggableRuleItem({
   item,
   onDrop,
   dragControlTooltipContent,
   disabled,
   readMode,
   ...restRuleItemProps
-}) => {
+}) {
   const [isDragging, setIsDragging] = useState(false);
 
   const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
@@ -116,7 +116,7 @@ export const DraggableRuleItem = ({
       )}
     </div>
   );
-};
+}
 DraggableRuleItem.propTypes = {
   ...ruleItemPropTypes,
   onDrop: PropTypes.func,

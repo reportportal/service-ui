@@ -36,13 +36,13 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-export const ProjectTeamPageHeader = ({
+export function ProjectTeamPageHeader({
   hasPermission,
   onInvite,
   isMembersLoading,
   searchValue,
   setSearchValue,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
@@ -72,7 +72,7 @@ export const ProjectTeamPageHeader = ({
               </div>
             </div>
             {hasPermission && (
-              <Button variant={'ghost'} onClick={onInvite}>
+              <Button variant="ghost" onClick={onInvite}>
                 {formatMessage(messages.inviteUser)}
               </Button>
             )}
@@ -81,7 +81,7 @@ export const ProjectTeamPageHeader = ({
       </div>
     </MembersPageHeader>
   );
-};
+}
 
 ProjectTeamPageHeader.propTypes = {
   isMembersLoading: PropTypes.bool.isRequired,

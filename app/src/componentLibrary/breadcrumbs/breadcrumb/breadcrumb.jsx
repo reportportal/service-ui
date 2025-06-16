@@ -22,12 +22,12 @@ import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-export const Breadcrumb = ({
+export function Breadcrumb({
   maxBreadcrumbWidth,
   titleTailNumChars,
   descriptor: { title, link, onClick },
   isClickable,
-}) => {
+}) {
   const ref = useRef();
   const [breadcrumbTitle, setBreadcrumbTitle] = useState(null);
 
@@ -55,7 +55,7 @@ export const Breadcrumb = ({
       )}
     </div>
   );
-};
+}
 
 Breadcrumb.propTypes = {
   maxBreadcrumbWidth: PropTypes.number,

@@ -43,11 +43,11 @@ const getDefects = (values, name) => {
   return Object.assign({}, ...defects);
 };
 
-export const DefectsColumn = (
+export function DefectsColumn(
   { className, value },
   name,
   { isLatest, getCompositeAttributes, linkPayload },
-) => {
+) {
   const data = value.statistics
     ? getDefects(value.statistics, name)
     : getDefects(value.total.statistics, name);
@@ -69,7 +69,7 @@ export const DefectsColumn = (
   return (
     <div className={cx('defect-col', className)}>
       {value.statistics ? (
-        <Fragment>
+        <>
           <div className={cx('desktop-block')}>
             <DefectStatistics type={name} data={data} {...defaultColumnProps} />
           </div>
@@ -83,18 +83,18 @@ export const DefectsColumn = (
               <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
             </div>
           </div>
-        </Fragment>
+        </>
       ) : (
         !!data.total && (
-          <Fragment>
+          <>
             <span className={cx('mobile-hint')}>{defaultDefectsMessages[name]}</span>
             <span className={cx('total-item')}>{data.total}</span>
-          </Fragment>
+          </>
         )
       )}
     </div>
   );
-};
+}
 DefectsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,

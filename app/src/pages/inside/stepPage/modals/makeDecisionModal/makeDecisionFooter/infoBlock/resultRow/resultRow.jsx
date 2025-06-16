@@ -23,13 +23,15 @@ import styles from './resultRow.scss';
 
 const cx = classNames.bind(styles);
 
-export const ResultRow = ({ text, children }) => (
-  <div className={cx('row')}>
-    {Parser(ReplaceIcon)}
-    <span className={cx('row-text')}>{text}</span>
-    {children && children}
-  </div>
-);
+export function ResultRow({ text, children }) {
+  return (
+    <div className={cx('row')}>
+      {Parser(ReplaceIcon)}
+      <span className={cx('row-text')}>{text}</span>
+      {children && children}
+    </div>
+  );
+}
 ResultRow.propTypes = {
   text: PropTypes.string,
   children: PropTypes.node,

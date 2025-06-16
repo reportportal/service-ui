@@ -35,7 +35,7 @@ import styles from './projectTeamPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectTeamPage = () => {
+export function ProjectTeamPage() {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -92,4 +92,4 @@ export const ProjectTeamPage = () => {
       {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
     </div>
   );
-};
+}

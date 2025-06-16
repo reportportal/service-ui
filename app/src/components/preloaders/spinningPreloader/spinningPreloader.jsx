@@ -19,12 +19,14 @@ import styles from './spinningPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const SpinningPreloader = () => (
-  <div className={cx('spinning-preloader')}>
-    <div className={cx('preloader')}>
-      <div className={cx('preloader-part')} />
-      <div className={cx('preloader-part')} />
-      <div className={cx('preloader-part')} />
+export function SpinningPreloader() {
+  return (
+    <div className={cx('spinning-preloader')}>
+      <div className={cx('preloader')}>
+        <div className={cx('preloader-part')} />
+        <div className={cx('preloader-part')} />
+        <div className={cx('preloader-part')} />
+      </div>
     </div>
-  </div>
-);
+  );
+}

@@ -22,7 +22,7 @@ const MODE_INFORMATION = 'info';
 const MODE_WARNING = 'warning';
 const MODE_SYS_ERROR = 'error';
 
-export const SystemMessage = ({ header, caption, children, mode, widthByContent }) => {
+export function SystemMessage({ header, caption, children, mode, widthByContent }) {
   return (
     <div className={cx('system-message', { 'content-width': widthByContent })}>
       <div className={cx(`stripes-${mode}`)} />
@@ -33,7 +33,7 @@ export const SystemMessage = ({ header, caption, children, mode, widthByContent 
       </div>
     </div>
   );
-};
+}
 
 SystemMessage.propTypes = {
   header: PropTypes.string,

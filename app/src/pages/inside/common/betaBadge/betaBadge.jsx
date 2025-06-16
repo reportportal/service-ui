@@ -22,11 +22,13 @@ import styles from './betaBadge.scss';
 
 const cx = classNames.bind(styles);
 
-export const BetaBadge = ({ className }) => (
-  <span className={cx('beta-badge', className)}>
-    <FormattedMessage id="BetaBadge.beta" defaultMessage="beta" />
-  </span>
-);
+export function BetaBadge({ className }) {
+  return (
+    <span className={cx('beta-badge', className)}>
+      <FormattedMessage id="BetaBadge.beta" defaultMessage="beta" />
+    </span>
+  );
+}
 
 BetaBadge.propTypes = {
   className: PropTypes.string,

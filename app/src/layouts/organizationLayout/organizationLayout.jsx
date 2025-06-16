@@ -22,16 +22,18 @@ import { HeaderLayout } from '../headerLayout';
 import { OrganizationSidebar } from './organizationSidebar';
 import { DemoBanner } from '../demoBanner';
 
-const OrganizationLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
-  <Layout
-    Header={HeaderLayout}
-    Sidebar={OrganizationSidebar}
-    Banner={isDemoInstance ? DemoBanner : null}
-    rawContent={rawContent}
-  >
-    {children}
-  </Layout>
-);
+function OrganizationLayoutComponent({ children, isDemoInstance, rawContent }) {
+  return (
+    <Layout
+      Header={HeaderLayout}
+      Sidebar={OrganizationSidebar}
+      Banner={isDemoInstance ? DemoBanner : null}
+      rawContent={rawContent}
+    >
+      {children}
+    </Layout>
+  );
+}
 
 OrganizationLayoutComponent.propTypes = {
   children: PropTypes.node,

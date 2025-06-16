@@ -19,10 +19,11 @@ import PropTypes from 'prop-types';
 import { PlainTableRow } from '../plainTableRow';
 import { columnPropTypes } from '../propTypes';
 
-export const PlainTableBody = ({ data, columns, actions }) =>
-  data.map((rowData) => (
+export function PlainTableBody({ data, columns, actions }) {
+  return data.map((rowData) => (
     <PlainTableRow key={rowData.id} value={rowData} columns={columns} actions={actions} />
   ));
+}
 PlainTableBody.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,

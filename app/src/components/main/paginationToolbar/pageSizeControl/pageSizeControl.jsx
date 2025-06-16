@@ -70,7 +70,8 @@ export class PageSizeControl extends Component {
   normalizeInput = (value) => {
     if (Number(value) < 0 || isNaN(Number(value))) {
       return '0';
-    } else if (Number(value) > MAX_SIZE) {
+    }
+    if (Number(value) > MAX_SIZE) {
       return String(MAX_SIZE);
     }
     return value;
@@ -115,8 +116,10 @@ export class PageSizeControl extends Component {
   }
 }
 
-const SizeInput = ({ ...props }) => (
-  <div className={cx('size-input')}>
-    <Input {...props} type="text" maxLength="3" />
-  </div>
-);
+function SizeInput({ ...props }) {
+  return (
+    <div className={cx('size-input')}>
+      <Input {...props} type="text" maxLength="3" />
+    </div>
+  );
+}

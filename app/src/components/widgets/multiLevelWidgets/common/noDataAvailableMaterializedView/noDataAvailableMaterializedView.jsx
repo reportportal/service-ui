@@ -25,7 +25,7 @@ import styles from './noDataAvailableMaterializedView.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoDataAvailableMaterializedView = ({ state, isLoading }) => {
+export function NoDataAvailableMaterializedView({ state, isLoading }) {
   if (state === STATE_RENDERING) {
     return (
       <div className={cx('rendering-wrap')}>
@@ -54,7 +54,7 @@ export const NoDataAvailableMaterializedView = ({ state, isLoading }) => {
   }
 
   return <NoDataAvailable />;
-};
+}
 
 NoDataAvailableMaterializedView.propTypes = {
   state: PropTypes.string.isRequired,

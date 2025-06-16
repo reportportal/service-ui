@@ -25,7 +25,7 @@ import styles from './userNameCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserNameCell = ({ userId, fullName, badges }) => {
+export function UserNameCell({ userId, fullName, badges }) {
   const { formatMessage } = useIntl();
 
   return (
@@ -60,7 +60,7 @@ export const UserNameCell = ({ userId, fullName, badges }) => {
       </div>
     </div>
   );
-};
+}
 
 UserNameCell.propTypes = {
   userId: PropTypes.number.isRequired,

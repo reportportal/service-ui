@@ -87,7 +87,7 @@ const lengthAndUniqueNameValidator = (existNames) =>
     bindMessageToValidator(validate.apiKeyNameShouldMatch, 'apiKeyNameShouldMatch'),
   ]);
 
-const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
+function GenerateApiKey({ invalid, handleSubmit, apiKeyName }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -161,7 +161,7 @@ const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
       )}
     </ModalLayout>
   );
-};
+}
 GenerateApiKey.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,

@@ -46,14 +46,14 @@ const messages = defineMessages({
 
 const cx = classNames.bind(styles);
 
-export const Footer = ({
+export function Footer({
   launches,
   selectedRegularLaunches,
   selectedImportantLaunches,
   confirmDeleteLaunches,
   onClickOk,
   closeHandler,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
@@ -63,7 +63,7 @@ export const Footer = ({
         <div className={cx('button-container', 'left')}>
           {selectedRegularLaunches.length > 0 ? (
             <GhostButton
-              color={'red'}
+              color="red"
               onClick={() => {
                 confirmDeleteLaunches(launches);
                 onClickOk();
@@ -79,7 +79,7 @@ export const Footer = ({
             </GhostButton>
           ) : (
             <GhostButton
-              color={'red'}
+              color="red"
               onClick={() => {
                 confirmDeleteLaunches(selectedImportantLaunches);
                 onClickOk();
@@ -100,14 +100,14 @@ export const Footer = ({
           )}
         </div>
         <div className={cx('button-container')}>
-          <BigButton color={'gray-60'} onClick={closeHandler}>
+          <BigButton color="gray-60" onClick={closeHandler}>
             {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
           </BigButton>
         </div>
         {selectedRegularLaunches.length > 0 && (
           <div className={cx('button-container')}>
             <BigButton
-              color={'tomato'}
+              color="tomato"
               onClick={() => {
                 confirmDeleteLaunches(selectedRegularLaunches);
                 onClickOk();
@@ -125,7 +125,7 @@ export const Footer = ({
       </div>
     </div>
   );
-};
+}
 Footer.propTypes = {
   launches: PropTypes.array.isRequired,
   selectedRegularLaunches: PropTypes.array.isRequired,

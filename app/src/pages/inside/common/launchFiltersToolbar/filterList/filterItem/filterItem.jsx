@@ -36,7 +36,7 @@ const handleClick = (e) => {
   e.preventDefault();
 };
 
-const FilterItemBase = ({
+function FilterItemBase({
   id,
   name,
   active,
@@ -47,28 +47,30 @@ const FilterItemBase = ({
   isDisabled,
   getLaunchFilterLink,
   organizationSlug,
-}) => (
-  <Link
-    className={cx('filter-item', className, { active })}
-    onClick={isDisabled && handleClick}
-    to={getLaunchFilterLink(id, active, organizationSlug)}
-  >
-    <span className={cx('name')}>
-      {name}
-      {unsaved && <span className={cx('unsaved')}>*</span>}
-    </span>
-    {description && (
-      <div className={cx('icon')}>
-        <FilterDescriptionTooltipIcon tooltipContent={description} />
-      </div>
-    )}
-    {active && (
-      <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
-        {Parser(CrossIcon)}
-      </div>
-    )}
-  </Link>
-);
+}) {
+  return (
+    <Link
+      className={cx('filter-item', className, { active })}
+      onClick={isDisabled && handleClick}
+      to={getLaunchFilterLink(id, active, organizationSlug)}
+    >
+      <span className={cx('name')}>
+        {name}
+        {unsaved && <span className={cx('unsaved')}>*</span>}
+      </span>
+      {description && (
+        <div className={cx('icon')}>
+          <FilterDescriptionTooltipIcon tooltipContent={description} />
+        </div>
+      )}
+      {active && (
+        <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
+          {Parser(CrossIcon)}
+        </div>
+      )}
+    </Link>
+  );
+}
 
 export const FilterItem = connect((state) => ({
   organizationSlug: urlOrganizationSlugSelector(state),

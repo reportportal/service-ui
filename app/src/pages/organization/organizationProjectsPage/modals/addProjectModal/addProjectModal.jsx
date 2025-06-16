@@ -30,7 +30,7 @@ import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
 
-export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
+export function AddProjectModal({ data = {}, handleSubmit, anyTouched, invalid }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
@@ -66,7 +66,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }
       </FieldProvider>
     </Modal>
   );
-};
+}
 
 AddProjectModal.propTypes = {
   data: PropTypes.object,

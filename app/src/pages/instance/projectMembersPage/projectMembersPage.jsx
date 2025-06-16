@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export const ProjectMembersPage = () => <h1>Project members page</h1>;
+export function ProjectMembersPage() {
+  return <h1>Project members page</h1>;
+}

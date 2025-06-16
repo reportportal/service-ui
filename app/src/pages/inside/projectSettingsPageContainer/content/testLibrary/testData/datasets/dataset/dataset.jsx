@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
 });
 
-export const Dataset = ({ dataset: { datasetName, timestamp, username } }) => {
+export function Dataset({ dataset: { datasetName, timestamp, username } }) {
   const { formatMessage, formatDate, formatTime } = useIntl();
 
   return (
@@ -84,7 +84,7 @@ export const Dataset = ({ dataset: { datasetName, timestamp, username } }) => {
       </div>
     </div>
   );
-};
+}
 
 Dataset.propTypes = {
   dataset: datasetShape.isRequired,

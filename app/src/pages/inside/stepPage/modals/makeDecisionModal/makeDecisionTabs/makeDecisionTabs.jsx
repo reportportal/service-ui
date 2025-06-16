@@ -31,7 +31,7 @@ import styles from './makeDecisionTabs.scss';
 
 const cx = classNames.bind(styles);
 
-export const MakeDecisionTabs = ({
+export function MakeDecisionTabs({
   tabs,
   toggleTab,
   suggestedItems,
@@ -40,7 +40,7 @@ export const MakeDecisionTabs = ({
   setModalState,
   isAnalyzerAvailable,
   isMLSuggestionsAvailable,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const [selectedMLSuggest, setSelectedMLSuggest] = useState(null);
   const [animationSuggest, setAnimationSuggest] = useState(true);
@@ -128,6 +128,7 @@ export const MakeDecisionTabs = ({
                       href="https://reportportal.io/docs/issues-troubleshooting/ResolveAnalyzerKnownIssues/"
                       target="_blank"
                       className={cx('suggestion-link')}
+                      rel="noreferrer"
                     >
                       <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
                       <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
@@ -176,7 +177,7 @@ export const MakeDecisionTabs = ({
       {renderActiveTab()}
     </div>
   );
-};
+}
 
 MakeDecisionTabs.propTypes = {
   modalState: PropTypes.object.isRequired,

@@ -26,7 +26,7 @@ import styles from './suiteTestToolbar.scss';
 
 const cx = classNames.bind(styles);
 
-export const SuiteTestToolbar = ({
+export function SuiteTestToolbar({
   parentItem,
   selectedItems,
   errors,
@@ -51,51 +51,53 @@ export const SuiteTestToolbar = ({
   filterErrors,
   filterEntities,
   isTestItemsList,
-}) => (
-  <Fragment>
-    <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
-      {!!selectedItems.length && (
-        <SelectedItems
+}) {
+  return (
+    <>
+      <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
+        {!!selectedItems.length && (
+          <SelectedItems
+            selectedItems={selectedItems}
+            errors={errors}
+            onUnselect={onUnselect}
+            onClose={onUnselectAll}
+          />
+        )}
+        <TestItemActionPanel
+          debugMode={debugMode}
+          hasErrors={selectedItems.some((item) => !!errors[item.id])}
+          hasValidItems={selectedItems.length > Object.keys(errors).length}
+          onProceedValidItems={onProceedValidItems}
+          showBreadcrumbs={selectedItems.length === 0}
+          onRefresh={onRefresh}
           selectedItems={selectedItems}
-          errors={errors}
-          onUnselect={onUnselect}
-          onClose={onUnselectAll}
+          onIgnoreInAA={onIgnoreInAA}
+          onIncludeInAA={onIncludeInAA}
+          onUnlinkIssue={onUnlinkIssue}
+          onLinkIssue={onLinkIssue}
+          onPostIssue={onPostIssue}
+          onEditDefects={onEditDefects}
+          onEditItems={onEditItems}
+          onDelete={onDelete}
+          deleteDisabled={!selectedItems.length}
+          parentItem={parentItem}
         />
+      </div>
+      {(parentItem || isTestItemsList) && (
+        <InfoPanel viewMode={LIST_VIEW} data={parentItem} events={events} />
       )}
-      <TestItemActionPanel
-        debugMode={debugMode}
-        hasErrors={selectedItems.some((item) => !!errors[item.id])}
-        hasValidItems={selectedItems.length > Object.keys(errors).length}
-        onProceedValidItems={onProceedValidItems}
-        showBreadcrumbs={selectedItems.length === 0}
-        onRefresh={onRefresh}
-        selectedItems={selectedItems}
-        onIgnoreInAA={onIgnoreInAA}
-        onIncludeInAA={onIncludeInAA}
-        onUnlinkIssue={onUnlinkIssue}
-        onLinkIssue={onLinkIssue}
-        onPostIssue={onPostIssue}
-        onEditDefects={onEditDefects}
-        onEditItems={onEditItems}
-        onDelete={onDelete}
-        deleteDisabled={!selectedItems.length}
-        parentItem={parentItem}
+      <RefineFiltersPanel
+        onFilterAdd={onFilterAdd}
+        onFilterRemove={onFilterRemove}
+        onFilterValidate={onFilterValidate}
+        onFilterChange={onFilterChange}
+        filterErrors={filterErrors}
+        filterEntities={filterEntities}
+        events={events.REFINE_FILTERS_PANEL_EVENTS}
       />
-    </div>
-    {(parentItem || isTestItemsList) && (
-      <InfoPanel viewMode={LIST_VIEW} data={parentItem} events={events} />
-    )}
-    <RefineFiltersPanel
-      onFilterAdd={onFilterAdd}
-      onFilterRemove={onFilterRemove}
-      onFilterValidate={onFilterValidate}
-      onFilterChange={onFilterChange}
-      filterErrors={filterErrors}
-      filterEntities={filterEntities}
-      events={events.REFINE_FILTERS_PANEL_EVENTS}
-    />
-  </Fragment>
-);
+    </>
+  );
+}
 SuiteTestToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   errors: PropTypes.object,

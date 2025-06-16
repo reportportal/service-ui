@@ -18,13 +18,13 @@ import PropTypes from 'prop-types';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
 
-export const GroupedGridBody = ({
+export function GroupedGridBody({
   data,
   groupFunction,
   groupHeader: GroupHeader,
   isViewOnly,
   ...rest
-}) => {
+}) {
   const groupedData = groupFunction(data) || [];
   return Object.keys(groupedData).reduce(
     (rows, groupId) => [
@@ -39,7 +39,7 @@ export const GroupedGridBody = ({
     ],
     [],
   );
-};
+}
 GroupedGridBody.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   data: PropTypes.array,

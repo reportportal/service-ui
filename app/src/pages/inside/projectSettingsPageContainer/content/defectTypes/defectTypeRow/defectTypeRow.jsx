@@ -39,19 +39,21 @@ import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorPopoverContent = ({ locator, onCopy }) => (
-  <div className={cx('defect-locator-popover')}>
-    Locator
-    <span className={cx('locator')}>
-      {locator}
-      <CopyToClipboard text={locator} onCopy={onCopy}>
-        <i className={cx('icon', 'copy-button')} data-automation-id="defectTypeCopyLocatorIcon">
-          {Parser(CopyIcon)}
-        </i>
-      </CopyToClipboard>
-    </span>
-  </div>
-);
+function DefectLocatorPopoverContent({ locator, onCopy }) {
+  return (
+    <div className={cx('defect-locator-popover')}>
+      Locator
+      <span className={cx('locator')}>
+        {locator}
+        <CopyToClipboard text={locator} onCopy={onCopy}>
+          <i className={cx('icon', 'copy-button')} data-automation-id="defectTypeCopyLocatorIcon">
+            {Parser(CopyIcon)}
+          </i>
+        </CopyToClipboard>
+      </span>
+    </div>
+  );
+}
 DefectLocatorPopoverContent.propTypes = {
   locator: PropTypes.string.isRequired,
   onCopy: PropTypes.func,
@@ -80,12 +82,12 @@ DefectLocatorWithPopover.defaultProps = {
   onCopy: () => {},
 };
 
-export const DefectTypeRow = ({
+export function DefectTypeRow({
   data,
   data: { longName, shortName, locator, color },
   group,
   isPossibleUpdateSettings,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -176,7 +178,7 @@ export const DefectTypeRow = ({
       </div>
     </div>
   );
-};
+}
 DefectTypeRow.propTypes = {
   data: defectTypeShape,
   group: PropTypes.arrayOf(defectTypeShape),

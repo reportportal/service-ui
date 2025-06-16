@@ -33,7 +33,7 @@ import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationHeader = (props) => {
+export function IntegrationHeader(props) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const {
@@ -128,7 +128,7 @@ export const IntegrationHeader = (props) => {
       </div>
     </div>
   );
-};
+}
 IntegrationHeader.propTypes = {
   data: PropTypes.shape({
     creationDate: PropTypes.number,

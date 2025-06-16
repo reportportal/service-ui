@@ -34,13 +34,7 @@ import {
 } from '../../../constants';
 import { messages } from '../../../messages';
 
-export const OptionsBlock = ({
-  optionValue,
-  currentTestItem,
-  loading,
-  setModalState,
-  eventsInfo,
-}) => {
+export function OptionsBlock({ optionValue, currentTestItem, loading, setModalState, eventsInfo }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const activeFilter = useSelector(activeFilterSelector);
@@ -143,7 +137,7 @@ export const OptionsBlock = ({
       options={getOptions()}
     />
   );
-};
+}
 OptionsBlock.propTypes = {
   optionValue: PropTypes.string.isRequired,
   currentTestItem: PropTypes.object,

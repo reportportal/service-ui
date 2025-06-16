@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
 });
 
-export const OrganizationsItem = ({
+export function OrganizationsItem({
   organizationName,
   organizationSlug,
   projects,
@@ -52,7 +52,7 @@ export const OrganizationsItem = ({
   onClick,
   currentProject,
   isAllOpen,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [isCollapsed, setIsCollapsed] = useState(isOpen);
@@ -165,7 +165,7 @@ export const OrganizationsItem = ({
             tooltipClassName={cx('tooltip')}
             portalRoot={tooltipRoot}
             isFloating={false}
-            placement={'right'}
+            placement="right"
           >
             {getOrganizationItemContentHeader()}
           </Tooltip>
@@ -190,7 +190,7 @@ export const OrganizationsItem = ({
       )}
     </div>
   );
-};
+}
 
 OrganizationsItem.propTypes = {
   organizationName: PropTypes.string.isRequired,

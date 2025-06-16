@@ -29,7 +29,7 @@ import { messages } from './messages';
 
 export const CREATE_PRODUCT_VERSION_MODAL_KEY = 'createProductVersionModal';
 
-const CreateProductVersionModal = ({ data: { onSubmit }, handleSubmit }) => {
+function CreateProductVersionModal({ data: { onSubmit }, handleSubmit }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -54,7 +54,7 @@ const CreateProductVersionModal = ({ data: { onSubmit }, handleSubmit }) => {
       </form>
     </Modal>
   );
-};
+}
 
 CreateProductVersionModal.propTypes = {
   data: PropTypes.shape({

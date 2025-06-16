@@ -22,12 +22,14 @@ import styles from './labeledPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const LabeledPreloader = ({ text }) => (
-  <span>
-    <BubblesLoader className={cx('preloader')} />
-    <span className={cx('preloader-text')}>{text}</span>
-  </span>
-);
+export function LabeledPreloader({ text }) {
+  return (
+    <span>
+      <BubblesLoader className={cx('preloader')} />
+      <span className={cx('preloader-text')}>{text}</span>
+    </span>
+  );
+}
 LabeledPreloader.propTypes = {
   text: PropTypes.string.isRequired,
 };

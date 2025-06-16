@@ -44,7 +44,7 @@ import { ListOfVersions } from './listOfVersions';
 
 const cx = classNames.bind(styles);
 
-export const ProductVersionsPageContent = () => {
+export function ProductVersionsPageContent() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -121,7 +121,7 @@ export const ProductVersionsPageContent = () => {
                   </div>
                   {!isEmpty(versions) && (
                     <Button
-                      adjustWidthOn={'wide-content'}
+                      adjustWidthOn="wide-content"
                       onClick={openCreateProductVersionModal}
                       data-automation-id="addProductVersionButton"
                       icon={Parser(PlusIcon)}
@@ -141,4 +141,4 @@ export const ProductVersionsPageContent = () => {
       </ScrollWrapper>
     </SettingsLayout>
   );
-};
+}

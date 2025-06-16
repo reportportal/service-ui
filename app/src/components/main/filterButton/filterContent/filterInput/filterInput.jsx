@@ -21,7 +21,7 @@ import styles from './filterInput.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterInput = ({ filter, onChange }) => {
+export function FilterInput({ filter, onChange }) {
   const { filterName, title, fields, fieldsWrapperClassName } = filter;
   const onClear = (fieldName) => onChange(fieldName, '');
 
@@ -42,7 +42,7 @@ export const FilterInput = ({ filter, onChange }) => {
       </div>
     </div>
   );
-};
+}
 
 FilterInput.propTypes = {
   filter: PropTypes.shape({

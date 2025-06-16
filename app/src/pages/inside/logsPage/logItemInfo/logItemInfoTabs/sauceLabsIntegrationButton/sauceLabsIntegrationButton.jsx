@@ -23,7 +23,7 @@ import styles from './sauceLabsIntegrationButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SauceLabsIntegrationButton = ({ active, onClick }) => {
+export function SauceLabsIntegrationButton({ active, onClick }) {
   const title = SAUCE_LABS_TITLE;
 
   return (
@@ -34,7 +34,7 @@ export const SauceLabsIntegrationButton = ({ active, onClick }) => {
       <div className={cx('sauce-labs-integration-button--label')}>{title}</div>
     </button>
   );
-};
+}
 
 SauceLabsIntegrationButton.propTypes = {
   onClick: PropTypes.func,

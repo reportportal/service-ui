@@ -30,7 +30,7 @@ import styles from './productVersionHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProductVersionHeader = ({ tabsConfig }) => {
+export function ProductVersionHeader({ tabsConfig }) {
   const { formatMessage } = useIntl();
   const { productVersionTab: currentTab, productVersionId } = useSelector(payloadSelector);
 
@@ -55,7 +55,7 @@ export const ProductVersionHeader = ({ tabsConfig }) => {
       </div>
     </div>
   );
-};
+}
 
 ProductVersionHeader.propTypes = {
   tabsConfig: TabsConfigShape.isRequired,

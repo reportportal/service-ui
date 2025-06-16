@@ -42,7 +42,7 @@ const THROTTLING_SEARCH_TIME = 300;
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
 const cx = classNames.bind(styles);
-export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
+export function TestCaseSearch({ widget: { id: widgetId }, isDisplayedLaunches }) {
   const dashboardId = useSelector(activeDashboardIdSelector);
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
@@ -93,7 +93,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     setSearchValue({});
   };
   const handleStatusChange = (entity) => {
-    const value = entity.status.value;
+    const { value } = entity.status;
     const selectedStatuses = value.split(',');
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.status;
     setSearchValue(entity);
@@ -154,7 +154,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
       />
     </div>
   );
-};
+}
 
 TestCaseSearch.propTypes = {
   widget: PropTypes.object,

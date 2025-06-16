@@ -40,7 +40,7 @@ const cx = classNames.bind(styles);
 const nameMaxLengthDisplay = 60;
 const testDataMaxLengthDisplay = 1000;
 
-const CreateEnvironmentModal = ({ data = {}, handleSubmit, dirty = false }) => {
+function CreateEnvironmentModal({ data = {}, handleSubmit, dirty = false }) {
   const { onSave } = data;
 
   const dispatch = useDispatch();
@@ -104,7 +104,7 @@ const CreateEnvironmentModal = ({ data = {}, handleSubmit, dirty = false }) => {
       </div>
     </Modal>
   );
-};
+}
 
 CreateEnvironmentModal.propTypes = {
   data: PropTypes.shape({

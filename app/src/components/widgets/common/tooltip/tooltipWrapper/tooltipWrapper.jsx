@@ -21,9 +21,9 @@ import styles from './tooltipWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const TooltipWrapper = ({ children, className }) => (
-  <div className={cx('tooltip-wrapper', className)}>{children}</div>
-);
+export function TooltipWrapper({ children, className }) {
+  return <div className={cx('tooltip-wrapper', className)}>{children}</div>;
+}
 
 TooltipWrapper.propTypes = {
   children: PropTypes.node,

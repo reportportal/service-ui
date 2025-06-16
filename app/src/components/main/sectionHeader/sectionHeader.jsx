@@ -20,9 +20,9 @@ import styles from './sectionHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const SectionHeader = ({ text, error }) => (
-  <div className={cx('section-header', { error })}>{text}</div>
-);
+export function SectionHeader({ text, error }) {
+  return <div className={cx('section-header', { error })}>{text}</div>;
+}
 
 SectionHeader.propTypes = {
   text: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),

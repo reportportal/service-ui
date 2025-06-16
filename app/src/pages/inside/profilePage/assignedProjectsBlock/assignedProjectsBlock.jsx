@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
 });
 
-export const AssignedProjectsBlock = () => {
+export function AssignedProjectsBlock() {
   const { formatMessage } = useIntl();
   const availableProjects = useSelector(availableProjectsSelector);
 
@@ -74,4 +74,4 @@ export const AssignedProjectsBlock = () => {
       </ScrollWrapper>
     </div>
   );
-};
+}

@@ -35,11 +35,11 @@ import styles from './innerComponents.scss';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = (
+export function NameColumn(
   { className, value },
   name,
   { formatMessage, linkPayload, onFilterNameClick },
-) => {
+) {
   if (value.type === TOTAL_TYPE) {
     return (
       <div className={cx('name-col', 'total-col', 'total-col--desktop', className)}>
@@ -86,13 +86,13 @@ export const NameColumn = (
       )}
     </div>
   );
-};
+}
 NameColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const AttributeColumn = ({ className, value }, name) => {
+export function AttributeColumn({ className, value }, name) {
   if (value.type === TOTAL_TYPE) {
     return <div className={cx('attribute-col', 'total-col', 'desktop-block', className)} />;
   }
@@ -107,13 +107,13 @@ export const AttributeColumn = ({ className, value }, name) => {
       ))}
     </div>
   );
-};
+}
 AttributeColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const StatusColumn = ({ className, value }, name, { formatMessage }) => {
+export function StatusColumn({ className, value }, name, { formatMessage }) {
   if (value.type === TOTAL_TYPE) {
     return <div className={cx('status-col', 'total-col', 'desktop-block', className)} />;
   }
@@ -126,13 +126,13 @@ export const StatusColumn = ({ className, value }, name, { formatMessage }) => {
       <span className={cx('uppercase')}>{formatStatus(formatMessage, value.status)}</span>
     </div>
   );
-};
+}
 StatusColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const TimeColumn = ({ className, value }, name, { formatMessage }) => {
+export function TimeColumn({ className, value }, name, { formatMessage }) {
   if (value.type === TOTAL_TYPE) {
     return <div className={cx('time-col', 'total-col', 'desktop-block', className)} />;
   }
@@ -142,24 +142,20 @@ export const TimeColumn = ({ className, value }, name, { formatMessage }) => {
   return (
     <div className={cx('time-col', className)}>
       {value.startTime && (
-        <Fragment>
+        <>
           <span className={cx('mobile-hint')}>{formatMessage(hintMessages.startTimeHint)}</span>
           <AbsRelTime startTime={new Date(value.startTime).getTime()} />
-        </Fragment>
+        </>
       )}
     </div>
   );
-};
+}
 TimeColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const StatisticsColumn = (
-  { className, value },
-  name,
-  { linkPayload, onFilterNameClick },
-) => {
+export function StatisticsColumn({ className, value }, name, { linkPayload, onFilterNameClick }) {
   const defaultColumnProps = {
     itemId: Number(value.linkId),
     statuses: getStatisticsStatuses(name),
@@ -204,13 +200,13 @@ export const StatisticsColumn = (
       </div>
     </div>
   );
-};
+}
 StatisticsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const DefectsColumn = ({ className, value }, name, { linkPayload, onFilterNameClick }) => {
+export function DefectsColumn({ className, value }, name, { linkPayload, onFilterNameClick }) {
   const nameConfig = name.split('$');
   const defectType = nameConfig[2];
   const defectLocator = nameConfig[3];
@@ -262,13 +258,13 @@ export const DefectsColumn = ({ className, value }, name, { linkPayload, onFilte
       </div>
     </div>
   );
-};
+}
 DefectsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
 };
 
-export const PassingRateColumn = ({ className, value }, name, { formatMessage }) => {
+export function PassingRateColumn({ className, value }, name, { formatMessage }) {
   if (value.type === FILTER_TITLE_TYPE) {
     return null;
   }
@@ -289,7 +285,7 @@ export const PassingRateColumn = ({ className, value }, name, { formatMessage })
       </div>
     </div>
   );
-};
+}
 PassingRateColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,

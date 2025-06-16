@@ -29,7 +29,7 @@ import styles from './filterContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterContentWrapped = ({
+export function FilterContentWrapped({
   setIsOpen,
   setAppliedFiltersCount,
   onFilterChange,
@@ -43,7 +43,7 @@ export const FilterContentWrapped = ({
   getClearButtonState,
   getApplyButtonState,
   event,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const formValues = useSelector((state) => getFormValues('filter')(state));
@@ -98,16 +98,11 @@ export const FilterContentWrapped = ({
           ))}
         </div>
         <div className={cx('actions')}>
-          <Button
-            className={cx('clear-all')}
-            variant={'text'}
-            onClick={clearAll}
-            disabled={isClear}
-          >
+          <Button className={cx('clear-all')} variant="text" onClick={clearAll} disabled={isClear}>
             {formatMessage(messages.clearAllFilters)}
           </Button>
           <div className={cx('controls')}>
-            <Button className={cx('cancel')} variant={'ghost'} onClick={closePopover}>
+            <Button className={cx('cancel')} variant="ghost" onClick={closePopover}>
               {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
             </Button>
             <Button className={cx('apply')} type="submit" disabled={isApply}>
@@ -118,7 +113,7 @@ export const FilterContentWrapped = ({
       </div>
     </form>
   );
-};
+}
 
 FilterContentWrapped.propTypes = {
   setIsOpen: PropTypes.func.isRequired,

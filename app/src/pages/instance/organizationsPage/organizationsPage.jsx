@@ -41,7 +41,7 @@ const cx = classNames.bind(styles);
 const PANEL_VIEW = 'PanelView';
 const TABLE_VIEW = 'TableView';
 
-export const OrganizationsPage = () => {
+export function OrganizationsPage() {
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateOrganization(userRoles);
@@ -130,4 +130,4 @@ export const OrganizationsPage = () => {
       )}
     </div>
   );
-};
+}

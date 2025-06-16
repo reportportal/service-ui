@@ -36,11 +36,11 @@ const messages = defineMessages({
 
 export const RENAME_PRODUCT_VERSION_MODAL = 'renameProductVersionModal';
 
-const RenameProductVersionModal = ({
+function RenameProductVersionModal({
   data: { productVersionName, onSubmit },
   initialize,
   handleSubmit,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -69,7 +69,7 @@ const RenameProductVersionModal = ({
       </form>
     </Modal>
   );
-};
+}
 
 RenameProductVersionModal.propTypes = {
   data: PropTypes.shape({

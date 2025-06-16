@@ -21,8 +21,8 @@ import styles from './testParameters.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestParameters = ({ parameters }) =>
-  parameters.length ? (
+export function TestParameters({ parameters }) {
+  return parameters.length ? (
     <table className={cx('test-parameters')}>
       <thead className={cx('header')}>
         <tr className={cx('row')}>
@@ -48,6 +48,7 @@ export const TestParameters = ({ parameters }) =>
       <FormattedMessage id="TestItemDetailsModal.noParameters" defaultMessage="No parameters" />
     </div>
   );
+}
 TestParameters.propTypes = {
   parameters: PropTypes.arrayOf(
     PropTypes.shape({

@@ -39,7 +39,7 @@ export const DEFAULT_FOOTER_LINKS = [
 
 const MAX_HEIGHT_ONE_LINE = 35;
 
-export const Footer = ({ className = '', isPreview = false }) => {
+export function Footer({ className = '', isPreview = false }) {
   const buildVersion = useSelector(uiBuildVersionSelector);
   const customLinks = useSelector(serverFooterLinksSelector);
   const links = [...DEFAULT_FOOTER_LINKS, ...customLinks];
@@ -63,17 +63,17 @@ export const Footer = ({ className = '', isPreview = false }) => {
     <footer className={cx('footer', { 'one-line': isSingleLine }, className)} ref={footerRef}>
       <div className={cx('text-wrapper')}>
         <div className={cx('footer-text')}>
-          <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
+          <FormattedMessage id="Footer.build" defaultMessage="Build" />
           <span>: {buildVersion}</span>
         </div>
         <div className={cx('text-wrapper')}>
           <div className={cx('footer-text')}>
-            <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
+            <FormattedMessage id="Footer.build" defaultMessage="Build" />
             <span>: {buildVersion}</span>
           </div>
           <div className={cx('footer-text')}>
             <span> &copy; ReportPortal 2013-{new Date().getFullYear()}. </span>
-            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved.'} />
+            <FormattedMessage id="Footer.copyright" defaultMessage="All rights reserved." />
           </div>
         </div>
       </div>
@@ -84,6 +84,7 @@ export const Footer = ({ className = '', isPreview = false }) => {
             href={link.url}
             target="_blank"
             onClick={() => handleLinkClick(link.name)}
+            rel="noreferrer"
           >
             {link.name}
           </a>
@@ -91,7 +92,7 @@ export const Footer = ({ className = '', isPreview = false }) => {
       </div>
     </footer>
   );
-};
+}
 
 Footer.propTypes = {
   className: PropTypes.string,

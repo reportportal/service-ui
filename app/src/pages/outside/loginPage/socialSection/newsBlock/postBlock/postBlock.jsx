@@ -32,7 +32,8 @@ export const renderer = {
       return `<a class=${cx(
         'twit-link',
       )} href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
-    } else if (title) {
+    }
+    if (title) {
       return `<a class=${cx(
         'twit-link',
       )} href="${href}" target="_blank" rel="noopener noreferrer"">${title}</a>`;
@@ -66,11 +67,13 @@ const handleClick = (e, tracking) => {
   }
 };
 
-export const PostBlock = ({ tweetData, tracking }) => (
-  <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
-    {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
-  </div>
-);
+export function PostBlock({ tweetData, tracking }) {
+  return (
+    <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
+      {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
+    </div>
+  );
+}
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,

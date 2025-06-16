@@ -34,7 +34,7 @@ import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const HistoryLineItemContent = ({ active, showTriangles, testItem, defectTypes }) => {
+export function HistoryLineItemContent({ active, showTriangles, testItem, defectTypes }) {
   const { status, hasChildren, growthDuration, launchNumber, statistics } = testItem;
   const isNotEmpty = !hasChildren ? Object.keys(statistics.defects).length : false;
 
@@ -56,7 +56,7 @@ export const HistoryLineItemContent = ({ active, showTriangles, testItem, defect
       </div>
     </div>
   );
-};
+}
 HistoryLineItemContent.propTypes = {
   active: PropTypes.bool,
   defectTypes: PropTypes.object.isRequired,

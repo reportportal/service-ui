@@ -24,17 +24,19 @@ import styles from './instanceUserAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstanceUserAvatar = ({ className, userId }) => (
-  <div className={cx('user-avatar', className)}>
-    <Image
-      className={cx('avatar')}
-      src={URLS.userAvatar(userId)}
-      alt="avatar"
-      fallback={DefaultUserImage}
-      preloaderColor="charcoal"
-    />
-  </div>
-);
+export function InstanceUserAvatar({ className, userId }) {
+  return (
+    <div className={cx('user-avatar', className)}>
+      <Image
+        className={cx('avatar')}
+        src={URLS.userAvatar(userId)}
+        alt="avatar"
+        fallback={DefaultUserImage}
+        preloaderColor="charcoal"
+      />
+    </div>
+  );
+}
 
 InstanceUserAvatar.propTypes = {
   className: PropTypes.string,

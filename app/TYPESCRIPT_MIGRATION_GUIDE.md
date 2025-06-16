@@ -18,7 +18,6 @@ The migration strategy allows for gradual adoption:
 #### Before (JSX with PropTypes):
 
 ```jsx
-import { FC } from 'react';
 import PropTypes from 'prop-types';
 
 const MyComponent = ({ title, items, onItemClick, loading }) => {
@@ -42,8 +41,6 @@ MyComponent.defaultProps = {
 #### After (TSX with TypeScript):
 
 ```tsx
-import { FC } from 'react';
-
 interface MyComponentProps {
   title: string;
   items?: string[];
@@ -51,12 +48,12 @@ interface MyComponentProps {
   loading?: boolean;
 }
 
-const MyComponent: FC<MyComponentProps> = ({
+const MyComponent = ({
   title,
   items = [],
   onItemClick = () => {},
   loading = false,
-}) => {
+}: MyComponentProps) => {
   // Component implementation
 };
 ```
@@ -106,7 +103,7 @@ interface ComponentState {
   error: string | null;
 }
 
-const MyComponent: FC<MyComponentProps> = ({ initialData = [] }) => {
+const MyComponent = ({ initialData = [] }: MyComponentProps) => {
   const [state, setState] = useState<ComponentState>({
     data: initialData,
     loading: false,
@@ -236,13 +233,13 @@ interface FormComponentProps {
   disabled?: boolean;
 }
 
-const FormComponent: FC<FormComponentProps> = ({
+const FormComponent = ({
   input,
   meta,
   placeholder,
   disabled,
   ...props
-}) => (
+}: FormComponentProps) => (
   <div>
     <input {...input} placeholder={placeholder} disabled={disabled} {...props} />
     {meta.touched && meta.error && (
@@ -264,7 +261,7 @@ interface ComponentProps {
   optional?: number;
 }
 
-const Component: FC<Props> = ({ required, optional = 42 }) => {
+const Component = ({ required, optional = 42 }: ComponentProps) => {
   // Use destructuring with defaults
 };
 ```
@@ -297,7 +294,7 @@ interface GenericListProps<T> {
   renderItem: (item: T) => ReactNode;
 }
 
-function GenericList<T>({ items, renderItem }: GenericListProps <T>) {
+function GenericList<T>({ items, renderItem }: GenericListProps<T>) {
   return (
     <ul>
       {items.map((item, index) => (
@@ -316,12 +313,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({
+const Button = ({
   variant = 'primary',
   loading = false,
   children,
   ...props
-}) => (
+}: ButtonProps) => (
   <button
     className={`btn btn-${variant} ${loading ? 'loading' : ''}`}
     disabled={loading}
@@ -337,7 +334,7 @@ const Button: FC<ButtonProps> = ({
 ### For Each Component:
 
 1. **Create Interface**: Define props interface replacing PropTypes
-2. **Add Type Annotations**: Add FC<Props> type annotation
+2. **Add Type Annotations**: Add proper typing to component function parameters
 3. **Handle Defaults**: Use destructuring defaults instead of defaultProps
 4. **Update Event Handlers**: Add proper event types
 5. **State Typing**: Add interfaces for component state
@@ -416,6 +413,28 @@ interface RowHighlightingConfig {
   /** ID of the currently highlighted row */
   highlightedRowId?: string | number;
 }
+```
+
+### 6. Avoid Unnecessary Type Annotations
+
+Modern TypeScript can infer component types automatically. Don't add unnecessary complexity:
+
+```tsx
+// Good - TypeScript infers this is a React component
+const MyComponent = ({ title }: { title: string }) => <h1>{title}</h1>;
+
+// Also good - using an interface for complex props
+interface MyComponentProps {
+  title: string;
+  subtitle?: string;
+}
+
+const MyComponent = ({ title, subtitle }: MyComponentProps) => (
+  <div>
+    <h1>{title}</h1>
+    {subtitle && <h2>{subtitle}</h2>}
+  </div>
+);
 ```
 
 ## Troubleshooting

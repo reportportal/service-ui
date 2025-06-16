@@ -49,7 +49,7 @@ const messages = defineMessages({
       'If all your memory space is used for important launches and a new important launch is coming, they will be deleted in reverse chronological order, starting with the oldest launches.',
   },
 });
-const MarkAsImportantModal = ({ data }) => {
+function MarkAsImportantModal({ data }) {
   const { formatMessage } = useIntl();
 
   const { activeProject, launch, onSuccess } = data;
@@ -92,7 +92,7 @@ const MarkAsImportantModal = ({ data }) => {
       </div>
     </ModalLayout>
   );
-};
+}
 MarkAsImportantModal.propTypes = {
   data: PropTypes.object,
 };

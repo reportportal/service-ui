@@ -37,10 +37,7 @@ const getFormattedDate = (value) => {
       .startOf('day')
       .subtract(days - 1, 'days')
       .valueOf();
-  const endOfToday = moment()
-    .add(1, 'days')
-    .startOf('day')
-    .valueOf();
+  const endOfToday = moment().add(1, 'days').startOf('day').valueOf();
   let start = null;
   switch (value) {
     case 'today':

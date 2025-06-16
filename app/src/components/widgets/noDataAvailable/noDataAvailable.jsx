@@ -21,8 +21,10 @@ import styles from './noDataAvailable.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoDataAvailable = () => (
-  <div className={cx('no-data-available')}>
-    <FormattedMessage id="NoDataAvailable.noDataMessage" defaultMessage="No data available." />
-  </div>
-);
+export function NoDataAvailable() {
+  return (
+    <div className={cx('no-data-available')}>
+      <FormattedMessage id="NoDataAvailable.noDataMessage" defaultMessage="No data available." />
+    </div>
+  );
+}

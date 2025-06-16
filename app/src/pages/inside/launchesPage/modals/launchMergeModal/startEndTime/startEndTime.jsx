@@ -22,13 +22,15 @@ import styles from './startEndTime.scss';
 
 const cx = classNames.bind(styles);
 
-export const StartEndTime = ({ start, end }) => (
-  <div className={cx('start-end-time')}>
-    <Input value={dateFormat(start)} disabled />
-    <div className={cx('separator')}>/</div>
-    <Input value={dateFormat(end)} disabled />
-  </div>
-);
+export function StartEndTime({ start, end }) {
+  return (
+    <div className={cx('start-end-time')}>
+      <Input value={dateFormat(start)} disabled />
+      <div className={cx('separator')}>/</div>
+      <Input value={dateFormat(end)} disabled />
+    </div>
+  );
+}
 
 StartEndTime.propTypes = {
   start: PropTypes.number.isRequired,

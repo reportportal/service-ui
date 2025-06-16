@@ -18,16 +18,18 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { ActiveDirectoryFormFields } from '../activeDirectoryFormFields';
 
-export const ActiveDirectorySettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
-  <IntegrationSettings
-    data={data}
-    onUpdate={onUpdate}
-    goToPreviousPage={goToPreviousPage}
-    isGlobal={isGlobal}
-    formFieldsComponent={ActiveDirectoryFormFields}
-    preventTestConnection
-  />
-);
+export function ActiveDirectorySettings({ data, goToPreviousPage, onUpdate, isGlobal }) {
+  return (
+    <IntegrationSettings
+      data={data}
+      onUpdate={onUpdate}
+      goToPreviousPage={goToPreviousPage}
+      isGlobal={isGlobal}
+      formFieldsComponent={ActiveDirectoryFormFields}
+      preventTestConnection
+    />
+  );
+}
 
 ActiveDirectorySettings.propTypes = {
   data: PropTypes.object.isRequired,

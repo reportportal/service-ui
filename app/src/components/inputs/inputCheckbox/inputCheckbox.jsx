@@ -20,7 +20,7 @@ import { CheckIcon } from './checkIcon';
 
 const cx = classNames.bind(styles);
 
-export const InputCheckbox = ({
+export function InputCheckbox({
   children,
   value,
   disabled,
@@ -31,29 +31,35 @@ export const InputCheckbox = ({
   className,
   darkView,
   responsive,
-}) => (
-  // eslint-disable-next-line
-  <label className={cx('input-checkbox', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
-    <input
-      type="checkbox"
-      className={cx('input')}
-      checked={value}
-      disabled={disabled}
-      onChange={onChange}
-    />
-    <CheckIcon
-      disabled={disabled}
-      centered={!children}
-      checked={value}
-      transparentBackground={iconTransparentBackground}
-      darkView={darkView}
-      responsive={responsive}
-    />
-    {children && (
-      <span className={cx('children-container', { disabled, responsive })}>{children}</span>
-    )}
-  </label>
-);
+}) {
+  return (
+    <label
+      className={cx('input-checkbox', className)}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      tabIndex="1"
+    >
+      <input
+        type="checkbox"
+        className={cx('input')}
+        checked={value}
+        disabled={disabled}
+        onChange={onChange}
+      />
+      <CheckIcon
+        disabled={disabled}
+        centered={!children}
+        checked={value}
+        transparentBackground={iconTransparentBackground}
+        darkView={darkView}
+        responsive={responsive}
+      />
+      {children && (
+        <span className={cx('children-container', { disabled, responsive })}>{children}</span>
+      )}
+    </label>
+  );
+}
 InputCheckbox.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,

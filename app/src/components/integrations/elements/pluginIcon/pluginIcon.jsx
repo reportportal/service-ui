@@ -22,7 +22,7 @@ import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations
 import { Image } from 'components/main/image';
 import { RemotePluginIcon } from './remotePluginIcon';
 
-export const PluginIcon = ({ pluginData, className, ...rest }) => {
+export function PluginIcon({ pluginData, className, ...rest }) {
   const { details, name, pluginType } = pluginData;
   const isDynamicIconAvailable = details?.binaryData?.[ICON_FILE_KEY];
 
@@ -50,7 +50,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       )}
     </div>
   );
-};
+}
 PluginIcon.propTypes = {
   pluginData: PropTypes.object,
   className: PropTypes.string,

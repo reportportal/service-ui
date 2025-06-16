@@ -25,7 +25,7 @@ import styles from './groupItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const GroupItem = ({
+export function GroupItem({
   formatMessage,
   attributeValue,
   passingRate,
@@ -34,35 +34,37 @@ export const GroupItem = ({
   onClickGroupItem,
   getSpecificTestListLink,
   isClickable,
-}) => (
-  <div
-    className={cx('group-item', { 'group-item-clickable': isClickable })}
-    style={{ borderTopColor: color }}
-    onClick={isClickable ? () => onClickGroupItem(attributeValue, passingRate, color) : undefined}
-  >
-    <h4 className={cx('item-title')} title={attributeValue}>
-      {attributeValue}
-    </h4>
-    <div className={cx('stat-wrapper')}>
-      <div className={cx('stat-item')}>
-        <span className={cx('stat-item-header')}>{formatMessage(messages.passingRate)}</span>
-        <span className={cx('stat-item-value')}>{`${passingRate} %`}</span>
-      </div>
-      <div className={cx('stat-item')}>
-        <span className={cx('stat-item-header')}>{formatMessage(messages.testCasesCaption)}</span>
-        <span className={cx('stat-item-value')}>{total}</span>
-      </div>
-    </div>
-    <Link
-      className={cx('icon')}
-      to={getSpecificTestListLink(attributeValue)}
-      onClick={(event) => event.stopPropagation()}
-      target="_blank"
+}) {
+  return (
+    <div
+      className={cx('group-item', { 'group-item-clickable': isClickable })}
+      style={{ borderTopColor: color }}
+      onClick={isClickable ? () => onClickGroupItem(attributeValue, passingRate, color) : undefined}
     >
-      {Parser(AnotherPageIcon)}
-    </Link>
-  </div>
-);
+      <h4 className={cx('item-title')} title={attributeValue}>
+        {attributeValue}
+      </h4>
+      <div className={cx('stat-wrapper')}>
+        <div className={cx('stat-item')}>
+          <span className={cx('stat-item-header')}>{formatMessage(messages.passingRate)}</span>
+          <span className={cx('stat-item-value')}>{`${passingRate} %`}</span>
+        </div>
+        <div className={cx('stat-item')}>
+          <span className={cx('stat-item-header')}>{formatMessage(messages.testCasesCaption)}</span>
+          <span className={cx('stat-item-value')}>{total}</span>
+        </div>
+      </div>
+      <Link
+        className={cx('icon')}
+        to={getSpecificTestListLink(attributeValue)}
+        onClick={(event) => event.stopPropagation()}
+        target="_blank"
+      >
+        {Parser(AnotherPageIcon)}
+      </Link>
+    </div>
+  );
+}
 GroupItem.propTypes = {
   ...groupItemPropTypes,
   color: PropTypes.string,

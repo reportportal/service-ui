@@ -24,13 +24,13 @@ import PropTypes from 'prop-types';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { useSelector } from 'react-redux';
-import { InfoBlockWithControl } from '../../../content/elements/infoBlockWithControl';
+import { InfoBlockWithControl } from '../../elements/infoBlockWithControl';
 import { messages } from '../messages';
 import styles from './emptyRuleState.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
+export function EmptyRuleState({ ruleName, onCreateClick }) {
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
   const isUpdateSettingAvailable = canUpdateSettings(userRoles);
@@ -53,7 +53,7 @@ export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
       />
     </div>
   );
-};
+}
 
 EmptyRuleState.propTypes = {
   ruleName: PropTypes.string.isRequired,

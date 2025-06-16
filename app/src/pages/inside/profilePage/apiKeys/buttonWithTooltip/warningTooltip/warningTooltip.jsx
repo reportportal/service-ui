@@ -20,22 +20,24 @@ import classNames from 'classnames/bind';
 import styles from './warningTooltip.scss';
 
 const cx = classNames.bind(styles);
-export const WarningTooltip = () => (
-  <Fragment>
-    <p className={cx('text')}>
-      <FormattedMessage
-        id="WarningTooltip.description"
-        defaultMessage="If you need to update your access token, click regenerate to have new one."
-      />
-    </p>
-    <p className={cx('warning')}>
-      <FormattedMessage id="WarningTooltip.warning" defaultMessage="Warning!" />
-    </p>
-    <p className={cx('text')}>
-      <FormattedMessage
-        id="WarningTooltip.warningDescription"
-        defaultMessage="All configured agents with old access token will not be working after that"
-      />
-    </p>
-  </Fragment>
-);
+export function WarningTooltip() {
+  return (
+    <>
+      <p className={cx('text')}>
+        <FormattedMessage
+          id="WarningTooltip.description"
+          defaultMessage="If you need to update your access token, click regenerate to have new one."
+        />
+      </p>
+      <p className={cx('warning')}>
+        <FormattedMessage id="WarningTooltip.warning" defaultMessage="Warning!" />
+      </p>
+      <p className={cx('text')}>
+        <FormattedMessage
+          id="WarningTooltip.warningDescription"
+          defaultMessage="All configured agents with old access token will not be working after that"
+        />
+      </p>
+    </>
+  );
+}

@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-const RevokeApiKey = ({ data }) => {
+function RevokeApiKey({ data }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -100,7 +100,7 @@ const RevokeApiKey = ({ data }) => {
       )}
     </ModalLayout>
   );
-};
+}
 RevokeApiKey.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.number.isRequired,

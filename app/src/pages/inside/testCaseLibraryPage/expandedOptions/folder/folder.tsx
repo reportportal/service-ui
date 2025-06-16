@@ -36,12 +36,7 @@ interface FolderProps {
   setIsEmptyFolder: (count: boolean) => void;
 }
 
-export const Folder = ({
-  folder,
-  setActiveFolder,
-  activeFolder,
-  setIsEmptyFolder,
-}: FolderProps) => {
+export function Folder({ folder, setActiveFolder, activeFolder, setIsEmptyFolder }: FolderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = useCallback(
@@ -93,4 +88,4 @@ export const Folder = ({
       )}
     </li>
   );
-};
+}

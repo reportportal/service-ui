@@ -31,7 +31,7 @@ import styles from './testItemDetails.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestItemDetails = ({
+export function TestItemDetails({
   item,
   mode,
   selectItem,
@@ -44,7 +44,7 @@ export const TestItemDetails = ({
   showErrorLogs,
   loading,
   onToggleCallback,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const [showDetails, setShowDetails] = useState(showErrorLogs);
 
@@ -112,7 +112,7 @@ export const TestItemDetails = ({
       )}
     </div>
   );
-};
+}
 
 TestItemDetails.propTypes = {
   item: PropTypes.object.isRequired,

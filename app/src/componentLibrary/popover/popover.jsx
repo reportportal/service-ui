@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 const TRIANGLE_SIZE = 9;
 const SAFE_ZONE = 4;
 
-export const Popover = ({
+export function Popover({
   children,
   title,
   side,
@@ -37,7 +37,7 @@ export const Popover = ({
   arrowVerticalPosition,
   topPosition,
   arrowVerticalOffset,
-}) => {
+}) {
   const popoverRef = useRef();
   const [top, setTop] = useState(topPosition);
   const [left, setLeft] = useState(0);
@@ -123,7 +123,7 @@ export const Popover = ({
       <div className={cx('content')}>{children}</div>
     </div>
   );
-};
+}
 
 Popover.propTypes = {
   children: PropTypes.node,

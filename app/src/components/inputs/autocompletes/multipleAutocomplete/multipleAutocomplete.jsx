@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { Manager, Reference, Popper } from 'react-popper';
-import { AutocompleteMenu } from './../common/autocompleteMenu';
+import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { SelectedItems } from './selectedItems';
 import { MultipleDownshift } from './multipleDownshift';
 import styles from './multipleAutocomplete.scss';
@@ -90,14 +90,16 @@ export class MultipleAutocomplete extends Component {
     focused: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItems) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+        ...rest,
+      });
 
   handleChange = (...args) => {
     this.updatePosition?.();

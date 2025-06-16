@@ -47,7 +47,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { canWorkWithTests } from 'common/utils/permissions/permissions';
 
 // TODO: Refactor to avoid duplication
-export const SuitesPageWrapped = ({
+export function SuitesPageWrapped({
   deleteItems,
   onEditItem,
   onEditItems,
@@ -66,7 +66,7 @@ export const SuitesPageWrapped = ({
   onFilterChange,
   filterErrors,
   filterEntities,
-}) => {
+}) {
   const { trackEvent } = useTracking({ page: SUITE_PAGE });
 
   const [highlightedRowId, setHighlightedRowId] = useState(null);
@@ -193,7 +193,7 @@ export const SuitesPageWrapped = ({
       </PageSection>
     </PageLayout>
   );
-};
+}
 
 SuitesPageWrapped.propTypes = {
   deleteItems: PropTypes.func,

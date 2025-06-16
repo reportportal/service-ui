@@ -30,7 +30,7 @@ import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants'
 import { formatFieldName } from '../utils';
 import { Layout } from '../../layout';
 
-const UniqueErrors = ({
+function UniqueErrors({
   analyzerConfig,
   onFormSubmit,
   initialize,
@@ -38,7 +38,7 @@ const UniqueErrors = ({
   hasPermission,
   analyzerUnavailableTitle,
   isAnalyzerServiceAvailable,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
   const { trackEvent } = useTracking();
@@ -123,7 +123,7 @@ const UniqueErrors = ({
       </form>
     </Layout>
   );
-};
+}
 UniqueErrors.propTypes = {
   analyzerConfig: PropTypes.object.isRequired,
   onFormSubmit: PropTypes.func.isRequired,

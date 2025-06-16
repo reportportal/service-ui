@@ -20,39 +20,41 @@ import styles from './checkIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const CheckIcon = ({
+export function CheckIcon({
   disabled,
   centered,
   checked,
   transparentBackground,
   darkView,
   responsive,
-}) => (
-  <div
-    className={cx('square', {
-      centered,
-      checked,
-      disabled,
-      'transparent-background': transparentBackground,
-      'dark-view': darkView,
-      responsive,
-    })}
-  >
-    <svg
-      className={cx('icon', { responsive })}
-      xmlns="http://www.w3.org/2000/svg"
-      width="9"
-      height="10"
-      viewBox="0 0 8 7"
+}) {
+  return (
+    <div
+      className={cx('square', {
+        centered,
+        checked,
+        disabled,
+        'transparent-background': transparentBackground,
+        'dark-view': darkView,
+        responsive,
+      })}
     >
-      <polygon
-        fill={disabled ? '#999' : '#fff'}
-        fillRule="evenodd"
-        points="0 3.111 3 6.222 8 1.037 7 0 3 4.148 1 2.074"
-      />
-    </svg>
-  </div>
-);
+      <svg
+        className={cx('icon', { responsive })}
+        xmlns="http://www.w3.org/2000/svg"
+        width="9"
+        height="10"
+        viewBox="0 0 8 7"
+      >
+        <polygon
+          fill={disabled ? '#999' : '#fff'}
+          fillRule="evenodd"
+          points="0 3.111 3 6.222 8 1.037 7 0 3 4.148 1 2.074"
+        />
+      </svg>
+    </div>
+  );
+}
 
 CheckIcon.propTypes = {
   disabled: PropTypes.bool,

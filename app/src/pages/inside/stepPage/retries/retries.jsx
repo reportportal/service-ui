@@ -22,7 +22,7 @@ import styles from './retries.scss';
 
 const cx = classNames.bind(styles);
 
-export const Retries = ({
+export function Retries({
   testItemId,
   retries,
   selectedId,
@@ -31,22 +31,24 @@ export const Retries = ({
   loading,
   onRetrySelect,
   collapsed,
-}) => (
-  <div className={cx('retries')}>
-    <div className={cx('list')}>
-      <RetriesList retries={retries} selectedId={selectedId} onRetrySelect={onRetrySelect} />
+}) {
+  return (
+    <div className={cx('retries')}>
+      <div className={cx('list')}>
+        <RetriesList retries={retries} selectedId={selectedId} onRetrySelect={onRetrySelect} />
+      </div>
+      <div className={cx('details', { collapsed })}>
+        <RetriesStackTrace
+          retryId={selectedId}
+          testItemId={testItemId}
+          index={selectedIndex}
+          message={logItem ? logItem.message : ''}
+          loading={loading}
+        />
+      </div>
     </div>
-    <div className={cx('details', { collapsed })}>
-      <RetriesStackTrace
-        retryId={selectedId}
-        testItemId={testItemId}
-        index={selectedIndex}
-        message={logItem ? logItem.message : ''}
-        loading={loading}
-      />
-    </div>
-  </div>
-);
+  );
+}
 Retries.propTypes = {
   testItemId: PropTypes.number.isRequired,
   retries: PropTypes.arrayOf(PropTypes.object),

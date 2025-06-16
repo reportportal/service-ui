@@ -29,7 +29,7 @@ import {
 import { IntegrationSettings } from 'components/integrations/elements';
 import { messages } from '../messages';
 
-export const JiraSettings = (props) => {
+export function JiraSettings(props) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -111,7 +111,7 @@ export const JiraSettings = (props) => {
       isEmptyConfiguration={!data.integrationParameters.defectFormFields?.length}
     />
   );
-};
+}
 
 JiraSettings.propTypes = {
   data: PropTypes.object.isRequired,

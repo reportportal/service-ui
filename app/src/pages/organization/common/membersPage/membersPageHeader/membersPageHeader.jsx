@@ -22,7 +22,7 @@ import styles from './membersPageHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersPageHeader = ({ title, children, organizationName, projectName }) => {
+export function MembersPageHeader({ title, children, organizationName, projectName }) {
   return (
     <div className={cx('members-page-header-container')}>
       <UserPageLocationLevel organizationName={organizationName} projectName={projectName} />
@@ -32,7 +32,7 @@ export const MembersPageHeader = ({ title, children, organizationName, projectNa
       </div>
     </div>
   );
-};
+}
 
 MembersPageHeader.propTypes = {
   title: PropTypes.string.isRequired,

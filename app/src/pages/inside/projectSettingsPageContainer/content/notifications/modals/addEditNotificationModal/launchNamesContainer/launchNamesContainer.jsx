@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) => {
+export function LaunchNamesContainer({ highlightUnStoredItem, value, ...rest }) {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
   const [showMessage, setShowMessage] = useState(false);
@@ -93,7 +93,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
       )}
     </>
   );
-};
+}
 LaunchNamesContainer.propTypes = {
   highlightUnStoredItem: PropTypes.bool.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),

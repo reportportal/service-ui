@@ -17,6 +17,6 @@
 import React from 'react';
 import { MultipleAutocompleteField } from 'components/fields/dynamicFieldsSection/fields/multipleAutocompleteField';
 
-export const CreatableMultipleAutocompleteField = (props) => (
-  <MultipleAutocompleteField createWithoutConfirmation={false} {...props} />
-);
+export function CreatableMultipleAutocompleteField(props) {
+  return <MultipleAutocompleteField createWithoutConfirmation={false} {...props} />;
+}

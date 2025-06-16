@@ -40,12 +40,12 @@ import styles from './organizationFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsFilter = ({
+export function OrganizationsFilter({
   entities,
   onFilterChange,
   appliedFiltersCount,
   setAppliedFiltersCount,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -237,7 +237,7 @@ export const OrganizationsFilter = ({
       event={eventHandler}
     />
   );
-};
+}
 
 OrganizationsFilter.propTypes = {
   entities: PropTypes.objectOf(

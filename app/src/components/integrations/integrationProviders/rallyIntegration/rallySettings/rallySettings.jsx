@@ -29,7 +29,7 @@ import {
 import { IntegrationSettings } from 'components/integrations/elements';
 import { messages } from '../messages';
 
-export const RallySettings = (props) => {
+export function RallySettings(props) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -107,7 +107,7 @@ export const RallySettings = (props) => {
       isEmptyConfiguration={!data.integrationParameters.defectFormFields?.length}
     />
   );
-};
+}
 
 RallySettings.propTypes = {
   data: PropTypes.object.isRequired,

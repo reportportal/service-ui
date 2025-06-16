@@ -59,7 +59,7 @@ const messages = defineMessages({
 const MAX_FILE_SIZE = 134217728;
 const ACCEPT_FILE_MIME_TYPES = ['.jar', '.json'];
 
-export const UploadPluginModal = ({ data: { onImport } }) => {
+export function UploadPluginModal({ data: { onImport } }) {
   const {
     files,
     actions: { addFiles, removeFile, updateFile },
@@ -115,7 +115,7 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
       />
     </UploadModalLayout>
   );
-};
+}
 UploadPluginModal.propTypes = {
   data: PropTypes.shape({
     onImport: PropTypes.func,

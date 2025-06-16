@@ -22,10 +22,12 @@ import { SocialsBlock } from './socialsBlock';
 
 const cx = classNames.bind(styles);
 
-export const SocialSection = () => (
-  <div className={cx('social-section')}>
-    <NewsBlock />
-    <SectionsSeparator />
-    <SocialsBlock />
-  </div>
-);
+export function SocialSection() {
+  return (
+    <div className={cx('social-section')}>
+      <NewsBlock />
+      <SectionsSeparator />
+      <SocialsBlock />
+    </div>
+  );
+}

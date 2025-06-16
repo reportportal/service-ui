@@ -43,9 +43,9 @@ import styles from './defectTypes.scss';
 
 const cx = classNames.bind(styles);
 
-const CreateDefectTooltip = ({ formatMessage }) => (
-  <span className={cx('create-tooltip')}>{formatMessage(messages.createDefectIcon)}</span>
-);
+function CreateDefectTooltip({ formatMessage }) {
+  return <span className={cx('create-tooltip')}>{formatMessage(messages.createDefectIcon)}</span>;
+}
 CreateDefectTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
@@ -59,7 +59,7 @@ const CreateDefect = withTooltip({
     className={cx('group-create', { disabled })}
     onClick={onClick}
     onKeyDown={onClick}
-    data-automation-id={'createDefectTypeIcon'}
+    data-automation-id="createDefectTypeIcon"
   >
     {Parser(CreateDefectIcon)}
   </i>
@@ -70,7 +70,7 @@ CreateDefect.propTypes = {
   disabled: PropTypes.bool.isRequired,
 };
 
-export const DefectTypes = ({ setHeaderTitleNode }) => {
+export function DefectTypes({ setHeaderTitleNode }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -132,7 +132,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                   trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
                 )
               }
-              data-automation-id={'createDefectTypeButton'}
+              data-automation-id="createDefectTypeButton"
             >
               {formatMessage(messages.createDefectHeader)}
             </Button>
@@ -227,7 +227,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
       </div>
     </SettingsPageContent>
   );
-};
+}
 DefectTypes.propTypes = {
   setHeaderTitleNode: PropTypes.func.isRequired,
 };

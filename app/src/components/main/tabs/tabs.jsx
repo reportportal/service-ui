@@ -23,7 +23,7 @@ import styles from './tabs.scss';
 
 const cx = classNames.bind(styles);
 
-export const Tabs = ({ config, activeTab, withContent }) => {
+export function Tabs({ config, activeTab, withContent }) {
   const [activeTabIndex, setActiveTabIndex] = useState(() => {
     const tabIndex = Object.keys(config).indexOf(activeTab);
     return tabIndex >= 0 ? tabIndex : 0;
@@ -78,7 +78,7 @@ export const Tabs = ({ config, activeTab, withContent }) => {
       {withContent && <div className={cx('tab-content')}>{activeTabInfo.component}</div>}
     </div>
   );
-};
+}
 
 export const TabsConfigShape = PropTypes.objectOf(
   PropTypes.shape({

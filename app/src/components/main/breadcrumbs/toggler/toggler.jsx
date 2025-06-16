@@ -24,11 +24,13 @@ import styles from './toggler.scss';
 
 const cx = classNames.bind(styles);
 
-export const Toggler = ({ disabled, expanded, onToggleExpand }) => (
-  <div className={cx('toggler', { disabled })} onClick={onToggleExpand}>
-    {!disabled && Parser(expanded ? SquareMinusIcon : SquarePlusIcon)}
-  </div>
-);
+export function Toggler({ disabled, expanded, onToggleExpand }) {
+  return (
+    <div className={cx('toggler', { disabled })} onClick={onToggleExpand}>
+      {!disabled && Parser(expanded ? SquareMinusIcon : SquarePlusIcon)}
+    </div>
+  );
+}
 Toggler.propTypes = {
   expanded: PropTypes.bool,
   onToggleExpand: PropTypes.func,

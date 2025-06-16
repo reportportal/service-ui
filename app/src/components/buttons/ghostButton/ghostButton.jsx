@@ -21,7 +21,7 @@ import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const GhostButton = ({
+export function GhostButton({
   type,
   children,
   disabled,
@@ -43,7 +43,7 @@ export const GhostButton = ({
   transparentBackground,
   appearance,
   preventIconParsing,
-}) => {
+}) {
   const classes = cx('ghost-button', {
     disabled,
     tiny,
@@ -77,7 +77,7 @@ export const GhostButton = ({
       {children && <span className={cx('text')}>{children}</span>}
     </button>
   );
-};
+}
 
 GhostButton.propTypes = {
   children: PropTypes.node,

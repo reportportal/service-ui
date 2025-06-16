@@ -38,14 +38,18 @@ export class NewsBlock extends Component {
   static defaultProps = {
     tweets: [],
   };
+
   constructor(props) {
     super(props);
     window.addEventListener('resize', this.windowResizeHandler, false);
   }
+
   state = { twitterBlockHeight: window.innerWidth < 992 ? 160 : 500 };
-  componentWillUnmount = () => {
+
+  componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeHandler, false);
-  };
+  }
+
   windowResizeHandler = (e) => {
     if (this.state.twitterBlockHeight === 500 && e.target.innerWidth < 992) {
       this.setState({ twitterBlockHeight: 160 });
@@ -62,8 +66,8 @@ export class NewsBlock extends Component {
           <div className={cx('twitter-title')}>
             <div className={cx('twitter-icon')} />
             <FormattedMessage
-              id={'NewsBlock.twitterTitle'}
-              defaultMessage={'Be informed with our latest tweets'}
+              id="NewsBlock.twitterTitle"
+              defaultMessage="Be informed with our latest tweets"
             />
           </div>
           <div className={cx('twitter-news')}>

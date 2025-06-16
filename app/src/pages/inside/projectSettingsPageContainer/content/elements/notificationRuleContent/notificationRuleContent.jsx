@@ -82,7 +82,7 @@ const messages = defineMessages({
   },
 });
 
-export const NotificationRuleContent = ({
+export function NotificationRuleContent({
   item: {
     type,
     informOwner,
@@ -94,7 +94,7 @@ export const NotificationRuleContent = ({
     ruleDetails,
   },
   ruleFields,
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   const recipientsValue = informOwner
@@ -117,9 +117,8 @@ export const NotificationRuleContent = ({
           ? messages.attributesLabelAll
           : messages.attributesLabelAny,
       )}`;
-    } else {
-      return formatMessage(messages.attributesLabel);
     }
+    return formatMessage(messages.attributesLabel);
   };
   const renderDynamicFields = () => {
     if (type === EMAIL)
@@ -129,22 +128,21 @@ export const NotificationRuleContent = ({
           <span className={cx('value')}>{recipientsValue.join(SEPARATOR)}</span>
         </>
       );
-    else {
-      return (
-        ruleDetails &&
-        ruleFields?.reduce((acc, field) => {
-          if (ruleDetails[field.name]) {
-            acc.push(
-              <Fragment key={field.name}>
-                <span className={cx('field')}>{field.label}</span>
-                <span className={cx('value')}>{ruleDetails[field.name]}</span>
-              </Fragment>,
-            );
-          }
-          return acc;
-        }, [])
-      );
-    }
+
+    return (
+      ruleDetails &&
+      ruleFields?.reduce((acc, field) => {
+        if (ruleDetails[field.name]) {
+          acc.push(
+            <Fragment key={field.name}>
+              <span className={cx('field')}>{field.label}</span>
+              <span className={cx('value')}>{ruleDetails[field.name]}</span>
+            </Fragment>,
+          );
+        }
+        return acc;
+      }, [])
+    );
   };
 
   return (
@@ -168,7 +166,7 @@ export const NotificationRuleContent = ({
       )}
     </div>
   );
-};
+}
 
 NotificationRuleContent.propTypes = {
   item: PropTypes.shape({

@@ -61,20 +61,19 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
   }
 
   formatFilterValue = (value) => value?.[0];
+
   parseFilterValue = (value) => value && [value];
 
   render() {
     const { formAppearance, onFormAppearanceChange, eventsInfo } = this.props;
     return (
-      <Fragment>
-        <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
-            formAppearance={formAppearance}
-            onFormAppearanceChange={onFormAppearanceChange}
-            eventsInfo={eventsInfo}
-          />
-        </FieldProvider>
-      </Fragment>
+      <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
+        <FiltersControl
+          formAppearance={formAppearance}
+          onFormAppearanceChange={onFormAppearanceChange}
+          eventsInfo={eventsInfo}
+        />
+      </FieldProvider>
     );
   }
 }

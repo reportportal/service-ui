@@ -20,16 +20,18 @@ import styles from './btsAuthFieldsInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const BtsAuthFieldsInfo = ({ fieldsConfig = [] }) => (
-  <>
-    {fieldsConfig.map((item) => (
-      <div key={item.value} className={cx('field-item')}>
-        <span className={cx('field-item-title')}>{item.message}</span>
-        <span className={cx('field-item-value')}>{item.value}</span>
-      </div>
-    ))}
-  </>
-);
+export function BtsAuthFieldsInfo({ fieldsConfig = [] }) {
+  return (
+    <>
+      {fieldsConfig.map((item) => (
+        <div key={item.value} className={cx('field-item')}>
+          <span className={cx('field-item-title')}>{item.message}</span>
+          <span className={cx('field-item-value')}>{item.value}</span>
+        </div>
+      ))}
+    </>
+  );
+}
 
 BtsAuthFieldsInfo.propTypes = {
   fieldsConfig: PropTypes.arrayOf(

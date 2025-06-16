@@ -22,29 +22,31 @@ import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
 
-export const HexColorPickerComponent = ({ label, value, presets, onChange }) => (
-  <div className={cx('hex-color-picker')}>
-    <div className={cx('label')}>{label}</div>
-    <HexColorPicker color={value} onChange={onChange} />
-    <section className={cx('section')}>
-      <div className={cx('hex-color-input-wrapper')}>
-        <span>HEX</span>
-        <HexColorInput color={value} onChange={onChange} prefixed />
-        <div className={cx('hex-color-preset', 'current')} style={{ background: value }} />
-      </div>
-      <div className={cx('hex-color-presets')}>
-        {presets.map((presetColor) => (
-          <button
-            key={presetColor}
-            className={cx('hex-color-preset')}
-            style={{ background: presetColor }}
-            onClick={() => onChange(presetColor)}
-          />
-        ))}
-      </div>
-    </section>
-  </div>
-);
+export function HexColorPickerComponent({ label, value, presets, onChange }) {
+  return (
+    <div className={cx('hex-color-picker')}>
+      <div className={cx('label')}>{label}</div>
+      <HexColorPicker color={value} onChange={onChange} />
+      <section className={cx('section')}>
+        <div className={cx('hex-color-input-wrapper')}>
+          <span>HEX</span>
+          <HexColorInput color={value} onChange={onChange} prefixed />
+          <div className={cx('hex-color-preset', 'current')} style={{ background: value }} />
+        </div>
+        <div className={cx('hex-color-presets')}>
+          {presets.map((presetColor) => (
+            <button
+              key={presetColor}
+              className={cx('hex-color-preset')}
+              style={{ background: presetColor }}
+              onClick={() => onChange(presetColor)}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
 
 HexColorPickerComponent.propTypes = {
   label: PropTypes.string,

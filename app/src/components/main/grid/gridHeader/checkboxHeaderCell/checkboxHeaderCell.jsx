@@ -21,11 +21,13 @@ import styles from './checkboxHeaderCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const CheckboxHeaderCell = ({ value, onChange }) => (
-  <div className={cx('checkbox-header-cell')}>
-    <InputCheckbox value={value} onChange={onChange} />
-  </div>
-);
+export function CheckboxHeaderCell({ value, onChange }) {
+  return (
+    <div className={cx('checkbox-header-cell')}>
+      <InputCheckbox value={value} onChange={onChange} />
+    </div>
+  );
+}
 CheckboxHeaderCell.propTypes = {
   value: PropTypes.bool,
   onChange: PropTypes.func,

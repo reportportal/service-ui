@@ -21,7 +21,7 @@ import styles from './radioButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const RadioButton = ({ option, value, onChange, onFocus, onBlur, className, variant }) => {
+export function RadioButton({ option, value, onChange, onFocus, onBlur, className, variant }) {
   const inputRef = useRef(null);
   const isChecked = option.value === value;
 
@@ -75,7 +75,7 @@ export const RadioButton = ({ option, value, onChange, onFocus, onBlur, classNam
       <span className={cx(variant, 'children-container')}>{option.label}</span>
     </label>
   );
-};
+}
 RadioButton.propTypes = {
   variant: PropTypes.oneOf(['light', 'dark']),
   option: PropTypes.shape({

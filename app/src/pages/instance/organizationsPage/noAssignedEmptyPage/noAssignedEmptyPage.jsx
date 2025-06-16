@@ -29,7 +29,7 @@ import styles from './noAssignedEmptyPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoAssignedEmptyPage = () => {
+export function NoAssignedEmptyPage() {
   const { formatMessage } = useIntl();
   const fullName = useSelector(fullNameSelector);
   const instanceType = useSelector(instanceTypeSelector);
@@ -77,4 +77,4 @@ export const NoAssignedEmptyPage = () => {
       <img className={cx('footer-icon')} src={FooterImg} alt="footer" />
     </div>
   );
-};
+}

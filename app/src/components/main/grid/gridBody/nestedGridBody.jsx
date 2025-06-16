@@ -21,7 +21,7 @@ import { columnPropTypes } from '../propTypes';
 
 // The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridRow.
 
-export const NestedGridBody = ({ data, ...rest }) => {
+export function NestedGridBody({ data, ...rest }) {
   const Component = rest.nestedGridRow || NestedGridRow;
   return data.map((nodeData) =>
     'hasContent' in nodeData ? (
@@ -30,7 +30,7 @@ export const NestedGridBody = ({ data, ...rest }) => {
       <GridRow value={nodeData} {...rest} key={nodeData.id} />
     ),
   );
-};
+}
 
 NestedGridBody.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),

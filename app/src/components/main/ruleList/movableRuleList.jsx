@@ -29,7 +29,7 @@ const ReactGridLayout = WidthProvider(RGL);
 const calculateLayout = (data) =>
   data.map((item) => ({ x: 0, y: item.order, w: 1, h: 1, i: String(item.id) }));
 
-export const MovableRuleList = ({ data, onMove, ...rest }) => {
+export function MovableRuleList({ data, onMove, ...rest }) {
   const isFirefox = typeof InstallTrigger !== 'undefined';
   const maxItemOrder = data.length - 1;
   const [layout, setLayout] = React.useState(calculateLayout(data));
@@ -45,7 +45,8 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
     const updatedData = data.map((item) => {
       if (item.order === itemToMove.order) {
         return { ...item, order: nextOrder };
-      } else if (item.order === nextOrder) {
+      }
+      if (item.order === nextOrder) {
         return { ...item, order: itemToMove.order };
       }
 
@@ -85,7 +86,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
       </ReactGridLayout>
     </div>
   );
-};
+}
 MovableRuleList.propTypes = {
   data: PropTypes.array,
   ...ruleListItemPropTypes,

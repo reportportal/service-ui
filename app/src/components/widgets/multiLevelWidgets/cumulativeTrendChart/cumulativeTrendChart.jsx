@@ -107,10 +107,10 @@ export class CumulativeTrendChart extends PureComponent {
     isLoading: false,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.getConfig();
     this.setLegendControlsShown(this.props.container.offsetWidth);
-  };
+  }
 
   componentDidUpdate(prevProps) {
     if (

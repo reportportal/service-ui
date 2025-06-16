@@ -18,15 +18,17 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { SauceLabsFormFields } from '../sauceLabsFormFields';
 
-export const SauceLabsSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
-  <IntegrationSettings
-    data={data}
-    onUpdate={onUpdate}
-    goToPreviousPage={goToPreviousPage}
-    isGlobal={isGlobal}
-    formFieldsComponent={SauceLabsFormFields}
-  />
-);
+export function SauceLabsSettings({ data, goToPreviousPage, onUpdate, isGlobal }) {
+  return (
+    <IntegrationSettings
+      data={data}
+      onUpdate={onUpdate}
+      goToPreviousPage={goToPreviousPage}
+      isGlobal={isGlobal}
+      formFieldsComponent={SauceLabsFormFields}
+    />
+  );
+}
 
 SauceLabsSettings.propTypes = {
   data: PropTypes.object.isRequired,

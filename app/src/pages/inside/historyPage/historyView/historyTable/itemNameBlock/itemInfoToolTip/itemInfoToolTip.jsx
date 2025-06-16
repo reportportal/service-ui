@@ -26,7 +26,7 @@ import styles from './itemInfoToolTip.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemInfoToolTip = ({ data }) => {
+export function ItemInfoToolTip({ data }) {
   const start = new Date(data.startTime).getTime();
   const end = new Date(data.endTime).getTime();
   const { value: startTime, unit } = getRelativeUnits(start);
@@ -61,7 +61,7 @@ export const ItemInfoToolTip = ({ data }) => {
       <MarkdownViewer value={data.description} />
     </div>
   );
-};
+}
 ItemInfoToolTip.propTypes = {
   data: PropTypes.object,
 };

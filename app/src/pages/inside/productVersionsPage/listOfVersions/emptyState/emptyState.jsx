@@ -26,7 +26,7 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { messages as parentMessage } from '../../messages';
 import { messages } from './messages';
 
-export const EmptyState = ({ openCreateProductVersionModal }) => {
+export function EmptyState({ openCreateProductVersionModal }) {
   const { formatMessage } = useIntl();
 
   const benefits = [
@@ -61,7 +61,7 @@ export const EmptyState = ({ openCreateProductVersionModal }) => {
       />
     </>
   );
-};
+}
 
 EmptyState.propTypes = {
   openCreateProductVersionModal: PropTypes.func.isRequired,

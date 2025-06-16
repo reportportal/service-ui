@@ -24,7 +24,7 @@ const NEW_ATTRIBUTE = {
   new: true,
 };
 
-export const EditableAttributeList = ({
+export function EditableAttributeList({
   attributes,
   onChange,
   disabled,
@@ -35,7 +35,7 @@ export const EditableAttributeList = ({
   editable,
   defaultOpen,
   ...rest
-}) => {
+}) {
   const handleAddNew = () => {
     onChange([...attributes, NEW_ATTRIBUTE]);
   };
@@ -65,7 +65,7 @@ export const EditableAttributeList = ({
       {...rest}
     />
   );
-};
+}
 
 EditableAttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),

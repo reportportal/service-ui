@@ -131,7 +131,7 @@ const messages = defineMessages({
 
 const urlValidator = bindMessageToValidator(validate.ldapUrl, 'requiredFieldHint');
 
-const LdapFormFieldsComponent = ({
+function LdapFormFieldsComponent({
   initialize,
   change,
   stepNumber,
@@ -141,7 +141,7 @@ const LdapFormFieldsComponent = ({
   passwordEncoderType,
   nameType,
   updateMetaData,
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -235,7 +235,7 @@ const LdapFormFieldsComponent = ({
         label: messages.urlLabel,
         children: (
           <FieldErrorHint>
-            <FieldTextConditional conditions={urlConditions} placeholder={'example.com'} />
+            <FieldTextConditional conditions={urlConditions} placeholder="example.com" />
           </FieldErrorHint>
         ),
       },
@@ -376,17 +376,17 @@ const LdapFormFieldsComponent = ({
 
     if (isFirstStep) {
       return firstStepFields;
-    } else if (stepNumber) {
-      return secondStepFields;
-    } else {
-      return [];
     }
+    if (stepNumber) {
+      return secondStepFields;
+    }
+    return [];
   };
 
   const fields = getFieldsConfig();
 
   return (
-    <Fragment>
+    <>
       {fields.map((item) => (
         <IntegrationFormField
           key={item.fieldProps.name}
@@ -399,9 +399,9 @@ const LdapFormFieldsComponent = ({
           {item.children}
         </IntegrationFormField>
       ))}
-    </Fragment>
+    </>
   );
-};
+}
 LdapFormFieldsComponent.propTypes = {
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,

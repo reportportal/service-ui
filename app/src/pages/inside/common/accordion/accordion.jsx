@@ -22,7 +22,7 @@ import styles from './accordion.scss';
 
 const cx = classNames.bind(styles);
 
-export const Accordion = ({ tabs, toggleTab }) => {
+export function Accordion({ tabs, toggleTab }) {
   return (
     <div className={cx('accordion')}>
       {tabs.length > 0 &&
@@ -37,7 +37,7 @@ export const Accordion = ({ tabs, toggleTab }) => {
           ))}
     </div>
   );
-};
+}
 Accordion.propTypes = {
   tabs: PropTypes.array,
   toggleTab: PropTypes.func,

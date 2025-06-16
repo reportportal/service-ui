@@ -21,14 +21,7 @@ import styles from './inputDropdownSortingOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownSortingOption = ({
-  label,
-  disabled,
-  selected,
-  subOption,
-  onChange,
-  value,
-}) => {
+export function DropdownSortingOption({ label, disabled, selected, subOption, onChange, value }) {
   const onChangeHandler = () => {
     onChange?.(value);
   };
@@ -45,7 +38,7 @@ export const DropdownSortingOption = ({
       </div>
     </div>
   );
-};
+}
 
 DropdownSortingOption.propTypes = {
   value: PropTypes.string,

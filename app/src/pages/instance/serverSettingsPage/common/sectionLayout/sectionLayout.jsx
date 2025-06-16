@@ -22,7 +22,7 @@ import styles from './sectionLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const SectionLayout = ({ children, header }) => {
+export function SectionLayout({ children, header }) {
   return (
     <div className={cx('section-layout')}>
       <div className={cx('header')}>
@@ -31,7 +31,7 @@ export const SectionLayout = ({ children, header }) => {
       <div className={cx('content')}>{children}</div>
     </div>
   );
-};
+}
 SectionLayout.propTypes = {
   children: PropTypes.node.isRequired,
   header: PropTypes.string.isRequired,

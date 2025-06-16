@@ -20,9 +20,9 @@ import styles from './loginPageSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const LoginPageSection = ({ left, children }) => (
-  <div className={cx('login-page-section', { left })}>{children}</div>
-);
+export function LoginPageSection({ left, children }) {
+  return <div className={cx('login-page-section', { left })}>{children}</div>;
+}
 
 LoginPageSection.propTypes = {
   children: PropTypes.node,

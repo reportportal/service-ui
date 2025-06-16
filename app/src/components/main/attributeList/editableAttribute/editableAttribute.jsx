@@ -18,19 +18,20 @@ import PropTypes from 'prop-types';
 import { Attribute } from './attribute';
 import { AttributeEditor } from './attributeEditor';
 
-export const EditableAttribute = ({
+export function EditableAttribute({
   attribute,
   onChange,
   onEdit,
   onCancelEdit,
   editMode,
   ...rest
-}) =>
-  editMode ? (
+}) {
+  return editMode ? (
     <AttributeEditor {...rest} attribute={attribute} onConfirm={onChange} onCancel={onCancelEdit} />
   ) : (
     <Attribute {...rest} attribute={attribute} onClick={onEdit} />
   );
+}
 
 EditableAttribute.propTypes = {
   attribute: PropTypes.object,

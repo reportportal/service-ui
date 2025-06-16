@@ -21,8 +21,8 @@ import styles from './issueList.scss';
 
 const cx = classNames.bind(styles);
 
-export const IssueList = ({ issues, onRemove, onClick, className, readOnly }) =>
-  issues.map((issue) => (
+export function IssueList({ issues, onRemove, onClick, className, readOnly }) {
+  return issues.map((issue) => (
     <div className={cx('issue-list-item')} key={`${issue.btsProject}_${issue.ticketId}`}>
       <Issue
         {...issue}
@@ -34,6 +34,7 @@ export const IssueList = ({ issues, onRemove, onClick, className, readOnly }) =>
       />
     </div>
   ));
+}
 
 IssueList.propTypes = {
   issues: PropTypes.arrayOf(

@@ -99,7 +99,7 @@ const messages = defineMessages({
   },
 });
 
-export const Hamburger = ({ launch, customProps }) => {
+export function Hamburger({ launch, customProps }) {
   const userRoles = useSelector(userRolesSelector);
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
@@ -211,13 +211,14 @@ export const Hamburger = ({ launch, customProps }) => {
 
     if (clusterActive) {
       return formatMessage(messages.uniqueErrorAnalysisIsInProgress);
-    } else if (isLaunchInProgress) {
-      return formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
-    } else if (!analyzerExtensions.length) {
-      return formatMessage(messages.serviceAnalyzerDisabledTooltip);
-    } else {
-      return '';
     }
+    if (isLaunchInProgress) {
+      return formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
+    }
+    if (!analyzerExtensions.length) {
+      return formatMessage(messages.serviceAnalyzerDisabledTooltip);
+    }
+    return '';
   };
 
   const clusterTitle = getClusterTitle();
@@ -331,7 +332,7 @@ export const Hamburger = ({ launch, customProps }) => {
         )}
         <div className={cx('export-block')}>
           <div className={cx('export-label')}>
-            <FormattedMessage id={'Hamburger.export'} defaultMessage={'Export:'} />
+            <FormattedMessage id="Hamburger.export" defaultMessage="Export:" />
           </div>
           <div className={cx('export-buttons')}>
             <div className={cx('export-button')}>
@@ -354,7 +355,7 @@ export const Hamburger = ({ launch, customProps }) => {
       </div>
     </div>
   );
-};
+}
 
 Hamburger.propTypes = {
   launch: PropTypes.object.isRequired,

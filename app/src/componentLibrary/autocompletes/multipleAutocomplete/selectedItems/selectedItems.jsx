@@ -23,7 +23,7 @@ import styles from './selectedItems.scss';
 
 const cx = classNames.bind(styles);
 
-const SelectedItem = ({
+function SelectedItem({
   item,
   onRemoveItem,
   disabled,
@@ -36,7 +36,7 @@ const SelectedItem = ({
   storedOption,
   highlightUnStoredItem,
   variant,
-}) => {
+}) {
   const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState('');
 
@@ -98,7 +98,7 @@ const SelectedItem = ({
       )}
     </div>
   );
-};
+}
 SelectedItem.propTypes = {
   item: PropTypes.any.isRequired,
   onRemoveItem: PropTypes.func.isRequired,
@@ -126,7 +126,7 @@ SelectedItem.defaultProps = {
   variant: 'light',
 };
 
-export const SelectedItems = ({
+export function SelectedItems({
   items,
   parseValueToString,
   getItemValidationErrorType,
@@ -134,8 +134,8 @@ export const SelectedItems = ({
   storedItemsMap,
   highlightUnStoredItem,
   ...props
-}) =>
-  (items || []).map((item) => {
+}) {
+  return (items || []).map((item) => {
     let errorType = '';
     if (getItemValidationErrorType) {
       errorType = getItemValidationErrorType(item);
@@ -152,6 +152,7 @@ export const SelectedItems = ({
       />
     );
   });
+}
 
 SelectedItems.propTypes = {
   items: PropTypes.array,

@@ -21,9 +21,9 @@ import styles from './settingsPageContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const SettingsPageContent = ({ children }) => (
-  <div className={cx('settings-page-content')}>{children}</div>
-);
+export function SettingsPageContent({ children }) {
+  return <div className={cx('settings-page-content')}>{children}</div>;
+}
 SettingsPageContent.propTypes = {
   children: PropTypes.node.isRequired,
 };

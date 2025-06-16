@@ -103,14 +103,14 @@ const messages = defineMessages({
   },
 });
 
-const AddEditDefectTypeModal = ({
+function AddEditDefectTypeModal({
   data,
   data: { onSave, defectType, defectTypes },
   handleSubmit,
   initialize,
   dirty,
   change,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -236,7 +236,7 @@ const AddEditDefectTypeModal = ({
       </div>
     </Modal>
   );
-};
+}
 AddEditDefectTypeModal.propTypes = {
   data: PropTypes.shape({
     defectType: PropTypes.object,

@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
 });
 
-export const InactivityTimeoutForm = () => {
+export function InactivityTimeoutForm() {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const expirationTimeoutConfig = useSelector(sessionExpirationTimeSelector);
@@ -65,7 +65,7 @@ export const InactivityTimeoutForm = () => {
   ];
 
   const handleTimeoutChange = (value) => {
-    const label = timeoutOptions.find((option) => option.value === value).label;
+    const { label } = timeoutOptions.find((option) => option.value === value);
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.changeSessionInactivity(label));
     dispatch(
       updateServerSettingsAction({
@@ -104,4 +104,4 @@ export const InactivityTimeoutForm = () => {
       </ServerSettingsField>
     </SectionLayout>
   );
-};
+}

@@ -21,15 +21,17 @@ import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalFooter = ({ buttons, infoBlock, className }) => (
-  <div className={cx('container', className.footerContainer)}>
-    {infoBlock && infoBlock}
-    <div className={cx('buttons-bar')}>
-      <span className={cx('button')}>{buttons.cancelButton}</span>
-      {buttons.okButton}
+export function ModalFooter({ buttons, infoBlock, className }) {
+  return (
+    <div className={cx('container', className.footerContainer)}>
+      {infoBlock && infoBlock}
+      <div className={cx('buttons-bar')}>
+        <span className={cx('button')}>{buttons.cancelButton}</span>
+        {buttons.okButton}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 ModalFooter.propTypes = {
   buttons: PropTypes.object,
   infoBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),

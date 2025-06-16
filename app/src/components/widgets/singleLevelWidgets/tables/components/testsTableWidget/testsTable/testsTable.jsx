@@ -25,19 +25,21 @@ import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTable = ({ tests, columns, getMatrixTooltip, onItemClick }) => (
-  <div className={cx('tests-table')}>
-    <ScrollWrapper>
-      <TestsTableHeader columns={columns} />
-      <TestsTableBody
-        columns={columns}
-        tests={tests}
-        getMatrixTooltip={getMatrixTooltip}
-        onItemClick={onItemClick}
-      />
-    </ScrollWrapper>
-  </div>
-);
+export function TestsTable({ tests, columns, getMatrixTooltip, onItemClick }) {
+  return (
+    <div className={cx('tests-table')}>
+      <ScrollWrapper>
+        <TestsTableHeader columns={columns} />
+        <TestsTableBody
+          columns={columns}
+          tests={tests}
+          getMatrixTooltip={getMatrixTooltip}
+          onItemClick={onItemClick}
+        />
+      </ScrollWrapper>
+    </div>
+  );
+}
 
 TestsTable.propTypes = {
   tests: PTTests.isRequired,

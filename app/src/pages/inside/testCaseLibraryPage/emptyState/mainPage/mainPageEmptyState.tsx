@@ -29,7 +29,7 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 
-export const MainPageEmptyState = () => {
+export function MainPageEmptyState() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -48,11 +48,9 @@ export const MainPageEmptyState = () => {
     );
   };
 
-  const benefits = [
-    messages.createFolder,
-    messages.addTestCases,
-    messages.tagTestCases,
-  ].map((translation) => Parser(formatMessage(translation)));
+  const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
+    (translation) => Parser(formatMessage(translation)),
+  );
 
   return (
     <>
@@ -80,8 +78,9 @@ export const MainPageEmptyState = () => {
       <NumerableBlock
         items={benefits}
         title={formatMessage(messages.numerableBlockTitle)}
+        className=""
         fullWidth
       />
     </>
   );
-};
+}

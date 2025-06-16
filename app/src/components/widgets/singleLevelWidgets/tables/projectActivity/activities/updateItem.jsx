@@ -46,7 +46,7 @@ const messages = defineMessages({
   },
 });
 
-export const UpdateItem = ({ activity }) => {
+export function UpdateItem({ activity }) {
   const { formatMessage } = useIntl();
   const {
     actionType,
@@ -75,7 +75,7 @@ export const UpdateItem = ({ activity }) => {
       <span className={cx('activity-name')}> {newValue}</span>
     </>
   );
-};
+}
 
 UpdateItem.propTypes = activityItemPropTypes;
 UpdateItem.defaultProps = activityItemDefaultProps;

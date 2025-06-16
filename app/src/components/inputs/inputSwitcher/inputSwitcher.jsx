@@ -20,7 +20,7 @@ import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputSwitcher = ({
+export function InputSwitcher({
   children,
   value,
   onChange,
@@ -32,7 +32,7 @@ export const InputSwitcher = ({
   childrenClassName,
   size,
   mode,
-}) => {
+}) {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
@@ -73,7 +73,7 @@ export const InputSwitcher = ({
       )}
     </label>
   );
-};
+}
 
 InputSwitcher.propTypes = {
   children: PropTypes.node,

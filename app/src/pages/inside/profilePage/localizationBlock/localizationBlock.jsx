@@ -95,12 +95,14 @@ const langName = {
 
 const langNameByCode = (code) => langName[code];
 
-const LanguageOption = ({ icon, label }) => (
-  <div className={cx('icon-block')}>
-    <i className={cx('icon')}>{Parser(icon)}</i>
-    {label}
-  </div>
-);
+function LanguageOption({ icon, label }) {
+  return (
+    <div className={cx('icon-block')}>
+      <i className={cx('icon')}>{Parser(icon)}</i>
+      {label}
+    </div>
+  );
+}
 LanguageOption.propTypes = {
   icon: PropTypes.string,
   label: PropTypes.string,

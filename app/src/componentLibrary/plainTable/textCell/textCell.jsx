@@ -16,7 +16,9 @@
 
 import PropTypes from 'prop-types';
 
-export const TextCell = ({ className, value }) => <p className={className}>{value}</p>;
+export function TextCell({ className, value }) {
+  return <p className={className}>{value}</p>;
+}
 TextCell.propTypes = {
   className: PropTypes.string,
   value: PropTypes.any,

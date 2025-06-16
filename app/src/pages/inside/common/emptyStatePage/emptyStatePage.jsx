@@ -44,7 +44,7 @@ const images = {
   docs,
 };
 
-export const EmptyStatePage = ({
+export function EmptyStatePage({
   description,
   documentationLink,
   title,
@@ -53,7 +53,7 @@ export const EmptyStatePage = ({
   imageType,
   documentationDataAutomationId,
   buttons,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('container')}>
@@ -66,7 +66,7 @@ export const EmptyStatePage = ({
             ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
               <Button
                 disabled={isDisabled}
-                adjustWidthOn={'wide-content'}
+                adjustWidthOn="wide-content"
                 onClick={isDisabled ? null : handleButton}
                 data-automation-id={dataAutomationId}
                 key={name}
@@ -92,7 +92,7 @@ export const EmptyStatePage = ({
       )}
     </div>
   );
-};
+}
 
 EmptyStatePage.propTypes = {
   title: PropTypes.string,

@@ -26,7 +26,7 @@ import styles from './filtersActionBar.scss';
 
 const cx = classNames.bind(styles);
 
-export const FiltersActionBar = ({
+export function FiltersActionBar({
   filter,
   unsaved,
   discardDisabled,
@@ -39,7 +39,7 @@ export const FiltersActionBar = ({
   onSave,
   onChangeSorting,
   sortingString,
-}) => {
+}) {
   const userRoles = useSelector(userRolesSelector);
   const hasFilterPermissions = canWorkWithFilters(userRoles);
 
@@ -74,7 +74,7 @@ export const FiltersActionBar = ({
       </div>
     </div>
   );
-};
+}
 FiltersActionBar.propTypes = {
   filter: PropTypes.object,
   unsaved: PropTypes.bool,

@@ -25,7 +25,7 @@ import styles from './testCaseDetailsPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestCaseDetailsPage = () => {
+export function TestCaseDetailsPage() {
   const { formatMessage } = useIntl();
 
   return (
@@ -40,4 +40,4 @@ export const TestCaseDetailsPage = () => {
       </ScrollWrapper>
     </SettingsLayout>
   );
-};
+}

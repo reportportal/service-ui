@@ -20,17 +20,19 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import { FIELD_LABEL_WIDTH } from './constants';
 
-export const TagsControl = ({ fieldLabel, inputWidth, multi, ...rest }) => (
-  <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH}>
-    <div style={{ width: inputWidth || 'unset' }}>
-      {multi ? (
-        <AsyncMultipleAutocomplete showDynamicSearchPrompt {...rest} />
-      ) : (
-        <AsyncAutocomplete showDynamicSearchPrompt {...rest} />
-      )}
-    </div>
-  </ModalField>
-);
+export function TagsControl({ fieldLabel, inputWidth, multi, ...rest }) {
+  return (
+    <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH}>
+      <div style={{ width: inputWidth || 'unset' }}>
+        {multi ? (
+          <AsyncMultipleAutocomplete showDynamicSearchPrompt {...rest} />
+        ) : (
+          <AsyncAutocomplete showDynamicSearchPrompt {...rest} />
+        )}
+      </div>
+    </ModalField>
+  );
+}
 
 TagsControl.propTypes = {
   fieldLabel: PropTypes.string,

@@ -23,28 +23,30 @@ import styles from './plainTableRow.scss';
 
 const cx = classNames.bind(styles);
 
-export const PlainTableRow = ({ value, columns, actions }) => (
-  <div className={cx('plain-table-row-wrapper')}>
-    <div className={cx('plain-table-row', 'plain-table-row-appearance')}>
-      {columns.map(({ id, align, component, title, cellCustomProps }) => (
-        <PlainTableCell
-          key={id}
-          id={id}
-          value={value}
-          title={title}
-          component={component}
-          align={align}
-          cellCustomProps={cellCustomProps}
-        />
+export function PlainTableRow({ value, columns, actions }) {
+  return (
+    <div className={cx('plain-table-row-wrapper')}>
+      <div className={cx('plain-table-row', 'plain-table-row-appearance')}>
+        {columns.map(({ id, align, component, title, cellCustomProps }) => (
+          <PlainTableCell
+            key={id}
+            id={id}
+            value={value}
+            title={title}
+            component={component}
+            align={align}
+            cellCustomProps={cellCustomProps}
+          />
+        ))}
+      </div>
+      {actions.map(({ id, handler, icon }) => (
+        <i className={cx('plain-table-row-icon')} key={id} onClick={() => handler(value)}>
+          {Parser(icon)}
+        </i>
       ))}
     </div>
-    {actions.map(({ id, handler, icon }) => (
-      <i className={cx('plain-table-row-icon')} key={id} onClick={() => handler(value)}>
-        {Parser(icon)}
-      </i>
-    ))}
-  </div>
-);
+  );
+}
 PlainTableRow.propTypes = {
   value: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)).isRequired,

@@ -347,6 +347,7 @@ export class SimpleWidget extends Component {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.fetchWidget();
   };
+
   refreshWidgetSearch = () => {
     const { widgetId } = this.props;
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
@@ -470,20 +471,23 @@ export class SimpleWidget extends Component {
   }
 }
 
-export const LazyLoadWidget = (props) => (
-  <LazyLoad
-    className={cx('lazy-load-wrapper')}
-    height={'100%'}
-    offset={1000}
-    resize
-    unmountIfInvisible
-  >
-    <SimpleWidget {...props} />
-  </LazyLoad>
-);
+export function LazyLoadWidget(props) {
+  return (
+    <LazyLoad
+      className={cx('lazy-load-wrapper')}
+      height="100%"
+      offset={1000}
+      resize
+      unmountIfInvisible
+    >
+      <SimpleWidget {...props} />
+    </LazyLoad>
+  );
+}
 
-export const Widget = (props) =>
-  props.isPrintMode ? <SimpleWidget {...props} /> : <LazyLoadWidget {...props} />;
+export function Widget(props) {
+  return props.isPrintMode ? <SimpleWidget {...props} /> : <LazyLoadWidget {...props} />;
+}
 
 Widget.propTypes = {
   isPrintMode: PropTypes.bool,

@@ -21,15 +21,17 @@ import styles from './organizationsPanels.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsPanels = ({ organizationsList }) => (
-  <div className={cx('organizations-panels-wrapper')}>
-    <div className={cx('organizations-panels')}>
-      {organizationsList.map((organization) => (
-        <OrganizationCard key={organization.id} organization={organization} />
-      ))}
+export function OrganizationsPanels({ organizationsList }) {
+  return (
+    <div className={cx('organizations-panels-wrapper')}>
+      <div className={cx('organizations-panels')}>
+        {organizationsList.map((organization) => (
+          <OrganizationCard key={organization.id} organization={organization} />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 OrganizationsPanels.propTypes = {
   organizationsList: PropTypes.array,

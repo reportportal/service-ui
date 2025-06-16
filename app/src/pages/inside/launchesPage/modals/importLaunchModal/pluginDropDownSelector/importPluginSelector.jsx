@@ -14,7 +14,7 @@ const messages = defineMessages({
   },
 });
 
-export const ImportPluginSelector = ({ selectedPlugin, plugins, selectPlugin }) => {
+export function ImportPluginSelector({ selectedPlugin, plugins, selectPlugin }) {
   const { formatMessage } = useIntl();
 
   const pluginNamesOptions = plugins.map((plugin) => ({
@@ -34,7 +34,7 @@ export const ImportPluginSelector = ({ selectedPlugin, plugins, selectPlugin }) 
       </div>
     </div>
   );
-};
+}
 ImportPluginSelector.propTypes = {
   selectedPlugin: PropTypes.object.isRequired,
   plugins: PropTypes.array.isRequired,

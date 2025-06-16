@@ -60,7 +60,7 @@ import styles from './analyzerContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const AnalyzerContainer = ({ setHeaderNodes }) => {
+export function AnalyzerContainer({ setHeaderNodes }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -92,9 +92,10 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     [organizationSlug, projectSlug],
   );
 
-  const indexingRunning = useMemo(() => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'), [
-    analyzerConfig,
-  ]);
+  const indexingRunning = useMemo(
+    () => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'),
+    [analyzerConfig],
+  );
 
   const checkIfConfirmationNeeded = (data) => {
     const newLogLinesValue = data[NUMBER_OF_LOG_LINES];
@@ -233,7 +234,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   }, [activeSubTab]);
 
   return activeSubTab ? tabsConfig[activeSubTab].component : null;
-};
+}
 AnalyzerContainer.propTypes = {
   setHeaderNodes: PropTypes.func.isRequired,
 };

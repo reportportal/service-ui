@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
 });
 
-const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
+function DeleteNotificationCaseModal({ data: { onSave, type } }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -60,7 +60,7 @@ const DeleteNotificationCaseModal = ({ data: { onSave, type } }) => {
       <div>{Parser(formatMessage(messages.message))}</div>
     </Modal>
   );
-};
+}
 DeleteNotificationCaseModal.propTypes = {
   data: PropTypes.object,
 };

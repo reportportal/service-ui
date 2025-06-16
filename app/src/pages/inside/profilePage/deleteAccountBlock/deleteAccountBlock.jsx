@@ -48,19 +48,21 @@ const messages = defineMessages({
   },
 });
 
-const Button = ({ onClick, formatMessage, disabled }) => (
-  <GhostButton
-    onClick={onClick}
-    transparentBorder
-    transparentBackground
-    transparentBorderHover
-    color="red"
-    style={{ opacity: disabled ? 0.5 : 1 }}
-    disabled={disabled}
-  >
-    {formatMessage(messages.deleteAccountButton)}
-  </GhostButton>
-);
+function Button({ onClick, formatMessage, disabled }) {
+  return (
+    <GhostButton
+      onClick={onClick}
+      transparentBorder
+      transparentBackground
+      transparentBorderHover
+      color="red"
+      style={{ opacity: disabled ? 0.5 : 1 }}
+      disabled={disabled}
+    >
+      {formatMessage(messages.deleteAccountButton)}
+    </GhostButton>
+  );
+}
 Button.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
@@ -70,13 +72,15 @@ Button.propTypes = {
   disabled: false,
   onClick: () => {},
 };
-const TooltipContent = ({ formatMessage, isAdmin }) => (
-  <div className={cx('tooltip-content')}>
-    {formatMessage(
-      isAdmin ? messages.tooltipAdminDisabledText : messages.tooltipDefaultUserDisabledText,
-    )}
-  </div>
-);
+function TooltipContent({ formatMessage, isAdmin }) {
+  return (
+    <div className={cx('tooltip-content')}>
+      {formatMessage(
+        isAdmin ? messages.tooltipAdminDisabledText : messages.tooltipDefaultUserDisabledText,
+      )}
+    </div>
+  );
+}
 TooltipContent.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
@@ -90,7 +94,7 @@ const ButtonWithTooltip = withTooltip({
   },
 })(Button);
 
-export const DeleteAccountBlock = () => {
+export function DeleteAccountBlock() {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -118,4 +122,4 @@ export const DeleteAccountBlock = () => {
       )}
     </div>
   );
-};
+}

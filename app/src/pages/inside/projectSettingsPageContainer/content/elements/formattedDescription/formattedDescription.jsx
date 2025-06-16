@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 
 const isAnchorElement = (target) => !!target.closest('A');
 
-export const FormattedDescription = ({ content, event, variant }) => {
+export function FormattedDescription({ content, event, variant }) {
   const { trackEvent } = useTracking();
 
   const handleExternalLinkClick = ({ target }) => {
@@ -38,7 +38,7 @@ export const FormattedDescription = ({ content, event, variant }) => {
       {Parser(content)}
     </span>
   );
-};
+}
 FormattedDescription.propTypes = {
   content: PropTypes.string,
   event: PropTypes.object,

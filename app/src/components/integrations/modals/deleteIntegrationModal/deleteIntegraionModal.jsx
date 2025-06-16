@@ -23,7 +23,7 @@ import { withModal } from 'components/main/modal';
 import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 
-const DeleteIntegrationModal = ({ data }) => {
+function DeleteIntegrationModal({ data }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -55,7 +55,7 @@ const DeleteIntegrationModal = ({ data }) => {
       {data.description}
     </Modal>
   );
-};
+}
 DeleteIntegrationModal.propTypes = {
   data: PropTypes.shape({
     onConfirm: PropTypes.func,

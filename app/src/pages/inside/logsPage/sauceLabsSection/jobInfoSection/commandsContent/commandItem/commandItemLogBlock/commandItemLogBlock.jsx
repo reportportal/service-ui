@@ -20,12 +20,14 @@ import styles from './commandItemLogBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const CommandItemLogBlock = ({ commandTitle, content }) => (
-  <div className={cx('command-item-log-block')}>
-    <div className={cx('command-title')}>{commandTitle}</div>
-    <div className={cx('command-content')}>{content}</div>
-  </div>
-);
+export function CommandItemLogBlock({ commandTitle, content }) {
+  return (
+    <div className={cx('command-item-log-block')}>
+      <div className={cx('command-title')}>{commandTitle}</div>
+      <div className={cx('command-content')}>{content}</div>
+    </div>
+  );
+}
 
 CommandItemLogBlock.propTypes = {
   commandTitle: PropTypes.string,

@@ -26,30 +26,35 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
 const cx = classNames.bind(styles);
 
-export const AnalysisConfigurations = ({ activity }) => (
-  <Fragment>
-    <span className={cx('user-name')}>{activity.user}</span>
-    <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
-    <Link
-      to={getProjectSettingTabPageLink(
-        getProjectKey(activity),
-        ANALYSIS,
-        activity.organizationSlug,
+export function AnalysisConfigurations({ activity }) {
+  return (
+    <>
+      <span className={cx('user-name')}>{activity.user}</span>
+      <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
+      <Link
+        to={getProjectSettingTabPageLink(
+          getProjectKey(activity),
+          ANALYSIS,
+          activity.organizationSlug,
+        )}
+        className={cx('link')}
+        target="_blank"
+      >
+        <FormattedMessage
+          id="AnalysisConfigurations.analysisConfigurations"
+          defaultMessage="Auto-Analysis configurations:"
+        />
+      </Link>
+      {activity.actionType === GENERATE_INDEX ? (
+        <FormattedMessage
+          id="AnalysisConfigurations.generateIndex"
+          defaultMessage="generate index"
+        />
+      ) : (
+        <FormattedMessage id="AnalysisConfigurations.removeIndex" defaultMessage="remove index" />
       )}
-      className={cx('link')}
-      target="_blank"
-    >
-      <FormattedMessage
-        id="AnalysisConfigurations.analysisConfigurations"
-        defaultMessage="Auto-Analysis configurations:"
-      />
-    </Link>
-    {activity.actionType === GENERATE_INDEX ? (
-      <FormattedMessage id="AnalysisConfigurations.generateIndex" defaultMessage="generate index" />
-    ) : (
-      <FormattedMessage id="AnalysisConfigurations.removeIndex" defaultMessage="remove index" />
-    )}
-  </Fragment>
-);
+    </>
+  );
+}
 AnalysisConfigurations.propTypes = activityItemPropTypes;
 AnalysisConfigurations.defaultProps = activityItemDefaultProps;

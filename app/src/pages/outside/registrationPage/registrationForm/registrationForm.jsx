@@ -89,9 +89,9 @@ export class RegistrationForm extends Component {
     submitButtonTitle: '',
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.autofillData();
-  };
+  }
 
   autofillData = () => {
     const { initialData, email } = this.props;
@@ -133,7 +133,7 @@ export class RegistrationForm extends Component {
             <FieldErrorHint provideHint={false}>
               <InputOutside
                 icon={LoginIcon}
-                maxLength={'128'}
+                maxLength="128"
                 placeholder={formatMessage(messages.login)}
                 hasDynamicValidation
                 hint={formatMessage(messages.loginConstraint)}
@@ -151,7 +151,7 @@ export class RegistrationForm extends Component {
           <FieldProvider name="password">
             <FieldErrorHint provideHint={false}>
               <InputOutside
-                type={'password'}
+                type="password"
                 icon={PasswordIcon}
                 maxLength="256"
                 placeholder={formatMessage(messages.password)}
@@ -164,12 +164,12 @@ export class RegistrationForm extends Component {
         <div className={cx('confirm-password-field')}>
           <FieldProvider name="confirmPassword">
             <FieldErrorHint
-              formPath={'user.registrationForm'}
-              fieldName={'confirmPassword'}
+              formPath="user.registrationForm"
+              fieldName="confirmPassword"
               provideHint={false}
             >
               <InputOutside
-                type={'password'}
+                type="password"
                 icon={PasswordIcon}
                 maxLength="256"
                 placeholder={formatMessage(messages.confirmPassword)}
@@ -182,9 +182,9 @@ export class RegistrationForm extends Component {
 
         <div className={cx('buttons-container')}>
           <div className={cx('button-register')}>
-            <BigButton type={'submit'} roundedCorners color={'organish'} disabled={loading}>
+            <BigButton type="submit" roundedCorners color="organish" disabled={loading}>
               {submitButtonTitle || (
-                <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
+                <FormattedMessage id="RegistrationForm.register" defaultMessage="Register" />
               )}
             </BigButton>
           </div>

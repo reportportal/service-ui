@@ -20,12 +20,14 @@ import styles from './page.scss';
 
 const cx = classNames.bind(styles);
 
-export const Page = ({ title, children }) => (
-  <div className={cx('page')}>
-    {title ? <PageTitle title={title} /> : null}
-    {children}
-  </div>
-);
+export function Page({ title, children }) {
+  return (
+    <div className={cx('page')}>
+      {title ? <PageTitle title={title} /> : null}
+      {children}
+    </div>
+  );
+}
 Page.propTypes = {
   title: PropTypes.node,
   children: PropTypes.node,
@@ -35,7 +37,9 @@ Page.defaultProps = {
   children: null,
 };
 
-const PageTitle = ({ title }) => <div className={cx('page-title')}>{title}</div>;
+function PageTitle({ title }) {
+  return <div className={cx('page-title')}>{title}</div>;
+}
 PageTitle.propTypes = {
   title: PropTypes.node,
 };

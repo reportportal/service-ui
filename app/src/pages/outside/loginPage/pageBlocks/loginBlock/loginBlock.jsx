@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
 });
 
-export const LoginBlock = () => {
+export function LoginBlock() {
   const externalAuth = useSelector(authExtensionsSelector);
   const extensions = useSelector(uiExtensionLoginBlockSelector);
 
@@ -53,7 +53,7 @@ export const LoginBlock = () => {
             <div className={cx('separator')}>
               <div className={cx('line')} />
               <div className={cx('or')}>
-                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+                <FormattedMessage id="LoginForm.or" defaultMessage="or" />
               </div>
             </div>
           </>
@@ -67,4 +67,4 @@ export const LoginBlock = () => {
       </div>
     </>
   );
-};
+}

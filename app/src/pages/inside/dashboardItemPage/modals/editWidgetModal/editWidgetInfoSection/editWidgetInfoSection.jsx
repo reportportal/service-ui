@@ -22,15 +22,17 @@ import styles from './editWidgetInfoSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const EditWidgetInfoSection = ({ projectKey, widgetSettings, activeWidget }) => (
-  <div className={cx('edit-widget-info-section')}>
-    <WidgetInfoBlock
-      projectKey={projectKey}
-      activeWidget={activeWidget}
-      widgetSettings={widgetSettings}
-    />
-  </div>
-);
+export function EditWidgetInfoSection({ projectKey, widgetSettings, activeWidget }) {
+  return (
+    <div className={cx('edit-widget-info-section')}>
+      <WidgetInfoBlock
+        projectKey={projectKey}
+        activeWidget={activeWidget}
+        widgetSettings={widgetSettings}
+      />
+    </div>
+  );
+}
 
 EditWidgetInfoSection.propTypes = {
   projectKey: PropTypes.string.isRequired,

@@ -23,13 +23,15 @@ import styles from './descriptionTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const DescriptionTooltip = ({ description }) => (
-  <div className={cx('description-tooltip')}>
-    <ScrollWrapper>
-      <MarkdownViewer value={description} />
-    </ScrollWrapper>
-  </div>
-);
+export function DescriptionTooltip({ description }) {
+  return (
+    <div className={cx('description-tooltip')}>
+      <ScrollWrapper>
+        <MarkdownViewer value={description} />
+      </ScrollWrapper>
+    </div>
+  );
+}
 DescriptionTooltip.propTypes = {
   description: PropTypes.string,
 };

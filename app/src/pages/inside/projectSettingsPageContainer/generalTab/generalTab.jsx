@@ -136,6 +136,7 @@ export class GeneralTab extends Component {
     isLoading: false,
     userRoles: {},
   };
+
   state = {
     processingData: false,
   };
@@ -320,10 +321,12 @@ export class GeneralTab extends Component {
     return newOptions;
   };
 
-  createTrackingFunction = (createEvent, formatValue = this.formatRetention) => (value) => {
-    const label = formatValue(value).label;
-    this.props.tracking.trackEvent(createEvent(label));
-  };
+  createTrackingFunction =
+    (createEvent, formatValue = this.formatRetention) =>
+    (value) => {
+      const { label } = formatValue(value);
+      this.props.tracking.trackEvent(createEvent(label));
+    };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 

@@ -25,7 +25,7 @@ const formatStatusClassName = (status = '') => `status-${status.toLowerCase()}`;
 
 const getRetries = (testItem) => [...testItem.retries, testItem];
 
-export const RetriesCounter = ({ testItem, onLabelClick }) => {
+export function RetriesCounter({ testItem, onLabelClick }) {
   const retries = getRetries(testItem);
   return (
     <div className={cx('retries-counter')}>
@@ -55,7 +55,7 @@ export const RetriesCounter = ({ testItem, onLabelClick }) => {
       </div>
     </div>
   );
-};
+}
 RetriesCounter.propTypes = {
   testItem: PropTypes.object.isRequired,
   onLabelClick: PropTypes.func,

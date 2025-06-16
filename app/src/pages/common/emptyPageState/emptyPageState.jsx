@@ -22,7 +22,7 @@ import styles from './emptyPageState.scss';
 
 const cx = classNames.bind(styles);
 
-export const EmptyPageState = ({
+export function EmptyPageState({
   hasPermission,
   label,
   description,
@@ -30,20 +30,22 @@ export const EmptyPageState = ({
   buttonTitle,
   emptyIcon,
   onClick,
-}) => (
-  <div className={cx('empty-page-state')}>
-    <div className={cx('empty-icon')}>{Parser(emptyIcon)}</div>
-    <div className={cx('content')}>
-      <span className={cx('label')}>{label}</span>
-      <p className={cx('description')}>{description}</p>
-      {hasPermission && (
-        <Button variant={'primary'} className={cx('button')} icon={icon} onClick={onClick}>
-          {buttonTitle}
-        </Button>
-      )}
+}) {
+  return (
+    <div className={cx('empty-page-state')}>
+      <div className={cx('empty-icon')}>{Parser(emptyIcon)}</div>
+      <div className={cx('content')}>
+        <span className={cx('label')}>{label}</span>
+        <p className={cx('description')}>{description}</p>
+        {hasPermission && (
+          <Button variant="primary" className={cx('button')} icon={icon} onClick={onClick}>
+            {buttonTitle}
+          </Button>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 EmptyPageState.propTypes = {
   hasPermission: PropTypes.bool,

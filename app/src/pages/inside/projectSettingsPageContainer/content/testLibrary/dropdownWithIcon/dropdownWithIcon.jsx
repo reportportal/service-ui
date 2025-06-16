@@ -21,29 +21,31 @@ import styles from './dropdownWithIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownWithIcon = ({ options, selectedOption, placeholder, onChange }) => (
-  <Dropdown
-    icon={selectedOption.icon}
-    className={cx('dropdown-with-icon')}
-    options={options}
-    placeholder={placeholder}
-    value={selectedOption.value}
-    renderOption={({ option, selected }) => (
-      <div
-        className={cx('option-wrapper', {
-          'selected-option': selected,
-        })}
-      >
-        <span className={cx('icon')}>{option.icon}</span>
-        <div>
-          <b>{option.label}</b>
-          <div className={cx('description')}>{option.description}</div>
+export function DropdownWithIcon({ options, selectedOption, placeholder, onChange }) {
+  return (
+    <Dropdown
+      icon={selectedOption.icon}
+      className={cx('dropdown-with-icon')}
+      options={options}
+      placeholder={placeholder}
+      value={selectedOption.value}
+      renderOption={({ option, selected }) => (
+        <div
+          className={cx('option-wrapper', {
+            'selected-option': selected,
+          })}
+        >
+          <span className={cx('icon')}>{option.icon}</span>
+          <div>
+            <b>{option.label}</b>
+            <div className={cx('description')}>{option.description}</div>
+          </div>
         </div>
-      </div>
-    )}
-    onChange={onChange}
-  />
-);
+      )}
+      onChange={onChange}
+    />
+  );
+}
 
 const optionWithIconType = PropTypes.shape({
   value: PropTypes.string.isRequired,

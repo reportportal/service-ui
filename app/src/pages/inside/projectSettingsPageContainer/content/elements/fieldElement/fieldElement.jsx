@@ -22,7 +22,7 @@ import styles from './fieldElement.scss';
 
 const cx = classNames.bind(styles);
 
-export const FieldElement = (props) => {
+export function FieldElement(props) {
   const {
     label,
     description,
@@ -69,7 +69,7 @@ export const FieldElement = (props) => {
       {additionalInfo}
     </div>
   );
-};
+}
 FieldElement.propTypes = {
   children: PropTypes.node.isRequired,
   label: PropTypes.string,

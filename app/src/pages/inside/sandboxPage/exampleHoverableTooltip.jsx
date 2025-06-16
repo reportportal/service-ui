@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export const ExampleHoverableTooltip = ({ ...props }) => (
-  <div {...props}>123 sgsdg sdgsdgsdgsdsdgsdgsdgsdgsdgsdg sdgsdgsdg</div>
-);
+export function ExampleHoverableTooltip({ ...props }) {
+  return <div {...props}>123 sgsdg sdgsdgsdgsdsdgsdgsdgsdgsdgsdg sdgsdgsdg</div>;
+}

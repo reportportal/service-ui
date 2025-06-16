@@ -31,7 +31,7 @@ import styles from './integrationsList.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationsList = (props) => {
+export function IntegrationsList(props) {
   const { formatMessage } = useIntl();
   const { availableIntegrations, onItemClick } = props;
   const { trackEvent } = useTracking();
@@ -78,7 +78,7 @@ export const IntegrationsList = (props) => {
       )}
     </>
   );
-};
+}
 IntegrationsList.propTypes = {
   availableIntegrations: PropTypes.object.isRequired,
   onItemClick: PropTypes.func,

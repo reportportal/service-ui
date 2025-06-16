@@ -40,7 +40,7 @@ const cx = classNames.bind(styles);
 
 const createPatternFormSelector = formValueSelector('createPatternForm');
 
-const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) => {
+function CreatePatternAnalysisModal({ data, handleSubmit, initialize, dirty }) {
   const { pattern, onSave } = data;
 
   const selectedType = useSelector((state) => createPatternFormSelector(state, 'type'));
@@ -113,7 +113,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
       </div>
     </Modal>
   );
-};
+}
 CreatePatternAnalysisModal.propTypes = {
   data: PropTypes.shape({
     pattern: PropTypes.object,

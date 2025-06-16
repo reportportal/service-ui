@@ -22,17 +22,19 @@ import styles from './actionButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButton = ({ icon, label, hint, isSelected, onClick, disabled }) => (
-  <button
-    className={cx('button', { selected: isSelected, disabled })}
-    onClick={onClick}
-    title={hint}
-    disabled={disabled}
-  >
-    <i className={cx('icon')}>{icon && Parser(icon)}</i>
-    <span className={cx('text', { selected: isSelected })}>{label}</span>
-  </button>
-);
+export function ActionButton({ icon, label, hint, isSelected, onClick, disabled }) {
+  return (
+    <button
+      className={cx('button', { selected: isSelected, disabled })}
+      onClick={onClick}
+      title={hint}
+      disabled={disabled}
+    >
+      <i className={cx('icon')}>{icon && Parser(icon)}</i>
+      <span className={cx('text', { selected: isSelected })}>{label}</span>
+    </button>
+  );
+}
 
 ActionButton.propTypes = {
   icon: PropTypes.string,

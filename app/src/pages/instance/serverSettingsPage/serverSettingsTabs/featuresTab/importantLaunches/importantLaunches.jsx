@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
 });
 
-export const ImportantLaunches = () => {
+export function ImportantLaunches() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const enabledConfig = useSelector(importantLaunchesEnabledSelector);
@@ -87,4 +87,4 @@ export const ImportantLaunches = () => {
       </ServerSettingsField>
     </SectionLayout>
   );
-};
+}

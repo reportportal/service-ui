@@ -205,14 +205,14 @@ const fieldByType = {
   [FIELD_TYPE_TEXT]: FieldText,
   [FIELD_TYPE_MULTILINE_TEXT]: FieldTextFlex,
 };
-const AddEditNotificationModal = ({
+function AddEditNotificationModal({
   data,
   data: { onSave },
   handleSubmit,
   initialize,
   change,
   dirty,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -437,7 +437,7 @@ const AddEditNotificationModal = ({
       </div>
     </Modal>
   );
-};
+}
 
 const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
   if (type === EMAIL) {
@@ -447,26 +447,25 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
         'recipientsHint',
       )(inputValues.recipients),
     };
-  } else {
-    const inputDetails = inputValues[RULE_DETAILS_FIELD_KEY];
-    return ruleFields.reduce(
-      (acc, field) => {
-        const { type: validationType, errorMessage } = field.validation || {};
-        if (validate[validationType]) {
-          acc[RULE_DETAILS_FIELD_KEY][field.name] = bindMessageToValidator(
-            validate[validationType],
-            errorMessage,
-          )(inputDetails?.[field.name]);
-        } else if (field.required) {
-          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(
-            inputDetails?.[field.name],
-          );
-        }
-        return acc;
-      },
-      { [RULE_DETAILS_FIELD_KEY]: {} },
-    );
   }
+  const inputDetails = inputValues[RULE_DETAILS_FIELD_KEY];
+  return ruleFields.reduce(
+    (acc, field) => {
+      const { type: validationType, errorMessage } = field.validation || {};
+      if (validate[validationType]) {
+        acc[RULE_DETAILS_FIELD_KEY][field.name] = bindMessageToValidator(
+          validate[validationType],
+          errorMessage,
+        )(inputDetails?.[field.name]);
+      } else if (field.required) {
+        acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(
+          inputDetails?.[field.name],
+        );
+      }
+      return acc;
+    },
+    { [RULE_DETAILS_FIELD_KEY]: {} },
+  );
 };
 
 AddEditNotificationModal.propTypes = {

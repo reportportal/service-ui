@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-export const IntegrationCollectionItem = ({
+export function IntegrationCollectionItem({
   id,
   title,
   creator,
@@ -43,7 +43,7 @@ export const IntegrationCollectionItem = ({
   disabled,
   openIntegration,
   item,
-}) => {
+}) {
   const [connected, setConnected] = useState(true);
   const projectKey = useSelector(projectKeySelector);
   const activeProjectKey = useSelector(activeProjectKeySelector);
@@ -90,7 +90,7 @@ export const IntegrationCollectionItem = ({
       </div>
     </li>
   );
-};
+}
 
 IntegrationCollectionItem.propTypes = {
   id: PropTypes.number,

@@ -105,9 +105,8 @@ const getPostIssueEventsInfo = (place) => ({
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    place,
-  ),
+  addNewIssue:
+    LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
   closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 });
 const getUnlinkIssueEventsInfo = (place) => ({
@@ -116,7 +115,7 @@ const getUnlinkIssueEventsInfo = (place) => ({
   closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
-export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
+export function DefectDetails({ fetchFunc, debugMode, logItem }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -395,7 +394,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
       </div>
     </div>
   );
-};
+}
 
 DefectDetails.propTypes = {
   fetchFunc: PropTypes.func.isRequired,

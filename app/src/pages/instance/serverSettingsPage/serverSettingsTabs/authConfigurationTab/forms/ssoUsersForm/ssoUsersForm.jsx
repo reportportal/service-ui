@@ -52,7 +52,7 @@ const messages = defineMessages({
   },
 });
 
-export const SsoUsersForm = () => {
+export function SsoUsersForm() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const enabledFromStore = useSelector(ssoUsersOnlySelector);
@@ -94,4 +94,4 @@ export const SsoUsersForm = () => {
       </ServerSettingsField>
     </SectionLayout>
   );
-};
+}

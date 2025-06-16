@@ -22,7 +22,7 @@ import { ProductVersionPage } from 'pages/inside/productVersionPage';
 import { useSelector } from 'react-redux';
 import { ProductVersionsPageContent } from './productVersionsPageContent';
 
-export const ProductVersionsPage = () => {
+export function ProductVersionsPage() {
   const { productVersionId } = useSelector(payloadSelector);
 
   if (productVersionId) {
@@ -30,4 +30,4 @@ export const ProductVersionsPage = () => {
   }
 
   return <ProductVersionsPageContent />;
-};
+}

@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-export const AllUsersPage = () => {
+export function AllUsersPage() {
   const { formatMessage } = useIntl();
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
@@ -62,4 +62,4 @@ export const AllUsersPage = () => {
       )}
     </div>
   );
-};
+}

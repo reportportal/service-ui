@@ -52,11 +52,13 @@ const messages = defineMessages({
   },
 });
 
-const DisabledImportButton = () => (
-  <GhostButton disabled icon={ImportIcon} transparentBackground>
-    <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
-  </GhostButton>
-);
+function DisabledImportButton() {
+  return (
+    <GhostButton disabled icon={ImportIcon} transparentBackground>
+      <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+    </GhostButton>
+  );
+}
 
 const DisabledImportButtonWithTooltip = withHoverableTooltip({
   TooltipComponent: TextTooltip,
@@ -65,7 +67,7 @@ const DisabledImportButtonWithTooltip = withHoverableTooltip({
   },
 })(DisabledImportButton);
 
-export const ActionPanel = ({
+export function ActionPanel({
   debugMode,
   onRefresh,
   selectedLaunches,
@@ -84,7 +86,7 @@ export const ActionPanel = ({
   activeFilterId,
   onAddNewWidget,
   finishedLaunchesCount,
-}) => {
+}) {
   const breadcrumbs = useSelector(breadcrumbsSelector);
   const userRoles = useSelector(userRolesSelector);
   const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
@@ -233,7 +235,7 @@ export const ActionPanel = ({
       </div>
     </div>
   );
-};
+}
 
 ActionPanel.propTypes = {
   debugMode: PropTypes.bool,

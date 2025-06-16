@@ -18,21 +18,23 @@ import PropTypes from 'prop-types';
 import { columnShape } from '../columnShape';
 import { ItemListCell } from './itemListCell';
 
-export const ItemListRow = ({ columns, value }) => (
-  <tr>
-    {columns.map((column) => (
-      <ItemListCell
-        key={column.name}
-        component={column.component}
-        align={column.align}
-        bold={column.bold}
-        withIcon={column.withIcon}
-        formatter={column.formatter}
-        value={value}
-      />
-    ))}
-  </tr>
-);
+export function ItemListRow({ columns, value }) {
+  return (
+    <tr>
+      {columns.map((column) => (
+        <ItemListCell
+          key={column.name}
+          component={column.component}
+          align={column.align}
+          bold={column.bold}
+          withIcon={column.withIcon}
+          formatter={column.formatter}
+          value={value}
+        />
+      ))}
+    </tr>
+  );
+}
 ItemListRow.propTypes = {
   columns: PropTypes.arrayOf(columnShape),
   value: PropTypes.object,

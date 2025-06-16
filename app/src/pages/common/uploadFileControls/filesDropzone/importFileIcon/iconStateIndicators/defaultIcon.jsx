@@ -21,9 +21,9 @@ import styles from './iconStateIndicators.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefaultIcon = ({ fileExtension }) => (
-  <div className={cx('indicator-default')}>{`.${fileExtension}`}</div>
-);
+export function DefaultIcon({ fileExtension }) {
+  return <div className={cx('indicator-default')}>{`.${fileExtension}`}</div>;
+}
 
 DefaultIcon.propTypes = {
   fileExtension: PropTypes.string,

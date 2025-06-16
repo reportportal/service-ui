@@ -88,7 +88,7 @@ const messages = defineMessages({
   },
 });
 
-export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) => {
+export function InviteUser({ data, handleSubmit, dirty, invalid, anyTouched }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
@@ -208,7 +208,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
           <FieldProvider name="email">
             <FieldErrorHint provideHint={false}>
               <FieldText
-                maxLength={'128'}
+                maxLength="128"
                 placeholder={formatMessage(messages.email)}
                 defaultWidth={false}
                 type="email"
@@ -236,7 +236,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
       </form>
     </Modal>
   );
-};
+}
 
 InviteUser.propTypes = {
   data: PropTypes.shape({

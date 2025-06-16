@@ -20,7 +20,7 @@ import styles from './dashboardItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const DashboardItem = ({ dashboard, onClick, active }) => {
+export function DashboardItem({ dashboard, onClick, active }) {
   const { name } = dashboard;
   return (
     <div
@@ -32,7 +32,7 @@ export const DashboardItem = ({ dashboard, onClick, active }) => {
       {name}
     </div>
   );
-};
+}
 
 DashboardItem.defaultProps = {
   onClick: () => {},

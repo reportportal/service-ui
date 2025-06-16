@@ -83,7 +83,7 @@ const messages = defineMessages({
   },
 });
 
-export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
+export function CreateUserModal({ data = {}, handleSubmit, invalid }) {
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
   const dispatch = useDispatch();
@@ -172,7 +172,7 @@ export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
       </div>
     </Modal>
   );
-};
+}
 
 CreateUserModal.propTypes = {
   data: PropTypes.object,

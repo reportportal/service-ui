@@ -49,7 +49,7 @@ const messages = defineMessages({
   },
 });
 
-const RemoveIndexModal = () => {
+function RemoveIndexModal() {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
@@ -87,6 +87,6 @@ const RemoveIndexModal = () => {
       {formatMessage(messages.contentHeaderMessage)}
     </Modal>
   );
-};
+}
 
 export default withModal('removeIndexModalWindow')(RemoveIndexModal);

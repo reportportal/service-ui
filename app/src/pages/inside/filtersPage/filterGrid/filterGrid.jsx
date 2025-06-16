@@ -44,7 +44,7 @@ const messages = defineMessages({
   deleteCol: { id: 'MembersGrid.deleteCol', defaultMessage: 'Delete' },
 });
 
-const NameColumn = ({ className, value, customProps }) => {
+function NameColumn({ className, value, customProps }) {
   const { organizationSlug, projectSlug, editable = true } = customProps;
   return (
     <div className={cx('name-col', className)}>
@@ -63,7 +63,7 @@ const NameColumn = ({ className, value, customProps }) => {
       />
     </div>
   );
-};
+}
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -74,11 +74,13 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const OptionsColumn = ({ className, value }) => (
-  <div className={cx('options-col', className)}>
-    <FilterOptions entities={value.conditions} sort={value.orders} />
-  </div>
-);
+function OptionsColumn({ className, value }) {
+  return (
+    <div className={cx('options-col', className)}>
+      <FilterOptions entities={value.conditions} sort={value.orders} />
+    </div>
+  );
+}
 OptionsColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -87,14 +89,16 @@ OptionsColumn.defaultProps = {
   value: {},
 };
 
-const OwnerColumn = ({ className, value }) => (
-  <div className={cx('owner-col', className)}>
-    <div className={cx('mobile-label', 'owner-label')}>
-      <FormattedMessage id={'OwnerColumn.owner'} defaultMessage={'Owner:'} />
+function OwnerColumn({ className, value }) {
+  return (
+    <div className={cx('owner-col', className)}>
+      <div className={cx('mobile-label', 'owner-label')}>
+        <FormattedMessage id="OwnerColumn.owner" defaultMessage="Owner:" />
+      </div>
+      {value.owner}
     </div>
-    {value.owner}
-  </div>
-);
+  );
+}
 OwnerColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -103,7 +107,7 @@ OwnerColumn.defaultProps = {
   value: {},
 };
 
-const DisplayOnLaunchColumn = ({ className, value, customProps }) => {
+function DisplayOnLaunchColumn({ className, value, customProps }) {
   const { onChangeDisplay, userFilters, readOnly } = customProps;
   return (
     <div className={cx('display-col', className)}>
@@ -115,7 +119,7 @@ const DisplayOnLaunchColumn = ({ className, value, customProps }) => {
       />
     </div>
   );
-};
+}
 
 DisplayOnLaunchColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -127,7 +131,7 @@ DisplayOnLaunchColumn.defaultProps = {
   customProps: {},
 };
 
-const DeleteColumn = ({ className, value, customProps }) => {
+function DeleteColumn({ className, value, customProps }) {
   const { disabled, onDelete } = customProps;
 
   return (
@@ -135,7 +139,7 @@ const DeleteColumn = ({ className, value, customProps }) => {
       <DeleteFilterButton filter={value} onDelete={onDelete} disabled={disabled} />
     </div>
   );
-};
+}
 DeleteColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,

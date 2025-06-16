@@ -22,7 +22,7 @@ import styles from './activityPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActivityPanel = ({ data: { result } }) => {
+export function ActivityPanel({ data: { result } }) {
   const widget = {
     content: { result: result.slice(0, 150) },
   };
@@ -32,7 +32,7 @@ export const ActivityPanel = ({ data: { result } }) => {
       <ProjectActivity widget={widget} />
     </div>
   );
-};
+}
 
 ActivityPanel.propTypes = {
   data: PropTypes.object.isRequired,

@@ -28,21 +28,21 @@ import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
 
-const Tooltip = ({ projectName }) => (
-  <div className={cx('project-selector-tooltip')}>{projectName}</div>
-);
+function Tooltip({ projectName }) {
+  return <div className={cx('project-selector-tooltip')}>{projectName}</div>;
+}
 Tooltip.propTypes = {
   projectName: PropTypes.string.isRequired,
 };
 
-const CurrentProjectBlock = ({ getProjectName }) => {
+function CurrentProjectBlock({ getProjectName }) {
   return (
     <>
       <div className={cx('current-project-name')}>{getProjectName()}</div>
       <div className={cx('show-list-icon')} />
     </>
   );
-};
+}
 
 CurrentProjectBlock.propTypes = {
   getProjectName: PropTypes.func.isRequired,
@@ -69,6 +69,7 @@ export class ProjectSelector extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   static defaultProps = {
     projects: [],
     mobileOnly: false,

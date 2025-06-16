@@ -22,14 +22,15 @@ import styles from './linkItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const LinkItem = ({ link, active, title, onClick }) =>
-  !active ? (
+export function LinkItem({ link, active, title, onClick }) {
+  return !active ? (
     <NavLink className={cx('link')} to={link} onClick={onClick}>
       {title}
     </NavLink>
   ) : (
     <span>{title}</span>
   );
+}
 LinkItem.propTypes = {
   link: PropTypes.object.isRequired,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,

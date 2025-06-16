@@ -22,15 +22,17 @@ import styles from './attributesTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const AttributesTooltip = ({ attributes }) => (
-  <div className={cx('attributes-tooltip')}>
-    {attributes.map((item) => (
-      <div key={`${item.key}-${item.value}`}>
-        {formatAttribute({ key: item.key, value: item.value })}
-      </div>
-    ))}
-  </div>
-);
+export function AttributesTooltip({ attributes }) {
+  return (
+    <div className={cx('attributes-tooltip')}>
+      {attributes.map((item) => (
+        <div key={`${item.key}-${item.value}`}>
+          {formatAttribute({ key: item.key, value: item.value })}
+        </div>
+      ))}
+    </div>
+  );
+}
 AttributesTooltip.propTypes = {
   attributes: PropTypes.arrayOf(
     PropTypes.shape({

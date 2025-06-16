@@ -29,11 +29,11 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const StatisticsColumn = (
+export function StatisticsColumn(
   { className, value },
   name,
   { isLatest, getCompositeAttributes, linkPayload, excludeSkipped },
-) => {
+) {
   const itemValue = Number(value.statistics?.[name]);
   const totalValue = Number(value.total?.statistics?.[name]);
   const defaultColumnProps = {
@@ -56,7 +56,7 @@ export const StatisticsColumn = (
   return (
     <div className={cx('statistics-col', className)}>
       {value.statistics ? (
-        <Fragment>
+        <>
           <div className={cx('desktop-block')}>
             {!!itemValue && <ExecutionStatistics value={itemValue} {...defaultColumnProps} />}
           </div>
@@ -70,18 +70,18 @@ export const StatisticsColumn = (
               <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
             </div>
           </div>
-        </Fragment>
+        </>
       ) : (
         !!totalValue && (
-          <Fragment>
+          <>
             <span className={cx('mobile-hint')}>{defaultStatisticsMessages[name]}</span>
             <span className={cx('total-item')}>{totalValue}</span>
-          </Fragment>
+          </>
         )
       )}
     </div>
   );
-};
+}
 
 StatisticsColumn.propTypes = {
   value: PropTypes.object.isRequired,

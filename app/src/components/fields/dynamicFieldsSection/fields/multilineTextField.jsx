@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { DynamicField } from '../dynamicField';
 
-export const MultilineTextField = (props) => {
+export function MultilineTextField(props) {
   const { field, darkView, ...rest } = props;
 
   const formatInputValue = (value) => value?.[0];
@@ -37,7 +37,7 @@ export const MultilineTextField = (props) => {
       <FieldTextFlex defaultWidth={false} variant={darkView ? 'dark' : 'light'} mobileDisabled />
     </DynamicField>
   );
-};
+}
 MultilineTextField.propTypes = {
   field: PropTypes.object.isRequired,
   darkView: PropTypes.bool,

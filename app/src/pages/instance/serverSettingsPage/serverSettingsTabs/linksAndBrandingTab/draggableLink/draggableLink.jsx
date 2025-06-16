@@ -26,7 +26,7 @@ import styles from '../linksAndBrandingTab.scss';
 
 const cx = classNames.bind(styles);
 const FOOTER_LINK_DRAG_SOURCE_TYPE = 'FOOTER_LINK';
-export const DraggableLink = ({ item, onDrop, onDelete, disabled, disabledTitle }) => {
+export function DraggableLink({ item, onDrop, onDelete, disabled, disabledTitle }) {
   const [isDragging, setIsDragging] = useState(false);
   const { trackEvent } = useTracking();
   const [{ isInDraggingState }, dragRef, dragPreviewRef] = useDrag(
@@ -100,7 +100,7 @@ export const DraggableLink = ({ item, onDrop, onDelete, disabled, disabledTitle 
       />
     </div>
   );
-};
+}
 
 DraggableLink.propTypes = {
   item: PropTypes.shape({

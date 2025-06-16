@@ -105,35 +105,37 @@ export const prevPagePropertiesSelector = (
   mapping,
 ) => commonPagePropertiesSelector(query, namespace, mapping);
 
-export const createQueryParametersSelector = ({
-  namespace: staticNamespace,
-  defaultPagination,
-  defaultSorting,
-  sortingKey = SORTING_KEY,
-} = {}) => (state, namespace) => {
-  const calculatedNamespace = staticNamespace || namespace;
-  const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
-  const query = pagePropertiesSelector(state, calculatedNamespace);
-  const queryParameters = {
-    ...calculatedPagination,
-    [sortingKey]: defaultSorting || '',
-    ...query,
-  };
-  const defaultPageSize = calculatedPagination[SIZE_KEY];
-  if (Number(queryParameters[SIZE_KEY]) < 0) {
-    queryParameters[SIZE_KEY] = defaultPageSize;
-  }
-  if (Number(queryParameters[PAGE_KEY]) < 0) {
-    queryParameters[PAGE_KEY] = calculatedPagination[PAGE_KEY];
-  }
-  if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && calculatedNamespace) {
-    const userId = userIdSelector(state);
-    const userSettings = getStorageItem(`${userId}_settings`) || {};
-    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
-  }
+export const createQueryParametersSelector =
+  ({
+    namespace: staticNamespace,
+    defaultPagination,
+    defaultSorting,
+    sortingKey = SORTING_KEY,
+  } = {}) =>
+  (state, namespace) => {
+    const calculatedNamespace = staticNamespace || namespace;
+    const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
+    const query = pagePropertiesSelector(state, calculatedNamespace);
+    const queryParameters = {
+      ...calculatedPagination,
+      [sortingKey]: defaultSorting || '',
+      ...query,
+    };
+    const defaultPageSize = calculatedPagination[SIZE_KEY];
+    if (Number(queryParameters[SIZE_KEY]) < 0) {
+      queryParameters[SIZE_KEY] = defaultPageSize;
+    }
+    if (Number(queryParameters[PAGE_KEY]) < 0) {
+      queryParameters[PAGE_KEY] = calculatedPagination[PAGE_KEY];
+    }
+    if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && calculatedNamespace) {
+      const userId = userIdSelector(state);
+      const userSettings = getStorageItem(`${userId}_settings`) || {};
+      queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
+    }
 
-  return queryParameters;
-};
+    return queryParameters;
+  };
 
 export const createAlternativeQueryParametersSelector = ({
   defaultPagination,

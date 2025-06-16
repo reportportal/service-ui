@@ -22,11 +22,13 @@ import styles from './count.scss';
 
 const cx = classNames.bind(styles);
 
-export const Count = ({ count, total }) => (
-  <div className={cx('count')}>
-    {count} <FormattedMessage id="Common.of" defaultMessage="of" /> {total}
-  </div>
-);
+export function Count({ count, total }) {
+  return (
+    <div className={cx('count')}>
+      {count} <FormattedMessage id="Common.of" defaultMessage="of" /> {total}
+    </div>
+  );
+}
 
 Count.propTypes = {
   count: number.isRequired,

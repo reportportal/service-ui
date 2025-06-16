@@ -35,13 +35,15 @@ const fieldShape = {
   ),
 };
 
-const Field = ({ component, prefix, postfix }) => (
-  <div className={cx('dependent-control-field')}>
-    {prefix && <span className={cx('field-caption')}>{prefix}</span>}
-    {component}
-    {postfix && <span className={cx('field-caption')}>{postfix}</span>}
-  </div>
-);
+function Field({ component, prefix, postfix }) {
+  return (
+    <div className={cx('dependent-control-field')}>
+      {prefix && <span className={cx('field-caption')}>{prefix}</span>}
+      {component}
+      {postfix && <span className={cx('field-caption')}>{postfix}</span>}
+    </div>
+  );
+}
 Field.propTypes = fieldShape;
 Field.defaultProps = {
   id: '',
@@ -64,9 +66,11 @@ function renderFieldsRecursively(fields, values) {
   });
 }
 
-export const DependentFieldsControl = ({ values, fields }) => (
-  <div className={cx('dependent-fields-control')}>{renderFieldsRecursively(fields, values)}</div>
-);
+export function DependentFieldsControl({ values, fields }) {
+  return (
+    <div className={cx('dependent-fields-control')}>{renderFieldsRecursively(fields, values)}</div>
+  );
+}
 DependentFieldsControl.propTypes = {
   values: PropTypes.object,
   fields: PropTypes.arrayOf(

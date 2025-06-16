@@ -22,18 +22,19 @@ import styles from './instancesListItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstancesListItem = ({ title, creator, creationInfo, onClick, disabled }) => (
-  // eslint-disable-next-line
-  <li className={cx('instances-list-item', { disabled })} onClick={onClick}>
-    <div className={cx('item-data')}>
-      <h4 className={cx('integration-name')}>{title}</h4>
-      <span className={cx('creation-info')}>
-        {creator ? `${creator} on ${creationInfo}` : creationInfo}
-      </span>
-    </div>
-    <div className={cx('arrow-control')}>{Parser(ArrowIcon)}</div>
-  </li>
-);
+export function InstancesListItem({ title, creator, creationInfo, onClick, disabled }) {
+  return (
+    <li className={cx('instances-list-item', { disabled })} onClick={onClick}>
+      <div className={cx('item-data')}>
+        <h4 className={cx('integration-name')}>{title}</h4>
+        <span className={cx('creation-info')}>
+          {creator ? `${creator} on ${creationInfo}` : creationInfo}
+        </span>
+      </div>
+      <div className={cx('arrow-control')}>{Parser(ArrowIcon)}</div>
+    </li>
+  );
+}
 
 InstancesListItem.propTypes = {
   onClick: PropTypes.func.isRequired,

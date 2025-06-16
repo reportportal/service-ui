@@ -28,14 +28,14 @@ import styles from './organizationsControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsControl = ({
+export function OrganizationsControl({
   isPopoverOpen,
   onClick,
   closeSidebar,
   link,
   titles,
   isExtendedNav,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   return (
     <div className={cx('organizations-control-wrapper')} onClick={onClick}>
@@ -79,7 +79,7 @@ export const OrganizationsControl = ({
       </button>
     </div>
   );
-};
+}
 
 OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,

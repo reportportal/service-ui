@@ -20,7 +20,7 @@ import styles from './bigButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const BigButton = ({
+export function BigButton({
   type,
   children,
   disabled,
@@ -31,7 +31,7 @@ export const BigButton = ({
   onClick,
   form,
   title,
-}) => {
+}) {
   const classes = cx('big-button', className, {
     'rounded-corners': roundedCorners,
     'mobile-disabled': mobileDisabled,
@@ -51,7 +51,7 @@ export const BigButton = ({
       {children}
     </button>
   );
-};
+}
 
 BigButton.propTypes = {
   children: PropTypes.node,

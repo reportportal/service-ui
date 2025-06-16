@@ -24,7 +24,7 @@ const VARIANT_INLINE = 'inline';
 
 const cx = classNames.bind(styles);
 
-export const Input = ({
+export function Input({
   type,
   value,
   readonly,
@@ -45,32 +45,34 @@ export const Input = ({
   variant,
   style,
   title,
-}) => (
-  <input
-    ref={refFunction}
-    type={type}
-    style={style}
-    title={title}
-    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
-      'mobile-disabled': mobileDisabled,
-      disabled,
-      error,
-      touched,
-      readonly,
-      asyncValidating,
-    })}
-    value={value}
-    placeholder={placeholder}
-    maxLength={maxLength}
-    disabled={disabled}
-    readOnly={readonly}
-    onChange={onChange}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    onKeyUp={onKeyUp}
-    onKeyPress={onKeyPress}
-  />
-);
+}) {
+  return (
+    <input
+      ref={refFunction}
+      type={type}
+      style={style}
+      title={title}
+      className={cx('input', `type-${type}`, className, `variant-${variant}`, {
+        'mobile-disabled': mobileDisabled,
+        disabled,
+        error,
+        touched,
+        readonly,
+        asyncValidating,
+      })}
+      value={value}
+      placeholder={placeholder}
+      maxLength={maxLength}
+      disabled={disabled}
+      readOnly={readonly}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyUp={onKeyUp}
+      onKeyPress={onKeyPress}
+    />
+  );
+}
 
 Input.propTypes = {
   type: PropTypes.string,

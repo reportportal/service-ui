@@ -23,15 +23,17 @@ import styles from './modalHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalHeader = ({ text, onClose }) => (
-  <div className={cx('header')}>
-    <span className={cx('title')}>{text}</span>
-    <div className={cx('close-icon')} onClick={onClose}>
-      <span className={cx('close-icon-prefix')}>Esc</span>
-      {Parser(CloseIcon)}
+export function ModalHeader({ text, onClose }) {
+  return (
+    <div className={cx('header')}>
+      <span className={cx('title')}>{text}</span>
+      <div className={cx('close-icon')} onClick={onClose}>
+        <span className={cx('close-icon-prefix')}>Esc</span>
+        {Parser(CloseIcon)}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 ModalHeader.propTypes = {
   text: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   onClose: PropTypes.func,

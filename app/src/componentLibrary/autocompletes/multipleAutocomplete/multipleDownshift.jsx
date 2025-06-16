@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import isEqual from 'fast-deep-equal';
 
-export const MultipleDownshift = ({
+export function MultipleDownshift({
   selectedItems,
   children,
   onChange,
@@ -28,7 +28,7 @@ export const MultipleDownshift = ({
   existingItemsMap,
   customizeNewSelectedValue,
   ...props
-}) => {
+}) {
   const [storedItemsMap, setStoredItems] = useState(existingItemsMap);
 
   const collectStoredItems = (newItemData, collectStoredItemsCb) => {
@@ -113,7 +113,7 @@ export const MultipleDownshift = ({
       {(downshift) => children(getStateAndHelpers(downshift))}
     </Downshift>
   );
-};
+}
 MultipleDownshift.propTypes = {
   options: PropTypes.array,
   onChange: PropTypes.func,

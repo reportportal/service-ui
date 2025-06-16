@@ -21,11 +21,13 @@ import styles from './simpleBreadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-export const SimpleBreadcrumb = ({ descriptor: { title }, active, onClick }) => (
-  <div className={cx('simple-breadcrumb', { active })} onClick={active ? onClick : null}>
-    {title}
-  </div>
-);
+export function SimpleBreadcrumb({ descriptor: { title }, active, onClick }) {
+  return (
+    <div className={cx('simple-breadcrumb', { active })} onClick={active ? onClick : null}>
+      {title}
+    </div>
+  );
+}
 SimpleBreadcrumb.propTypes = {
   descriptor: PropTypes.object.isRequired,
   active: PropTypes.bool,

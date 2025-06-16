@@ -34,12 +34,12 @@ const messages = defineMessages({
   },
 });
 
-const DeleteDefectTypeModal = ({
+function DeleteDefectTypeModal({
   data: {
     onSave,
     defectType: { name },
   },
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -61,7 +61,7 @@ const DeleteDefectTypeModal = ({
       <div>{formatMessage(messages.message, { name })}</div>
     </Modal>
   );
-};
+}
 DeleteDefectTypeModal.propTypes = {
   data: PropTypes.object,
 };

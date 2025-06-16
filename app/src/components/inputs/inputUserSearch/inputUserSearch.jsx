@@ -36,34 +36,34 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
-export const makeOptions = (isAdmin, projectKey, { organizationSlug, projectSlug }) => ({
-  content: options,
-}) =>
-  options.map((option) => {
-    let isAssignedProject = false;
+export const makeOptions =
+  (isAdmin, projectKey, { organizationSlug, projectSlug }) =>
+  ({ content: options }) =>
+    options.map((option) => {
+      let isAssignedProject = false;
 
-    if (isAdmin) {
-      isAssignedProject = !!findAssignedProjectByOrganization(
-        option.assignedProjects,
-        option.assignedOrganizations[organizationSlug]?.organizationId,
-        projectSlug,
-      );
-    }
+      if (isAdmin) {
+        isAssignedProject = !!findAssignedProjectByOrganization(
+          option.assignedProjects,
+          option.assignedOrganizations[organizationSlug]?.organizationId,
+          projectSlug,
+        );
+      }
 
-    return {
-      userName: option.fullName || '',
-      userLogin: isAdmin ? option.userId : option.login,
-      email: option.email || '',
-      disabled: isAssignedProject,
-      isAssigned: isAssignedProject,
-      userAvatar: URLS.userAvatar(isAdmin ? option.userId : option.login, true),
-      assignedProjects: option.assignedProjects || {},
-      assignedOrganizations: option.assignedOrganizations || {},
-      userRole: option.userRole,
-      projectKey,
-      userId: isAdmin ? option.userId : option.login,
-    };
-  });
+      return {
+        userName: option.fullName || '',
+        userLogin: isAdmin ? option.userId : option.login,
+        email: option.email || '',
+        disabled: isAssignedProject,
+        isAssigned: isAssignedProject,
+        userAvatar: URLS.userAvatar(isAdmin ? option.userId : option.login, true),
+        assignedProjects: option.assignedProjects || {},
+        assignedOrganizations: option.assignedOrganizations || {},
+        userRole: option.userRole,
+        projectKey,
+        userId: isAdmin ? option.userId : option.login,
+      };
+    });
 
 const parseValueToString = (option) => (option ? option.userLogin : '');
 
@@ -78,7 +78,7 @@ const renderOption = (option, index, isNew, getItemProps) =>
     />
   );
 
-export const InputUserSearch = ({
+export function InputUserSearch({
   isAdmin,
   onChange,
   projectKey,
@@ -87,24 +87,26 @@ export const InputUserSearch = ({
   touched,
   placeholder,
   creatable,
-}) => (
-  <AsyncAutocomplete
-    getURI={getURI(isAdmin, projectKey)}
-    onChange={onChange}
-    error={error}
-    touched={touched}
-    isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlOrganizationAndProjectSelector))}
-    createNewOption={newOptionCreator}
-    value={value}
-    parseValueToString={parseValueToString}
-    renderOption={renderOption}
-    placeholder={placeholder}
-    isOptionUnique={isOptionUnique}
-    creatable={creatable}
-    showDynamicSearchPrompt
-  />
-);
+}) {
+  return (
+    <AsyncAutocomplete
+      getURI={getURI(isAdmin, projectKey)}
+      onChange={onChange}
+      error={error}
+      touched={touched}
+      isValidNewOption={isValidNewOption}
+      makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlOrganizationAndProjectSelector))}
+      createNewOption={newOptionCreator}
+      value={value}
+      parseValueToString={parseValueToString}
+      renderOption={renderOption}
+      placeholder={placeholder}
+      isOptionUnique={isOptionUnique}
+      creatable={creatable}
+      showDynamicSearchPrompt
+    />
+  );
+}
 
 InputUserSearch.propTypes = {
   isAdmin: PropTypes.bool,

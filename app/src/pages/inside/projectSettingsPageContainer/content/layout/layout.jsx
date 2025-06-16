@@ -22,7 +22,7 @@ import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
 
-export const Layout = ({ description, children, className }) => {
+export function Layout({ description, children, className }) {
   return (
     <>
       <TabDescription>{description}</TabDescription>
@@ -30,7 +30,7 @@ export const Layout = ({ description, children, className }) => {
       <div className={cx(className)}>{children}</div>
     </>
   );
-};
+}
 Layout.propTypes = {
   description: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,

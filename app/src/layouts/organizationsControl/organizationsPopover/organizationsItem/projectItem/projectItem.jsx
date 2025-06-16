@@ -25,14 +25,14 @@ import styles from './projectItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectItem = ({
+export function ProjectItem({
   organizationSlug,
   projectSlug,
   projectKey,
   projectName,
   onClick,
   isActive,
-}) => {
+}) {
   const projectItemRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -65,7 +65,7 @@ export const ProjectItem = ({
       </NavLink>
     </div>
   );
-};
+}
 
 ProjectItem.propTypes = {
   projectSlug: PropTypes.string.isRequired,

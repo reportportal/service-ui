@@ -27,7 +27,7 @@ import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectName = ({ project, disableAnalytics = false }) => {
+export function ProjectName({ project, disableAnalytics = false }) {
   const { projectSlug, organizationSlug, projectName, projectKey } = project;
   const { hasPermission } = useSelector(userAssignedSelector(projectSlug, organizationSlug));
   const dispatch = useDispatch();
@@ -62,7 +62,7 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
       {projectName}
     </Link>
   );
-};
+}
 
 ProjectName.propTypes = {
   project: PropTypes.object.isRequired,

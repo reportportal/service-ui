@@ -31,7 +31,7 @@ import { calculateDefaultIndex, calculateNextIndex, calculatePrevIndex } from '.
 
 const cx = classNames.bind(styles);
 
-export const Dropdown = ({
+export function Dropdown({
   value,
   options,
   disabled,
@@ -51,7 +51,7 @@ export const Dropdown = ({
   transparentBackground,
   className,
   toggleButtonClassName,
-}) => {
+}) {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
   const updatePosition = useRef(null);
@@ -256,7 +256,7 @@ export const Dropdown = ({
       </div>
     </Manager>
   );
-};
+}
 
 Dropdown.propTypes = {
   value: PropTypes.oneOfType([

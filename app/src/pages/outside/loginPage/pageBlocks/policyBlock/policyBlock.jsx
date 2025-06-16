@@ -22,10 +22,12 @@ import styles from './policyBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const PolicyBlock = () => (
-  <div className={cx('policy-block')}>
-    <a href={referenceDictionary.rpEpamPolicy} target="_blank">
-      <FormattedMessage id={'PolicyBlock.privacyPolicy'} defaultMessage={'Privacy Policy'} />
-    </a>
-  </div>
-);
+export function PolicyBlock() {
+  return (
+    <div className={cx('policy-block')}>
+      <a href={referenceDictionary.rpEpamPolicy} target="_blank" rel="noreferrer">
+        <FormattedMessage id="PolicyBlock.privacyPolicy" defaultMessage="Privacy Policy" />
+      </a>
+    </div>
+  );
+}

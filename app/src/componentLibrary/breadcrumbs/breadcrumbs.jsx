@@ -28,21 +28,23 @@ const MEATBALL_WIDTH = 36;
 const ARROW_WIDTH = 20;
 const MAX_SHOWN_DESCRIPTORS = 5;
 
-export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
+export function Breadcrumbs({ descriptors, dataAutomationId }) {
   const shownDescriptors = [...descriptors];
 
   const titleTailNumChars = ((breadcrumbsCount) => {
     if (breadcrumbsCount >= MAX_SHOWN_DESCRIPTORS) {
       return 12;
-    } else if (breadcrumbsCount === 4) {
-      return 13;
-    } else if (breadcrumbsCount === 3) {
-      return 18;
-    } else if (breadcrumbsCount === 2) {
-      return 24;
-    } else {
-      return 55;
     }
+    if (breadcrumbsCount === 4) {
+      return 13;
+    }
+    if (breadcrumbsCount === 3) {
+      return 18;
+    }
+    if (breadcrumbsCount === 2) {
+      return 24;
+    }
+    return 55;
   })(descriptors.length);
 
   let hiddenDescriptors = [];
@@ -111,7 +113,7 @@ export const Breadcrumbs = ({ descriptors, dataAutomationId }) => {
       )}
     </div>
   );
-};
+}
 
 Breadcrumbs.propTypes = {
   descriptors: PropTypes.arrayOf(

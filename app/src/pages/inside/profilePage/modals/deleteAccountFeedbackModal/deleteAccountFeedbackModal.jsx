@@ -74,7 +74,7 @@ const ALTERNATIVE = 'alternative';
 const OTHER = 'other';
 const OTHER_REASON = 'otherReason';
 
-const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
+function DeleteAccountFeedback({ invalid, handleSubmit }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -132,7 +132,7 @@ const DeleteAccountFeedback = ({ invalid, handleSubmit }) => {
       </form>
     </ModalLayout>
   );
-};
+}
 DeleteAccountFeedback.propTypes = {
   invalid: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,

@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
 });
 
-export const AttributeListFormField = ({
+export function AttributeListFormField({
   shown,
   name,
   changeValue,
@@ -47,7 +47,7 @@ export const AttributeListFormField = ({
   value,
   attributesNote,
   ...rest
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   const attributeControlHandler = (e) => {
@@ -75,7 +75,7 @@ export const AttributeListFormField = ({
       <AttributeListContainer value={value} {...rest} />
     </>
   );
-};
+}
 AttributeListFormField.propTypes = {
   name: PropTypes.string,
   setShowEditor: PropTypes.func,

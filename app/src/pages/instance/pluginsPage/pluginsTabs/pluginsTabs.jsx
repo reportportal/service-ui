@@ -54,6 +54,7 @@ export class PluginsTabs extends Component {
     activeTab: PropTypes.string,
     onChangeTab: PropTypes.func,
   };
+
   static defaultProps = {
     activeTab: INSTALLED,
     onChangeTab: () => {},
@@ -80,12 +81,14 @@ export class PluginsTabs extends Component {
     },
   });
 
-  render = () => (
-    <NavigationTabs
-      config={this.createTabsConfig()}
-      activeTab={this.props.activeTab}
-      onChangeTab={this.props.onChangeTab}
-      customBlock={<PluginsToolbar />}
-    />
-  );
+  render() {
+    return (
+      <NavigationTabs
+        config={this.createTabsConfig()}
+        activeTab={this.props.activeTab}
+        onChangeTab={this.props.onChangeTab}
+        customBlock={<PluginsToolbar />}
+      />
+    );
+  }
 }

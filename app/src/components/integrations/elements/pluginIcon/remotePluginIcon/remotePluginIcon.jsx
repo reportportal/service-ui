@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_ICON_TYPES } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
-export const RemotePluginIcon = ({ icon = {}, className = '', ...rest }) => {
+export function RemotePluginIcon({ icon = {}, className = '', ...rest }) {
   const { type, content } = icon;
 
   return type === PLUGIN_ICON_TYPES.SVG ? (
@@ -35,7 +35,7 @@ export const RemotePluginIcon = ({ icon = {}, className = '', ...rest }) => {
       {...rest}
     />
   );
-};
+}
 RemotePluginIcon.propTypes = {
   icon: PropTypes.shape({
     type: PropTypes.oneOf([

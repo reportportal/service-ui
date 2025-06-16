@@ -26,14 +26,16 @@ import styles from './inputWithEye.scss';
 
 const cx = classNames.bind(styles);
 
-const EyeComponent = ({ value }) => Parser(value ? EyeIcon : CrossEyeIcon);
+function EyeComponent({ value }) {
+  return Parser(value ? EyeIcon : CrossEyeIcon);
+}
 EyeComponent.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const EyeTooltip = ({ formatMessage, value }) => (
-  <span>{formatMessage(value ? messages.hideTooltip : messages.showTooltip)}</span>
-);
+function EyeTooltip({ formatMessage, value }) {
+  return <span>{formatMessage(value ? messages.hideTooltip : messages.showTooltip)}</span>;
+}
 EyeTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
@@ -49,7 +51,7 @@ EyeComponentWithTooltip.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, className }) => {
+export function InputWithEye({ value, disabled, onChange, onFocus, onBlur, className }) {
   const { formatMessage } = useIntl();
 
   return (
@@ -75,7 +77,7 @@ export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, class
       </div>
     </label>
   );
-};
+}
 InputWithEye.propTypes = {
   value: PropTypes.bool,
   disabled: PropTypes.bool,

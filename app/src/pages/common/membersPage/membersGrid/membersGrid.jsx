@@ -35,11 +35,13 @@ const messages = defineMessages({
   actionCol: { id: 'MembersGrid.actionCol', defaultMessage: 'Action' },
 });
 
-const NameColumn = ({ className, value }) => (
-  <div className={cx('name-col', className)}>
-    <PersonalInfo name={value.fullName} login={value.userId} userRole={value.userRole} />
-  </div>
-);
+function NameColumn({ className, value }) {
+  return (
+    <div className={cx('name-col', className)}>
+      <PersonalInfo name={value.fullName} login={value.userId} userRole={value.userRole} />
+    </div>
+  );
+}
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -48,7 +50,7 @@ NameColumn.defaultProps = {
   value: {},
 };
 
-const LastLoginColumn = ({ className, value }) => {
+function LastLoginColumn({ className, value }) {
   const {
     metadata: { last_login: lastLogin = 0 },
   } = value;
@@ -57,7 +59,7 @@ const LastLoginColumn = ({ className, value }) => {
       <LastLogin time={lastLogin} />
     </div>
   );
-};
+}
 LastLoginColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -66,15 +68,17 @@ LastLoginColumn.defaultProps = {
   value: {},
 };
 
-const RolesColumn = ({ className, value }) => (
-  <div className={cx('roles-col', className)}>
-    <ProjectRole
-      assignedProjects={value.assignedProjects}
-      accountRole={value.userRole}
-      userId={value.userId}
-    />
-  </div>
-);
+function RolesColumn({ className, value }) {
+  return (
+    <div className={cx('roles-col', className)}>
+      <ProjectRole
+        assignedProjects={value.assignedProjects}
+        accountRole={value.userRole}
+        userId={value.userId}
+      />
+    </div>
+  );
+}
 RolesColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -83,11 +87,13 @@ RolesColumn.defaultProps = {
   value: {},
 };
 
-const UnassignColumn = ({ className, value, customProps }) => (
-  <div className={cx('unassign-col', className)}>
-    <UnassignButton userId={value.userId} fetchData={customProps.fetchData} />
-  </div>
-);
+function UnassignColumn({ className, value, customProps }) {
+  return (
+    <div className={cx('unassign-col', className)}>
+      <UnassignButton userId={value.userId} fetchData={customProps.fetchData} />
+    </div>
+  );
+}
 UnassignColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,

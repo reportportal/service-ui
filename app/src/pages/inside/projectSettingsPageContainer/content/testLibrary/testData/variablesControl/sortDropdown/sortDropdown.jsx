@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
 });
 
-export const SortDropdown = () => {
+export function SortDropdown() {
   const { formatMessage } = useIntl();
 
   return (
@@ -66,4 +66,4 @@ export const SortDropdown = () => {
       </Button>
     </PopoverControl>
   );
-};
+}

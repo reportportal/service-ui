@@ -23,7 +23,7 @@ import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownOption = ({
+export function DropdownOption({
   multiple,
   label,
   disabled,
@@ -35,7 +35,7 @@ export const DropdownOption = ({
   independentSelection,
   title,
   customClass,
-}) => {
+}) {
   const onChangeHandler = () => {
     onChange?.(value);
   };
@@ -83,7 +83,7 @@ export const DropdownOption = ({
       {renderOptionComponent()}
     </div>
   );
-};
+}
 
 DropdownOption.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),

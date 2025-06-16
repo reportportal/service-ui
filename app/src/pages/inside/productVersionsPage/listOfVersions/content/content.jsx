@@ -34,7 +34,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const Content = ({ versions }) => {
+export function Content({ versions }) {
   const { formatMessage, formatDate } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
@@ -99,7 +99,7 @@ export const Content = ({ versions }) => {
       <HelpPanel items={infoItems} />
     </>
   );
-};
+}
 
 Content.propTypes = {
   versions: PropTypes.arrayOf(

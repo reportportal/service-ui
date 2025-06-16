@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
 });
 
-export const UploadModalLayout = ({
+export function UploadModalLayout({
   children,
   title,
   files,
@@ -38,7 +38,7 @@ export const UploadModalLayout = ({
   eventsInfo,
   importConfirmationWarning,
   uploadButtonTitle,
-}) => {
+}) {
   const { formatMessage } = useIntl();
 
   const validFiles = getValidFiles(files);
@@ -96,7 +96,7 @@ export const UploadModalLayout = ({
       {children}
     </ModalLayout>
   );
-};
+}
 UploadModalLayout.propTypes = {
   title: intlMessageType.isRequired,
   uploadButtonTitle: intlMessageType.isRequired,

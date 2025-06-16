@@ -29,14 +29,14 @@ import styles from './infoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const InfoBlock = ({
+export function InfoBlock({
   modalState,
   setModalState,
   isBulkOperation,
   expanded,
   onToggle,
   eventsInfo,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { decisionType, issueActionType } = modalState;
   const currentSource = modalState[ACTIVE_TAB_MAP[decisionType]].issue;
@@ -66,11 +66,10 @@ export const InfoBlock = ({
           </span>
         ),
       });
-    } else {
-      return testItemsLength > 1
-        ? formatMessage(messages.applyToItems, { itemsCount: testItemsLength })
-        : formatMessage(messages.applyToItem);
     }
+    return testItemsLength > 1
+      ? formatMessage(messages.applyToItems, { itemsCount: testItemsLength })
+      : formatMessage(messages.applyToItem);
   };
 
   return (
@@ -126,7 +125,7 @@ export const InfoBlock = ({
       )}
     </div>
   );
-};
+}
 InfoBlock.propTypes = {
   modalState: PropTypes.object,
   setModalState: PropTypes.func,

@@ -21,7 +21,7 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-export const Header = ({ title, titleNode, children }) => {
+export function Header({ title, titleNode, children }) {
   return (
     <div className={cx('container')}>
       <div className={cx('header')}>
@@ -31,7 +31,7 @@ export const Header = ({ title, titleNode, children }) => {
       {children}
     </div>
   );
-};
+}
 Header.propTypes = {
   title: PropTypes.string,
   titleNode: PropTypes.node,

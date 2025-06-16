@@ -25,7 +25,7 @@ import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
 
-const SimilarItemsList = ({ testItems, selectedItems, selectItem, eventsInfo, onToggleItem }) => {
+function SimilarItemsList({ testItems, selectedItems, selectItem, eventsInfo, onToggleItem }) {
   return (
     <>
       {testItems.length > 0 &&
@@ -59,7 +59,7 @@ const SimilarItemsList = ({ testItems, selectedItems, selectItem, eventsInfo, on
         })}
     </>
   );
-};
+}
 SimilarItemsList.propTypes = {
   testItems: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
@@ -72,7 +72,7 @@ SimilarItemsList.defaultProps = {
   onToggleItem: () => {},
 };
 
-export const ItemsListBody = ({
+export function ItemsListBody({
   currentTestItem,
   testItems,
   selectedItems,
@@ -80,7 +80,7 @@ export const ItemsListBody = ({
   showErrorLogs,
   eventsInfo,
   onShowErrorLogsChange,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
     TO_INVESTIGATE_LOCATOR_PREFIX,
@@ -123,7 +123,7 @@ export const ItemsListBody = ({
       />
     </div>
   );
-};
+}
 ItemsListBody.propTypes = {
   currentTestItem: PropTypes.array,
   testItems: PropTypes.array,

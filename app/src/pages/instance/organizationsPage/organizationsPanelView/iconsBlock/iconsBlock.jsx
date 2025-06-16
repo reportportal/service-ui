@@ -32,7 +32,7 @@ import styles from './iconsBlock.scss';
 const cx = classNames.bind(styles);
 const THREE_MONTHS_IN_MS = 1000 * 60 * 60 * 24 * 30 * 3;
 
-export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) => {
+export function IconsBlock({ lastLaunchDate, hasPermission, organizationType }) {
   const { formatMessage } = useIntl();
   const isOutdated =
     lastLaunchDate && Date.now() - new Date(lastLaunchDate).getTime() > THREE_MONTHS_IN_MS;
@@ -43,7 +43,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
         (organizationType === ORGANIZATION_EXTERNAL_TYPE ? (
           <Tooltip
             content={formatMessage(messages.synchedOrganization)}
-            placement={'top'}
+            placement="top"
             wrapperClassName={cx('tooltip-wrapper')}
           >
             <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
@@ -52,7 +52,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
           organizationType !== ORGANIZATION_INTERNAL_TYPE && (
             <Tooltip
               content={formatMessage(messages.personalOrganization)}
-              placement={'top'}
+              placement="top"
               wrapperClassName={cx('tooltip-wrapper')}
             >
               <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
@@ -62,7 +62,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
       {hasPermission && isOutdated && (
         <Tooltip
           content={formatMessage(messages.lastLaunch)}
-          placement={'top'}
+          placement="top"
           wrapperClassName={cx('tooltip-wrapper')}
         >
           <i className={cx('icon')}>{Parser(OutdatedIcon)}</i>
@@ -70,7 +70,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
       )}
     </>
   );
-};
+}
 
 IconsBlock.propTypes = {
   organizationType: PropTypes.string.isRequired,

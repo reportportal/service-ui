@@ -45,12 +45,7 @@ import styles from './patternAnalysisContent.scss';
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
 
-export const PatternAnalysisContent = ({
-  setHeaderTitleNode,
-  onAddPattern,
-  patterns,
-  disabled,
-}) => {
+export function PatternAnalysisContent({ setHeaderTitleNode, onAddPattern, patterns, disabled }) {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -229,7 +224,7 @@ export const PatternAnalysisContent = ({
       </div>
     </>
   );
-};
+}
 PatternAnalysisContent.propTypes = {
   setHeaderTitleNode: PropTypes.func.isRequired,
   onAddPattern: PropTypes.func.isRequired,

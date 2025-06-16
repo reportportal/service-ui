@@ -40,7 +40,9 @@ const messages = defineMessages({
   },
 });
 
-const TooltipComponent = ({ formatMessage }) => <p>{formatMessage(messages.buttonTooltip)}</p>;
+function TooltipComponent({ formatMessage }) {
+  return <p>{formatMessage(messages.buttonTooltip)}</p>;
+}
 TooltipComponent.propTypes = {
   formatMessage: PropTypes.func,
 };

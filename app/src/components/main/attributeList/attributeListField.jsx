@@ -17,9 +17,9 @@
 import PropTypes from 'prop-types';
 import { EditableAttributeList } from './editableAttributeList';
 
-export const AttributeListField = ({ value, ...rest }) => (
-  <EditableAttributeList attributes={value} {...rest} />
-);
+export function AttributeListField({ value, ...rest }) {
+  return <EditableAttributeList attributes={value} {...rest} />;
+}
 AttributeListField.propTypes = {
   value: PropTypes.array,
 };

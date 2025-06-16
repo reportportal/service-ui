@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-export const ApiKeysBlock = ({ apiKeys }) => {
+export function ApiKeysBlock({ apiKeys }) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -122,7 +122,7 @@ export const ApiKeysBlock = ({ apiKeys }) => {
       </div>
     </>
   );
-};
+}
 ApiKeysBlock.propTypes = {
   apiKeys: PropTypes.arrayOf(
     PropTypes.shape({

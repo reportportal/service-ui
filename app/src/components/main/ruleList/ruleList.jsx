@@ -20,13 +20,15 @@ import { ListItem } from './listItem';
 import { MovableRuleList } from './movableRuleList';
 import { ruleListItemPropTypes, ruleListItemDefaultProps } from './constants';
 
-const PlainRuleList = ({ data, ...rest }) => (
-  <Fragment>
-    {data.map((item, index) => (
-      <ListItem key={item.id || index} id={index} item={item} {...rest} />
-    ))}
-  </Fragment>
-);
+function PlainRuleList({ data, ...rest }) {
+  return (
+    <>
+      {data.map((item, index) => (
+        <ListItem key={item.id || index} id={index} item={item} {...rest} />
+      ))}
+    </>
+  );
+}
 PlainRuleList.propTypes = {
   ...ruleListItemPropTypes,
   data: PropTypes.array,
@@ -36,8 +38,9 @@ PlainRuleList.defaultProps = {
   data: [],
 };
 
-export const RuleList = ({ isMovable, ...rest }) =>
-  isMovable ? <MovableRuleList {...rest} /> : <PlainRuleList {...rest} />;
+export function RuleList({ isMovable, ...rest }) {
+  return isMovable ? <MovableRuleList {...rest} /> : <PlainRuleList {...rest} />;
+}
 RuleList.propTypes = {
   data: PropTypes.array,
   ...ruleListItemPropTypes,

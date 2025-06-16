@@ -43,7 +43,7 @@ import styles from './projectsListTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProjectsListTable = ({
+export function ProjectsListTable({
   projects,
   sortingDirection,
   onChangeSorting,
@@ -53,7 +53,7 @@ export const ProjectsListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const dispatch = useDispatch();
@@ -149,7 +149,7 @@ export const ProjectsListTable = ({
       />
     </PaginationWrapper>
   );
-};
+}
 
 ProjectsListTable.propTypes = {
   projects: PropTypes.array,

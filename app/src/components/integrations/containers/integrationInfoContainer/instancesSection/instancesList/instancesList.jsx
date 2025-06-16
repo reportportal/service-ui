@@ -24,7 +24,7 @@ import styles from './instancesList.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstancesList = ({
+export function InstancesList({
   items,
   title,
   onItemClick,
@@ -32,7 +32,7 @@ export const InstancesList = ({
   disabledHint,
   blocked,
   isGlobal,
-}) => {
+}) {
   const { trackEvent } = useTracking();
   const onClick = (item) => {
     trackEvent(
@@ -62,7 +62,7 @@ export const InstancesList = ({
       </ul>
     </div>
   );
-};
+}
 
 InstancesList.propTypes = {
   items: PropTypes.array.isRequired,

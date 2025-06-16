@@ -25,12 +25,12 @@ import styles from './defectTypeSelector.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelector = ({
+export function DefectTypeSelector({
   selectDefectType,
   selectedItem,
   isNarrowView,
   highlightedItem,
-}) => {
+}) {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -56,7 +56,7 @@ export const DefectTypeSelector = ({
       )}
     </>
   );
-};
+}
 DefectTypeSelector.propTypes = {
   selectDefectType: PropTypes.func,
   selectedItem: PropTypes.string,

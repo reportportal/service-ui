@@ -32,13 +32,7 @@ import { LabeledPreloader, FieldElement, FormattedDescription } from '../../elem
 import { messages } from './messages';
 import { SEARCH_LOGS_MIN_SHOULD_MATCH } from '../constants';
 
-const SimilarItems = ({
-  analyzerConfig,
-  onFormSubmit,
-  initialize,
-  handleSubmit,
-  hasPermission,
-}) => {
+function SimilarItems({ analyzerConfig, onFormSubmit, initialize, handleSubmit, hasPermission }) {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
   const { trackEvent } = useTracking();
@@ -97,7 +91,7 @@ const SimilarItems = ({
       </form>
     </Layout>
   );
-};
+}
 SimilarItems.propTypes = {
   analyzerConfig: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,

@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
 });
 
-export const Variable = ({ variable }) => {
+export function Variable({ variable }) {
   const [isBlockHovered, setIsBlockHovered] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [areToolsShown, setAreToolsShown] = useState(false);
@@ -99,7 +99,7 @@ export const Variable = ({ variable }) => {
       </button>
     </div>
   );
-};
+}
 
 Variable.propTypes = {
   variable: PropTypes.object.isRequired,

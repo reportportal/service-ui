@@ -24,7 +24,7 @@ import styles from './dashboardGridList.scss';
 
 const cx = classNames.bind(styles);
 
-export const DashboardGridList = ({
+export function DashboardGridList({
   name,
   dashboardList,
   onEditItem,
@@ -33,7 +33,7 @@ export const DashboardGridList = ({
   loading,
   filter,
   ...rest
-}) => {
+}) {
   const noItems = loading ? (
     <SpinningPreloader />
   ) : (
@@ -54,7 +54,7 @@ export const DashboardGridList = ({
         : noItems}
     </div>
   );
-};
+}
 
 DashboardGridList.propTypes = {
   name: PropTypes.string,

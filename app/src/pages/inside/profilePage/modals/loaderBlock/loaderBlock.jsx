@@ -22,7 +22,7 @@ import styles from './loaderBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const LoaderBlock = ({ text, className }) => {
+export function LoaderBlock({ text, className }) {
   return (
     <div className={cx('loader-block', className)}>
       <div className={cx('loader')}>
@@ -31,7 +31,7 @@ export const LoaderBlock = ({ text, className }) => {
       <div className={cx('loader-text')}>{text}</div>
     </div>
   );
-};
+}
 LoaderBlock.propTypes = {
   text: PropTypes.string,
   className: PropTypes.string,

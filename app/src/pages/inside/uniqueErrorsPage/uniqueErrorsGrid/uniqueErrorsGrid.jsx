@@ -36,7 +36,7 @@ import styles from './uniqueErrorsGrid.scss';
 const cx = classNames.bind(styles);
 const MATCHED_TESTS_COLUMN_ID = 'matchedTests';
 
-export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }) => {
+export function UniqueErrorsGridWrapped({ parentLaunch, data, loading, ...rest }) {
   const { formatMessage } = useIntl();
   const query = useSelector(querySelector);
   const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
@@ -67,11 +67,13 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
     if (!extensions.length) return [];
 
     return extensions.map((extension) => {
-      const MemoizedComponent = (params) => (
-        <div className={cx('extension-col')}>
-          <ExtensionLoader extension={extension} {...params} />
-        </div>
-      );
+      function MemoizedComponent(params) {
+        return (
+          <div className={cx('extension-col')}>
+            <ExtensionLoader extension={extension} {...params} />
+          </div>
+        );
+      }
 
       return {
         title: {
@@ -118,7 +120,7 @@ export const UniqueErrorsGridWrapped = ({ parentLaunch, data, loading, ...rest }
       )}
     </>
   );
-};
+}
 UniqueErrorsGridWrapped.propTypes = {
   parentLaunch: PropTypes.object,
   data: PropTypes.array,

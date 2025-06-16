@@ -26,13 +26,13 @@ import styles from './optionsSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsSection = ({
+export function OptionsSection({
   currentTestItem,
   setModalState,
   modalState,
   eventsInfo,
   loading,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const { optionValue, testItems, selectedItems } = modalState;
 
@@ -64,7 +64,7 @@ export const OptionsSection = ({
       </div>
     </>
   );
-};
+}
 OptionsSection.propTypes = {
   currentTestItem: PropTypes.object,
   setModalState: PropTypes.func,

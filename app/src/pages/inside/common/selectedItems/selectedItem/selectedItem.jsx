@@ -87,14 +87,16 @@ TooltipComponent.defaultProps = {
 
 const formatItem = (name, number) => (number ? `${name} #${number}` : name);
 
-const SelectedItemBody = ({ name, number, error, onUnselect }) => (
-  <div className={cx('selected-item', { error: !!error })}>
-    <span className={cx('name')}>{formatItem(name, number)}</span>
-    <div className={cx('cross-icon')} onClick={onUnselect}>
-      {Parser(CrossIcon)}
+function SelectedItemBody({ name, number, error, onUnselect }) {
+  return (
+    <div className={cx('selected-item', { error: !!error })}>
+      <span className={cx('name')}>{formatItem(name, number)}</span>
+      <div className={cx('cross-icon')} onClick={onUnselect}>
+        {Parser(CrossIcon)}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 SelectedItemBody.propTypes = {
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
@@ -116,8 +118,13 @@ const SelectedItemWithTooltip = withTooltip({
   },
 })(SelectedItemBody);
 
-export const SelectedItem = ({ error, ...rest }) =>
-  error ? <SelectedItemWithTooltip error={error} {...rest} /> : <SelectedItemBody {...rest} />;
+export function SelectedItem({ error, ...rest }) {
+  return error ? (
+    <SelectedItemWithTooltip error={error} {...rest} />
+  ) : (
+    <SelectedItemBody {...rest} />
+  );
+}
 
 SelectedItem.propTypes = {
   name: PropTypes.string.isRequired,

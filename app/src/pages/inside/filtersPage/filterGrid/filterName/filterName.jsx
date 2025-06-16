@@ -26,14 +26,15 @@ import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
 
-const NameLink = ({ link, children }) =>
-  link ? (
+function NameLink({ link, children }) {
+  return link ? (
     <Link className={cx('name-link')} to={link}>
       {children}
     </Link>
   ) : (
     children
   );
+}
 NameLink.propTypes = {
   link: PropTypes.string,
   children: PropTypes.node,
@@ -100,7 +101,7 @@ export class FilterName extends Component {
     } = this.props;
 
     return (
-      <Fragment>
+      <>
         <span className={cx('name-wrapper')}>
           <NameLink link={nameLink}>
             <span
@@ -120,7 +121,7 @@ export class FilterName extends Component {
           )}
         </span>
         {showDesc && <MarkdownViewer value={filter.description} />}
-      </Fragment>
+      </>
     );
   }
 }

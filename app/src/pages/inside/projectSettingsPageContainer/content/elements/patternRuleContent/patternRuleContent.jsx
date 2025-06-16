@@ -22,12 +22,14 @@ import styles from './patternRuleContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const PatternRuleContent = ({ item }) => (
-  <div className={cx('info')}>
-    <span className={cx('type')}>{item.type === STRING_PATTERN ? 'String' : 'RegEx'}</span>
-    <span className={cx('value')}>{item.value}</span>
-  </div>
-);
+export function PatternRuleContent({ item }) {
+  return (
+    <div className={cx('info')}>
+      <span className={cx('type')}>{item.type === STRING_PATTERN ? 'String' : 'RegEx'}</span>
+      <span className={cx('value')}>{item.value}</span>
+    </div>
+  );
+}
 PatternRuleContent.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.string,

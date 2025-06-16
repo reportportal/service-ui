@@ -23,7 +23,7 @@ import { TextCell } from '../textCell';
 
 const cx = classNames.bind(styles);
 
-export const PlainTableCell = ({ value, id, component, title, align, cellCustomProps }) => {
+export function PlainTableCell({ value, id, component, title, align, cellCustomProps }) {
   const CellComponent = component;
 
   return (
@@ -35,7 +35,7 @@ export const PlainTableCell = ({ value, id, component, title, align, cellCustomP
       value={value}
     />
   );
-};
+}
 PlainTableCell.propTypes = { ...columnPropTypes, value: PropTypes.object.isRequired };
 PlainTableCell.defaultProps = {
   component: TextCell,

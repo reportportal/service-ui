@@ -34,13 +34,13 @@ const messages = defineMessages({
   },
 });
 
-export const AvailableIntegrations = ({
+export function AvailableIntegrations({
   header,
   text,
   integrations,
   hasProjectIntegration,
   openIntegration,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   return (
     <>
@@ -52,7 +52,7 @@ export const AvailableIntegrations = ({
             <div className={cx('message-container')}>
               <SystemMessage
                 header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
-                mode={'warning'}
+                mode="warning"
               >
                 {formatMessage(messages.GlobalIntegrationsSystemMessageText)}
               </SystemMessage>
@@ -67,7 +67,7 @@ export const AvailableIntegrations = ({
       )}
     </>
   );
-};
+}
 
 AvailableIntegrations.propTypes = {
   header: PropTypes.string,

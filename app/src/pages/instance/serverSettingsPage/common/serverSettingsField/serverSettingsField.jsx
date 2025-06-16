@@ -22,7 +22,7 @@ import styles from './serverSettingsField.scss';
 
 const cx = classNames.bind(styles);
 
-export const ServerSettingsField = ({ children, label, description = '' }) => {
+export function ServerSettingsField({ children, label, description = '' }) {
   return (
     <FormField
       containerClassName={cx('server-settings-field')}
@@ -34,7 +34,7 @@ export const ServerSettingsField = ({ children, label, description = '' }) => {
       {children}
     </FormField>
   );
-};
+}
 ServerSettingsField.propTypes = {
   children: PropTypes.node.isRequired,
   label: PropTypes.string.isRequired,

@@ -22,20 +22,22 @@ import styles from './launchInfoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const LaunchInfoBlock = ({ launchName, issueType }) => (
-  <div className={cx('info-block')}>
-    <p>
-      <FormattedMessage id="TestsTableWidget.header.launchName" defaultMessage="Launch name" />:{' '}
-      <span className={cx('info-block-launch-name')}>{launchName}</span>
-    </p>
-    {issueType && (
+export function LaunchInfoBlock({ launchName, issueType }) {
+  return (
+    <div className={cx('info-block')}>
       <p>
-        <FormattedMessage id="TestsTableWidget.header.basedOn" defaultMessage="Based on" />:{' '}
-        <span className={cx('info-block-launch-name')}>{issueType}</span>
+        <FormattedMessage id="TestsTableWidget.header.launchName" defaultMessage="Launch name" />:{' '}
+        <span className={cx('info-block-launch-name')}>{launchName}</span>
       </p>
-    )}
-  </div>
-);
+      {issueType && (
+        <p>
+          <FormattedMessage id="TestsTableWidget.header.basedOn" defaultMessage="Based on" />:{' '}
+          <span className={cx('info-block-launch-name')}>{issueType}</span>
+        </p>
+      )}
+    </div>
+  );
+}
 
 LaunchInfoBlock.propTypes = {
   launchName: string.isRequired,

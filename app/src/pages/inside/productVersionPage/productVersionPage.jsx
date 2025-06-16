@@ -33,7 +33,7 @@ import {
 import { LinkedTestCasesTab } from './linkedTestCasesTab';
 import { messages } from './messages';
 
-export const ProductVersionPage = () => {
+export function ProductVersionPage() {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const { productVersionTab: currentTab, productVersionId } = useSelector(payloadSelector);
@@ -90,4 +90,4 @@ export const ProductVersionPage = () => {
       </ScrollWrapper>
     </SettingsLayout>
   );
-};
+}

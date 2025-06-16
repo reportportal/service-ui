@@ -20,7 +20,7 @@ import { ClearIcon } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
-import { AutocompleteMenu } from './../common/autocompleteMenu';
+import { AutocompleteMenu } from '../common/autocompleteMenu';
 import styles from './singleAutocomplete.scss';
 
 const cx = classNames.bind(styles);
@@ -82,14 +82,16 @@ export class SingleAutocomplete extends Component {
     nakedView: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItem === item,
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItem) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItem === item,
+        ...rest,
+      });
 
   render() {
     const {

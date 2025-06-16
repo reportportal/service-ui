@@ -22,11 +22,13 @@ const cx = classNames.bind(styles);
 
 const defaultFormatter = (value) => String(value);
 
-export const ItemListCell = ({ component: Component, align, bold, withIcon, formatter, value }) => (
-  <td className={cx('cell', `align-${align}`, { bold, 'with-icon': withIcon })}>
-    {Component ? <Component value={value} /> : formatter(value)}
-  </td>
-);
+export function ItemListCell({ component: Component, align, bold, withIcon, formatter, value }) {
+  return (
+    <td className={cx('cell', `align-${align}`, { bold, 'with-icon': withIcon })}>
+      {Component ? <Component value={value} /> : formatter(value)}
+    </td>
+  );
+}
 ItemListCell.propTypes = {
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   value: PropTypes.object,

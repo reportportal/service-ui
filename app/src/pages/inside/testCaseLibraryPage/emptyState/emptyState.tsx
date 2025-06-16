@@ -28,7 +28,7 @@ import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { messages } from './messages';
 
-export const EmptyState = () => {
+export function EmptyState() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -47,11 +47,9 @@ export const EmptyState = () => {
     );
   };
 
-  const benefits = [
-    messages.createFolder,
-    messages.addTestCases,
-    messages.tagTestCases,
-  ].map((translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })));
+  const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
+    (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
+  );
 
   return (
     <>
@@ -79,8 +77,9 @@ export const EmptyState = () => {
       <NumerableBlock
         items={benefits}
         title={formatMessage(messages.numerableBlockTitle)}
+        className=""
         fullWidth
       />
     </>
   );
-};
+}

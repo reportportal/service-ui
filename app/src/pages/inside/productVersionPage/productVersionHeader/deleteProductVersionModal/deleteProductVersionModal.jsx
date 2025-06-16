@@ -50,11 +50,11 @@ const messages = defineMessages({
 
 export const DELETE_PRODUCT_VERSION_MODAL = 'deleteProductVersionModal';
 
-const DeleteProductVersionModal = ({
+function DeleteProductVersionModal({
   data: { productVersionName, onSubmit },
   submitFailed,
   handleSubmit,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [isChangedAfterFailedSubmit, setIsChangedAfterFailedSubmit] = useState(false);
@@ -91,7 +91,7 @@ const DeleteProductVersionModal = ({
       </form>
     </Modal>
   );
-};
+}
 
 DeleteProductVersionModal.propTypes = {
   data: PropTypes.shape({

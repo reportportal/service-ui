@@ -79,7 +79,7 @@ const messages = defineMessages({
 
 const cx = classNames.bind(styles);
 
-const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }) => {
+function DeleteLaunchModal({ data: { launches, confirmDeleteLaunches, userId } }) {
   const { formatMessage } = useIntl();
   const confirmAndClose = (closeModal) => {
     confirmDeleteLaunches(launches);
@@ -131,7 +131,8 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
             importantCount: selectedImportantLaunches.length,
             totalCount: launches.length,
           });
-    } else if (selectedImportantLaunches.length > 0) {
+    }
+    if (selectedImportantLaunches.length > 0) {
       return selectedImportantLaunches.length === 1
         ? formatMessage(messages.deleteImportantLaunchMessage, {
             b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
@@ -141,14 +142,13 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
             b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
             importantCount: selectedImportantLaunches.length,
           });
-    } else {
-      return launches.length === 1
-        ? formatMessage(messages.deleteModalContent, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: launches[0].name,
-          })
-        : formatMessage(messages.deleteModalMultipleContent);
     }
+    return launches.length === 1
+      ? formatMessage(messages.deleteModalContent, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+          name: launches[0].name,
+        })
+      : formatMessage(messages.deleteModalMultipleContent);
   };
 
   const isNotAllOwnLaunches = launches.some((launch) => launch.owner !== userId);
@@ -175,7 +175,7 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
       <p className={cx('message')}>{Parser(DOMPurify.sanitize(getMainContent()))}</p>
     </ModalLayout>
   );
-};
+}
 DeleteLaunchModal.propTypes = {
   data: PropTypes.shape({
     launches: PropTypes.array.isRequired,

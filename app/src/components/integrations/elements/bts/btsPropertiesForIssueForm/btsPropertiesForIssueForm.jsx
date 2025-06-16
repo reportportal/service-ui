@@ -72,16 +72,16 @@ const messages = defineMessages({
   },
 });
 
-const Popover = ({ formatMessage }) => (
-  <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>
-);
+function Popover({ formatMessage }) {
+  return <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>;
+}
 Popover.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const IconShow = () => {
+function IconShow() {
   return <i>{Parser(InfoIcon)}</i>;
-};
+}
 
 const ShowWithPopover = withPopover({
   ContentComponent: Popover,
@@ -409,9 +409,9 @@ export class BtsPropertiesForIssueForm extends Component {
         {loading && !this.state.issueType ? (
           <BubblesLoader className={cx('center')} />
         ) : (
-          <Fragment>
+          <>
             {!disabled && (
-              <Fragment>
+              <>
                 {this.issueTypeDropdownOptions?.length > 0 && (
                   <FieldElement
                     label="Issue Type"
@@ -441,30 +441,28 @@ export class BtsPropertiesForIssueForm extends Component {
                     <ShowWithPopover formatMessage={intl.formatMessage} />
                   </div>
                 </div>
-              </Fragment>
+              </>
             )}
             {loading ? (
               <BubblesLoader className={cx('center')} />
             ) : (
-              <Fragment>
-                <DynamicFieldsSection
-                  fields={preparedFields}
-                  customBlockCreator={this.getAvailabilityControl}
-                  defaultOptionValueKey={this.defaultOptionValueKey}
-                  integrationInfo={integrationInfo}
-                >
-                  {disabled && (
-                    <div className={cx('show-hint-wrapper')}>
-                      <span className={cx('show-hint-text')}>
-                        {intl.formatMessage(messages.showFieldsHeader)}
-                      </span>
-                      <ShowWithPopover formatMessage={intl.formatMessage} />
-                    </div>
-                  )}
-                </DynamicFieldsSection>
-              </Fragment>
+              <DynamicFieldsSection
+                fields={preparedFields}
+                customBlockCreator={this.getAvailabilityControl}
+                defaultOptionValueKey={this.defaultOptionValueKey}
+                integrationInfo={integrationInfo}
+              >
+                {disabled && (
+                  <div className={cx('show-hint-wrapper')}>
+                    <span className={cx('show-hint-text')}>
+                      {intl.formatMessage(messages.showFieldsHeader)}
+                    </span>
+                    <ShowWithPopover formatMessage={intl.formatMessage} />
+                  </div>
+                )}
+              </DynamicFieldsSection>
             )}
-          </Fragment>
+          </>
         )}
       </div>
     );

@@ -107,6 +107,7 @@ export class UnassignButton extends Component {
     }).isRequired,
     projectKey: PropTypes.string.isRequired,
   };
+
   static defaultProps = {
     userId: '',
     userRoles: {},
@@ -115,19 +116,24 @@ export class UnassignButton extends Component {
     showNotification: () => {},
     fetchData: () => {},
   };
+
   getUnAssignTitle = () => {
     if (this.isPersonalProject()) {
       return this.props.intl.formatMessage(messages.unAssignTitlePersonal);
-    } else if (this.props.currentUser === this.props.userId) {
+    }
+    if (this.props.currentUser === this.props.userId) {
       return this.props.intl.formatMessage(messages.unAssignTitleYou);
-    } else if (!canAssignUnassignInternalUser(this.props.userRoles)) {
+    }
+    if (!canAssignUnassignInternalUser(this.props.userRoles)) {
       return this.props.intl.formatMessage(messages.unAssignTitleNoPermission);
     }
     return this.props.intl.formatMessage(messages.unAssignTitle);
   };
+
   isPersonalProject = () =>
     this.props.entryType === 'PERSONAL' &&
     this.props.projectSlug === `${this.props.userId.replace('.', '_')}_personal`;
+
   showUnassignModal = () => {
     const { tracking, intl, userId, projectSlug } = this.props;
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
@@ -168,8 +174,9 @@ export class UnassignButton extends Component {
         });
       });
   };
-  render = () => (
-    <Fragment>
+
+  render() {
+    return (
       <GhostButton
         icon={UnassignIcon}
         onClick={this.showUnassignModal}
@@ -182,6 +189,6 @@ export class UnassignButton extends Component {
       >
         {this.props.intl.formatMessage(messages.btnTitle)}
       </GhostButton>
-    </Fragment>
-  );
+    );
+  }
 }

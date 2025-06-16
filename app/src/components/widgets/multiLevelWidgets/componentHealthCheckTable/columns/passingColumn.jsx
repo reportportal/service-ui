@@ -22,23 +22,25 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const PassingRateColumn = ({ className, value }, name, { formatMessage }) => (
-  <div className={cx('passing-rate-col', className)}>
-    {value.passingRate !== undefined ? (
-      <Fragment>
-        <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
-        <span className={cx('passing-rate-item')}>{value.passingRate.toFixed(2)}%</span>
-      </Fragment>
-    ) : (
-      <Fragment>
-        <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
-        <span className={cx('total-item')}>
-          {!!value.total && value.total.passingRate.toFixed(2)}%
-        </span>
-      </Fragment>
-    )}
-  </div>
-);
+export function PassingRateColumn({ className, value }, name, { formatMessage }) {
+  return (
+    <div className={cx('passing-rate-col', className)}>
+      {value.passingRate !== undefined ? (
+        <>
+          <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
+          <span className={cx('passing-rate-item')}>{value.passingRate.toFixed(2)}%</span>
+        </>
+      ) : (
+        <>
+          <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
+          <span className={cx('total-item')}>
+            {!!value.total && value.total.passingRate.toFixed(2)}%
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
 
 PassingRateColumn.propTypes = {
   value: PropTypes.object.isRequired,

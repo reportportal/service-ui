@@ -262,8 +262,8 @@ export class PostIssueModal extends Component {
 
   initIntegrationFields = (defectFormFields = [], pluginName = '') => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
-    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
-      item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
+      (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
     );
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({
@@ -280,7 +280,7 @@ export class PostIssueModal extends Component {
       getBtsIntegrationBackLink,
       data: { items },
     } = this.props;
-    const pluginName = this.state.pluginName;
+    const { pluginName } = this.state;
     const fields = this.state.fields.map((field) => {
       const isAutocomplete =
         field.fieldType === AUTOCOMPLETE_TYPE ||

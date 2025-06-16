@@ -19,12 +19,13 @@ import PropTypes from 'prop-types';
 import { UploadStatusIndicator } from './uploadStatusIndicator';
 import { DefaultIcon } from './defaultIcon';
 
-export const UploadIndicator = ({ uploaded, uploadFailed, uploadFailReason, fileExtension }) =>
-  uploaded ? (
+export function UploadIndicator({ uploaded, uploadFailed, uploadFailReason, fileExtension }) {
+  return uploaded ? (
     <UploadStatusIndicator uploadFailed={uploadFailed} uploadFailReason={uploadFailReason} />
   ) : (
     <DefaultIcon fileExtension={fileExtension} />
   );
+}
 
 UploadIndicator.propTypes = {
   uploaded: PropTypes.bool,

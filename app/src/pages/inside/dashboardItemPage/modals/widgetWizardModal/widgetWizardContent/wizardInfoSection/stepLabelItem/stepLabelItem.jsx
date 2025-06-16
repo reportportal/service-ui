@@ -20,12 +20,14 @@ import styles from './stepLabelItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const StepLabelItem = ({ step, label, active, completed }) => (
-  <div className={cx('step-label-item', { active, completed })}>
-    <div className={cx('number')}>{step + 1}</div>
-    <div className={cx('label')}>{label}</div>
-  </div>
-);
+export function StepLabelItem({ step, label, active, completed }) {
+  return (
+    <div className={cx('step-label-item', { active, completed })}>
+      <div className={cx('number')}>{step + 1}</div>
+      <div className={cx('label')}>{label}</div>
+    </div>
+  );
+}
 StepLabelItem.propTypes = {
   step: PropTypes.number,
   label: PropTypes.string,

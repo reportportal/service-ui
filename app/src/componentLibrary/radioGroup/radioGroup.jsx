@@ -21,13 +21,15 @@ import { RadioButton } from './radioButton';
 
 const cx = classNames.bind(styles);
 
-export const RadioGroup = ({ options, value, ...rest }) => (
-  <div className={cx('radio-group')}>
-    {options.map((option) => (
-      <RadioButton option={option} value={value} {...rest} />
-    ))}
-  </div>
-);
+export function RadioGroup({ options, value, ...rest }) {
+  return (
+    <div className={cx('radio-group')}>
+      {options.map((option) => (
+        <RadioButton option={option} value={value} {...rest} />
+      ))}
+    </div>
+  );
+}
 RadioGroup.propTypes = {
   variant: PropTypes.oneOf(['light', 'dark']),
   options: PropTypes.arrayOf(

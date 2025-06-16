@@ -23,7 +23,7 @@ import styles from './navMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const NavMenu = ({ items }) => {
+export function NavMenu({ items }) {
   const { trackEvent } = useTracking();
   const createTrackingFunction = (eventInfo) => (eventInfo ? () => trackEvent(eventInfo) : null);
 
@@ -43,7 +43,7 @@ export const NavMenu = ({ items }) => {
         ))}
     </ul>
   );
-};
+}
 NavMenu.propTypes = {
   items: PropTypes.objectOf(
     PropTypes.shape({

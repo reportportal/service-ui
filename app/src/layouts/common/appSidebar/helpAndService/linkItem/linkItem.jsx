@@ -18,8 +18,8 @@ import { NavLink } from 'components/main/navLink';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 
-export const LinkItem = ({ isInternal, link, content, icon, ...rest }) =>
-  isInternal ? (
+export function LinkItem({ isInternal, link, content, icon, ...rest }) {
+  return isInternal ? (
     <NavLink to={link} {...rest}>
       {content}
       {icon && <i>{Parser(icon)}</i>}
@@ -30,6 +30,7 @@ export const LinkItem = ({ isInternal, link, content, icon, ...rest }) =>
       {icon && <i>{Parser(icon)}</i>}
     </a>
   );
+}
 
 LinkItem.propTypes = {
   isInternal: PropTypes.bool,

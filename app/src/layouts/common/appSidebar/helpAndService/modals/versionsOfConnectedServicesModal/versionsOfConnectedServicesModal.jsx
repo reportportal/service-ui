@@ -30,7 +30,7 @@ import styles from './versionsOfConnectedServicesModal.scss';
 
 const cx = classNames.bind(styles);
 
-const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
+function VersionsOfConnectedServices({ data: { latestServiceVersions } }) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const appInfo = useSelector(appInfoSelector);
@@ -94,7 +94,7 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
       ))}
     </Modal>
   );
-};
+}
 
 VersionsOfConnectedServices.propTypes = {
   data: PropTypes.string.isRequired,

@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
 const LIGHT_VARIANT = 'light';
 const DARK_VARIANT = 'dark';
 
-export const FieldText = ({
+export function FieldText({
   value,
   className,
   error,
@@ -51,7 +51,7 @@ export const FieldText = ({
   type,
   variant,
   name,
-}) => {
+}) {
   const clearInput = () => onChange('');
 
   const helpTextElement = <span className={cx(variant, 'help-text')}>{helpText}</span>;
@@ -130,7 +130,7 @@ export const FieldText = ({
       )}
     </>
   );
-};
+}
 FieldText.propTypes = {
   name: PropTypes.string,
   value: PropTypes.string,

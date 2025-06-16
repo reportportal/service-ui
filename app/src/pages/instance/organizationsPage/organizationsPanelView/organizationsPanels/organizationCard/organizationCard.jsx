@@ -36,7 +36,7 @@ import { IconsBlock } from '../../iconsBlock';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationCard = ({ organization }) => {
+export function OrganizationCard({ organization }) {
   const { formatMessage } = useIntl();
   const { userRole } = useSelector(userRolesSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
@@ -97,7 +97,7 @@ export const OrganizationCard = ({ organization }) => {
         <div className={cx('cart-info')}>
           {cartInfo.map(({ icon, className, content, bottomElement }) => (
             <div key={content} className={className}>
-              <Tooltip content={content} placement={'top'} wrapperClassName={cx('tooltip-wrapper')}>
+              <Tooltip content={content} placement="top" wrapperClassName={cx('tooltip-wrapper')}>
                 <i className={cx('icon')}>{Parser(icon)}</i>
               </Tooltip>
               {bottomElement}
@@ -107,7 +107,7 @@ export const OrganizationCard = ({ organization }) => {
       )}
     </div>
   );
-};
+}
 
 OrganizationCard.propTypes = {
   organization: PropTypes.object.isRequired,

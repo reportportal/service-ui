@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
 });
 
-export const RegistrationPage = ({
+export function RegistrationPage({
   tokenActive,
   tokenProvided,
   email,
@@ -48,7 +48,7 @@ export const RegistrationPage = ({
   loading,
   initialData,
   submitButtonTitle,
-}) => {
+}) {
   const backgroundClasses = {
     background: true,
     failed: !tokenProvided || !tokenActive,
@@ -58,15 +58,15 @@ export const RegistrationPage = ({
     <div className={cx('registration-page')}>
       <div className={cx('registration-page-content')}>
         <div className={cx(backgroundClasses)} />
-        <a href={referenceDictionary.rpLanding} target="_blank">
+        <a href={referenceDictionary.rpLanding} target="_blank" rel="noreferrer">
           <div className={cx('logo')} />
         </a>
         <RegistrationPageSection left>
           {tokenProvided && tokenActive && (
             <div className={cx('couple-minutes')}>
               <FormattedMessage
-                id={'RegistrationPage.coupleMinutes'}
-                defaultMessage={'It only takes a couple of minutes to get started'}
+                id="RegistrationPage.coupleMinutes"
+                defaultMessage="It only takes a couple of minutes to get started"
               />
             </div>
           )}
@@ -90,7 +90,7 @@ export const RegistrationPage = ({
       </div>
     </div>
   );
-};
+}
 RegistrationPage.propTypes = {
   tokenActive: PropTypes.bool,
   tokenProvided: PropTypes.bool,
@@ -110,39 +110,41 @@ RegistrationPage.defaultProps = {
   submitButtonTitle: '',
 };
 
-const TokenErrorSection = ({ tokenProvided }) => (
-  <RegistrationFailBlock>
-    <span className={cx('fail-msg')}>
-      <span className={cx('big')}>
-        <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
+function TokenErrorSection({ tokenProvided }) {
+  return (
+    <RegistrationFailBlock>
+      <span className={cx('fail-msg')}>
+        <span className={cx('big')}>
+          <FormattedMessage id="RegistrationPage.oops" defaultMessage="Oops," />
+        </span>
+        <br />
+        {tokenProvided ? (
+          <FormattedMessage
+            id="RegistrationPage.tokenExpired"
+            defaultMessage="this invitation has expired or already used"
+          />
+        ) : (
+          <FormattedMessage
+            id="RegistrationPage.tokenNotProvided"
+            defaultMessage="invitation token was not provided in URL parameters"
+          />
+        )}
       </span>
-      <br />
-      {tokenProvided ? (
-        <FormattedMessage
-          id={'RegistrationPage.tokenExpired'}
-          defaultMessage={'this invitation has expired or already used'}
-        />
-      ) : (
-        <FormattedMessage
-          id={'RegistrationPage.tokenNotProvided'}
-          defaultMessage={'invitation token was not provided in URL parameters'}
-        />
-      )}
-    </span>
-    <div className={cx('visit-rp')}>
-      <FormattedMessage id={'RegistrationPage.visit'} defaultMessage={'Visit '} />
-      <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
-        ReportPortal.io
-      </a>
-      <br />
-      <FormattedMessage id={'RegistrationPage.or'} defaultMessage={'or '} />
-      <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
-        <FormattedMessage id={'RegistrationPage.login'} defaultMessage={'Log In'} />
-      </Link>
-      <FormattedMessage id={'RegistrationPage.again'} defaultMessage={' again'} />
-    </div>
-  </RegistrationFailBlock>
-);
+      <div className={cx('visit-rp')}>
+        <FormattedMessage id="RegistrationPage.visit" defaultMessage="Visit " />
+        <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
+          ReportPortal.io
+        </a>
+        <br />
+        <FormattedMessage id="RegistrationPage.or" defaultMessage="or " />
+        <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
+          <FormattedMessage id="RegistrationPage.login" defaultMessage="Log In" />
+        </Link>
+        <FormattedMessage id="RegistrationPage.again" defaultMessage=" again" />
+      </div>
+    </RegistrationFailBlock>
+  );
+}
 TokenErrorSection.propTypes = {
   tokenProvided: PropTypes.bool,
 };

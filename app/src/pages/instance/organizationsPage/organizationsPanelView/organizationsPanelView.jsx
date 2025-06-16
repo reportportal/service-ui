@@ -32,7 +32,7 @@ import { OrganizationsTable } from './organizationsTable';
 
 const cx = classNames.bind(styles);
 
-const OrganizationsPanelViewWrapped = ({
+function OrganizationsPanelViewWrapped({
   organizationsList,
   pageSize,
   activePage,
@@ -41,25 +41,27 @@ const OrganizationsPanelViewWrapped = ({
   onChangePage,
   onChangePageSize,
   isOpenTableView,
-}) => (
-  <PaginationWrapper
-    showPagination={organizationsList.length > 0}
-    pageSize={pageSize}
-    activePage={activePage}
-    totalItems={itemCount}
-    totalPages={pageCount}
-    pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
-    changePage={onChangePage}
-    changePageSize={onChangePageSize}
-    className={cx('organizations-pagination-wrapper')}
-  >
-    {isOpenTableView ? (
-      <OrganizationsTable organizationsList={organizationsList} />
-    ) : (
-      <OrganizationsPanels organizationsList={organizationsList} />
-    )}
-  </PaginationWrapper>
-);
+}) {
+  return (
+    <PaginationWrapper
+      showPagination={organizationsList.length > 0}
+      pageSize={pageSize}
+      activePage={activePage}
+      totalItems={itemCount}
+      totalPages={pageCount}
+      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
+      changePage={onChangePage}
+      changePageSize={onChangePageSize}
+      className={cx('organizations-pagination-wrapper')}
+    >
+      {isOpenTableView ? (
+        <OrganizationsTable organizationsList={organizationsList} />
+      ) : (
+        <OrganizationsPanels organizationsList={organizationsList} />
+      )}
+    </PaginationWrapper>
+  );
+}
 
 OrganizationsPanelViewWrapped.propTypes = {
   organizationsList: PropTypes.array,

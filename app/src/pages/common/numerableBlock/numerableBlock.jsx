@@ -22,25 +22,27 @@ import styles from './numerableBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const NumerableBlock = ({ title, items, className, fullWidth = false }) => (
-  <div className={cx('numerable-block', className)}>
-    <h2 className={cx('numerable-block__title')}>{title}</h2>
-    <div className={cx('numerable-block__list')}>
-      {items.map((message, index) => (
-        <div
-          className={cx('numerable-block__list-item', {
-            'numerable-block__list-item--full-width': fullWidth,
-          })}
-          /* eslint-disable-next-line react/no-array-index-key */
-          key={index}
-        >
-          <div className={cx('numerable-block__list-item-number')}>{index + 1}</div>
-          <div className={cx('numerable-block__list-item-text')}>{message}</div>
-        </div>
-      ))}
+export function NumerableBlock({ title, items, className, fullWidth = false }) {
+  return (
+    <div className={cx('numerable-block', className)}>
+      <h2 className={cx('numerable-block__title')}>{title}</h2>
+      <div className={cx('numerable-block__list')}>
+        {items.map((message, index) => (
+          <div
+            className={cx('numerable-block__list-item', {
+              'numerable-block__list-item--full-width': fullWidth,
+            })}
+            /* eslint-disable-next-line react/no-array-index-key */
+            key={index}
+          >
+            <div className={cx('numerable-block__list-item-number')}>{index + 1}</div>
+            <div className={cx('numerable-block__list-item-text')}>{message}</div>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 NumerableBlock.propTypes = {
   items: PropTypes.arrayOf(PropTypes.node).isRequired,

@@ -38,35 +38,39 @@ const ColumnProps = {
   className: PropTypes.string.isRequired,
 };
 
-const BugIDColumn = ({ className, value: { id, url } }) => (
-  <div className={cx('bug-id-col', className)}>
-    {url ? (
-      <a href={url} target="_blank" className={cx('bug-link')}>
-        {id}
-      </a>
-    ) : (
-      id
-    )}
-  </div>
-);
+function BugIDColumn({ className, value: { id, url } }) {
+  return (
+    <div className={cx('bug-id-col', className)}>
+      {url ? (
+        <a href={url} target="_blank" className={cx('bug-link')} rel="noreferrer">
+          {id}
+        </a>
+      ) : (
+        id
+      )}
+    </div>
+  );
+}
 BugIDColumn.propTypes = ColumnProps;
 
-const FoundInColumn = ({ className, value }) => (
-  <FoundIn className={className} id={value.id} items={value.items} />
-);
+function FoundInColumn({ className, value }) {
+  return <FoundIn className={className} id={value.id} items={value.items} />;
+}
 FoundInColumn.propTypes = ColumnProps;
 
-const SubmitDateColumn = ({ className, value: { submitDate = 0 } }, formatMessage) => (
-  <div className={cx('submit-date-col', className)}>
-    <span className={cx('mobile-hint')}>{formatMessage(hintMessages.submitDateHint)}</span>
-    <AbsRelTime startTime={submitDate} />
-  </div>
-);
+function SubmitDateColumn({ className, value: { submitDate = 0 } }, formatMessage) {
+  return (
+    <div className={cx('submit-date-col', className)}>
+      <span className={cx('mobile-hint')}>{formatMessage(hintMessages.submitDateHint)}</span>
+      <AbsRelTime startTime={submitDate} />
+    </div>
+  );
+}
 SubmitDateColumn.propTypes = ColumnProps;
 
-const SubmitterColumn = ({ className, value: { submitter = '' } }) => (
-  <div className={cx('submitter-col', className)}>{submitter}</div>
-);
+function SubmitterColumn({ className, value: { submitter = '' } }) {
+  return <div className={cx('submitter-col', className)}>{submitter}</div>;
+}
 SubmitterColumn.propTypes = ColumnProps;
 
 const columnComponentsMap = {

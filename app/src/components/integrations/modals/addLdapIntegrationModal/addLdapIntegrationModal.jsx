@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
 });
 
-const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
+function AddLdapIntegrationModal({ data, dirty, valid }) {
   const [metaData, setMetaData] = useState({});
   const [stepNumber, setStepNumber] = useState(1);
   const [forceConfirm, setForceConfirm] = useState(false);
@@ -62,7 +62,7 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
     setMetaData({ ...metaData, ...newMetaData });
   };
 
-  const isEdit = customProps.isEdit;
+  const { isEdit } = customProps;
 
   const onSubmit = (newData) => {
     if (stepNumber === 1 && !forceConfirm) {
@@ -117,7 +117,7 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
           closeHandler={closeModalHandler}
         />
       )}
-      size={'large'}
+      size="large"
     >
       <TwoStepsContent
         steps={stepTitles.map((title, index) => ({
@@ -133,7 +133,7 @@ const AddLdapIntegrationModal = ({ data, dirty, valid }) => {
       />
     </Modal>
   );
-};
+}
 AddLdapIntegrationModal.propTypes = {
   data: PropTypes.object,
   dirty: PropTypes.bool.isRequired,

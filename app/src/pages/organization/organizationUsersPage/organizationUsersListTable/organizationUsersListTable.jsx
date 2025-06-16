@@ -45,7 +45,7 @@ import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-const OrgTeamListTableWrapped = ({
+function OrgTeamListTableWrapped({
   users,
   onChangeSorting,
   sortingDirection,
@@ -55,7 +55,7 @@ const OrgTeamListTableWrapped = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -63,7 +63,7 @@ const OrgTeamListTableWrapped = ({
 
   const renderRowActions = () => (
     <Popover
-      placement={'bottom-end'}
+      placement="bottom-end"
       content={
         <div className={cx('row-action-menu')}>
           <p>Manage assignments</p>
@@ -169,7 +169,7 @@ const OrgTeamListTableWrapped = ({
       onChangePageSize={onChangePageSize}
     />
   );
-};
+}
 
 OrgTeamListTableWrapped.propTypes = {
   users: PropTypes.array,

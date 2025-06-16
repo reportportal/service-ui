@@ -33,7 +33,7 @@ import styles from './indexSettings.scss';
 
 const cx = classNames.bind(styles);
 
-const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermission }) => {
+function IndexSettings({ indexingRunning, analyzerUnavailableTitle, hasPermission }) {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -108,7 +108,7 @@ const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermissio
       </div>
     </Layout>
   );
-};
+}
 IndexSettings.propTypes = {
   hasPermission: PropTypes.bool.isRequired,
   indexingRunning: PropTypes.bool.isRequired,

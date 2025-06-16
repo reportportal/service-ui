@@ -23,24 +23,26 @@ import DragAndDropIcon from './img/drag-n-drop-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const DragControl = ({
+export function DragControl({
   dragRef,
   handleDragStart,
   handleDragEnd,
   isDragging,
   disabled,
   title,
-}) => (
-  <i
-    ref={dragRef}
-    onDragStart={disabled ? null : handleDragStart}
-    onDragEnd={disabled ? null : handleDragEnd}
-    className={cx('drag-control', { 'dragging-control': isDragging, disabled })}
-    title={title}
-  >
-    {Parser(DragAndDropIcon)}
-  </i>
-);
+}) {
+  return (
+    <i
+      ref={dragRef}
+      onDragStart={disabled ? null : handleDragStart}
+      onDragEnd={disabled ? null : handleDragEnd}
+      className={cx('drag-control', { 'dragging-control': isDragging, disabled })}
+      title={title}
+    >
+      {Parser(DragAndDropIcon)}
+    </i>
+  );
+}
 DragControl.propTypes = {
   dragRef: PropTypes.func,
   handleDragStart: PropTypes.func,

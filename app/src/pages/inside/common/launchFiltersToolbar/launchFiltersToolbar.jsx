@@ -186,14 +186,8 @@ export class LaunchFiltersToolbar extends Component {
   redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
 
   updateActiveFilter = () => {
-    const {
-      activeFilter,
-      updateFilter,
-      activeFilterId,
-      showModal,
-      saveNewFilter,
-      tracking,
-    } = this.props;
+    const { activeFilter, updateFilter, activeFilterId, showModal, saveNewFilter, tracking } =
+      this.props;
     if (activeFilterId < 0) {
       showModal({
         id: 'filterEditModal',
@@ -208,12 +202,14 @@ export class LaunchFiltersToolbar extends Component {
     }
     tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('save'));
   };
+
   isNoFilterValues = () => {
     const {
       activeFilter: { conditions = [] },
     } = this.props;
     return !conditions.some((filter) => !isEmptyValue(filter.value));
   };
+
   toggleExpand = () => {
     this.props.tracking.trackEvent(
       LAUNCHES_PAGE_EVENTS.getClickOnCriteriaTogglerEvent(this.state.expanded),
@@ -221,24 +217,30 @@ export class LaunchFiltersToolbar extends Component {
 
     return this.setState({ expanded: !this.state.expanded });
   };
+
   isNewFilter = () => {
     const { activeFilterId } = this.props;
     return activeFilterId < 0;
   };
+
   isFilterUnsaved = () => {
     const { unsavedFilterIds, activeFilterId } = this.props;
     return unsavedFilterIds.indexOf(activeFilterId) !== -1;
   };
+
   isFilterDirty = () => {
     const { dirtyFilterIds, activeFilterId } = this.props;
     return dirtyFilterIds.indexOf(activeFilterId) !== -1;
   };
+
   isSaveDisabled = () => {
     const { filterErrors } = this.props;
 
     return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
   };
+
   isDiscardDisabled = () => !this.isFilterDirty();
+
   isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
 
   getFilterMessage = (hasFilterPermissions) => {

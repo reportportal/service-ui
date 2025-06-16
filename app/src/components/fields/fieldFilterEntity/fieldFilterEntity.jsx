@@ -22,7 +22,7 @@ import styles from './fieldFilterEntity.scss';
 
 const cx = classNames.bind(styles);
 
-export const FieldFilterEntity = ({
+export function FieldFilterEntity({
   title,
   children,
   removable,
@@ -30,17 +30,19 @@ export const FieldFilterEntity = ({
   smallSize,
   onRemove,
   vertical,
-}) => (
-  <div className={cx('field-filter-entity', { stretchable, small: smallSize, vertical })}>
-    <span className={cx('entity-name', { vertical })}>{title}</span>
-    {removable && (
-      <i className={cx('close-icon')} onClick={onRemove}>
-        {Parser(CrossIcon)}
-      </i>
-    )}
-    <div className={cx('entity-input-holder', { vertical })}>{children}</div>
-  </div>
-);
+}) {
+  return (
+    <div className={cx('field-filter-entity', { stretchable, small: smallSize, vertical })}>
+      <span className={cx('entity-name', { vertical })}>{title}</span>
+      {removable && (
+        <i className={cx('close-icon')} onClick={onRemove}>
+          {Parser(CrossIcon)}
+        </i>
+      )}
+      <div className={cx('entity-input-holder', { vertical })}>{children}</div>
+    </div>
+  );
+}
 FieldFilterEntity.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,

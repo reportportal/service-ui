@@ -46,7 +46,7 @@ const cx = classNames.bind(styles);
 
 const getDisplayAccountType = (accountType) => ACCOUNT_TYPE_DISPLAY_MAP[accountType] || accountType;
 
-const AllUsersListTableComponent = ({
+function AllUsersListTableComponent({
   users,
   onChangeSorting,
   sortingDirection,
@@ -56,14 +56,14 @@ const AllUsersListTableComponent = ({
   pageCount,
   onChangePage,
   onChangePageSize,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
 
   const renderRowActions = () => (
     <Popover
-      placement={'bottom-end'}
+      placement="bottom-end"
       content={
         <div className={cx('row-action-menu')}>
           <p>Manage assignments</p>
@@ -161,7 +161,7 @@ const AllUsersListTableComponent = ({
       renderRowActions={renderRowActions}
     />
   );
-};
+}
 
 AllUsersListTableComponent.propTypes = {
   users: PropTypes.array,

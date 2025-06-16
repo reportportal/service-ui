@@ -93,11 +93,7 @@ export class IssuesChartWrapper extends Component {
     switch (interval) {
       case PERIOD_VALUES.THREE_MONTHS:
       case PERIOD_VALUES.SIX_MONTHS:
-        lastEmptyElementDate = getWeekRange(
-          moment(lastElementDate)
-            .subtract(1, 'week')
-            .format(),
-        );
+        lastEmptyElementDate = getWeekRange(moment(lastElementDate).subtract(1, 'week').format());
         break;
       case PERIOD_VALUES.ONE_MONTH:
         lastEmptyElementDate = moment(lastElementDate)

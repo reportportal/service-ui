@@ -23,35 +23,36 @@ const computeInitialState = (options) => {
   return options.initialState;
 };
 
-export const fetchReducer = (namespace, options = DEFAULT_OPTIONS, payloadConverter) => (
-  state = computeInitialState(options),
-  { type = '', payload = {}, meta = {}, concat = false },
-) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-  const contentPath = options.contentPath || DEFAULT_OPTIONS.contentPath;
-  switch (type) {
-    case FETCH_SUCCESS: {
-      if (options.getFirst && payload[contentPath] instanceof Array) {
-        return payload[contentPath][0] || null;
-      } else {
+export const fetchReducer =
+  (namespace, options = DEFAULT_OPTIONS, payloadConverter) =>
+  (
+    state = computeInitialState(options),
+    { type = '', payload = {}, meta = {}, concat = false },
+  ) => {
+    if (meta?.namespace !== namespace) {
+      return state;
+    }
+    const contentPath = options.contentPath || DEFAULT_OPTIONS.contentPath;
+    switch (type) {
+      case FETCH_SUCCESS: {
+        if (options.getFirst && payload[contentPath] instanceof Array) {
+          return payload[contentPath][0] || null;
+        }
         const selectedPayload =
           contentPath && payload[contentPath] ? payload[contentPath] : payload;
         return payloadConverter ? payloadConverter(selectedPayload) : selectedPayload;
       }
-    }
-    case CONCAT_FETCH_SUCCESS: {
-      const data = contentPath ? payload[contentPath] : payload;
+      case CONCAT_FETCH_SUCCESS: {
+        const data = contentPath ? payload[contentPath] : payload;
 
-      if (data instanceof Array && concat) {
-        return state.concat(data);
+        if (data instanceof Array && concat) {
+          return state.concat(data);
+        }
+        return data;
       }
-      return data;
+      case FETCH_ERROR:
+        return computeInitialState(options);
+      default:
+        return state;
     }
-    case FETCH_ERROR:
-      return computeInitialState(options);
-    default:
-      return state;
-  }
-};
+  };

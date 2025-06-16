@@ -20,9 +20,9 @@ import styles from './registrationFailBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const RegistrationFailBlock = ({ children }) => (
-  <div className={cx('registration-fail-block')}>{children}</div>
-);
+export function RegistrationFailBlock({ children }) {
+  return <div className={cx('registration-fail-block')}>{children}</div>;
+}
 
 RegistrationFailBlock.propTypes = {
   children: PropTypes.node,

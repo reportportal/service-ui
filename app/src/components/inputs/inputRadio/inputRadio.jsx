@@ -20,7 +20,7 @@ import styles from './inputRadio.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputRadio = ({
+export function InputRadio({
   children,
   value,
   ownValue,
@@ -34,42 +34,43 @@ export const InputRadio = ({
   title,
   mode,
   size,
-}) => (
-  // eslint-disable-next-line
-  <label
-    className={cx(
-      'input-radio',
-      { disabled, 'mobile-disabled': mobileDisabled },
-      { [`mode-${mode}`]: mode },
-    )}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    tabIndex="1"
-  >
-    <input
-      type="radio"
-      className={cx('input')}
-      disabled={disabled}
-      onChange={onChange}
-      value={ownValue}
-      checked={value === ownValue}
-      name={name}
-    />
-    <span
-      className={cx('toggler', {
-        checked: value === ownValue,
-        'at-top': circleAtTop,
-        [`mode-${mode}`]: mode,
-        [`toggler-${size}`]: size,
-      })}
-    />
-    {children && (
-      <span className={cx('children-container', { [`mode-${mode}`]: mode })} title={title}>
-        {children}
-      </span>
-    )}
-  </label>
-);
+}) {
+  return (
+    <label
+      className={cx(
+        'input-radio',
+        { disabled, 'mobile-disabled': mobileDisabled },
+        { [`mode-${mode}`]: mode },
+      )}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      tabIndex="1"
+    >
+      <input
+        type="radio"
+        className={cx('input')}
+        disabled={disabled}
+        onChange={onChange}
+        value={ownValue}
+        checked={value === ownValue}
+        name={name}
+      />
+      <span
+        className={cx('toggler', {
+          checked: value === ownValue,
+          'at-top': circleAtTop,
+          [`mode-${mode}`]: mode,
+          [`toggler-${size}`]: size,
+        })}
+      />
+      {children && (
+        <span className={cx('children-container', { [`mode-${mode}`]: mode })} title={title}>
+          {children}
+        </span>
+      )}
+    </label>
+  );
+}
 InputRadio.propTypes = {
   children: PropTypes.node,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),

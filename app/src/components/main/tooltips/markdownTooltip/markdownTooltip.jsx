@@ -17,7 +17,9 @@
 import PropTypes from 'prop-types';
 import { MarkdownViewer } from 'components/main/markdown';
 
-export const MarkdownTooltip = ({ tooltipContent }) => <MarkdownViewer value={tooltipContent} />;
+export function MarkdownTooltip({ tooltipContent }) {
+  return <MarkdownViewer value={tooltipContent} />;
+}
 
 MarkdownTooltip.propTypes = {
   tooltipContent: PropTypes.any,

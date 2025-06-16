@@ -25,33 +25,35 @@ import styles from './parentInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const ParentInfo = ({ parentItem }) => (
-  <div className={cx('parent-info')}>
-    <div className={cx('icon-holder')}>
-      <Duration
-        status={parentItem.status}
-        startTime={new Date(parentItem.startTime).getTime()}
-        endTime={new Date(parentItem.endTime).getTime()}
-        approxTime={parentItem.approximateDuration}
-      />
+export function ParentInfo({ parentItem }) {
+  return (
+    <div className={cx('parent-info')}>
+      <div className={cx('icon-holder')}>
+        <Duration
+          status={parentItem.status}
+          startTime={new Date(parentItem.startTime).getTime()}
+          endTime={new Date(parentItem.endTime).getTime()}
+          approxTime={parentItem.approximateDuration}
+        />
+      </div>
+      {parentItem.owner && (
+        <div className={cx('icon-holder')}>
+          <Owner owner={parentItem.owner} />
+        </div>
+      )}
+      {parentItem.attributes.length > 0 && (
+        <div className={cx('icon-holder')}>
+          <Attributes attributes={parentItem.attributes} />
+        </div>
+      )}
+      {parentItem.description && (
+        <div className={cx('icon-holder')}>
+          <Description description={parentItem.description} />
+        </div>
+      )}
     </div>
-    {parentItem.owner && (
-      <div className={cx('icon-holder')}>
-        <Owner owner={parentItem.owner} />
-      </div>
-    )}
-    {parentItem.attributes.length > 0 && (
-      <div className={cx('icon-holder')}>
-        <Attributes attributes={parentItem.attributes} />
-      </div>
-    )}
-    {parentItem.description && (
-      <div className={cx('icon-holder')}>
-        <Description description={parentItem.description} />
-      </div>
-    )}
-  </div>
-);
+  );
+}
 ParentInfo.propTypes = {
   parentItem: PropTypes.object,
 };

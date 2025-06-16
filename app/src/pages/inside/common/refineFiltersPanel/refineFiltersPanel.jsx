@@ -22,7 +22,7 @@ import styles from './refineFiltersPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const RefineFiltersPanel = ({
+export function RefineFiltersPanel({
   onFilterAdd,
   onFilterRemove,
   onFilterValidate,
@@ -30,22 +30,24 @@ export const RefineFiltersPanel = ({
   filterErrors,
   filterEntities,
   events,
-}) => (
-  <div className={cx('refine-filters-panel')}>
-    <div className={cx('label')}>
-      <FormattedMessage id="Filters.refine" defaultMessage="Refine:" />
+}) {
+  return (
+    <div className={cx('refine-filters-panel')}>
+      <div className={cx('label')}>
+        <FormattedMessage id="Filters.refine" defaultMessage="Refine:" />
+      </div>
+      <EntitiesGroup
+        onChange={onFilterChange}
+        onValidate={onFilterValidate}
+        onRemove={onFilterRemove}
+        onAdd={onFilterAdd}
+        errors={filterErrors}
+        entities={filterEntities}
+        events={events}
+      />
     </div>
-    <EntitiesGroup
-      onChange={onFilterChange}
-      onValidate={onFilterValidate}
-      onRemove={onFilterRemove}
-      onAdd={onFilterAdd}
-      errors={filterErrors}
-      entities={filterEntities}
-      events={events}
-    />
-  </div>
-);
+  );
+}
 RefineFiltersPanel.propTypes = {
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,

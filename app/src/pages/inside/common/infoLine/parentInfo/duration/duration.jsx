@@ -22,20 +22,22 @@ import styles from './duration.scss';
 
 const cx = classNames.bind(styles);
 
-export const Duration = ({ status, startTime, endTime, approxTime }) => (
-  <span className={cx('duration-block')}>
-    <DurationBlock
-      status={status}
-      timing={{
-        start: startTime,
-        end: endTime,
-        approxTime,
-      }}
-      iconClass={cx('icon')}
-      durationClass={cx('duration')}
-    />
-  </span>
-);
+export function Duration({ status, startTime, endTime, approxTime }) {
+  return (
+    <span className={cx('duration-block')}>
+      <DurationBlock
+        status={status}
+        timing={{
+          start: startTime,
+          end: endTime,
+          approxTime,
+        }}
+        iconClass={cx('icon')}
+        durationClass={cx('duration')}
+      />
+    </span>
+  );
+}
 
 Duration.propTypes = {
   status: PropTypes.string,
