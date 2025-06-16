@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-export type TestCaseStatus = 'low' | 'normal' | 'high';
+export type TestCasePriority = 'low' | 'normal' | 'high';
 
 export interface TestCase {
   id: string | number;
   name: string;
-  status: TestCaseStatus;
+  priority: TestCasePriority;
   tags: string[];
   lastExecution: string;
 }

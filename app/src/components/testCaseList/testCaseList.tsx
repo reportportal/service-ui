@@ -66,7 +66,11 @@ export const TestCaseList = memo(
       name: {
         content: testCase.name,
         component: (
-          <TestCaseNameCell status={testCase.status} name={testCase.name} tags={testCase.tags} />
+          <TestCaseNameCell
+            priority={testCase.priority}
+            name={testCase.name}
+            tags={testCase.tags}
+          />
         ),
       },
       lastExecution: {

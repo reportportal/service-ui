@@ -25,23 +25,12 @@
   font-weight: bold;
   color: var(--rp-ui-base-bg-000);
   flex-shrink: 0;
-
-  &--failed {
-    background-color: var(--rp-ui-base-error);
-  }
-
-  &--skipped {
-    background-color: var(--rp-ui-base-e-300);
-  }
-
-  &--in_progress {
-    background-color: var(--rp-ui-base-e-400);
-  }
+  padding-top: 1px;
 }
 
 .priority-icon {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
 
   svg {
     fill: var(--rp-ui-base-bg-000);

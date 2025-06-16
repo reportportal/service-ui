@@ -17,31 +17,24 @@
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCaseStatus } from '../types';
+import { TestCasePriority } from '../types';
 import styles from './priorityIcon.scss';
 
 const cx = classNames.bind(styles);
 
 interface PriorityIconProps {
-  status: TestCaseStatus;
+  priority: TestCasePriority;
 }
 
-const iconMap: Record<TestCaseStatus, React.ReactNode> = {
-  low: (
-    <div className={cx('priority-icon', 'priority-icon--low')}>{Parser(PriorityInlineIcon)}</div>
-  ),
-  normal: (
-    <div className={cx('priority-icon', 'priority-icon--normal')}>{Parser(PriorityInlineIcon)}</div>
-  ),
-  high: (
-    <div className={cx('priority-icon', 'priority-icon--high')}>{Parser(PriorityInlineIcon)}</div>
-  ),
-};
+const parsedIcon = Parser(PriorityInlineIcon);
 
-export const PriorityIcon = ({ status }: PriorityIconProps) => {
+const getPriorityClass = (priority: TestCasePriority) =>
+  cx('priority-icon', `priority-icon--${priority}`);
+
+export const PriorityIcon = ({ priority }: PriorityIconProps) => {
   return (
-    <div className={cx('priority-icon-block', `priority-icon-block--${status}`)}>
-      {iconMap[status]}
+    <div className={cx('priority-icon-block', `priority-icon-block--${priority}`)}>
+      <div className={getPriorityClass(priority)}>{parsedIcon}</div>
     </div>
   );
 };

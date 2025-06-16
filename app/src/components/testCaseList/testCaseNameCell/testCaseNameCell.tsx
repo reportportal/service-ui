@@ -17,21 +17,21 @@
 import classNames from 'classnames/bind';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from '../priorityIcon';
-import { TestCaseStatus } from '../types';
+import { TestCasePriority } from '../types';
 import styles from './testCaseNameCell.scss';
 
 const cx = classNames.bind(styles);
 
 interface TestCaseNameCellProps {
-  status: TestCaseStatus;
+  priority: TestCasePriority;
   name: string;
   tags: string[];
 }
 
-export const TestCaseNameCell = ({ status, name, tags }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      <PriorityIcon status={status} />
+      <PriorityIcon priority={priority} />
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
