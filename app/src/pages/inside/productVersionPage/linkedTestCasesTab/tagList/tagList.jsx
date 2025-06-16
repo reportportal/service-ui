@@ -68,7 +68,9 @@ export const TagList = ({ tags }) => {
 
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
 
-  if (!tags.length) {
+  const isEmpty = (value) => !value.length || value.length === 0;
+
+  if (isEmpty(tags)) {
     return (
       <div className={cx('tag-list-wrapper')}>
         <div className={cx('tag-list', 'tag-list--no-tags')}>

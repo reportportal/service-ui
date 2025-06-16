@@ -23,7 +23,7 @@ import { TestCase } from './types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { mockTestCases } from './mockData';
-import { DEFAULT_CURRENT_PAGE } from './testCaseList.constants';
+import { DEFAULT_CURRENT_PAGE } from './constants';
 import { messages } from './messages';
 import styles from './testCaseList.scss';
 
@@ -36,10 +36,6 @@ interface TestCaseListProps {
   itemsPerPage: number;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
-  onEdit: () => void;
-  onDelete: (testCaseId: string | number) => void;
-  onDuplicate: (testCase: TestCase) => void;
-  onMove: () => void;
 }
 
 export const TestCaseList = memo(
@@ -50,10 +46,6 @@ export const TestCaseList = memo(
     itemsPerPage,
     searchValue = '',
     onSearchChange,
-    onEdit,
-    onDelete,
-    onDuplicate,
-    onMove,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
 
@@ -79,15 +71,7 @@ export const TestCaseList = memo(
       },
       lastExecution: {
         content: testCase.lastExecution,
-        component: (
-          <TestCaseExecutionCell
-            lastExecution={testCase.lastExecution}
-            onEdit={() => onEdit()}
-            onDelete={() => onDelete(testCase.id)}
-            onDuplicate={() => onDuplicate(testCase)}
-            onMove={() => onMove()}
-          />
-        ),
+        component: <TestCaseExecutionCell lastExecution={testCase.lastExecution} />,
       },
     }));
 
@@ -106,6 +90,8 @@ export const TestCaseList = memo(
         align: 'left' as const,
       },
     ];
+
+    const isEmptyList = (value: TestCase[]) => !value.length || value.length === 0;
 
     return (
       <div className={cx('test-case-list')}>
@@ -127,12 +113,11 @@ export const TestCaseList = memo(
           </div>
         </div>
 
-        {currentData.length > 0 ? (
+        {!isEmptyList(currentData) ? (
           <Table
             data={tableData}
             fixedColumns={fixedColumns}
             primaryColumn={primaryColumn}
-            sortingColumn={undefined}
             sortableColumns={[]}
             className={cx('test-case-table')}
             rowClassName={cx('test-case-table-row')}

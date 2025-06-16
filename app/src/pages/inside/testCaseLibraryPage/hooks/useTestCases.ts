@@ -52,23 +52,6 @@ export const useTestCases = () => {
     );
   }, [testCases, searchValue]);
 
-  const deleteTestCase = (id: string | number) => {
-    setTestCases((prev) => prev.filter((tc) => tc.id !== id));
-  };
-
-  const duplicateTestCase = (testCase: TestCase, copySuffix: string) => {
-    const duplicatedTestCase: TestCase = {
-      ...testCase,
-      id: Date.now(),
-      name: `${testCase.name} ${copySuffix}`,
-    };
-    setTestCases((prev) => [...prev, duplicatedTestCase]);
-  };
-
-  const updateTestCase = (id: string | number, updates: Partial<TestCase>) => {
-    setTestCases((prev) => prev.map((tc) => (tc.id === id ? { ...tc, ...updates } : tc)));
-  };
-
   const hasTestCases = useMemo(() => filteredTestCases && filteredTestCases.length > 0, [
     filteredTestCases,
   ]);
@@ -80,8 +63,5 @@ export const useTestCases = () => {
     hasTestCases,
     searchValue,
     setSearchValue,
-    deleteTestCase,
-    duplicateTestCase,
-    updateTestCase,
   };
 };

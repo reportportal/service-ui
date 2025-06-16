@@ -37,15 +37,7 @@ export const ExpandedOptions = () => {
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
 
-  const {
-    filteredTestCases,
-    loading,
-    hasTestCases,
-    searchValue,
-    setSearchValue,
-    deleteTestCase,
-    duplicateTestCase,
-  } = useTestCases();
+  const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
 
   const setAllTestCases = () => {
     setActiveFolder(null);
@@ -107,9 +99,6 @@ export const ExpandedOptions = () => {
         </div>
       </div>
       <div className={cx('expanded-options__content')}>
-        <div className={cx('expanded-options__content-title')}>
-          {activeFolder === null ? formatMessage(commonMessages.allTestCases) : activeFolder}
-        </div>
         {isEmptyFolder || !hasTestCases ? (
           <FolderEmptyState />
         ) : (
@@ -117,8 +106,6 @@ export const ExpandedOptions = () => {
             testCases={filteredTestCases}
             searchValue={searchValue}
             setSearchValue={setSearchValue}
-            deleteTestCase={deleteTestCase}
-            duplicateTestCase={duplicateTestCase}
             loading={loading}
           />
         )}

@@ -56,20 +56,20 @@
 
   &--low {
     svg {
-      fill: #4d70ed;
+      fill: var(--rp-ui-base-icon-priority-low);
       transform: rotate(180deg);
     }
   }
 
   &--normal {
     svg {
-      fill: #fdc63a;
+      fill: var(--rp-ui-base-icon-priority-medium);
     }
   }
 
   &--high {
     svg {
-      fill: var(--rp-ui-base-error);
+      fill: var(--rp-ui-base-icon-priority-high);
     }
   }
 }
@@ -107,7 +107,7 @@
 
 .execution-time {
   font-size: 13px;
-  color: var(--rp-ui-base-e-400);
+  color: var(--rp-ui-base-almost-black);
   line-height: 16px;
   align-items: flex-start;
   padding-top: 16px;
@@ -130,7 +130,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
   height: 16px;
 
   &:hover {

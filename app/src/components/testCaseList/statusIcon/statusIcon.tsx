@@ -22,26 +22,22 @@ import styles from '../testCaseCell.scss';
 
 const cx = classNames.bind(styles);
 
-interface PriorityIconProps {
+interface StatusIconProps {
   status: TestCaseStatus;
 }
 
-export const PriorityIcon = ({ status }: PriorityIconProps) => {
-  const iconMap: Record<TestCaseStatus, React.ReactNode> = {
-    low: (
-      <div className={cx('priority-icon', 'priority-icon--low')}>{Parser(PriorityInlineIcon)}</div>
-    ),
-    normal: (
-      <div className={cx('priority-icon', 'priority-icon--normal')}>
-        {Parser(PriorityInlineIcon)}
-      </div>
-    ),
-    high: (
-      <div className={cx('priority-icon', 'priority-icon--high')}>{Parser(PriorityInlineIcon)}</div>
-    ),
-  };
+const iconMap: Record<TestCaseStatus, React.ReactNode> = {
+  low: (
+    <div className={cx('priority-icon', 'priority-icon--low')}>{Parser(PriorityInlineIcon)}</div>
+  ),
+  normal: (
+    <div className={cx('priority-icon', 'priority-icon--normal')}>{Parser(PriorityInlineIcon)}</div>
+  ),
+  high: (
+    <div className={cx('priority-icon', 'priority-icon--high')}>{Parser(PriorityInlineIcon)}</div>
+  ),
+};
 
-  return (
-    <div className={cx('status-icon', `status-icon--${status}`)}>{iconMap[status] || '?'}</div>
-  );
+export const StatusIcon = ({ status }: StatusIconProps) => {
+  return <div className={cx('status-icon', `status-icon--${status}`)}>{iconMap[status]}</div>;
 };

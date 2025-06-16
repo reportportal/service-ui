@@ -20,10 +20,7 @@ import classNames from 'classnames/bind';
 import { Pagination } from '@reportportal/ui-kit';
 import { TestCaseList } from 'components/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'components/testCaseList/mockData';
-import {
-  DEFAULT_CURRENT_PAGE,
-  DEFAULT_ITEMS_PER_PAGE,
-} from 'components/testCaseList/testCaseList.constants';
+import { DEFAULT_CURRENT_PAGE, DEFAULT_ITEMS_PER_PAGE } from 'components/testCaseList/constants';
 import { TestCase } from 'components/testCaseList/types';
 import { messages } from '../messages';
 import styles from './allTestCasesPage.scss';
@@ -35,8 +32,6 @@ interface AllTestCasesPageProps {
   loading: boolean;
   searchValue: string;
   setSearchValue: (value: string) => void;
-  deleteTestCase: (id: string | number) => void;
-  duplicateTestCase: (testCase: TestCase, copySuffix: string) => void;
 }
 
 export const AllTestCasesPage = ({
@@ -44,8 +39,6 @@ export const AllTestCasesPage = ({
   loading,
   searchValue,
   setSearchValue,
-  deleteTestCase,
-  duplicateTestCase,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
@@ -54,31 +47,6 @@ export const AllTestCasesPage = ({
   // Calculate pagination values
   const totalItems = testCases.length;
   const totalPages = Math.ceil(totalItems / pageSize);
-
-  const handleEdit = useCallback(() => {
-    // Here you would implement edit logic
-  }, []);
-
-  const handleDelete = useCallback(
-    (testCaseId: string) => {
-      // Here you would typically show confirmation modal
-      deleteTestCase(testCaseId);
-    },
-    [deleteTestCase],
-  );
-
-  const handleDuplicate = useCallback(
-    (testCase: TestCase) => {
-      // Here you would implement duplication logic
-      const copySuffix = formatMessage(messages.copySuffix);
-      duplicateTestCase(testCase, copySuffix);
-    },
-    [formatMessage, duplicateTestCase],
-  );
-
-  const handleMove = useCallback(() => {
-    // Here you would implement move logic (show modal with folder selection, etc.)
-  }, []);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
@@ -103,10 +71,6 @@ export const AllTestCasesPage = ({
           itemsPerPage={pageSize}
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onDuplicate={handleDuplicate}
-          onMove={handleMove}
         />
       </div>
       {totalItems > 0 && (

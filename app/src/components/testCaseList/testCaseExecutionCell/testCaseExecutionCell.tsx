@@ -26,44 +26,30 @@ const cx = classNames.bind(styles);
 
 interface MenuItem {
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
 interface TestCaseExecutionCellProps {
   lastExecution: string;
-  onEdit: () => void;
-  onDelete: () => void;
-  onDuplicate: () => void;
-  onMove: () => void;
 }
 
-export const TestCaseExecutionCell = ({
-  lastExecution,
-  onEdit,
-  onDelete,
-  onDuplicate,
-  onMove,
-}: TestCaseExecutionCellProps) => {
+export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const menuItems: MenuItem[] = [
     {
       label: formatMessage(testCaseCardMessages.duplicate),
-      onClick: onDuplicate,
     },
     {
       label: formatMessage(testCaseCardMessages.editTestCase),
-      onClick: onEdit,
     },
     {
       label: formatMessage(testCaseCardMessages.moveTestCaseTo),
-      onClick: onMove,
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      onClick: onDelete,
       className: 'delete-menu-item',
     },
   ];
