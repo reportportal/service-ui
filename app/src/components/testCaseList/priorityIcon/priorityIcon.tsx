@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
 import { TestCaseStatus } from '../types';
-import styles from '../testCaseCell.scss';
+import styles from './priorityIcon.scss';
 
 const cx = classNames.bind(styles);
 

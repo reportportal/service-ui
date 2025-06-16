@@ -14,90 +14,6 @@
  * limitations under the License.
  */
 
-.name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px 0;
-}
-
-.priority-icon-block {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: bold;
-  color: var(--rp-ui-base-bg-000);
-  flex-shrink: 0;
-
-  &--failed {
-    background-color: var(--rp-ui-base-error);
-  }
-
-  &--skipped {
-    background-color: var(--rp-ui-base-e-300);
-  }
-
-  &--in_progress {
-    background-color: var(--rp-ui-base-e-400);
-  }
-}
-
-.priority-icon {
-  width: 12px;
-  height: 12px;
-
-  svg {
-    fill: var(--rp-ui-base-bg-000);
-  }
-
-  &--low {
-    svg {
-      fill: var(--rp-ui-base-icon-priority-low);
-      transform: rotate(180deg);
-    }
-  }
-
-  &--normal {
-    svg {
-      fill: var(--rp-ui-base-icon-priority-medium);
-    }
-  }
-
-  &--high {
-    svg {
-      fill: var(--rp-ui-base-icon-priority-high);
-    }
-  }
-}
-
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.test-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
 .execution-content {
   display: flex;
   justify-content: space-between;
@@ -141,4 +57,8 @@
     outline: 2px solid var(--rp-ui-base-topaz);
     outline-offset: 2px;
   }
+}
+
+.delete-menu-item {
+  color: var(--rp-ui-base-error);
 }

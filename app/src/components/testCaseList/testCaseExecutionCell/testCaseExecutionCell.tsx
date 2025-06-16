@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { messages as testCaseCardMessages } from '../messages';
-import styles from '../testCaseCell.scss';
+import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles);
 
@@ -50,7 +50,7 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      className: 'delete-menu-item',
+      className: cx('delete-menu-item'),
     },
   ];
 

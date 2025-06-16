@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from '../priorityIcon';
 import { TestCaseStatus } from '../types';
-import styles from '../testCaseCell.scss';
+import styles from './testCaseNameCell.scss';
 
 const cx = classNames.bind(styles);
 
