@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
+import { forwardRef } from 'react';
 import { ArrowDownIcon, ArrowUpIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { SORTING_ASC } from 'controllers/sorting';
@@ -29,40 +29,51 @@ interface DropdownSortingOptionProps {
   value: string;
   direction: SortingDirection;
   onChange?: (value: string) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   highlightHovered?: boolean;
 }
 
-export const DropdownSortingOption: FC<DropdownSortingOptionProps> = ({
-  label,
-  selected,
-  onChange,
-  value,
-  direction,
-  highlightHovered = false,
-}: DropdownSortingOptionProps) => {
+export const DropdownSortingOptionWrapped = (
+  {
+    label,
+    selected,
+    onChange,
+    value,
+    direction,
+    highlightHovered = false,
+    onKeyDown,
+  }: DropdownSortingOptionProps,
+  ref: React.Ref<HTMLButtonElement>,
+) => {
   let icon = <ArrowUpIcon />;
   if (selected) {
     icon = direction === SORTING_ASC ? <ArrowUpIcon /> : <ArrowDownIcon />;
   }
+
+  const onKeyDownHandler = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    onKeyDown?.(event);
+  };
 
   const onClickHandler = () => {
     onChange?.(value);
   };
 
   return (
-    <div
-      role="option"
-      aria-selected={selected}
+    <button
+      type="button"
       className={cx('dropdown-option', {
         selected,
         hover: highlightHovered,
       })}
       onClick={onClickHandler}
-      onKeyDown={() => {}}
+      onKeyDown={onKeyDownHandler}
+      ref={ref}
       tabIndex={-1}
     >
       <div className={cx('icon')}>{icon}</div>
       <div className={cx('label')}>{label}</div>
-    </div>
+    </button>
   );
 };
+
+export const DropdownSortingOption = forwardRef(DropdownSortingOptionWrapped);

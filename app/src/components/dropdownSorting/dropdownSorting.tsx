@@ -49,16 +49,16 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
   const [highlightedIndex, setHighlightedIndex] = useState(
     defaultHighLightedIndex > -1 ? defaultHighLightedIndex : 0,
   );
-  const listRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLButtonElement[]>([]);
   const [keyboardControl, setKeyboardControl] = useState(false);
 
   useEffect(() => {
     if (isOpened) {
-      listRef.current?.focus();
+      listRef.current[highlightedIndex]?.focus();
     } else {
       setKeyboardControl(false);
     }
-  }, [isOpened]);
+  }, [highlightedIndex, isOpened]);
 
   const handleChange = useCallback(
     (selectedValue: string) => {
@@ -66,66 +66,70 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         current === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
 
       const newDirection = selectedValue === value ? toggleDirection(direction) : SORTING_ASC;
+      const selectedIndex = options.findIndex((option) => option.value === selectedValue);
+
       onChange({ value: selectedValue, direction: newDirection });
+      setHighlightedIndex(selectedIndex);
       setIsOpened(false);
     },
-    [value, direction, onChange],
+    [value, direction, options, onChange],
   );
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!keyboardControl) {
-      setKeyboardControl(true);
-      return;
-    }
+  const setOptionRef = useCallback(
+    (index: number) => (el: HTMLButtonElement | null) => {
+      listRef.current[index] = el;
+    },
+    [],
+  );
 
-    if ([Keys.ENTER, Keys.SPACE].includes(event.key)) {
-      event.preventDefault();
-      handleChange(options[highlightedIndex].value);
-    }
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (!keyboardControl) {
+        setKeyboardControl(true);
+        return;
+      }
 
-    if (event.key === Keys.ARROW_DOWN) {
-      event.preventDefault();
-      setHighlightedIndex((prev) => (prev + 1) % options.length);
-    }
+      if ([Keys.ENTER, Keys.SPACE].includes(event.key)) {
+        event.preventDefault();
+        handleChange(options[highlightedIndex].value);
+      }
 
-    if (event.key === Keys.ARROW_UP) {
-      event.preventDefault();
-      setHighlightedIndex((prev) => (prev - 1 + options.length) % options.length);
-    }
-  };
+      if (event.key === Keys.ARROW_DOWN) {
+        event.preventDefault();
+        setHighlightedIndex((prev) => (prev + 1) % options.length);
+      }
+
+      if (event.key === Keys.ARROW_UP) {
+        event.preventDefault();
+        setHighlightedIndex((prev) => (prev - 1 + options.length) % options.length);
+      }
+    },
+    [handleChange, highlightedIndex, keyboardControl, options],
+  );
 
   const renderOptions = () => {
     return options.map((option, index) => {
       const selected = option.value === value;
-      const highlighted = index === highlightedIndex && keyboardControl;
 
       return (
-        <DropdownSortingOption
-          key={option.value}
-          value={option.value}
-          selected={selected}
-          label={option.label}
-          onChange={handleChange}
-          direction={direction}
-          highlightHovered={highlighted}
-        />
+        <li key={option.value}>
+          <DropdownSortingOption
+            ref={setOptionRef(index)}
+            value={option.value}
+            selected={selected}
+            label={option.label}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            direction={direction}
+          />
+        </li>
       );
     });
   };
 
   return (
     <Popover
-      content={
-        <div
-          role="listbox"
-          className={cx('select-list')}
-          ref={listRef}
-          tabIndex={-1}
-          onKeyDown={handleKeyDown}
-        >
-          {renderOptions()}
-        </div>
-      }
+      content={<ul className={cx('select-list')}>{renderOptions()}</ul>}
       className={cx('popover')}
       placement="bottom-end"
       isOpened={isOpened}
@@ -134,7 +138,6 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
       <button
         type="button"
         className={cx('value', { open: isOpened })}
-        tabIndex={0}
         onKeyDown={() => setKeyboardControl(true)}
       >
         {direction === SORTING_ASC ? <ArrowUpIcon /> : <ArrowDownIcon />}

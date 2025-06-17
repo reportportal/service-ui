@@ -18,6 +18,13 @@
   display: flex;
   gap: 8px;
   padding: 8px 16px;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
   cursor: pointer;
 
   .icon {
@@ -39,7 +46,8 @@
   }
 
   &:hover,
-  &.hover {
+  &.hover,
+  &:focus-visible {
     background-color: $COLOR--bg-200;
 
     .icon {
@@ -53,7 +61,10 @@
     }
   }
 
-  &.hover {
+  &.hover
+  &:focus,
+  &:focus-visible {
+    outline: none;
     border: 1px solid $COLOR--topaz-focused;
   }
 }
