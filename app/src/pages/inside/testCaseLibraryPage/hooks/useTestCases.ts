@@ -47,7 +47,7 @@ export const useTestCases = () => {
     const term = searchValue.toLowerCase();
     return testCases.filter(
       (testCase) =>
-        testCase.name.toLowerCase().includes(term) ||
+        testCase.name.toLowerCase().includes(term) ??
         testCase.tags.some((tag) => tag.toLowerCase().includes(term)),
     );
   }, [testCases, searchValue]);
