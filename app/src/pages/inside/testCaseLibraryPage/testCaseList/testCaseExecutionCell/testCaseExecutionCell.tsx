@@ -34,19 +34,10 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const menuItems: PopoverItem[] = [
-    {
-      label: formatMessage(testCaseCardMessages.duplicate),
-    },
-    {
-      label: formatMessage(testCaseCardMessages.editTestCase),
-    },
-    {
-      label: formatMessage(testCaseCardMessages.moveTestCaseTo),
-    },
-    {
-      label: formatMessage(testCaseCardMessages.deleteTestCase),
-      variant: 'danger',
-    },
+    { label: formatMessage(testCaseCardMessages.duplicate) },
+    { label: formatMessage(testCaseCardMessages.editTestCase) },
+    { label: formatMessage(testCaseCardMessages.moveTestCaseTo) },
+    { label: formatMessage(testCaseCardMessages.deleteTestCase), variant: 'danger' },
   ];
 
   return (
