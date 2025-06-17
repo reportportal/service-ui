@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-.popover-tools {
-  &__meatball-button {
-    padding: 17px;
-    min-width: auto;
-    margin-bottom: 10px;
+.section {
+  padding: 16px 20px;
+  margin-bottom: 1px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
   }
+
+  &__title {
+    color: var(--rp-ui-base-almost-black);
+    font-size: 14px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-weight: 500;
+    margin: 0;
+  }
+
+
 }

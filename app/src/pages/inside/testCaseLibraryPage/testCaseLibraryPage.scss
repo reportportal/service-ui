@@ -23,24 +23,24 @@
     position: sticky;
     top: 0;
     z-index: $Z-INDEX-PAGE-CONTAINER-HEADER;
+    background-color: var(--rp-ui-base-bg-000);
+    padding: 16px 32px 12px;
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
   }
 
   &__breadcrumb {
-    position: absolute;
-    top: 16px;
-    left: 34px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    color: var(--rp-ui-base-e-300);
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    line-height: 20px;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
 
-    &-icon,
-    svg {
-      height: 16px;
-    }
+  &__title {
+    color: var(--rp-ui-base-almost-black);
+    font-size: 24px;
+    font-family: $FONT-SEMIBOLD;
+    line-height: 31px;
+    margin-bottom: 5px;
   }
 
   &__content {
@@ -67,8 +67,7 @@
   }
 
   &__toggle {
-    position: absolute;
-    top: 35px;
-    left: 250px;
+    text-wrap: nowrap;
+    margin-left: 16px;
   }
 }

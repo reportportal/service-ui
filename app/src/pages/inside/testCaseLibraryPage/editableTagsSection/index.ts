@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { EmptyState } from './emptyState';
+export { EditableTagsSection } from './editableTagsSection';

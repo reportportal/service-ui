@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { BreadcrumbsTreeIcon, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
-
+import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 import { Tabs } from 'components/main/tabs';
-import { payloadSelector } from 'controllers/pages';
+import {
+  payloadSelector,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { messages } from 'pages/inside/productVersionsPage/messages';
+import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
 import { TabsConfigShape } from 'components/main/tabs/tabs';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PopoverTools } from './popoverTools';
 
 import styles from './productVersionHeader.scss';
@@ -33,18 +37,32 @@ const cx = classNames.bind(styles);
 export const ProductVersionHeader = ({ tabsConfig }) => {
   const { formatMessage } = useIntl();
   const { productVersionTab: currentTab, productVersionId } = useSelector(payloadSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+
+  const breadcrumbDescriptors = [
+    {
+      id: 'product-versions',
+      title: formatMessage(messages.productVersions),
+      link: {
+        type: PRODUCT_VERSIONS_TAB_PAGE,
+        payload: {
+          projectSlug,
+          subPage: LIST_OF_VERSIONS,
+          organizationSlug,
+        },
+      },
+    },
+    {
+      id: productVersionId,
+      title: productVersionId,
+    },
+  ];
 
   return (
     <div className={cx('product-version-header')}>
       <div className={cx('product-version-header__breadcrumb')}>
-        <div className={cx('product-version-header__tree-icon')}>
-          <BreadcrumbsTreeIcon />
-        </div>
-        <div className={cx('product-version-header__breadcrumb-name')}>
-          {formatMessage(messages.productVersions)}
-          <ChevronRightBreadcrumbsIcon />
-          {productVersionId}
-        </div>
+        <BreadcrumbsTreeIcon />
+        <Breadcrumbs descriptors={breadcrumbDescriptors} />
       </div>
       <div className={cx('product-version-header__title')}>{productVersionId}</div>
       <div className={cx('product-version-header__tab-wrapper')}>

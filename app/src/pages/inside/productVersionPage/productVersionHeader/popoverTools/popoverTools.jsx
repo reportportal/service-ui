@@ -17,7 +17,6 @@
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { redirect } from 'redux-first-router';
-import classNames from 'classnames/bind';
 import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -33,10 +32,6 @@ import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { DELETE_PRODUCT_VERSION_MODAL } from '../deleteProductVersionModal';
 import { RENAME_PRODUCT_VERSION_MODAL } from '../renameProductVersionModal';
-
-import styles from './popoverTools.scss';
-
-const cx = classNames.bind(styles);
 
 export const PopoverTools = () => {
   const { formatMessage } = useIntl();
@@ -112,7 +107,7 @@ export const PopoverTools = () => {
       ]}
       placement="bottom-end"
     >
-      <Button variant="ghost" className={cx('popover-tools__meatball-button')}>
+      <Button variant="ghost" adjustWidthOn="content">
         <MeatballMenuIcon />
       </Button>
     </PopoverControl>

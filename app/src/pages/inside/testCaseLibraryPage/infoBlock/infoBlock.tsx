@@ -15,19 +15,17 @@
  */
 
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCasePriority } from '../types';
-import styles from './priorityIcon.scss';
+import styles from './infoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-interface PriorityIconProps {
-  priority: TestCasePriority;
+interface InfoBlockProps {
+  label: string;
+  className?: string;
 }
 
-const parsedIcon = Parser(PriorityInlineIcon);
-
-export const PriorityIcon = ({ priority }: PriorityIconProps) => (
-  <div className={cx('priority-icon', `priority-icon--${priority}`)}>{parsedIcon}</div>
+export const InfoBlock = ({ label, className = '' }: InfoBlockProps) => (
+  <div className={cx('info-block', className)}>
+    <span className={cx('info-block__label')}>{label}</span>
+  </div>
 );

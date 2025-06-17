@@ -19,33 +19,10 @@
   padding: 16px 32px 0;
 
   &__breadcrumb {
-    color: var(--rp-ui-base-e-300);
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    line-height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-
-    svg {
-      height: 16px;
-    }
-  }
-
-  &__tree-icon {
-    margin-right: 16px;
-    display: flex;
-    align-items: center;
-  }
-
-  &__breadcrumb-name {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    svg {
-      color: var(--rp-ui-base-e-300);
-    }
   }
 
   &__title {

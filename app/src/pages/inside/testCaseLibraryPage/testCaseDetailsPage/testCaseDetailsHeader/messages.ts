@@ -17,20 +17,28 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  tags: {
-    id: 'EditTestCasePage.tags',
-    defaultMessage: 'Tags',
+  testCaseLibraryBreadcrumb: {
+    id: 'EditTestCasePage.testCaseLibraryBreadcrumb',
+    defaultMessage: 'Test Case Library',
   },
-  noTagsAdded: {
-    id: 'EditTestCasePage.noTagsAdded',
-    defaultMessage: 'No tags added yet',
+  addToLaunch: {
+    id: 'EditTestCasePage.addToLaunch',
+    defaultMessage: 'Add to Launch',
   },
-  description: {
-    id: 'EditTestCasePage.description',
-    defaultMessage: 'Description',
+  addToTestPlan: {
+    id: 'EditTestCasePage.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
   },
-  noDescriptionAdded: {
-    id: 'EditTestCasePage.noDescriptionAdded',
-    defaultMessage: 'No description added',
+  created: {
+    id: 'EditTestCasePage.created',
+    defaultMessage: 'Created:',
+  },
+  id: {
+    id: 'EditTestCasePage.id',
+    defaultMessage: 'ID:',
+  },
+  historyOfActions: {
+    id: 'EditTestCasePage.historyOfActions',
+    defaultMessage: 'History of Actions',
   },
 });
