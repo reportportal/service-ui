@@ -62,7 +62,6 @@
   }
 
   &.hover,
-  &:focus,
   &:focus-visible {
     outline: none;
     border: 1px solid $COLOR--topaz-focused;
