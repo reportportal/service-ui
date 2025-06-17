@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
@@ -30,11 +29,13 @@ import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Ev
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { canWorkWithOrganizationFilter } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
+import { canWorkWithOrganizationsSorting } from 'common/utils/permissions/permissions';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
+import { OrganizationsSorting } from './organizationsSorting';
 
 const cx = classNames.bind(styles);
 
@@ -87,6 +88,7 @@ export const OrganizationsPageHeader = ({
                     )}
                   />
                 )}
+                {canWorkWithOrganizationsSorting(userRoles) && <OrganizationsSorting />}
               </div>
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}

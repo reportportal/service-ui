@@ -86,3 +86,6 @@ export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
 export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
 export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
 export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
+export const canWorkWithOrganizationsSorting = checkPermission(
+  ACTIONS.WORK_WITH_ORGANIZATIONS_SORTING,
+);

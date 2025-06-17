@@ -24,8 +24,9 @@ import {
   DEFAULT_LIMITATION,
   DEFAULT_PAGE_SIZE_OPTIONS,
   NAMESPACE,
+  ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
 } from 'controllers/instance/organizations/constants';
-import { DEFAULT_SORT_COLUMN, SORTING_KEY } from 'controllers/instance';
 import styles from './organizationsPanelView.scss';
 import { OrganizationsPanels } from './organizationsPanels';
 import { OrganizationsTable } from './organizationsTable';
@@ -41,6 +42,9 @@ const OrganizationsPanelViewWrapped = ({
   onChangePage,
   onChangePageSize,
   isOpenTableView,
+  sortingColumn,
+  sortingDirection,
+  onChangeSorting,
 }) => (
   <PaginationWrapper
     showPagination={organizationsList.length > 0}
@@ -54,7 +58,12 @@ const OrganizationsPanelViewWrapped = ({
     className={cx('organizations-pagination-wrapper')}
   >
     {isOpenTableView ? (
-      <OrganizationsTable organizationsList={organizationsList} />
+      <OrganizationsTable
+        organizationsList={organizationsList}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+      />
     ) : (
       <OrganizationsPanels organizationsList={organizationsList} />
     )}
@@ -70,6 +79,9 @@ OrganizationsPanelViewWrapped.propTypes = {
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
   isOpenTableView: PropTypes.bool.isRequired,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
 
 OrganizationsPanelViewWrapped.defaultProps = {
@@ -80,7 +92,7 @@ OrganizationsPanelViewWrapped.defaultProps = {
 
 export const OrganizationsPanelView = withSortingURL({
   defaultDirection: SORTING_ASC,
-  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultFields: [ORGANIZATIONS_DEFAULT_SORT_COLUMN],
   sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
 })(

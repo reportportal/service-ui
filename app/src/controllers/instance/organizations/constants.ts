@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,3 +33,13 @@ export const DEFAULT_PAGINATION = {
   [PAGE_KEY]: 1,
   [SIZE_KEY]: DEFAULT_LIMITATION,
 };
+
+export enum SortingFields {
+  CREATED_AT = 'created_at',
+  NAME = 'name',
+  USERS = 'users',
+  PROJECTS = 'projects',
+  LAST_LAUNCH_DATE = 'last_launch_occurred',
+}
+
+export const ORGANIZATIONS_DEFAULT_SORT_COLUMN = SortingFields.NAME;
