@@ -18,10 +18,13 @@ import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Pagination } from '@reportportal/ui-kit';
-import { TestCaseList } from 'components/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'components/testCaseList/mockData';
-import { DEFAULT_CURRENT_PAGE, DEFAULT_ITEMS_PER_PAGE } from 'components/testCaseList/constants';
-import { TestCase } from 'components/testCaseList/types';
+import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
+import {
+  DEFAULT_CURRENT_PAGE,
+  DEFAULT_ITEMS_PER_PAGE,
+} from 'pages/inside/testCaseLibraryPage/testCaseList/constants';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
 import { messages } from '../messages';
 import styles from './allTestCasesPage.scss';
 
