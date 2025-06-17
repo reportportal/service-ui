@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.name-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 0;
+}
 
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+.name-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.test-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rp-ui-base-almost-black);
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tags-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

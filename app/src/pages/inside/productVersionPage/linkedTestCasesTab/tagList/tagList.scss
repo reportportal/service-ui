@@ -32,6 +32,11 @@
     max-width: none;
   }
 
+  &--no-tags {
+    padding-left: 0;
+    height: auto;
+  }
+
   &__item {
     position: relative;
     border: 1px solid var(--rp-ui-base-e-200);
@@ -80,4 +85,11 @@
       color: var(--rp-ui-base-e-400);
     }
   }
+}
+
+.no-tags-message {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--rp-ui-base-e-400);
 }

@@ -50,5 +50,9 @@
         color: var(--rp-ui-base-error);
       }
     }
+
+    &--danger {
+      color: var(--rp-ui-base-error);
+    }
   }
 }

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+export type TestCasePriority = 'low' | 'normal' | 'high';
 
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+export interface TestCase {
+  id: string | number;
+  name: string;
+  priority: TestCasePriority;
+  tags: string[];
+  lastExecution: string;
+}
+
+export interface FilterOption {
+  label: string;
+  value: string;
+}

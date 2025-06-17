@@ -27,6 +27,8 @@ import { FOLDERS } from './mockData';
 import { Folder } from './folder';
 
 import styles from './expandedOptions.scss';
+import { AllTestCasesPage } from '../allTestCasesPage';
+import { useTestCases } from '../hooks/useTestCases';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +36,8 @@ export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState(null);
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
+
+  const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
 
   const setAllTestCases = () => {
     setActiveFolder(null);
@@ -95,10 +99,16 @@ export const ExpandedOptions = () => {
         </div>
       </div>
       <div className={cx('expanded-options__content')}>
-        <div className={cx('expanded-options__content-title')}>
-          {activeFolder === null ? formatMessage(commonMessages.allTestCases) : activeFolder}
-        </div>
-        {isEmptyFolder ? <FolderEmptyState /> : 'Here will be the table with test cases'}
+        {isEmptyFolder || !hasTestCases ? (
+          <FolderEmptyState />
+        ) : (
+          <AllTestCasesPage
+            testCases={filteredTestCases}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            loading={loading}
+          />
+        )}
       </div>
     </div>
   );

@@ -57,6 +57,10 @@
   &.transparent {
     background-color: transparent;
   }
+
+  &.hide-arrow {
+    padding-right: 0px;
+  }
 }
 .value {
   display: inline-block;
@@ -69,6 +73,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: $COLOR--topaz;
+
+  &.bold-value {
+    font-weight: 600;
+  }
 }
 .arrow {
   position: absolute;

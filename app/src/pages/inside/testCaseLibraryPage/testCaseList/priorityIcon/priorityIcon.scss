@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+.priority-icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
 
-import { defineMessages } from 'react-intl';
+  svg {
+    fill: var(--rp-ui-base-bg-000);
+  }
 
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+  &--low {
+    svg {
+      fill: var(--rp-ui-base-icon-priority-low);
+      transform: rotate(180deg);
+    }
+  }
+
+  &--normal {
+    svg {
+      fill: var(--rp-ui-base-icon-priority-medium);
+    }
+  }
+
+  &--high {
+    svg {
+      fill: var(--rp-ui-base-icon-priority-high);
+    }
+  }
+}

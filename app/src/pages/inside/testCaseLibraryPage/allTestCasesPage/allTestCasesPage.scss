@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.all-test-cases-page {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 12px 32px 0 32px;
+}
 
-export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
-});
+.pagination {
+  position: sticky;
+  bottom: 0;
+  background: $COLOR--bg-100;
+  padding: 5px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+}
