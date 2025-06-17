@@ -27,8 +27,12 @@ import { assignedOrganizationsSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { SortingFields } from 'controllers/instance/organizations/constants';
-import { canWorkWithOrganizationsSorting } from 'common/utils/permissions/permissions';
+import {
+  ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  SortingFields,
+} from 'controllers/instance/organizations/constants';
+import { canWorkWithOrganizationsSorting } from 'common/utils/permissions';
+import { SORTING_ASC } from 'controllers/sorting';
 import { IconsBlock } from '../iconsBlock';
 import styles from './organizationsTable.scss';
 import { messages } from '../../messages';
@@ -197,4 +201,7 @@ OrganizationsTable.propTypes = {
 
 OrganizationsTable.defaultProps = {
   organizationsList: [],
+  sortingColumn: ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  sortingDirection: SORTING_ASC,
+  onChangeSorting: () => {},
 };

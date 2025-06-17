@@ -44,5 +44,6 @@ export {
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
+  canWorkWithOrganizationsSorting,
 } from './permissions';
 export { getRoleTitle, getRoleBadgesData } from './getRoleTitle';

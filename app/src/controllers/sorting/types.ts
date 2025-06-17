@@ -20,7 +20,7 @@ export type SortingDirection = typeof SORTING_ASC | typeof SORTING_DESC;
 
 export interface WithSortingURLProps {
   defaultFields?: string[];
-  defaultDirection: string;
+  defaultDirection: SortingDirection;
   staticFields?: string[];
   namespace: unknown;
   namespaceSelector: unknown;

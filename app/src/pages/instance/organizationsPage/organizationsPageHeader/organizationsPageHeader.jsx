@@ -27,9 +27,11 @@ import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
-import { canWorkWithOrganizationFilter } from 'common/utils/permissions';
+import {
+  canWorkWithOrganizationFilter,
+  canWorkWithOrganizationsSorting,
+} from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
-import { canWorkWithOrganizationsSorting } from 'common/utils/permissions/permissions';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
