@@ -44,7 +44,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
   onChange,
 }) => {
   const [isOpened, setIsOpened] = useState(false);
-  const displayedValue = options.find((option) => option.value === value)?.label || 'Sort by';
+  const displayedValue = options.find((option) => option.value === value)?.label ?? 'Sort by';
   const defaultHighLightedIndex = options.findIndex((option) => option.value === value);
   const [highlightedIndex, setHighlightedIndex] = useState(
     defaultHighLightedIndex > -1 ? defaultHighLightedIndex : 0,
@@ -131,8 +131,8 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
       isOpened={isOpened}
       setIsOpened={setIsOpened}
     >
-      <div
-        role="button"
+      <button
+        type="button"
         className={cx('value', { open: isOpened })}
         tabIndex={0}
         onKeyDown={() => setKeyboardControl(true)}
@@ -142,7 +142,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         <div className={cx('arrow')}>
           <DropdownIcon />
         </div>
-      </div>
+      </button>
     </Popover>
   );
 };

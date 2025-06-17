@@ -18,7 +18,7 @@ import { SORTING_ASC, SORTING_DESC } from './constants';
 
 export type SortingDirection = typeof SORTING_ASC | typeof SORTING_DESC;
 
-export interface withSortingURLProps {
+export interface WithSortingURLProps {
   defaultFields?: string[];
   defaultDirection: string;
   staticFields?: string[];

@@ -23,7 +23,7 @@ import {
   SortingFields,
 } from 'controllers/instance/organizations/constants';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { SortingDirection, withSortingURLProps } from 'controllers/sorting/types';
+import { SortingDirection, WithSortingURLProps } from 'controllers/sorting/types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -65,7 +65,7 @@ const OrganizationsSortingWrapped: FC<OrganizationsSortingWrappedProps> = ({
   );
 };
 
-const sortingProps: withSortingURLProps = {
+const sortingProps: WithSortingURLProps = {
   defaultFields: [ORGANIZATIONS_DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
   sortingKey: SORTING_KEY,
