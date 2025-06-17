@@ -19,16 +19,11 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { messages as testCaseCardMessages } from '../messages';
 import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles);
-
-interface MenuItem {
-  label: string;
-  onClick?: () => void;
-  className?: string;
-}
 
 interface TestCaseExecutionCellProps {
   lastExecution: string;
@@ -38,7 +33,7 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems: MenuItem[] = [
+  const menuItems: PopoverItem[] = [
     {
       label: formatMessage(testCaseCardMessages.duplicate),
     },
@@ -50,7 +45,7 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
     },
     {
       label: formatMessage(testCaseCardMessages.deleteTestCase),
-      className: cx('delete-menu-item'),
+      variant: 'danger',
     },
   ];
 

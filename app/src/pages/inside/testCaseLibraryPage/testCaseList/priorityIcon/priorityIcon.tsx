@@ -31,10 +31,6 @@ const parsedIcon = Parser(PriorityInlineIcon);
 const getPriorityClass = (priority: TestCasePriority) =>
   cx('priority-icon', `priority-icon--${priority}`);
 
-export const PriorityIcon = ({ priority }: PriorityIconProps) => {
-  return (
-    <div className={cx('priority-icon-block', `priority-icon-block--${priority}`)}>
-      <div className={getPriorityClass(priority)}>{parsedIcon}</div>
-    </div>
-  );
-};
+export const PriorityIcon = ({ priority }: PriorityIconProps) => (
+  <div className={cx('priority-icon', getPriorityClass(priority))}>{parsedIcon}</div>
+);

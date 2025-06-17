@@ -23,13 +23,13 @@ import styles from './popoverControl.scss';
 
 const cx = classNames.bind(styles);
 
-interface PopoverItem {
+export interface PopoverItem {
   label: string;
   icon?: ReactElement;
   /** @deprecated Consider defining a variant instead */
   className?: string;
   onClick?: () => void;
-  variant?: 'destructive';
+  variant?: 'destructive' | 'danger';
 }
 
 interface PopoverControlProps {
