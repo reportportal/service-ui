@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCasePriority } from '../types';
-import styles from './priorityIcon.scss';
+
+import styles from './sectionWithHeader.scss';
 
 const cx = classNames.bind(styles);
 
-interface PriorityIconProps {
-  priority: TestCasePriority;
+interface SectionWithHeaderProps {
+  title: string;
+  headerControl?: ReactNode;
+  children: ReactNode;
+  className?: string;
 }
 
-const parsedIcon = Parser(PriorityInlineIcon);
-
-export const PriorityIcon = ({ priority }: PriorityIconProps) => (
-  <div className={cx('priority-icon', `priority-icon--${priority}`)}>{parsedIcon}</div>
-);
+export const SectionWithHeader = ({
+  title,
+  headerControl,
+  children,
+  className = '',
+}: SectionWithHeaderProps) => {
+  return (
+    <div className={cx('section', className)}>
+      <div className={cx('section__header')}>
+        <h3 className={cx('section__title')}>{title}</h3>
+        {headerControl}
+      </div>
+      {children}
+    </div>
+  );
+};

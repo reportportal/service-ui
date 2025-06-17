@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCasePriority } from '../types';
-import styles from './priorityIcon.scss';
-
-const cx = classNames.bind(styles);
-
-interface PriorityIconProps {
-  priority: TestCasePriority;
-}
-
-const parsedIcon = Parser(PriorityInlineIcon);
-
-export const PriorityIcon = ({ priority }: PriorityIconProps) => (
-  <div className={cx('priority-icon', `priority-icon--${priority}`)}>{parsedIcon}</div>
-);
+export { TestCaseDetailsHeader } from './testCaseDetailsHeader';

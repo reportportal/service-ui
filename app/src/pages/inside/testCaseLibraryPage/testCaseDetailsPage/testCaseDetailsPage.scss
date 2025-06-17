@@ -14,18 +14,34 @@
  * limitations under the License.
  */
 
-.header-container {
-  padding: 16px 32px 12px;
-  border-bottom: 1px solid var(--rp-ui-base-e-100);
-  background-color: var(--rp-ui-base-bg-000);
-  box-sizing: border-box;
-}
+.page {
+  display: grid;
+  height: 100%;
+  padding: 0;
+  grid-template:
+    "header header" auto
+    "sidebar main" 1fr
+    / 360px 1fr;
 
-.header-title {
-  display: flex;
-  min-height: 31px;
-}
+  &__header {
+    grid-area: header;
+  }
 
-.content {
-  padding: 32px;
+  &__sidebar {
+    display: flex;
+    grid-area: sidebar;
+    flex-direction: column;
+    width: 360px;
+    gap: 18px;
+    border-right: 1px solid var(--rp-ui-base-e-200);
+  }
+
+  &__main-content {
+    grid-area: main;
+    flex-grow: 1;
+    margin-left: 1px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
 }

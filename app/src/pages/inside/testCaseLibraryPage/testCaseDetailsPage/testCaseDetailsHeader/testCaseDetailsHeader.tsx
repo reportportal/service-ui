@@ -1,0 +1,134 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useIntl } from 'react-intl';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+import IconDuplicate from 'common/img/duplicate-inline.svg';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { PopoverControl } from 'pages/common/popoverControl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { useSelector } from 'react-redux';
+import { messages } from './messages';
+
+import styles from './testCaseDetailsHeader.scss';
+import { PriorityIcon } from '../../testCaseList/priorityIcon';
+
+const cx = classNames.bind(styles);
+
+interface TestCase {
+  id: string;
+  name: string;
+  created: string;
+}
+
+interface TestCaseDetailsHeaderProps {
+  className?: string;
+  testCase: TestCase;
+  onAddToLaunch: () => void;
+  onAddToTestPlan: () => void;
+  onMenuAction?: () => void;
+}
+
+export const TestCaseDetailsHeader = ({
+  className,
+  testCase,
+  onAddToLaunch,
+  onAddToTestPlan,
+  onMenuAction = () => {},
+}: TestCaseDetailsHeaderProps) => {
+  const { formatMessage } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+
+  const breadcrumbDescriptors = [
+    {
+      id: 'test-case-library',
+      title: formatMessage(messages.testCaseLibraryBreadcrumb),
+      link: {
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+        },
+      },
+    },
+    {
+      id: testCase.id,
+      title: testCase.name,
+      link: {},
+    },
+  ];
+
+  return (
+    <div className={cx('header', className)}>
+      <div className={cx('header__breadcrumb')}>
+        <BreadcrumbsTreeIcon />
+        <Breadcrumbs descriptors={breadcrumbDescriptors} />
+      </div>
+      <div className={cx('header__title')}>
+        <PriorityIcon priority="high" />
+        {testCase.name}
+      </div>
+      <div className={cx('header__info-wrapper')}>
+        <div className={cx('header__meta')}>
+          <div className={cx('header__meta-item')}>
+            <span className={cx('header__meta-label')}>{formatMessage(messages.created)}</span>
+            <span className={cx('header__meta-value')}>{testCase.created}</span>
+          </div>
+          <div className={cx('header__meta-item')}>
+            <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
+            <span className={cx('header__meta-value')}>{testCase.id}</span>
+            <CopyToClipboard text={testCase.id} className={cx('header__copy')}>
+              {Parser(IconDuplicate)}
+            </CopyToClipboard>
+          </div>
+        </div>
+        <div className={cx('header__actions')}>
+          <PopoverControl
+            items={[
+              {
+                label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+              },
+              {
+                label: formatMessage(messages.historyOfActions),
+              },
+              {
+                label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+                variant: 'destructive',
+              },
+            ]}
+            placement="bottom-end"
+          >
+            <Button variant="ghost" adjustWidthOn="content" onClick={onMenuAction}>
+              <MeatballMenuIcon />
+            </Button>
+          </PopoverControl>
+
+          <Button onClick={onAddToLaunch} variant="ghost" disabled>
+            {formatMessage(messages.addToLaunch)}
+          </Button>
+          <Button onClick={onAddToTestPlan} variant="ghost">
+            {formatMessage(messages.addToTestPlan)}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};

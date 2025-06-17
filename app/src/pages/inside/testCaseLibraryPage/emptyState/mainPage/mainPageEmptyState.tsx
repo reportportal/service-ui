@@ -17,7 +17,6 @@
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { redirect } from 'redux-first-router';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -35,17 +34,15 @@ export const MainPageEmptyState = () => {
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
   const handleCreateTestCase = () => {
-    dispatch(
-      redirect({
-        type: TEST_CASE_DETAILS_PAGE,
-        payload: {
-          // temporary - will be replaced with actual ID generation
-          testCaseSlug: 'new',
-          organizationSlug,
-          projectSlug,
-        },
-      }),
-    );
+    dispatch({
+      type: TEST_CASE_DETAILS_PAGE,
+      payload: {
+        // temporary - will be replaced with actual ID generation
+        testCaseSlug: 'new',
+        organizationSlug,
+        projectSlug,
+      },
+    });
   };
 
   const benefits = [
