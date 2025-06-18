@@ -49,11 +49,7 @@ export const passwordCreateUser = composeValidators([
   maxLength(256),
   regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
 ]);
-export const userName = composeValidators([
-  isNotEmpty,
-  regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),
-]);
-export const userCreateName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/i)]);
+export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/i)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
