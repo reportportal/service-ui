@@ -68,10 +68,7 @@ export const emailCreateUserValidator = () =>
   ]);
 
 export const createPatternCreateUserNameValidator = () =>
-  composeBoundValidators([
-    requiredField,
-    bindMessageToValidator(validate.userCreateName, 'nameCreateUserHint'),
-  ]);
+  composeBoundValidators([requiredField, bindMessageToValidator(validate.userName, 'nameHint')]);
 
 export const createPatternCreateUserPasswordValidator = () =>
   composeBoundValidators([
