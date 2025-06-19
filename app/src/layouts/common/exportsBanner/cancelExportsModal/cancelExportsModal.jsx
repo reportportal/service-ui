@@ -5,6 +5,8 @@ import classNames from 'classnames/bind';
 import { cancelExportsAction } from 'controllers/exports/actionCreators';
 import { ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useTracking } from 'react-tracking';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './cancelExportsModal.scss';
 
 const cx = classNames.bind(styles);
@@ -27,9 +29,11 @@ const messages = defineMessages({
 
 export const CancelExportsModal = () => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
-  const handleCancel = (closeModal) => {
+  const handleInterrupt = (closeModal) => {
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_INTERRUPT_EXPORT_MODAL_BTN);
     dispatch(cancelExportsAction());
     closeModal();
   };
@@ -37,7 +41,7 @@ export const CancelExportsModal = () => {
   const okButton = {
     text: formatMessage(messages.interrupt),
     danger: true,
-    onClick: handleCancel,
+    onClick: handleInterrupt,
   };
 
   const cancelButton = {

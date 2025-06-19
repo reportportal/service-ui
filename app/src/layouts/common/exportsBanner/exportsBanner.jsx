@@ -7,6 +7,8 @@ import { BubblesLoader } from '@reportportal/ui-kit';
 import { exportsSelector } from 'controllers/exports/selectors';
 import { showModalAction } from 'controllers/modal';
 import CrossIcon from 'common/img/circle-cross-icon-inline.svg';
+import { useTracking } from 'react-tracking';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { CancelExportsModal } from './cancelExportsModal';
 import styles from './exportsBanner.scss';
 
@@ -35,9 +37,11 @@ const messages = defineMessages({
 export const ExportsBanner = () => {
   const exports = useSelector(exportsSelector);
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
   const handleInterrupt = () => {
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_INTERRUPT_EXPORT_BANNER_BTN);
     dispatch(
       showModalAction({
         id: 'cancelExportsModal',
