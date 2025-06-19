@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import { Layout } from 'layouts/common/layout';
-import { AppHeader } from './appHeader';
-import { AppSidebar } from './appSidebar';
-import { AppBanner } from './appBanner';
+import { ADD_EXPORT, CANCEL_EXPORTS, REMOVE_EXPORT, RESET_EXPORTS } from './constants';
 
-export const AppLayout = ({ children, rawContent }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={AppBanner} rawContent={rawContent}>
-    {children}
-  </Layout>
-);
+export const addExportAction = ({ id, cancelRequest }) => ({
+  type: ADD_EXPORT,
+  payload: { id, cancelRequest },
+});
 
-AppLayout.propTypes = {
-  children: PropTypes.node,
-  rawContent: PropTypes.bool,
-};
-AppLayout.defaultProps = {
-  children: null,
-  rawContent: false,
-};
+export const removeExportAction = (id) => ({
+  type: REMOVE_EXPORT,
+  payload: id,
+});
+
+export const resetExportsAction = () => ({
+  type: RESET_EXPORTS,
+});
+
+export const cancelExportsAction = () => ({
+  type: CANCEL_EXPORTS,
+});

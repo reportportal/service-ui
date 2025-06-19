@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import { Layout } from 'layouts/common/layout';
-import { AppHeader } from './appHeader';
-import { AppSidebar } from './appSidebar';
-import { AppBanner } from './appBanner';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
+import { ExportsBanner } from 'layouts/common/exportsBanner';
+import { DemoBanner } from './demoBanner';
 
-export const AppLayout = ({ children, rawContent }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={AppBanner} rawContent={rawContent}>
-    {children}
-  </Layout>
-);
+export const AppBanner = () => {
+  const isDemoInstance = useSelector(isDemoInstanceSelector);
 
-AppLayout.propTypes = {
-  children: PropTypes.node,
-  rawContent: PropTypes.bool,
-};
-AppLayout.defaultProps = {
-  children: null,
-  rawContent: false,
+  return (
+    <>
+      {isDemoInstance && <DemoBanner />}
+      <ExportsBanner />
+    </>
+  );
 };
