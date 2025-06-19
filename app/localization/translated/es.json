@@ -616,6 +616,7 @@
   "DisplayFilter.display": "Mostrar en ejecuciones:",
   "DisplayFilter.showOnLaunchesSwitcherOff": "Desactivado",
   "DisplayFilter.showOnLaunchesSwitcherOn": "Activado",
+  "DropdownSorting.label": "Sort by",
   "DurationBlock.finishedDuration": "Duración: {durationTime}.",
   "DurationBlock.finishedTime": "Hora de finalización: {endTime}",
   "DurationBlock.inProgress": "En proceso",

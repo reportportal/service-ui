@@ -616,6 +616,7 @@
   "DisplayFilter.display": "显示在测试任务上：",
   "DisplayFilter.showOnLaunchesSwitcherOff": "关闭",
   "DisplayFilter.showOnLaunchesSwitcherOn": "启用",
+  "DropdownSorting.label": "Sort by",
   "DurationBlock.finishedDuration": "时长：{durationTime}",
   "DurationBlock.finishedTime": "结束时间：{endTime}",
   "DurationBlock.inProgress": "进行中",

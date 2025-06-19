@@ -22,7 +22,7 @@
   border: none;
   border-radius: 0;
   background: none;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   font-size: 13px;
   line-height: 20px;
   cursor: pointer;
@@ -34,21 +34,20 @@
   }
 
   &.selected {
-    color: $COLOR--topaz-2;
+    color: var(--rp-ui-base-topaz);
 
     .icon {
       visibility: visible;
 
       svg path {
-        fill: $COLOR--topaz-2;
+        fill: var(--rp-ui-base-topaz);
       }
     }
   }
 
   &:hover,
-  &.hover,
   &:focus-visible {
-    background-color: $COLOR--bg-200;
+    background-color: var(--rp-ui-base-bg-200);
 
     .icon {
       visibility: visible;
@@ -61,9 +60,8 @@
     }
   }
 
-  &.hover,
   &:focus-visible {
     outline: none;
-    border: 1px solid $COLOR--topaz-focused;
+    border: 1px solid var(--rp-ui-base-topaz-focused);
   }
 }

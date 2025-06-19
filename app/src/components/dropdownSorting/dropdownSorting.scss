@@ -30,20 +30,20 @@
   padding: 8px 0;
   font-size: 13px;
   line-height: 20px;
-  color: $COLOR--e-400;
+  color: var(--rp-ui-base-e-400);
   background: none;
   border: none;
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid $COLOR--topaz;
+    outline: 2px solid var(--rp-ui-base-dark-topaz-main);
   }
 
   &.open {
-    color: $COLOR--topaz-pressed;
+    color: var(--rp-ui-base-topaz-pressed);
 
     svg path {
-      fill: $COLOR--topaz-pressed;
+      fill: var(--rp-ui-base-topaz-pressed);
     }
 
     .arrow {

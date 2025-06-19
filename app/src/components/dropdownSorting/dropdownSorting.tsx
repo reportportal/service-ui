@@ -15,12 +15,15 @@
  */
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUpIcon, ArrowDownIcon, Popover, DropdownIcon } from '@reportportal/ui-kit';
+import { Popover, DropdownIcon } from '@reportportal/ui-kit';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { SortingDirection } from 'controllers/sorting/types';
 import classNames from 'classnames/bind';
 import { Keys } from 'common/constants/keyCodes';
+import { useIntl } from 'react-intl';
 import { DropdownSortingOption } from './dropdownSortingOption';
+import { DirectionIcon } from './directionIcon';
+import { messages } from './messages';
 import styles from './dropdownSorting.scss';
 
 const cx = classNames.bind(styles);
@@ -43,8 +46,11 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
   direction,
   onChange,
 }) => {
+  const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
-  const displayedValue = options.find((option) => option.value === value)?.label ?? 'Sort by';
+  const displayedValue =
+    options.find((option) => option.value === value)?.label ??
+    formatMessage(messages.dropdownSortingLabel);
   const defaultHighLightedIndex = options.findIndex((option) => option.value === value);
   const [highlightedIndex, setHighlightedIndex] = useState(
     defaultHighLightedIndex > -1 ? defaultHighLightedIndex : 0,
@@ -140,7 +146,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         className={cx('value', { open: isOpened })}
         onKeyDown={() => setKeyboardControl(true)}
       >
-        {direction === SORTING_ASC ? <ArrowUpIcon /> : <ArrowDownIcon />}
+        <DirectionIcon direction={direction} />
         {displayedValue}
         <div className={cx('arrow')}>
           <DropdownIcon />

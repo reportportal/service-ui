@@ -15,10 +15,9 @@
  */
 
 import { forwardRef } from 'react';
-import { ArrowDownIcon, ArrowUpIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
-import { SORTING_ASC } from 'controllers/sorting';
 import { SortingDirection } from 'controllers/sorting/types';
+import { DirectionIcon } from '../directionIcon';
 import styles from './dropdownSortingOption.scss';
 
 const cx = classNames.bind(styles);
@@ -28,43 +27,28 @@ interface DropdownSortingOptionProps {
   selected: boolean;
   value: string;
   direction: SortingDirection;
-  onChange?: (value: string) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
-  highlightHovered?: boolean;
+  onChange: (value: string) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
 }
 
 export const DropdownSortingOptionWrapped = (
-  {
-    label,
-    selected,
-    onChange,
-    value,
-    direction,
-    highlightHovered = false,
-    onKeyDown,
-  }: DropdownSortingOptionProps,
+  { label, selected, value, direction, onChange, onKeyDown }: DropdownSortingOptionProps,
   ref: React.Ref<HTMLButtonElement>,
 ) => {
-  let icon = <ArrowUpIcon />;
-  if (selected) {
-    icon = direction === SORTING_ASC ? <ArrowUpIcon /> : <ArrowDownIcon />;
-  }
+  const icon = selected ? <DirectionIcon direction={direction} /> : <DirectionIcon />;
 
   const onKeyDownHandler = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    onKeyDown?.(event);
+    onKeyDown(event);
   };
 
   const onClickHandler = () => {
-    onChange?.(value);
+    onChange(value);
   };
 
   return (
     <button
       type="button"
-      className={cx('dropdown-option', {
-        selected,
-        hover: highlightHovered,
-      })}
+      className={cx('dropdown-option', { selected })}
       onClick={onClickHandler}
       onKeyDown={onKeyDownHandler}
       ref={ref}

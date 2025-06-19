@@ -616,6 +616,7 @@
   "DisplayFilter.display": "Відобразити на запуски:",
   "DisplayFilter.showOnLaunchesSwitcherOff": "Вимкнено",
   "DisplayFilter.showOnLaunchesSwitcherOn": "Вкл",
+  "DropdownSorting.label": "Сортувати за",
   "DurationBlock.finishedDuration": "Длительность: {durationTime}.",
   "DurationBlock.finishedTime": "Время окончания: {endTime}",
   "DurationBlock.inProgress": "У процесі",
