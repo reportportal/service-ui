@@ -56,15 +56,16 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
     defaultHighLightedIndex > -1 ? defaultHighLightedIndex : 0,
   );
   const listRef = useRef<HTMLButtonElement[]>([]);
-  const [keyboardControl, setKeyboardControl] = useState(false);
+  const [isKeyboardMode, setIsKeyboardMode] = useState(false);
 
   useEffect(() => {
     if (isOpened) {
       listRef.current[highlightedIndex]?.focus();
     } else {
-      setKeyboardControl(false);
+      setHighlightedIndex(defaultHighLightedIndex > -1 ? defaultHighLightedIndex : 0);
+      setIsKeyboardMode(false);
     }
-  }, [highlightedIndex, isOpened]);
+  }, [defaultHighLightedIndex, highlightedIndex, isOpened]);
 
   const handleChange = useCallback(
     (selectedValue: string) => {
@@ -72,13 +73,11 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         current === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
 
       const newDirection = selectedValue === value ? toggleDirection(direction) : SORTING_ASC;
-      const selectedIndex = options.findIndex((option) => option.value === selectedValue);
 
       onChange({ value: selectedValue, direction: newDirection });
-      setHighlightedIndex(selectedIndex);
       setIsOpened(false);
     },
-    [value, direction, options, onChange],
+    [value, direction, onChange],
   );
 
   const setOptionRef = useCallback(
@@ -90,8 +89,8 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      if (!keyboardControl) {
-        setKeyboardControl(true);
+      if (!isKeyboardMode) {
+        setIsKeyboardMode(true);
         return;
       }
 
@@ -110,7 +109,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         setHighlightedIndex((prev) => (prev - 1 + options.length) % options.length);
       }
     },
-    [handleChange, highlightedIndex, keyboardControl, options],
+    [handleChange, highlightedIndex, isKeyboardMode, options],
   );
 
   const renderOptions = () => {
@@ -140,11 +139,12 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
       placement="bottom-end"
       isOpened={isOpened}
       setIsOpened={setIsOpened}
+      isCentered={false}
     >
       <button
         type="button"
         className={cx('value', { open: isOpened })}
-        onKeyDown={() => setKeyboardControl(true)}
+        onKeyDown={() => setIsKeyboardMode(true)}
       >
         <DirectionIcon direction={direction} />
         {displayedValue}
