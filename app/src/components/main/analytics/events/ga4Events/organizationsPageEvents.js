@@ -38,4 +38,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     condition,
     type,
   }),
+  organizationsSorting: (type) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'organizations_sorting',
+    type,
+  }),
 };
