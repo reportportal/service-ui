@@ -40,6 +40,8 @@ import {
 } from 'controllers/instance/allUsers';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
+import { canUpdateUserInstanceRole } from 'common/utils/permissions';
+import { UpdateUserInstanceRole } from './updateUserInstanceRole';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -61,20 +63,33 @@ const AllUsersListTableComponent = ({
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
 
-  const renderRowActions = () => (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-menu')}>
-          <p>Manage assignments</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
+  const renderRowActions = ({ id, email, fullName, instanceRole, isCurrentUser }) => {
+    const actions = [<button key="assignments">Manage assignments</button>];
+
+    if (canUpdateUserInstanceRole && !isCurrentUser) {
+      actions.push(
+        <UpdateUserInstanceRole
+          key="update-role"
+          id={id}
+          email={email}
+          fullName={fullName}
+          instanceRole={instanceRole}
+        />,
+      );
+    }
+
+    return (
+      <Popover
+        className={cx('popover')}
+        placement={'bottom-end'}
+        content={<div className={cx('row-action-menu')}>{actions.map((action) => action)}</div>}
+      >
+        <i className={cx('menu-icon')}>
+          <MeatballMenuIcon />
+        </i>
+      </Popover>
+    );
+  };
 
   const data = useMemo(
     () =>
@@ -102,6 +117,13 @@ const AllUsersListTableComponent = ({
           },
           accountType: getDisplayAccountType(user.account_type),
           organizations: organizationsCount,
+          metaData: {
+            id: user.id,
+            email: user.email,
+            fullName: user.full_name,
+            instanceRole: user.instance_role,
+            isCurrentUser,
+          },
         };
       }),
     [users, currentUser.id],

@@ -47,3 +47,4 @@ export const ADD_API_KEY_SUCCESS = 'addApiKeySuccess';
 export const DELETE_API_KEY = 'deleteApiKey';
 export const DELETE_API_KEY_SUCCESS = 'deleteApiKeySuccess';
 export const DELETE_USER_ACCOUNT = 'deleteUserAccount';
+export const UPDATE_USER_INFO = 'updateUserInfo';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,8 @@
  * limitations under the License.
  */
 
-.date {
-  font-family: inherit;
-  color: inherit;
-  min-height: auto;
-}
-
-.popover {
-  padding: 8px 0;
-}
-
-.row-action-menu {
-  display: flex;
-  flex-direction: column;
-
-  button {
-    width: fit-content;
-    padding: 8px 16px;
-    font-family: var(--rp-ui-base-font-family);
-    font-size: 13px;
-    line-height: 20px;
-    background: none;
-    color: var(--rp-ui-base-almost-black);
-    border: none;
-    outline: none;
-    cursor: pointer;
-  }
-}
-
-.menu-icon {
-  svg {
-    margin-bottom: 3px;
+.modal {
+  b {
+    font-weight: bolder;
   }
 }
