@@ -105,6 +105,15 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'import',
   },
+  CLICK_INTERRUPT_EXPORT_BANNER_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    icon_name: 'interrupt',
+  },
+  CLICK_INTERRUPT_EXPORT_MODAL_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'interrupt',
+    modal: 'interrupt_report_generation',
+  },
   ADD_NEW_WIDGET_BTN: {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_new_widget',

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import { administrateReducer } from 'controllers/administrate';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
+import { exportsReducer } from 'controllers/exports/reducer';
 
 export default {
   appInfo: appInfoReducer,
@@ -62,4 +63,5 @@ export default {
   administrate: administrateReducer,
   plugins: pluginsReducer,
   initialDataReady: initialDataReadyReducer,
+  exports: exportsReducer,
 };

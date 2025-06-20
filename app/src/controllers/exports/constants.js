@@ -14,23 +14,7 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import { Layout } from 'layouts/common/layout';
-import { AppHeader } from './appHeader';
-import { AppSidebar } from './appSidebar';
-import { AppBanner } from './appBanner';
-
-export const AppLayout = ({ children, rawContent }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={AppBanner} rawContent={rawContent}>
-    {children}
-  </Layout>
-);
-
-AppLayout.propTypes = {
-  children: PropTypes.node,
-  rawContent: PropTypes.bool,
-};
-AppLayout.defaultProps = {
-  children: null,
-  rawContent: false,
-};
+export const ADD_EXPORT = 'ADD_EXPORT';
+export const REMOVE_EXPORT = 'REMOVE_EXPORT';
+export const CANCEL_EXPORTS = 'CANCEL_EXPORTS';
+export const RESET_EXPORTS = 'RESET_EXPORTS';

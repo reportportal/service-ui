@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
+import { ExportsBanner } from 'layouts/common/exportsBanner';
 import { AdminHeader } from './adminHeader';
 import { AdminSidebar } from './adminSidebar';
 
 export const AdminLayout = ({ children }) => (
-  <Layout Header={AdminHeader} Sidebar={AdminSidebar}>
+  <Layout Header={AdminHeader} Sidebar={AdminSidebar} Banner={ExportsBanner}>
     {children}
   </Layout>
 );
