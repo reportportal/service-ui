@@ -18,7 +18,11 @@ import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effect
 import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  showErrorNotification,
+} from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import {
@@ -51,6 +55,7 @@ import {
   DELETE_API_KEY,
   FETCH_USER,
   DELETE_USER_ACCOUNT,
+  UPDATE_USER_INFO,
 } from './constants';
 import { userIdSelector, userInfoSelector } from './selectors';
 
@@ -330,6 +335,20 @@ function* deleteUserAccount({ payload = {} }) {
   }
 }
 
+function* updateUserInfo({ payload = {} }) {
+  const { login, data, onSuccess } = payload;
+
+  try {
+    yield call(fetch, URLS.userInfo(login), {
+      method: 'put',
+      data,
+    });
+    onSuccess?.();
+  } catch ({ message }) {
+    yield put(showErrorNotification({ message }));
+  }
+}
+
 function* watchAddApiKey() {
   yield takeEvery(ADD_API_KEY, addApiKey);
 }
@@ -362,6 +381,10 @@ function* watchUnassignFromProject() {
   yield takeLatest(UNASSIGN_FROM_PROJECT, unassignFromProject);
 }
 
+function* watchUpdateUserInfo() {
+  yield takeEvery(UPDATE_USER_INFO, updateUserInfo);
+}
+
 export function* userSagas() {
   yield all([
     watchAssignToProject(),
@@ -372,5 +395,6 @@ export function* userSagas() {
     watchFetchApiKeys(),
     watchDeleteApiKey(),
     watchDeleteUserAccount(),
+    watchUpdateUserInfo(),
   ]);
 }

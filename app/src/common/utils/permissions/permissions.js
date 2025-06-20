@@ -89,3 +89,4 @@ export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVE
 export const canWorkWithOrganizationsSorting = checkPermission(
   ACTIONS.WORK_WITH_ORGANIZATIONS_SORTING,
 );
+export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
