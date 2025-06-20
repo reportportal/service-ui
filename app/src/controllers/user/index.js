@@ -42,6 +42,7 @@ export {
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
   unassignFromProjectAction,
+  updateUserInfoAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
