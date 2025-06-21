@@ -16,37 +16,25 @@
 
 import { defineMessages } from 'react-intl';
 
-export const messages = defineMessages({
+export const commonMessages = defineMessages({
   testCaseLibraryHeader: {
     id: 'TestCaseLibraryPage.testCaseLibraryHeader',
     defaultMessage: 'Test Case Library',
   },
-  copySuffix: {
-    id: 'TestCaseLibraryPage.copySuffix',
-    defaultMessage: '(Copy)',
+  createTestCase: {
+    id: 'TestCaseLibraryPage.createTestCase',
+    defaultMessage: 'Create Test Case',
   },
-  items: {
-    id: 'TestCaseLibraryPage.items',
-    defaultMessage: 'items',
+  createFolder: {
+    id: 'TestCaseLibraryPage.createFolder',
+    defaultMessage: 'Create Folder',
   },
-  of: {
-    id: 'TestCaseLibraryPage.of',
-    defaultMessage: 'of',
+  allTestCases: {
+    id: 'TestCaseLibraryPage.allTestCases',
+    defaultMessage: 'All Test Cases',
   },
-  page: {
-    id: 'TestCaseLibraryPage.page',
-    defaultMessage: 'Page',
-  },
-  goToPage: {
-    id: 'TestCaseLibraryPage.goToPage',
-    defaultMessage: 'Go to page',
-  },
-  go: {
-    id: 'TestCaseLibraryPage.go',
-    defaultMessage: 'Go',
-  },
-  perPage: {
-    id: 'TestCaseLibraryPage.perPage',
-    defaultMessage: 'per page',
+  folders: {
+    id: 'TestCaseLibraryPage.folders',
+    defaultMessage: 'Folders',
   },
 });

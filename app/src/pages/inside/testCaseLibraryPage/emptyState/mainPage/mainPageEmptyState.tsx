@@ -25,6 +25,8 @@ import { TEST_CASE_DETAILS_PAGE } from 'controllers/pages/constants';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 
 import ImportIcon from 'common/img/import-thin-inline.svg';
+import { hideModalAction, showModalAction } from 'controllers/modal';
+import { CREATE_TEST_CASE_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 
@@ -33,7 +35,10 @@ export const MainPageEmptyState = () => {
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
-  const handleCreateTestCase = () => {
+  const handleCreateTestCaseModalSubmit = (formValues) => {
+    // eslint-disable-next-line no-console
+    console.log('Form submitted with values:', formValues);
+    dispatch(hideModalAction());
     dispatch({
       type: TEST_CASE_DETAILS_PAGE,
       payload: {
@@ -43,6 +48,18 @@ export const MainPageEmptyState = () => {
         projectSlug,
       },
     });
+  };
+
+  const openCreateTestCaseModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_TEST_CASE_MODAL_KEY,
+        data: {
+          onSubmit: handleCreateTestCaseModalSubmit,
+        },
+        component: null,
+      }),
+    );
   };
 
   const benefits = [
@@ -63,7 +80,7 @@ export const MainPageEmptyState = () => {
             name: formatMessage(commonMessages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
-            handleButton: handleCreateTestCase,
+            handleButton: openCreateTestCaseModal,
           },
           {
             name: formatMessage(messages.importTestCases),
