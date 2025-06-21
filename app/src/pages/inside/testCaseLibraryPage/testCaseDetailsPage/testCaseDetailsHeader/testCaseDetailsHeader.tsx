@@ -26,18 +26,13 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useSelector } from 'react-redux';
+import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TestCase } from '../../types';
 import { messages } from './messages';
 
 import styles from './testCaseDetailsHeader.scss';
-import { PriorityIcon } from '../../testCaseList/priorityIcon';
 
 const cx = classNames.bind(styles);
-
-interface TestCase {
-  id: string;
-  name: string;
-  created: string;
-}
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
@@ -83,7 +78,9 @@ export const TestCaseDetailsHeader = ({
         <Breadcrumbs descriptors={breadcrumbDescriptors} />
       </div>
       <div className={cx('header__title')}>
-        <PriorityIcon priority="high" />
+        <div className={cx('header__title-icon')}>
+          <PriorityIcon priority={testCase.priority} />
+        </div>
         {testCase.name}
       </div>
       <div className={cx('header__info-wrapper')}>

@@ -24,7 +24,7 @@ import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/testCaseLibraryPage/testCaseList/constants';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { messages } from '../messages';
 import styles from './allTestCasesPage.scss';
 
