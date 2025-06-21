@@ -27,22 +27,27 @@
   }
 
   &__title {
-    color: var(--rp-ui-base-almost-black);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 5px;
     font-size: 24px;
     font-family: $FONT-SEMIBOLD;
     line-height: 31px;
-    margin-bottom: 5px;
-    display: flex;
-    gap: 12px;
+    color: var(--rp-ui-base-almost-black);
   }
 
   &__title-icon {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
 
-    svg {
-      width: 20px;
-      height: 20px;
+    &:hover {
+      border-radius: 4px;
+      background-color: var(--rp-ui-base-bg-200);
+      cursor: pointer;
     }
   }
 

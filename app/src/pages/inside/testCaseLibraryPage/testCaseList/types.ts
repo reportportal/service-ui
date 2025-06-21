@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-export type TestCasePriority = 'low' | 'normal' | 'high';
-
-export interface TestCase {
-  id: string | number;
-  name: string;
-  priority: TestCasePriority;
-  tags: string[];
-  lastExecution: string;
-}
-
 export interface FilterOption {
   label: string;
   value: string;

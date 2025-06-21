@@ -15,9 +15,17 @@
  */
 
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PriorityInlineIcon from 'common/img/newIcons/priority-inline.svg';
-import { TestCasePriority } from '../types';
+import {
+  PriorityBlockerIcon,
+  PriorityCriticalIcon,
+  PriorityHighIcon,
+  PriorityMediumIcon,
+  PriorityLowIcon,
+  PriorityUnspecifiedIcon,
+} from '@reportportal/ui-kit';
+
+import { TestCasePriority } from './types';
+
 import styles from './priorityIcon.scss';
 
 const cx = classNames.bind(styles);
@@ -26,8 +34,15 @@ interface PriorityIconProps {
   priority: TestCasePriority;
 }
 
-const parsedIcon = Parser(PriorityInlineIcon);
+const iconMap = {
+  blocker: <PriorityBlockerIcon />,
+  critical: <PriorityCriticalIcon />,
+  high: <PriorityHighIcon />,
+  medium: <PriorityMediumIcon />,
+  low: <PriorityLowIcon />,
+  unspecified: <PriorityUnspecifiedIcon />,
+};
 
 export const PriorityIcon = ({ priority }: PriorityIconProps) => (
-  <div className={cx('priority-icon', `priority-icon--${priority}`)}>{parsedIcon}</div>
+  <div className={cx('priority-icon')}>{iconMap[priority]}</div>
 );

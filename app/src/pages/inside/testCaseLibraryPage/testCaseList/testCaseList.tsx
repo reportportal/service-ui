@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TestCase } from './types';
+import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { mockTestCases } from './mockData';

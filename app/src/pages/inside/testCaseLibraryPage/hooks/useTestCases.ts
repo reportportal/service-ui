@@ -15,7 +15,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { mockTestCases } from 'pages/inside/testCaseLibraryPage/testCaseList';
 
 export const useTestCases = () => {
