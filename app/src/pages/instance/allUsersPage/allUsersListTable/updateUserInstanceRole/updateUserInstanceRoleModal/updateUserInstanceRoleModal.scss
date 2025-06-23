@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-import { SHOW_MODAL, HIDE_MODAL, CONFIRM_MODAL } from './constants';
-
-export const showModalAction = ({ id, data = {}, component = null }) => ({
-  type: SHOW_MODAL,
-  payload: {
-    activeModal: { id, data, component },
-  },
-});
-export const hideModalAction = () => ({
-  type: HIDE_MODAL,
-});
-
-export const confirmModalAction = () => ({
-  type: CONFIRM_MODAL,
-});
+.modal {
+  b {
+    font-family: $FONT-ROBOTO-BOLD;
+  }
+}

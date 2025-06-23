@@ -20,17 +20,25 @@
   min-height: auto;
 }
 
+.popover {
+  padding: 8px 0;
+}
+
 .row-action-menu {
   display: flex;
   flex-direction: column;
 
-  p {
-    padding: 7px 16px;
-    align-items: center;
+  button {
+    width: fit-content;
+    padding: 8px 16px;
+    font-family: var(--rp-ui-base-font-family);
     font-size: 13px;
     line-height: 20px;
-    width: 120px;
-    color: $COLOR--almost-black;
+    background: none;
+    color: var(--rp-ui-base-almost-black);
+    border: none;
+    outline: none;
+    cursor: pointer;
   }
 }
 

@@ -21,7 +21,12 @@ import {
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
-import { FETCH_ALL_USERS, NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
+import {
+  FETCH_ALL_USERS,
+  NAMESPACE,
+  TOGGLE_USER_ROLE_FORM,
+  UPDATE_USER_INSTANCE_ROLE,
+} from './constants';
 import { validateDeleteUser } from './actionValidators';
 
 export const fetchAllUsersAction = () => ({
@@ -50,3 +55,11 @@ export const deleteItemsAction = defineGroupOperation(
     }),
   validateDeleteUser,
 );
+
+export const updateUserInstanceRoleAction = (userId, instanceRole) => ({
+  type: UPDATE_USER_INSTANCE_ROLE,
+  payload: {
+    userId,
+    instanceRole,
+  },
+});
