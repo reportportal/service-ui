@@ -336,10 +336,10 @@ function* deleteUserAccount({ payload = {} }) {
 }
 
 function* updateUserInfo({ payload = {} }) {
-  const { login, data, onSuccess } = payload;
+  const { email, data, onSuccess } = payload;
 
   try {
-    yield call(fetch, URLS.userInfo(login), {
+    yield call(fetch, URLS.userInfo(email), {
       method: 'put',
       data,
     });

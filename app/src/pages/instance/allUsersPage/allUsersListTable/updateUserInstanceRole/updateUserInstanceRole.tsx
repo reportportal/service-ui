@@ -56,8 +56,6 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
     dispatch(
       showSuccessNotification({
         message: formatMessage(messages.successMessage, { name: fullName }),
-        messageId: null,
-        values: null,
       }),
     );
 
@@ -67,28 +65,21 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const onConfirm = () => {
     const data = { role: newRole };
     dispatch(updateUserInfoAction(email, data, onSuccess));
-    trackEvent(
-      ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(newRole === ADMINISTRATOR, true),
-    );
+    trackEvent(ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(!isAdmin, true));
   };
 
   const openUpdateUserInstanceRoleModal = () => {
     dispatch(
       showModalAction({
         id: 'updateUserInstanceRoleModal',
-        data: {
-          title,
-          description,
-          onConfirm,
-        },
-        component: UpdateUserInstanceRoleModal,
+        component: <UpdateUserInstanceRoleModal data={{ title, description, onConfirm }} />,
       }),
     );
   };
 
   const handleClick = () => {
     openUpdateUserInstanceRoleModal();
-    trackEvent(ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(newRole === ADMINISTRATOR));
+    trackEvent(ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(!isAdmin));
   };
 
   return (

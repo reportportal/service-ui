@@ -34,7 +34,7 @@ export const ALL_USERS_PAGE_EVENTS = {
     type,
   }),
   clickProvideRevokeAdminRights: (provide = true, modal = false) => {
-    const name = provide ? 'provide_admin_rights' : 'revoke_admin_rights';
+    const name = `${provide ? 'provide' : 'revoke'}_admin_rights`;
     const additionalParamenters = modal ? { modal: name, element_name: name } : { icon_name: name };
 
     return {

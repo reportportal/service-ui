@@ -131,7 +131,7 @@ export const unassignFromProjectSuccessAction = (project) => ({
   payload: project,
 });
 
-export const updateUserInfoAction = (login, data, onSuccess) => ({
+export const updateUserInfoAction = (email, data, onSuccess) => ({
   type: UPDATE_USER_INFO,
-  payload: { login, data, onSuccess },
+  payload: { email, data, onSuccess },
 });

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
-import { withModal } from 'components/main/modal';
+import { FC, ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
@@ -29,12 +28,12 @@ const cx = classNames.bind(styles);
 interface UpdateUserInstanceRoleModalProps {
   data: {
     title: string;
-    description: string;
+    description: ReactNode;
     onConfirm: () => void;
   };
 }
 
-const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> = ({ data }) => {
+export const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -66,5 +65,3 @@ const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> = ({ dat
     </Modal>
   );
 };
-
-export default withModal('updateUserInstanceRoleModal')(UpdateUserInstanceRoleModal);

@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-import UpdateUserInstanceRoleModal from './updateUserInstanceRoleModal';
-
-export { UpdateUserInstanceRoleModal };
+export { UpdateUserInstanceRoleModal } from './updateUserInstanceRoleModal';
