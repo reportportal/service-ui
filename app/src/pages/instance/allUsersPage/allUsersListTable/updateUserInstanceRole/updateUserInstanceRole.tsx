@@ -83,7 +83,7 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   };
 
   return (
-    <button type="button" onClick={handleClick}>
+    <button type="button" onClick={handleClick} aria-label={title}>
       {title}
     </button>
   );
