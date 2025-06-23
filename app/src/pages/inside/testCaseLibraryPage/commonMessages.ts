@@ -37,4 +37,28 @@ export const commonMessages = defineMessages({
     id: 'TestCaseLibraryPage.folders',
     defaultMessage: 'Folders',
   },
+  name: {
+    id: 'TestCaseLibraryPage.name',
+    defaultMessage: 'Name',
+  },
+  enterFolderName: {
+    id: 'TestCaseLibraryPage.enterFolderName',
+    defaultMessage: 'Enter folder name',
+  },
+  createAsSubfolder: {
+    id: 'TestCaseLibraryPage.createAsSubfolder',
+    defaultMessage: 'Create as subfolder',
+  },
+  parentFolder: {
+    id: 'TestCaseLibraryPage.parentFolder',
+    defaultMessage: 'Parent folder',
+  },
+  searchFolderToSelect: {
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
+    defaultMessage: 'Search folder to select',
+  },
+  fieldIsRequired: {
+    id: 'TestCaseLibraryPage.fieldIsRequired',
+    defaultMessage: 'Field is required',
+  },
 });
