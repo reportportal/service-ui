@@ -184,7 +184,7 @@ export const OrganizationsTable = ({
         fixedColumns={fixedColumns}
         renderRowActions={renderRowActions}
         sortingColumn={getSortingColumn(sortingColumn)}
-        sortingDirection={sortingDirection.toLowerCase()}
+        sortingDirection={sortingDirection}
         sortableColumns={getSortableColumns()}
         onChangeSorting={handleChangeSorting}
       />

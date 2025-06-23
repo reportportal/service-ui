@@ -57,7 +57,7 @@ export const MembersListTable = ({
         renderRowActions={renderRowActions}
         className={cx('members-list-table')}
         sortingColumn={primaryColumn}
-        sortingDirection={sortingDirection.toLowerCase()}
+        sortingDirection={sortingDirection}
         onChangeSorting={onTableSorting}
         sortableColumns={primaryColumn.key}
       />
