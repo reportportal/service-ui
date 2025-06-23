@@ -39,10 +39,8 @@ export const DateRangeFormField = ({ input }) => {
 };
 
 DateRangeFormField.propTypes = {
-  input: PropTypes.objectOf(
-    PropTypes.shape({
-      value: PropTypes.object,
-      onChange: PropTypes.func,
-    }),
-  ).isRequired,
+  input: PropTypes.shape({
+    value: PropTypes.object,
+    onChange: PropTypes.func,
+  }).isRequired,
 };
