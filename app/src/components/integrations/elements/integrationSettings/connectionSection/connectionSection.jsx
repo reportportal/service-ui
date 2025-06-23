@@ -158,7 +158,12 @@ export class ConnectionSection extends Component {
       projectIntegrations,
       pluginName,
       isEditable,
-      data: { name, creator, creationDate, details },
+      data: {
+        name,
+        creator,
+        creationDate,
+        integrationType: { details },
+      },
     } = this.props;
 
     const availableProjectIntegrations = projectIntegrations[pluginName] || [];

@@ -148,7 +148,7 @@ export class ProjectSelector extends Component {
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
                   {Object.keys(projects)
-                    .sort()
+                    .sort((a, b) => a.localeCompare(b))
                     .map((project) => {
                       const { projectSlug, organizationSlug } = projects[project];
 

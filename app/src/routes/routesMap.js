@@ -58,6 +58,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
   USER_PROFILE_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
@@ -66,7 +67,13 @@ import {
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
 } from 'controllers/pages';
-import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
+import {
+  GENERAL,
+  AUTHORIZATION_CONFIGURATION,
+  ANALYTICS,
+  LINKS_AND_BRANDING,
+  FEATURES,
+} from 'common/constants/settingsTabs';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -99,6 +106,7 @@ import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizat
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
+  prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -161,7 +169,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/plugins',
     () => ({
@@ -202,8 +210,22 @@ const routesMap = {
     },
   },
 
-  [ORGANIZATION_SETTINGS_PAGE]: {
-    path: '/organizations/:organizationSlug/settings',
+  [ORGANIZATION_SETTINGS_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/settings',
+    (payload) => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
+  ),
+
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/settings/:settingsTab`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
   },
 
   [PROJECT_PAGE]: {
@@ -373,11 +395,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
-    } else if (
-      hashOrganizationSlug &&
-      !hashProjectSlug &&
-      (isAssignedToTargetOrganization || assignmentNotRequired)
-    ) {
+    } else if (!hashProjectSlug && (isAssignedToTargetOrganization || assignmentNotRequired)) {
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
 
       organizationSlug = hashOrganizationSlug;

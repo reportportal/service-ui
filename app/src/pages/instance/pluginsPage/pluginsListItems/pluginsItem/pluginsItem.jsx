@@ -132,7 +132,7 @@ export class PluginsItem extends Component {
           />
           <div className={cx('plugins-info')}>
             <span className={cx('plugins-name')}>{displayName}</span>
-            <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
+            <span className={cx('plugins-author')}>{`by ${uploadedBy || 'ReportPortal'}`}</span>
             <span
               className={cx('plugins-version')}
               title={
@@ -145,9 +145,9 @@ export class PluginsItem extends Component {
         </div>
         <div className={cx('plugins-additional-block')}>
           {toggleable && (
-            <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
+            <button className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
               <InputSwitcher value={this.state.isEnabled} onChange={this.onChangeHandler} />
-            </div>
+            </button>
           )}
         </div>
       </div>

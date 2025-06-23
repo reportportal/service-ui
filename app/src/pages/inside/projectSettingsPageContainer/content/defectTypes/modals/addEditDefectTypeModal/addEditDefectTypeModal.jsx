@@ -21,12 +21,11 @@ import { useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal } from '@reportportal/ui-kit';
+import { Dropdown, Modal } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
@@ -198,7 +197,7 @@ const AddEditDefectTypeModal = ({
             }}
             dataAutomationId={GROUP_FIELD_KEY + FIELD}
           >
-            <Dropdown options={defectGroupOptions} defaultWidth={false} />
+            <Dropdown options={defectGroupOptions} />
           </FieldElement>
         )}
         <div className={cx('input')}>

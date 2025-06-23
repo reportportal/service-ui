@@ -84,7 +84,7 @@ export class StatusPageContent extends Component {
         widgetsData,
         loading: false,
       });
-    } catch (e) {
+    } catch {
       this.setState({
         widgetsData: {},
         loading: false,

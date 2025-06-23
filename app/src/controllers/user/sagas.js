@@ -186,7 +186,7 @@ function* fetchUserWorker() {
       );
 
       activeOrganization = activeOrganizationResponse?.items?.[0];
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {} // eslint-disable-line no-empty
 
     if (!isAssignedToTargetProject && assignmentNotRequired) {
       try {
@@ -195,11 +195,11 @@ function* fetchUserWorker() {
           URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
         );
         projectKey = currentProject?.items?.[0]?.key;
-      } catch (e) {} // eslint-disable-line no-empty
+      } catch {} // eslint-disable-line no-empty
     }
 
     const activeProject =
-      isAssignedToTargetProject || projectKey
+      targetActiveProject && (isAssignedToTargetProject || projectKey)
         ? targetActiveProject
         : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
 

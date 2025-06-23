@@ -19,8 +19,6 @@ export {
   fetchAppInfoAction,
   updateServerSettingsAction,
   updateServerSettingsSuccessAction,
-  updateExpirationSessionAction,
-  updateServerFooterLinksAction,
 } from './actionCreators';
 export {
   appInfoSelector,
@@ -38,6 +36,7 @@ export {
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,
   serverFooterLinksSelector,
+  importantLaunchesEnabledSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
 export {
@@ -45,4 +44,6 @@ export {
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_FOOTER_LINKS_KEY,
   UPDATE_API_EXTENSIONS_RESULT,
+  SSO_USERS_ONLY_KEY,
+  IMPORTANT_LAUNCHES_FEATURE_KEY,
 } from './constants';

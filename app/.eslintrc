@@ -11,6 +11,9 @@
     "import/resolver": {
       "webpack": {
         "config": "webpack.config.js"
+      },
+      "typescript": {
+        "alwaysTryTypes": true
       }
     }
   },
@@ -61,11 +64,62 @@
     "no-invalid-this": 0,
     "prefer-object-spread": 0,
     "react-hooks/rules-of-hooks": 2,
-    "react-hooks/exhaustive-deps": 1
+    "react-hooks/exhaustive-deps": 1,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   },
   "parserOptions": {
+    "requireConfigFile": true,
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-env"]
+    },
     "ecmaFeatures": {
+      "jsx": true,
       "legacyDecorators": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "extends": [
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "prettier/react"
+      ],
+      "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-empty-interface": "off",
+        "react/prop-types": "off",
+        "react/require-default-props": "off",
+        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+        "import/prefer-default-export": "off",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error",
+        "import/extensions": [
+          "error",
+          "ignorePackages",
+          {
+            "js": "never",
+            "jsx": "never",
+            "ts": "never",
+            "tsx": "never"
+          }
+        ]
+      }
+    }
+  ]
 }

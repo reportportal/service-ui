@@ -76,7 +76,6 @@ export const AllUsersFilter = ({
           props: {
             options: permissions,
             value: [],
-            placeholder: formatMessage(messages.permissionsPlaceholder),
           },
         },
       ],
@@ -109,7 +108,6 @@ export const AllUsersFilter = ({
           props: {
             value: '',
             options: lastLogin,
-            placeholder: formatMessage(messages.lastLoginPlaceholder),
             formatDisplayedValue,
             notScrollable: true,
             footer: <Field name={LAST_LOGIN_FILTER_NAME} component={DateRangeFormField} />,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
@@ -378,7 +378,6 @@ export const StepGrid = ({
 
 StepGrid.propTypes = {
   data: PropTypes.array,
-  intl: PropTypes.object.isRequired,
   selectedItems: PropTypes.array,
   onItemSelect: PropTypes.func,
   onItemsSelect: PropTypes.func,

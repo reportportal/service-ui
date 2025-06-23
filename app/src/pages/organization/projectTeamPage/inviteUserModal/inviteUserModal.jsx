@@ -46,7 +46,7 @@ const INVITE_USER_FORM = 'inviteUserForm';
 const messages = defineMessages({
   headerInviteUserModal: {
     id: 'InviteUserModal.headerInviteUserModal',
-    defaultMessage: 'Invite user to',
+    defaultMessage: 'Invite User to',
   },
   canEditProject: {
     id: 'InviteUserModal.canEditProject',
@@ -54,12 +54,11 @@ const messages = defineMessages({
   },
   headerAssignUserModal: {
     id: 'InviteUserModal.headerAssignUserModal',
-    defaultMessage: 'Assign user',
+    defaultMessage: 'Assign User to',
   },
   description: {
     id: 'InviteUserModal.description',
-    defaultMessage:
-      'Please note, users new to the organization will join it with “Member” role, whereas existing users will maintain their current organizational role.',
+    defaultMessage: `Please note, that new users joining this project's organization will be assigned the ‘Member’ role, while existing users will retain their current organizational roles and permissions.`,
   },
   email: {
     id: 'InviteUserModal.email',
@@ -67,7 +66,8 @@ const messages = defineMessages({
   },
   descriptionAssign: {
     id: 'InviteUserModal.descriptionAssign',
-    defaultMessage: 'Assign user to the project',
+    defaultMessage:
+      'Please be aware that only users who are present on the instance can be assigned to the project.',
   },
   inputPlaceholder: {
     id: 'InviteUserModal.inputPlaceholder',
@@ -173,8 +173,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
   };
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.INVITE),
-    text: formatMessage(ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE),
+    children: formatMessage(ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE),
     onClick: () => {
       handleSubmit(inviteUserAndCloseModal)();
     },
@@ -193,8 +192,8 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
     <Modal
       title={
         ssoUsersOnly
-          ? formatMessage(messages.headerAssignUserModal)
-          : `${formatMessage(messages.headerInviteUserModal)} "${projectName}"`
+          ? `${formatMessage(messages.headerAssignUserModal)} ${projectName}`
+          : `${formatMessage(messages.headerInviteUserModal)} ${projectName}`
       }
       okButton={okButton}
       cancelButton={cancelButton}
@@ -206,13 +205,14 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
         {formatMessage(ssoUsersOnly ? messages.descriptionAssign : messages.description)}
       </p>
       <form className={cx('invite-form')}>
-        <ModalField label={formatMessage(messages.email)} className={cx('label')} noMinHeight>
+        <ModalField noMinHeight>
           <FieldProvider name="email">
             <FieldErrorHint provideHint={false}>
               <FieldText
                 maxLength={'128'}
-                placeholder={formatMessage(messages.email)}
+                placeholder={formatMessage(messages.inputPlaceholder)}
                 defaultWidth={false}
+                label={formatMessage(messages.email)}
                 type="email"
               />
             </FieldErrorHint>
@@ -253,10 +253,8 @@ InviteUser.propTypes = {
 export const InviteUserModal = withModal('inviteUserModal')(
   reduxForm({
     form: INVITE_USER_FORM,
-    validate: ({ user, project, email }) => ({
-      user: commonValidators.requiredField(user),
-      project: commonValidators.requiredField(project),
-      email: commonValidators.email(email),
+    validate: ({ email }) => ({
+      email: commonValidators.emailCreateUserValidator()(email?.trim()),
     }),
     enableReinitialize: true,
   })(InviteUser),

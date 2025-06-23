@@ -24,7 +24,6 @@ import {
   activeDashboardIdSelector,
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
-  PROJECT_DASHBOARD_ITEM_PAGE,
   userRolesSelector,
 } from 'controllers/pages';
 import {
@@ -113,17 +112,6 @@ export class DashboardPageHeader extends Component {
         </NavLink>
       ),
       value: DASHBOARD_PAGE_ITEM_VALUE,
-    };
-  };
-
-  createDashboardLink = (dashboardId) => {
-    const {
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-
-    return {
-      type: PROJECT_DASHBOARD_ITEM_PAGE,
-      payload: { projectSlug, dashboardId, organizationSlug },
     };
   };
 

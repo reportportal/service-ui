@@ -26,3 +26,6 @@ export const activeOrganizationLoadingSelector = (state) =>
 export const activeOrganizationNameSelector = (state) => activeOrganizationSelector(state)?.name;
 
 export const activeOrganizationIdSelector = (state) => activeOrganizationSelector(state)?.id;
+
+export const activeOrganizationSettingsSelector = (state) =>
+  organizationSelector(state).settings || {};

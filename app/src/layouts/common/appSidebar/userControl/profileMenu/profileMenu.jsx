@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import { Button } from '@reportportal/ui-kit';
 import { logoutAction } from 'controllers/auth';
 import { NavLink } from 'components/main/navLink';
 import LogoutIcon from './img/log-out-inline.svg';
@@ -48,10 +49,10 @@ export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage 
         {Parser(MyProfileIcon)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
       </NavLink>
-      <div className={cx('menu-item')} onClick={onClickLogout}>
+      <Button className={cx('menu-item')} onClick={onClickLogout}>
         {Parser(LogoutIcon)}
         <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
-      </div>
+      </Button>
     </>
   );
 };

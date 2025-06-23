@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { Header } from 'pages/inside/common/header';
 import { PageHeader, PageLayout, PageSection } from 'layouts/pageLayout';
 import { ExtensionLoader } from 'components/extensionLoader';
 import styles from './adminUiExtensionPage.scss';

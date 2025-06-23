@@ -33,13 +33,15 @@ export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
-export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
+export const email = composeValidators([
+  regex(/^(?![.])[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
+]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, email]);
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
 export const password = composeValidators([
   isNotEmpty,
-  regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,256}$/),
+  regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z\d\s])([^\s]){8,256}$/),
 ]);
 export const passwordCreateUser = composeValidators([
   isNotEmpty,
@@ -47,11 +49,7 @@ export const passwordCreateUser = composeValidators([
   maxLength(256),
   regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
 ]);
-export const userName = composeValidators([
-  isNotEmpty,
-  regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),
-]);
-export const userCreateName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/i)]);
+export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);

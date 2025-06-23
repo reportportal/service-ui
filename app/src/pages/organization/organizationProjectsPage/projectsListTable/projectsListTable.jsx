@@ -140,7 +140,7 @@ export const ProjectsListTable = ({
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
-        sortingDirection={sortingDirection.toLowerCase()}
+        sortingDirection={sortingDirection}
         sortingColumn={primaryColumn}
         sortableColumns={primaryColumn.key}
         renderRowActions={(metaData) => <ProjectActionMenu details={metaData} />}

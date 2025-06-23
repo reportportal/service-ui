@@ -27,13 +27,24 @@ import { assignedOrganizationsSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import {
+  ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  SortingFields,
+} from 'controllers/instance/organizations/constants';
+import { canWorkWithOrganizationsSorting } from 'common/utils/permissions';
+import { SORTING_ASC } from 'controllers/sorting';
 import { IconsBlock } from '../iconsBlock';
 import styles from './organizationsTable.scss';
 import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationsTable = ({ organizationsList }) => {
+export const OrganizationsTable = ({
+  organizationsList,
+  sortingColumn,
+  sortingDirection,
+  onChangeSorting,
+}) => {
   const { formatMessage } = useIntl();
   const { userRole } = useSelector(userRolesSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
@@ -47,7 +58,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
 
         const mainColumns = {
           id,
-          name: {
+          [SortingFields.NAME]: {
             content: name,
             component: (
               <div className={cx('name-column')}>
@@ -69,20 +80,20 @@ export const OrganizationsTable = ({ organizationsList }) => {
               </div>
             ),
           },
-          projectsCount: '',
-          usersCount: '',
+          [SortingFields.PROJECTS]: '',
+          [SortingFields.USERS]: '',
           launchesCount: '',
-          lastLaunch: '',
+          [SortingFields.LAST_LAUNCH_DATE]: '',
         };
 
         return {
           ...mainColumns,
           ...(hasPermission
             ? {
-                projectsCount: relationships.projects.meta.count,
-                usersCount: relationships.users.meta.count,
+                [SortingFields.PROJECTS]: relationships.projects.meta.count,
+                [SortingFields.USERS]: relationships.users.meta.count,
                 launchesCount: relationships.launches.meta.count,
-                lastLaunch: {
+                [SortingFields.LAST_LAUNCH_DATE]: {
                   content: lastLaunch,
                   component: lastLaunch ? (
                     <AbsRelTime startTime={lastLaunch} customClass={cx('date')} />
@@ -94,23 +105,23 @@ export const OrganizationsTable = ({ organizationsList }) => {
             : {}),
         };
       }),
-    [organizationsList, assignedOrganizations],
+    [organizationsList, userRole, assignedOrganizations],
   );
 
   const primaryColumn = {
-    key: 'name',
+    key: SortingFields.NAME,
     header: formatMessage(messages.organizationName),
   };
 
   const fixedColumns = [
     {
-      key: 'projectsCount',
+      key: SortingFields.PROJECTS,
       header: formatMessage(messages.projects),
       width: 100,
       align: 'right',
     },
     {
-      key: 'usersCount',
+      key: SortingFields.USERS,
       header: formatMessage(messages.users),
       width: 100,
       align: 'right',
@@ -122,7 +133,7 @@ export const OrganizationsTable = ({ organizationsList }) => {
       align: 'right',
     },
     {
-      key: 'lastLaunch',
+      key: SortingFields.LAST_LAUNCH_DATE,
       header: formatMessage(messages.lastLaunchDate),
       width: 156,
       align: 'left',
@@ -145,6 +156,26 @@ export const OrganizationsTable = ({ organizationsList }) => {
     </Popover>
   );
 
+  const getSortingColumn = (key) => {
+    if (key === SortingFields.NAME) {
+      return primaryColumn;
+    }
+
+    return fixedColumns.find((column) => column.key === key) || null;
+  };
+
+  const getSortableColumns = () => {
+    if (canWorkWithOrganizationsSorting({ userRole })) {
+      return Object.values(SortingFields);
+    }
+
+    return [];
+  };
+
+  const handleChangeSorting = ({ key }) => {
+    onChangeSorting(key);
+  };
+
   return (
     <div className={cx('table-container')}>
       <Table
@@ -152,7 +183,10 @@ export const OrganizationsTable = ({ organizationsList }) => {
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
         renderRowActions={renderRowActions}
-        sortableColumns={[]}
+        sortingColumn={getSortingColumn(sortingColumn)}
+        sortingDirection={sortingDirection}
+        sortableColumns={getSortableColumns()}
+        onChangeSorting={handleChangeSorting}
       />
     </div>
   );
@@ -160,8 +194,14 @@ export const OrganizationsTable = ({ organizationsList }) => {
 
 OrganizationsTable.propTypes = {
   organizationsList: PropTypes.array,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
 
 OrganizationsTable.defaultProps = {
   organizationsList: [],
+  sortingColumn: ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  sortingDirection: SORTING_ASC,
+  onChangeSorting: () => {},
 };

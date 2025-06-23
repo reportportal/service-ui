@@ -76,7 +76,7 @@ export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_W
 export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
 export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
 export const canReportLaunches = checkPermission(ACTIONS.REPORT_LAUNCHES);
-export const canSeeOrganizationSettings = checkPermission(ACTIONS.SEE_ORGANIZATION_SETTINGS);
+export const canUpdateOrganizationSettings = checkPermission(ACTIONS.UPDATE_ORGANIZATION_SETTINGS);
 export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
 export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
 export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);
@@ -86,3 +86,6 @@ export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
 export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
 export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
 export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
+export const canWorkWithOrganizationsSorting = checkPermission(
+  ACTIONS.WORK_WITH_ORGANIZATIONS_SORTING,
+);

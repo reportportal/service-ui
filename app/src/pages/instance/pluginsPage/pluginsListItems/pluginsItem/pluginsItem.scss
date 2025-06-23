@@ -57,6 +57,11 @@
   width: 30px;
   height: 30px;
   margin-right: 15px;
+
+  svg {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 .plugins-info {
@@ -106,6 +111,7 @@
 }
 
 .plugins-switcher {
+  all: unset;
   height: 14px;
   width: 20px;
 

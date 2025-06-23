@@ -53,6 +53,8 @@
       }
 
       .analytics-list-toggler {
+        all: unset;
+        display: block;
         position: relative;
         font-family: $FONT-SEMIBOLD;
         font-size: 12px;

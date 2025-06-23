@@ -66,6 +66,7 @@ import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
+import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -105,6 +106,16 @@ export const pageRendering = {
   },
   ORGANIZATION_PROJECTS_PAGE: {
     component: OrganizationProjectsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_PAGE: {
+    component: OrganizationSettingsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_TAB_PAGE: {
+    component: OrganizationSettingsPage,
     layout: OrganizationLayout,
     rawContent: true,
   },

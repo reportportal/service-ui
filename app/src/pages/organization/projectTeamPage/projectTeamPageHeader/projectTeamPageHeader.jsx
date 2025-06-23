@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
+import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -66,9 +65,6 @@ export const ProjectTeamPageHeader = ({
                   placeholder={formatMessage(messages.searchPlaceholder)}
                   event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
                 />
-                <i className={cx('filters-icon')}>
-                  <FilterOutlineIcon />
-                </i>
               </div>
             </div>
             {hasPermission && (

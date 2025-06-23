@@ -178,7 +178,7 @@ function* fetchTestItems({ payload = {} }) {
     let parentItem;
     try {
       parentItem = yield select(createParentItemsSelector(offset));
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {} // eslint-disable-line no-empty
     launchId = parentItem ? parentItem.launchId : launchId;
   }
 

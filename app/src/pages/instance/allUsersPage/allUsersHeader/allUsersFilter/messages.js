@@ -21,10 +21,6 @@ export const messages = defineMessages({
     id: 'AllUsersFilter.permissions',
     defaultMessage: 'Permissions',
   },
-  permissionsPlaceholder: {
-    id: 'AllUsersFilter.permissionsPlaceholder',
-    defaultMessage: 'All',
-  },
   type: {
     id: 'AllUsersFilter.type',
     defaultMessage: 'Type',
@@ -36,10 +32,6 @@ export const messages = defineMessages({
   lastLogin: {
     id: 'AllUsersFilter.lastLogin',
     defaultMessage: 'Last login',
-  },
-  lastLoginPlaceholder: {
-    id: 'AllUsersFilter.lastLoginPlaceholder',
-    defaultMessage: 'Any',
   },
   email: {
     id: 'AllUsersFilter.email',

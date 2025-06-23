@@ -17,8 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import DefaultUserImage from 'common/img/default-user-avatar.png';
-import { Image } from 'components/main/image';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import styles from './userItem.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +39,11 @@ export const UserItem = injectIntl(
       })}
       {...restItemProps}
     >
-      <Image className={cx('user-avatar')} src={option.userAvatar} fallback={DefaultUserImage} />
+      <UserAvatar
+        className={cx('user-avatar')}
+        projectId={option.projectId}
+        userId={option.userId}
+      />
       <div className={cx('user-search-info')}>
         <p className={cx('user-search-name')}>{option.userName}</p>
         <p className={cx('user-search-login')}>{option.userLogin}</p>
