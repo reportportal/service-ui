@@ -20,7 +20,6 @@ import {
   autoAnalysisEnabledSelector,
   enabledPattersSelector,
   patternAnalysisEnabledSelector,
-  projectInfoIdSelector,
 } from 'controllers/project/selectors';
 import {
   ANALYTICS_INSTANCE_KEY,
@@ -89,7 +88,6 @@ export const baseEventParametersSelector = createSelector(
   idSelector,
   autoAnalysisEnabledSelector,
   patternAnalysisEnabledSelector,
-  projectInfoIdSelector,
   isAdminSelector,
   analyzerExtensionsSelector,
   enabledPattersSelector,
@@ -99,7 +97,6 @@ export const baseEventParametersSelector = createSelector(
     userId,
     isAutoAnalyzerEnabled,
     isPatternAnalyzerEnabled,
-    projectInfoId,
     isAdmin,
     analyzerExtensions,
     enabledPatterns,
@@ -110,7 +107,6 @@ export const baseEventParametersSelector = createSelector(
     isAutoAnalyzerEnabled,
     isPatternAnalyzerEnabled:
       !!enabledPatterns.length && String(isPatternAnalyzerEnabled) === 'true',
-    projectInfoId,
     isAdmin,
     isAnalyzerAvailable: !!analyzerExtensions.length,
   }),
