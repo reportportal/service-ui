@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
 import { Modal } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import styles from './updateUserInstanceRoleModal.scss';
@@ -33,6 +34,11 @@ interface UpdateUserInstanceRoleModalProps {
   };
 }
 
+interface ModalButtonProps extends ButtonProps {
+  text?: string;
+  'data-automation-id'?: string;
+}
+
 export const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -42,14 +48,16 @@ export const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> =
     dispatch(hideModalAction());
   };
 
-  const okButton = {
+  const okButton: ModalButtonProps = {
     text: data.title,
     children: data.title,
     onClick: onConfirm,
     'data-automation-id': 'submitButton',
   };
-  const cancelButton = {
+
+  const cancelButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    adjustWidthOn: 'min-width',
     'data-automation-id': 'cancelButton',
   };
 
