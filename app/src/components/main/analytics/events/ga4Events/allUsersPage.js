@@ -43,4 +43,9 @@ export const ALL_USERS_PAGE_EVENTS = {
       ...additionalParamenters,
     };
   },
+  SORTING: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    icon_name: 'users_sorting',
+  },
 };
