@@ -49,12 +49,17 @@
   height: 16px;
 
   &:hover {
-    background-color: var(--rp-ui-base-bg-200);
-    color: var(--rp-ui-base-e-400);
+    background-color: var(--rp-ui-base-e-100);
   }
 
+  &:active,
   &:focus {
-    outline: 2px solid var(--rp-ui-base-topaz);
-    outline-offset: 2px;
+    svg {
+      color: var(--rp-ui-base-topaz-pressed);
+
+      path {
+        fill: var(--rp-ui-base-topaz-pressed);
+      }
+    }
   }
 }

@@ -26,11 +26,12 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const TagList = ({ tags }) => {
+export const TagList = ({ tags, fullWidthMode = false }) => {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hiddenIndices, setHiddenIndices] = useState(new Set());
 
   const getOffset = () => {
     const parentElement = listRef.current;
@@ -46,21 +47,56 @@ export const TagList = ({ tags }) => {
     setCount(overflowedElements);
   };
 
+  const getFullWidthOffset = () => {
+    const parentElement = listRef.current;
+    const hiddenSet = new Set();
+
+    if (!parentElement) return;
+
+    const tagElements = [...parentElement.children].filter(
+      (child) => !child.classList.contains('tag-list__item--button'),
+    );
+
+    if (tagElements.length === 0) return;
+
+    const firstElementTop = tagElements[0].offsetTop;
+    const containerRect = parentElement.getBoundingClientRect();
+    const containerRight = containerRect.right;
+
+    let overflowedCount = 0;
+
+    tagElements.forEach((childElement, index) => {
+      const elementRect = childElement.getBoundingClientRect();
+      const elementTop = childElement.offsetTop;
+
+      // Check if element is on a different line OR extends beyond container width
+      const isOnDifferentLine = elementTop !== firstElementTop;
+      const extendsRightBoundary = elementRect.right > containerRight;
+
+      if (isOnDifferentLine || extendsRightBoundary) {
+        hiddenSet.add(index);
+        overflowedCount += 1;
+      }
+    });
+
+    setHiddenIndices(hiddenSet);
+    setCount(overflowedCount);
+  };
+
   useEffect(() => {
     const parentElement = listRef.current;
 
     if (!parentElement) {
-      console.error(`Element with ID not found.`);
       return;
     }
     // It is needed because script executes earlier than font-family applies to the text
     const timeoutId = setTimeout(() => {
-      getOffset();
+      fullWidthMode ? getFullWidthOffset() : getOffset();
     }, 500);
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
-  }, [listRef]);
+  }, [listRef, fullWidthMode]);
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
@@ -73,7 +109,9 @@ export const TagList = ({ tags }) => {
   if (isEmpty(tags)) {
     return (
       <div className={cx('tag-list-wrapper')}>
-        <div className={cx('tag-list', 'tag-list--no-tags')}>
+        <div
+          className={cx('tag-list', 'tag-list--no-tags', { 'tag-list--full-width': fullWidthMode })}
+        >
           <div className={cx('no-tags-message')}>{formatMessage(messages.noTagsAdded)}</div>
         </div>
       </div>
@@ -85,12 +123,19 @@ export const TagList = ({ tags }) => {
       <div
         className={cx('tag-list', {
           'tag-list--expanded': isExpanded,
+          'tag-list--full-width': fullWidthMode,
         })}
         ref={listRef}
       >
         {tags.map((tag, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className={cx('tag-list__item')}>
+          <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${index}-${tag}`}
+            className={cx('tag-list__item')}
+            style={{
+              display: fullWidthMode && !isExpanded && hiddenIndices.has(index) ? 'none' : 'flex',
+            }}
+          >
             <div className={cx('tag-list__item-title')}>{tag}</div>
           </div>
         ))}
@@ -111,4 +156,5 @@ export const TagList = ({ tags }) => {
 
 TagList.propTypes = {
   tags: PropTypes.array,
+  fullWidthMode: PropTypes.bool,
 };

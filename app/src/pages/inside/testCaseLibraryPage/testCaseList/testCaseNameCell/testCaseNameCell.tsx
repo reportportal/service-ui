@@ -26,18 +26,19 @@ interface TestCaseNameCellProps {
   priority: TestCasePriority;
   name: string;
   tags: string[];
+  onRowClick: () => void;
 }
 
-export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseNameCellProps) => {
   return (
-    <div className={cx('name-section')}>
+    <div className={cx('name-section')} onClick={onRowClick}>
       <PriorityIcon priority={priority} />
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <TagList tags={tags} />
+          <TagList tags={tags} fullWidthMode />
         </div>
       </div>
     </div>
