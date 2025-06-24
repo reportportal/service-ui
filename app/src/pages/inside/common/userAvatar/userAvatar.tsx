@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
@@ -24,8 +23,20 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, userId, thumbnail }) => {
-  const src = URLS.userAvatar(userId, thumbnail);
+interface UserAvatarProps {
+  userId: string | number;
+  className?: string;
+  thumbnail?: boolean;
+  timestamp?: number;
+}
+
+export const UserAvatar: FC<UserAvatarProps> = ({
+  userId,
+  className = '',
+  thumbnail = false,
+  timestamp,
+}) => {
+  const src = URLS.userAvatar(userId, thumbnail, timestamp);
 
   return (
     <div className={cx('user-avatar', className)}>
@@ -38,15 +49,4 @@ export const UserAvatar = ({ className, userId, thumbnail }) => {
       />
     </div>
   );
-};
-
-UserAvatar.propTypes = {
-  className: PropTypes.string,
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  thumbnail: PropTypes.bool,
-};
-
-UserAvatar.defaultProps = {
-  className: '',
-  thumbnail: false,
 };
