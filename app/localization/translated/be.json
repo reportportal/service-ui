@@ -608,7 +608,7 @@
   "DemoBanner.githubAuthTitle": "GitHub аўтарызацыю",
   "DemoBanner.timerCaption": "Дадзеныя будуць выдалены праз",
   "ExportsBanner.singleExport": "Генерацыя справаздачы пачалася.",
-  "ExportsBanner.multipleExport": "Генерацыя <b>{count}</b> справаздач пачалася..",
+  "ExportsBanner.multipleExport": "Генерацыя <b>{count}</b> справаздач пачалася.",
   "ExportsBanner.caution": "Гэта можа заняць некаторы час, таму, калі ласка, не абнаўляйце старонку і дачакайцеся пачатку загрузкі.",
   "ExportsBanner.interrupt": "Перапыніць",
   "CancelExportsModal.cancelNotice": "Гэта дзеянне перапыніць працэс экспарту. Вы ўпэўнены, што хочаце спыніць яго?",

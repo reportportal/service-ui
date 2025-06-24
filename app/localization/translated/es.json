@@ -608,7 +608,7 @@
   "DemoBanner.githubAuthTitle": "autorización de GitHub",
   "DemoBanner.timerCaption": "Los datos serán eliminados en",
   "ExportsBanner.singleExport": "Report generation has started.",
-  "ExportsBanner.multipleExport": "Generation of <b>{count}</b> reports has started..",
+  "ExportsBanner.multipleExport": "Generation of <b>{count}</b> reports has started.",
   "ExportsBanner.caution": "This may take a while, so please don’t refresh the page and wait for the download to begin.",
   "ExportsBanner.interrupt": "Interrupt",
   "CancelExportsModal.cancelNotice": "This action will interrupt the export process. Are you sure you want to stop it?",

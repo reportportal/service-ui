@@ -608,7 +608,7 @@
   "DemoBanner.githubAuthTitle": "GitHub автентифікацію",
   "DemoBanner.timerCaption": "Дані будуть видалені через",
   "ExportsBanner.singleExport": "Генерація звіту розпочалася.",
-  "ExportsBanner.multipleExport": "Генерація <b>{count}</b> звітів розпочалася..",
+  "ExportsBanner.multipleExport": "Генерація <b>{count}</b> звітів розпочалася.",
   "ExportsBanner.caution": "Це може зайняти деякий час, тому, будь ласка, не оновлюйте сторінку та дочекайтеся початку завантаження.",
   "ExportsBanner.interrupt": "Перервати",
   "CancelExportsModal.cancelNotice": "Ця дія перерве процес експорту. Ви впевнені, що хочете зупинити його?",

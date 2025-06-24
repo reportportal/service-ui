@@ -21,7 +21,7 @@ const messages = defineMessages({
   },
   multipleExport: {
     id: 'ExportsBanner.multipleExport',
-    defaultMessage: 'Generation of <b>{count}</b> reports has started..',
+    defaultMessage: 'Generation of <b>{count}</b> reports has started.',
   },
   caution: {
     id: 'ExportsBanner.caution',
