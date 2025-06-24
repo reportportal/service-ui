@@ -50,12 +50,10 @@ export const TestCaseDetailsPage = () => (
           onAddToTestPlan={noopHandler}
           onMenuAction={noopHandler}
         />
-
         <div className={cx('page__sidebar')}>
           <EditableTagsSection onAddTag={noopHandler} />
           <EditableDescriptionSection onAddDescription={noopHandler} />
         </div>
-
         <div className={cx('page__main-content')}>
           <ScrollWrapper>
             <DetailsEmptyState />

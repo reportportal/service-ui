@@ -78,9 +78,7 @@ export const TestCaseDetailsHeader = ({
         <Breadcrumbs descriptors={breadcrumbDescriptors} />
       </div>
       <div className={cx('header__title')}>
-        <div className={cx('header__title-icon')}>
-          <PriorityIcon priority={testCase.priority} />
-        </div>
+        <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
         {testCase.name}
       </div>
       <div className={cx('header__info-wrapper')}>

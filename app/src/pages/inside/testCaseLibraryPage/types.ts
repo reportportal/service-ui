@@ -1,5 +1,5 @@
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-
+// The structure must be corrected after BE integration
 export interface TestCase {
   id: string | number;
   name: string;

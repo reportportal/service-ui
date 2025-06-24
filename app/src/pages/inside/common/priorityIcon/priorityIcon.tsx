@@ -32,6 +32,7 @@ const cx = classNames.bind(styles);
 
 interface PriorityIconProps {
   priority: TestCasePriority;
+  className?: string;
 }
 
 const iconMap = {
@@ -41,8 +42,8 @@ const iconMap = {
   medium: <PriorityMediumIcon />,
   low: <PriorityLowIcon />,
   unspecified: <PriorityUnspecifiedIcon />,
-};
+} as const;
 
-export const PriorityIcon = ({ priority }: PriorityIconProps) => (
-  <div className={cx('priority-icon')}>{iconMap[priority]}</div>
+export const PriorityIcon = ({ priority, className }: PriorityIconProps) => (
+  <div className={cx('priority-icon', className)}>{iconMap[priority]}</div>
 );
