@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_CNT } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
@@ -31,14 +33,21 @@ import {
   getPermissions,
   LAST_LOGIN_FILTER_NAME,
   USERS_PERMISSIONS_FILTER_NAME,
+  FILTER_FORM,
 } from 'components/main/filterButton';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import classNames from 'classnames/bind';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+} from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
 const cx = classNames.bind(styles);
+
+const selector = formValueSelector(FILTER_FORM);
 
 export const AllUsersFilter = ({
   entities,
@@ -53,6 +62,7 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
+  const lastRunDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {
@@ -98,6 +108,9 @@ export const AllUsersFilter = ({
           props: {
             value: '',
             options: lastLogin,
+            formatDisplayedValue,
+            notScrollable: true,
+            footer: <Field name={LAST_LOGIN_FILTER_NAME} component={DateRangeFormField} />,
           },
         },
       ],
@@ -132,16 +145,6 @@ export const AllUsersFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_LOGIN_FILTER_NAME,
-    );
-
-    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: '',
     [ACCOUNT_TYPE_FILTER_NAME]: [],
@@ -153,10 +156,24 @@ export const AllUsersFilter = ({
   const initialFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: entities[USERS_PERMISSIONS_FILTER_NAME]?.value || '',
     [ACCOUNT_TYPE_FILTER_NAME]: entities[ACCOUNT_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_LOGIN_FILTER_NAME]: entities[LAST_LOGIN_FILTER_NAME]?.value || '',
+    [LAST_LOGIN_FILTER_NAME]:
+      parseFormattedDate(entities[LAST_LOGIN_FILTER_NAME]?.value) ||
+      entities[LAST_LOGIN_FILTER_NAME]?.value ||
+      '',
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_LOGIN_FILTER_NAME]?.value,
+      LAST_LOGIN_FILTER_NAME,
+    );
+
+    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {
@@ -170,6 +187,10 @@ export const AllUsersFilter = ({
   const getApplyButtonState = (formValues) => {
     if (!formValues) {
       return false;
+    }
+
+    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
+      return true;
     }
 
     let isApply =
@@ -186,6 +207,16 @@ export const AllUsersFilter = ({
       isApply =
         formValues[EMAIL_FILTER_NAME_CONDITION] ===
           initialFilterState[EMAIL_FILTER_NAME_CONDITION] && isApply;
+    }
+
+    if (typeof lastRunDate === 'object') {
+      const initialDate = formatDisplayedValue(initialFilterState[LAST_LOGIN_FILTER_NAME]);
+      const currentDate = formatDisplayedValue(lastRunDate);
+      isApply = initialDate === currentDate && isApply;
+    } else {
+      isApply =
+        formValues[LAST_LOGIN_FILTER_NAME] === initialFilterState[LAST_LOGIN_FILTER_NAME] &&
+        isApply;
     }
 
     return isApply;

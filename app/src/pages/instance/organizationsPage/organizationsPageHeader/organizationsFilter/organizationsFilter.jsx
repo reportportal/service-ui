@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { Field, formValueSelector } from 'redux-form';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
+  FILTER_FORM,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
@@ -33,12 +37,17 @@ import {
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+} from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
 
 const cx = classNames.bind(styles);
+
+const selector = formValueSelector(FILTER_FORM);
 
 export const OrganizationsFilter = ({
   entities,
@@ -56,6 +65,7 @@ export const OrganizationsFilter = ({
     { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
     { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
   ];
+  const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {
@@ -86,6 +96,9 @@ export const OrganizationsFilter = ({
           props: {
             value: timeRange[0].value,
             options: timeRange,
+            formatDisplayedValue,
+            notScrollable: true,
+            footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
           },
         },
       ],
@@ -152,16 +165,6 @@ export const OrganizationsFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_RUN_DATE_FILTER_NAME,
-    );
-
-    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]: [],
     [LAST_RUN_DATE_FILTER_NAME]: '',
@@ -174,13 +177,27 @@ export const OrganizationsFilter = ({
   const initialFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]:
       entities[ORGANIZATION_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
+    [LAST_RUN_DATE_FILTER_NAME]:
+      parseFormattedDate(entities[LAST_RUN_DATE_FILTER_NAME]?.value) ||
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value ||
+      timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:
       entities[LAUNCHES_FILTER_NAME]?.condition || rangeComparisons[0].value,
     [TEAMMATES_FILTER_NAME]: entities[TEAMMATES_FILTER_NAME]?.value || '',
     [TEAMMATES_FILTER_NAME_CONDITION]:
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value,
+      LAST_RUN_DATE_FILTER_NAME,
+    );
+
+    return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {
@@ -196,8 +213,12 @@ export const OrganizationsFilter = ({
       return false;
     }
 
+    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
+      return true;
+    }
+
     let isApply =
-      [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+      [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
       ) &&
       formValues[ORGANIZATION_TYPE_FILTER_NAME].every((type) =>
@@ -215,6 +236,16 @@ export const OrganizationsFilter = ({
       isApply =
         formValues[TEAMMATES_FILTER_NAME_CONDITION] ===
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
+    }
+
+    if (typeof lastRunDate === 'object') {
+      const initialDate = formatDisplayedValue(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
+      const currentDate = formatDisplayedValue(lastRunDate);
+      isApply = initialDate === currentDate && isApply;
+    } else {
+      isApply =
+        formValues[LAST_RUN_DATE_FILTER_NAME] === initialFilterState[LAST_RUN_DATE_FILTER_NAME] &&
+        isApply;
     }
 
     return isApply;

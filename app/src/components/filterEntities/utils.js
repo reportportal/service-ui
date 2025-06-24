@@ -30,18 +30,21 @@ export function bindDefaultValue(key, options = {}) {
   };
 }
 
-const getFormattedDate = (value) => {
+export const getFormattedDate = (value) => {
   const utcString = moment().format('ZZ');
+
   const calculateStartDate = (days) =>
     moment()
       .startOf('day')
       .subtract(days - 1, 'days')
       .valueOf();
-  const endOfToday = moment()
+
+  let endOfToday = moment()
     .add(1, 'days')
     .startOf('day')
     .valueOf();
   let start = null;
+
   switch (value) {
     case 'today':
       start = calculateStartDate(1);
@@ -62,8 +65,14 @@ const getFormattedDate = (value) => {
       start = calculateStartDate(365);
       break;
     default:
+      start = value.startDate;
+      endOfToday = value.endDate;
       break;
   }
+  if (!start || !endOfToday) {
+    return value;
+  }
+
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(endOfToday)};${utcString}`;
 };
 
