@@ -38,9 +38,11 @@ import {
   allUsersPaginationSelector,
   fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
+import { useTracking } from 'react-tracking';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
 import { canUpdateUserInstanceRole } from 'common/utils/permissions';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { UpdateUserInstanceRole } from './updateUserInstanceRole';
 import styles from './allUsersListTable.scss';
 
@@ -62,6 +64,7 @@ const AllUsersListTableComponent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
+  const { trackEvent } = useTracking();
 
   const renderRowActions = ({ id, email, fullName, instanceRole, isCurrentUser }) => {
     const actions = [<button key="assignments">Manage assignments</button>];
@@ -164,6 +167,7 @@ const AllUsersListTableComponent = ({
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
     dispatch(fetchAllUsersAction());
+    trackEvent(ALL_USERS_PAGE_EVENTS.SORTING);
   };
 
   return (
