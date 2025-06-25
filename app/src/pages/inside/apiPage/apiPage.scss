@@ -47,6 +47,12 @@
     .swagger-ui {
       font-family: $FONT-REGULAR;
 
+      article {
+        button {
+          background-color: transparent;
+        }
+      }
+
       .errors-wrapper {
         display: none;
       }
