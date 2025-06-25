@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 
-import { isEmpty } from 'lodash.isempty';
+import isEmpty from 'lodash.isempty';
 import styles from './tagList.scss';
 
 import { messages } from './messages';
