@@ -26,7 +26,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const TagList = ({ tags, fullWidthMode = false }) => {
+export const TagList = ({ tags, isFullWidthMode = false }) => {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
@@ -51,36 +51,40 @@ export const TagList = ({ tags, fullWidthMode = false }) => {
     const parentElement = listRef.current;
     const hiddenSet = new Set();
 
-    if (!parentElement) return;
+    if (!parentElement) {
+      return;
+    }
 
-    const tagElements = [...parentElement.children].filter(
+    const tagElementsWithoutButtons = [...parentElement.children].filter(
       (child) => !child.classList.contains('tag-list__item--button'),
     );
 
-    if (tagElements.length === 0) return;
+    if (tagElementsWithoutButtons.length === 0) {
+      return;
+    }
 
-    const firstElementTop = tagElements[0].offsetTop;
+    const firstElementOffsetTop = tagElementsWithoutButtons[0].offsetTop;
     const containerRect = parentElement.getBoundingClientRect();
     const containerRight = containerRect.right;
 
-    let overflowedCount = 0;
+    let overflowedElementsCount = 0;
 
-    tagElements.forEach((childElement, index) => {
+    tagElementsWithoutButtons.forEach((childElement, index) => {
       const elementRect = childElement.getBoundingClientRect();
-      const elementTop = childElement.offsetTop;
+      const elementOffsetTop = childElement.offsetTop;
 
       // Check if element is on a different line OR extends beyond container width
-      const isOnDifferentLine = elementTop !== firstElementTop;
-      const extendsRightBoundary = elementRect.right > containerRight;
+      const isOnDifferentLine = elementOffsetTop !== firstElementOffsetTop;
+      const isExtendingRightBoundary = elementRect.right > containerRight;
 
-      if (isOnDifferentLine || extendsRightBoundary) {
+      if (isOnDifferentLine || isExtendingRightBoundary) {
         hiddenSet.add(index);
-        overflowedCount += 1;
+        overflowedElementsCount += 1;
       }
     });
 
     setHiddenIndices(hiddenSet);
-    setCount(overflowedCount);
+    setCount(overflowedElementsCount);
   };
 
   useEffect(() => {
@@ -91,12 +95,12 @@ export const TagList = ({ tags, fullWidthMode = false }) => {
     }
     // It is needed because script executes earlier than font-family applies to the text
     const timeoutId = setTimeout(() => {
-      fullWidthMode ? getFullWidthOffset() : getOffset();
+      isFullWidthMode ? getFullWidthOffset() : getOffset();
     }, 500);
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
-  }, [listRef, fullWidthMode]);
+  }, [listRef, isFullWidthMode]);
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
@@ -110,7 +114,9 @@ export const TagList = ({ tags, fullWidthMode = false }) => {
     return (
       <div className={cx('tag-list-wrapper')}>
         <div
-          className={cx('tag-list', 'tag-list--no-tags', { 'tag-list--full-width': fullWidthMode })}
+          className={cx('tag-list', 'tag-list--no-tags', {
+            'tag-list--full-width': isFullWidthMode,
+          })}
         >
           <div className={cx('no-tags-message')}>{formatMessage(messages.noTagsAdded)}</div>
         </div>
@@ -123,22 +129,26 @@ export const TagList = ({ tags, fullWidthMode = false }) => {
       <div
         className={cx('tag-list', {
           'tag-list--expanded': isExpanded,
-          'tag-list--full-width': fullWidthMode,
+          'tag-list--full-width': isFullWidthMode,
         })}
         ref={listRef}
       >
-        {tags.map((tag, index) => (
-          <div
-            // eslint-disable-next-line react/no-array-index-key
-            key={`${index}-${tag}`}
-            className={cx('tag-list__item')}
-            style={{
-              display: fullWidthMode && !isExpanded && hiddenIndices.has(index) ? 'none' : 'flex',
-            }}
-          >
-            <div className={cx('tag-list__item-title')}>{tag}</div>
-          </div>
-        ))}
+        {tags.map((tag, index) => {
+          const isItemHidden = isFullWidthMode && !isExpanded && hiddenIndices.has(index);
+
+          return (
+            <div
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${index}-${tag}`}
+              className={cx('tag-list__item')}
+              style={{
+                display: isItemHidden ? 'none' : 'flex',
+              }}
+            >
+              <div className={cx('tag-list__item-title')}>{tag}</div>
+            </div>
+          );
+        })}
         {isExpanded && (
           <Button className={cx('tag-list__item--button')} onClick={toggleExpanded} variant="text">
             {formatMessage(messages.showLess)}
@@ -156,5 +166,5 @@ export const TagList = ({ tags, fullWidthMode = false }) => {
 
 TagList.propTypes = {
   tags: PropTypes.array,
-  fullWidthMode: PropTypes.bool,
+  isFullWidthMode: PropTypes.bool,
 };

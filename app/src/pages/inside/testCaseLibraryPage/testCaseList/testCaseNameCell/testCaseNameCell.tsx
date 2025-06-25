@@ -38,7 +38,7 @@ export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseN
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <TagList tags={tags} fullWidthMode />
+          <TagList tags={tags} isFullWidthMode />
         </div>
       </div>
     </div>
