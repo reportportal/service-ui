@@ -71,11 +71,10 @@ export const TestCaseList = memo(
       name: {
         content: testCase.name,
         component: (
-          <div
+          <button
+            type="button"
             className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
             onClick={() => handleRowClick(testCase.id)}
-            role="button"
-            tabIndex={0}
           >
             <TestCaseNameCell
               priority={testCase.priority}
@@ -83,7 +82,7 @@ export const TestCaseList = memo(
               tags={testCase.tags}
               onRowClick={() => handleRowClick(testCase.id)}
             />
-          </div>
+          </button>
         ),
       },
       lastExecution: {

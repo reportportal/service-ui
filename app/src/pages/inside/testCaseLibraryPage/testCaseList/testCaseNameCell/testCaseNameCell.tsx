@@ -31,7 +31,7 @@ interface TestCaseNameCellProps {
 
 export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseNameCellProps) => {
   return (
-    <div className={cx('name-section')} onClick={onRowClick}>
+    <button type="button" className={cx('name-section')} onClick={onRowClick}>
       <PriorityIcon priority={priority} className={cx('name-icon')} />
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
@@ -41,6 +41,6 @@ export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseN
           <TagList tags={tags} isFullWidthMode />
         </div>
       </div>
-    </div>
+    </button>
   );
 };
