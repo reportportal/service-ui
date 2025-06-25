@@ -57,12 +57,8 @@ export const messages = defineMessages({
     id: 'Hamburger.importantControlsDisabledTooltip',
     defaultMessage: 'The feature was disabled by Administrator',
   },
-  successExportLaunch: {
-    id: 'Hamburger.successExportLaunch',
-    defaultMessage: '{exportType} export of launch "{launchName}" has been successfully completed',
-  },
-  failExportLaunch: {
-    id: 'Hamburger.failExportLaunch',
-    defaultMessage: '{exportType} export of launch "{launchName}" has failed',
+  exportReport: {
+    id: 'Hamburger.exportReport',
+    defaultMessage: 'Export report',
   },
 });

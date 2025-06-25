@@ -66,16 +66,6 @@
 }
 .hamburger-menu-actions {
   width: 100%;
-  position: relative;
-
-  &:after {
-    content: '';
-    display: block;
-    width: 180px;
-    height: 1px;
-    margin: 10px auto;
-    background-color: $COLOR--gray-91;
-  }
 }
 .export-block {
   padding: 0 15px;

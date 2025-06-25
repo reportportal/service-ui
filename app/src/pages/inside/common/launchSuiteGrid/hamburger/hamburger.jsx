@@ -15,34 +15,29 @@
  */
 
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { GhostButton } from 'components/buttons/ghostButton';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { URLS } from 'common/urls';
-import { downloadFile } from 'common/utils/downloadFile';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import {
   activeProjectRoleSelector,
   userIdSelector,
   userAccountRoleSelector,
   activeProjectSelector,
 } from 'controllers/user';
-import { addExportAction, removeExportAction } from 'controllers/exports';
 import { enabledPattersSelector } from 'controllers/project';
 import { analyzerExtensionsSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
-import { ERROR_CANCELED } from 'common/utils/fetch';
+import { LaunchExportModal } from 'pages/inside/launchesPage/modals/launchExportModal';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import { messages } from './messages';
 import styles from './hamburger.scss';
@@ -65,6 +60,8 @@ export const Hamburger = ({ launch, customProps }) => {
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
   const areImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
+  const isLaunchInProgress = launch.status === IN_PROGRESS.toUpperCase();
+
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (iconRef.current && !iconRef.current.contains(e.target) && menuShown) {
@@ -78,50 +75,13 @@ export const Hamburger = ({ launch, customProps }) => {
     };
   }, [menuShown]);
 
-  const isInProgress = () => launch.status === IN_PROGRESS.toUpperCase();
-
-  const onExportLaunch = async (type) => {
-    const requestId = `${launch.id}_${Date.now()}`;
-    const messageParams = {
-      exportType: type.toUpperCase(),
-      launchName: launch.name,
-    };
-
-    try {
-      await downloadFile(URLS.exportLaunch(projectId, launch.id, type), {
-        abort: (cancelRequest) => dispatch(addExportAction({ id: requestId, cancelRequest })),
-      });
-      dispatch(
-        showSuccessNotification({
-          message: formatMessage(messages.successExportLaunch, messageParams),
-        }),
-      );
-    } catch (e) {
-      if (e.message !== ERROR_CANCELED) {
-        dispatch(
-          showErrorNotification({
-            message: formatMessage(messages.failExportLaunch, messageParams),
-          }),
-        );
-      }
-    } finally {
-      dispatch(removeExportAction(requestId));
-    }
-  };
-
-  const exportAsPDF = () => {
-    onExportLaunch('pdf');
-    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_PDF);
-  };
-
-  const exportAsXLS = () => {
-    onExportLaunch('xls');
-    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_XLS);
-  };
-
-  const exportAsHTML = () => {
-    onExportLaunch('html');
-    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_HTML);
+  const onExportReport = () => {
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_REPORT);
+    dispatch(
+      showModalAction({
+        component: <LaunchExportModal name={launch.name} id={launch.id} />,
+      }),
+    );
   };
 
   const toggleMenu = () => {
@@ -137,7 +97,7 @@ export const Hamburger = ({ launch, customProps }) => {
     if (!canForceFinishLaunch(accountRole, projectRole, userId === launch.owner || launch.rerun)) {
       forceFinishTitle = formatMessage(messages.noPermissions);
     }
-    if (!isInProgress()) {
+    if (!isLaunchInProgress) {
       forceFinishTitle = formatMessage(messages.launchFinished);
     }
     return forceFinishTitle;
@@ -153,7 +113,7 @@ export const Hamburger = ({ launch, customProps }) => {
     if (!canDeleteLaunch(accountRole, projectRole, userId === launch.owner)) {
       return formatMessage(messages.notYourLaunch);
     }
-    if (isInProgress()) {
+    if (isLaunchInProgress) {
       return formatMessage(messages.launchInProgress);
     }
     return '';
@@ -196,7 +156,6 @@ export const Hamburger = ({ launch, customProps }) => {
 
   const getClusterTitle = () => {
     const clusterActive = launch.analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
-    const isLaunchInProgress = isInProgress();
 
     if (clusterActive) {
       return formatMessage(messages.uniqueErrorAnalysisIsInProgress);
@@ -262,7 +221,7 @@ export const Hamburger = ({ launch, customProps }) => {
             title={getForceFinishTooltip()}
             disabled={
               !canForceFinishLaunch(accountRole, projectRole, userId === launch.owner) ||
-              !isInProgress()
+              !isLaunchInProgress
             }
             onClick={() => {
               trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
@@ -316,7 +275,8 @@ export const Hamburger = ({ launch, customProps }) => {
           <HamburgerMenuItem
             text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
             disabled={
-              !canDeleteLaunch(accountRole, projectRole, userId === launch.owner) || isInProgress()
+              !canDeleteLaunch(accountRole, projectRole, userId === launch.owner) ||
+              isLaunchInProgress
             }
             onClick={() => {
               trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
@@ -324,28 +284,12 @@ export const Hamburger = ({ launch, customProps }) => {
             }}
             title={getDeleteItemTooltip()}
           />
-        </div>
-        <div className={cx('export-block')}>
-          <div className={cx('export-label')}>
-            <FormattedMessage id={'Hamburger.export'} defaultMessage={'Export:'} />
-          </div>
-          <div className={cx('export-buttons')}>
-            <div className={cx('export-button')}>
-              <GhostButton tiny onClick={exportAsPDF} disabled={isInProgress()}>
-                PDF
-              </GhostButton>
-            </div>
-            <div className={cx('export-button')}>
-              <GhostButton tiny onClick={exportAsXLS} disabled={isInProgress()}>
-                XLS
-              </GhostButton>
-            </div>
-            <div className={cx('export-button')}>
-              <GhostButton tiny onClick={exportAsHTML} disabled={isInProgress()}>
-                HTML
-              </GhostButton>
-            </div>
-          </div>
+          <HamburgerMenuItem
+            text={formatMessage(messages.exportReport)}
+            disabled={isLaunchInProgress}
+            onClick={onExportReport}
+            title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
+          />
         </div>
       </div>
     </div>
