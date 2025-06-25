@@ -18,6 +18,7 @@ import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Pagination } from '@reportportal/ui-kit';
+
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
 import {
@@ -25,7 +26,8 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/testCaseLibraryPage/testCaseList/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { messages } from '../messages';
+import { messages } from './messages';
+
 import styles from './allTestCasesPage.scss';
 
 const cx = classNames.bind(styles);

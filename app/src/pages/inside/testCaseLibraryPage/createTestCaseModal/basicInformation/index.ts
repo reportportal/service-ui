@@ -14,29 +14,4 @@
  * limitations under the License.
  */
 
-.section {
-  padding: 16px 20px;
-  margin-bottom: 1px;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-
-    button {
-      display: flex;
-      column-gap: 8px;
-    }
-  }
-
-  &__title {
-    color: var(--rp-ui-base-almost-black);
-    font-size: 14px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-weight: 500;
-    margin: 0;
-  }
-
-
-}
+export { BasicInformation } from './basicInformation';

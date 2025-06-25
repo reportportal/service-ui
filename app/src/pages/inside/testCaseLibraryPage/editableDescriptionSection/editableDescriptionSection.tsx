@@ -34,7 +34,7 @@ export const EditableDescriptionSection = ({
   const { formatMessage } = useIntl();
 
   const headerControl = (
-    <Button onClick={onAddDescription} variant="text">
+    <Button onClick={onAddDescription} adjustWidthOn="content" variant="text">
       <PlusIcon />
       {formatMessage(COMMON_LOCALE_KEYS.ADD)}
     </Button>
