@@ -15,24 +15,6 @@
  */
 
 .name-section {
-  /* Reset all default button styles */
-  background: none;
-  border: none;
-  margin: 0;
-  outline: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  /* Component-specific styles */
   display: flex;
   align-items: flex-start;
   gap: 8px;

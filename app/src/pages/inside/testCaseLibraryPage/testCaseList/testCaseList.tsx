@@ -80,7 +80,6 @@ export const TestCaseList = memo(
               priority={testCase.priority}
               name={testCase.name}
               tags={testCase.tags}
-              onRowClick={() => handleRowClick(testCase.id)}
             />
           </button>
         ),
