@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 
+import { isEmpty } from 'lodash.isempty';
 import styles from './tagList.scss';
 
 import { messages } from './messages';
@@ -59,14 +60,13 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
       (child) => !child.classList.contains('tag-list__item--button'),
     );
 
-    if (tagElementsWithoutButtons.length === 0) {
+    if (isEmpty(tagElementsWithoutButtons)) {
       return;
     }
 
     const firstElementOffsetTop = tagElementsWithoutButtons[0].offsetTop;
     const containerRect = parentElement.getBoundingClientRect();
     const containerRight = containerRect.right;
-
     let overflowedElementsCount = 0;
 
     tagElementsWithoutButtons.forEach((childElement, index) => {
@@ -107,8 +107,6 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
   };
 
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
-
-  const isEmpty = (value) => !value.length || value.length === 0;
 
   if (isEmpty(tags)) {
     return (

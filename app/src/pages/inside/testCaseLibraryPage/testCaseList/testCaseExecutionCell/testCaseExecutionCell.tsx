@@ -45,7 +45,7 @@ export const TestCaseExecutionCell = ({
   ];
 
   return (
-    <div className={cx('execution-content')} onClick={onRowClick}>
+    <div className={cx('execution-content')} onClick={onRowClick} role="button" tabIndex={0}>
       <div className={cx('execution-time')}>{lastExecution}</div>
       <div className={cx('menu-section')}>
         <PopoverControl

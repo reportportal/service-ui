@@ -74,6 +74,8 @@ export const TestCaseList = memo(
           <div
             className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
             onClick={() => handleRowClick(testCase.id)}
+            role="button"
+            tabIndex={0}
           >
             <TestCaseNameCell
               priority={testCase.priority}
