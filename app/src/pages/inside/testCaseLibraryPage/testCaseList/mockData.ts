@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { TestCase, FilterOption } from './types';
+import { FilterOption } from './types';
+import { TestCase } from '../types';
 
 export const mockTestCases: TestCase[] = [
   {
@@ -36,7 +37,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 2,
     name: 'Login Functionality Check Beta',
-    priority: 'normal',
+    priority: 'medium',
     tags: [],
     lastExecution: 'Yesterday',
   },
@@ -56,14 +57,14 @@ export const mockTestCases: TestCase[] = [
   {
     id: 4,
     name: 'User Sign-In Validation Process for Gamma Systems',
-    priority: 'high',
+    priority: 'blocker',
     tags: [],
     lastExecution: 'last month',
   },
   {
     id: 5,
     name: 'Credential Submission Assessment Epsilon',
-    priority: 'high',
+    priority: 'critical',
     tags: [
       'ai bug',
       'performance test',
@@ -86,7 +87,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 6,
     name: 'Login Process Evaluation Zeta',
-    priority: 'normal',
+    priority: 'unspecified',
     tags: [
       'sso system',
       'user interface improvements',
@@ -99,7 +100,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 7,
     name: 'User Entry Confirmation Eta',
-    priority: 'normal',
+    priority: 'medium',
     tags: [
       'sso system',
       'user interface improvements',
@@ -126,7 +127,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 10,
     name: 'Mobile Responsive Design Check',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['mobile', 'responsive', 'css', 'media queries', 'cross-device'],
     lastExecution: '12 hours ago',
   },
@@ -154,7 +155,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 14,
     name: 'Email Notification System',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['email', 'notification', 'smtp', 'template'],
     lastExecution: '6 hours ago',
   },
@@ -168,7 +169,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 16,
     name: 'Search Filter Performance',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['search', 'filter', 'performance', 'optimization', 'indexing'],
     lastExecution: '3 hours ago',
   },
@@ -189,21 +190,21 @@ export const mockTestCases: TestCase[] = [
   {
     id: 19,
     name: 'Shopping Cart Persistence',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['shopping cart', 'persistence', 'session', 'local storage'],
     lastExecution: '45 minutes ago',
   },
   {
     id: 20,
     name: 'Social Media Login Integration',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['social login', 'oauth', 'facebook', 'google', 'integration'],
     lastExecution: '4 hours ago',
   },
   {
     id: 21,
     name: 'Report Generation Performance',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['reports', 'generation', 'performance', 'pdf', 'excel'],
     lastExecution: '1 day ago',
   },
@@ -238,14 +239,14 @@ export const mockTestCases: TestCase[] = [
   {
     id: 26,
     name: 'User Session Management',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['session', 'management', 'timeout', 'security'],
     lastExecution: '5 hours ago',
   },
   {
     id: 27,
     name: 'Content Management System',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['cms', 'content', 'management', 'editor', 'publishing'],
     lastExecution: '7 hours ago',
   },
@@ -259,7 +260,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 29,
     name: 'Third-party API Rate Limiting',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['api', 'rate limiting', 'third-party', 'throttling'],
     lastExecution: '1 week ago',
   },
@@ -280,7 +281,7 @@ export const mockTestCases: TestCase[] = [
   {
     id: 32,
     name: 'Microservices Communication',
-    priority: 'normal',
+    priority: 'medium',
     tags: ['microservices', 'communication', 'service mesh', 'api gateway'],
     lastExecution: '3 hours ago',
   },
@@ -308,16 +309,22 @@ export const mockTestCases: TestCase[] = [
 ];
 
 export const STATUS_TYPES = {
-  LOW: 'low',
-  NORMAL: 'normal',
+  BLOCKER: 'blocker',
+  CRITICAL: 'critical',
   HIGH: 'high',
+  MEDIUM: 'medium',
+  LOW: 'low',
+  UNSPECIFIED: 'unspecified',
 } as const;
 
 export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 25, 50, 100];
 
 export const FILTER_OPTIONS: FilterOption[] = [
   { label: 'All Priorities', value: 'all' },
-  { label: 'Low Priority', value: STATUS_TYPES.LOW },
-  { label: 'Normal Priority', value: STATUS_TYPES.NORMAL },
+  { label: 'Blocker', value: STATUS_TYPES.BLOCKER },
+  { label: 'Critical', value: STATUS_TYPES.CRITICAL },
   { label: 'High Priority', value: STATUS_TYPES.HIGH },
+  { label: 'Medium Priority', value: STATUS_TYPES.MEDIUM },
+  { label: 'Low Priority', value: STATUS_TYPES.LOW },
+  { label: 'Unspecified', value: STATUS_TYPES.UNSPECIFIED },
 ];
