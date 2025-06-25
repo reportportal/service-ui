@@ -16,8 +16,8 @@
 
 import classNames from 'classnames/bind';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { PriorityIcon } from '../priorityIcon';
-import { TestCasePriority } from '../types';
+import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import styles from './testCaseNameCell.scss';
 
 const cx = classNames.bind(styles);
@@ -32,7 +32,8 @@ interface TestCaseNameCellProps {
 export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')} onClick={onRowClick}>
-      <PriorityIcon priority={priority} />
+      <PriorityIcon priority={priority} className={cx('name-icon')} />
+
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
