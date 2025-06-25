@@ -48,7 +48,7 @@ export const analyticsEventObserver = ReactObserver();
       isAdmin,
       isAnalyzerAvailable,
     } = baseEventParameters;
-    const { projectId, entryType } = assignedProject;
+    const { projectId, entryType } = assignedProject || {};
 
     if ('place' in data) {
       const eventParameters = {
