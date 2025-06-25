@@ -33,7 +33,6 @@ export const TestCaseNameCell = ({ priority, name, tags, onRowClick }: TestCaseN
   return (
     <div className={cx('name-section')} onClick={onRowClick}>
       <PriorityIcon priority={priority} className={cx('name-icon')} />
-
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
