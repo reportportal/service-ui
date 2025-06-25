@@ -14,5 +14,12 @@
  * limitations under the License.
  */
 
-export { TestCaseLibraryPage } from './testCaseLibraryPage';
-export { TestCaseDetailsPage } from './testCaseDetailsPage';
+.create-test-case-modal {
+  max-width: 1020px;
+  width: 100%;
+
+  &__container {
+    display: flex;
+    column-gap: 16px;
+  }
+}
