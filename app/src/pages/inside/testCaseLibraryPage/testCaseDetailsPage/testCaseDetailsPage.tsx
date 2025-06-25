@@ -23,45 +23,43 @@ import styles from './testCaseDetailsPage.scss';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { EditableTagsSection } from '../editableTagsSection';
 import { EditableDescriptionSection } from '../editableDescriptionSection';
+import { TestCase } from '../types';
 
 const cx = classNames.bind(styles);
 
 const noopHandler = () => {};
 
-export const TestCaseDetailsPage = () => {
-  const testCase = {
-    id: '2775277527',
-    name: '24.2 PV',
-    created: '2025-03-26',
-    tags: [],
-    description: '',
-    hasScenario: false,
-  };
-
-  return (
-    <SettingsLayout>
-      <ScrollWrapper resetRequired>
-        <div className={cx('page')}>
-          <TestCaseDetailsHeader
-            className={cx('page__header')}
-            testCase={testCase}
-            onAddToLaunch={noopHandler}
-            onAddToTestPlan={noopHandler}
-            onMenuAction={noopHandler}
-          />
-
-          <div className={cx('page__sidebar')}>
-            <EditableTagsSection onAddTag={noopHandler} />
-            <EditableDescriptionSection onAddDescription={noopHandler} />
-          </div>
-
-          <div className={cx('page__main-content')}>
-            <ScrollWrapper>
-              <DetailsEmptyState />
-            </ScrollWrapper>
-          </div>
-        </div>
-      </ScrollWrapper>
-    </SettingsLayout>
-  );
+const testCase: TestCase = {
+  id: '2775277527',
+  name: '24.2 PV',
+  created: '2025-03-26',
+  priority: 'high',
+  tags: [],
+  description: '',
+  hasScenario: false,
 };
+
+export const TestCaseDetailsPage = () => (
+  <SettingsLayout>
+    <ScrollWrapper resetRequired>
+      <div className={cx('page')}>
+        <TestCaseDetailsHeader
+          className={cx('page__header')}
+          testCase={testCase}
+          onAddToLaunch={noopHandler}
+          onAddToTestPlan={noopHandler}
+          onMenuAction={noopHandler}
+        />
+        <div className={cx('page__sidebar')}>
+          <EditableTagsSection onAddTag={noopHandler} />
+          <EditableDescriptionSection onAddDescription={noopHandler} />
+        </div>
+        <div className={cx('page__main-content')}>
+          <ScrollWrapper>
+            <DetailsEmptyState />
+          </ScrollWrapper>
+        </div>
+      </div>
+    </ScrollWrapper>
+  </SettingsLayout>
+);
