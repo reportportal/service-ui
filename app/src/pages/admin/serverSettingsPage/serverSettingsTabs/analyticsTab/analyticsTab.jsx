@@ -170,9 +170,9 @@ export class AnalyticsTab extends Component {
     })
       .then(() => {
         this.updateSettingSuccess();
-        if (!this.state.analyticsEnabled) {
-          this.props.tracking.trackEvent(submitAnalyticsBtn('disabled'));
-        }
+        this.props.tracking.trackEvent(
+          submitAnalyticsBtn(this.state.analyticsEnabled ? 'active' : 'disable'),
+        );
       })
       .catch(this.catchRequestError);
   };
