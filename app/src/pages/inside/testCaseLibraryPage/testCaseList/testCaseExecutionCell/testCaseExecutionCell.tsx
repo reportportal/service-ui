@@ -27,9 +27,13 @@ const cx = classNames.bind(styles);
 
 interface TestCaseExecutionCellProps {
   lastExecution: string;
+  onRowClick: () => void;
 }
 
-export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellProps) => {
+export const TestCaseExecutionCell = ({
+  lastExecution,
+  onRowClick,
+}: TestCaseExecutionCellProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -41,7 +45,7 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
   ];
 
   return (
-    <div className={cx('execution-content')}>
+    <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div className={cx('execution-time')}>{lastExecution}</div>
       <div className={cx('menu-section')}>
         <PopoverControl
@@ -55,6 +59,6 @@ export const TestCaseExecutionCell = ({ lastExecution }: TestCaseExecutionCellPr
           </button>
         </PopoverControl>
       </div>
-    </div>
+    </button>
   );
 };

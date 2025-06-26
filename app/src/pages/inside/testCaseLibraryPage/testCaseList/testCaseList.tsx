@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
@@ -48,10 +48,15 @@ export const TestCaseList = memo(
     onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
+    const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | number>('');
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = testCases.slice(startIndex, endIndex);
+
+    const handleRowClick = (testCaseId: string | number) => {
+      setSelectedTestCaseId(testCaseId);
+    };
 
     if (loading) {
       return (
@@ -66,16 +71,27 @@ export const TestCaseList = memo(
       name: {
         content: testCase.name,
         component: (
-          <TestCaseNameCell
-            priority={testCase.priority}
-            name={testCase.name}
-            tags={testCase.tags}
-          />
+          <button
+            type="button"
+            className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
+            onClick={() => handleRowClick(testCase.id)}
+          >
+            <TestCaseNameCell
+              priority={testCase.priority}
+              name={testCase.name}
+              tags={testCase.tags}
+            />
+          </button>
         ),
       },
       lastExecution: {
         content: testCase.lastExecution,
-        component: <TestCaseExecutionCell lastExecution={testCase.lastExecution} />,
+        component: (
+          <TestCaseExecutionCell
+            lastExecution={testCase.lastExecution}
+            onRowClick={() => setSelectedTestCaseId(testCase.id)}
+          />
+        ),
       },
     }));
 
