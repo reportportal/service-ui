@@ -20,7 +20,7 @@
 .action-dropdown {
   display: flex;
   flex-direction: column;
-  width: 120px;
+  min-width: 120px;
 
   .action-item {
     padding: 8px 16px;
