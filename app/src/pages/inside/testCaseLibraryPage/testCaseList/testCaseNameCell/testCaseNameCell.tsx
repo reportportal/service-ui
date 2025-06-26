@@ -37,7 +37,7 @@ export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <TagList tags={tags} />
+          <TagList tags={tags} isFullWidthMode />
         </div>
       </div>
     </div>

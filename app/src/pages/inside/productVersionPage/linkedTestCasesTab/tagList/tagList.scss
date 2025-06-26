@@ -23,13 +23,18 @@
   gap: 8px 18px;
   flex-wrap: wrap;
   padding-left: 11px;
-  max-width: 450px;
   height: 22px;
+  max-width: 450px;
   overflow: hidden;
+
+  &--full-width {
+    max-width: 850px;
+  }
 
   &--expanded {
     height: auto;
     max-width: none;
+    overflow: visible;
   }
 
   &--no-tags {
