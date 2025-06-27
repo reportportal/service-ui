@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { InjectedFormProps, reduxForm } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
-import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
+import { ModalButtonProps } from 'types/common';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { messages } from '../../messages';
@@ -35,8 +34,21 @@ const cx = classNames.bind(styles);
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
 
-export const DeleteProjectModal = ({
-  data: { onSave, projectDetails },
+interface DeleteProjectFormProps {
+  [PROJECT_NAME_FIELD]: string;
+}
+
+interface ModalProps {
+  data: {
+    onConfirm: () => void;
+    projectName: string;
+  };
+}
+
+type DeleteProjectModalProps = InjectedFormProps<DeleteProjectFormProps, ModalProps> & ModalProps;
+
+const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
+  data: { onConfirm, projectName },
   handleSubmit,
   anyTouched,
   invalid,
@@ -45,31 +57,27 @@ export const DeleteProjectModal = ({
   const { formatMessage } = useIntl();
 
   const hideModal = () => dispatch(hideModalAction());
-  const handleDelete = () => {
-    const { projectId, projectName } = projectDetails;
-    onSave({ projectId, projectName });
+
+  const okButton: ModalButtonProps = {
+    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    onClick: handleSubmit(onConfirm),
+    variant: 'danger',
+    disabled: anyTouched && invalid,
+  };
+
+  const cancelButton: ModalButtonProps = {
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
   return (
     <Modal
-      title={'Delete Project'}
-      okButton={{
-        children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        onClick: () => {
-          handleSubmit(handleDelete)();
-        },
-        variant: 'danger',
-        disabled: anyTouched && invalid,
-      }}
-      cancelButton={{
-        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      }}
+      title={formatMessage(messages.deleteProject)}
+      okButton={okButton}
+      cancelButton={cancelButton}
       onClose={hideModal}
     >
       <p className={cx('message')}>
-        {formatMessage(messages.confirmDeleteProjectMessage, {
-          projectName: projectDetails?.projectName,
-        })}
+        {formatMessage(messages.confirmDeleteProjectMessage, { projectName })}
       </p>
       <FieldProvider name={PROJECT_NAME_FIELD}>
         <FieldErrorHint provideHint={false}>
@@ -77,7 +85,6 @@ export const DeleteProjectModal = ({
             label={formatMessage(messages.confirmProjectNameEntry)}
             defaultWidth={false}
             placeholder={formatMessage(messages.projectName)}
-            maxLength={Infinity}
           />
         </FieldErrorHint>
       </FieldProvider>
@@ -85,22 +92,11 @@ export const DeleteProjectModal = ({
   );
 };
 
-DeleteProjectModal.propTypes = {
-  data: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  anyTouched: PropTypes.bool.isRequired,
-  invalid: PropTypes.bool.isRequired,
-};
-
-export default withModal('deleteProjectModal')(
-  reduxForm({
-    form: DELETE_PROJECT_FORM,
-    validate: ({ projectName: inputProjectValue }, { data: { projectDetails } }) => {
-      return {
-        projectName: commonValidators.createKeywordMatcherValidator(projectDetails.projectName)(
-          inputProjectValue,
-        ),
-      };
-    },
-  })(DeleteProjectModal),
-);
+export default reduxForm<DeleteProjectFormProps, ModalProps>({
+  form: DELETE_PROJECT_FORM,
+  validate: ({ projectName: inputProjectValue }, { data: { projectName } }) => {
+    return {
+      projectName: commonValidators.createKeywordMatcherValidator(projectName)(inputProjectValue),
+    };
+  },
+})(DeleteProjectModal);

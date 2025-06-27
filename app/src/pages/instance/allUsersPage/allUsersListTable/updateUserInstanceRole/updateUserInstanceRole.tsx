@@ -23,20 +23,18 @@ import { showModalAction } from 'controllers/modal';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { updateUserInfoAction } from 'controllers/user';
 import { showSuccessNotification } from 'controllers/notification';
-import { updateUserInstanceRoleAction } from 'controllers/instance/allUsers';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { UpdateUserInstanceRoleModal } from './updateUserInstanceRoleModal';
 import { messages } from './messages';
 
 interface UpdateUserInstanceRoleProps {
-  id: number;
   email: string;
   fullName: string;
   instanceRole: string;
 }
 
 export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
-  id,
   email,
   fullName,
   instanceRole,
@@ -59,7 +57,7 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
       }),
     );
 
-    dispatch(updateUserInstanceRoleAction(id, newRole));
+    dispatch(fetchAllUsersAction());
   };
 
   const onConfirm = () => {
@@ -71,7 +69,6 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const openUpdateUserInstanceRoleModal = () => {
     dispatch(
       showModalAction({
-        id: 'updateUserInstanceRoleModal',
         component: <UpdateUserInstanceRoleModal data={{ title, description, onConfirm }} />,
       }),
     );

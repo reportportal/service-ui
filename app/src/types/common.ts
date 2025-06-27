@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
-.message {
-  margin-bottom: 16px;
+import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+
+export interface ModalButtonProps extends ButtonProps {
+  text?: string;
+  'data-automation-id'?: string;
 }

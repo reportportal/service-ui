@@ -32,6 +32,7 @@ function* fetchAllUsers() {
     }),
   );
 }
+
 function* watchFetchAllUsers() {
   yield takeEvery(FETCH_ALL_USERS, fetchAllUsers);
 }

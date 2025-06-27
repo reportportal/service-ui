@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-.message {
-  margin-bottom: 16px;
-}
+export { ProjectActionMenu } from './projectActionMenu';

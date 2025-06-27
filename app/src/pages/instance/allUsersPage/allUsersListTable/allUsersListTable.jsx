@@ -66,14 +66,13 @@ const AllUsersListTableComponent = ({
   const currentUser = useSelector(userInfoSelector);
   const { trackEvent } = useTracking();
 
-  const renderRowActions = ({ id, email, fullName, instanceRole, isCurrentUser }) => {
+  const renderRowActions = ({ email, fullName, instanceRole, isCurrentUser }) => {
     const actions = [<button key="assignments">Manage assignments</button>];
 
     if (canUpdateUserInstanceRole && !isCurrentUser) {
       actions.push(
         <UpdateUserInstanceRole
           key="update-role"
-          id={id}
           email={email}
           fullName={fullName}
           instanceRole={instanceRole}
@@ -121,7 +120,6 @@ const AllUsersListTableComponent = ({
           accountType: getDisplayAccountType(user.account_type),
           organizations: organizationsCount,
           metaData: {
-            id: user.id,
             email: user.email,
             fullName: user.full_name,
             instanceRole: user.instance_role,

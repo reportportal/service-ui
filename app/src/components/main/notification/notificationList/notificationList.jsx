@@ -59,6 +59,10 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
   },
+  updateProjectSuccess: {
+    id: 'ProjectsPage.updateProjectSuccess',
+    defaultMessage: 'The project has been updated successfully',
+  },
   addDefectTypeSuccess: {
     id: 'Project.addDefectTypeSuccess',
     defaultMessage: 'Defect Type has been successfully created',
