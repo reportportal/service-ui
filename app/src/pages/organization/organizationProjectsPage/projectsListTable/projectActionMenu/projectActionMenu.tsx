@@ -71,12 +71,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       },
     };
 
-    dispatch(
-      showModalAction({
-        id: 'deleteProjectModal',
-        component: <DeleteProjectModal data={data} />,
-      }),
-    );
+    dispatch(showModalAction({ component: <DeleteProjectModal data={data} /> }));
   }, [dispatch, projectId, projectName]);
 
   const handleRenameProjectClick = useCallback(() => {
@@ -87,12 +82,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       },
     };
 
-    dispatch(
-      showModalAction({
-        id: 'renameProjectModal',
-        component: <RenameProjectModal data={data} />,
-      }),
-    );
+    dispatch(showModalAction({ component: <RenameProjectModal data={data} /> }));
   }, [dispatch, projectId, projectName]);
 
   const actionsButtons = useMemo(() => {

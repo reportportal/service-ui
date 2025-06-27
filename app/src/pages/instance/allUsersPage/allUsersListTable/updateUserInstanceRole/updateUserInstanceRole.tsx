@@ -69,7 +69,6 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const openUpdateUserInstanceRoleModal = () => {
     dispatch(
       showModalAction({
-        id: 'updateUserInstanceRoleModal',
         component: <UpdateUserInstanceRoleModal data={{ title, description, onConfirm }} />,
       }),
     );
