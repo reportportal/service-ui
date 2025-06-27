@@ -24,7 +24,7 @@ import {
 } from 'controllers/fetch';
 import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   urlOrganizationAndProjectSelector,
   testItemIdsArraySelector,
@@ -361,7 +361,7 @@ function* watchDeleteTestItems() {
 }
 
 function* fetchSearchedItems(searchCriteria, sortingDirection = SORTING_DESC, pageNumber = 1) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = createFilterQuery(searchCriteria);
   const sorting = formatSortingString(
     [FILTER_ENTITY_ID_TO_TYPE_MAP[ENTITY_START_TIME]],
@@ -369,7 +369,7 @@ function* fetchSearchedItems(searchCriteria, sortingDirection = SORTING_DESC, pa
   );
   return yield call(
     fetch,
-    URLS.testItemSearch(activeProject, {
+    URLS.testItemSearch(projectKey, {
       ...query,
       [SORTING_KEY]: sorting,
       [PAGE_KEY]: pageNumber,
