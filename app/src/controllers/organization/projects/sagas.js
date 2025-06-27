@@ -112,7 +112,7 @@ function* watchCreateProject() {
 function* deleteProject({ payload: { projectId, projectName } }) {
   const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
   try {
-    yield call(fetch, URLS.organizationSingleProject({ organizationId, projectId }), {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
       method: 'delete',
     });
 
@@ -139,7 +139,7 @@ function* deleteProject({ payload: { projectId, projectName } }) {
 }
 
 function* renameProject({ payload: { projectId, newProjectName } }) {
-  const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
+  const { id: organizationId } = yield select(activeOrganizationSelector);
 
   const renameOperation = {
     op: 'replace',
@@ -148,12 +148,11 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
   };
 
   try {
-    yield call(fetch, URLS.organizationSingleProject({ organizationId, projectId }), {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
       method: 'patch',
       data: [renameOperation],
     });
 
-    yield put(fetchOrganizationBySlugAction(organizationSlug));
     yield fetchFilteredProjects();
     yield put(hideModalAction());
     yield put(showSuccessNotification({ messageId: 'updateProjectSuccess' }));

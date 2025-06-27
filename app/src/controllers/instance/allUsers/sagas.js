@@ -20,7 +20,7 @@ import { fetchDataAction } from 'controllers/fetch';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { LAST_LOGIN_FILTER_NAME } from 'components/main/filterButton';
 import { querySelector } from './selectors';
-import { NAMESPACE, FETCH_ALL_USERS, UPDATE_USER_INSTANCE_ROLE } from './constants';
+import { NAMESPACE, FETCH_ALL_USERS } from './constants';
 
 function* fetchAllUsers() {
   const filtersParams = yield select(querySelector);
@@ -37,10 +37,6 @@ function* watchFetchAllUsers() {
   yield takeEvery(FETCH_ALL_USERS, fetchAllUsers);
 }
 
-function* watchUpdateUserInstanceRole() {
-  yield takeEvery(UPDATE_USER_INSTANCE_ROLE, fetchAllUsers);
-}
-
 export function* allUsersSagas() {
-  yield all([watchFetchAllUsers(), watchUpdateUserInstanceRole()]);
+  yield all([watchFetchAllUsers()]);
 }

@@ -16,4 +16,3 @@
 
 export { ProjectActionMenu } from './projectActionMenu';
 export { DeleteProjectModal } from '../../modals/deleteProjectModal';
-export { RenameProjectModal } from '../../modals/renameProjectModal';

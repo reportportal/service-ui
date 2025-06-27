@@ -20,7 +20,6 @@ import { InjectedFormProps, reduxForm } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
-import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
@@ -44,7 +43,7 @@ interface ModalProps {
 
 type RenameProjectModalProps = InjectedFormProps<RenameProjectFormProps, ModalProps> & ModalProps;
 
-export const RenameProjectModal: FC<RenameProjectModalProps> = ({
+const RenameProjectModal: FC<RenameProjectModalProps> = ({
   data: { onConfirm, projectName },
   initialize,
   handleSubmit,
@@ -93,16 +92,14 @@ export const RenameProjectModal: FC<RenameProjectModalProps> = ({
   );
 };
 
-export default withModal('renameProjectModal')(
-  reduxForm({
-    form: RENAME_PROJECT_FORM,
-    validate: (values) => {
-      const newProjectName = values[PROJECT_NAME_FIELD]?.trim();
-      const projectNameValidator = commonValidators.createProjectNameValidator();
+export default reduxForm<RenameProjectFormProps, ModalProps>({
+  form: RENAME_PROJECT_FORM,
+  validate: (values) => {
+    const newProjectName = values[PROJECT_NAME_FIELD]?.trim();
+    const projectNameValidator = commonValidators.createProjectNameValidator();
 
-      return {
-        [PROJECT_NAME_FIELD]: projectNameValidator(newProjectName),
-      };
-    },
-  })(RenameProjectModal),
-);
+    return {
+      [PROJECT_NAME_FIELD]: projectNameValidator(newProjectName),
+    };
+  },
+})(RenameProjectModal);

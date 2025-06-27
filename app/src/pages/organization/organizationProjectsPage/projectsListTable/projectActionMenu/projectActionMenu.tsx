@@ -30,6 +30,7 @@ import { showModalAction } from 'controllers/modal';
 import { deleteProjectAction, renameProjectAction } from 'controllers/organization/projects';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { RenameProjectModal } from '../../modals/renameProjectModal';
 import { messages } from '../../messages';
 import styles from './projectActionMenu.scss';
 
@@ -76,15 +77,17 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   }, [details, dispatch, projectId, projectName]);
 
   const handleRenameProjectClick = useCallback(() => {
+    const data = {
+      projectName,
+      onConfirm: (newProjectName: string) => {
+        dispatch(renameProjectAction({ projectId, newProjectName }));
+      },
+    };
+
     dispatch(
       showModalAction({
         id: 'renameProjectModal',
-        data: {
-          projectName,
-          onConfirm: (newProjectName: string) => {
-            dispatch(renameProjectAction({ projectId, newProjectName }));
-          },
-        },
+        component: <RenameProjectModal data={data} />,
       }),
     );
   }, [dispatch, projectId, projectName]);

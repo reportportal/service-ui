@@ -21,7 +21,6 @@ export {
   deleteItemsAction,
   unselectAllUsersAction,
   toggleUserRoleFormAction,
-  updateUserInstanceRoleAction,
 } from './actionCreators';
 export { allUsersReducer } from './reducer';
 export {

@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { RenameProjectModal } from './renameProjectModal';
+import RenameProjectModal from './renameProjectModal';
+
+export { RenameProjectModal };

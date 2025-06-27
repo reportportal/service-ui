@@ -24,4 +24,3 @@ export const DEFAULT_SORT_COLUMN = 'full_name';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
 export const SEARCH_KEY = 'filter.CNT.full_name';
 export const SORTING_KEY = 'order';
-export const UPDATE_USER_INSTANCE_ROLE = 'updateUserInstanceRole';
