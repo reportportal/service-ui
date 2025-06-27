@@ -15,4 +15,3 @@
  */
 
 export { ProjectActionMenu } from './projectActionMenu';
-export { DeleteProjectModal } from '../../modals/deleteProjectModal';

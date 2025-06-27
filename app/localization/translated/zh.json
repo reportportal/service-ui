@@ -1590,6 +1590,7 @@
   "OrganizationProjectsPage.confirmDeleteProjectMessage": "Are you sure you want to delete the \"{projectName}\" project? This irreversible action will delete all its data.",
   "OrganizationProjectsPage.confirmProjectNameEntry": "To confirm, please enter the name of the project",
   "OrganizationProjectsPage.createProject": "创建项目",
+  "OrganizationProjectsPage.deleteProject": "Delete project",
   "OrganizationProjectsPage.noProjectsListWithPermission": "创建新项目以开始您的 ReportPortal 之旅",
   "OrganizationProjectsPage.noProjectsListWithoutPermission": "您可用的项目列表目前为空。<br />请联系您组织的经理了解详情。",
   "OrganizationProjectsPage.noProjectsWithPermission": "尚无项目",

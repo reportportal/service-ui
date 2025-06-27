@@ -112,6 +112,10 @@ export const messages = defineMessages({
     defaultMessage:
       'Are you sure you want to delete the "{projectName}" project? This irreversible action will delete all its data.',
   },
+  deleteProject: {
+    id: 'OrganizationProjectsPage.deleteProject',
+    defaultMessage: 'Delete project',
+  },
   renameProject: {
     id: 'OrganizationProjectsPage.renameProject',
     defaultMessage: 'Rename project',

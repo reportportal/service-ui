@@ -1592,6 +1592,7 @@
   "OrganizationProjectsPage.confirmDeleteProjectMessage": "Are you sure you want to delete the \"{projectName}\" project? This irreversible action will delete all its data.",
   "OrganizationProjectsPage.confirmProjectNameEntry": "To confirm, please enter the name of the project",
   "OrganizationProjectsPage.createProject": "Create project",
+  "OrganizationProjectsPage.deleteProject": "Delete project",
   "OrganizationProjectsPage.noProjectsListWithPermission": "Create a new project to begin your ReportPortal journey",
   "OrganizationProjectsPage.noProjectsListWithoutPermission": "The list of available to you projects is currently empty. <br />Contact your Organization’s manager for details.",
   "OrganizationProjectsPage.noProjectsWithPermission": "No projects yet",

@@ -31,6 +31,7 @@ import { deleteProjectAction, renameProjectAction } from 'controllers/organizati
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RenameProjectModal } from '../../modals/renameProjectModal';
+import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
 import styles from './projectActionMenu.scss';
 
@@ -63,18 +64,20 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { formatMessage } = useIntl();
 
   const handleDeleteProjectClick = useCallback(() => {
+    const data = {
+      projectName,
+      onConfirm: () => {
+        dispatch(deleteProjectAction({ projectName, projectId }));
+      },
+    };
+
     dispatch(
       showModalAction({
         id: 'deleteProjectModal',
-        data: {
-          projectDetails: details,
-          onSave: () => {
-            dispatch(deleteProjectAction({ projectName, projectId }));
-          },
-        },
+        component: <DeleteProjectModal data={data} />,
       }),
     );
-  }, [details, dispatch, projectId, projectName]);
+  }, [dispatch, projectId, projectName]);
 
   const handleRenameProjectClick = useCallback(() => {
     const data = {
