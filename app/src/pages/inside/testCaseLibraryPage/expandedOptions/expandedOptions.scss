@@ -22,6 +22,7 @@
   &__sidebar {
     min-width: 360px;
     max-width: 360px;
+    border-right: 1px solid var(--rp-ui-base-e-100);
     background-color: var(--rp-ui-base-bg-000);
   }
 
@@ -46,13 +47,17 @@
       color: var(--rp-ui-base-almost-black);
     }
 
+    &--search {
+      height: 16px;
+    }
+
     &--create {
       margin-left: 16px;
     }
   }
 
   &__sidebar-folders {
-    padding: 20px 24px;
+    padding: 0 24px 20px;
   }
 
   &__sidebar-folders-wrapper {

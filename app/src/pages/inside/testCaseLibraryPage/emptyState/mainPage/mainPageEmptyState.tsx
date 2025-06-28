@@ -17,6 +17,7 @@
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames/bind';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -29,6 +30,10 @@ import { hideModalAction, showModalAction } from 'controllers/modal';
 import { CREATE_TEST_CASE_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+
+import styles from './mainPageEmptyState.scss';
+
+const cx = classNames.bind(styles);
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
@@ -66,7 +71,7 @@ export const MainPageEmptyState = () => {
     messages.createFolder,
     messages.addTestCases,
     messages.tagTestCases,
-  ].map((translation) => Parser(formatMessage(translation)));
+  ].map((translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })));
 
   return (
     <>
@@ -79,15 +84,15 @@ export const MainPageEmptyState = () => {
           {
             name: formatMessage(commonMessages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
-            isCompact: true,
             handleButton: openCreateTestCaseModal,
+            className: cx('main-page-empty-state__button'),
           },
           {
             name: formatMessage(messages.importTestCases),
             dataAutomationId: 'importTestCaseButton',
             variant: 'ghost',
             icon: ImportIcon,
-            isCompact: true,
+            className: cx('main-page-empty-state__button'),
           },
         ]}
       />

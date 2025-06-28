@@ -21,12 +21,14 @@ import { BreadcrumbsTreeIcon, Button, Toggle } from '@reportportal/ui-kit';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import ExportIcon from 'common/img/export-thin-inline.svg';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { projectNameSelector } from 'controllers/project';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { ExpandedOptions } from './expandedOptions';
 import { commonMessages } from './commonMessages';
@@ -38,12 +40,15 @@ const cx = classNames.bind(styles);
 export const TestCaseLibraryPage = () => {
   const [isEmptyState, setEmptyState] = useState(true);
   const { formatMessage } = useIntl();
+  const projectName = useSelector(projectNameSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   // Temporary toggle for BA and designer review
   const toggleEmptyState = () => {
     setEmptyState((prevState) => !prevState);
   };
 
-  const breadcrumbDescriptors = [{ id: 'project', title: 'Adi_02' }];
+  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
   return (
     <SettingsLayout>
@@ -69,15 +74,9 @@ export const TestCaseLibraryPage = () => {
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
-                  icon={Parser(ExportIcon)}
-                  data-automation-id="exportTestCase"
-                >
-                  {formatMessage(COMMON_LOCALE_KEYS.EXPORT)}
-                </Button>
-                <Button
-                  variant="text"
                   icon={Parser(ImportIcon)}
                   data-automation-id="importTestCase"
+                  adjustWidthOn="content"
                 >
                   {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                 </Button>

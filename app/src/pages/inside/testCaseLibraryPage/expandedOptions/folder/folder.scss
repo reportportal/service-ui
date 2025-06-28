@@ -25,7 +25,7 @@
       content: '';
       display: block;
       width: 12px;
-      height: 2px;
+      height: 1px;
       background-color: var(--rp-ui-base-e-100);
     }
   }
@@ -39,7 +39,7 @@
       left: -9px;
       content: '';
       display: block;
-      width: 2px;
+      width: 1px;
       height: calc(100% - 42px);
       background-color: var(--rp-ui-base-e-100);
     }
@@ -70,6 +70,7 @@
 
       &:hover {
         background-color: var(--rp-ui-base-bg-100);
+        border-radius: 4px;
       }
 
       &--active {
@@ -88,7 +89,7 @@
       transform: rotate(-90deg);
     }
 
-    &--open {
+    &--open > div {
       > svg {
         transform: none;
       }
