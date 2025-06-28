@@ -103,7 +103,6 @@ export class AttributesFieldArrayControl extends Component {
           const isFirstItem = index === 0;
           return (
             <ModalField
-              // eslint-disable-next-line
               key={item}
               label={formatMessage(messages.attributeKeyFieldLabel, {
                 number: index + 1,

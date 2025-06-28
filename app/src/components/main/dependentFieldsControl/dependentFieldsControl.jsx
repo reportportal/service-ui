@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 /*
  * Copyright 2020 EPAM Systems
  *

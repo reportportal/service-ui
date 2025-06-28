@@ -244,7 +244,6 @@ function* addApiKey({ payload = {} }) {
       },
     });
 
-    // eslint-disable-next-line camelcase
     const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {

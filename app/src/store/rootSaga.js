@@ -70,7 +70,6 @@ export function* rootSagas() {
     sagas.map((saga) =>
       // eslint-disable-next-line func-names
       spawn(function*() {
-        // eslint-disable-next-line no-constant-condition
         while (true) {
           try {
             yield call(saga);
