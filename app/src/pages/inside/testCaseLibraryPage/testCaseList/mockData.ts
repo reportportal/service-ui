@@ -32,6 +32,21 @@ export const mockTestCases: TestCase[] = [
       'performance test',
       'security check',
       'user flow',
+      'ui',
+      'performance test',
+      'security check',
+      'user flow',
+      'ui',
+      'performance test',
+      'security check',
+      'user flow',
+      'ui',
+      'performance test',
+      'security check',
+      'user flow',
+      'ui',
+      'performance test',
+      'security check',
     ],
     created: 1711284904218,
     lastExecution: 1711198504218,
@@ -433,3 +448,6 @@ export const FILTER_OPTIONS: FilterOption[] = [
   { label: 'Low Priority', value: STATUS_TYPES.LOW },
   { label: 'Unspecified', value: STATUS_TYPES.UNSPECIFIED },
 ];
+
+export const mockedTestCaseDescription =
+  'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works. Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works';

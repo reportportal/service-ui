@@ -17,20 +17,12 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  showLess: {
-    id: 'LinkedTestCasesTab.showLess',
-    defaultMessage: 'Show less',
-  },
   showAll: {
-    id: 'LinkedTestCasesTab.showAll',
+    id: 'ExpandedTextSection.showAll',
     defaultMessage: 'Show all',
   },
   hideAll: {
-    id: 'LinkedTestCasesTab.hideAll',
+    id: 'ExpandedTextSection.hideAll',
     defaultMessage: 'Hide all',
-  },
-  noTagsAdded: {
-    id: 'LinkedTestCasesTab.noTagsAdded',
-    defaultMessage: 'No tags added',
   },
 });

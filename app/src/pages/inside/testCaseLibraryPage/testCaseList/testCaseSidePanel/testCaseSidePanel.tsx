@@ -23,14 +23,51 @@ import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { CollapsibleSection } from 'components/collapsibleSection';
+import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import isEmpty from 'lodash.isempty';
 import { TestCase } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../constants';
-import { PathBreadcrumb } from './pathBreadcrumb';
+import { mockedTestCaseDescription } from '../mockData';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles);
+
+const COLLAPSIBLE_SECTIONS_CONFIG = (tags: string[]) =>
+  [
+    {
+      titleKey: 'tagsTitle',
+      defaultMessageKey: 'noTagsAdded',
+      childComponent: isEmpty(tags) ? null : (
+        <TagList tags={tags} isFullWidthMode isShowAllView defaultVisibleLines={2} />
+      ),
+    },
+    {
+      titleKey: 'scenarioTitle',
+      defaultMessageKey: 'noDetailsForScenario',
+      childComponent: null,
+    },
+    {
+      titleKey: 'stepTitle',
+      defaultMessageKey: 'noStepsAdded',
+      childComponent: null,
+    },
+    {
+      titleKey: 'descriptionTitle',
+      defaultMessageKey: 'descriptionNotSpecified',
+      childComponent: (
+        <ExpandedTextSection
+          text={mockedTestCaseDescription}
+          defaultVisibleLines={5}
+          fontSize={13}
+        />
+      ),
+    },
+  ] as const;
 
 interface TestCaseSidePanelProps {
   testCase: TestCase | null;
@@ -119,7 +156,18 @@ export const TestCaseSidePanel = memo(
           </div>
         </div>
 
-        <div className={cx('content')}>{/* TODO: Add test case details content here */}</div>
+        <div className={cx('content')}>
+          {COLLAPSIBLE_SECTIONS_CONFIG(testCase.tags).map(
+            ({ titleKey, defaultMessageKey, childComponent }) => (
+              <CollapsibleSection
+                key={titleKey}
+                title={formatMessage(messages[titleKey])}
+                defaultMessage={formatMessage(messages[defaultMessageKey])}
+                childComponent={childComponent}
+              />
+            ),
+          )}
+        </div>
 
         <div className={cx('footer')}>
           <PopoverControl

@@ -27,12 +27,18 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const TagList = ({ tags, isFullWidthMode = false }) => {
+export const TagList = ({
+  tags,
+  isFullWidthMode = false,
+  isShowAllView = false,
+  defaultVisibleLines = null,
+}) => {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState(new Set());
+  const [exceedsVisibleLines, setExceedsVisibleLines] = useState(false);
 
   const getOffset = () => {
     const parentElement = listRef.current;
@@ -87,6 +93,43 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
     setCount(overflowedElementsCount);
   };
 
+  const getVisibleLinesOffset = () => {
+    const parentElement = listRef.current;
+    const hiddenSet = new Set();
+
+    if (!parentElement || !defaultVisibleLines) {
+      return;
+    }
+
+    const tagElementsWithoutButtons = [...parentElement.children].filter(
+      (child) => !child.classList.contains('tag-list__item--button'),
+    );
+
+    if (isEmpty(tagElementsWithoutButtons)) {
+      return;
+    }
+
+    const firstElementOffsetTop = tagElementsWithoutButtons[0].offsetTop;
+    const lineHeight = tagElementsWithoutButtons[0].offsetHeight;
+    const maxAllowedTop = firstElementOffsetTop + lineHeight * (defaultVisibleLines - 1);
+    let overflowedElementsCount = 0;
+    let hasOverflow = false;
+
+    tagElementsWithoutButtons.forEach((childElement, index) => {
+      const elementOffsetTop = childElement.offsetTop;
+
+      if (elementOffsetTop > maxAllowedTop) {
+        hiddenSet.add(index);
+        overflowedElementsCount += 1;
+        hasOverflow = true;
+      }
+    });
+
+    setHiddenIndices(hiddenSet);
+    setCount(overflowedElementsCount);
+    setExceedsVisibleLines(hasOverflow);
+  };
+
   useEffect(() => {
     const parentElement = listRef.current;
 
@@ -95,18 +138,38 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
     }
     // It is needed because script executes earlier than font-family applies to the text
     const timeoutId = setTimeout(() => {
-      isFullWidthMode ? getFullWidthOffset() : getOffset();
+      if (isShowAllView && defaultVisibleLines) {
+        getVisibleLinesOffset();
+      } else if (isFullWidthMode) {
+        getFullWidthOffset();
+      } else {
+        getOffset();
+      }
     }, 500);
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
-  }, [listRef, isFullWidthMode]);
+  }, [listRef, isFullWidthMode, isShowAllView, defaultVisibleLines]);
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
 
+  const handleCountClick = (e) => {
+    e.stopPropagation();
+    toggleExpanded();
+  };
+
+  const handleButtonClick = (e) => {
+    e.stopPropagation();
+    toggleExpanded();
+  };
+
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
+  const isShowAllButtonVisible = useMemo(
+    () => isShowAllView && defaultVisibleLines && exceedsVisibleLines && !isExpanded,
+    [isShowAllView, defaultVisibleLines, exceedsVisibleLines, isExpanded],
+  );
 
   if (isEmpty(tags)) {
     return (
@@ -123,7 +186,7 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
   }
 
   return (
-    <div className={cx('tag-list-wrapper')}>
+    <div className={cx('tag-list-wrapper', { 'tag-list-wrapper--show-all-view': isShowAllView })}>
       <div
         className={cx('tag-list', {
           'tag-list--expanded': isExpanded,
@@ -132,7 +195,9 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
         ref={listRef}
       >
         {tags.map((tag, index) => {
-          const isItemHidden = isFullWidthMode && !isExpanded && hiddenIndices.has(index);
+          const isItemHidden =
+            (isFullWidthMode && !isExpanded && hiddenIndices.has(index)) ||
+            (isShowAllView && defaultVisibleLines && !isExpanded && hiddenIndices.has(index));
 
           return (
             <div
@@ -147,14 +212,63 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
             </div>
           );
         })}
-        {isExpanded && (
-          <Button className={cx('tag-list__item--button')} onClick={toggleExpanded} variant="text">
-            {formatMessage(messages.showLess)}
+        {/* {isExpanded && (
+          <Button
+            className={cx('tag-list__item--button', {
+              'tag-list__item--button-show-all-view': isShowAllView && defaultVisibleLines,
+            })}
+            onClick={handleButtonClick}
+            variant="text"
+          >
+            {isShowAllView && defaultVisibleLines
+              ? formatMessage(messages.hideAll)
+              : formatMessage(messages.showLess)}
           </Button>
         )}
+        {isShowAllButtonVisible && (
+          <div className={cx('tag-list__item--button-wrapper')}>
+            <Button
+              className={cx('tag-list__item--button', 'tag-list__item--button-show-all-view')}
+              onClick={handleButtonClick}
+              variant="text"
+            >
+              {formatMessage(messages.showAll)}
+            </Button>
+          </div>
+        )} */}
       </div>
-      {isCounterButtonVisible ? (
-        <div className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
+      {isShowAllView && (
+        <>
+          {isExpanded && (
+            <div className={cx({ 'tag-list__item--button-wrapper': isShowAllView })}>
+              <Button
+                className={cx('tag-list__item--button', {
+                  'tag-list__item--button-show-all-view': isShowAllView && defaultVisibleLines,
+                })}
+                onClick={handleButtonClick}
+                variant="text"
+              >
+                {isShowAllView && defaultVisibleLines
+                  ? formatMessage(messages.hideAll)
+                  : formatMessage(messages.showLess)}
+              </Button>
+            </div>
+          )}
+          {isShowAllButtonVisible && (
+            <div className={cx('tag-list__item--button-wrapper')}>
+              <Button
+                className={cx('tag-list__item--button', 'tag-list__item--button-show-all-view')}
+                onClick={handleButtonClick}
+                variant="text"
+              >
+                {formatMessage(messages.showAll)}
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+      {isCounterButtonVisible && !isShowAllView ? (
+        <div className={cx('tag-list__item', 'tag-list__item--count')} onClick={handleCountClick}>
           +{count}
         </div>
       ) : null}
@@ -165,4 +279,6 @@ export const TagList = ({ tags, isFullWidthMode = false }) => {
 TagList.propTypes = {
   tags: PropTypes.array,
   isFullWidthMode: PropTypes.bool,
+  isShowAllView: PropTypes.bool,
+  defaultVisibleLines: PropTypes.number,
 };
