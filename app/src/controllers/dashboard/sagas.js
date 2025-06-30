@@ -49,7 +49,6 @@ import {
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
   DUPLICATE_DASHBOARD,
-  COPY_DASHBOARD_CONFIG,
 } from './constants';
 import { querySelector } from './selectors';
 import {
@@ -206,22 +205,6 @@ function* duplicateDashboard({ payload: dashboard }) {
   }
 }
 
-function* copyDashboardConfig({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
-  try {
-    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
-    yield call([navigator.clipboard, 'writeText'], JSON.stringify(config));
-    yield put(
-      showNotification({
-        messageId: 'dashboardConfigurationCopied',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
 function* updateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
   const { name, description, id } = dashboard;
@@ -308,6 +291,5 @@ export function* dashboardSagas() {
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
-    yield takeEvery(COPY_DASHBOARD_CONFIG, copyDashboardConfig),
   ]);
 }
