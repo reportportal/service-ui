@@ -22,6 +22,7 @@ import { SearchField } from 'components/fields/searchField';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
+import { TestCaseSidePanel } from './testCaseSidePanel';
 import { mockTestCases } from './mockData';
 import { DEFAULT_CURRENT_PAGE } from './constants';
 import { messages } from './messages';
@@ -57,6 +58,13 @@ export const TestCaseList = memo(
     const handleRowClick = (testCaseId: string | number) => {
       setSelectedTestCaseId(testCaseId);
     };
+
+    const handleCloseSidePanel = () => {
+      setSelectedTestCaseId('');
+    };
+
+    const selectedTestCase =
+      testCases.find((testCase) => testCase.id === selectedTestCaseId) || null;
 
     if (loading) {
       return (
@@ -151,6 +159,12 @@ export const TestCaseList = memo(
             </div>
           </div>
         )}
+
+        <TestCaseSidePanel
+          testCase={selectedTestCase}
+          isVisible={!!selectedTestCaseId}
+          onClose={handleCloseSidePanel}
+        />
       </div>
     );
   },
