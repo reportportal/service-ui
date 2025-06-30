@@ -176,6 +176,14 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  testCaseCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
+    defaultMessage: 'Test Case has been created successfully.',
+  },
+  testCaseCreationFailed: {
+    id: 'TestCaseLibraryPage.testCaseCreationFailed',
+    defaultMessage: 'Failed to create Test Case.',
+  },
 });
 
 @injectIntl

@@ -18,16 +18,17 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal } from '@reportportal/ui-kit';
+import { Modal, BubblesLoader } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
-import { BasicInformation } from './basicInformation';
-import { TestCaseDetails, StepData } from './testCaseDetails';
 import { commonMessages } from '../commonMessages';
+import { BasicInformation } from './basicInformation';
+import { TestCaseDetails } from './testCaseDetails';
+import { TestStep, useCreateTestCase } from './useCreateTestCase';
 
 import styles from './createTestCaseModal.scss';
 
@@ -35,39 +36,48 @@ const cx = classNames.bind(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 
-interface CreateTestCaseFormValues {
-  testCaseName: string;
+export interface CreateTestCaseFormData {
+  name: string;
+  description?: string;
   folder: string;
-  priority: TestCasePriority;
-  description: string;
-  template: 'steps' | 'text';
-  requirementsLink: string;
-  executionTime: number;
-  steps: StepData[];
+  priority?: TestCasePriority;
+  linkToRequirements?: string;
+  executionEstimationTime?: number;
+  manualScenarioType: 'STEPS' | 'TEXT';
+  precondition?: string;
+  steps?: TestStep[];
+  tags?: string[];
 }
 
-interface CreateTestCaseModalProps {
-  onSubmit: (values: CreateTestCaseFormValues) => void;
-}
-
-export const CreateTestCaseModal = reduxForm<CreateTestCaseFormValues, CreateTestCaseModalProps>({
+export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
   form: 'create-test-case-modal-form',
   initialValues: {
     priority: 'unspecified',
-    template: 'steps',
-    executionTime: 5,
+    manualScenarioType: 'STEPS',
+    executionEstimationTime: 5,
   },
-  validate: ({ testCaseName, folder }) => ({
-    testCaseName: commonValidators.requiredField(testCaseName),
+  validate: ({ name, folder }) => ({
+    name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
   }),
-})(({ onSubmit, handleSubmit }) => {
+})(({ handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
-    onClick: handleSubmit(onSubmit),
+    children: isCreateTestCaseLoading ? (
+      <BubblesLoader className={cx('create-test-case-modal__loading-button')} color="white" />
+    ) : (
+      formatMessage(COMMON_LOCALE_KEYS.CREATE)
+    ),
+    onClick: () => handleSubmit(createTestCase)(),
+    disabled: isCreateTestCaseLoading,
+  };
+
+  const cancelButton = {
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isCreateTestCaseLoading,
   };
 
   return (
@@ -75,16 +85,21 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormValues, CreateTes
       title={formatMessage(commonMessages.createTestCase)}
       okButton={okButton}
       className={cx('create-test-case-modal')}
-      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
+      cancelButton={cancelButton}
       scrollable
       onClose={() => dispatch(hideModalAction())}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={cx('create-test-case-modal__container')}>
-          <BasicInformation />
-          <TestCaseDetails />
-        </div>
-      </form>
+      <div className={cx('create-test-case-modal__content-wrapper')}>
+        <form onSubmit={handleSubmit(createTestCase)}>
+          <div className={cx('create-test-case-modal__container')}>
+            <BasicInformation />
+            <TestCaseDetails />
+          </div>
+        </form>
+        {isCreateTestCaseLoading && (
+          <div className={cx('create-test-case-modal__loading-overlay')} />
+        )}
+      </div>
     </Modal>
   );
 });

@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-export { useCreateTestCase } from './useCreateTestCase';
+export const GET_TEST_CASES = 'getTestCases' as const;
