@@ -50,7 +50,7 @@ const OrganizationsSortingWrapped: FC<OrganizationsSortingWrappedProps> = ({
     { value: SortingFields.LAST_LAUNCH_DATE, label: formatMessage(messages.lastLaunchDate) },
   ];
 
-  const handleChangeSorting = ({ value }) => {
+  const handleChangeSorting = ({ value }: { value: string }) => {
     onChangeSorting(value);
     trackEvent(ORGANIZATION_PAGE_EVENTS.organizationsSorting(value));
   };

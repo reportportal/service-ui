@@ -29,7 +29,7 @@ import classNames from 'classnames/bind';
 import { messages } from '../../messages';
 import styles from './deleteProjectModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
@@ -60,7 +60,8 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    onClick: handleSubmit(onConfirm),
+    // @Alla_Prischepa check it please
+    onClick: () => handleSubmit(onConfirm) as void,
     variant: 'danger',
     disabled: anyTouched && invalid,
   };
@@ -96,6 +97,7 @@ export default reduxForm<DeleteProjectFormProps, ModalProps>({
   form: DELETE_PROJECT_FORM,
   validate: ({ projectName: inputProjectValue }, { data: { projectName } }) => {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- @Alla_Prischepa update after `validation` migrated to TS
       projectName: commonValidators.createKeywordMatcherValidator(projectName)(inputProjectValue),
     };
   },

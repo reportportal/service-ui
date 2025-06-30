@@ -1,15 +1,22 @@
 {
-  "extends": "stylelint-config-recommended-scss",
-  "plugins": ["stylelint-scss", "stylelint-declaration-use-variable", "stylelint-prettier"],
+  "extends":  [
+    "stylelint-config-recommended-scss",
+    "stylelint-config-prettier-scss",
+    "stylelint-prettier/recommended"
+  ],
+  "plugins": [
+    "stylelint-declaration-strict-value"
+  ],
   "rules": {
-    "prettier/prettier": [true, {"severity": "warning"}],
+    "prettier/prettier": null,
     "no-descending-specificity": [true, {"severity": "warning"}],
     "selector-pseudo-class-no-unknown": [true, {"ignorePseudoClasses": ["global"]}],
     "block-no-empty": [true, {"severity": "warning"}],
     "selector-max-attribute": 0,
     "color-named": "never",
     "color-no-hex": true,
-    "sh-waqar/declaration-use-variable": [["color", {"ignoreValues": ["inherit", "transparent"]}]],
-    "declaration-block-trailing-semicolon": "always"
+    "declaration-property-value-keyword-no-deprecated": [true, {"ignoreKeywords": ["break-word"]}],
+    "scss/at-extend-no-missing-placeholder": null,
+    "scale-unlimited/declaration-strict-value": ["color", {"ignoreValues": ["inherit", "transparent"]}]
   }
 }

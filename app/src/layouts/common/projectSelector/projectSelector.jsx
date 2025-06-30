@@ -126,6 +126,7 @@ export class ProjectSelector extends Component {
                   ref(node);
                   this.controlNode = node;
                 }}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 tabIndex={0}
                 className={cx('current-project-block')}
                 onClick={this.toggleShowList}

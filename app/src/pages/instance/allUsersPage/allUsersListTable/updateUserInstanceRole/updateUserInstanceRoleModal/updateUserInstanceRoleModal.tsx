@@ -24,7 +24,7 @@ import { Modal } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import styles from './updateUserInstanceRoleModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface UpdateUserInstanceRoleModalProps {
   data: {

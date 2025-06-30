@@ -51,7 +51,6 @@ export class LaunchStatistics extends Component {
 
   componentDidMount() {
     if (this.containerRef.current) {
-      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ isContainerRefReady: true });
     }
   }

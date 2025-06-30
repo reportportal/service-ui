@@ -21,7 +21,7 @@ import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { Image } from 'components/main/image';
 import styles from './userAvatar.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface UserAvatarProps {
   userId: string | number;

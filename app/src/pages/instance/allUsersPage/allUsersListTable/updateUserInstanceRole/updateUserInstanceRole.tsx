@@ -47,6 +47,7 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const title = formatMessage(isAdmin ? messages.revokeAdminRights : messages.provideAdminRights);
   const description = formatMessage(
     isAdmin ? messages.revokeAdminRightsDescription : messages.provideAdminRightsDescription,
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- @Alla_Prischepa to investigate
     { name: fullName, b: (innerData) => Parser(`<b>${innerData}</b>`) },
   );
 

@@ -66,7 +66,8 @@ const RenameProjectModal: FC<RenameProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-    onClick: handleSubmit(onSubmit),
+    // @Alla_Prischepa check it please
+    onClick: () => handleSubmit(onSubmit) as void,
     disabled: anyTouched && invalid,
     'data-automation-id': 'submitButton',
   };
@@ -99,6 +100,7 @@ export default reduxForm<RenameProjectFormProps, ModalProps>({
     const projectNameValidator = commonValidators.createProjectNameValidator();
 
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- @Alla_Prischepa update after `validation` migrated to TS
       [PROJECT_NAME_FIELD]: projectNameValidator(newProjectName),
     };
   },
