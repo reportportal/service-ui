@@ -7,7 +7,7 @@ export const useFetchedResponse = (url) => {
   useEffect(() => {
     if (!url) return;
 
-    const fetchText = async () => {
+    const fetchResponse = async () => {
       try {
         const res = await fetch(url);
         setResponse(res);
@@ -16,7 +16,7 @@ export const useFetchedResponse = (url) => {
       }
     };
 
-    fetchText();
+    fetchResponse();
   }, [url]);
 
   return response;
