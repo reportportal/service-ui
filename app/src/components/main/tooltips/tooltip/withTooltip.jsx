@@ -24,94 +24,98 @@ import styles from './tooltip.scss';
 const cx = classNames.bind(styles);
 const DEFAULT_TOOLTIP_WIDTH = 300;
 
-export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponent) =>
-  class Wrapper extends Component {
-    static propTypes = {
-      showTooltip: PropTypes.bool,
-      children: PropTypes.node,
-      tooltipRoot: PropTypes.instanceOf(Element),
-    };
-    static defaultProps = {
-      showTooltip: true,
-      children: null,
-      tooltipRoot: null,
-    };
-    state = {
-      shown: false,
-    };
+export const withTooltip =
+  ({ TooltipComponent, data = {} }) =>
+  (WrappedComponent) =>
+    class Wrapper extends Component {
+      static propTypes = {
+        showTooltip: PropTypes.bool,
+        children: PropTypes.node,
+        tooltipRoot: PropTypes.instanceOf(Element),
+      };
+      static defaultProps = {
+        showTooltip: true,
+        children: null,
+        tooltipRoot: null,
+      };
+      state = {
+        shown: false,
+      };
 
-    tooltipRoot = document.getElementById('tooltip-root');
-    showTooltip = () => {
-      this.setState({ shown: true });
-    };
-    hideTooltip = () => {
-      this.setState({ shown: false });
-    };
-    render() {
-      const { shown } = this.state;
-      const styleWidth = data.dynamicWidth ? null : { width: data.width || DEFAULT_TOOLTIP_WIDTH };
-      const topOffset = data.topOffset || 0;
-      const leftOffset = data.leftOffset || 0;
-      const clientWidth = document.documentElement.clientWidth;
-      const maxWidth = !styleWidth ? clientWidth - 100 : styleWidth;
-      return (
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <div
-                ref={ref}
-                className={cx('tooltip-trigger', data.tooltipTriggerClass)}
-                onMouseEnter={this.showTooltip}
-                onMouseLeave={this.hideTooltip}
-              >
-                <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
-              </div>
-            )}
-          </Reference>
-          {shown &&
-            this.props.showTooltip &&
-            ReactDOM.createPortal(
-              <Popper placement={data.placement} modifiers={data.modifiers} eventsEnabled={false}>
-                {({ placement, ref, style, arrowProps }) => (
-                  <div
-                    className={cx('tooltip', {
-                      'no-mobile': data.noMobile,
-                      'desktop-only': data.desktopOnly,
-                      dark: data.dark,
-                    })}
-                    ref={ref}
-                    style={{
-                      ...style,
-                      ...styleWidth,
-                      top: style.top + topOffset,
-                      left: style.left + leftOffset,
-                    }}
-                    data-placement={placement}
-                    onMouseEnter={data.hoverable ? this.showTooltip : null}
-                    onMouseLeave={data.hoverable ? this.hideTooltip : null}
-                  >
+      tooltipRoot = document.getElementById('tooltip-root');
+      showTooltip = () => {
+        this.setState({ shown: true });
+      };
+      hideTooltip = () => {
+        this.setState({ shown: false });
+      };
+      render() {
+        const { shown } = this.state;
+        const styleWidth = data.dynamicWidth
+          ? null
+          : { width: data.width || DEFAULT_TOOLTIP_WIDTH };
+        const topOffset = data.topOffset || 0;
+        const leftOffset = data.leftOffset || 0;
+        const clientWidth = document.documentElement.clientWidth;
+        const maxWidth = !styleWidth ? clientWidth - 100 : styleWidth;
+        return (
+          <Manager>
+            <Reference>
+              {({ ref }) => (
+                <div
+                  ref={ref}
+                  className={cx('tooltip-trigger', data.tooltipTriggerClass)}
+                  onMouseEnter={this.showTooltip}
+                  onMouseLeave={this.hideTooltip}
+                >
+                  <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
+                </div>
+              )}
+            </Reference>
+            {shown &&
+              this.props.showTooltip &&
+              ReactDOM.createPortal(
+                <Popper placement={data.placement} modifiers={data.modifiers} eventsEnabled={false}>
+                  {({ placement, ref, style, arrowProps }) => (
                     <div
-                      className={cx('tooltip-content', data.customClassName)}
+                      className={cx('tooltip', {
+                        'no-mobile': data.noMobile,
+                        'desktop-only': data.desktopOnly,
+                        dark: data.dark,
+                      })}
+                      ref={ref}
                       style={{
-                        maxWidth: `${maxWidth}px`,
+                        ...style,
+                        ...styleWidth,
+                        top: style.top + topOffset,
+                        left: style.left + leftOffset,
                       }}
+                      data-placement={placement}
+                      onMouseEnter={data.hoverable ? this.showTooltip : null}
+                      onMouseLeave={data.hoverable ? this.hideTooltip : null}
                     >
-                      <TooltipComponent {...this.props} />
-                      {!data.noArrow && (
-                        <div
-                          className={cx('tooltip-arrow')}
-                          data-placement={placement}
-                          ref={arrowProps.ref}
-                          style={arrowProps.style}
-                        />
-                      )}
+                      <div
+                        className={cx('tooltip-content', data.customClassName)}
+                        style={{
+                          maxWidth: `${maxWidth}px`,
+                        }}
+                      >
+                        <TooltipComponent {...this.props} />
+                        {!data.noArrow && (
+                          <div
+                            className={cx('tooltip-arrow')}
+                            data-placement={placement}
+                            ref={arrowProps.ref}
+                            style={arrowProps.style}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Popper>,
-              this.props.tooltipRoot || this.tooltipRoot,
-            )}
-        </Manager>
-      );
-    }
-  };
+                  )}
+                </Popper>,
+                this.props.tooltipRoot || this.tooltipRoot,
+              )}
+          </Manager>
+        );
+      }
+    };

@@ -37,7 +37,6 @@ export default defineConfig([
   prettier,
   {
     rules: {
-      'prettier/prettier': 'off', // will format and reenable in next PR
       // Temporary disabled rules that has lot of violations
       'jsx-a11y/no-static-element-interactions': 'off',
       'jsx-a11y/click-events-have-key-events': 'off',

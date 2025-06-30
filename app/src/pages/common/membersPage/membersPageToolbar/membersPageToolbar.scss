@@ -38,5 +38,7 @@
   box-shadow: none;
   flex-grow: 1;
   max-width: 310px;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 }

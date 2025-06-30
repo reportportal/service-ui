@@ -186,14 +186,8 @@ export class LaunchFiltersToolbar extends Component {
   redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
 
   updateActiveFilter = () => {
-    const {
-      activeFilter,
-      updateFilter,
-      activeFilterId,
-      showModal,
-      saveNewFilter,
-      tracking,
-    } = this.props;
+    const { activeFilter, updateFilter, activeFilterId, showModal, saveNewFilter, tracking } =
+      this.props;
     if (activeFilterId < 0) {
       showModal({
         id: 'filterEditModal',

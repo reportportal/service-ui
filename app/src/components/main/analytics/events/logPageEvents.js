@@ -267,12 +267,10 @@ export const LOG_PAGE_EVENTS = {
   },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
-  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
-    LOG_PAGE,
-  ),
-  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL: getEditToInvestigateSelectSpecificSimilarItemEvent(
-    LOG_PAGE,
-  ),
+  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL:
+    getEditToInvestigateSelectAllSimilarItemsEvent(LOG_PAGE),
+  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL:
+    getEditToInvestigateSelectSpecificSimilarItemEvent(LOG_PAGE),
   CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(LOG_PAGE),
   // UNLINK_ISSUE_MODAL
   UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(LOG_PAGE),

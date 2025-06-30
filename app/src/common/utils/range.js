@@ -16,7 +16,7 @@
 
 export function range(start = 0, stop = 0, step = 1) {
   if (arguments.length <= 1) {
-    stop = start;  
+    stop = start;
   }
 
   const length = Math.max(Math.ceil((stop - start) / step), 0);
@@ -25,8 +25,8 @@ export function range(start = 0, stop = 0, step = 1) {
 
   while (idx < length) {
     // eslint-disable-next-line no-plusplus
-    arr[idx++] = start; 
-    start += step;  
+    arr[idx++] = start;
+    start += step;
   }
 
   return arr;

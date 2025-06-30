@@ -78,12 +78,7 @@ const createDataSet = (field, group, options) => {
     data: [],
     borderColor: isTotalDataset ? '#000000' : color,
     borderWidth: isTotalDataset ? { left: 0, top: 0, right: 1, bottom: 0 } : 0,
-    backgroundColor:
-      group === DEFECTS && !defectTypes
-        ? Color(color)
-            .alpha(0.3)
-            .string()
-        : color,
+    backgroundColor: group === DEFECTS && !defectTypes ? Color(color).alpha(0.3).string() : color,
     stack: separate ? field : group,
     datalabels: {
       display: isTotalDataset,

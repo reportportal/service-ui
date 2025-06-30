@@ -28,86 +28,84 @@ import styles from './headerCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const HeaderCell = track()(
-  ({
-    title,
-    align,
-    size,
-    backgroundColor,
-    border,
+export const HeaderCell = track()(({
+  title,
+  align,
+  size,
+  backgroundColor,
+  border,
+  sortable,
+  id,
+  sortingActive,
+  sortingDirection,
+  onChangeSorting,
+  withFilter,
+  onFilterClick,
+  filterEventInfo,
+  sortingEventInfo,
+  tracking,
+  paddingRight25,
+  customProps,
+}) => {
+  const displayedDirection = sortingActive ? sortingDirection : SORTING_ASC;
+  const computedClassName = {
+    [`background-color-${backgroundColor}`]: backgroundColor,
+    [`border-${border}`]: border,
+    [`align-${align}`]: align,
+    [`sorting-${displayedDirection.toLowerCase()}`]: displayedDirection,
     sortable,
-    id,
-    sortingActive,
-    sortingDirection,
-    onChangeSorting,
-    withFilter,
-    onFilterClick,
-    filterEventInfo,
-    sortingEventInfo,
-    tracking,
-    paddingRight25,
-    customProps,
-  }) => {
-    const displayedDirection = sortingActive ? sortingDirection : SORTING_ASC;
-    const computedClassName = {
-      [`background-color-${backgroundColor}`]: backgroundColor,
-      [`border-${border}`]: border,
-      [`align-${align}`]: align,
-      [`sorting-${displayedDirection.toLowerCase()}`]: displayedDirection,
-      sortable,
-      'sorting-active': sortingActive,
-      'with-filter': withFilter,
-      [`size-${size}`]: size,
-      'padding-right25': paddingRight25,
-      [customProps.gridHeaderCellStyles]: customProps.gridHeaderCellStyles,
-    };
-    const filterClickHandler = (e) => {
-      e.stopPropagation();
-      onFilterClick(id);
-      filterEventInfo && tracking.trackEvent(filterEventInfo);
-    };
-    const sortingClickHandler = () => {
-      sortingEventInfo && !isEmptyObject(sortingEventInfo) && tracking.trackEvent(sortingEventInfo);
-      onChangeSorting(id);
-    };
-    const TitleComponent = title.component;
-    const titleComponentProps = title.componentProps;
-    return title.component ? (
-      <TitleComponent
-        className={cx('header-cell', computedClassName)}
-        style={customProps.rawHeaderCellStylesConfig}
-        {...titleComponentProps}
-      />
-    ) : (
+    'sorting-active': sortingActive,
+    'with-filter': withFilter,
+    [`size-${size}`]: size,
+    'padding-right25': paddingRight25,
+    [customProps.gridHeaderCellStyles]: customProps.gridHeaderCellStyles,
+  };
+  const filterClickHandler = (e) => {
+    e.stopPropagation();
+    onFilterClick(id);
+    filterEventInfo && tracking.trackEvent(filterEventInfo);
+  };
+  const sortingClickHandler = () => {
+    sortingEventInfo && !isEmptyObject(sortingEventInfo) && tracking.trackEvent(sortingEventInfo);
+    onChangeSorting(id);
+  };
+  const TitleComponent = title.component;
+  const titleComponentProps = title.componentProps;
+  return title.component ? (
+    <TitleComponent
+      className={cx('header-cell', computedClassName)}
+      style={customProps.rawHeaderCellStylesConfig}
+      {...titleComponentProps}
+    />
+  ) : (
+    <div
+      className={cx('header-cell', computedClassName)}
+      style={customProps.rawHeaderCellStylesConfig}
+    >
       <div
-        className={cx('header-cell', computedClassName)}
-        style={customProps.rawHeaderCellStylesConfig}
+        className={cx('title-container', customProps.titleClassName)}
+        onClick={sortable ? sortingClickHandler : null}
       >
-        <div
-          className={cx('title-container', customProps.titleClassName)}
-          onClick={sortable ? sortingClickHandler : null}
-        >
-          <div className={cx('filter')} onClick={filterClickHandler}>
-            {Parser(FilterIcon)}
-          </div>
-          <span
-            className={cx('title-full', { [`title-full--${size}`]: size })}
-            title={size ? title.full : ''}
-          >
-            {title.full}
-          </span>
-          <span
-            className={cx('title-short', { [`title-short--${size}`]: size })}
-            title={size ? title.full : ''}
-          >
-            {title.short || title.full}
-          </span>
-          <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
+        <div className={cx('filter')} onClick={filterClickHandler}>
+          {Parser(FilterIcon)}
         </div>
+        <span
+          className={cx('title-full', { [`title-full--${size}`]: size })}
+          title={size ? title.full : ''}
+        >
+          {title.full}
+        </span>
+        <span
+          className={cx('title-short', { [`title-short--${size}`]: size })}
+          title={size ? title.full : ''}
+        >
+          {title.short || title.full}
+        </span>
+        <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 HeaderCell.propTypes = {
   ...columnPropTypes,
   sortingDirection: PropTypes.string,

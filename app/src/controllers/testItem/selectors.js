@@ -565,17 +565,18 @@ export const uniqueErrorsLinkSelector = createSelector(
 
 export const getLogItemLinkSelector = createSelector(
   urlOrganizationAndProjectSelector,
-  ({ organizationSlug, projectSlug }) => (testItem) => {
-    const payload = {
-      projectSlug,
-      filterId: ALL,
-      organizationSlug,
-    };
+  ({ organizationSlug, projectSlug }) =>
+    (testItem) => {
+      const payload = {
+        projectSlug,
+        filterId: ALL,
+        organizationSlug,
+      };
 
-    const testItemPath = testItem.path.split('.').slice(0, -1);
-    const testItemIds = [testItem.launchId, ...testItemPath].join('/');
-    const itemId = testItem.id || testItem.itemId;
+      const testItemPath = testItem.path.split('.').slice(0, -1);
+      const testItemIds = [testItem.launchId, ...testItemPath].join('/');
+      const itemId = testItem.id || testItem.itemId;
 
-    return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
-  },
+      return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
+    },
 );

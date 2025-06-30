@@ -85,8 +85,11 @@ export const getDataSectionConfig = (value) => ({
 
 export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
   const defaultPluginName = Object.keys(namedIntegrations)[0];
-  const { pluginName = defaultPluginName, integrationId, ...config } =
-    getSessionItem(`${userId}_settings`) || {};
+  const {
+    pluginName = defaultPluginName,
+    integrationId,
+    ...config
+  } = getSessionItem(`${userId}_settings`) || {};
 
   const suggestedPluginName = namedIntegrations[pluginName] ? pluginName : defaultPluginName;
   const integration =

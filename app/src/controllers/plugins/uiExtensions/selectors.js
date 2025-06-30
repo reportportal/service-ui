@@ -72,9 +72,8 @@ const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPlugin
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SETTINGS_TAB,
 );
-export const uiExtensionAdminPagesSelector = createExtensionSelectorByType(
-  EXTENSION_TYPE_ADMIN_PAGE,
-);
+export const uiExtensionAdminPagesSelector =
+  createExtensionSelectorByType(EXTENSION_TYPE_ADMIN_PAGE);
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
 );

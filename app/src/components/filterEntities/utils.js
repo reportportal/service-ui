@@ -39,10 +39,7 @@ export const getFormattedDate = (value) => {
       .subtract(days - 1, 'days')
       .valueOf();
 
-  let endOfToday = moment()
-    .add(1, 'days')
-    .startOf('day')
-    .valueOf();
+  let endOfToday = moment().add(1, 'days').startOf('day').valueOf();
   let start = null;
 
   switch (value) {

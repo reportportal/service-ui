@@ -70,18 +70,16 @@ export const MultipleAutocomplete = ({
     updatePosition?.();
     onChange(...args);
   };
-  const getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({
-    item,
-    index,
-    ...rest
-  }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      ...rest,
-    });
+  const getOptionProps =
+    (getItemProps, highlightedIndex, selectedItems) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+        ...rest,
+      });
   const removeItemByBackspace = ({ event, removeItem, inputValue }) => {
     if (event.key === 'Backspace' && !inputValue && value.length) {
       removeItem(value[value.length - 1]);

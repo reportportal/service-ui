@@ -78,7 +78,7 @@ export class LaunchesComparisonChart extends Component {
 
   onChartCreated = () => {
     // eslint-disable-next-line func-names
-    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function() {
+    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function () {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {
         elem.style('stroke-width', '3px');

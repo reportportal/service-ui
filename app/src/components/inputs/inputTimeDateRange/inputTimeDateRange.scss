@@ -38,7 +38,9 @@
   color: $COLOR--charcoal-grey;
   box-shadow: none;
   cursor: pointer;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 
   &:hover {
     border-color: $COLOR--gray-47;
@@ -212,7 +214,9 @@
       font-size: 11px;
       color: $COLOR--charcoal-grey;
       cursor: pointer;
-      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+      transition:
+        border-color ease-in-out 0.15s,
+        box-shadow ease-in-out 0.15s;
 
       &:hover {
         border-color: $COLOR--gray-47;

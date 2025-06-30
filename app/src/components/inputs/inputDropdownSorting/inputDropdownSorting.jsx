@@ -123,15 +123,8 @@ export class InputDropdownSorting extends Component {
   }
 
   render() {
-    const {
-      error,
-      touched,
-      disabled,
-      mobileDisabled,
-      transparent,
-      sortingMode,
-      positionTop,
-    } = this.props;
+    const { error, touched, disabled, mobileDisabled, transparent, sortingMode, positionTop } =
+      this.props;
     const { opened } = this.state;
 
     return (
