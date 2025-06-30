@@ -262,8 +262,8 @@ export class PostIssueModal extends Component {
 
   initIntegrationFields = (defectFormFields = [], pluginName = '') => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
-    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
-      item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
+      (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
     );
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({

@@ -277,15 +277,13 @@ const routesMap = {
     },
   },
   [HISTORY_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
     },
   },
   [UNIQUE_ERRORS_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
       dispatch(fetchClustersAction());
     },
@@ -298,16 +296,14 @@ const routesMap = {
     },
   },
   [PROJECT_LOG_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
@@ -322,8 +318,7 @@ const routesMap = {
     },
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());

@@ -8,7 +8,6 @@
     "stylelint-declaration-strict-value"
   ],
   "rules": {
-    "prettier/prettier": null,
     "no-descending-specificity": [true, {"severity": "warning"}],
     "selector-pseudo-class-no-unknown": [true, {"ignorePseudoClasses": ["global"]}],
     "block-no-empty": [true, {"severity": "warning"}],

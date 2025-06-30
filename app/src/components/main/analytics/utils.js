@@ -26,16 +26,9 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 };
 
 export const normalizeEventString = (string = '') =>
-  string
-    .trim()
-    .replace(/\s+|-/g, '_')
-    .toLowerCase();
+  string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-export const getAppVersion = (buildVersion) =>
-  buildVersion
-    ?.split('.')
-    .splice(0, 2)
-    .join('.');
+export const getAppVersion = (buildVersion) => buildVersion?.split('.').splice(0, 2).join('.');
 
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
   const {

@@ -144,24 +144,17 @@ export const daysBetween = (date1, date2) => {
 export const utcOffset = (new Date().getTimezoneOffset() / 60) * -1;
 
 export const getTimestampFromMinutes = (minutes) => {
-  const currentUnix = moment()
-    .startOf('day')
-    .unix();
+  const currentUnix = moment().startOf('day').unix();
   return (parseInt(minutes, 10) * 60 + currentUnix) * 1000;
 };
 
 export const getMinutesFromTimestamp = (timestamp) => {
-  const currentUnix = moment()
-    .startOf('day')
-    .unix();
+  const currentUnix = moment().startOf('day').unix();
   return parseInt((moment(timestamp).unix() - currentUnix) / 60, 10);
 };
 
 export const secondsToDays = (seconds, locale) =>
-  moment
-    .duration(seconds, 'seconds')
-    .locale(locale)
-    .humanize({ d: Number.MAX_SAFE_INTEGER });
+  moment.duration(seconds, 'seconds').locale(locale).humanize({ d: Number.MAX_SAFE_INTEGER });
 
 export const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 export const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();

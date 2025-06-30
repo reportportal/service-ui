@@ -63,9 +63,8 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Open "Launch log view"',
   },
   // DELETE_ITEM_MODAL
-  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
-    SUITE_PAGE,
-  ),
+  getClickOnDeleteBtnDeleteItemModalEvent:
+    getClickOnDeleteBtnDeleteItemModalEventCreator(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
 };

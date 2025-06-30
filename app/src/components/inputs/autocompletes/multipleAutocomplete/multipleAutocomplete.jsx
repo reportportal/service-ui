@@ -90,14 +90,16 @@ export class MultipleAutocomplete extends Component {
     focused: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItems) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+        ...rest,
+      });
 
   handleChange = (...args) => {
     this.updatePosition?.();

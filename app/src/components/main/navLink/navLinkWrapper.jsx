@@ -99,16 +99,8 @@ export class NavLinkWrapper extends Component {
   };
 
   render() {
-    const {
-      onClick,
-      onFocus,
-      onBlur,
-      children,
-      to,
-      className,
-      activeClassName,
-      title,
-    } = this.props;
+    const { onClick, onFocus, onBlur, children, to, className, activeClassName, title } =
+      this.props;
 
     return (
       <NavLink

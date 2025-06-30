@@ -64,13 +64,10 @@ export const getUniqueAndCommonAttributes = (items) => {
     };
   };
 
-  return items
-    .reduce(flatAttributes, [])
-    .filter(uniqueAttributes)
-    .reduce(groupAttributes, {
-      common: [],
-      unique: [],
-    });
+  return items.reduce(flatAttributes, []).filter(uniqueAttributes).reduce(groupAttributes, {
+    common: [],
+    unique: [],
+  });
 };
 
 export const parseQueryAttributes = ({ value }) => {

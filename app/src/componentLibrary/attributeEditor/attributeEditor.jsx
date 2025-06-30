@@ -146,7 +146,9 @@ export const AttributeEditor = ({
 
   const isValidForm = isFormValid();
 
-  const handleKeyDown = (handler) => ({ keyCode }) => {
+  const handleKeyDown =
+    (handler) =>
+    ({ keyCode }) => {
       if (keyCode === ENTER_KEY_CODE) {
         handler();
 
