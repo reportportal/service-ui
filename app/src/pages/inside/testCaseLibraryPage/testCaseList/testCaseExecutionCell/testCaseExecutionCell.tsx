@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
-import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
-import { messages as testCaseCardMessages } from '../messages';
+import { formatRelativeTime } from '../utils';
+import { createTestCaseMenuItems } from '../constants';
 import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles);
 
 interface TestCaseExecutionCellProps {
-  lastExecution: string;
+  lastExecution: number;
   onRowClick: () => void;
 }
 
@@ -37,17 +37,25 @@ export const TestCaseExecutionCell = ({
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems: PopoverItem[] = [
-    { label: formatMessage(testCaseCardMessages.duplicate) },
-    { label: formatMessage(testCaseCardMessages.editTestCase) },
-    { label: formatMessage(testCaseCardMessages.moveTestCaseTo) },
-    { label: formatMessage(testCaseCardMessages.deleteTestCase), variant: 'danger' },
-  ];
+  const menuItems = createTestCaseMenuItems(formatMessage, [3]);
+
+  const handleMenuOpen = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
-      <div className={cx('execution-time')}>{lastExecution}</div>
-      <div className={cx('menu-section')}>
+      <div className={cx('execution-time')}>{formatRelativeTime(lastExecution)}</div>
+      <div
+        role="menuitem"
+        tabIndex={0}
+        className={cx('menu-section')}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleMenuOpen}
+      >
         <PopoverControl
           items={menuItems}
           placement="bottom-end"

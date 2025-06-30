@@ -30,19 +30,57 @@
 
 .header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 24px;
   border-bottom: 1px solid var(--rp-ui-base-e-100);
   flex-shrink: 0;
+  gap: 16px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .test-case-name {
-  flex: 1;
-  margin-right: 16px;
   display: flex;
   align-items: flex-start;
   gap: 8px;
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.meta-label {
+  color: var(--rp-ui-base-e-400);
+  font-weight: 500;
+}
+
+.meta-item-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.meta-value {
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+}
+
+.meta-icon {
+  font-size: 14px;
 }
 
 .priority-icon {

@@ -49,13 +49,13 @@ export const TestCaseList = memo(
     onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
-    const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | number>('');
+    const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = testCases.slice(startIndex, endIndex);
 
-    const handleRowClick = (testCaseId: string | number) => {
+    const handleRowClick = (testCaseId: string) => {
       setSelectedTestCaseId(testCaseId);
     };
 

@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { Button, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { Button, EditIcon, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import { PopoverControl } from 'pages/common/popoverControl';
 import { TestCase } from '../../types';
+import { formatTimestamp, formatDuration } from '../utils';
+import { createTestCaseMenuItems } from '../constants';
+import { PathBreadcrumb } from './pathBreadcrumb';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 
@@ -38,6 +42,7 @@ export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -45,8 +50,10 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
+    const menuItems = createTestCaseMenuItems(formatMessage);
+
     const handleThreeDotsClick = () => {
-      // TODO: Implement three dots menu functionality
+      setIsMenuOpen(!isMenuOpen);
     };
 
     const handleOpenDetailsClick = () => {
@@ -64,31 +71,73 @@ export const TestCaseSidePanel = memo(
     return (
       <div ref={sidePanelRef} className={cx('test-case-side-panel')}>
         <div className={cx('header')}>
-          <div className={cx('test-case-name')}>
-            <PriorityIcon priority={testCase.priority} className={cx('priority-icon')} />
-            <span className={cx('test-name')}>{testCase.name}</span>
+          <div className={cx('header-top')}>
+            <div className={cx('test-case-name')}>
+              <PriorityIcon priority={testCase.priority} className={cx('priority-icon')} />
+              <span className={cx('test-name')}>{testCase.name}</span>
+            </div>
+            <button
+              type="button"
+              className={cx('close-button')}
+              onClick={onClose}
+              aria-label={formatMessage(messages.closePanel)}
+              data-automation-id="close-test-case-panel"
+            >
+              {Parser(CrossIcon)}
+            </button>
           </div>
-          <button
-            type="button"
-            className={cx('close-button')}
-            onClick={onClose}
-            aria-label={formatMessage(messages.closePanel)}
-            data-automation-id="close-test-case-panel"
-          >
-            {Parser(CrossIcon)}
-          </button>
+
+          <PathBreadcrumb path={testCase.path} />
+
+          <div className={cx('header-meta')}>
+            <div className={cx('meta-row')}>
+              <div className={cx('meta-item-row')}>
+                <span className={cx('meta-label')}>ID:</span>
+                <span className={cx('meta-value')}>{testCase.id}</span>
+              </div>
+              <div className={cx('meta-item-row')}>
+                <span className={cx('meta-label')}>Created:</span>
+                <span className={cx('meta-value')}>{formatTimestamp(testCase.created)}</span>
+              </div>
+            </div>
+            <div className={cx('meta-row')}>
+              {!!testCase.lastExecution && (
+                <div className={cx('meta-item-row')}>
+                  <EditIcon />
+                  <span className={cx('meta-value')}>
+                    {formatTimestamp(testCase.lastExecution)}
+                  </span>
+                </div>
+              )}
+              {!!testCase.durationTime && (
+                <div className={cx('meta-item-row')}>
+                  <EditIcon />
+                  <span className={cx('meta-value')}>{formatDuration(testCase.durationTime)}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className={cx('content')}>{/* TODO: Add test case details content here */}</div>
 
         <div className={cx('footer')}>
-          <Button
-            variant="ghost"
-            icon={<MeatballMenuIcon />}
-            className={cx('action-button', 'more-actions-button')}
-            onClick={handleThreeDotsClick}
-            data-automation-id="test-case-more-actions"
-          />
+          <PopoverControl
+            items={menuItems}
+            placement="bottom-end"
+            isOpened={isMenuOpen}
+            setIsOpened={setIsMenuOpen}
+          >
+            <Tooltip placement="top" content={formatMessage(messages.moreActionsTooltip)}>
+              <Button
+                variant="ghost"
+                icon={<MeatballMenuIcon />}
+                className={cx('action-button', 'more-actions-button')}
+                onClick={handleThreeDotsClick}
+                data-automation-id="test-case-more-actions"
+              />
+            </Tooltip>
+          </PopoverControl>
           <Button
             variant="ghost"
             className={cx('action-button')}

@@ -57,8 +57,16 @@ export const messages = defineMessages({
     id: 'TestCaseList.moveTestCaseTo',
     defaultMessage: 'Move test case to',
   },
+  historyOfActions: {
+    id: 'TestCaseList.historyOfActions',
+    defaultMessage: 'History of actions',
+  },
   deleteTestCase: {
     id: 'TestCaseList.deleteTestCase',
     defaultMessage: 'Delete test case',
+  },
+  addScenarioDetailsTooltip: {
+    id: 'TestCaseList.addScenarioDetailsTooltip',
+    defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
 });
