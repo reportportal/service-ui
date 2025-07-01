@@ -21,6 +21,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { BoundValidator } from 'common/utils/validation/types';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
@@ -66,8 +67,7 @@ const RenameProjectModal: FC<RenameProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-    // @Alla_Prischepa check it please
-    onClick: () => handleSubmit(onSubmit) as void,
+    onClick: handleSubmit(onSubmit) as () => void,
     disabled: anyTouched && invalid,
     'data-automation-id': 'submitButton',
   };
@@ -97,10 +97,9 @@ export default reduxForm<RenameProjectFormProps, ModalProps>({
   form: RENAME_PROJECT_FORM,
   validate: (values) => {
     const newProjectName = values[PROJECT_NAME_FIELD]?.trim();
-    const projectNameValidator = commonValidators.createProjectNameValidator();
+    const projectNameValidator: BoundValidator = commonValidators.createProjectNameValidator();
 
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- @Alla_Prischepa update after `validation` migrated to TS
       [PROJECT_NAME_FIELD]: projectNameValidator(newProjectName),
     };
   },
