@@ -24,11 +24,21 @@ import {
   FETCH_ORGANIZATION_BY_SLUG,
   FETCH_ORGANIZATION_SETTINGS,
   SET_ACTIVE_ORGANIZATION,
+  UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
 } from './constants';
 
 const setActiveOrganizationReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case SET_ACTIVE_ORGANIZATION:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+const updateOrganizationSettingsReducer = (state = [], { type = '', payload = {} }) => {
+  switch (type) {
+    case UPDATE_ORGANIZATION_SETTINGS_SUCCESS:
       return payload;
     default:
       return state;
@@ -47,8 +57,11 @@ export const organizationReducer = combineReducers({
   organizationLoading: loadingReducer(FETCH_ORGANIZATION_BY_SLUG),
   projects: projectsReducer,
   users: usersReducer,
-  settings: fetchReducer(FETCH_ORGANIZATION_SETTINGS, {
-    contentPath: 'retention_policy',
-    initialState: {},
-  }),
+  settings: queueReducers(
+    fetchReducer(FETCH_ORGANIZATION_SETTINGS, {
+      contentPath: 'retention_policy',
+      initialState: {},
+    }),
+    updateOrganizationSettingsReducer,
+  ),
 });

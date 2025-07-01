@@ -180,6 +180,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  updateOrganizationSettingsSuccess: {
+    id: 'OrganizationSettingsPage.updateSettingsSuccess',
+    defaultMessage: 'Organization settings have been updated successfully',
+  },
 });
 
 @injectIntl

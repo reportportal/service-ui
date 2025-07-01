@@ -1626,6 +1626,7 @@
   "OrganizationSettings.generalTab.organizationNameLabel": "Name",
   "OrganizationSettingsPage.general": "General",
   "OrganizationSettingsPage.title": "Organization Settings",
+  "OrganizationSettingsPage.updateSettingsSuccess": "Organization settings have been updated successfully",
   "OrganizationSidebar.membersBtn": "Organization Users",
   "OrganizationSidebar.projectsBtn": "Projects",
   "OrganizationSidebar.settingsBtn": "Organization Settings",

@@ -15,47 +15,22 @@
  */
 
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
-import { daysToSeconds, secondsToDays } from 'common/utils';
 import { useIntl } from 'react-intl';
 
-export const useRetentionUtils = (formValues, retention = null) => {
-  const { lang, formatMessage } = useIntl();
+export const useRetentionUtils = (formValues) => {
+  const { formatMessage } = useIntl();
 
   const getRetentionOptions = () => {
-    const retentionOptions = [
-      { label: formatMessage(settingsMessages.week1), value: daysToSeconds(7) },
-      { label: formatMessage(settingsMessages.week2), value: daysToSeconds(14) },
-      { label: formatMessage(settingsMessages.week3), value: daysToSeconds(21) },
-      { label: formatMessage(settingsMessages.month1), value: daysToSeconds(30) },
-      { label: formatMessage(settingsMessages.month3), value: daysToSeconds(90) },
-      { label: formatMessage(settingsMessages.month6), value: daysToSeconds(180) },
+    return [
+      { label: formatMessage(settingsMessages.week1), value: 7 },
+      { label: formatMessage(settingsMessages.week2), value: 14 },
+      { label: formatMessage(settingsMessages.week3), value: 21 },
+      { label: formatMessage(settingsMessages.month1), value: 30 },
+      { label: formatMessage(settingsMessages.month3), value: 90 },
+      { label: formatMessage(settingsMessages.month6), value: 180 },
       { label: formatMessage(settingsMessages.forever), value: 0 },
     ];
-
-    if (!retention || retention === 0) {
-      return retentionOptions;
-    }
-
-    const options = retentionOptions.filter(
-      (option) => option.value <= retention && option.value !== 0,
-    );
-
-    if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
-      options.push({ label: secondsToDays(retention, lang), value: retention });
-    }
-
-    return options;
   };
-
-  const createValueFormatter = (values) => (value) => {
-    const selectedOption = values.find((option) => option.value === value);
-    if (selectedOption) {
-      return selectedOption;
-    }
-    return { label: secondsToDays(value, lang), value };
-  };
-
-  const formatRetention = createValueFormatter(getRetentionOptions());
 
   const formatInputValues = (values) => {
     if (!values) {
@@ -83,6 +58,7 @@ export const useRetentionUtils = (formValues, retention = null) => {
         title: formatMessage(settingsMessages.keepLaunchesTooltip),
       };
     });
+
     return newOptions;
   };
 
@@ -105,9 +81,7 @@ export const useRetentionUtils = (formValues, retention = null) => {
         title: formatMessage(settingsMessages.keepLogsTooltip),
       };
     });
-    if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(formatRetention(inputValues.keepLogs));
-    }
+
     return newOptions;
   };
 
@@ -120,22 +94,13 @@ export const useRetentionUtils = (formValues, retention = null) => {
       const hidden = inputValues.keepLogs === Infinity ? false : isHidden;
       return { ...elem, hidden };
     });
-    if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(formatRetention(inputValues.keepScreenshots));
-    }
-    return newOptions;
-  };
 
-  const getMinRetentionValue = (value) => {
-    return retention === null || retention > value || retention === 0 ? value : retention;
+    return newOptions;
   };
 
   return {
     getLaunchesOptions,
     getLogOptions,
     getScreenshotsOptions,
-    formatRetention,
-    getMinRetentionValue,
-    createValueFormatter,
   };
 };
