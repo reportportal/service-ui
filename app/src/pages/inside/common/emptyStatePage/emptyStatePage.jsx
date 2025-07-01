@@ -63,16 +63,7 @@ export const EmptyStatePage = ({
       {!isEmpty(buttons) && (
         <div className={cx('buttons')}>
           {buttons.map(
-            ({
-              name,
-              dataAutomationId,
-              isDisabled,
-              handleButton,
-              icon,
-              variant,
-              isCompact,
-              className,
-            }) => (
+            ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
               <Button
                 disabled={isDisabled}
                 adjustWidthOn={'wide-content'}
@@ -80,7 +71,7 @@ export const EmptyStatePage = ({
                 data-automation-id={dataAutomationId}
                 key={name}
                 variant={variant}
-                className={cx({ 'buttons__button--compact': isCompact }, className)}
+                className={cx({ 'buttons__button--compact': isCompact })}
                 {...(icon && { icon: Parser(icon) })}
               >
                 {name}
@@ -114,7 +105,6 @@ EmptyStatePage.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      className: PropTypes.string,
       dataAutomationId: PropTypes.string,
       isDisabled: PropTypes.bool,
       handleButton: PropTypes.func,
