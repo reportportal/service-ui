@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -160,16 +160,51 @@ export const TagList = ({
     toggleExpanded();
   };
 
-  const handleButtonClick = (e) => {
-    e.stopPropagation();
-    toggleExpanded();
-  };
+  const handleButtonClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      toggleExpanded();
+    },
+    [toggleExpanded],
+  );
 
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
   const isShowAllButtonVisible = useMemo(
     () => isShowAllView && defaultVisibleLines && exceedsVisibleLines && !isExpanded,
     [isShowAllView, defaultVisibleLines, exceedsVisibleLines, isExpanded],
   );
+
+  const showAllButtonTemplate = useMemo(() => {
+    return (
+      <div className={cx('tag-list__item--button-wrapper')}>
+        <Button
+          className={cx('tag-list__item--button', 'tag-list__item--button-show-all-view')}
+          onClick={handleButtonClick}
+          variant="text"
+        >
+          {formatMessage(messages.showAll)}
+        </Button>
+      </div>
+    );
+  }, [formatMessage, handleButtonClick]);
+
+  const hideAllButtonTemplate = useMemo(() => {
+    return (
+      <div className={cx({ 'tag-list__item--button-wrapper': isShowAllView })}>
+        <Button
+          className={cx('tag-list__item--button', {
+            'tag-list__item--button-show-all-view': isShowAllView && defaultVisibleLines,
+          })}
+          onClick={handleButtonClick}
+          variant="text"
+        >
+          {isShowAllView && defaultVisibleLines
+            ? formatMessage(messages.hideAll)
+            : formatMessage(messages.showLess)}
+        </Button>
+      </div>
+    );
+  }, [formatMessage, handleButtonClick, isShowAllView, defaultVisibleLines]);
 
   if (isEmpty(tags)) {
     return (
@@ -212,59 +247,17 @@ export const TagList = ({
             </div>
           );
         })}
-        {/* {isExpanded && (
-          <Button
-            className={cx('tag-list__item--button', {
-              'tag-list__item--button-show-all-view': isShowAllView && defaultVisibleLines,
-            })}
-            onClick={handleButtonClick}
-            variant="text"
-          >
-            {isShowAllView && defaultVisibleLines
-              ? formatMessage(messages.hideAll)
-              : formatMessage(messages.showLess)}
-          </Button>
+        {!isShowAllView && (
+          <>
+            {isExpanded && hideAllButtonTemplate}
+            {isShowAllButtonVisible && showAllButtonTemplate}
+          </>
         )}
-        {isShowAllButtonVisible && (
-          <div className={cx('tag-list__item--button-wrapper')}>
-            <Button
-              className={cx('tag-list__item--button', 'tag-list__item--button-show-all-view')}
-              onClick={handleButtonClick}
-              variant="text"
-            >
-              {formatMessage(messages.showAll)}
-            </Button>
-          </div>
-        )} */}
       </div>
       {isShowAllView && (
         <>
-          {isExpanded && (
-            <div className={cx({ 'tag-list__item--button-wrapper': isShowAllView })}>
-              <Button
-                className={cx('tag-list__item--button', {
-                  'tag-list__item--button-show-all-view': isShowAllView && defaultVisibleLines,
-                })}
-                onClick={handleButtonClick}
-                variant="text"
-              >
-                {isShowAllView && defaultVisibleLines
-                  ? formatMessage(messages.hideAll)
-                  : formatMessage(messages.showLess)}
-              </Button>
-            </div>
-          )}
-          {isShowAllButtonVisible && (
-            <div className={cx('tag-list__item--button-wrapper')}>
-              <Button
-                className={cx('tag-list__item--button', 'tag-list__item--button-show-all-view')}
-                onClick={handleButtonClick}
-                variant="text"
-              >
-                {formatMessage(messages.showAll)}
-              </Button>
-            </div>
-          )}
+          {isExpanded && hideAllButtonTemplate}
+          {isShowAllButtonVisible && showAllButtonTemplate}
         </>
       )}
       {isCounterButtonVisible && !isShowAllView ? (
