@@ -32,11 +32,12 @@ const noopHandler = () => {};
 const testCase: TestCase = {
   id: '2775277527',
   name: '24.2 PV',
-  created: '2025-03-26',
+  created: 1751362404546,
   priority: 'high',
   tags: [],
   description: '',
   hasScenario: false,
+  path: ['24.2 PV'],
 };
 
 export const TestCaseDetailsPage = () => (
