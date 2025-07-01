@@ -32,6 +32,7 @@ import {
   LAUNCHES_FILTER_NAME_CONDITION,
   TEAMMATES_FILTER_NAME_CONDITION,
   ORGANIZATION_TYPE_FILTER_NAME,
+  timeRangeValues,
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
@@ -42,6 +43,7 @@ import {
   formatDisplayedValue,
   parseFormattedDate,
 } from 'components/main/dateRange';
+import { getFormattedDate } from 'components/filterEntities/utils';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
 
@@ -93,12 +95,20 @@ export const OrganizationsFilter = ({
         {
           component: Dropdown,
           name: LAST_RUN_DATE_FILTER_NAME,
+          format: getFormattedDate,
           props: {
             value: timeRange[0].value,
             options: timeRange,
-            formatDisplayedValue,
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
             notScrollable: true,
-            footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
+            footer: (
+              <Field
+                name={LAST_RUN_DATE_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+              />
+            ),
           },
         },
       ],

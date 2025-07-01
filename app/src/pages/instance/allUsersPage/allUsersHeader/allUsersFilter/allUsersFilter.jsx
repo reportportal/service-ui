@@ -27,6 +27,7 @@ import {
   ACCOUNT_TYPE_FILTER_NAME,
   EMAIL_FILTER_NAME,
   EMAIL_FILTER_NAME_CONDITION,
+  timeRangeLastLoginValues,
   getAccountTypes,
   getEmailComparisons,
   getLastLogin,
@@ -42,6 +43,7 @@ import {
   formatDisplayedValue,
   parseFormattedDate,
 } from 'components/main/dateRange';
+import { getFormattedDate } from 'components/filterEntities/utils';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
@@ -105,12 +107,20 @@ export const AllUsersFilter = ({
         {
           component: Dropdown,
           name: LAST_LOGIN_FILTER_NAME,
+          format: getFormattedDate,
           props: {
             value: '',
             options: lastLogin,
-            formatDisplayedValue,
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastRunDate, timeRangeLastLoginValues),
             notScrollable: true,
-            footer: <Field name={LAST_LOGIN_FILTER_NAME} component={DateRangeFormField} />,
+            footer: (
+              <Field
+                name={LAST_LOGIN_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+              />
+            ),
           },
         },
       ],

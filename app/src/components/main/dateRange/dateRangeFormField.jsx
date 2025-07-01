@@ -30,9 +30,9 @@ export const DateRangeFormField = ({ input }) => {
 
   return (
     <DateRange
-      startDate={value.startDate}
+      startDate={value?.startDate}
       setStartDate={startDateChangeHandler}
-      endDate={value.endDate}
+      endDate={value?.endDate}
       setEndDate={endDateChangeHandler}
     />
   );

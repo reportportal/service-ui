@@ -16,13 +16,18 @@
 
 import moment from 'moment';
 import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
+import { getFormattedDate } from 'components/filterEntities/utils';
 
-export const formatDisplayedValue = (date) => {
-  if (!date || typeof date === 'string') {
-    return date;
+export const formatDisplayedValue = (displayedValue, lastRunDate, timeRangeValues) => {
+  if (!lastRunDate || typeof lastRunDate === 'string') {
+    return displayedValue;
   }
 
-  const { startDate, endDate } = date;
+  if (timeRangeValues.includes(getFormattedDate(lastRunDate))) {
+    return displayedValue;
+  }
+
+  const { startDate, endDate } = lastRunDate;
 
   if (!startDate && !endDate) {
     return '';
@@ -38,6 +43,10 @@ export const formatDisplayedValue = (date) => {
 export const parseFormattedDate = (formatted) => {
   if (!formatted) {
     return null;
+  }
+
+  if (formatted instanceof Object) {
+    return formatted;
   }
 
   const [startMinutesStr, endMinutesStr] = formatted.split(';');

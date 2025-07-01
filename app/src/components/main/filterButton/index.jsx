@@ -28,6 +28,8 @@ export {
   LAST_LOGIN_FILTER_NAME,
   EMAIL_FILTER_NAME,
   EMAIL_FILTER_NAME_CONDITION,
+  timeRangeValues,
+  timeRangeLastLoginValues,
   getRangeComparisons,
   getTimeRange,
   getLastLogin,

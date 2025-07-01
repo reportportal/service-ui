@@ -30,50 +30,16 @@ export function bindDefaultValue(key, options = {}) {
   };
 }
 
-export const getFormattedDate = (value) => {
+export const getFormattedDate = (formValue) => {
+  if (typeof formValue === 'string') {
+    return formValue;
+  }
+
+  const { startDate, endDate } = formValue || {};
+
   const utcString = moment().format('ZZ');
 
-  const calculateStartDate = (days) =>
-    moment()
-      .startOf('day')
-      .subtract(days - 1, 'days')
-      .valueOf();
-
-  let endOfToday = moment()
-    .add(1, 'days')
-    .startOf('day')
-    .valueOf();
-  let start = null;
-
-  switch (value) {
-    case 'today':
-      start = calculateStartDate(1);
-      break;
-    case 'last2days':
-      start = calculateStartDate(2);
-      break;
-    case 'last7days':
-      start = calculateStartDate(7);
-      break;
-    case 'last30days':
-      start = calculateStartDate(30);
-      break;
-    case 'last90days':
-      start = calculateStartDate(90);
-      break;
-    case 'moreThanYearAgo':
-      start = calculateStartDate(365);
-      break;
-    default:
-      start = value.startDate;
-      endOfToday = value.endDate;
-      break;
-  }
-  if (!start || !endOfToday) {
-    return value;
-  }
-
-  return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(endOfToday)};${utcString}`;
+  return `${getMinutesFromTimestamp(startDate)};${getMinutesFromTimestamp(endDate)};${utcString}`;
 };
 
 export const prepareQueryFilters = (filtersParams, dateProp) => {

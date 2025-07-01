@@ -31,6 +31,7 @@ import {
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
+  timeRangeValues,
 } from 'components/main/filterButton';
 import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
@@ -41,6 +42,7 @@ import {
   parseFormattedDate,
 } from 'components/main/dateRange';
 import classNames from 'classnames/bind';
+import { getFormattedDate } from 'components/filterEntities/utils';
 import { messages } from './messages';
 import styles from './projectsFilter.scss';
 
@@ -70,12 +72,20 @@ export const ProjectsFilter = ({
         {
           component: Dropdown,
           name: LAST_RUN_DATE_FILTER_NAME,
+          format: getFormattedDate,
           props: {
             value: timeRange[0].value,
             options: timeRange,
-            formatDisplayedValue,
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
             notScrollable: true,
-            footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
+            footer: (
+              <Field
+                name={LAST_RUN_DATE_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+              />
+            ),
           },
         },
       ],
