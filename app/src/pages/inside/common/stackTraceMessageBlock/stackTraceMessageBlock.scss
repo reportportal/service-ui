@@ -54,7 +54,9 @@
   height: 20px;
   background-color: $COLOR--white-two;
   box-shadow: 0 -15px 20px 0px $COLOR--white-two;
-  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+  transition:
+    background-color 0.2s ease 0s,
+    box-shadow 0.2s ease 0s;
 
   &.expanded {
     box-shadow: none;

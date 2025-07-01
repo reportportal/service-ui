@@ -45,62 +45,60 @@ export const GroupHeader = connect((state) => ({
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
   slugs: urlOrganizationAndProjectSelector(state),
-}))(
-  ({
-    data,
-    launchId,
-    filterId,
-    isTestItemsList,
-    isSearchedItems,
-    isViewOnly,
-    slugs: { organizationSlug, projectSlug },
-  }) => {
-    const { itemPaths = [], launchPathName } = data[0].pathNames;
+}))(({
+  data,
+  launchId,
+  filterId,
+  isTestItemsList,
+  isSearchedItems,
+  isViewOnly,
+  slugs: { organizationSlug, projectSlug },
+}) => {
+  const { itemPaths = [], launchPathName } = data[0].pathNames;
 
-    let pathNames = itemPaths;
-    let sliceIndexBegin = 0;
+  let pathNames = itemPaths;
+  let sliceIndexBegin = 0;
 
-    if (isTestItemsList || isSearchedItems) {
-      const newLaunchPathName = {
-        id: data[0].launchId,
-        name: `${launchPathName.name} #${launchPathName.number}`,
-      };
+  if (isTestItemsList || isSearchedItems) {
+    const newLaunchPathName = {
+      id: data[0].launchId,
+      name: `${launchPathName.name} #${launchPathName.number}`,
+    };
 
-      pathNames = [newLaunchPathName, ...pathNames];
-      sliceIndexBegin = 1;
-    }
-    const itemLaunchId = isTestItemsList ? data[0].launchId : launchId || data[0].launchId;
+    pathNames = [newLaunchPathName, ...pathNames];
+    sliceIndexBegin = 1;
+  }
+  const itemLaunchId = isTestItemsList ? data[0].launchId : launchId || data[0].launchId;
 
-    return (
-      <div className={cx('group-header-row')}>
-        {/* td inside of div because of EPMRPP-36916 */}
-        <td className={cx('group-header-content', { disabled: isViewOnly })} colSpan={100}>
-          {pathNames.map((key, i, array) => (
-            <Fragment key={`${key.id}${key.name}`}>
-              {isViewOnly ? (
-                <span className={cx('item-name')}>{key.name}</span>
-              ) : (
-                <Link
-                  className={cx('link')}
-                  to={createLink(
-                    projectSlug,
-                    filterId,
-                    itemLaunchId,
-                    array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
-                    organizationSlug,
-                  )}
-                >
-                  {key.name}
-                </Link>
-              )}
-              {i < array.length - 1 && <span className={cx('separator')}> / </span>}
-            </Fragment>
-          ))}
-        </td>
-      </div>
-    );
-  },
-);
+  return (
+    <div className={cx('group-header-row')}>
+      {/* td inside of div because of EPMRPP-36916 */}
+      <td className={cx('group-header-content', { disabled: isViewOnly })} colSpan={100}>
+        {pathNames.map((key, i, array) => (
+          <Fragment key={`${key.id}${key.name}`}>
+            {isViewOnly ? (
+              <span className={cx('item-name')}>{key.name}</span>
+            ) : (
+              <Link
+                className={cx('link')}
+                to={createLink(
+                  projectSlug,
+                  filterId,
+                  itemLaunchId,
+                  array.slice(sliceIndexBegin, i + 1).map((item) => item.id),
+                  organizationSlug,
+                )}
+              >
+                {key.name}
+              </Link>
+            )}
+            {i < array.length - 1 && <span className={cx('separator')}> / </span>}
+          </Fragment>
+        ))}
+      </td>
+    </div>
+  );
+});
 GroupHeader.propTypes = {
   data: PropTypes.array,
   slugs: PropTypes.shape({

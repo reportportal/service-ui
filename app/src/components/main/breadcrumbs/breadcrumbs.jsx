@@ -126,6 +126,7 @@ export class Breadcrumbs extends Component {
               defaultMessage="Original launch was lost"
             />
             <div className={cx('restore-launch-container')}>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className={cx('restore-launch-button')} onClick={this.props.onRestorePath}>
                 <FormattedMessage id="Breadcrumbs.restorePath" defaultMessage="Restore path" />
               </a>

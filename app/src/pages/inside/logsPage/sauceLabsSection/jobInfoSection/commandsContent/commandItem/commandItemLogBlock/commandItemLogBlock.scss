@@ -31,7 +31,12 @@
     max-height: 160px;
     padding: 7px;
     background: $COLOR--white-two;
-    font-family: Source Code Pro, Consolas, Monaco, Andale Mono, monospace;
+    font-family:
+      Source Code Pro,
+      Consolas,
+      Monaco,
+      Andale Mono,
+      monospace;
     word-break: break-all;
     overflow-y: scroll;
   }

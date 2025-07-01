@@ -315,14 +315,8 @@ export class LogsGrid extends Component {
 
   renderConsoleViewHeader = (cellProps) => {
     const { className, style: cellClassName } = cellProps;
-    const {
-      intl,
-      sortingColumn,
-      sortingDirection,
-      onChangeSorting,
-      filter,
-      onFilterChange,
-    } = this.props;
+    const { intl, sortingColumn, sortingDirection, onChangeSorting, filter, onFilterChange } =
+      this.props;
 
     return (
       <div className={className} style={cellClassName}>

@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,6 @@
  * limitations under the License.
  */
 
-.permission-map {
-  width: 850px;
-  margin-left: -425px;
-  transition:
-    margin-top 450ms ease-in,
-    opacity 450ms ease-in;
-  @media (max-width: $SCREEN-MD_MAX) {
-    width: 800px;
-    margin-left: -400px;
-  }
-  @media (max-width: $SCREEN-SM_MAX) {
-    width: 750px;
-    margin-left: -375px;
-  }
-  @media (max-width: $SCREEN-XS_MAX) {
-    width: 100%;
-    margin-left: 0;
-    right: 0;
-    left: 0;
-  }
-}
+export type Validator = (value: unknown) => boolean;
+
+export type BoundValidator = (value: unknown) => string | undefined;

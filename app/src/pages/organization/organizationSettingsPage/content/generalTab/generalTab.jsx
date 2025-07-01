@@ -50,9 +50,8 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const formValues = useSelector((state) =>
     selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
   );
-  const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } = useRetentionUtils(
-    formValues,
-  );
+  const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } =
+    useRetentionUtils(formValues);
   const isDisabled = !canPerformUpdate || processingData;
 
   useEffect(() => {

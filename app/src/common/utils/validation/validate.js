@@ -128,20 +128,22 @@ export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3
 export const footerLinkUrlLength = maxLength(1024);
 export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
 export const urlOrEmailValidator = (value) => email(value) || url(value);
-export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
-  if (!informOwner && !value.length) {
-    return false;
-  }
-  if (informOwner && !value.length) {
-    return true;
-  }
-  const checkIsStringWithEmailParts = regex(/@/);
-  if (value.some(checkIsStringWithEmailParts)) {
-    return value.filter(checkIsStringWithEmailParts).every(email);
-  }
+export const createNotificationRecipientsValidator =
+  (informOwner) =>
+  (value = []) => {
+    if (!informOwner && !value.length) {
+      return false;
+    }
+    if (informOwner && !value.length) {
+      return true;
+    }
+    const checkIsStringWithEmailParts = regex(/@/);
+    if (value.some(checkIsStringWithEmailParts)) {
+      return value.filter(checkIsStringWithEmailParts).every(email);
+    }
 
-  return true;
-};
+    return true;
+  };
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);

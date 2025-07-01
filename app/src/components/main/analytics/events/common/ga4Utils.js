@@ -33,7 +33,4 @@ export const getBasicPerformanceEventParameters = (category) =>
   getBasicEventParameters('performance', category);
 
 export const normalizeEventParameter = (parameter = '') =>
-  parameter
-    .toLowerCase()
-    .trim()
-    .replace(/\s+|-/g, '_');
+  parameter.toLowerCase().trim().replace(/\s+|-/g, '_');

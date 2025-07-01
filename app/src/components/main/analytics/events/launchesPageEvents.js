@@ -109,8 +109,8 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_new_widget',
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickBreadcrumbsEvents(LAUNCHES_PAGE)
-    .getClickOnPlusMinusBreadcrumbEvent,
+  getClickOnPlusMinusBreadcrumbEvent:
+    getClickBreadcrumbsEvents(LAUNCHES_PAGE).getClickOnPlusMinusBreadcrumbEvent,
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(LAUNCHES_PAGE),
   getClickOnFilterActionBarButtonEvent: (name) => ({
     ...basicFilterActionBarClickEventParameters,
@@ -286,9 +286,8 @@ export const LAUNCHES_MODAL_EVENTS = {
     condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[analyzerMode],
     type: formatAnalyzeItemsMode(analyzeItemsMode),
   }),
-  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
-    LAUNCHES_PAGE,
-  ),
+  getClickOnDeleteBtnDeleteItemModalEvent:
+    getClickOnDeleteBtnDeleteItemModalEventCreator(LAUNCHES_PAGE),
   getOkBtnImportModal: (selectedPluginName) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'import_launch',
@@ -410,9 +409,8 @@ export const LAUNCHES_MODAL_EVENTS = {
   CHOOSE_FILTER_ADD_WIDGET_MODAL: getChooseFilterAddWidgetModal(LAUNCHES_MODAL),
   ADD_FILTER_BTN_ADD_WIDGET_MODAL: getAddFilterBtnAddWidgetModal(LAUNCHES_MODAL),
   ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getAddBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
-  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getCancelBtnAddNewFilterAddWidgetModal(
-    LAUNCHES_MODAL,
-  ),
+  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL:
+    getCancelBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
   NEXT_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Next Step on Modal Add New Widget',

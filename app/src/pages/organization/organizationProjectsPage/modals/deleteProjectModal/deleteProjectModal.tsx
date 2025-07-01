@@ -21,6 +21,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { BoundValidator } from 'common/utils/validation/types';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
@@ -29,7 +30,7 @@ import classNames from 'classnames/bind';
 import { messages } from '../../messages';
 import styles from './deleteProjectModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
@@ -60,7 +61,7 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    onClick: handleSubmit(onConfirm),
+    onClick: handleSubmit(onConfirm) as () => void,
     variant: 'danger',
     disabled: anyTouched && invalid,
   };
@@ -95,8 +96,11 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
 export default reduxForm<DeleteProjectFormProps, ModalProps>({
   form: DELETE_PROJECT_FORM,
   validate: ({ projectName: inputProjectValue }, { data: { projectName } }) => {
+    const projectNameValidator: BoundValidator =
+      commonValidators.createKeywordMatcherValidator(projectName);
+
     return {
-      projectName: commonValidators.createKeywordMatcherValidator(projectName)(inputProjectValue),
+      projectName: projectNameValidator(inputProjectValue),
     };
   },
 })(DeleteProjectModal);

@@ -35,7 +35,7 @@ import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
 import styles from './projectActionMenu.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface ProjectDetails {
   projectName: string;
@@ -51,14 +51,8 @@ interface ProjectActionMenuProps {
 }
 
 export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
-  const {
-    projectName,
-    projectKey,
-    projectId,
-    projectSlug,
-    projectRole,
-    organizationSlug,
-  } = details;
+  const { projectName, projectKey, projectId, projectSlug, projectRole, organizationSlug } =
+    details;
   const roles = useSelector(userRolesSelector);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();

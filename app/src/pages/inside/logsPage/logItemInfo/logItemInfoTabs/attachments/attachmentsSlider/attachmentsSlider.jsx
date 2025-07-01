@@ -75,14 +75,8 @@ class AttachmentsSlider extends Component {
     this.props.carouselStore.setStoreState({ currentSlide: this.props.currentThumb });
 
   nextArrowClickHandler = () => {
-    const {
-      isThumbsView,
-      activeItemId,
-      currentThumb,
-      carouselStore,
-      attachments,
-      visibleThumbs,
-    } = this.props;
+    const { isThumbsView, activeItemId, currentThumb, carouselStore, attachments, visibleThumbs } =
+      this.props;
 
     let nextItemId = activeItemId + 1;
     let thumbConfig = null;

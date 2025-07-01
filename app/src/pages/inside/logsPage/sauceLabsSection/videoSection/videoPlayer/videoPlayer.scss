@@ -36,7 +36,10 @@
         width: 2em;
         border: none;
         color: $COLOR--white-two;
-        transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
+        transition:
+          border-color 0.4s,
+          outline 0.4s,
+          background-color 0.4s;
         background-color: $COLOR--black-2;
         font-size: 3.5em;
         border-radius: 50%;

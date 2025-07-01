@@ -94,10 +94,7 @@ export class LogStatusBlock extends Component {
       return this.formatStatus(ALL_STATUSES).toUpperCase();
     }
 
-    return activeStatuses
-      .map(this.formatStatus)
-      .join(', ')
-      .toUpperCase();
+    return activeStatuses.map(this.formatStatus).join(', ').toUpperCase();
   };
 
   getIsAllStatusesActive = (activeStatuses) => activeStatuses.length === this.statusArray.length;

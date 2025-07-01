@@ -69,14 +69,14 @@ export const IntegrationInfo = (props) => {
     integrationId,
   } = props;
 
-  const availableGlobalIntegrations = useMemo(() => globalIntegrations[pluginName] || [], [
-    globalIntegrations,
-    pluginName,
-  ]);
-  const availableProjectIntegrations = useMemo(() => projectIntegrations[pluginName] || [], [
-    projectIntegrations,
-    pluginName,
-  ]);
+  const availableGlobalIntegrations = useMemo(
+    () => globalIntegrations[pluginName] || [],
+    [globalIntegrations, pluginName],
+  );
+  const availableProjectIntegrations = useMemo(
+    () => projectIntegrations[pluginName] || [],
+    [projectIntegrations, pluginName],
+  );
   const isAtLeastOneIntegrationAvailable =
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 

@@ -20,7 +20,7 @@ import { SortingDirection } from 'controllers/sorting/types';
 import { DirectionIcon } from '../directionIcon';
 import styles from './dropdownSortingOption.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface DropdownSortingOptionProps {
   label: string;

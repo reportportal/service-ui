@@ -26,7 +26,7 @@ import { DirectionIcon } from './directionIcon';
 import { messages } from './messages';
 import styles from './dropdownSorting.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface SortParams {
   value: string;

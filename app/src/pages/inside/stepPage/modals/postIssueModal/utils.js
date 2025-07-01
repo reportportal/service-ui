@@ -35,9 +35,7 @@ const validateNonRequiredField = (value, type, hint) => {
   if (fieldValue) {
     try {
       const parsedFieldValue = JSON.parse(fieldValue);
-      // eslint-disable-next-line
       isFieldValid = typeof parsedFieldValue === type;
-      // eslint-disable-next-line no-empty
     } catch (e) {
       isFieldValid = false;
     }
@@ -87,8 +85,11 @@ export const getDataSectionConfig = (value) => ({
 
 export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
   const defaultPluginName = Object.keys(namedIntegrations)[0];
-  const { pluginName = defaultPluginName, integrationId, ...config } =
-    getSessionItem(`${userId}_settings`) || {};
+  const {
+    pluginName = defaultPluginName,
+    integrationId,
+    ...config
+  } = getSessionItem(`${userId}_settings`) || {};
 
   const suggestedPluginName = namedIntegrations[pluginName] ? pluginName : defaultPluginName;
   const integration =

@@ -24,14 +24,9 @@ import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { InputTimeDateRangeMenu } from './inputTimeDateRangeMenu';
 import styles from './inputTimeDateRange.scss';
 
-const DEFAULT_DISPLAY_START_DATE = moment()
-  .startOf('day')
-  .valueOf();
+const DEFAULT_DISPLAY_START_DATE = moment().startOf('day').valueOf();
 
-const DEFAULT_DISPLAY_END_DATE =
-  moment()
-    .endOf('day')
-    .valueOf() + 1;
+const DEFAULT_DISPLAY_END_DATE = moment().endOf('day').valueOf() + 1;
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

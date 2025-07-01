@@ -46,69 +46,68 @@ const getBasicClickEventParametersMakeDecisionCreator = (place, defectFromTIGrou
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
 
-const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = '') => ({
-  ...basicClickEventParametersMakeDecision,
-  place: `${place}${actionPlace && `#${actionPlace}`}`,
-  condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
-});
+const getOpenModalEventCreator =
+  (place) =>
+  (defectFromTIGroup, actionPlace = '') => ({
+    ...basicClickEventParametersMakeDecision,
+    place: `${place}${actionPlace && `#${actionPlace}`}`,
+    condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
+  });
 
-const getClickOnApplyEventCreator = (place) => (
-  defectFromTIGroup,
-  hasSuggestions,
-  status,
-  issueType,
-  itemDataIssueType,
-  issueActionType,
-  suggestedItems,
-  extraParams,
-) => {
-  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
-    place,
+const getClickOnApplyEventCreator =
+  (place) =>
+  (
     defectFromTIGroup,
-  );
-
-  basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
-    issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
-  }`;
-
-  const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
-    issueType,
-  )}`;
-
-  const iconName = suggestedItems
-    .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
-    .join('#');
-
-  return {
-    ...basicEventParameters,
+    hasSuggestions,
     status,
-    switcher,
-    icon_name: iconName || 'not_set',
-    element_name: getMakeDecisionElementName(issueActionType),
-    ...extraParams,
-  };
-};
+    issueType,
+    itemDataIssueType,
+    issueActionType,
+    suggestedItems,
+    extraParams,
+  ) => {
+    const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
+      place,
+      defectFromTIGroup,
+    );
 
-const getClickOnApplyBulkEventCreator = (place) => (
-  defectFromTIGroup,
-  issueActionType,
-  items,
-  issueType,
-  linkName,
-) => {
-  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
-    place,
-    defectFromTIGroup,
-  );
+    basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
+      issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
+    }`;
 
-  return {
-    ...basicEventParameters,
-    element_name: getMakeDecisionElementName(issueActionType),
-    switcher: getSwitchedDefectTypes(items, issueType),
-    type: ISSUE_TYPE_MAP[issueActionType] || undefined,
-    link_name: linkName,
+    const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
+      issueType,
+    )}`;
+
+    const iconName = suggestedItems
+      .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
+      .join('#');
+
+    return {
+      ...basicEventParameters,
+      status,
+      switcher,
+      icon_name: iconName || 'not_set',
+      element_name: getMakeDecisionElementName(issueActionType),
+      ...extraParams,
+    };
   };
-};
+
+const getClickOnApplyBulkEventCreator =
+  (place) => (defectFromTIGroup, issueActionType, items, issueType, linkName) => {
+    const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
+      place,
+      defectFromTIGroup,
+    );
+
+    return {
+      ...basicEventParameters,
+      element_name: getMakeDecisionElementName(issueActionType),
+      switcher: getSwitchedDefectTypes(items, issueType),
+      type: ISSUE_TYPE_MAP[issueActionType] || undefined,
+      link_name: linkName,
+    };
+  };
 
 const getShowErrLogsSwitcherEventCreator = (place) => (defectFromTIGroup, switcherState) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
@@ -272,12 +271,14 @@ export const getLinkIssueModalEvents = (category) => ({
     action: 'Click on Btn Cancel on Modal Link Issue',
     label: 'Close Modal Modal Link Issue',
   },
-  getClickLoadButtonEventParameters: (place = '') => (number) => ({
-    ...getBasicLinkIssueModalEventParameters(category),
-    element_name: 'link_issue',
-    number,
-    ...(place && { place }),
-  }),
+  getClickLoadButtonEventParameters:
+    (place = '') =>
+    (number) => ({
+      ...getBasicLinkIssueModalEventParameters(category),
+      element_name: 'link_issue',
+      number,
+      ...(place && { place }),
+    }),
 });
 
 const EDIT_ITEM_MODAL = 'edit_item';
