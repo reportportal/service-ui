@@ -21,6 +21,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { BoundValidator } from 'common/utils/validation/types';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
@@ -60,8 +61,7 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    // @Alla_Prischepa check it please
-    onClick: () => handleSubmit(onConfirm) as void,
+    onClick: handleSubmit(onConfirm) as () => void,
     variant: 'danger',
     disabled: anyTouched && invalid,
   };
@@ -96,9 +96,11 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
 export default reduxForm<DeleteProjectFormProps, ModalProps>({
   form: DELETE_PROJECT_FORM,
   validate: ({ projectName: inputProjectValue }, { data: { projectName } }) => {
+    const projectNameValidator: BoundValidator =
+      commonValidators.createKeywordMatcherValidator(projectName);
+
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- @Alla_Prischepa update after `validation` migrated to TS
-      projectName: commonValidators.createKeywordMatcherValidator(projectName)(inputProjectValue),
+      projectName: projectNameValidator(inputProjectValue),
     };
   },
 })(DeleteProjectModal);

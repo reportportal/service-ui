@@ -16,7 +16,6 @@
 
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
-import Parser from 'html-react-parser';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
@@ -47,8 +46,7 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const title = formatMessage(isAdmin ? messages.revokeAdminRights : messages.provideAdminRights);
   const description = formatMessage(
     isAdmin ? messages.revokeAdminRightsDescription : messages.provideAdminRightsDescription,
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- @Alla_Prischepa to investigate
-    { name: fullName, b: (innerData) => Parser(`<b>${innerData}</b>`) },
+    { name: fullName, b: (innerData) => <b>{innerData}</b> },
   );
 
   const onSuccess = () => {
