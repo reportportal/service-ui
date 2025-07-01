@@ -55,6 +55,7 @@ FilterInput.propTypes = {
         component: PropTypes.elementType,
         name: PropTypes.string.isRequired,
         containerClassName: PropTypes.string,
+        format: PropTypes.func,
         props: PropTypes.object,
       }),
     ),
