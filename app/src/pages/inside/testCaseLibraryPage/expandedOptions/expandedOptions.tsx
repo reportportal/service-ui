@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch } from 'react-redux';
+import isEmpty from 'lodash.isempty';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
@@ -28,6 +29,7 @@ import { commonMessages } from '../commonMessages';
 import { FOLDERS } from './mockData';
 import { Folder } from './folder';
 import { CreateFolderModal } from './createFolderModal';
+import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal/createFolderModal';
 
 import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
@@ -50,9 +52,9 @@ export const ExpandedOptions = () => {
   const showCreateFolderModal = () => {
     dispatch(
       showModalAction({
-        id: 'CreateFolderModal',
+        id: CREATE_FOLDER_MODAL_KEY,
         data: {
-          areFoldersPresent: !!FOLDERS.length,
+          shouldRenderToggle: !isEmpty(FOLDERS),
         },
         component: CreateFolderModal,
       }),

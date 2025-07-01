@@ -14,23 +14,45 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { isEmpty } from 'common/utils/validation/validatorHelpers';
-import styles from './createFolderModal.scss';
 import { commonMessages } from '../../commonMessages';
+import styles from './createFolderModal.scss';
 
 const cx = classNames.bind(styles);
 
-const CreateFolder = ({
-  data: { areFoldersPresent },
+export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
+const MAX_FIELD_LENGTH = 48;
+
+const messages = defineMessages({
+  enterFolderName: {
+    id: 'TestCaseLibraryPage.enterFolderName',
+    defaultMessage: 'Enter folder name',
+  },
+  createAsSubfolder: {
+    id: 'TestCaseLibraryPage.createAsSubfolder',
+    defaultMessage: 'Create as subfolder',
+  },
+  parentFolder: {
+    id: 'TestCaseLibraryPage.parentFolder',
+    defaultMessage: 'Parent folder',
+  },
+  searchFolderToSelect: {
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
+    defaultMessage: 'Search folder to select',
+  },
+});
+
+const CreateFolderModalComponent = ({
+  data: { shouldRenderToggle },
 }: {
-  data: { areFoldersPresent: boolean };
+  data: { shouldRenderToggle: boolean };
 }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -44,45 +66,47 @@ const CreateFolder = ({
     parentFolderName: '',
   });
 
-  const onFolderNameChange = (e: { target: { value: string } }) => {
-    const newValue = e.target.value;
+  const hanldeFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
 
-    setFolderNameValue(newValue);
+    setFolderNameValue(value);
     setValidationErrors({
       ...validationErrors,
       folderName: '',
     });
   };
 
-  const onParentFolderNameChange = (e: { target: { value: string } }) => {
-    const newValue = e.target.value;
+  const handleParentFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
 
-    setParentFolderNameValue(newValue);
+    setParentFolderNameValue(value);
     setValidationErrors({
       ...validationErrors,
       parentFolderName: '',
     });
   };
 
-  const onParentFolderNameClear = () => {
+  const handleParentFolderNameClear = () => {
     setParentFolderNameValue('');
+  };
+
+  const handleSubmit = () => {
+    if (isEmpty(folderNameValue) || (isSubfolderToggled && isEmpty(parentFolderNameValue))) {
+      setValidationErrors({
+        folderName: isEmpty(folderNameValue) ? formatMessage(commonMessages.fieldIsRequired) : '',
+        parentFolderName:
+          isSubfolderToggled && isEmpty(parentFolderNameValue)
+            ? formatMessage(commonMessages.fieldIsRequired)
+            : '',
+      });
+    } else {
+      hideModal();
+    }
   };
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
-    onClick: () => {
-      if (isEmpty(folderNameValue) || (isSubfolderToggled && isEmpty(parentFolderNameValue))) {
-        setValidationErrors({
-          folderName: isEmpty(folderNameValue) ? formatMessage(commonMessages.fieldIsRequired) : '',
-          parentFolderName:
-            isSubfolderToggled && isEmpty(parentFolderNameValue)
-              ? formatMessage(commonMessages.fieldIsRequired)
-              : '',
-        });
-      } else {
-        hideModal();
-      }
-    },
+    onClick: handleSubmit,
     'data-automation-id': 'submitButton',
   };
 
@@ -101,41 +125,41 @@ const CreateFolder = ({
       <FieldText
         label={formatMessage(commonMessages.name)}
         value={folderNameValue}
-        onChange={onFolderNameChange}
-        placeholder={formatMessage(commonMessages.enterFolderName)}
+        onChange={hanldeFolderNameChange}
+        placeholder={formatMessage(messages.enterFolderName)}
         defaultWidth={false}
-        maxLength={48}
-        maxLengthDisplay={48}
+        maxLength={MAX_FIELD_LENGTH}
+        maxLengthDisplay={MAX_FIELD_LENGTH}
         touched
         error={validationErrors.folderName}
       />
-      {areFoldersPresent ? (
+      {shouldRenderToggle && (
         <Toggle
           value={isSubfolderToggled}
-          onChange={(e) => setIsSubfolderToggled(e.target.checked)}
+          onChange={({ target }) => setIsSubfolderToggled(target.checked)}
           className={cx('toggle')}
         >
-          {formatMessage(commonMessages.createAsSubfolder)}
+          {formatMessage(messages.createAsSubfolder)}
         </Toggle>
-      ) : null}
-      {isSubfolderToggled ? (
+      )}
+      {isSubfolderToggled && (
         <div className={cx('parent-folder')}>
           <FieldText
-            label={formatMessage(commonMessages.parentFolder)}
+            label={formatMessage(messages.parentFolder)}
             value={parentFolderNameValue}
-            onChange={onParentFolderNameChange}
-            placeholder={formatMessage(commonMessages.searchFolderToSelect)}
+            onChange={handleParentFolderNameChange}
+            placeholder={formatMessage(messages.searchFolderToSelect)}
             defaultWidth={false}
-            maxLength={48}
-            onClear={onParentFolderNameClear}
+            maxLength={MAX_FIELD_LENGTH}
+            onClear={handleParentFolderNameClear}
             clearable
             touched={isSubfolderToggled}
             error={validationErrors.parentFolderName}
           />
         </div>
-      ) : null}
+      )}
     </Modal>
   );
 };
 
-export const CreateFolderModal = withModal('CreateFolderModal')(CreateFolder);
+export const CreateFolderModal = withModal(CREATE_FOLDER_MODAL_KEY)(CreateFolderModalComponent);
