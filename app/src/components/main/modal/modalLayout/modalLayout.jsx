@@ -141,13 +141,23 @@ export class ModalLayout extends Component {
   };
 
   onClickCancelButton = () => {
+    const {
+      cancelButton: { eventInfo },
+      tracking: { trackEvent },
+    } = this.props;
+
     this.closeModal();
-    this.props.tracking.trackEvent(this.props.cancelButton.eventInfo);
+    eventInfo && trackEvent(eventInfo);
   };
 
   onClickCloseIcon = () => {
+    const {
+      closeIconEventInfo,
+      tracking: { trackEvent },
+    } = this.props;
+
     this.closeModal();
-    this.props.tracking.trackEvent(this.props.closeIconEventInfo);
+    closeIconEventInfo && trackEvent(closeIconEventInfo);
   };
 
   closeModalWithOk = () => {

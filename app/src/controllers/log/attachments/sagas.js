@@ -149,7 +149,7 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
 function* downloadAttachment({ payload: { id, contentType } }) {
   const projectKey = yield select(projectKeySelector);
 
-  downloadFile(URLS.getFileById(projectKey, id), createAttachmentName(id, contentType));
+  downloadFile(URLS.getFileById(projectKey, id), {}, createAttachmentName(id, contentType));
 }
 
 function* openAttachmentInBrowser({ payload: id }) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,16 @@
  */
 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Layout } from 'layouts/common/layout';
-import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { HeaderLayout } from '../headerLayout';
 import { ProjectSidebar } from './projectSidebar';
-import { DemoBanner } from '../demoBanner';
+import { AppBanner } from './appBanner';
 
-const ProjectLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
+const ProjectLayoutComponent = ({ children, rawContent }) => (
   <Layout
     Header={HeaderLayout}
     Sidebar={ProjectSidebar}
-    Banner={isDemoInstance ? DemoBanner : null}
+    Banner={AppBanner}
     rawContent={rawContent}
   >
     {children}
@@ -35,15 +33,9 @@ const ProjectLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
 
 ProjectLayoutComponent.propTypes = {
   children: PropTypes.node,
-  isDemoInstance: PropTypes.bool,
   rawContent: PropTypes.bool,
 };
 ProjectLayoutComponent.defaultProps = {
   children: null,
-  isDemoInstance: false,
   rawContent: false,
 };
-
-export const ProjectLayout = connect((state) => ({
-  isDemoInstance: isDemoInstanceSelector(state),
-}))(ProjectLayoutComponent);
