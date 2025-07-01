@@ -20,22 +20,17 @@ import { HeaderLayout } from '../headerLayout';
 import { ProjectSidebar } from './projectSidebar';
 import { AppBanner } from './appBanner';
 
-const ProjectLayoutComponent = ({ children, rawContent }) => (
-  <Layout
-    Header={HeaderLayout}
-    Sidebar={ProjectSidebar}
-    Banner={AppBanner}
-    rawContent={rawContent}
-  >
+export const ProjectLayout = ({ children, rawContent }) => (
+  <Layout Header={HeaderLayout} Sidebar={ProjectSidebar} Banner={AppBanner} rawContent={rawContent}>
     {children}
   </Layout>
 );
 
-ProjectLayoutComponent.propTypes = {
+ProjectLayout.propTypes = {
   children: PropTypes.node,
   rawContent: PropTypes.bool,
 };
-ProjectLayoutComponent.defaultProps = {
+ProjectLayout.defaultProps = {
   children: null,
   rawContent: false,
 };
