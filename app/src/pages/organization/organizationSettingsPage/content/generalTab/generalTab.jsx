@@ -33,7 +33,6 @@ import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
-import { daysToSeconds, secondsToDaysNumber } from 'common/utils';
 import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
@@ -64,9 +63,9 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
     if (organizationName) {
       initialize({
         name: organizationName,
-        keepLaunches: daysToSeconds(launches?.period || 0),
-        keepLogs: daysToSeconds(logs?.period || 0),
-        keepScreenshots: daysToSeconds(attachments?.period || 0),
+        keepLaunches: launches?.period || 0,
+        keepLogs: logs?.period || 0,
+        keepScreenshots: attachments?.period || 0,
       });
     }
   }, [attachments, initialize, launches, logs, organizationName]);
@@ -75,9 +74,9 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
     const { keepLaunches, keepLogs, keepScreenshots } = formData;
 
     const retentionPolicy = {
-      launches: { ...launches, period: secondsToDaysNumber(keepLaunches) },
-      logs: { ...logs, period: secondsToDaysNumber(keepLogs) },
-      attachments: { ...attachments, period: secondsToDaysNumber(keepScreenshots) },
+      launches: { ...launches, period: keepLaunches },
+      logs: { ...logs, period: keepLogs },
+      attachments: { ...attachments, period: keepScreenshots },
     };
 
     dispatch(updateOrganizationSettingsAction({ organizationId, retentionPolicy }));
