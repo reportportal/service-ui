@@ -25,6 +25,7 @@ import {
   daysToSeconds,
   secondsToHours,
   hoursToDays,
+  secondsToDaysNumber,
 } from './timeDateUtils';
 
 const NOW = Date.now();
@@ -168,5 +169,13 @@ describe('hoursToDays', () => {
 
   it('converts 36 hours to 1.5 days', () => {
     expect(hoursToDays(36)).toBe(1.5);
+  });
+});
+
+describe('secondsToDaysNumber', () => {
+  it('converts seconds to days correctly', () => {
+    expect(secondsToDaysNumber(86400)).toBeCloseTo(1);
+    expect(secondsToDaysNumber(43200)).toBeCloseTo(0.5);
+    expect(secondsToDaysNumber(0)).toBe(0);
   });
 });

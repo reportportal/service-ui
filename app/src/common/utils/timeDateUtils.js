@@ -160,6 +160,7 @@ export const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSecon
 export const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
 export const secondsToHours = (seconds) => moment.duration(seconds, 'seconds').asHours();
 export const hoursToDays = (hours) => moment.duration(hours, 'hours').asDays();
+export const secondsToDaysNumber = (seconds) => moment.duration(seconds, 'seconds').asDays();
 
 export const getMillisecondsWoTimezone = (time) => {
   const date = new Date(time);

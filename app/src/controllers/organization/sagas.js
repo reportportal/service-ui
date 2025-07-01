@@ -19,16 +19,19 @@ import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
-import { showDefaultErrorNotification } from 'controllers/notification';
+import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetchFilteredProjectAction, projectsSagas } from './projects';
 import {
   FETCH_ORGANIZATION_BY_SLUG,
   FETCH_ORGANIZATION_SETTINGS,
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
   PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
+  UPDATE_ORGANIZATION_SETTINGS,
 } from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
+import { fetch } from 'common/utils';
+import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -85,8 +88,27 @@ function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
   });
 }
 
+function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy } }) {
+  try {
+    yield call(fetch, URLS.organizationSettings(organizationId), {
+      method: 'put',
+      data: {
+        retention_policy: retentionPolicy,
+      },
+    });
+    yield put(updateOrganizationSettingsSuccessAction(retentionPolicy));
+    yield put(showSuccessNotification({ messageId: 'updateOrganizationSettingsSuccess' }));
+  } catch ({ message }) {
+    yield put(showDefaultErrorNotification({ message }));
+  }
+}
+
 function* watchPrepareActiveOrganizationSettings() {
   yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_SETTINGS, prepareActiveOrganizationSettings);
+}
+
+function* watchUpdateOrganizationSettings() {
+  yield takeEvery(UPDATE_ORGANIZATION_SETTINGS, updateOrganizationSettings);
 }
 
 export function* organizationSagas() {
@@ -95,6 +117,7 @@ export function* organizationSagas() {
     watchFetchOrganizationBySlug(),
     watchFetchOrganizationSettings(),
     watchPrepareActiveOrganizationSettings(),
+    watchUpdateOrganizationSettings(),
     projectsSagas(),
     usersSagas(),
   ]);

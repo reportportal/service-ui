@@ -1608,6 +1608,7 @@
   "OrganizationSettings.generalTab.organizationNameLabel": "Имя",
   "OrganizationSettingsPage.general": "Общее",
   "OrganizationSettingsPage.title": "Настройки Организации",
+  "OrganizationSettingsPage.updateSettingsSuccess": "Настройки организации успешно обновлены",
   "OrganizationSidebar.membersBtn": "Пользователи Организации",
   "OrganizationSidebar.projectsBtn": "Проекты",
   "OrganizationSidebar.settingsBtn": "Настройки Организации",

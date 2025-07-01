@@ -19,17 +19,21 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { formValueSelector, reduxForm } from 'redux-form';
-import { activeOrganizationNameSelector } from 'controllers/organization';
+import {
+  activeOrganizationIdSelector,
+  activeOrganizationNameSelector,
+  updateOrganizationSettingsAction,
+  activeOrganizationSettingsSelector,
+} from 'controllers/organization';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { canUpdateOrganizationSettings } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
-import { activeOrganizationSettingsSelector } from 'controllers/organization/selectors';
-import { daysToSeconds } from 'common/utils';
+import { daysToSeconds, secondsToDaysNumber } from 'common/utils';
 import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
@@ -41,6 +45,8 @@ const selector = formValueSelector(GENERAL_TAB_FORM);
 
 const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
   const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
   const userRoles = useSelector(userRolesSelector);
@@ -65,8 +71,16 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
     }
   }, [attachments, initialize, launches, logs, organizationName]);
 
-  const onFormSubmit = () => {
-    // ToDo: Implement form submission logic
+  const onFormSubmit = (formData) => {
+    const { keepLaunches, keepLogs, keepScreenshots } = formData;
+
+    const retentionPolicy = {
+      launches: { ...launches, period: secondsToDaysNumber(keepLaunches) },
+      logs: { ...logs, period: secondsToDaysNumber(keepLogs) },
+      attachments: { ...attachments, period: secondsToDaysNumber(keepScreenshots) },
+    };
+
+    dispatch(updateOrganizationSettingsAction({ organizationId, retentionPolicy }));
   };
 
   return isLoading ? (
