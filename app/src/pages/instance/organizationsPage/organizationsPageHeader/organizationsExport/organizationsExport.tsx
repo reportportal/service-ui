@@ -45,10 +45,10 @@ export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExport
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const query = useSelector(querySelector) as QueryParams;
-  const filtersParams: QueryParams = { ...query, offset: 0, limit: ORGANIZATIONS_EXPORT_LIMIT };
-  const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
 
   const handleClick = () => {
+    const filtersParams: QueryParams = { ...query, offset: 0, limit: ORGANIZATIONS_EXPORT_LIMIT };
+    const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
     const requestParams = {
       method: 'post',
       data,
