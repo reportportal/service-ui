@@ -41,7 +41,14 @@ export const FilterButton = ({
 
   useEffect(() => {
     const { [searchProp]: value, ...filters } = definedFilters;
-    setAppliedFiltersCount(Object.keys(filters).length);
+    const filtersCount = Object.keys(filters).length;
+
+    if (appliedFiltersCount !== filtersCount) {
+      setAppliedFiltersCount(filtersCount);
+    }
+  }, [appliedFiltersCount, definedFilters, searchProp, setAppliedFiltersCount]);
+
+  useEffect(() => {
     filteredAction();
   }, []);
 

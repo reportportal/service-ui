@@ -46,5 +46,6 @@ export {
   canUpdateOrganizationSettings,
   canWorkWithOrganizationsSorting,
   canUpdateUserInstanceRole,
+  canExportOrganizations,
 } from './permissions';
 export { getRoleTitle, getRoleBadgesData } from './getRoleTitle';

@@ -28,6 +28,7 @@ import { organizationsListLoadingSelector } from 'controllers/instance/organizat
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import {
+  canExportOrganizations,
   canWorkWithOrganizationFilter,
   canWorkWithOrganizationsSorting,
 } from 'common/utils/permissions';
@@ -38,6 +39,7 @@ import TableViewIcon from '../img/table-view-inline.svg';
 import { messages } from '../messages';
 import styles from './organizationsPageHeader.scss';
 import { OrganizationsSorting } from './organizationsSorting';
+import { OrganizationsExport } from './organizationsExport';
 
 const cx = classNames.bind(styles);
 
@@ -65,33 +67,33 @@ export const OrganizationsPageHeader = ({
     <div className={cx('organizations-page-header-container')}>
       <div className={cx('header')}>
         <span className={cx('title')}>{formatMessage(messages.title)}</span>
-        <div className={cx('actions')}>
-          {!isEmpty && (
-            <div className={cx('icons')}>
-              <div className={cx('filters')}>
-                <SearchFieldWithFilter
-                  isLoading={projectsLoading}
-                  searchValue={searchValue}
-                  setSearchValue={setSearchValue}
-                  placeholder={formatMessage(messages.searchPlaceholder)}
-                  event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
+        {!isEmpty && (
+          <div className={cx('actions')}>
+            <div className={cx('filters')}>
+              <SearchFieldWithFilter
+                isLoading={projectsLoading}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
+              />
+              {canWorkWithOrganizationFilter(userRoles) && (
+                <FilterEntitiesURLContainer
+                  debounced={false}
+                  additionalFilter="name"
+                  render={({ entities, onChange }) => (
+                    <OrganizationsFilter
+                      appliedFiltersCount={appliedFiltersCount}
+                      setAppliedFiltersCount={setAppliedFiltersCount}
+                      entities={entities}
+                      onFilterChange={onChange}
+                    />
+                  )}
                 />
-                {canWorkWithOrganizationFilter(userRoles) && (
-                  <FilterEntitiesURLContainer
-                    debounced={false}
-                    additionalFilter="name"
-                    render={({ entities, onChange }) => (
-                      <OrganizationsFilter
-                        appliedFiltersCount={appliedFiltersCount}
-                        setAppliedFiltersCount={setAppliedFiltersCount}
-                        entities={entities}
-                        onFilterChange={onChange}
-                      />
-                    )}
-                  />
-                )}
-                {canWorkWithOrganizationsSorting(userRoles) && <OrganizationsSorting />}
-              </div>
+              )}
+              {canWorkWithOrganizationsSorting(userRoles) && <OrganizationsSorting />}
+            </div>
+            <div className={cx('view-toggle')}>
               <BaseIconButton
                 className={cx('panel-icon', { active: !isOpenTableView })}
                 onClick={openPanelView}
@@ -107,8 +109,13 @@ export const OrganizationsPageHeader = ({
                 {Parser(TableViewIcon)}
               </BaseIconButton>
             </div>
-          )}
-        </div>
+            <div className={cx('primary-actions')}>
+              {canExportOrganizations(userRoles) && (
+                <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
