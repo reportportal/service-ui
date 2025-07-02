@@ -31,17 +31,23 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_users',
     element_name: 'search',
   },
-  clickApplyFilterButton: (type, condition) => ({
+  clickApplyFilterButton: (type: string, condition: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     modal: 'filter_organization',
     element_name: 'apply',
     condition,
     type,
   }),
-  organizationsSorting: (type) => ({
+  organizationsSorting: (type: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
     element_name: 'organizations_sorting',
     type,
+  }),
+  export: (appliedFiltersCount = 0) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'export',
+    number: appliedFiltersCount,
   }),
 };
