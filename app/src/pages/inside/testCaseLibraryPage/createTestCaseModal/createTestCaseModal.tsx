@@ -18,12 +18,14 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, BubblesLoader } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { commonMessages } from '../commonMessages';
 import { BasicInformation } from './basicInformation';
@@ -66,12 +68,12 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
 
   const okButton = {
-    children: isCreateTestCaseLoading ? (
-      <BubblesLoader className={cx('create-test-case-modal__loading-button')} color="white" />
-    ) : (
-      formatMessage(COMMON_LOCALE_KEYS.CREATE)
+    children: (
+      <LoadingSubmitButton isLoading={isCreateTestCaseLoading}>
+        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+      </LoadingSubmitButton>
     ),
-    onClick: () => handleSubmit(createTestCase)(),
+    onClick: handleSubmit(createTestCase),
     disabled: isCreateTestCaseLoading,
   };
 
@@ -86,7 +88,6 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
       okButton={okButton}
       className={cx('create-test-case-modal')}
       cancelButton={cancelButton}
-      scrollable
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-test-case-modal__content-wrapper')}>
@@ -96,9 +97,7 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
             <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />
           </div>
         </form>
-        {isCreateTestCaseLoading && (
-          <div className={cx('create-test-case-modal__loading-overlay')} />
-        )}
+        <ModalLoadingOverlay isVisible={isCreateTestCaseLoading} />
       </div>
     </Modal>
   );

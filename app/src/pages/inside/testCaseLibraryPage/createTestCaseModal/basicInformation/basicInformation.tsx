@@ -23,7 +23,7 @@ import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTa
 import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
 
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { noop } from '../../constants';
+import { noop } from 'common/utils';
 import { messages } from './messages';
 
 import styles from './basicInformation.scss';

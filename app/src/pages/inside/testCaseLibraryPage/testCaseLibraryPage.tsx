@@ -15,24 +15,25 @@
  */
 
 import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
-import { useSelector, useDispatch } from 'react-redux';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { foldersSelector, getFoldersAction } from 'controllers/testCase';
+
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { ExpandedOptions } from './expandedOptions';
 import { commonMessages } from './commonMessages';
+import { useCreateTestCaseModal } from './createTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
@@ -47,6 +48,7 @@ export const TestCaseLibraryPage = () => {
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
   const isFolders = !!folders.length;
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   useEffect(() => {
     dispatch(getFoldersAction());
@@ -75,7 +77,11 @@ export const TestCaseLibraryPage = () => {
                 >
                   {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                 </Button>
-                <Button variant="ghost" data-automation-id="createTestCase">
+                <Button
+                  variant="ghost"
+                  data-automation-id="createTestCase"
+                  onClick={openCreateTestCaseModal}
+                >
                   {formatMessage(commonMessages.createTestCase)}
                 </Button>
               </div>

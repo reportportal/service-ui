@@ -20,6 +20,7 @@ import { useIntl } from 'react-intl';
 import { referenceDictionary } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
+import { useCreateTestPlanModal } from '../hooks';
 import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
@@ -34,13 +35,10 @@ const benefitMessages = [
 
 export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
+  const { openModal } = useCreateTestPlanModal();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
-
-  const handleCreate = (): void => {
-    // open modal
-  };
 
   return (
     <div className={cx('empty-test-plans')}>
@@ -54,7 +52,7 @@ export const EmptyTestPlans = () => {
             name: formatMessage(commonMessages.createTestPlan),
             dataAutomationId: 'createTestPlansButton',
             isCompact: true,
-            handleButton: handleCreate,
+            handleButton: openModal,
           },
         ]}
       />
