@@ -24,9 +24,7 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { useDispatch } from 'react-redux';
 import {
   NOTIFICATION_TYPES,
   showDefaultErrorNotification,
@@ -34,7 +32,7 @@ import {
 } from 'controllers/notification';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
-import { useFetchedResponse } from './hooks';
+import { useFetchDashboardConfig } from './hooks';
 
 const cx = classNames.bind(styles);
 
@@ -93,8 +91,7 @@ export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
-    const activeProject = useSelector(activeProjectSelector);
-    const responseToCopy = useFetchedResponse(URLS.dashboardConfig(activeProject, value.id));
+    const { config, fetchConfig, error } = useFetchDashboardConfig(value.id);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -104,7 +101,7 @@ export const DuplicateColumn = track()(
             setOpened(false);
           }
         };
-
+        fetchConfig();
         document.addEventListener('click', handleOutsideClick);
         return () => document.removeEventListener('click', handleOutsideClick);
       }
@@ -126,17 +123,18 @@ export const DuplicateColumn = track()(
     const handleCopyConfig = async (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
-
+      const dashboardConfig = config || (await fetchConfig());
       try {
-        await navigator.clipboard.writeText(JSON.stringify(responseToCopy));
+        if (error) throw error;
+        await navigator.clipboard.writeText(JSON.stringify(dashboardConfig));
         dispatch(
           showNotification({
             messageId: 'dashboardConfigurationCopied',
             type: NOTIFICATION_TYPES.SUCCESS,
           }),
         );
-      } catch (error) {
-        dispatch(showDefaultErrorNotification(error));
+      } catch (err) {
+        dispatch(showDefaultErrorNotification(err));
       }
 
       setOpened(false);

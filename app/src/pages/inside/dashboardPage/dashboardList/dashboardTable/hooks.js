@@ -1,23 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { fetch } from 'common/utils';
+import { activeProjectSelector } from 'controllers/user';
+import { useSelector } from 'react-redux';
+import { URLS } from 'common/urls';
 
-export const useFetchedResponse = (url) => {
-  const [response, setResponse] = useState('');
+export const useFetchDashboardConfig = (dashboardId) => {
+  const [config, setConfig] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!url) return;
+  const activeProject = useSelector(activeProjectSelector);
+  const url = URLS.dashboardConfig(activeProject, dashboardId);
 
-    const fetchResponse = async () => {
-      try {
-        const res = await fetch(url);
-        setResponse(res);
-      } catch (err) {
-        setResponse('');
-      }
-    };
+  const fetchConfig = useCallback(async () => {
+    if (!activeProject || !dashboardId) return null;
 
-    fetchResponse();
-  }, [url]);
+    setLoading(true);
+    setError(null);
 
-  return response;
+    try {
+      const response = await fetch(url);
+      setConfig(response);
+      return response;
+    } catch (err) {
+      setError(err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [activeProject, dashboardId, url]);
+
+  return { config, fetchConfig, loading, error };
 };
