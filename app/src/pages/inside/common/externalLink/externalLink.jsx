@@ -16,10 +16,8 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-
-import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
+import { ExternalLinkIcon } from '@reportportal/ui-kit';
 
 import styles from './externalLink.scss';
 
@@ -27,7 +25,6 @@ const cx = classNames.bind(styles);
 
 export const ExternalLink = ({
   href,
-  icon = ExternalLinkIcon,
   children,
   dataAutomationId = '',
   className = '',
@@ -41,7 +38,9 @@ export const ExternalLink = ({
     onClick={onClick}
   >
     <span>{children}</span>
-    <div className={cx('icon')}>{Parser(icon)}</div>
+    <div className={cx('icon')}>
+      <ExternalLinkIcon />
+    </div>
   </a>
 );
 
@@ -49,7 +48,6 @@ ExternalLink.propTypes = {
   href: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   dataAutomationId: PropTypes.string,
-  icon: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
