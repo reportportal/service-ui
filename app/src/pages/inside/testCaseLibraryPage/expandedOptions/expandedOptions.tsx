@@ -65,13 +65,17 @@ export const ExpandedOptions = () => {
           <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
             {formatMessage(commonMessages.folders)}
           </div>
-          <BaseIconButton>
+          <BaseIconButton
+            className={cx('expanded-options__sidebar-actions--search')}
+            onClick={setActiveFolder}
+          >
             <SearchIcon />
           </BaseIconButton>
           <Button
             variant="text"
             icon={<PlusIcon />}
             className={cx('expanded-options__sidebar-actions--create')}
+            adjustWidthOn="content"
           >
             {formatMessage(commonMessages.createFolder)}
           </Button>
