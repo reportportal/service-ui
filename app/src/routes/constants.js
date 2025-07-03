@@ -67,6 +67,7 @@ import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
+import { ProjectEventsPage } from '../pages/instance/projectEventsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -101,6 +102,11 @@ export const pageRendering = {
   },
   ORGANIZATIONS_PAGE: {
     component: OrganizationsPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
+  ORGANIZATIONS_ACTIVITY_PAGE: {
+    component: ProjectEventsPage,
     layout: InstanceLayout,
     rawContent: true,
   },

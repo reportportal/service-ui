@@ -1647,6 +1647,7 @@
   "OrganizationsFilter.usersPlaceholder": "Введіть кількість учасників",
   "OrganizationsItem.noProjectAssignments": "Ніяких проектних призначень",
   "OrganizationsItem.open": "відкрити",
+  "OrganizationsPage.activity": "Діяльність",
   "OrganizationsPage.createNewOrganization": "Створіть нову організацію, щоб розпочати свій шлях на порталі звітів",
   "OrganizationsPage.createOrganization": "Створити організацію",
   "OrganizationsPage.description": "Список доступних вам організацій в даний момент порожній. Будь ласка, зв'яжіться зі своїм адміністратором, щоб отримати призначення в уже існуючу організацію.",

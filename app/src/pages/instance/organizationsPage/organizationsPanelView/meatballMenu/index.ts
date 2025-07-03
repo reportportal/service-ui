@@ -1,5 +1,5 @@
-/*
- * Copyright 2019 EPAM Systems
+/*!
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-export const NAMESPACE = 'admin';
-export const FETCH_PROJECT_DATA = 'fetchProjectData';
-export const FETCH_ORGANIZATION_EVENTS_DATA = 'fetchOrganizationEventsData';
-
-export const DEFAULT_SORT_COLUMN = 'name';
-export const SORTING_KEY = 'order';
+export { MeatballMenu } from './meatballMenu';

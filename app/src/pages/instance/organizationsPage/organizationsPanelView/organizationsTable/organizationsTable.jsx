@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { MeatballMenuIcon, Popover, Table } from '@reportportal/ui-kit';
+import { Table } from '@reportportal/ui-kit';
 import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { userRolesSelector } from 'controllers/pages';
@@ -34,8 +34,9 @@ import {
 import { canWorkWithOrganizationsSorting } from 'common/utils/permissions';
 import { SORTING_ASC } from 'controllers/sorting';
 import { IconsBlock } from '../iconsBlock';
-import styles from './organizationsTable.scss';
+import { MeatballMenu } from '../meatballMenu';
 import { messages } from '../../messages';
+import styles from './organizationsTable.scss';
 
 const cx = classNames.bind(styles);
 
@@ -140,21 +141,10 @@ export const OrganizationsTable = ({
     },
   ];
 
-  const renderRowActions = () => (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-menu')}>
-          <p className={cx('add')}>Add</p>
-          <p className={cx('remove')}>Remove</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
+  const renderRowActions = (data) => {
+    console.log('data', data);
+    return <MeatballMenu />;
+  };
 
   const getSortingColumn = (key) => {
     if (key === SortingFields.NAME) {

@@ -23,12 +23,12 @@ import {
   reMappedOperationValuesMap,
 } from 'components/filterEntities/constants';
 
-export const getAppliedFilters = (filters, projectKey) => {
+export const getAppliedFilters = (filters, valueKey, filterKey) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
 
   const projectIdFilterParam = {
-    filter_key: 'projectName',
-    value: projectKey,
+    filter_key: filterKey || 'projectName',
+    value: valueKey,
     operation: CONDITION_EQ,
   };
 
@@ -58,6 +58,6 @@ export const getAppliedFilters = (filters, projectKey) => {
   });
 
   return {
-    search_criterias: [...appliedFilters, ...(projectKey ? [projectIdFilterParam] : [])],
+    search_criterias: [...appliedFilters, ...(valueKey ? [projectIdFilterParam] : [])],
   };
 };

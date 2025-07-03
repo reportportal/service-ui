@@ -30,9 +30,10 @@ import { assignedOrganizationsSelector } from 'controllers/user';
 import UserIcon from './img/user-inline.svg';
 import ProjectsIcon from './img/projects-inline.svg';
 import LastUpdateIcon from './img/last-update-inline.svg';
+import { IconsBlock } from '../../iconsBlock';
+import { MeatballMenu } from '../../meatballMenu';
 import { messages } from '../../../messages';
 import styles from './organizationCard.scss';
-import { IconsBlock } from '../../iconsBlock';
 
 const cx = classNames.bind(styles);
 
@@ -92,6 +93,9 @@ export const OrganizationCard = ({ organization }) => {
           hasPermission={hasPermission}
           organizationType={organization.type}
         />
+        <div className={cx('organization-card-menu')}>
+          <MeatballMenu organizationSlug={organization.slug} />
+        </div>
       </div>
       {hasPermission && (
         <div className={cx('cart-info')}>

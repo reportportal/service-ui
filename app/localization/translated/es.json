@@ -1649,6 +1649,7 @@
   "OrganizationsFilter.usersPlaceholder": "Enter the number of members",
   "OrganizationsItem.noProjectAssignments": "No project assignments",
   "OrganizationsItem.open": "open",
+  "OrganizationsPage.activity": "Activity",
   "OrganizationsPage.createNewOrganization": "Create a new organization to begin your ReportPortal journey",
   "OrganizationsPage.createOrganization": "Create Organization",
   "OrganizationsPage.description": "The list of organizations available to you is currently empty. Please contact your Administrator to be assigned to an existing one.",

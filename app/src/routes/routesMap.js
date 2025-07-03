@@ -66,6 +66,7 @@ import {
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
+  ORGANIZATIONS_ACTIVITY_PAGE,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -110,6 +111,8 @@ import {
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
+import { fetchProjectDataAction } from '../controllers/instance';
+import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -187,6 +190,13 @@ const routesMap = {
     path: '/organizations',
     thunk: (dispatch) => {
       dispatch(fetchFilteredOrganizationsAction());
+    },
+  },
+
+  [ORGANIZATIONS_ACTIVITY_PAGE]: {
+    path: '/organizations/:organizationSlug/activity',
+    thunk: (dispatch) => {
+      dispatch(fetchOrganizationEventsDataAction());
     },
   },
 

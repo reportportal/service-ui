@@ -1648,6 +1648,7 @@
   "OrganizationsFilter.usersPlaceholder": "Введите количество участников",
   "OrganizationsItem.noProjectAssignments": "Никаких проектных назначений",
   "OrganizationsItem.open": "открыть",
+  "OrganizationsPage.activity": "Деятельность",
   "OrganizationsPage.createNewOrganization": "Создайте новую организацию, чтобы начать свой путь на портале отчетов",
   "OrganizationsPage.createOrganization": "Создать организацию",
   "OrganizationsPage.description": "Список доступных вам организаций в данный момент пуст. Пожалуйста, свяжитесь со своим администратором, чтобы получить назначение в уже существующую организацию.",

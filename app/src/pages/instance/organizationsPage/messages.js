@@ -98,4 +98,8 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.lastLaunchDate',
     defaultMessage: 'Last launch date',
   },
+  activity: {
+    id: 'OrganizationsPage.activity',
+    defaultMessage: 'Activity',
+  }
 });
