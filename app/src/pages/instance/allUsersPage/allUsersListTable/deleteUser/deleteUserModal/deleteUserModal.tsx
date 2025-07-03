@@ -15,7 +15,7 @@
  */
 
 import { useDispatch } from 'react-redux';
-import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
@@ -41,10 +41,7 @@ interface DeleteUserModalProps {
   onConfirm: () => void;
 }
 
-export const DeleteUserModal = ({
-  fullName,
-  onConfirm,
-}: DeleteUserModalProps) => {
+export const DeleteUserModal = ({ fullName, onConfirm }: DeleteUserModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -74,7 +71,7 @@ export const DeleteUserModal = ({
     >
       {formatMessage(messages.description, {
         name: fullName,
-        b: (innerData) => <b>{innerData}</b>
+        b: (innerData) => <b>{innerData}</b>,
       })}
     </Modal>
   );

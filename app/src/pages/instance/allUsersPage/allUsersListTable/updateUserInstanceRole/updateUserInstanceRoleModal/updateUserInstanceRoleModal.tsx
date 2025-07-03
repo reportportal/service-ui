@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';

@@ -27,13 +27,13 @@ import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Event
 import { DeleteUserModal } from './deleteUserModal';
 import styles from './deleteUser.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const messages = defineMessages({
   successfully: {
     id: 'DeleteUser.successfully',
-    defaultMessage: 'The user has been deleted successfully'
-  }
+    defaultMessage: 'The user has been deleted successfully',
+  },
 });
 
 interface DeleteUserProps {
@@ -41,10 +41,7 @@ interface DeleteUserProps {
   userId: string;
 }
 
-export const DeleteUser = ({
-  fullName,
-  userId,
-}: DeleteUserProps) => {
+export const DeleteUser = ({ fullName, userId }: DeleteUserProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();

@@ -82,13 +82,7 @@ const AllUsersListTableComponent = ({
     }
 
     if (!isCurrentUser) {
-      actions.push(
-        <DeleteUser
-          key="delete-user"
-          fullName={fullName}
-          userId={userId}
-        />,
-      );
+      actions.push(<DeleteUser key="delete-user" fullName={fullName} userId={userId} />);
     }
 
     return (
