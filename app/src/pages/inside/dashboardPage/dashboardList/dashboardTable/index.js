@@ -15,3 +15,4 @@
  */
 
 export { DashboardTable } from './dashboardTable';
+export { useFetchDashboardConfig } from './hooks';

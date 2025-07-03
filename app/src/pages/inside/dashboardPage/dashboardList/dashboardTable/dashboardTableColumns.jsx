@@ -25,9 +25,14 @@ import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { copyDashboardConfigAction } from 'controllers/dashboard';
+import {
+  NOTIFICATION_TYPES,
+  showDefaultErrorNotification,
+  showNotification,
+} from 'controllers/notification';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
+import { useFetchDashboardConfig } from './hooks';
 
 const cx = classNames.bind(styles);
 
@@ -86,6 +91,7 @@ export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
+    const { config, fetchConfig, error } = useFetchDashboardConfig(value.id);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -95,7 +101,7 @@ export const DuplicateColumn = track()(
             setOpened(false);
           }
         };
-
+        fetchConfig();
         document.addEventListener('click', handleOutsideClick);
         return () => document.removeEventListener('click', handleOutsideClick);
       }
@@ -114,10 +120,23 @@ export const DuplicateColumn = track()(
       setOpened(false);
     };
 
-    const handleCopyConfig = (e) => {
+    const handleCopyConfig = async (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
-      dispatch(copyDashboardConfigAction(value));
+      const dashboardConfig = config || (await fetchConfig());
+      try {
+        if (error) throw error;
+        await navigator.clipboard.writeText(JSON.stringify(dashboardConfig));
+        dispatch(
+          showNotification({
+            messageId: 'dashboardConfigurationCopied',
+            type: NOTIFICATION_TYPES.SUCCESS,
+          }),
+        );
+      } catch (err) {
+        dispatch(showDefaultErrorNotification(err));
+      }
+
       setOpened(false);
     };
 
