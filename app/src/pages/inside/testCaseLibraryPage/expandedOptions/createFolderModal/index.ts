@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { CreateFolderModal } from './createFolderModal';
+export { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';

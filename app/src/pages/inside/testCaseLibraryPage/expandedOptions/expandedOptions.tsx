@@ -28,8 +28,7 @@ import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
 import { FOLDERS } from './mockData';
 import { Folder } from './folder';
-import { CreateFolderModal } from './createFolderModal';
-import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal/createFolderModal';
+import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
 
 import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
@@ -56,7 +55,7 @@ export const ExpandedOptions = () => {
         data: {
           shouldRenderToggle: !isEmpty(FOLDERS),
         },
-        component: CreateFolderModal,
+        component: null,
       }),
     );
   };

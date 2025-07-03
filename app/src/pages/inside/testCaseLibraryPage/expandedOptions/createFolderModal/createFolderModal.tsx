@@ -21,14 +21,11 @@ import classNames from 'classnames/bind';
 import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
-import { isEmpty } from 'common/utils/validation/validatorHelpers';
+import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
+import { commonValidators } from 'common/utils/validation';
 import { commonMessages } from '../../commonMessages';
 import styles from './createFolderModal.scss';
-
-const cx = classNames.bind(styles);
-
-export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
-const MAX_FIELD_LENGTH = 48;
 
 const messages = defineMessages({
   enterFolderName: {
@@ -49,64 +46,59 @@ const messages = defineMessages({
   },
 });
 
+const cx = classNames.bind(styles);
+
+export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
+const MAX_FIELD_LENGTH = 48;
+
+interface CreateFolderFormValues {
+  folderName: string;
+  parentFolderName: string;
+}
+interface CreateFolderModalProps {
+  data: {
+    shouldRenderToggle: boolean;
+  };
+}
+
 const CreateFolderModalComponent = ({
   data: { shouldRenderToggle },
-}: {
-  data: { shouldRenderToggle: boolean };
-}) => {
+  handleSubmit,
+  change,
+  untouch,
+  initialValues,
+}: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
   const dispatch = useDispatch();
+
   const { formatMessage } = useIntl();
+
+  const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
+
   const hideModal = () => dispatch(hideModalAction());
 
-  const [folderNameValue, setFolderNameValue] = useState('');
-  const [parentFolderNameValue, setParentFolderNameValue] = useState('');
-  const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({
-    folderName: '',
-    parentFolderName: '',
-  });
+  const onSubmit = (values: CreateFolderFormValues) => {
+    hideModal();
 
-  const hanldeFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setFolderNameValue(value);
-    setValidationErrors({
-      ...validationErrors,
-      folderName: '',
-    });
+    return values;
   };
 
-  const handleParentFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setParentFolderNameValue(value);
-    setValidationErrors({
-      ...validationErrors,
-      parentFolderName: '',
-    });
+  const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (target.checked) {
+      dispatch(registerField('create-folder-modal-form', 'parentFolderName', 'Field'));
+      untouch('parentFolderName');
+    } else {
+      dispatch(unregisterField('create-folder-modal-form', 'parentFolderName'));
+    }
+    setIsSubfolderToggled(target.checked);
   };
 
   const handleParentFolderNameClear = () => {
-    setParentFolderNameValue('');
-  };
-
-  const handleSubmit = () => {
-    if (isEmpty(folderNameValue) || (isSubfolderToggled && isEmpty(parentFolderNameValue))) {
-      setValidationErrors({
-        folderName: isEmpty(folderNameValue) ? formatMessage(commonMessages.fieldIsRequired) : '',
-        parentFolderName:
-          isSubfolderToggled && isEmpty(parentFolderNameValue)
-            ? formatMessage(commonMessages.fieldIsRequired)
-            : '',
-      });
-    } else {
-      hideModal();
-    }
+    change('parentFolderName', initialValues.parentFolderName);
   };
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
-    onClick: handleSubmit,
+    onClick: handleSubmit(onSubmit),
     'data-automation-id': 'submitButton',
   };
 
@@ -122,44 +114,57 @@ const CreateFolderModalComponent = ({
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      <FieldText
-        label={formatMessage(commonMessages.name)}
-        value={folderNameValue}
-        onChange={hanldeFolderNameChange}
-        placeholder={formatMessage(messages.enterFolderName)}
-        defaultWidth={false}
-        maxLength={MAX_FIELD_LENGTH}
-        maxLengthDisplay={MAX_FIELD_LENGTH}
-        touched
-        error={validationErrors.folderName}
-      />
-      {shouldRenderToggle && (
-        <Toggle
-          value={isSubfolderToggled}
-          onChange={({ target }) => setIsSubfolderToggled(target.checked)}
-          className={cx('toggle')}
-        >
-          {formatMessage(messages.createAsSubfolder)}
-        </Toggle>
-      )}
-      {isSubfolderToggled && (
-        <div className={cx('parent-folder')}>
-          <FieldText
-            label={formatMessage(messages.parentFolder)}
-            value={parentFolderNameValue}
-            onChange={handleParentFolderNameChange}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
+              defaultWidth={false}
+              maxLength={MAX_FIELD_LENGTH}
+              maxLengthDisplay={MAX_FIELD_LENGTH}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+        {shouldRenderToggle && (
+          <Toggle value={isSubfolderToggled} onChange={handleToggle} className={cx('toggle')}>
+            {formatMessage(messages.createAsSubfolder)}
+          </Toggle>
+        )}
+        {isSubfolderToggled && (
+          <FieldProvider
+            name="parentFolderName"
+            className={cx('parent-folder')}
             placeholder={formatMessage(messages.searchFolderToSelect)}
-            defaultWidth={false}
-            maxLength={MAX_FIELD_LENGTH}
-            onClear={handleParentFolderNameClear}
-            clearable
-            touched={isSubfolderToggled}
-            error={validationErrors.parentFolderName}
-          />
-        </div>
-      )}
+          >
+            <FieldErrorHint provideHint={false}>
+              <FieldText
+                label={formatMessage(messages.parentFolder)}
+                defaultWidth={false}
+                maxLength={MAX_FIELD_LENGTH}
+                onClear={handleParentFolderNameClear}
+                clearable
+              />
+            </FieldErrorHint>
+          </FieldProvider>
+        )}
+      </form>
     </Modal>
   );
 };
 
-export const CreateFolderModal = withModal(CREATE_FOLDER_MODAL_KEY)(CreateFolderModalComponent);
+withModal(CREATE_FOLDER_MODAL_KEY)(
+  reduxForm<CreateFolderFormValues, CreateFolderModalProps>({
+    form: 'create-folder-modal-form',
+    initialValues: {
+      folderName: '',
+      parentFolderName: '',
+    },
+    shouldValidate: () => true, // need this to force validation on parentFolderName after re-registering it
+    validate: ({ folderName, parentFolderName }) => {
+      return {
+        folderName: commonValidators.requiredField(folderName),
+        parentFolderName: commonValidators.requiredField(parentFolderName),
+      };
+    },
+  })(CreateFolderModalComponent),
+);

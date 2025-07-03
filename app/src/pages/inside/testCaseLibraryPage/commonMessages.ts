@@ -37,12 +37,4 @@ export const commonMessages = defineMessages({
     id: 'TestCaseLibraryPage.folders',
     defaultMessage: 'Folders',
   },
-  name: {
-    id: 'TestCaseLibraryPage.name',
-    defaultMessage: 'Name',
-  },
-  fieldIsRequired: {
-    id: 'TestCaseLibraryPage.fieldIsRequired',
-    defaultMessage: 'Field is required',
-  },
 });
