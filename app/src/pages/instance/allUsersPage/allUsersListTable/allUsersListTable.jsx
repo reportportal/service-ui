@@ -44,6 +44,7 @@ import { messages } from 'pages/common/users/membersListTable/messages';
 import { canUpdateUserInstanceRole } from 'common/utils/permissions';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { UpdateUserInstanceRole } from './updateUserInstanceRole';
+import { DeleteUser } from './deleteUser';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -66,7 +67,7 @@ const AllUsersListTableComponent = ({
   const currentUser = useSelector(userInfoSelector);
   const { trackEvent } = useTracking();
 
-  const renderRowActions = ({ email, fullName, instanceRole, isCurrentUser }) => {
+  const renderRowActions = ({ userId, email, fullName, instanceRole, isCurrentUser }) => {
     const actions = [<button key="assignments">Manage assignments</button>];
 
     if (canUpdateUserInstanceRole && !isCurrentUser) {
@@ -76,6 +77,16 @@ const AllUsersListTableComponent = ({
           email={email}
           fullName={fullName}
           instanceRole={instanceRole}
+        />,
+      );
+    }
+
+    if (!isCurrentUser) {
+      actions.push(
+        <DeleteUser
+          key="delete-user"
+          fullName={fullName}
+          userId={userId}
         />,
       );
     }
@@ -124,6 +135,7 @@ const AllUsersListTableComponent = ({
             fullName: user.full_name,
             instanceRole: user.instance_role,
             isCurrentUser,
+            userId: user.id,
           },
         };
       }),
