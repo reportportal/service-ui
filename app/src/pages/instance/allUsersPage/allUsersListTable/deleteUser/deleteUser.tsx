@@ -57,7 +57,7 @@ export const DeleteUser = ({ fullName, userId }: DeleteUserProps) => {
   };
 
   const onConfirm = () => {
-    dispatch(deleteUserAccountAction(onSuccess, userId || ''));
+    dispatch(deleteUserAccountAction(onSuccess, userId));
     trackEvent(ALL_USERS_PAGE_EVENTS.DELETE_USER);
   };
 
