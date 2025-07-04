@@ -14,35 +14,41 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
+import classNames from 'classnames/bind';
+import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
-import { Modal } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
-import styles from './updateUserInstanceRoleModal.scss';
+import styles from './deleteUserModal.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-interface UpdateUserInstanceRoleModalProps {
-  title: string;
-  description: ReactNode;
+export const messages = defineMessages({
+  title: {
+    id: 'DeleteUserModal.title',
+    defaultMessage: 'Delete user',
+  },
+  description: {
+    id: 'DeleteUserModal.description',
+    defaultMessage: `Are you sure you want to delete <b>{name}</b> from the Instance?`,
+  },
+});
+
+interface DeleteUserModalProps {
+  fullName: string;
   onConfirm: () => void;
 }
 
-export const UpdateUserInstanceRoleModal = ({
-  title,
-  description,
-  onConfirm,
-}: UpdateUserInstanceRoleModalProps) => {
+export const DeleteUserModal = ({ fullName, onConfirm }: DeleteUserModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
   const okButton: ModalButtonProps = {
-    text: title,
-    children: title,
+    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    variant: 'danger',
     onClick: () => {
       onConfirm();
       dispatch(hideModalAction());
@@ -58,12 +64,15 @@ export const UpdateUserInstanceRoleModal = ({
   return (
     <Modal
       className={cx('modal')}
-      title={title}
+      title={formatMessage(messages.title)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {description}
+      {formatMessage(messages.description, {
+        name: fullName,
+        b: (innerData) => <b>{innerData}</b>,
+      })}
     </Modal>
   );
 };

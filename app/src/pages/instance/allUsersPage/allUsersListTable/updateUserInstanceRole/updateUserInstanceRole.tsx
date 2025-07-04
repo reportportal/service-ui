@@ -31,12 +31,14 @@ interface UpdateUserInstanceRoleProps {
   email: string;
   fullName: string;
   instanceRole: string;
+  className: string;
 }
 
 export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   email,
   fullName,
   instanceRole,
+  className,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -68,7 +70,13 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   const openUpdateUserInstanceRoleModal = () => {
     dispatch(
       showModalAction({
-        component: <UpdateUserInstanceRoleModal data={{ title, description, onConfirm }} />,
+        component: (
+          <UpdateUserInstanceRoleModal
+            title={title}
+            description={description}
+            onConfirm={onConfirm}
+          />
+        ),
       }),
     );
   };
@@ -79,7 +87,7 @@ export const UpdateUserInstanceRole: FC<UpdateUserInstanceRoleProps> = ({
   };
 
   return (
-    <button type="button" onClick={handleClick} aria-label={title}>
+    <button type="button" onClick={handleClick} aria-label={title} className={className}>
       {title}
     </button>
   );
