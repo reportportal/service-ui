@@ -15,5 +15,5 @@
  */
 
 .delete-user.delete-user {
-  color: $COLOR--red-failed-2;
+  color: var(--rp-ui-base-error);
 }
