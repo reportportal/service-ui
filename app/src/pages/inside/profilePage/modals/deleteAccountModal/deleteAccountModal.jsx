@@ -27,7 +27,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
 import { ACCOUNT_REMOVED_PAGE } from 'controllers/pages';
-import { deleteUserAccountAction, userInfoSelector } from 'controllers/user';
+import { deleteUserAccountAction, idSelector } from 'controllers/user';
 import styles from './deleteAccountModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +62,7 @@ const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const userId = useSelector(userInfoSelector).id;
+  const userId = useSelector(idSelector);
   const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
