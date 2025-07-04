@@ -68,7 +68,7 @@ const AllUsersListTableComponent = ({
   const { trackEvent } = useTracking();
 
   const renderRowActions = ({ userId, email, fullName, instanceRole, isCurrentUser }) => {
-    const actions = [<button key="assignments">Manage assignments</button>];
+    const actions = [];
 
     if (canUpdateUserInstanceRole && !isCurrentUser) {
       actions.push(
@@ -77,12 +77,20 @@ const AllUsersListTableComponent = ({
           email={email}
           fullName={fullName}
           instanceRole={instanceRole}
+          className={cx('menu-item')}
         />,
       );
     }
 
     if (!isCurrentUser) {
-      actions.push(<DeleteUser key="delete-user" fullName={fullName} userId={userId} />);
+      actions.push(
+        <DeleteUser
+          key="delete-user"
+          fullName={fullName}
+          userId={userId}
+          className={cx('delete-user-item')}
+        />,
+      );
     }
 
     return (

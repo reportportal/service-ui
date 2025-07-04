@@ -17,7 +17,6 @@
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useIntl, defineMessages } from 'react-intl';
-import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { deleteUserAccountAction } from 'controllers/user';
@@ -25,9 +24,6 @@ import { showSuccessNotification } from 'controllers/notification';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { DeleteUserModal } from './deleteUserModal';
-import styles from './deleteUser.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
 
 export const messages = defineMessages({
   successfully: {
@@ -39,9 +35,10 @@ export const messages = defineMessages({
 interface DeleteUserProps {
   fullName: string;
   userId: string;
+  className: string;
 }
 
-export const DeleteUser = ({ fullName, userId }: DeleteUserProps) => {
+export const DeleteUser = ({ fullName, userId, className }: DeleteUserProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -75,7 +72,7 @@ export const DeleteUser = ({ fullName, userId }: DeleteUserProps) => {
   };
 
   return (
-    <button className={cx('delete-user')} type="button" onClick={handleClick}>
+    <button className={className} type="button" onClick={handleClick}>
       {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
     </button>
   );

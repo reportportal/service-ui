@@ -27,23 +27,28 @@
 .row-action-menu {
   display: flex;
   flex-direction: column;
-
-  button {
-    width: fit-content;
-    padding: 8px 16px;
-    font-family: var(--rp-ui-base-font-family);
-    font-size: 13px;
-    line-height: 20px;
-    background: none;
-    color: var(--rp-ui-base-almost-black);
-    border: none;
-    outline: none;
-    cursor: pointer;
-  }
 }
 
 .menu-icon {
   svg {
     margin-bottom: 3px;
   }
+}
+
+.menu-item,
+.delete-user-item {
+  width: fit-content;
+  padding: 8px 16px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  background: none;
+  color: var(--rp-ui-base-almost-black);
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.delete-user-item {
+  color: var(--rp-ui-base-error);
 }
