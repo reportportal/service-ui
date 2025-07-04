@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
@@ -27,7 +27,7 @@ import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -38,56 +38,13 @@ import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { projectInfoIdSelector, projectNameSelector } from 'controllers/project';
 import HintIcon from './img/hint-inline.svg';
 import styles from './inviteUserModal.scss';
+import { ERROR_CODES, InvitationStatus, settingsLink, settingsLinkName } from './constants';
+import { ExternalUserInvitationModal } from '../../../inside/common/modals/externalUserInvitationModal';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
 const INVITE_USER_FORM = 'inviteUserForm';
-
-const messages = defineMessages({
-  headerInviteUserModal: {
-    id: 'InviteUserModal.headerInviteUserModal',
-    defaultMessage: 'Invite User to',
-  },
-  canEditProject: {
-    id: 'InviteUserModal.canEditProject',
-    defaultMessage: 'Can edit the Project',
-  },
-  headerAssignUserModal: {
-    id: 'InviteUserModal.headerAssignUserModal',
-    defaultMessage: 'Assign User to',
-  },
-  description: {
-    id: 'InviteUserModal.description',
-    defaultMessage: `Please note, that new users joining this project's organization will be assigned the ‘Member’ role, while existing users will retain their current organizational roles and permissions.`,
-  },
-  email: {
-    id: 'InviteUserModal.email',
-    defaultMessage: 'Email',
-  },
-  descriptionAssign: {
-    id: 'InviteUserModal.descriptionAssign',
-    defaultMessage:
-      'Please be aware that only users who are present on the instance can be assigned to the project.',
-  },
-  inputPlaceholder: {
-    id: 'InviteUserModal.inputPlaceholder',
-    defaultMessage: 'Enter email (e.g. example@mail.com)',
-  },
-  memberWasInvited: {
-    id: 'InviteUserModal.memberWasInvited',
-    defaultMessage: "User ''<b>{name}</b>'' has been invited and assigned successfully",
-  },
-  inviteExternalMember: {
-    id: 'InviteUserModal.inviteExternalMember',
-    defaultMessage:
-      'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
-  },
-  hintMessage: {
-    id: 'InviteUserModal.hintMessage',
-    defaultMessage:
-      "By default, invited users receive 'View only' permissions. Users with 'Can edit' permissions can modify the project and all its data (report launches, change defect types, etc.).",
-  },
-});
 
 export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) => {
   const { formatMessage } = useIntl();
@@ -96,6 +53,9 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
   const projectId = useSelector(projectInfoIdSelector);
+  const header = ssoUsersOnly
+    ? `${formatMessage(messages.headerAssignUserModal)} ${projectName}`
+    : `${formatMessage(messages.headerInviteUserModal)} ${projectName}`;
 
   const getCloseConfirmationConfig = () => {
     if (dirty) {
@@ -114,25 +74,25 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
         method: 'post',
         data: userData,
       });
-      dispatch(
-        showNotification({
-          message: formatMessage(messages.memberWasInvited, {
-            b: (innerData) => DOMPurify.sanitize(`<b>${innerData}</b>`),
-            name: invitedUser.full_name,
-          }),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        }),
-      );
       onInvite();
 
       return invitedUser;
     } catch (err) {
-      dispatch(
-        showNotification({
-          message: err.message,
-          type: NOTIFICATION_TYPES.ERROR,
-        }),
-      );
+      const externalInviteForbidden = err.errorCode === ERROR_CODES.FORBIDDEN && ssoUsersOnly;
+      const message = externalInviteForbidden
+        ? formatMessage(messages.externalInviteForbidden, {
+            email: userData.email,
+            linkName: settingsLinkName,
+            a: (innerData) =>
+              DOMPurify.sanitize(
+                `<a href="${settingsLink}" target="_blank" rel="noopener">${innerData}</a>`,
+                { ADD_ATTR: ['target'] },
+              ),
+          })
+        : err.message;
+
+      dispatch(showErrorNotification({ message }));
+
       return {
         errorOccurred: true,
         ...err,
@@ -157,17 +117,32 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
     };
 
     const invitedUser = await inviteUser(userData);
+
     if (invitedUser?.errorOccurred) {
       return;
     }
-    if (invitedUser?.externalUser) {
+
+    if (invitedUser?.status === InvitationStatus.PENDING) {
       dispatch(
         showModalAction({
-          id: 'externalUserInvitationModal',
-          data: { email: invitedUser.email, link: invitedUser.link },
+          component: (
+            <ExternalUserInvitationModal
+              email={invitedUser.email}
+              link={invitedUser.link}
+              header={header}
+            />
+          ),
         }),
       );
     } else {
+      dispatch(
+        showSuccessNotification({
+          message: formatMessage(messages.memberWasInvited, {
+            b: (innerData) => DOMPurify.sanitize(`<b>${innerData}</b>`),
+            name: invitedUser.full_name,
+          }),
+        }),
+      );
       dispatch(hideModalAction());
     }
   };
@@ -190,11 +165,7 @@ export const InviteUser = ({ data, handleSubmit, dirty, invalid, anyTouched }) =
 
   return (
     <Modal
-      title={
-        ssoUsersOnly
-          ? `${formatMessage(messages.headerAssignUserModal)} ${projectName}`
-          : `${formatMessage(messages.headerInviteUserModal)} ${projectName}`
-      }
+      title={header}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
