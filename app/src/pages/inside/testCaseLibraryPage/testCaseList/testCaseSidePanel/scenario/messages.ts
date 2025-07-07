@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+import { defineMessages } from 'react-intl';
 
-  .step-item {
-    border-radius: 4px;
-    background-color: var(--rp-ui-base-bg-000);
-  }
-}
+export const messages = defineMessages({
+  precondition: {
+    id: 'Scenario.precondition',
+    defaultMessage: 'Precondition',
+  },
+  instructions: {
+    id: 'Scenario.instructions',
+    defaultMessage: 'Instructions',
+  },
+  expectedResult: {
+    id: 'Scenario.expectedResult',
+    defaultMessage: 'Expected result',
+  },
+  attachments: {
+    id: 'Scenario.attachments',
+    defaultMessage: 'Attachments',
+  },
+});

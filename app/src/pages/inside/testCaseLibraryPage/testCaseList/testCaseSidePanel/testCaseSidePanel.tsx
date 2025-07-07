@@ -28,18 +28,29 @@ import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import isEmpty from 'lodash.isempty';
-import { TestCase } from '../../types';
+import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../constants';
-import { mockedTestCaseDescription } from '../mockData';
-import { mockedStepsData } from './mocks';
+import { mockedTestCaseDescription, mockedScenarios } from '../mockData';
+import { StepData, mockedStepsData } from './mocks';
 import { StepsList } from './stepsList';
+import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles);
 
-const COLLAPSIBLE_SECTIONS_CONFIG = (tags: string[]) =>
+const COLLAPSIBLE_SECTIONS_CONFIG = ({
+  tags,
+  scenarios,
+  steps,
+  testCaseDescription,
+}: {
+  tags: string[];
+  scenarios: IScenario[];
+  steps: StepData[];
+  testCaseDescription: string;
+}) =>
   [
     {
       titleKey: 'tagsTitle',
@@ -51,22 +62,18 @@ const COLLAPSIBLE_SECTIONS_CONFIG = (tags: string[]) =>
     {
       titleKey: 'scenarioTitle',
       defaultMessageKey: 'noDetailsForScenario',
-      childComponent: null,
+      childComponent: isEmpty(scenarios) ? null : <ScenariosList scenarios={scenarios} />,
     },
     {
       titleKey: 'stepTitle',
       defaultMessageKey: 'noStepsAdded',
-      childComponent: isEmpty(mockedStepsData) ? null : <StepsList steps={mockedStepsData} />,
+      childComponent: isEmpty(steps) ? null : <StepsList steps={steps} />,
     },
     {
       titleKey: 'descriptionTitle',
       defaultMessageKey: 'descriptionNotSpecified',
       childComponent: (
-        <ExpandedTextSection
-          text={mockedTestCaseDescription}
-          defaultVisibleLines={5}
-          fontSize={13}
-        />
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} fontSize={13} />
       ),
     },
   ] as const;
@@ -159,16 +166,19 @@ export const TestCaseSidePanel = memo(
         </div>
 
         <div className={cx('content')}>
-          {COLLAPSIBLE_SECTIONS_CONFIG(testCase.tags).map(
-            ({ titleKey, defaultMessageKey, childComponent }) => (
-              <CollapsibleSection
-                key={titleKey}
-                title={formatMessage(messages[titleKey])}
-                defaultMessage={formatMessage(messages[defaultMessageKey])}
-                childComponent={childComponent}
-              />
-            ),
-          )}
+          {COLLAPSIBLE_SECTIONS_CONFIG({
+            ...testCase,
+            scenarios: mockedScenarios,
+            steps: mockedStepsData,
+            testCaseDescription: mockedTestCaseDescription,
+          }).map(({ titleKey, defaultMessageKey, childComponent }) => (
+            <CollapsibleSection
+              key={titleKey}
+              title={formatMessage(messages[titleKey])}
+              defaultMessage={formatMessage(messages[defaultMessageKey])}
+              childComponent={childComponent}
+            />
+          ))}
         </div>
 
         <div className={cx('footer')}>

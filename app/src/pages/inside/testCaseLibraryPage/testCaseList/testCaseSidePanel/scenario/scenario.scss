@@ -1,0 +1,83 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.scenario {
+  display: flex;
+  flex-direction: column;
+  font-family: $FONT-ROBOTO-REGULAR;
+  border-radius: 4px;
+  padding: 0 16px 16px;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: 0 1px 3px 0 var(--rp-ui-base-e-100);
+
+  .section-border {
+    height: 1px;
+    background-color: var(--rp-ui-base-e-100);
+    margin: 16px -16px 0;
+  }
+
+  .field-section {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .field-title {
+    color: var(--rp-ui-base-e-400);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    margin: 16px 0 4px 0;
+  }
+
+  .precondition-text {
+    color: var(--rp-ui-base-almost-black);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  &.with-attachments {
+    .attachments-list {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+      gap: 8px;
+    }
+  }
+
+  &.full-view {
+    gap: 16px;
+    border: none;
+    background: none;
+    padding: 16px 0;
+
+    .field-section {
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .field-title {
+      color: var(--rp-ui-base-almost-black);
+      margin-bottom: 8px;
+      margin-top: 0;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+    }
+  }
+}

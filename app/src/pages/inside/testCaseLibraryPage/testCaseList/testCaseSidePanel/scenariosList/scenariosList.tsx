@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+import classNames from 'classnames/bind';
+import { Scenario } from '../scenario';
+import { IScenario } from '../../../types';
+import styles from './scenariosList.scss';
 
-  .step-item {
-    border-radius: 4px;
-    background-color: var(--rp-ui-base-bg-000);
-  }
+const cx = classNames.bind(styles);
+
+interface ScenariosListProps {
+  scenarios: IScenario[];
 }
+
+export const ScenariosList = ({ scenarios }: ScenariosListProps) => {
+  return (
+    <div className={cx('scenarios-list')}>
+      {scenarios.map((scenario) => (
+        <Scenario key={scenario.id} scenario={scenario} />
+      ))}
+    </div>
+  );
+};

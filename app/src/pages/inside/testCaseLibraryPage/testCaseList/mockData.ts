@@ -15,7 +15,7 @@
  */
 
 import { FilterOption } from './types';
-import { TestCase } from '../types';
+import { IScenario, TestCase } from '../types';
 
 export const mockTestCases: TestCase[] = [
   {
@@ -451,3 +451,37 @@ export const FILTER_OPTIONS: FilterOption[] = [
 
 export const mockedTestCaseDescription =
   'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works. Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works';
+
+export const mockedScenarios: IScenario[] = [
+  {
+    id: '1',
+    precondition:
+      'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works',
+    instruction: '',
+    expectedResult: '',
+    attachments: [],
+  },
+  {
+    id: '2',
+    precondition:
+      'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works',
+    instruction: '',
+    expectedResult: '',
+    attachments: [
+      { fileName: 'Slack_plugin.jar', size: 128 },
+      { fileName: 'RALLY_plugin.jar', size: 62 },
+      { fileName: 'Screenshot 2023-09-08 at 16.23.58.png', size: 0.6 },
+      { fileName: 'Jira_plugin.jar', size: 12 },
+    ],
+  },
+  {
+    id: '3',
+    precondition:
+      'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works',
+    instruction:
+      'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works an always immediately view where things are going wrong. In this example there is a basic method called',
+    expectedResult:
+      'Example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works',
+    attachments: [],
+  },
+];

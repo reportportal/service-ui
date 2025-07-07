@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  .step-item {
-    border-radius: 4px;
-    background-color: var(--rp-ui-base-bg-000);
-  }
-}
+export { AttachmentItem } from './attachmentItem';

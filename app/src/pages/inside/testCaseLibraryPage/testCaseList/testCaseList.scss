@@ -31,6 +31,10 @@
   border: 1px solid transparent;
   border-radius: 4px;
 
+  [class*='table-row-content'] {
+    align-items: flex-start;
+  }
+
   &:hover {
     border-color: var(--rp-ui-base-topaz-focused);
   }

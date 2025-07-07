@@ -1,0 +1,96 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: 0 1px 3px 0 var(--rp-ui-base-e-100);
+  border-radius: 4px;
+  gap: 12px;
+  cursor: pointer;
+
+  &:hover {
+    .file-name {
+      color: var(--rp-ui-base-topaz-hover);
+    }
+  }
+}
+
+.attachment-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--rp-ui-base-e-300);
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--rp-ui-base-bg-000);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  }
+}
+
+.extension-text {
+  color: var(--rp-ui-base-bg-000);
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 10px;
+  text-transform: uppercase;
+  z-index: 1;
+  position: relative;
+}
+
+.attachment-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-details {
+  color: var(--rp-ui-base-e-400);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+}
