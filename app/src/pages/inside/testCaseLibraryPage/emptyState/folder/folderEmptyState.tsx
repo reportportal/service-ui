@@ -18,10 +18,11 @@ import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
+
 import { messages } from '../messages';
+import { commonMessages } from '../../commonMessages';
 
 export const FolderEmptyState = () => {
   const { formatMessage } = useIntl();
@@ -33,7 +34,7 @@ export const FolderEmptyState = () => {
       imageType="docs"
       buttons={[
         {
-          name: formatMessage(messages.addTestCase),
+          name: formatMessage(commonMessages.createTestCase),
           dataAutomationId: 'createTestCaseButton',
           icon: PlusIconInline,
           isCompact: true,
