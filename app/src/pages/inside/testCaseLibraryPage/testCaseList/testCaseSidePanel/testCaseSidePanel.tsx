@@ -32,6 +32,8 @@ import { TestCase } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../constants';
 import { mockedTestCaseDescription } from '../mockData';
+import { mockedStepsData } from './mocks';
+import { StepsList } from './stepsList';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 
@@ -54,7 +56,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = (tags: string[]) =>
     {
       titleKey: 'stepTitle',
       defaultMessageKey: 'noStepsAdded',
-      childComponent: null,
+      childComponent: isEmpty(mockedStepsData) ? null : <StepsList steps={mockedStepsData} />,
     },
     {
       titleKey: 'descriptionTitle',

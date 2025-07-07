@@ -39,9 +39,10 @@
       width: 14px;
       height: 14px;
       transition: transform 0.2s ease;
+      transform: rotate(-90deg);
 
       &.rotated {
-        transform: rotate(90deg);
+        transform: rotate(0deg);
       }
 
       svg {

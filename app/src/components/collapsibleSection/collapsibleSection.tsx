@@ -16,7 +16,7 @@
 
 import { ReactElement, useState } from 'react';
 import classNames from 'classnames/bind';
-import { ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 import styles from './collapsibleSection.scss';
 
 const cx = classNames.bind(styles);
@@ -49,7 +49,7 @@ export const CollapsibleSection = ({
         aria-expanded={isExpanded}
       >
         <div className={cx('chevron-wrapper', { rotated: isExpanded })}>
-          <ChevronRightBreadcrumbsIcon />
+          <ChevronDownDropdownIcon />
         </div>
         <span className={cx('section-title')}>{title}</span>
       </button>

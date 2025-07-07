@@ -41,14 +41,20 @@ const messages = defineMessages({
 interface AttachmentAreaProps {
   isDraggable?: boolean;
   index?: number;
+  isNumberable?: boolean;
   onRemove?: () => void;
+  showDragAndDropIcon?: boolean;
+  showAttachmentBlock?: boolean;
 }
 
 export const AttachmentArea = ({
   isDraggable = false,
   index,
+  isNumberable = true,
   children,
   onRemove,
+  showDragAndDropIcon = true,
+  showAttachmentBlock = true,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
 
@@ -56,32 +62,38 @@ export const AttachmentArea = ({
 
   return (
     <div className={cx('attachment-area')}>
-      {isDraggable && (
+      {isNumberable && (
         <div className={cx('attachment-area__number')}>
           <div className={cx('attachment-area__drag')}>
             {areaNumber}
-            <Button variant="text" adjustWidthOn="content">
-              <DragNDropIcon />
-            </Button>
+            {isDraggable && (
+              <Button variant="text" adjustWidthOn="content">
+                <DragNDropIcon />
+              </Button>
+            )}
           </div>
-          <Button variant="text" adjustWidthOn="content" onClick={onRemove}>
-            <DeleteIcon />
-          </Button>
+          {onRemove && (
+            <Button variant="text" adjustWidthOn="content" onClick={onRemove}>
+              <DeleteIcon />
+            </Button>
+          )}
         </div>
       )}
       <div className={cx('attachment-area__fields-container')}>
         <div className={cx('attachment-area__fields')}>{children}</div>
-        <div className={cx('attachment-area__attachment')}>
-          <span>{formatMessage(messages.attachments)}</span>
-          <div className={cx('attachment-area__add-attachment')}>
-            <span>
-              <DragAndDropIcon /> {formatMessage(messages.dropFilesHere)}
-            </span>
-            <Button variant="text" icon={<PlusIcon />} adjustWidthOn="content">
-              {formatMessage(COMMON_LOCALE_KEYS.ADD)}
-            </Button>
+        {showAttachmentBlock && (
+          <div className={cx('attachment-area__attachment')}>
+            <span>{formatMessage(messages.attachments)}</span>
+            <div className={cx('attachment-area__add-attachment')}>
+              <span>
+                {showDragAndDropIcon && <DragAndDropIcon />} {formatMessage(messages.dropFilesHere)}
+              </span>
+              <Button variant="text" icon={<PlusIcon />} adjustWidthOn="content">
+                {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -45,9 +45,11 @@
 
   &__drag {
     display: flex;
+    font-size: 13px;
     flex-direction: column;
     align-items: center;
     row-gap: 16px;
+    line-height: 16px;
     font-weight: 500;
   }
 
