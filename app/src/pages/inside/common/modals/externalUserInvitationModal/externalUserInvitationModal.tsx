@@ -24,11 +24,10 @@ import {
   SystemMessage,
   WarningIcon,
 } from '@reportportal/ui-kit';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { messages } from './messages';
 import styles from './externalUserInvitationModal.scss';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import { useDispatch } from 'react-redux';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -54,12 +53,14 @@ export const ExternalUserInvitationModal = ({
   });
 
   const copyLink = () => {
-    navigator.clipboard
-      .writeText(link)
-      .then(() =>
-        dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSucces) })),
-      )
-      .catch((err: Error) => dispatch(showErrorNotification({ message: err.message })));
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(link)
+        .then(() =>
+          dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) })),
+        )
+        .catch((err: Error) => dispatch(showErrorNotification({ message: err.message })));
+    }
   };
 
   return (

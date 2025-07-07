@@ -33,7 +33,7 @@ export const messages = defineMessages({
     id: 'ExternalUserInvitationModal.copyLink',
     defaultMessage: 'Copy link',
   },
-  copyLinkSucces: {
+  copyLinkSuccess: {
     id: 'ExternalUserInvitationModal.copyLinkSuccess',
     defaultMessage: 'Invitation link has been copied successfully',
   },

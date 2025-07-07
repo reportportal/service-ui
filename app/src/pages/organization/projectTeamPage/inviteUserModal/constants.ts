@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-export const InvitationStatus = {
-  PENDING: 'PENDING',
-};
+export enum InvitationStatus {
+  PENDING = 'PENDING',
+}
 
 export const ERROR_CODES = {
   FORBIDDEN: 4003,

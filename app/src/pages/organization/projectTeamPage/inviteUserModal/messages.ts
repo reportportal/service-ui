@@ -48,7 +48,7 @@ export const messages = defineMessages({
   },
   memberWasInvited: {
     id: 'InviteUserModal.memberWasInvited',
-    defaultMessage: "User ''<b>{name}</b>'' has been invited and assigned successfully",
+    defaultMessage: "User '<b>{name}</b>' has been invited and assigned successfully",
   },
   inviteExternalMember: {
     id: 'InviteUserModal.inviteExternalMember',
