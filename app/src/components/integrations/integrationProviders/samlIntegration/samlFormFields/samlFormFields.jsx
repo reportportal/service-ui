@@ -215,7 +215,7 @@ export class SamlFormFields extends Component {
         </IntegrationFormField>
         <IntegrationFormField
           name={CALLBACK_URL_ATTRIBUTE_KEY}
-          label="RP callback URL"
+          label="Assertion Consumer Service (ACS) URL"
           lineAlign={lineAlign}
           placeholder={this.configureCallbackUrl()}
           disabled
