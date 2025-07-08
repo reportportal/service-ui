@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters, getBasicPageViewEventParameters } from '../common/ga4Utils';
+import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const ORGANIZATION_PAGE = 'organization';
+const SETTINGS_PAGE = 'organization_settings';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
-const BASIC_PAGE_VIEW_EVENT_PARAMETERS = getBasicPageViewEventParameters(ORGANIZATION_PAGE);
+const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
 
 export const ORGANIZATION_PAGE_EVENTS = {
   SEARCH_ORGANIZATION_FIELD: {
@@ -52,11 +53,11 @@ export const ORGANIZATION_PAGE_EVENTS = {
     number: appliedFiltersCount,
   }),
   viewOrganizationSettings: (page: string) => ({
-    ...BASIC_PAGE_VIEW_EVENT_PARAMETERS,
+    action: 'page_view',
     place: `organization_settings_${page}`,
   }),
   updateOrganizationSettings: ({ keepLaunches, keepLogs, keepScreenshots }) => ({
-    ...BASIC_EVENT_PARAMETERS,
+    ...SETTINGS_EVENT_PARAMETERS,
     place: 'general',
     element_name: 'button_submit',
     type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
