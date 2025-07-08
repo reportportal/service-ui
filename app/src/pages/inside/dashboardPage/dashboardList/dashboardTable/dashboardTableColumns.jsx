@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
@@ -24,15 +24,13 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import {
-  NOTIFICATION_TYPES,
-  showDefaultErrorNotification,
-  showNotification,
-} from 'controllers/notification';
+import { useDispatch, useSelector } from 'react-redux';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { fetch } from 'common/utils';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
-import { useFetchDashboardConfig } from './hooks';
 
 const cx = classNames.bind(styles);
 
@@ -91,17 +89,26 @@ export const DuplicateColumn = track()(
   injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
-    const { config, fetchConfig, error } = useFetchDashboardConfig(value.id);
     const dispatch = useDispatch();
+    const activeProject = useSelector(activeProjectSelector);
+
+    // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
+    const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
+
+    const fetchDashboardConfig = async () => {
+      const url = URLS.dashboardConfig(activeProject, value.id);
+      return fetch(url);
+    };
 
     useEffect(() => {
       if (opened) {
+        setDashboardConfigPromise(fetchDashboardConfig());
         const handleOutsideClick = (e) => {
           if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
             setOpened(false);
           }
         };
-        fetchConfig();
+
         document.addEventListener('click', handleOutsideClick);
         return () => document.removeEventListener('click', handleOutsideClick);
       }
@@ -123,18 +130,17 @@ export const DuplicateColumn = track()(
     const handleCopyConfig = async (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
-      const dashboardConfig = config || (await fetchConfig());
+
       try {
-        if (error) throw error;
-        await navigator.clipboard.writeText(JSON.stringify(dashboardConfig));
+        const config = await dashboardConfigPromise;
+        await navigator.clipboard.writeText(JSON.stringify(config));
         dispatch(
-          showNotification({
+          showSuccessNotification({
             messageId: 'dashboardConfigurationCopied',
-            type: NOTIFICATION_TYPES.SUCCESS,
           }),
         );
-      } catch (err) {
-        dispatch(showDefaultErrorNotification(err));
+      } catch (error) {
+        dispatch(showDefaultErrorNotification(error));
       }
 
       setOpened(false);
