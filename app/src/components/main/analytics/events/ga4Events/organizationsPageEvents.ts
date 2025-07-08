@@ -50,4 +50,14 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'export',
     number: appliedFiltersCount,
   }),
+  viewOrganizationSettings: (page: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: `organization_settings_${page}`,
+  }),
+  updateOrganizationSettings: ({ keepLaunches, keepLogs, keepScreenshots }) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'general',
+    element_name: 'button_submit',
+    type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
+  }),
 };
