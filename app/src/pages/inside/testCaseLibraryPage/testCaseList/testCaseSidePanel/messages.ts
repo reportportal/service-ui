@@ -69,4 +69,8 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.noStepsAdded',
     defaultMessage: 'No steps for this scenario yet',
   },
+  copyId: {
+    id: 'TestCaseSidePanel.copyId',
+    defaultMessage: 'Copy ID',
+  },
 });

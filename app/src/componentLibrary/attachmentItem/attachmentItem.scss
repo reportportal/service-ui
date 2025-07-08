@@ -43,33 +43,18 @@
 .file-icon {
   width: 32px;
   height: 32px;
-  background-color: var(--rp-ui-base-e-300);
-  border-radius: 4px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    background-color: var(--rp-ui-base-bg-000);
-    clip-path: polygon(100% 0, 0 100%, 100% 100%);
-  }
-}
+  svg {
+    width: 32px;
+    height: 32px;
 
-.extension-text {
-  color: var(--rp-ui-base-bg-000);
-  font-size: 8px;
-  font-weight: 600;
-  line-height: 10px;
-  text-transform: uppercase;
-  z-index: 1;
-  position: relative;
+    path {
+      fill: var(--rp-ui-base-almost-black);
+    }
+  }
 }
 
 .attachment-info {

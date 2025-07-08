@@ -16,7 +16,7 @@
 
 import { memo } from 'react';
 import classNames from 'classnames/bind';
-import { ChevronRightBreadcrumbsIcon, EditIcon } from '@reportportal/ui-kit';
+import { ChevronRightBreadcrumbsIcon, MoveToFolderIcon } from '@reportportal/ui-kit';
 import styles from './pathBreadcrumb.scss';
 
 const cx = classNames.bind(styles);
@@ -28,7 +28,7 @@ interface PathBreadcrumbProps {
 export const PathBreadcrumb = memo(({ path }: PathBreadcrumbProps) => {
   return (
     <div className={cx('path-breadcrumb')}>
-      <EditIcon />
+      <MoveToFolderIcon />
       <div className={cx('path-text')}>
         {path.map((item, index) => (
           <span key={item} className={cx('path-item-container')}>

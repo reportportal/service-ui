@@ -16,6 +16,7 @@
 
 import classNames from 'classnames/bind';
 import { useCallback, useMemo } from 'react';
+import { AddCsvIcon, AddJarIcon, AddImageIcon } from '@reportportal/ui-kit';
 import styles from './attachmentItem.scss';
 
 const cx = classNames.bind(styles);
@@ -25,6 +26,17 @@ interface AttachmentItemProps {
   size: number;
 }
 
+const getFileIconByExtension = (extension: string) => {
+  switch (extension.toLowerCase()) {
+    case 'csv':
+      return AddCsvIcon;
+    case 'jar':
+      return AddJarIcon;
+    default:
+      return AddImageIcon;
+  }
+};
+
 export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
   const getFileExtension = useCallback((name: string): string => {
     const parts = name.split('.');
@@ -33,12 +45,13 @@ export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
 
   const fileExtension = useMemo(() => getFileExtension(fileName), [fileName, getFileExtension]);
   const upperCaseExtension = fileExtension.toUpperCase();
+  const IconComponent = useMemo(() => getFileIconByExtension(fileExtension), [fileExtension]);
 
   return (
     <div className={cx('attachment-item')}>
       <div className={cx('attachment-icon')}>
-        <div className={cx('file-icon', `file-icon`)}>
-          <span className={cx('extension-text')}>{upperCaseExtension}</span>
+        <div className={cx('file-icon')}>
+          <IconComponent />
         </div>
       </div>
 

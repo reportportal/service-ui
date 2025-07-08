@@ -18,7 +18,14 @@ import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { Button, EditIcon, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
+import {
+  Button,
+  MeatballMenuIcon,
+  Tooltip,
+  CopyIcon,
+  RerunIcon,
+  DurationIcon,
+} from '@reportportal/ui-kit';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -114,6 +121,10 @@ export const TestCaseSidePanel = memo(
       // TODO: Implement add to test plan functionality
     };
 
+    const handleCopyId = async () => {
+      await navigator.clipboard.writeText(testCase.id.toString());
+    };
+
     return (
       <div ref={sidePanelRef} className={cx('test-case-side-panel')}>
         <div className={cx('header')}>
@@ -137,9 +148,18 @@ export const TestCaseSidePanel = memo(
 
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
-              <div className={cx('meta-item-row')}>
+              <div className={cx('meta-item-row', 'id-row')}>
                 <span className={cx('meta-label')}>ID:</span>
                 <span className={cx('meta-value')}>{testCase.id}</span>
+                <button
+                  type="button"
+                  className={cx('copy-button')}
+                  onClick={handleCopyId}
+                  aria-label={formatMessage(messages.copyId)}
+                  data-automation-id="copy-test-case-id"
+                >
+                  <CopyIcon />
+                </button>
               </div>
               <div className={cx('meta-item-row')}>
                 <span className={cx('meta-label')}>Created:</span>
@@ -149,7 +169,7 @@ export const TestCaseSidePanel = memo(
             <div className={cx('meta-row')}>
               {!!testCase.lastExecution && (
                 <div className={cx('meta-item-row')}>
-                  <EditIcon />
+                  <RerunIcon />
                   <span className={cx('meta-value')}>
                     {formatTimestamp(testCase.lastExecution)}
                   </span>
@@ -157,7 +177,7 @@ export const TestCaseSidePanel = memo(
               )}
               {!!testCase.durationTime && (
                 <div className={cx('meta-item-row')}>
-                  <EditIcon />
+                  <DurationIcon />
                   <span className={cx('meta-value')}>{formatDuration(testCase.durationTime)}</span>
                 </div>
               )}
