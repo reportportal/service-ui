@@ -32,8 +32,5 @@ export const getBasicSearchEventParameters = (category) =>
 export const getBasicPerformanceEventParameters = (category) =>
   getBasicEventParameters('performance', category);
 
-export const getBasicPageViewEventParameters = (category) =>
-  getBasicEventParameters('page_view', category);
-
 export const normalizeEventParameter = (parameter = '') =>
   parameter.toLowerCase().trim().replace(/\s+|-/g, '_');
