@@ -18,7 +18,13 @@ export {
   prepareActiveOrganizationProjectsAction,
   fetchOrganizationBySlugAction,
   setActiveOrganizationAction,
+  updateOrganizationSettingsAction,
 } from './actionCreators';
 export { organizationReducer } from './reducer';
-export { activeOrganizationSelector, activeOrganizationNameSelector } from './selectors';
+export {
+  activeOrganizationSelector,
+  activeOrganizationNameSelector,
+  activeOrganizationIdSelector,
+  activeOrganizationSettingsSelector,
+} from './selectors';
 export { organizationSagas } from './sagas';

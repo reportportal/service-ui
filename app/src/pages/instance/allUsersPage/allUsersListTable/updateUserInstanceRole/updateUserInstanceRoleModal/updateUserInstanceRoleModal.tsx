@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
@@ -27,26 +27,26 @@ import styles from './updateUserInstanceRoleModal.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface UpdateUserInstanceRoleModalProps {
-  data: {
-    title: string;
-    description: ReactNode;
-    onConfirm: () => void;
-  };
+  title: string;
+  description: ReactNode;
+  onConfirm: () => void;
 }
 
-export const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> = ({ data }) => {
+export const UpdateUserInstanceRoleModal = ({
+  title,
+  description,
+  onConfirm,
+}: UpdateUserInstanceRoleModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  const onConfirm = () => {
-    data.onConfirm();
-    dispatch(hideModalAction());
-  };
-
   const okButton: ModalButtonProps = {
-    text: data.title,
-    children: data.title,
-    onClick: onConfirm,
+    text: title,
+    children: title,
+    onClick: () => {
+      onConfirm();
+      dispatch(hideModalAction());
+    },
     'data-automation-id': 'submitButton',
   };
 
@@ -58,12 +58,12 @@ export const UpdateUserInstanceRoleModal: FC<UpdateUserInstanceRoleModalProps> =
   return (
     <Modal
       className={cx('modal')}
-      title={data.title}
+      title={title}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {data.description}
+      {description}
     </Modal>
   );
 };

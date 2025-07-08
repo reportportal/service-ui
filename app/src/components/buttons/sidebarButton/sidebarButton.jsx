@@ -42,10 +42,10 @@ export const SidebarButton = ({
   const linkBody = isNavbar ? (
     <span>{children}</span>
   ) : (
-    <div>
+    <span className={cx('wrapper')}>
       <i className={cx('btn-icon')}>{Parser(icon)}</i>
       <span className={cx('btn-title-mobile')}>{children}</span>
-    </div>
+    </span>
   );
 
   return (
@@ -70,7 +70,7 @@ export const SidebarButton = ({
 
 SidebarButton.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  icon: PropTypes.string,
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   bottom: PropTypes.bool,
   children: PropTypes.node,
   isNav: PropTypes.bool,

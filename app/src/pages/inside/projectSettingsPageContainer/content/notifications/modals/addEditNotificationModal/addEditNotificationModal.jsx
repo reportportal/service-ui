@@ -450,16 +450,25 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
     const inputDetails = inputValues[RULE_DETAILS_FIELD_KEY];
     return ruleFields.reduce(
       (acc, field) => {
-        const { type: validationType, errorMessage } = field.validation || {};
-        if (validate[validationType]) {
+        const { type: validationType, errorMessage, regex } = field.validation || {};
+        const value = inputDetails?.[field.name];
+
+        if (regex) {
+          try {
+            const dynamicRegex = new RegExp(regex);
+            if (!dynamicRegex.test(value)) {
+              acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
+            }
+          } catch {
+            acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
+          }
+        } else if (validate[validationType]) {
           acc[RULE_DETAILS_FIELD_KEY][field.name] = bindMessageToValidator(
             validate[validationType],
             errorMessage,
-          )(inputDetails?.[field.name]);
+          )(value);
         } else if (field.required) {
-          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(
-            inputDetails?.[field.name],
-          );
+          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(value);
         }
         return acc;
       },

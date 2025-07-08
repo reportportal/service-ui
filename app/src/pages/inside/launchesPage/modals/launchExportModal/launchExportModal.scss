@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-.modal-description {
-  padding: 10px;
-  font-size: 12px;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  color: $COLOR--gray-47;
-  background-color: $COLOR--white-four;
+.modal-field {
+  padding-bottom: 15px;
 }
-.link {
+
+.include-attachments-field {
+  margin-top: 15px;
+}
+
+.export-type-field {
+  width: 90px;
+}
+
+.description {
   color: $COLOR--charcoal-grey;
-  font-family: $FONT-SEMIBOLD;
-  line-height: 17px;
-}
-.external-user-content {
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 80px;
-}
-.copy {
-  position: relative;
-  top: -15px;
-  margin-left: 135px;
-  display: inline-block;
   font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--topaz;
-  line-height: 18px;
-  cursor: pointer;
+  font-size: 14px;
+  line-height: 24px;
+
+  strong {
+    font-family: $FONT-SEMIBOLD;
+  }
 }

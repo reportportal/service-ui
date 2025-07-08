@@ -180,6 +180,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  updateOrganizationSettingsSuccess: {
+    id: 'OrganizationSettingsPage.updateSettingsSuccess',
+    defaultMessage: 'Organization settings have been updated successfully',
+  },
 });
 
 @injectIntl
@@ -211,6 +215,7 @@ export class NotificationList extends PureComponent {
                   title={Parser(
                     DOMPurify.sanitize(
                       messageId ? formatMessage(messages[messageId], values) : message,
+                      { ADD_ATTR: ['target'] },
                     ),
                   )}
                   onClose={() => this.props.hideNotification(uid)}

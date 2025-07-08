@@ -83,9 +83,9 @@ export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuc
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
 });
 
-export const deleteUserAccountAction = (onSuccess) => ({
+export const deleteUserAccountAction = (onSuccess, userId) => ({
   type: DELETE_USER_ACCOUNT,
-  payload: { onSuccess },
+  payload: { onSuccess, userId },
 });
 
 export const deleteApiKeySuccessAction = (apiKeyId) => ({
