@@ -190,7 +190,7 @@ export const ProjectsFilter = ({
       return false;
     }
 
-    let isApply = [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+    let isApply = [LAUNCHES_FILTER_NAME, LAST_RUN_DATE_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
       (prop) => formValues[prop] === initialFilterState[prop],
     );
 

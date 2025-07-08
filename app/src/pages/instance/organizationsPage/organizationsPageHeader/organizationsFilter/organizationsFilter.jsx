@@ -221,7 +221,7 @@ export const OrganizationsFilter = ({
     }
 
     let isApply =
-      [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+      [LAUNCHES_FILTER_NAME, LAST_RUN_DATE_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
       ) &&
       formValues[ORGANIZATION_TYPE_FILTER_NAME].every((type) =>
