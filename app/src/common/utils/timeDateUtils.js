@@ -161,6 +161,9 @@ export const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds()
 export const secondsToHours = (seconds) => moment.duration(seconds, 'seconds').asHours();
 export const hoursToDays = (hours) => moment.duration(hours, 'hours').asDays();
 
+export const humanizeDays = (days, locale) =>
+  moment.duration(days, 'days').locale(locale).humanize({ d: Number.MAX_SAFE_INTEGER });
+
 export const getMillisecondsWoTimezone = (time) => {
   const date = new Date(time);
   const userTimezoneOffset = date.getTimezoneOffset() * 60000;

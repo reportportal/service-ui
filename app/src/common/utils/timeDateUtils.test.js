@@ -25,6 +25,7 @@ import {
   daysToSeconds,
   secondsToHours,
   hoursToDays,
+  humanizeDays,
 } from './timeDateUtils';
 
 const NOW = Date.now();
@@ -168,5 +169,27 @@ describe('hoursToDays', () => {
 
   it('converts 36 hours to 1.5 days', () => {
     expect(hoursToDays(36)).toBe(1.5);
+  });
+});
+
+describe('humanizeDays', () => {
+  it('should return "a day" for 1 day in English', () => {
+    expect(humanizeDays(1, 'en')).toBe('a day');
+  });
+
+  it('should return "5 days" for 5 days in English', () => {
+    expect(humanizeDays(5, 'en')).toBe('5 days');
+  });
+
+  it('should return "день" for 1 day in Russian', () => {
+    expect(humanizeDays(1, 'ru')).toBe('день');
+  });
+
+  it('should return "5 дней" for 5 days in Russian', () => {
+    expect(humanizeDays(5, 'ru')).toBe('5 дней');
+  });
+
+  it('should return "3 дня" for 3 days in Russian', () => {
+    expect(humanizeDays(3, 'ru')).toBe('3 дня');
   });
 });
