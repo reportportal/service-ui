@@ -42,8 +42,8 @@ import {
   DateRangeFormField,
   formatDisplayedValue,
   parseFormattedDate,
+  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
-import { getFormattedDate } from 'components/filterEntities/utils';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
 
@@ -106,7 +106,7 @@ export const OrganizationsFilter = ({
                 name={LAST_RUN_DATE_FILTER_NAME}
                 component={DateRangeFormField}
                 format={parseFormattedDate}
-                parse={getFormattedDate}
+                parse={formatDateRangeToMinutesString}
               />
             ),
           },
@@ -220,10 +220,6 @@ export const OrganizationsFilter = ({
       return false;
     }
 
-    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
-      return true;
-    }
-
     let isApply =
       [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
@@ -243,16 +239,6 @@ export const OrganizationsFilter = ({
       isApply =
         formValues[TEAMMATES_FILTER_NAME_CONDITION] ===
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
-    }
-
-    if (typeof lastRunDate === 'object') {
-      const initialDate = formatDisplayedValue(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
-      const currentDate = formatDisplayedValue(lastRunDate);
-      isApply = initialDate === currentDate && isApply;
-    } else {
-      isApply =
-        formValues[LAST_RUN_DATE_FILTER_NAME] === initialFilterState[LAST_RUN_DATE_FILTER_NAME] &&
-        isApply;
     }
 
     return isApply;

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import moment from 'moment/moment';
-import { getMinutesFromTimestamp } from 'common/utils';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
 
 export function bindDefaultValue(key, options = {}) {
@@ -29,18 +27,6 @@ export function bindDefaultValue(key, options = {}) {
     ...options,
   };
 }
-
-export const getFormattedDate = (formValue) => {
-  if (typeof formValue === 'string') {
-    return formValue;
-  }
-
-  const { startDate, endDate } = formValue || {};
-
-  const utcString = moment().format('ZZ');
-
-  return `${getMinutesFromTimestamp(startDate)};${getMinutesFromTimestamp(endDate)};${utcString}`;
-};
 
 export const prepareQueryFilters = (filtersParams) => {
   const { limit, sort, offset, order, ...rest } = filtersParams;

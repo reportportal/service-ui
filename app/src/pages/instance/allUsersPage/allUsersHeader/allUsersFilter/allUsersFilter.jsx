@@ -42,8 +42,8 @@ import {
   DateRangeFormField,
   formatDisplayedValue,
   parseFormattedDate,
+  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
-import { getFormattedDate } from 'components/filterEntities/utils';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
@@ -64,7 +64,7 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
-  const lastRunDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
+  const lastLoginDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {
@@ -111,14 +111,14 @@ export const AllUsersFilter = ({
             value: '',
             options: lastLogin,
             formatDisplayedValue: (displayedValue) =>
-              formatDisplayedValue(displayedValue, lastRunDate, timeRangeLastLoginValues),
+              formatDisplayedValue(displayedValue, lastLoginDate, timeRangeLastLoginValues),
             notScrollable: true,
             footer: (
               <Field
                 name={LAST_LOGIN_FILTER_NAME}
                 component={DateRangeFormField}
                 format={parseFormattedDate}
-                parse={getFormattedDate}
+                parse={formatDateRangeToMinutesString}
               />
             ),
           },
@@ -196,10 +196,6 @@ export const AllUsersFilter = ({
       return false;
     }
 
-    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
-      return true;
-    }
-
     let isApply =
       [USERS_PERMISSIONS_FILTER_NAME, LAST_LOGIN_FILTER_NAME, EMAIL_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
@@ -214,16 +210,6 @@ export const AllUsersFilter = ({
       isApply =
         formValues[EMAIL_FILTER_NAME_CONDITION] ===
           initialFilterState[EMAIL_FILTER_NAME_CONDITION] && isApply;
-    }
-
-    if (typeof lastRunDate === 'object') {
-      const initialDate = formatDisplayedValue(initialFilterState[LAST_LOGIN_FILTER_NAME]);
-      const currentDate = formatDisplayedValue(lastRunDate);
-      isApply = initialDate === currentDate && isApply;
-    } else {
-      isApply =
-        formValues[LAST_LOGIN_FILTER_NAME] === initialFilterState[LAST_LOGIN_FILTER_NAME] &&
-        isApply;
     }
 
     return isApply;
