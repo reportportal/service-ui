@@ -17,7 +17,7 @@
 import classNames from 'classnames/bind';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
-import { StepData } from '../mocks';
+import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
 import styles from './stepsList.scss';
 
 const cx = classNames.bind(styles);
@@ -29,25 +29,28 @@ interface StepsListProps {
 export const StepsList = ({ steps }: StepsListProps) => {
   return (
     <div className={cx('steps-list')}>
-      {steps.map((step, index) => (
-        <div key={step.id} className={cx('step-item')}>
-          <AttachmentArea
-            isDraggable={false}
-            showDragAndDropIcon={false}
-            showAttachmentBlock={false}
-            index={index}
-          >
-            <Step
-              stepId={step.id}
-              readMode
-              textValue={{
-                instructions: step.instructions,
-                expectedResult: step.expectedResult,
-              }}
-            />
-          </AttachmentArea>
-        </div>
-      ))}
+      {steps.map((step, index) => {
+        const { instructions, expectedResult, id } = step;
+        return (
+          <div key={id} className={cx('step-item')}>
+            <AttachmentArea
+              isDraggable={false}
+              isDragAndDropIconVisible={false}
+              isAttachmentBlockVisible={false}
+              index={index}
+            >
+              <Step
+                stepId={id}
+                readMode
+                textValue={{
+                  instructions,
+                  expectedResult,
+                }}
+              />
+            </AttachmentArea>
+          </div>
+        );
+      })}
     </div>
   );
 };

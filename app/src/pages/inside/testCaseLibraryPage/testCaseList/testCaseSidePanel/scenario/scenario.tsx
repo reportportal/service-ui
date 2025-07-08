@@ -43,12 +43,10 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
           <ExpandedTextSection text={scenario.precondition} defaultVisibleLines={3} fontSize={13} />
         </div>
-
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>{formatMessage(messages.instructions)}</h4>
           <ExpandedTextSection text={scenario.instruction} defaultVisibleLines={3} fontSize={13} />
         </div>
-
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>{formatMessage(messages.expectedResult)}</h4>
           <ExpandedTextSection
@@ -60,7 +58,6 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
       </div>
     );
   }
-
   // View 2: Precondition + Attachments
   if (hasAttachments) {
     return (
@@ -69,7 +66,6 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
           <div className={cx('precondition-text')}>{scenario.precondition}</div>
         </div>
-
         <div className={cx('section-border')} />
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>
@@ -88,7 +84,6 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
       </div>
     );
   }
-
   // View 1: Only precondition
   return (
     <div className={cx('scenario', 'simple-view')}>

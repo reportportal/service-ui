@@ -43,8 +43,8 @@ interface AttachmentAreaProps {
   index?: number;
   isNumberable?: boolean;
   onRemove?: () => void;
-  showDragAndDropIcon?: boolean;
-  showAttachmentBlock?: boolean;
+  isDragAndDropIconVisible?: boolean;
+  isAttachmentBlockVisible?: boolean;
 }
 
 export const AttachmentArea = ({
@@ -53,8 +53,8 @@ export const AttachmentArea = ({
   isNumberable = true,
   children,
   onRemove,
-  showDragAndDropIcon = true,
-  showAttachmentBlock = true,
+  isDragAndDropIconVisible = true,
+  isAttachmentBlockVisible = true,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
 
@@ -81,12 +81,13 @@ export const AttachmentArea = ({
       )}
       <div className={cx('attachment-area__fields-container')}>
         <div className={cx('attachment-area__fields')}>{children}</div>
-        {showAttachmentBlock && (
+        {isAttachmentBlockVisible && (
           <div className={cx('attachment-area__attachment')}>
             <span>{formatMessage(messages.attachments)}</span>
             <div className={cx('attachment-area__add-attachment')}>
               <span>
-                {showDragAndDropIcon && <DragAndDropIcon />} {formatMessage(messages.dropFilesHere)}
+                {isDragAndDropIconVisible && <DragAndDropIcon />}{' '}
+                {formatMessage(messages.dropFilesHere)}
               </span>
               <Button variant="text" icon={<PlusIcon />} adjustWidthOn="content">
                 {formatMessage(COMMON_LOCALE_KEYS.ADD)}

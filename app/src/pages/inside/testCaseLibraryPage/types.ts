@@ -22,7 +22,6 @@ export interface TestCase {
   tags: string[];
   created: number;
   description?: string;
-  hasScenario?: boolean;
   lastExecution?: number;
   durationTime?: number;
   scenarios?: IScenario[];

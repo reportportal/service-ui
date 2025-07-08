@@ -38,7 +38,7 @@ export const TagList = ({
   const [count, setCount] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState(new Set());
-  const [exceedsVisibleLines, setExceedsVisibleLines] = useState(false);
+  const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
 
   const getOffset = () => {
     const parentElement = listRef.current;
@@ -111,14 +111,14 @@ export const TagList = ({
 
     const firstElementOffsetTop = tagElementsWithoutButtons[0].offsetTop;
     const lineHeight = tagElementsWithoutButtons[0].offsetHeight;
-    const maxAllowedTop = firstElementOffsetTop + lineHeight * (defaultVisibleLines - 1);
+    const maxAllowedTopOffset = firstElementOffsetTop + lineHeight * (defaultVisibleLines - 1);
     let overflowedElementsCount = 0;
     let hasOverflow = false;
 
     tagElementsWithoutButtons.forEach((childElement, index) => {
       const elementOffsetTop = childElement.offsetTop;
 
-      if (elementOffsetTop > maxAllowedTop) {
+      if (elementOffsetTop > maxAllowedTopOffset) {
         hiddenSet.add(index);
         overflowedElementsCount += 1;
         hasOverflow = true;
@@ -127,7 +127,7 @@ export const TagList = ({
 
     setHiddenIndices(hiddenSet);
     setCount(overflowedElementsCount);
-    setExceedsVisibleLines(hasOverflow);
+    setIsExceedsVisibleLines(hasOverflow);
   };
 
   useEffect(() => {
@@ -170,8 +170,8 @@ export const TagList = ({
 
   const isCounterButtonVisible = useMemo(() => count > 0 && !isExpanded, [count, isExpanded]);
   const isShowAllButtonVisible = useMemo(
-    () => isShowAllView && defaultVisibleLines && exceedsVisibleLines && !isExpanded,
-    [isShowAllView, defaultVisibleLines, exceedsVisibleLines, isExpanded],
+    () => isShowAllView && defaultVisibleLines && isExceedsVisibleLines && !isExpanded,
+    [isShowAllView, defaultVisibleLines, isExceedsVisibleLines, isExpanded],
   );
 
   const showAllButtonTemplate = useMemo(() => {
@@ -230,9 +230,10 @@ export const TagList = ({
         ref={listRef}
       >
         {tags.map((tag, index) => {
+          const isHasHiddenIndex = !isExpanded && hiddenIndices.has(index);
           const isItemHidden =
-            (isFullWidthMode && !isExpanded && hiddenIndices.has(index)) ||
-            (isShowAllView && defaultVisibleLines && !isExpanded && hiddenIndices.has(index));
+            (isFullWidthMode && isHasHiddenIndex) ||
+            (isShowAllView && defaultVisibleLines && isHasHiddenIndex);
 
           return (
             <div

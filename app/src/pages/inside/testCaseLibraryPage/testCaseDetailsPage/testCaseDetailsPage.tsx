@@ -36,7 +36,7 @@ const testCase: TestCase = {
   priority: 'high',
   tags: [],
   description: '',
-  hasScenario: false,
+  scenarios: [],
   path: ['24.2 PV'],
 };
 

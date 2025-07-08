@@ -38,12 +38,12 @@ import isEmpty from 'lodash.isempty';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../constants';
-import { mockedTestCaseDescription, mockedScenarios } from '../mockData';
-import { StepData, mockedStepsData } from './mocks';
+import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
 import { StepsList } from './stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
+import { StepData } from '../../createTestCaseModal/testCaseDetails';
 
 const cx = classNames.bind(styles);
 
