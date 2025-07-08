@@ -107,7 +107,6 @@ export const AllUsersFilter = ({
         {
           component: Dropdown,
           name: LAST_LOGIN_FILTER_NAME,
-          format: getFormattedDate,
           props: {
             value: '',
             options: lastLogin,

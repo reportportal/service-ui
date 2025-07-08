@@ -73,8 +73,7 @@ export const FilterContentWrapped = ({
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const field = formData[filterName];
-      const value = field?.startDate && field?.endDate ? getFormattedDate(field) : field.toString();
+      const value = formData[filterName].toString();
 
       acc[filterName] = {
         value,

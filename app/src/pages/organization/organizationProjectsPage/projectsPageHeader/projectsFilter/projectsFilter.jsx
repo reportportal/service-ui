@@ -72,7 +72,6 @@ export const ProjectsFilter = ({
         {
           component: Dropdown,
           name: LAST_RUN_DATE_FILTER_NAME,
-          format: getFormattedDate,
           props: {
             value: timeRange[0].value,
             options: timeRange,
