@@ -119,6 +119,7 @@ export const AllUsersFilter = ({
                 name={LAST_LOGIN_FILTER_NAME}
                 component={DateRangeFormField}
                 format={parseFormattedDate}
+                parse={getFormattedDate}
               />
             ),
           },
@@ -166,10 +167,7 @@ export const AllUsersFilter = ({
   const initialFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: entities[USERS_PERMISSIONS_FILTER_NAME]?.value || '',
     [ACCOUNT_TYPE_FILTER_NAME]: entities[ACCOUNT_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_LOGIN_FILTER_NAME]:
-      parseFormattedDate(entities[LAST_LOGIN_FILTER_NAME]?.value) ||
-      entities[LAST_LOGIN_FILTER_NAME]?.value ||
-      '',
+    [LAST_LOGIN_FILTER_NAME]: entities[LAST_LOGIN_FILTER_NAME]?.value || '',
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',

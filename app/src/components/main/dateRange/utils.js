@@ -16,29 +16,6 @@
 
 import moment from 'moment';
 import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
-import { getFormattedDate } from 'components/filterEntities/utils';
-
-export const formatDisplayedValue = (displayedValue, lastRunDate, timeRangeValues) => {
-  if (!lastRunDate || typeof lastRunDate === 'string') {
-    return displayedValue;
-  }
-
-  if (timeRangeValues.includes(getFormattedDate(lastRunDate))) {
-    return displayedValue;
-  }
-
-  const { startDate, endDate } = lastRunDate;
-
-  if (!startDate && !endDate) {
-    return '';
-  }
-
-  const formattedStartTimeRange =
-    startDate && moment(new Date(startDate)).format(DATE_FORMAT_DROPDOWN);
-  const formattedEndTimeRange = endDate && moment(new Date(endDate)).format(DATE_FORMAT_DROPDOWN);
-
-  return `${formattedStartTimeRange || ''} — ${formattedEndTimeRange || ''}`;
-};
 
 export const parseFormattedDate = (formatted) => {
   if (!formatted) {
@@ -63,4 +40,26 @@ export const parseFormattedDate = (formatted) => {
     startDate: startDate.toDate(),
     endDate: endDate.toDate(),
   };
+};
+
+export const formatDisplayedValue = (displayedValue, lastRunDate, timeRangeValues) => {
+  if (!lastRunDate) {
+    return displayedValue;
+  }
+
+  if (timeRangeValues.includes(lastRunDate)) {
+    return displayedValue;
+  }
+
+  const { startDate, endDate } = parseFormattedDate(lastRunDate) || {};
+
+  if (!startDate && !endDate) {
+    return '';
+  }
+
+  const formattedStartTimeRange =
+    startDate && moment(new Date(startDate)).format(DATE_FORMAT_DROPDOWN);
+  const formattedEndTimeRange = endDate && moment(new Date(endDate)).format(DATE_FORMAT_DROPDOWN);
+
+  return `${formattedStartTimeRange || ''} — ${formattedEndTimeRange || ''}`;
 };

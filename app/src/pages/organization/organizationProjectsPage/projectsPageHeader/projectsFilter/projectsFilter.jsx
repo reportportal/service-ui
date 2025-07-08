@@ -84,6 +84,7 @@ export const ProjectsFilter = ({
                 name={LAST_RUN_DATE_FILTER_NAME}
                 component={DateRangeFormField}
                 format={parseFormattedDate}
+                parse={getFormattedDate}
               />
             ),
           },
@@ -159,10 +160,7 @@ export const ProjectsFilter = ({
   };
 
   const initialFilterState = {
-    [LAST_RUN_DATE_FILTER_NAME]:
-      parseFormattedDate(entities[LAST_RUN_DATE_FILTER_NAME]?.value) ||
-      entities[LAST_RUN_DATE_FILTER_NAME]?.value ||
-      timeRange[0].value,
+    [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:
       entities[LAUNCHES_FILTER_NAME]?.condition || rangeComparisons[0].value,

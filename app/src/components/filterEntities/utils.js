@@ -42,22 +42,10 @@ export const getFormattedDate = (formValue) => {
   return `${getMinutesFromTimestamp(startDate)};${getMinutesFromTimestamp(endDate)};${utcString}`;
 };
 
-export const prepareQueryFilters = (filtersParams, dateProp) => {
+export const prepareQueryFilters = (filtersParams) => {
   const { limit, sort, offset, order, ...rest } = filtersParams;
 
   const searchCriteria = getAppliedFilters(rest)?.search_criterias;
-
-  if (dateProp) {
-    const dateFilterIndex = Object.values(searchCriteria).findIndex(
-      (el) => el.filter_key === dateProp,
-    );
-
-    if (dateFilterIndex !== -1) {
-      searchCriteria[dateFilterIndex].value = getFormattedDate(
-        searchCriteria[dateFilterIndex].value,
-      );
-    }
-  }
 
   return {
     limit,
