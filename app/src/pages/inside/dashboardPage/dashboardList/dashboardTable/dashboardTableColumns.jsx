@@ -91,6 +91,8 @@ export const DuplicateColumn = track()(
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
     const activeProject = useSelector(activeProjectSelector);
+
+    // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
     const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
 
     const fetchDashboardConfig = async () => {
