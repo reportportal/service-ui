@@ -20,7 +20,6 @@ import { URLS } from 'common/urls';
 import { downloadFile } from 'common/utils/downloadFile';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import { querySelector } from 'controllers/instance/organizations/selectors';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,7 +47,8 @@ export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExport
 
   const handleClick = () => {
     const filtersParams: QueryParams = { ...query, offset: 0, limit: ORGANIZATIONS_EXPORT_LIMIT };
-    const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
+    const data = prepareQueryFilters(filtersParams);
+
     const requestParams = {
       method: 'post',
       data,

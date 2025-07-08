@@ -32,6 +32,7 @@ import {
   LAUNCHES_FILTER_NAME_CONDITION,
   TEAMMATES_FILTER_NAME_CONDITION,
   ORGANIZATION_TYPE_FILTER_NAME,
+  timeRangeValues,
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
@@ -41,6 +42,7 @@ import {
   DateRangeFormField,
   formatDisplayedValue,
   parseFormattedDate,
+  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
@@ -96,9 +98,17 @@ export const OrganizationsFilter = ({
           props: {
             value: timeRange[0].value,
             options: timeRange,
-            formatDisplayedValue,
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
             notScrollable: true,
-            footer: <Field name={LAST_RUN_DATE_FILTER_NAME} component={DateRangeFormField} />,
+            footer: (
+              <Field
+                name={LAST_RUN_DATE_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+                parse={formatDateRangeToMinutesString}
+              />
+            ),
           },
         },
       ],
@@ -177,10 +187,7 @@ export const OrganizationsFilter = ({
   const initialFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]:
       entities[ORGANIZATION_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_RUN_DATE_FILTER_NAME]:
-      parseFormattedDate(entities[LAST_RUN_DATE_FILTER_NAME]?.value) ||
-      entities[LAST_RUN_DATE_FILTER_NAME]?.value ||
-      timeRange[0].value,
+    [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:
       entities[LAUNCHES_FILTER_NAME]?.condition || rangeComparisons[0].value,
@@ -213,12 +220,8 @@ export const OrganizationsFilter = ({
       return false;
     }
 
-    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
-      return true;
-    }
-
     let isApply =
-      [LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+      [LAUNCHES_FILTER_NAME, LAST_RUN_DATE_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
       ) &&
       formValues[ORGANIZATION_TYPE_FILTER_NAME].every((type) =>
@@ -236,16 +239,6 @@ export const OrganizationsFilter = ({
       isApply =
         formValues[TEAMMATES_FILTER_NAME_CONDITION] ===
           initialFilterState[TEAMMATES_FILTER_NAME_CONDITION] && isApply;
-    }
-
-    if (typeof lastRunDate === 'object') {
-      const initialDate = formatDisplayedValue(initialFilterState[LAST_RUN_DATE_FILTER_NAME]);
-      const currentDate = formatDisplayedValue(lastRunDate);
-      isApply = initialDate === currentDate && isApply;
-    } else {
-      isApply =
-        formValues[LAST_RUN_DATE_FILTER_NAME] === initialFilterState[LAST_RUN_DATE_FILTER_NAME] &&
-        isApply;
     }
 
     return isApply;

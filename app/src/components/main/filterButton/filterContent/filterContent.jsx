@@ -23,7 +23,6 @@ import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { getFormattedDate } from 'components/filterEntities/utils';
 import { FilterInput } from './filterInput/filterInput';
 import { FILTER_FORM } from '../constants';
 import { messages } from './messages';
@@ -73,8 +72,7 @@ export const FilterContentWrapped = ({
     let appliedFiltersCount = 0;
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
-      const field = formData[filterName];
-      const value = field?.startDate && field?.endDate ? getFormattedDate(field) : field.toString();
+      const value = formData[filterName].toString();
 
       acc[filterName] = {
         value,
