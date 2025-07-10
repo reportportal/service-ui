@@ -1,0 +1,105 @@
+.empty-milestones {
+  padding: 25px 0 60px;
+  width: 100%;
+  text-align: center;
+
+  &__image {
+    width: 168px;
+    height: 120px;
+    margin: 72px auto 0;
+    background-image: url(./img/no-milestones.png);
+    background-size: cover;
+  }
+
+  &__header {
+    margin: 32px 0 16px;
+    font-family: $FONT-REGULAR;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 31px;
+    color: $COLOR--e-400;
+  }
+
+  &__sub-header {
+    margin: 96px 0 24px;
+    color: $COLOR--e-400;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  &__description {
+    max-width: 417px;
+    margin: 0 auto;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    text-indent: 1px;
+    letter-spacing: 0;
+    color: $COLOR--e-400;
+  }
+
+  &__button {
+    margin: 16px auto;
+  }
+
+  &__link {
+    justify-content: center;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  &__info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__list {
+    margin: 0 32px;
+    list-style: none;
+    counter-reset: circle-counter;
+    display: flex;
+    align-self: center;
+    gap: 32px;
+
+    li {
+      display: flex;
+      counter-increment: circle-counter;
+      font-family: $FONT-ROBOTO-REGULAR;
+      color: $COLOR--e-400;
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      max-width: 370px;
+
+      strong {
+        font-weight: 700;
+      }
+    }
+
+    li::before {
+      content: counter(circle-counter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 24px;
+      text-align: center;
+      vertical-align: middle;
+      color: $COLOR--e-400;
+      border-radius: 50%;
+      background-color: $COLOR--bg-200;
+      min-width: 32px;
+      height: 32px;
+    }
+  }
+}

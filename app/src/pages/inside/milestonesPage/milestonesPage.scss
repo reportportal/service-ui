@@ -1,0 +1,16 @@
+.milestones-page {
+  &__header {
+    background-color: var(--rp-ui-base-bg-000);
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
+
+    h1 {
+      padding: 48px 0 17px 32px;
+      color: $COLOR--almost-black;
+      font-family: $FONT-REGULAR;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 31px;
+    }
+  }
+}
