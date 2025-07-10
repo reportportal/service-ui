@@ -67,6 +67,7 @@ export const UNIQUE_ERRORS_PAGE = 'UNIQUE_ERRORS_PAGE';
 export const TEST_ITEM_PAGE = 'TEST_ITEM_PAGE';
 export const LAUNCHES_PAGE = 'LAUNCHES_PAGE';
 export const OAUTH_SUCCESS = 'OAUTH_SUCCESS';
+export const PROJECT_MILESTONES_PAGE = 'PROJECT_MILESTONES_PAGE';
 // outside
 export const LOGIN_PAGE = 'LOGIN_PAGE';
 export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
@@ -124,6 +125,7 @@ export const pageNames = {
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
+  PROJECT_MILESTONES_PAGE,
 };
 
 export const adminPageNames = {

@@ -32,6 +32,7 @@ import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
 import docs from './img/test-case-empty-state-inline.svg';
+import flag from './img/milestones-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +43,7 @@ const images = {
   lines,
   branches,
   docs,
+  flag,
 };
 
 export const EmptyStatePage = ({
@@ -100,7 +102,7 @@ EmptyStatePage.propTypes = {
   documentationLink: PropTypes.string,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches', 'docs']),
+  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches', 'docs', 'flag']),
   documentationDataAutomationId: PropTypes.string,
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
