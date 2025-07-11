@@ -21,6 +21,7 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { formatRelativeTime } from '../utils';
 import { createTestCaseMenuItems } from '../constants';
+import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles);
@@ -37,7 +38,7 @@ export const TestCaseExecutionCell = ({
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems = createTestCaseMenuItems(formatMessage, [3]);
+  const menuItems = createTestCaseMenuItems(formatMessage, [TestCaseMenuAction.HISTORY]);
 
   const handleMenuOpen = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {

@@ -33,7 +33,7 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import isEmpty from 'lodash.isempty';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
@@ -63,7 +63,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       titleKey: 'tagsTitle',
       defaultMessageKey: 'noTagsAdded',
       childComponent: isEmpty(tags) ? null : (
-        <TagList tags={tags} isFullWidthMode isShowAllView defaultVisibleLines={2} />
+        <AdaptiveTagList tags={tags} isShowAllView defaultVisibleLines={2} />
       ),
     },
     {
@@ -79,9 +79,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     {
       titleKey: 'descriptionTitle',
       defaultMessageKey: 'descriptionNotSpecified',
-      childComponent: (
-        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} fontSize={13} />
-      ),
+      childComponent: <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />,
     },
   ] as const;
 

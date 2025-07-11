@@ -92,6 +92,7 @@
       overflow: visible;
       cursor: pointer;
       color: var(--rp-ui-base-e-400);
+      background-color: transparent;
     }
 
     &--button {
@@ -106,6 +107,25 @@
         margin-top: 8px;
       }
     }
+  }
+
+  button {
+    /* Reset all default button styles */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 }
 

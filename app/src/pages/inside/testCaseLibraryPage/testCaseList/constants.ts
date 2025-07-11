@@ -16,6 +16,7 @@
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { messages } from './messages';
+import { TestCaseMenuAction } from './types';
 
 export const DEFAULT_FILTER_VALUE = 'all';
 export const DEFAULT_CURRENT_PAGE = 1;
@@ -24,24 +25,28 @@ export const DEFAULT_ITEMS_PER_PAGE = 10;
 /**
  * Creates menu items for test case actions
  * @param formatMessage - Function to format internationalized messages
- * @param skippedIndexes - Optional array of indexes to filter out from the menu items
+ * @param excludedActions - Optional array of action names to exclude from the menu items
  * @returns Array of PopoverItem objects for test case actions
  */
 export const createTestCaseMenuItems = (
   formatMessage: (message: { id: string; defaultMessage: string }) => string,
-  skippedIndexes?: number[],
+  excludedActions?: TestCaseMenuAction[],
 ): PopoverItem[] => {
-  const allMenuItems: PopoverItem[] = [
-    { label: formatMessage(messages.duplicate) },
-    { label: formatMessage(messages.editTestCase) },
-    { label: formatMessage(messages.moveTestCaseTo) },
-    { label: formatMessage(messages.historyOfActions) },
-    { label: formatMessage(messages.deleteTestCase), variant: 'danger' },
+  const allMenuItems: (PopoverItem & { action: TestCaseMenuAction })[] = [
+    { label: formatMessage(messages.duplicate), action: TestCaseMenuAction.DUPLICATE },
+    { label: formatMessage(messages.editTestCase), action: TestCaseMenuAction.EDIT },
+    { label: formatMessage(messages.moveTestCaseTo), action: TestCaseMenuAction.MOVE },
+    { label: formatMessage(messages.historyOfActions), action: TestCaseMenuAction.HISTORY },
+    {
+      label: formatMessage(messages.deleteTestCase),
+      variant: 'danger',
+      action: TestCaseMenuAction.DELETE,
+    },
   ];
 
-  if (!skippedIndexes || skippedIndexes.length === 0) {
+  if (!excludedActions || excludedActions.length === 0) {
     return allMenuItems;
   }
 
-  return allMenuItems.filter((_, index) => !skippedIndexes.includes(index));
+  return allMenuItems.filter((item) => !excludedActions.includes(item.action));
 };

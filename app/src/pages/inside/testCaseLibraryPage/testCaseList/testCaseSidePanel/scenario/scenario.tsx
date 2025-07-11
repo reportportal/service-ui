@@ -17,6 +17,7 @@
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import isEmpty from 'lodash.isempty';
 import { IScenario } from '../../../types';
 import { AttachmentItem } from '../../../../../../componentLibrary/attachmentItem';
 import { messages } from './messages';
@@ -31,9 +32,9 @@ interface ScenarioProps {
 export const Scenario = ({ scenario }: ScenarioProps) => {
   const { formatMessage } = useIntl();
 
-  const hasInstructions = Boolean(scenario.instruction?.trim());
-  const hasExpectedResult = Boolean(scenario.expectedResult?.trim());
-  const hasAttachments = scenario.attachments.length > 0;
+  const hasInstructions = !isEmpty(scenario.instruction);
+  const hasExpectedResult = !isEmpty(scenario.expectedResult);
+  const hasAttachments = !isEmpty(scenario.attachments);
 
   // View 3: All three fields exist
   if (hasInstructions && hasExpectedResult) {
@@ -41,19 +42,15 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
       <div className={cx('scenario', 'full-view')}>
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
-          <ExpandedTextSection text={scenario.precondition} defaultVisibleLines={3} fontSize={13} />
+          <ExpandedTextSection text={scenario.precondition} />
         </div>
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>{formatMessage(messages.instructions)}</h4>
-          <ExpandedTextSection text={scenario.instruction} defaultVisibleLines={3} fontSize={13} />
+          <ExpandedTextSection text={scenario.instruction} />
         </div>
         <div className={cx('field-section')}>
           <h4 className={cx('field-title')}>{formatMessage(messages.expectedResult)}</h4>
-          <ExpandedTextSection
-            text={scenario.expectedResult}
-            defaultVisibleLines={3}
-            fontSize={13}
-          />
+          <ExpandedTextSection text={scenario.expectedResult} />
         </div>
       </div>
     );
