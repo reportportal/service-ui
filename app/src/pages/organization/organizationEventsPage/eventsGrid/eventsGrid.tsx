@@ -188,7 +188,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
       {
         id: ENTITY_SUBJECT_TYPE,
         title: {
-          full: intl.formatMessage(messages.projectNameCol),
+          full: intl.formatMessage(messages.subjectTypeCol),
         },
         sortable: true,
         maxHeight: 170,
