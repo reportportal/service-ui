@@ -31,7 +31,7 @@
   border: 1px solid transparent;
   border-radius: 4px;
 
-  [class*='table-row-content'] {
+  :global([class*='table-row-content']) {
     align-items: flex-start;
   }
 
