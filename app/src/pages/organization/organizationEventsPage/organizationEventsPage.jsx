@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames/bind';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import {
@@ -28,6 +29,9 @@ import { ENTITY_CREATED_AT } from 'components/filterEntities/constants';
 import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
 import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
+import styles from './organizationEventsPage.scss';
+
+const cx = classNames.bind(styles);
 
 @connect((state) => ({
   events: eventsSelector(state),
@@ -40,7 +44,7 @@ import { EventsToolbar } from './eventsToolbar';
 @withPagination({
   paginationSelector: eventsPaginationSelector,
 })
-export class ProjectEventsPage extends Component {
+export class OrganizationEventsPage extends Component {
   static propTypes = {
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -84,7 +88,7 @@ export class ProjectEventsPage extends Component {
     } = this.props;
 
     return (
-      <React.Fragment>
+      <div className={cx('organization-events-page')}>
         <EventsToolbar />
         <EventsGrid
           data={events}
@@ -103,7 +107,7 @@ export class ProjectEventsPage extends Component {
             onChangePageSize={onChangePageSize}
           />
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }

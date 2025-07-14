@@ -15,26 +15,16 @@
  */
 
 import { all, select, put, takeEvery } from 'redux-saga/effects';
-import { MONITORING, MEMBERS } from 'common/constants/projectSections';
-import { projectSectionSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
-import { fetchMembersAction } from 'controllers/members';
 import { FETCH_ORGANIZATION_EVENTS_DATA, FETCH_PROJECT_DATA } from './constants';
 import { allUsersSagas } from './allUsers';
 import { eventsSagas, fetchEventsAction } from './events';
 
-// will delete
-const pageDataActions = {
-  [MONITORING]: fetchEventsAction,
-  [MEMBERS]: fetchMembersAction,
-};
 function* fetchProjectData() {
-  const section = yield select(projectSectionSelector);
-  const sectionDataAction = pageDataActions[section] || fetchProjectAction;
   const projectKey = yield select(projectKeySelector);
   const isAdminAccess = true;
 
-  yield put(sectionDataAction(projectKey, isAdminAccess));
+  yield put(fetchProjectAction(projectKey, isAdminAccess));
 }
 
 function* watchFetchProjectData() {
@@ -42,19 +32,18 @@ function* watchFetchProjectData() {
 }
 
 function* fetchOrganizationEventsData() {
-  // const section = yield select(projectSectionSelector);
-  // const sectionDataAction = fetchEventsAction;
-  const organizationSlug = yield select(urlOrganizationSlugSelector);
-  const isAdminAccess = true;
-
-  yield put(fetchEventsAction(organizationSlug, isAdminAccess));
+  yield put(fetchEventsAction());
 }
 
 function* watchFetchOrganizationEventsData() {
-  // FETCH_PROJECT_DATA
   yield takeEvery(FETCH_ORGANIZATION_EVENTS_DATA, fetchOrganizationEventsData);
 }
 
 export function* instanceSagas() {
-  yield all([eventsSagas(), watchFetchProjectData(), allUsersSagas(), watchFetchOrganizationEventsData()]);
+  yield all([
+    eventsSagas(),
+    watchFetchProjectData(),
+    allUsersSagas(),
+    watchFetchOrganizationEventsData(),
+  ]);
 }

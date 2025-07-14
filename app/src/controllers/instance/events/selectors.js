@@ -22,11 +22,12 @@ import {
 } from 'controllers/pagination';
 import { createSelector } from 'reselect';
 import { createQueryParametersSelector } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project';
 import { SORTING_KEY } from 'controllers/sorting';
 import { administrateDomainSelector } from '../selectors';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_SORTING, NAMESPACE } from './constants';
 import { getAppliedFilters } from './utils';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { CONDITION_EQ } from 'components/filterEntities/constants';
 
 const domainSelector = (state) => administrateDomainSelector(state).events || {};
 
@@ -35,31 +36,38 @@ export const eventsSelector = (state) => domainSelector(state).events;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
 export const createEventsPageQueryParametersSelector = ({
-  namespace: staticNamespace,
+  namespace,
   defaultPagination,
   defaultSorting,
 } = {}) =>
   createSelector(
-    createQueryParametersSelector({ staticNamespace, defaultPagination, defaultSorting }),
-    projectKeySelector,
+    createQueryParametersSelector({ namespace, defaultPagination, defaultSorting }),
+    activeOrganizationIdSelector,
     (
       { [SIZE_KEY]: limit, [SORTING_KEY]: sort, [PAGE_KEY]: pageNumber, ...filters },
-      projectKey,
+      organizationId,
     ) => {
       const alternativePaginationAndSortParams = getAlternativePaginationAndSortParams(
         sort,
         limit,
         pageNumber,
       );
+      const appliedFilters = getAppliedFilters(
+        filters,
+        organizationId,
+        'organizationId',
+        CONDITION_EQ.toUpperCase(),
+      );
 
       return {
-        appliedFilters: getAppliedFilters(filters, projectKey),
-        alternativePaginationAndSortParams,
+        ...alternativePaginationAndSortParams,
+        search_criteria: appliedFilters?.search_criterias,
       };
     },
   );
 
 export const querySelector = createEventsPageQueryParametersSelector({
+  namespace: NAMESPACE,
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });

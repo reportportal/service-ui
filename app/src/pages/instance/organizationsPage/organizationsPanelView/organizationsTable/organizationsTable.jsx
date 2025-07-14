@@ -52,13 +52,15 @@ export const OrganizationsTable = ({
 
   const data = useMemo(
     () =>
-      organizationsList.map(({ id, name, relationships, type, slug }) => {
+      organizationsList.map((organization) => {
+        const { id, name, relationships, type, slug } = organization;
         const lastLaunch = relationships.launches.meta.last_occurred_at;
         const hasPermission =
           userRole === ADMINISTRATOR || assignedOrganizations[slug]?.organizationRole === MANAGER;
 
         const mainColumns = {
           id,
+          metaData: organization,
           [SortingFields.NAME]: {
             content: name,
             component: (
@@ -142,8 +144,7 @@ export const OrganizationsTable = ({
   ];
 
   const renderRowActions = (data) => {
-    console.log('data', data);
-    return <MeatballMenu />;
+    return <MeatballMenu organization={data} />;
   };
 
   const getSortingColumn = (key) => {

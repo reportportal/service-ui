@@ -94,7 +94,7 @@ export const OrganizationCard = ({ organization }) => {
           organizationType={organization.type}
         />
         <div className={cx('organization-card-menu')}>
-          <MeatballMenu organizationSlug={organization.slug} />
+          <MeatballMenu organization={organization} />
         </div>
       </div>
       {hasPermission && (

@@ -23,13 +23,13 @@ import {
   reMappedOperationValuesMap,
 } from 'components/filterEntities/constants';
 
-export const getAppliedFilters = (filters, valueKey, filterKey) => {
+export const getAppliedFilters = (filters, valueKey, filterKey, operation) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
 
   const projectIdFilterParam = {
-    filter_key: filterKey || 'projectName',
+    filter_key: filterKey,
     value: valueKey,
-    operation: CONDITION_EQ,
+    operation: operation || CONDITION_EQ,
   };
 
   const appliedFilters = Object.keys(filters).map((filter) => {

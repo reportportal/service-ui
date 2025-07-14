@@ -17,14 +17,26 @@
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
-import { Button, MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { ORGANIZATIONS_ACTIVITY_PAGE } from 'controllers/pages';
 import { messages } from '../../messages';
 import styles from './meatballMenu.scss';
+import { useDispatch } from 'react-redux';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
-export const MeatballMenu = ({ organizationSlug }) => {
+interface Organization {
+  slug: string;
+}
+
+interface MeatballMenuProps {
+  organization: Organization;
+}
+
+export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   return (
     <Popover
@@ -33,10 +45,11 @@ export const MeatballMenu = ({ organizationSlug }) => {
         <div className={cx('meatball-menu')}>
           <Link
             to={{
-              type: 'ORGANIZATIONS_ACTIVITY_PAGE',
-              payload: { organizationSlug },
+              type: ORGANIZATIONS_ACTIVITY_PAGE,
+              payload: { organizationSlug: organization?.slug },
             }}
             className={cx('option-link')}
+            onClick={() => dispatch(setActiveOrganizationAction(organization))}
           >
             <span>{formatMessage(messages.activity)}</span>
           </Link>
