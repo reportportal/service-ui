@@ -111,7 +111,6 @@ import {
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
-import { fetchProjectDataAction } from '../controllers/instance';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
