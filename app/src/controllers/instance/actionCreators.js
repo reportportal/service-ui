@@ -22,4 +22,4 @@ export const fetchProjectDataAction = () => ({
 
 export const fetchOrganizationEventsDataAction = () => ({
   type: FETCH_ORGANIZATION_EVENTS_DATA,
-})
+});

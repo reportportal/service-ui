@@ -101,5 +101,5 @@ export const messages = defineMessages({
   activity: {
     id: 'OrganizationsPage.activity',
     defaultMessage: 'Activity',
-  }
+  },
 });
