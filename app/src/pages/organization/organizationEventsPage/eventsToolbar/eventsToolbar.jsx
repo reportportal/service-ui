@@ -40,6 +40,10 @@ const messages = defineMessages({
     id: 'administrateEventsPageToolbar.allOrganizations',
     defaultMessage: 'All organizations',
   },
+  activity: {
+    id: 'administrateEventsPageToolbar.activity',
+    defaultMessage: 'Activity',
+  },
 });
 
 const cx = classNames.bind(styles);
@@ -59,7 +63,7 @@ export const EventsToolbar = () => {
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     },
     {
-      title: 'activity',
+      title: formatMessage(messages.activity),
     },
   ];
 
