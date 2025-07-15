@@ -1,0 +1,9 @@
+{
+  "services": {
+    "api": "${API_URL}",
+    "auth": "${AUTH_URL}"
+  },
+  "authentication": {
+    "oauthProxyEnabled": "${OAUTH_PROXY_ENABLED}"
+  }
+}

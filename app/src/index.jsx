@@ -55,18 +55,30 @@ const { store, initialDispatch } = configureStore(queryParseHistory, window.REDU
 
 initPluginRegistration(store);
 
-const rerenderApp = (TheApp) => {
+const rerenderApp = (TheApp, config) => {
   createRoot(document.querySelector('#app')).render(
     <Provider store={store}>
-      <TheApp initialDispatch={initialDispatch} />
+      <TheApp initialDispatch={initialDispatch} config={config} />
     </Provider>,
   );
 };
 
+const getConfig = async () => {
+  try {
+    const res = await fetch('/ui/config');
+    return await res.json();
+  } catch {
+    return {};
+  }
+};
+
+const config = await getConfig();
+
 if (module.hot) {
   module.hot.accept('./app', () => {
     const app = require('./app').default; // eslint-disable-line global-require
-    rerenderApp(app);
+    rerenderApp(app, config);
   });
 }
-rerenderApp(App);
+
+rerenderApp(App, config);
