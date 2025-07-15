@@ -18,7 +18,6 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
-
 import isEmpty from 'lodash.isempty';
 import styles from './tagList.scss';
 
@@ -41,12 +40,12 @@ export const AdaptiveTagList = ({
   const listRef = useRef(null);
   const [count, setCount] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [hiddenIndices, setHiddenIndices] = useState(new Set());
+  const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
 
   const getFullWidthOffset = useCallback(() => {
     const parentElement = listRef.current;
-    const hiddenSet = new Set();
+    const hiddenSet = new Set<number>();
 
     if (!parentElement) {
       return;
@@ -85,7 +84,7 @@ export const AdaptiveTagList = ({
 
   const getVisibleLinesOffset = useCallback(() => {
     const parentElement = listRef.current;
-    const hiddenSet = new Set();
+    const hiddenSet = new Set<number>();
 
     if (!parentElement || !defaultVisibleLines) {
       return;
@@ -143,14 +142,14 @@ export const AdaptiveTagList = ({
     setIsExpanded((prevState) => !prevState);
   }, []);
 
-  const handleCountClick = (e) => {
-    e.stopPropagation();
+  const handleCountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     toggleExpanded();
   };
 
   const handleButtonClick = useCallback(
-    (e) => {
-      e.stopPropagation();
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
       toggleExpanded();
     },
     [toggleExpanded],

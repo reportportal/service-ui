@@ -26,15 +26,13 @@ interface AttachmentItemProps {
   size: number;
 }
 
+const FILE_ICON_MAP = {
+  csv: AddCsvIcon,
+  jar: AddJarIcon,
+} as const;
+
 const getFileIconByExtension = (extension: string) => {
-  switch (extension.toLowerCase()) {
-    case 'csv':
-      return AddCsvIcon;
-    case 'jar':
-      return AddJarIcon;
-    default:
-      return AddImageIcon;
-  }
+  return FILE_ICON_MAP[extension.toLowerCase()] ?? AddImageIcon;
 };
 
 export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
@@ -54,7 +52,6 @@ export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
           <IconComponent />
         </div>
       </div>
-
       <div className={cx('attachment-info')}>
         <div className={cx('file-name')}>{fileName}</div>
         <div className={cx('file-details')}>

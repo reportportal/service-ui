@@ -14,30 +14,18 @@
  * limitations under the License.
  */
 
+@use '../../../../../common/css/mixins';
+
 .execution-content {
-  /* Reset all default button styles */
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  outline: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  @include mixins.button-reset;
 
   /* Component-specific styles */
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
   height: 64px;
+  flex-wrap: wrap;
 }
 
 .execution-info {
@@ -53,6 +41,13 @@
   padding-top: 16px;
   color: var(--rp-ui-base-almost-black);
   line-height: 16px;
+  max-width: 100px;
+  min-width: 0;
+  flex-shrink: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  hyphens: auto;
 }
 
 .duration-time {

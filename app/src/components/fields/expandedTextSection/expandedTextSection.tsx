@@ -22,6 +22,8 @@ import styles from './expandedTextSection.scss';
 
 const cx = classNames.bind(styles);
 
+const OFFSET_COEFFICIENT = 1.4;
+
 interface ExpandedTextSectionProps {
   text: string;
   defaultVisibleLines?: number;
@@ -40,9 +42,10 @@ export const ExpandedTextSection = ({
 
   useEffect(() => {
     if (textRef.current) {
-      const lineHeight = fontSize * 1.4;
+      const lineHeight = fontSize * OFFSET_COEFFICIENT;
       const maxHeight = lineHeight * defaultVisibleLines;
       const actualHeight = textRef.current.scrollHeight;
+
       setShouldTruncate(actualHeight > maxHeight);
     }
   }, [text, defaultVisibleLines, fontSize]);
@@ -60,13 +63,12 @@ export const ExpandedTextSection = ({
           {
             fontSize: `${fontSize}px`,
             '--visible-lines': defaultVisibleLines,
-            '--line-height': `${fontSize * 1.4}px`,
+            '--line-height': `${fontSize * OFFSET_COEFFICIENT}px`,
           } as React.CSSProperties
         }
       >
         {text}
       </div>
-
       {shouldTruncate && (
         <button type="button" className={cx('toggle-button')} onClick={handleToggle}>
           {isExpanded ? formatMessage(messages.hideAll) : formatMessage(messages.showAll)}

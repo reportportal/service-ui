@@ -18,8 +18,9 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import isEmpty from 'lodash.isempty';
+import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { IScenario } from '../../../types';
-import { AttachmentItem } from '../../../../../../componentLibrary/attachmentItem';
+import { FieldSection } from './fieldSection';
 import { messages } from './messages';
 import styles from './scenario.scss';
 
@@ -36,38 +37,31 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   const hasExpectedResult = !isEmpty(scenario.expectedResult);
   const hasAttachments = !isEmpty(scenario.attachments);
 
-  // View 3: All three fields exist
   if (hasInstructions && hasExpectedResult) {
     return (
       <div className={cx('scenario', 'full-view')}>
-        <div className={cx('field-section')}>
-          <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
+        <FieldSection title={formatMessage(messages.precondition)} variant="full-view">
           <ExpandedTextSection text={scenario.precondition} />
-        </div>
-        <div className={cx('field-section')}>
-          <h4 className={cx('field-title')}>{formatMessage(messages.instructions)}</h4>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.instructions)} variant="full-view">
           <ExpandedTextSection text={scenario.instruction} />
-        </div>
-        <div className={cx('field-section')}>
-          <h4 className={cx('field-title')}>{formatMessage(messages.expectedResult)}</h4>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.expectedResult)} variant="full-view">
           <ExpandedTextSection text={scenario.expectedResult} />
-        </div>
+        </FieldSection>
       </div>
     );
   }
-  // View 2: Precondition + Attachments
   if (hasAttachments) {
     return (
       <div className={cx('scenario', 'with-attachments')}>
-        <div className={cx('field-section')}>
-          <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
+        <FieldSection title={formatMessage(messages.precondition)}>
           <div className={cx('precondition-text')}>{scenario.precondition}</div>
-        </div>
+        </FieldSection>
         <div className={cx('section-border')} />
-        <div className={cx('field-section')}>
-          <h4 className={cx('field-title')}>
-            {formatMessage(messages.attachments)} {scenario.attachments.length}
-          </h4>
+        <FieldSection
+          title={`${formatMessage(messages.attachments)} ${scenario.attachments.length}`}
+        >
           <div className={cx('attachments-list')}>
             {scenario.attachments.map((attachment) => (
               <AttachmentItem
@@ -77,17 +71,15 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
               />
             ))}
           </div>
-        </div>
+        </FieldSection>
       </div>
     );
   }
-  // View 1: Only precondition
   return (
     <div className={cx('scenario', 'simple-view')}>
-      <div className={cx('field-section')}>
-        <h4 className={cx('field-title')}>{formatMessage(messages.precondition)}</h4>
+      <FieldSection title={formatMessage(messages.precondition)}>
         <div className={cx('precondition-text')}>{scenario.precondition}</div>
-      </div>
+      </FieldSection>
     </div>
   );
 };

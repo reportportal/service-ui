@@ -45,29 +45,27 @@ const messages = defineMessages({
 
 interface StepProps {
   stepId: string;
-  readMode?: boolean;
-  textValue?: {
-    instructions: string;
-    expectedResult: string;
-  };
+  isReadMode?: boolean;
+  instructions?: string;
+  expectedResult?: string;
 }
 
-export const Step = ({ stepId, readMode = false, textValue }: StepProps) => {
+export const Step = ({ stepId, isReadMode = false, instructions, expectedResult }: StepProps) => {
   const { formatMessage } = useIntl();
 
-  if (readMode) {
+  if (isReadMode) {
     return (
       <div className={cx('step', 'read-mode')}>
-        {textValue?.instructions && (
+        {instructions && (
           <div className={cx('field-group')}>
             <span className={cx('field-label')}>{formatMessage(messages.instructions)}</span>
-            <div className={cx('field-value')}>{textValue?.instructions}</div>
+            <div className={cx('field-value')}>{instructions}</div>
           </div>
         )}
-        {textValue?.expectedResult && (
+        {expectedResult && (
           <div className={cx('field-group')}>
             <span className={cx('field-label')}>{formatMessage(messages.expectedResult)}</span>
-            <div className={cx('field-value')}>{textValue?.expectedResult}</div>
+            <div className={cx('field-value')}>{expectedResult}</div>
           </div>
         )}
       </div>

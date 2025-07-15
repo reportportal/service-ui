@@ -41,11 +41,9 @@ export const StepsList = ({ steps }: StepsListProps) => {
             >
               <Step
                 stepId={id}
-                readMode
-                textValue={{
-                  instructions,
-                  expectedResult,
-                }}
+                isReadMode
+                instructions={instructions}
+                expectedResult={expectedResult}
               />
             </AttachmentArea>
           </div>

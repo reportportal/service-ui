@@ -24,7 +24,7 @@ import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
 import { mockTestCases } from './mockData';
-import { DEFAULT_CURRENT_PAGE } from './constants';
+import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import styles from './testCaseList.scss';
 
@@ -63,8 +63,7 @@ export const TestCaseList = memo(
       setSelectedTestCaseId('');
     };
 
-    const selectedTestCase =
-      testCases.find((testCase) => testCase.id === selectedTestCaseId) || null;
+    const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
     if (loading) {
       return (
@@ -140,7 +139,6 @@ export const TestCaseList = memo(
             </div>
           </div>
         </div>
-
         {!isEmptyList(currentData) ? (
           <Table
             data={tableData}
@@ -159,7 +157,6 @@ export const TestCaseList = memo(
             </div>
           </div>
         )}
-
         <TestCaseSidePanel
           testCase={selectedTestCase}
           isVisible={!!selectedTestCaseId}

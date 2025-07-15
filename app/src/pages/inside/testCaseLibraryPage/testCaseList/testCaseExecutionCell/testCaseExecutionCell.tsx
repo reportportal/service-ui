@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { KeyboardEvent, useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import { formatRelativeTime } from '../utils';
-import { createTestCaseMenuItems } from '../constants';
+import { createTestCaseMenuItems } from '../configUtils';
 import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
 
@@ -35,27 +36,20 @@ export const TestCaseExecutionCell = ({
   lastExecution,
   onRowClick,
 }: TestCaseExecutionCellProps) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage, locale } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const menuItems = createTestCaseMenuItems(formatMessage, [TestCaseMenuAction.HISTORY]);
 
-  const handleMenuOpen = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
-      <div className={cx('execution-time')}>{formatRelativeTime(lastExecution)}</div>
+      <div className={cx('execution-time')}>{formatRelativeTime(lastExecution, locale)}</div>
       <div
         role="menuitem"
         tabIndex={0}
         className={cx('menu-section')}
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={handleMenuOpen}
+        onKeyDown={handleEnterOrSpaceKey}
       >
         <PopoverControl
           items={menuItems}

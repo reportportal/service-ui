@@ -29,20 +29,6 @@
     margin: 16px -16px 0;
   }
 
-  .field-section {
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .field-title {
-    color: var(--rp-ui-base-e-400);
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 16px;
-    margin: 16px 0 4px 0;
-  }
-
   .precondition-text {
     color: var(--rp-ui-base-almost-black);
     font-size: 13px;
@@ -64,20 +50,5 @@
     border: none;
     background: none;
     padding: 16px 0;
-
-    .field-section {
-      border: none;
-      background: none;
-      padding: 0;
-    }
-
-    .field-title {
-      color: var(--rp-ui-base-almost-black);
-      margin-bottom: 8px;
-      margin-top: 0;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
-    }
   }
 }

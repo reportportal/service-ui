@@ -53,7 +53,6 @@ export const CollapsibleSection = ({
         </div>
         <span className={cx('section-title')}>{title}</span>
       </button>
-
       {isExpanded && (
         <div className={cx('section-content')}>
           {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}

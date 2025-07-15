@@ -37,9 +37,9 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import isEmpty from 'lodash.isempty';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
-import { createTestCaseMenuItems } from '../constants';
+import { createTestCaseMenuItems } from '../configUtils';
 import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
-import { StepsList } from './stepsList';
+import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
@@ -141,9 +141,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon)}
             </button>
           </div>
-
           <PathBreadcrumb path={testCase.path} />
-
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -182,7 +180,6 @@ export const TestCaseSidePanel = memo(
             </div>
           </div>
         </div>
-
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
             ...testCase,
@@ -198,7 +195,6 @@ export const TestCaseSidePanel = memo(
             />
           ))}
         </div>
-
         <div className={cx('footer')}>
           <PopoverControl
             items={menuItems}

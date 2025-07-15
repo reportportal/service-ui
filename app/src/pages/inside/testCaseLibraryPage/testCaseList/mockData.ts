@@ -50,7 +50,7 @@ export const mockTestCases: TestCase[] = [
       'security check',
     ],
     created: 1711284904218,
-    lastExecution: 1711198504218,
+    lastExecution: 1752570612408,
     durationTime: 960000,
   },
   {

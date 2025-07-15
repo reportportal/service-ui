@@ -14,38 +14,27 @@
  * limitations under the License.
  */
 
-.name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px 0;
+.field-section {
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
-.name-icon {
-  margin-top: 2px;
-}
+.field-title {
+  &--default {
+    color: var(--rp-ui-base-e-400);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    margin: 16px 0 4px 0;
+  }
 
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 6px;
-}
-
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  &--full-view {
+    color: var(--rp-ui-base-almost-black);
+    margin-bottom: 8px;
+    margin-top: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
 }

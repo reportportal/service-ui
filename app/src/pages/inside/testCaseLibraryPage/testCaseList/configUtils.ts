@@ -15,6 +15,7 @@
  */
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import isEmpty from 'lodash.isempty';
 import { messages } from './messages';
 import { TestCaseMenuAction } from './types';
 
@@ -22,12 +23,6 @@ export const DEFAULT_FILTER_VALUE = 'all';
 export const DEFAULT_CURRENT_PAGE = 1;
 export const DEFAULT_ITEMS_PER_PAGE = 10;
 
-/**
- * Creates menu items for test case actions
- * @param formatMessage - Function to format internationalized messages
- * @param excludedActions - Optional array of action names to exclude from the menu items
- * @returns Array of PopoverItem objects for test case actions
- */
 export const createTestCaseMenuItems = (
   formatMessage: (message: { id: string; defaultMessage: string }) => string,
   excludedActions?: TestCaseMenuAction[],
@@ -44,7 +39,7 @@ export const createTestCaseMenuItems = (
     },
   ];
 
-  if (!excludedActions || excludedActions.length === 0) {
+  if (isEmpty(excludedActions)) {
     return allMenuItems;
   }
 
