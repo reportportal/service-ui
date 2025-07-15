@@ -71,6 +71,32 @@
     }
   }
 
+  &__edit-button {
+    background: none;
+    border: none;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    path {
+      fill: var(--rp-ui-base-e-300);
+    }
+    &:hover {
+      path {
+        fill: var(--rp-ui-base-e-400);
+      }
+    }
+  }
+
+  &__more-button {
+    padding: 7px 12px;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   &__info-wrapper {
     display: flex;
     justify-content: space-between;

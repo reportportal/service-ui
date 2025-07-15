@@ -28,18 +28,20 @@ const cx = classNames.bind(styles);
 interface TestCaseExecutionCellProps {
   lastExecution: string;
   onRowClick: () => void;
+  onEditTestCase: () => void;
 }
 
 export const TestCaseExecutionCell = ({
   lastExecution,
   onRowClick,
+  onEditTestCase,
 }: TestCaseExecutionCellProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const menuItems: PopoverItem[] = [
     { label: formatMessage(testCaseCardMessages.duplicate) },
-    { label: formatMessage(testCaseCardMessages.editTestCase) },
+    { label: formatMessage(testCaseCardMessages.editTestCase), onClick: onEditTestCase },
     { label: formatMessage(testCaseCardMessages.moveTestCaseTo) },
     { label: formatMessage(testCaseCardMessages.deleteTestCase), variant: 'danger' },
   ];
