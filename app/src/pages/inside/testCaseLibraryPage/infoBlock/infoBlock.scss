@@ -16,15 +16,14 @@
 
 .info-block {
   display: flex;
-  height: 64px;
-  padding: 0 16px;
+  padding: 12px 16px;
   border-radius: 8px;
   justify-content: space-between;
   background-color: var(--rp-ui-base-bg-200);
   align-items: center;
 
   &__label {
-    font-family: $FONT-ROBOTO-REGULAR;
+    font-family: var(--rp-ui-base-font-family);
     font-size: 13px;
     line-height: 20px;
     color: var(--rp-ui-base-e-400);

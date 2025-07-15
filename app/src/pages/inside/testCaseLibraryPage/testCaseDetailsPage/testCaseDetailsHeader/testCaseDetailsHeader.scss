@@ -31,8 +31,8 @@
     align-items: center;
     gap: 9px;
     margin-bottom: 5px;
-    font-size: 24px;
-    font-family: $FONT-SEMIBOLD;
+    font-size: 20px;
+    font-family: $FONT-REGULAR;
     line-height: 31px;
     color: var(--rp-ui-base-almost-black);
   }
@@ -48,6 +48,32 @@
       border-radius: 4px;
       background-color: var(--rp-ui-base-bg-200);
       cursor: pointer;
+    }
+  }
+
+  &__edit-button {
+    background: none;
+    border: none;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    path {
+      fill: var(--rp-ui-base-e-300);
+    }
+    &:hover {
+      path {
+        fill: var(--rp-ui-base-e-400);
+      }
+    }
+  }
+
+  &__more-button {
+    padding: 7px 12px;
+    svg {
+      width: 16px;
+      height: 16px;
     }
   }
 
