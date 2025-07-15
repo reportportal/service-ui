@@ -15,28 +15,35 @@
  */
 
 .section {
-  padding: 16px 20px;
-  margin-bottom: 1px;
+  display: flex;
+  flex-direction: column;
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
-
-    button {
-      display: flex;
-      column-gap: 8px;
-    }
   }
 
   &__title {
     color: var(--rp-ui-base-almost-black);
-    font-size: 14px;
-    font-family: $FONT-ROBOTO-REGULAR;
+    font-family: var(--rp-ui-base-font-family);
     font-weight: 500;
     margin: 0;
   }
 
+  &--sidebar {
+    gap: 12px;
 
+    &__title {
+      font-size: 14px;
+    }
+  }
+
+  &--modal {
+    gap: 8px;
+
+    &__title {
+      font-size: 13px;
+    }
+  }
 }

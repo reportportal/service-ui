@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
@@ -44,7 +43,7 @@ const messages = defineMessages({
   },
 });
 
-export const Steps: FC<StepsProps> = ({ steps, onAddStep, onRemoveStep }) => {
+export const Steps = ({ steps, onAddStep, onRemoveStep }: StepsProps) => {
   const { formatMessage } = useIntl();
 
   const renderFloatingAddStepButton = (index: number) => {

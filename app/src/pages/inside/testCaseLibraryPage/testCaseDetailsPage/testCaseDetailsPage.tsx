@@ -51,7 +51,7 @@ export const TestCaseDetailsPage = () => (
           onMenuAction={noopHandler}
         />
         <div className={cx('page__sidebar')}>
-          <EditableTagsSection onAddTag={noopHandler} />
+          <EditableTagsSection onAddTag={noopHandler} variant="sidebar" />
           <EditableDescriptionSection onAddDescription={noopHandler} />
         </div>
         <div className={cx('page__main-content')}>

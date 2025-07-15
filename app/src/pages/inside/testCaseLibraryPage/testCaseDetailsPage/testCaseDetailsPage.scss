@@ -19,8 +19,8 @@
   height: 100%;
   padding: 0;
   grid-template:
-    "header header" auto
-    "sidebar main" 1fr
+    'header header' auto
+    'sidebar main' 1fr
     / 360px 1fr;
 
   &__header {
@@ -32,8 +32,9 @@
     grid-area: sidebar;
     flex-direction: column;
     width: 360px;
-    gap: 18px;
-    border-right: 1px solid var(--rp-ui-base-e-200);
+    padding: 24px 32px;
+    gap: 16px;
+    border-right: 1px solid var(--rp-ui-base-e-100);
   }
 
   &__main-content {
