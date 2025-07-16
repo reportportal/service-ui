@@ -37,7 +37,7 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
-import { MilestonePage } from 'pages/inside/milestonesPage';
+import { TestPlansPage } from 'pages/inside/testPlansPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -135,8 +135,8 @@ export const pageRendering = {
     layout: ProjectLayout,
     rawContent: true,
   },
-  PROJECT_MILESTONES_PAGE: {
-    component: MilestonePage,
+  PROJECT_TEST_PLANS_PAGE: {
+    component: TestPlansPage,
     layout: ProjectLayout,
     rawContent: true,
   },

@@ -115,7 +115,7 @@ import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
 import {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
-  PROJECT_MILESTONES_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
 } from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -369,8 +369,8 @@ const routesMap = {
   ),
   [PRODUCT_VERSION_TAB_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
-  [PROJECT_MILESTONES_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+  [PROJECT_TEST_PLANS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
   },
 };
 

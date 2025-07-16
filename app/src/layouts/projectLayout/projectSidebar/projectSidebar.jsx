@@ -35,7 +35,7 @@ import {
   USER_PROFILE_PAGE_PROJECT_LEVEL,
   PRODUCT_VERSIONS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
-  PROJECT_MILESTONES_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -51,7 +51,7 @@ import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
 import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
-import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
+import TestPlansIcon from 'common/img/sidebar/test-plans-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -142,13 +142,13 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
       {
         onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.milestones.defaultMessage, isSidebarCollapsed }),
+          onClickButton({ itemName: messages.testPlans.defaultMessage, isSidebarCollapsed }),
         link: {
-          type: PROJECT_MILESTONES_PAGE,
+          type: PROJECT_TEST_PLANS_PAGE,
           payload: { organizationSlug, projectSlug },
         },
-        icon: MilestonesIcon,
-        message: formatMessage(messages.milestones),
+        icon: TestPlansIcon,
+        message: formatMessage(messages.testPlans),
       },
       {
         onClick: (isSidebarCollapsed) =>

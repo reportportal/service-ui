@@ -2,7 +2,7 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   pageTitle: {
-    id: 'MilestonesPage.title',
+    id: 'TestPlansPage.title',
     defaultMessage: 'Test Plans',
   },
 });

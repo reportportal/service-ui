@@ -5,7 +5,7 @@ import { referenceDictionary } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { messages } from './messages';
-import styles from './emptyMilestones.scss';
+import styles from './emptyTestPlans.scss';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +15,7 @@ const benefitMessages = [
   messages.resourceManagement,
 ];
 
-export const EmptyMilestones = () => {
+export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
@@ -26,7 +26,7 @@ export const EmptyMilestones = () => {
   };
 
   return (
-    <div className={cx('empty-milestones')}>
+    <div className={cx('empty-test-plans')}>
       <EmptyStatePage
         title={formatMessage(messages.pageHeader)}
         description={Parser(formatMessage(messages.pageDescription))}
@@ -34,8 +34,8 @@ export const EmptyMilestones = () => {
         documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
-            name: formatMessage(messages.createMilestoneLabel),
-            dataAutomationId: 'createMilestoneButton',
+            name: formatMessage(messages.createTestPlansLabel),
+            dataAutomationId: 'createTestPlansButton',
             isCompact: true,
             handleButton: handleCreate,
           },
@@ -44,7 +44,7 @@ export const EmptyMilestones = () => {
       <NumerableBlock
         items={benefits}
         title={formatMessage(messages.numerableBlockTitle)}
-        className={cx('empty-milestones__numerableBlock')}
+        className={cx('empty-test-plans__numerableBlock')}
         fullWidth
       />
     </div>

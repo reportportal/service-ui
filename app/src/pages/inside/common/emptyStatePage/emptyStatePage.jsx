@@ -32,7 +32,7 @@ import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
 import docs from './img/test-case-empty-state-inline.svg';
-import flag from './img/milestones-empty-state-inline.svg';
+import flag from './img/test-plans-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 

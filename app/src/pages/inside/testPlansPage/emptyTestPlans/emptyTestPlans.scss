@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-.milestones-page {
-  &__header {
-    padding: 16px 0 16px 32px;
-    background-color: var(--rp-ui-base-bg-000);
-    border-bottom: 1px solid var(--rp-ui-base-e-100);
+.empty-test-plans {
+  padding: 40px 0 60px;
+  width: 100%;
 
-    h1 {
-      color: var(--rp-ui-base-almost-black);
-      font-family: var(--rp-ui-base-font-family-heading);
-      font-size: 20px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 31px;
-    }
-  }
-
-  &__breadcrumb {
-    display: flex;
+  &__numerableBlock {
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    margin-top: 95px;
   }
 }
