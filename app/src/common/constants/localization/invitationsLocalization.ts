@@ -34,7 +34,7 @@ export const messages = defineMessages({
     defaultMessage: 'Invite user',
   },
   assignUser: {
-    id: 'InviteUser.assingUser',
+    id: 'InviteUser.assignUser',
     defaultMessage: 'Assign user',
   },
   inviteUserTo: {

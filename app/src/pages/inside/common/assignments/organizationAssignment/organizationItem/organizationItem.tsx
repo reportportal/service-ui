@@ -63,7 +63,9 @@ export const OrganizationItem = ({ value, onChange, onRemove }: OrganizationItem
       .then(({ total_count }: ProjectsSearchesResponseData) => {
         setTotalProjects(total_count);
       })
-      .catch(() => {});
+      .catch(() => {
+        setTotalProjects(0);
+      });
   }, [id]);
 
   const handleRoleChange = (newRole: string) => {
