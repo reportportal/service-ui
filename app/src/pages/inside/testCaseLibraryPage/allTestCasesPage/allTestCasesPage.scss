@@ -24,7 +24,7 @@
 .pagination {
   position: sticky;
   bottom: 0;
-  background: $COLOR--bg-100;
+  background: var(--rp-ui-base-bg-100);
   padding: 5px 32px;
   border-top: 1px solid var(--rp-ui-base-e-100);
   margin-top: auto;

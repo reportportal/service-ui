@@ -68,12 +68,11 @@ export const EmptyStatePage = ({
             ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
               <Button
                 disabled={isDisabled}
-                adjustWidthOn={'wide-content'}
+                adjustWidthOn={isCompact ? 'content' : 'wide-content'}
                 onClick={isDisabled ? null : handleButton}
                 data-automation-id={dataAutomationId}
                 key={name}
                 variant={variant}
-                className={cx({ 'buttons__button--compact': isCompact })}
                 {...(icon && { icon: Parser(icon) })}
               >
                 {name}

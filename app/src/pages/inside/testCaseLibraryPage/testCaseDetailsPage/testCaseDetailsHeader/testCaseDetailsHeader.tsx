@@ -20,6 +20,7 @@ import Parser from 'html-react-parser';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PopoverControl } from 'pages/common/popoverControl';
@@ -80,6 +81,9 @@ export const TestCaseDetailsHeader = ({
       <div className={cx('header__title')}>
         <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
         {testCase.name}
+        <button type="button" className={cx('header__edit-button')}>
+          {Parser(PencilIcon)}
+        </button>
       </div>
       <div className={cx('header__info-wrapper')}>
         <div className={cx('header__meta')}>
@@ -111,7 +115,12 @@ export const TestCaseDetailsHeader = ({
             ]}
             placement="bottom-end"
           >
-            <Button variant="ghost" adjustWidthOn="content" onClick={onMenuAction}>
+            <Button
+              variant="ghost"
+              adjustWidthOn="content"
+              onClick={onMenuAction}
+              className={cx('header__more-button')}
+            >
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>

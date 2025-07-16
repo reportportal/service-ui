@@ -95,10 +95,7 @@ export const BasicInformation = () => {
           <FieldTextFlex label={formatMessage(messages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
-      <EditableTagsSection
-        bindClassName={(className = '') => cx(`basic-information-tags${className}`)}
-        onAddTag={noop}
-      />
+      <EditableTagsSection onAddTag={noop} variant="modal" />
     </div>
   );
 };
