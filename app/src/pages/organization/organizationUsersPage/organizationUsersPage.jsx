@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import {
   fetchOrganizationUsersAction,
