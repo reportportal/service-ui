@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,14 @@
  * limitations under the License.
  */
 
-.modal-description {
-  padding: 0;
-  margin-top: 16px;
-  font-size: 13px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  color: $COLOR--almost-black;
-  background-color: $COLOR--white-four;
+.form {
+  display: flex;
+  gap: 16px;
+  width: 100%;
 }
 
-.invite-form {
-  margin-top: 16px;
-}
-
-.can-edit {
-  &:last-child span {
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-REGULAR;
-  }
-}
-
-.can-edit-disabled {
-  width: max-content;
-}
-
-.wrapper-class {
-  width: 16px;
-}
-
-.content-class {
-  width: 240px;
-}
-
-.icon {
-  svg {
-    width: 16px;
-    height: 16px;
-  }
+.projects {
+  flex: 1;
 }
 
 .custom-tooltip {
@@ -68,18 +39,34 @@
   width: 16px;
 }
 
-.modal-field {
-  padding: 0;
-}
-
 .checkbox-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
 
   label {
-    span:last-child {
-      font-weight: 400;
-    }
+    font-weight: var(--rp-ui-base-fw-regular);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.button {
+  width: 36px;
+  height: 36px;
+  padding: 10px;
+
+  &.save svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  &.cancel svg {
+    width: 10px;
+    height: 10px;
   }
 }

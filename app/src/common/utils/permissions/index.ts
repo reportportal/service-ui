@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,5 +47,6 @@ export {
   canWorkWithOrganizationsSorting,
   canUpdateUserInstanceRole,
   canExportOrganizations,
+  canInviteUserToOrganization,
 } from './permissions';
-export { getRoleTitle, getRoleBadgesData } from './getRoleTitle';
+export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

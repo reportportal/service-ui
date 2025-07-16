@@ -27,6 +27,7 @@ import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useTracking } from 'react-tracking';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
+import { InviteUserModal } from 'pages/inside/common/invitations/inviteUserModal';
 import { messages } from '../common/membersPage/membersPageHeader/messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamPageHeader } from './projectTeamPageHeader';
@@ -57,8 +58,7 @@ export const ProjectTeamPage = () => {
   const showInviteUserModal = () => {
     dispatch(
       showModalAction({
-        id: 'inviteUserModal',
-        data: { onInvite },
+        component: <InviteUserModal level="project" onInvite={onInvite} />,
       }),
     );
   };

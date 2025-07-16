@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, MessageDescriptor } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { EDITOR, MANAGER } from 'common/constants/projectRoles';
 import { ADMIN_TYPE, MANAGER_TYPE, YOU_TYPE } from './constants';
+
+interface Badge {
+  title: MessageDescriptor;
+  type: string;
+}
 
 const messages = defineMessages({
   adminRole: {
@@ -40,9 +45,13 @@ const messages = defineMessages({
     id: 'MembersListTable.viewerRole',
     defaultMessage: 'View only',
   },
+  memberRole: {
+    id: 'MembersListTable.memberRole',
+    defaultMessage: 'Member',
+  },
 });
 
-export const getRoleTitle = (projectRole) => {
+export const getRoleTitle = (projectRole: string): MessageDescriptor => {
   if (projectRole === EDITOR) {
     return messages.editorRole;
   }
@@ -50,8 +59,20 @@ export const getRoleTitle = (projectRole) => {
   return messages.viewerRole;
 };
 
-export const getRoleBadgesData = (userRole, organizationRole, isCurrentLoggedInUser) => {
-  const badges = [];
+export const getOrgRoleTitle = (orgRole: string): MessageDescriptor => {
+  if (orgRole === MANAGER) {
+    return messages.managerRole;
+  }
+
+  return messages.memberRole;
+};
+
+export const getRoleBadgesData = (
+  userRole: string,
+  organizationRole: string,
+  isCurrentLoggedInUser: boolean,
+) => {
+  const badges: Badge[] = [];
   if (userRole === ADMINISTRATOR) {
     badges.push({
       title: messages.adminRole,
