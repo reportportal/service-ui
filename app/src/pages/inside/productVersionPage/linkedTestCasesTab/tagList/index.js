@@ -15,4 +15,5 @@
  */
 
 export { TagList } from './tagList';
+export { AdaptiveTagList } from './adaptiveTagList';
 export { getData } from './mockData';

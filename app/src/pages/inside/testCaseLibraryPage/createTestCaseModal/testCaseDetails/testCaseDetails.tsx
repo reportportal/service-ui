@@ -66,7 +66,7 @@ export const TestCaseDetails = () => {
           <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />
         </FieldErrorHint>
       </FieldProvider>
-      <AttachmentArea>
+      <AttachmentArea isNumberable={false}>
         <Precondition />
       </AttachmentArea>
       <FieldProvider name="steps">

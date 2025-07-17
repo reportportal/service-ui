@@ -15,7 +15,7 @@
  */
 
 import classNames from 'classnames/bind';
-import { TagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import styles from './testCaseNameCell.scss';
@@ -37,7 +37,7 @@ export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <TagList tags={tags} isFullWidthMode />
+          <AdaptiveTagList tags={tags} />
         </div>
       </div>
     </div>
