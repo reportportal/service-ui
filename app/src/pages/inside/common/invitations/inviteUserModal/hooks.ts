@@ -38,10 +38,15 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
     ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE,
   );
 
-  const header =
-    level === 'project'
-      ? `${formatMessage(ssoUsersOnly ? messages.assignUserTo : messages.inviteUserTo)} ${projectName}`
-      : formatMessage(ssoUsersOnly ? messages.assignUser : messages.inviteUser);
+  const getHeader = () => {
+    if (level === 'project') {
+      const message = ssoUsersOnly ? messages.assignUserTo : messages.inviteUserTo;
+      return `${formatMessage(message)} ${projectName}`;
+    }
+
+    const message = ssoUsersOnly ? messages.assignUser : messages.inviteUser;
+    return formatMessage(message);
+  };
 
   const buildOrganizationsData = (orgs: Organization[]) => {
     return orgs.map(({ name: _orgName, role, projects, ...orgRest }) => ({
@@ -83,7 +88,7 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   };
 
   return {
-    header,
+    header: getHeader(),
     okButtonTitle,
     buildUserData,
   };
