@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
+@use '../../../../../common/css/mixins';
+
 .tag-list-wrapper {
   display: flex;
+
+  &--show-all-view {
+    flex-direction: column;
+  }
 }
 
 .tag-list {
@@ -88,7 +94,26 @@
       overflow: visible;
       cursor: pointer;
       color: var(--rp-ui-base-e-400);
+      background-color: transparent;
     }
+
+    &--button {
+      &-show-all-view {
+        min-width: 45px;
+      }
+
+      &-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 8px;
+      }
+    }
+  }
+
+  button {
+    @include mixins.button-reset;
+    color: var(--rp-ui-color-primary-text);
   }
 }
 

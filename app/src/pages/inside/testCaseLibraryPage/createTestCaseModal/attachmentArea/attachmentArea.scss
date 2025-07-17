@@ -21,6 +21,7 @@
   border-left: 1px solid var(--rp-ui-base-e-100);
   border-radius: 4px;
   display: flex;
+  font-family: $FONT-ROBOTO-REGULAR;
 
   &__fields-container {
     width: 100%;
@@ -45,9 +46,11 @@
 
   &__drag {
     display: flex;
+    font-size: 13px;
     flex-direction: column;
     align-items: center;
     row-gap: 16px;
+    line-height: 16px;
     font-weight: 500;
   }
 

@@ -34,13 +34,14 @@
 }
 
 .test-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--rp-ui-base-almost-black);
-  line-height: 20px;
+  line-height: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 6px;
 }
 
 .tags-section {

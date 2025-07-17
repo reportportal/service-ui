@@ -19,14 +19,16 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
-import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
-import { messages as testCaseCardMessages } from '../messages';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { formatRelativeTime } from '../utils';
+import { createTestCaseMenuItems } from '../configUtils';
+import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles);
 
 interface TestCaseExecutionCellProps {
-  lastExecution: string;
+  lastExecution: number;
   onRowClick: () => void;
   onEditTestCase: () => void;
 }
@@ -36,20 +38,27 @@ export const TestCaseExecutionCell = ({
   onRowClick,
   onEditTestCase,
 }: TestCaseExecutionCellProps) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage, locale } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems: PopoverItem[] = [
-    { label: formatMessage(testCaseCardMessages.duplicate) },
-    { label: formatMessage(testCaseCardMessages.editTestCase), onClick: onEditTestCase },
-    { label: formatMessage(testCaseCardMessages.moveTestCaseTo) },
-    { label: formatMessage(testCaseCardMessages.deleteTestCase), variant: 'danger' },
-  ];
+  const menuItems = createTestCaseMenuItems(
+    formatMessage,
+    {
+      [TestCaseMenuAction.EDIT]: onEditTestCase,
+    },
+    [TestCaseMenuAction.HISTORY],
+  );
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
-      <div className={cx('execution-time')}>{lastExecution}</div>
-      <div className={cx('menu-section')}>
+      <div className={cx('execution-time')}>{formatRelativeTime(lastExecution, locale)}</div>
+      <div
+        role="menuitem"
+        tabIndex={0}
+        className={cx('menu-section')}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleEnterOrSpaceKey}
+      >
         <PopoverControl
           items={menuItems}
           placement="bottom-end"
