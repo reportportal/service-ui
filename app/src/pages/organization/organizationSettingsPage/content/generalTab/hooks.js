@@ -15,21 +15,43 @@
  */
 
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { humanizeDays } from 'common/utils';
 import { useIntl } from 'react-intl';
 
 export const useRetentionUtils = (formValues) => {
-  const { formatMessage } = useIntl();
+  const { locale, formatMessage } = useIntl();
 
-  const getRetentionOptions = () => {
-    return [
-      { label: formatMessage(settingsMessages.week1), value: 7 },
-      { label: formatMessage(settingsMessages.week2), value: 14 },
-      { label: formatMessage(settingsMessages.week3), value: 21 },
-      { label: formatMessage(settingsMessages.month1), value: 30 },
-      { label: formatMessage(settingsMessages.month3), value: 90 },
-      { label: formatMessage(settingsMessages.month6), value: 180 },
-      { label: formatMessage(settingsMessages.forever), value: 0 },
-    ];
+  const baseOptions = [
+    { label: formatMessage(settingsMessages.week1), value: 7 },
+    { label: formatMessage(settingsMessages.week2), value: 14 },
+    { label: formatMessage(settingsMessages.week3), value: 21 },
+    { label: formatMessage(settingsMessages.month1), value: 30 },
+    { label: formatMessage(settingsMessages.month3), value: 90 },
+    { label: formatMessage(settingsMessages.month6), value: 180 },
+    { label: formatMessage(settingsMessages.forever), value: 0 },
+  ];
+
+  const sortValues = (a, b) => {
+    if (a.value === 0) {
+      return 1;
+    }
+
+    if (b.value === 0) {
+      return -1;
+    }
+
+    return a.value - b.value;
+  };
+
+  const getRetentionOptions = (value) => {
+    const options = [...baseOptions];
+
+    if (!options.some((elem) => elem.value === value)) {
+      options.push({ label: humanizeDays(value, locale), value });
+      options.sort(sortValues);
+    }
+
+    return options;
   };
 
   const formatInputValues = (values) => {
@@ -47,7 +69,7 @@ export const useRetentionUtils = (formValues) => {
 
   const getLaunchesOptions = () => {
     const inputValues = formatInputValues(formValues);
-    const options = getRetentionOptions();
+    const options = getRetentionOptions(formValues.keepLaunches);
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value !== 0 &&
@@ -64,7 +86,7 @@ export const useRetentionUtils = (formValues) => {
 
   const getLogOptions = () => {
     const inputValues = formatInputValues(formValues);
-    const options = getRetentionOptions();
+    const options = getRetentionOptions(formValues.keepLogs);
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value === 0
@@ -87,7 +109,7 @@ export const useRetentionUtils = (formValues) => {
 
   const getScreenshotsOptions = () => {
     const inputValues = formatInputValues(formValues);
-    const options = getRetentionOptions();
+    const options = getRetentionOptions(formValues.keepScreenshots);
     const newOptions = options.map((elem) => {
       const isHidden =
         elem.value === 0 ? elem.value !== inputValues.keepLogs : elem.value > inputValues.keepLogs;

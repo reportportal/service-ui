@@ -43,6 +43,7 @@ export {
   secondsToHours,
   hoursToDays,
   getApproximateTime,
+  humanizeDays,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';

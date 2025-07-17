@@ -215,6 +215,7 @@ export class NotificationList extends PureComponent {
                   title={Parser(
                     DOMPurify.sanitize(
                       messageId ? formatMessage(messages[messageId], values) : message,
+                      { ADD_ATTR: ['target'] },
                     ),
                   )}
                   onClose={() => this.props.hideNotification(uid)}

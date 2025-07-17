@@ -316,11 +316,10 @@ function* deleteApiKey({ payload = {} }) {
 }
 
 function* deleteUserAccount({ payload = {} }) {
-  const { onSuccess } = payload;
-  const user = yield select(userInfoSelector);
+  const { onSuccess, userId } = payload;
 
   try {
-    yield call(fetch, URLS.userInfo(user.id), {
+    yield call(fetch, URLS.userInfo(userId), {
       method: 'delete',
     });
     onSuccess();

@@ -17,8 +17,10 @@
 import { getBasicClickEventParameters } from '../common/ga4Utils';
 
 const ORGANIZATION_PAGE = 'organization';
+const SETTINGS_PAGE = 'organization_settings';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
+const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
 
 export const ORGANIZATION_PAGE_EVENTS = {
   SEARCH_ORGANIZATION_FIELD: {
@@ -54,5 +56,15 @@ export const ORGANIZATION_PAGE_EVENTS = {
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
     element_name: elementName,
+  }),
+  viewOrganizationSettings: (page: string) => ({
+    action: 'page_view',
+    place: `organization_settings_${page}`,
+  }),
+  updateOrganizationSettings: ({ keepLaunches, keepLogs, keepScreenshots }) => ({
+    ...SETTINGS_EVENT_PARAMETERS,
+    place: 'general',
+    element_name: 'button_submit',
+    type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
   }),
 };

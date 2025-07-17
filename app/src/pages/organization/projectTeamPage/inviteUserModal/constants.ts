@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
-export { MembersPage } from './membersPage';
-export { PermissionMapModal } from './modals/permissionMapModal';
+export enum InvitationStatus {
+  PENDING = 'PENDING',
+}
+
+export const ERROR_CODES = {
+  FORBIDDEN: 4003,
+};
+
+export const settingsLinkName = 'Instance Invitation settings';
+export const settingsLink =
+  'https://reportportal.io/docs/admin-panel/ServerSettings/#instance-invitations_';

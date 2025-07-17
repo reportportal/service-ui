@@ -15,29 +15,16 @@
  */
 
 import moment from 'moment';
+import { getMinutesFromTimestamp } from 'common/utils';
 import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
-
-export const formatDisplayedValue = (date) => {
-  if (!date || typeof date === 'string') {
-    return date;
-  }
-
-  const { startDate, endDate } = date;
-
-  if (!startDate && !endDate) {
-    return '';
-  }
-
-  const formattedStartTimeRange =
-    startDate && moment(new Date(startDate)).format(DATE_FORMAT_DROPDOWN);
-  const formattedEndTimeRange = endDate && moment(new Date(endDate)).format(DATE_FORMAT_DROPDOWN);
-
-  return `${formattedStartTimeRange || ''} — ${formattedEndTimeRange || ''}`;
-};
 
 export const parseFormattedDate = (formatted) => {
   if (!formatted) {
     return null;
+  }
+
+  if (formatted instanceof Object) {
+    return formatted;
   }
 
   const [startMinutesStr, endMinutesStr] = formatted.split(';');
@@ -54,4 +41,41 @@ export const parseFormattedDate = (formatted) => {
     startDate: startDate.toDate(),
     endDate: endDate.toDate(),
   };
+};
+
+export const formatDisplayedValue = (displayedValue, value, timeRangeValues) => {
+  if (!value) {
+    return displayedValue;
+  }
+
+  if (timeRangeValues.includes(value)) {
+    return displayedValue;
+  }
+
+  const { startDate, endDate } = parseFormattedDate(value) || {};
+
+  if (!startDate && !endDate) {
+    return '';
+  }
+
+  const formattedStartTimeRange =
+    startDate && moment(new Date(startDate)).format(DATE_FORMAT_DROPDOWN);
+  const formattedEndTimeRange = endDate && moment(new Date(endDate)).format(DATE_FORMAT_DROPDOWN);
+
+  return `${formattedStartTimeRange || ''} — ${formattedEndTimeRange || ''}`;
+};
+
+export const formatDateRangeToMinutesString = (formValue) => {
+  if (typeof formValue === 'string') {
+    return formValue;
+  }
+
+  const { startDate, endDate } = formValue || {};
+  if (!startDate || !endDate) {
+    return '';
+  }
+
+  const utcString = moment().format('ZZ');
+
+  return `${getMinutesFromTimestamp(startDate)};${getMinutesFromTimestamp(endDate)};${utcString}`;
 };

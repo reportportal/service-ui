@@ -27,6 +27,7 @@ import {
   ACCOUNT_TYPE_FILTER_NAME,
   EMAIL_FILTER_NAME,
   EMAIL_FILTER_NAME_CONDITION,
+  timeRangeLastLoginValues,
   getAccountTypes,
   getEmailComparisons,
   getLastLogin,
@@ -41,6 +42,7 @@ import {
   DateRangeFormField,
   formatDisplayedValue,
   parseFormattedDate,
+  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
@@ -62,7 +64,7 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
-  const lastRunDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
+  const lastLoginDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {
@@ -108,9 +110,17 @@ export const AllUsersFilter = ({
           props: {
             value: '',
             options: lastLogin,
-            formatDisplayedValue,
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastLoginDate, timeRangeLastLoginValues),
             notScrollable: true,
-            footer: <Field name={LAST_LOGIN_FILTER_NAME} component={DateRangeFormField} />,
+            footer: (
+              <Field
+                name={LAST_LOGIN_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+                parse={formatDateRangeToMinutesString}
+              />
+            ),
           },
         },
       ],
@@ -156,10 +166,7 @@ export const AllUsersFilter = ({
   const initialFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: entities[USERS_PERMISSIONS_FILTER_NAME]?.value || '',
     [ACCOUNT_TYPE_FILTER_NAME]: entities[ACCOUNT_TYPE_FILTER_NAME]?.value?.split(',') || [],
-    [LAST_LOGIN_FILTER_NAME]:
-      parseFormattedDate(entities[LAST_LOGIN_FILTER_NAME]?.value) ||
-      entities[LAST_LOGIN_FILTER_NAME]?.value ||
-      '',
+    [LAST_LOGIN_FILTER_NAME]: entities[LAST_LOGIN_FILTER_NAME]?.value || '',
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',
@@ -189,10 +196,6 @@ export const AllUsersFilter = ({
       return false;
     }
 
-    if (typeof lastRunDate === 'object' && (!lastRunDate.startDate || !lastRunDate?.endDate)) {
-      return true;
-    }
-
     let isApply =
       [USERS_PERMISSIONS_FILTER_NAME, LAST_LOGIN_FILTER_NAME, EMAIL_FILTER_NAME].every(
         (prop) => formValues[prop] === initialFilterState[prop],
@@ -207,16 +210,6 @@ export const AllUsersFilter = ({
       isApply =
         formValues[EMAIL_FILTER_NAME_CONDITION] ===
           initialFilterState[EMAIL_FILTER_NAME_CONDITION] && isApply;
-    }
-
-    if (typeof lastRunDate === 'object') {
-      const initialDate = formatDisplayedValue(initialFilterState[LAST_LOGIN_FILTER_NAME]);
-      const currentDate = formatDisplayedValue(lastRunDate);
-      isApply = initialDate === currentDate && isApply;
-    } else {
-      isApply =
-        formValues[LAST_LOGIN_FILTER_NAME] === initialFilterState[LAST_LOGIN_FILTER_NAME] &&
-        isApply;
     }
 
     return isApply;

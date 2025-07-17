@@ -33,6 +33,8 @@ import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { useTracking } from 'react-tracking';
 import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
@@ -45,6 +47,7 @@ const selector = formValueSelector(GENERAL_TAB_FORM);
 const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const organizationId = useSelector(activeOrganizationIdSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
   const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
@@ -58,6 +61,10 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } =
     useRetentionUtils(formValues);
   const isDisabled = !canPerformUpdate || processingData;
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.viewOrganizationSettings('general'));
+  }, [trackEvent]);
 
   useEffect(() => {
     if (organizationName) {
@@ -80,6 +87,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
     };
 
     dispatch(updateOrganizationSettingsAction({ organizationId, retentionPolicy }));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.updateOrganizationSettings(formData));
   };
 
   return isLoading ? (

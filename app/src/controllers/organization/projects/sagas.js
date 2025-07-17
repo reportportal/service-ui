@@ -27,7 +27,6 @@ import {
   showSuccessNotification,
 } from 'controllers/notification';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
-import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import {
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
@@ -45,7 +44,7 @@ import { fetchOrganizationProjectsAction } from './actionCreators';
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const filtersParams = yield select(querySelector);
-  const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
+  const data = prepareQueryFilters(filtersParams);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
