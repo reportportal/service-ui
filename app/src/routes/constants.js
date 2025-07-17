@@ -37,6 +37,7 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
+import { TestPlansPage } from 'pages/inside/testPlansPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -131,6 +132,11 @@ export const pageRendering = {
   },
   PROJECT_SETTINGS_TAB_PAGE: {
     component: ProjectSettingsPageContainer,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  PROJECT_TEST_PLANS_PAGE: {
+    component: TestPlansPage,
     layout: ProjectLayout,
     rawContent: true,
   },

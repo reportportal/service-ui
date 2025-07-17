@@ -112,7 +112,11 @@ import {
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
-import { PRODUCT_VERSION_PAGE, PRODUCT_VERSION_TAB_PAGE } from 'controllers/pages/constants';
+import {
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
+} from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
@@ -365,6 +369,9 @@ const routesMap = {
   ),
   [PRODUCT_VERSION_TAB_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+  [PROJECT_TEST_PLANS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
+  },
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
