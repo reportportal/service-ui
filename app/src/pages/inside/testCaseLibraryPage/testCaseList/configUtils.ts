@@ -25,6 +25,7 @@ export const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export const createTestCaseMenuItems = (
   formatMessage: (message: { id: string; defaultMessage: string }) => string,
+  actions?: { [key in TestCaseMenuAction]?: () => void },
   excludedActions?: TestCaseMenuAction[],
 ): PopoverItem[] => {
   const allMenuItems: (PopoverItem & { action: TestCaseMenuAction })[] = [
@@ -43,5 +44,10 @@ export const createTestCaseMenuItems = (
     return allMenuItems;
   }
 
-  return allMenuItems.filter((item) => !excludedActions.includes(item.action));
+  return allMenuItems
+    .filter((item) => !excludedActions.includes(item.action))
+    .map((item) => ({
+      ...item,
+      onClick: actions?.[item.action],
+    }));
 };

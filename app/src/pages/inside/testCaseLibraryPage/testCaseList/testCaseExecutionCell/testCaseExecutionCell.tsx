@@ -41,7 +41,13 @@ export const TestCaseExecutionCell = ({
   const { formatMessage, locale } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems = createTestCaseMenuItems(formatMessage, [TestCaseMenuAction.HISTORY]);
+  const menuItems = createTestCaseMenuItems(
+    formatMessage,
+    {
+      [TestCaseMenuAction.EDIT]: onEditTestCase,
+    },
+    [TestCaseMenuAction.HISTORY],
+  );
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
