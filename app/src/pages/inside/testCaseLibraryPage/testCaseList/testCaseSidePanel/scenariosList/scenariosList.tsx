@@ -14,38 +14,23 @@
  * limitations under the License.
  */
 
-.name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px 0;
+import classNames from 'classnames/bind';
+import { Scenario } from '../scenario';
+import { IScenario } from '../../../types';
+import styles from './scenariosList.scss';
+
+const cx = classNames.bind(styles);
+
+interface ScenariosListProps {
+  scenarios: IScenario[];
 }
 
-.name-icon {
-  margin-top: 2px;
-}
-
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 6px;
-}
-
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+export const ScenariosList = ({ scenarios }: ScenariosListProps) => {
+  return (
+    <div className={cx('scenarios-list')}>
+      {scenarios.map((scenario) => (
+        <Scenario key={scenario.id} scenario={scenario} />
+      ))}
+    </div>
+  );
+};

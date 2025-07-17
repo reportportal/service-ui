@@ -18,3 +18,12 @@ export interface FilterOption {
   label: string;
   value: string;
 }
+
+// eslint-disable-next-line no-shadow
+export enum TestCaseMenuAction {
+  DUPLICATE = 'duplicate',
+  EDIT = 'edit',
+  MOVE = 'move',
+  HISTORY = 'history',
+  DELETE = 'delete',
+}

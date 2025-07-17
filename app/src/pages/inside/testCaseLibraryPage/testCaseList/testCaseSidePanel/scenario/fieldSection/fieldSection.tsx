@@ -14,38 +14,29 @@
  * limitations under the License.
  */
 
-.name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px 0;
+import { ReactNode } from 'react';
+import classNames from 'classnames/bind';
+import styles from './fieldSection.scss';
+
+const cx = classNames.bind(styles);
+
+interface FieldSectionProps {
+  title: string;
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'full-view';
 }
 
-.name-icon {
-  margin-top: 2px;
-}
-
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 6px;
-}
-
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+export const FieldSection = ({
+  title,
+  children,
+  className,
+  variant = 'default',
+}: FieldSectionProps) => {
+  return (
+    <div className={cx('field-section', className)}>
+      <h4 className={cx('field-title', `field-title--${variant}`)}>{title}</h4>
+      {children}
+    </div>
+  );
+};

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .test-case-list {
   display: flex;
   flex-direction: column;
@@ -31,6 +33,10 @@
   border: 1px solid transparent;
   border-radius: 4px;
 
+  :global([class*='table-row-content']) {
+    align-items: flex-start;
+  }
+
   &:hover {
     border-color: var(--rp-ui-base-topaz-focused);
   }
@@ -41,23 +47,7 @@
 }
 
 .cell-wrapper {
-  /* Reset all default button styles */
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  outline: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: none;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  @include mixins.button-reset;
 
   /* Component-specific styles */
   width: 100%;
