@@ -19,6 +19,8 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
+import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { useDispatch, useSelector } from 'react-redux';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -50,6 +52,8 @@ export const TestCaseList = memo(
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
+    const dispatch = useDispatch();
+    const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -97,6 +101,16 @@ export const TestCaseList = memo(
           <TestCaseExecutionCell
             lastExecution={testCase.lastExecution}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
+            onEditTestCase={() =>
+              dispatch({
+                type: TEST_CASE_DETAILS_PAGE,
+                payload: {
+                  testCaseSlug: testCase.id,
+                  organizationSlug,
+                  projectSlug,
+                },
+              })
+            }
           />
         ),
       },

@@ -28,6 +28,7 @@ import { referenceDictionary } from 'common/utils';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+import { CreateTestCaseModal } from '../../createTestCaseModal/createTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
@@ -53,10 +54,8 @@ export const MainPageEmptyState = () => {
     dispatch(
       showModalAction({
         id: CREATE_TEST_CASE_MODAL_KEY,
-        data: {
-          onSubmit: handleCreateTestCaseModalSubmit,
-        },
-        component: null,
+        data: null,
+        component: <CreateTestCaseModal onSubmit={handleCreateTestCaseModalSubmit} />,
       }),
     );
   };

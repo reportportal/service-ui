@@ -30,11 +30,13 @@ const cx = classNames.bind(styles);
 interface TestCaseExecutionCellProps {
   lastExecution: number;
   onRowClick: () => void;
+  onEditTestCase: () => void;
 }
 
 export const TestCaseExecutionCell = ({
   lastExecution,
   onRowClick,
+  onEditTestCase,
 }: TestCaseExecutionCellProps) => {
   const { formatMessage, locale } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

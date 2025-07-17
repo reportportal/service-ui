@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-.all-test-cases-page {
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  padding: 12px 32px 0 32px;
-}
-
-.pagination {
-  position: sticky;
-  bottom: 0;
-  background: var(--rp-ui-base-bg-100);
-  padding: 5px 32px;
-  border-top: 1px solid var(--rp-ui-base-e-100);
-  margin-top: auto;
-  height: 64px;
-}
+export { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';

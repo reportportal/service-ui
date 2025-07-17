@@ -28,10 +28,11 @@ export const DetailsEmptyState = () => {
     <EmptyStatePage
       title={formatMessage(messages.noScenarioDetails)}
       description={Parser(formatMessage(messages.scenarioDescription))}
-      imageType="docs"
+      imageType="plus"
       documentationLink={referenceDictionary.rpDoc}
       buttons={[
         {
+          isCompact: true,
           name: formatMessage(messages.editScenario),
           variant: 'primary',
         },

@@ -34,8 +34,7 @@ export const EditableDescriptionSection = ({
   const { formatMessage } = useIntl();
 
   const headerControl = (
-    <Button onClick={onAddDescription} adjustWidthOn="content" variant="text">
-      <PlusIcon />
+    <Button variant="text" adjustWidthOn="content" onClick={onAddDescription} icon={<PlusIcon />}>
       {formatMessage(COMMON_LOCALE_KEYS.ADD)}
     </Button>
   );
@@ -45,6 +44,7 @@ export const EditableDescriptionSection = ({
       title={formatMessage(messages.description)}
       headerControl={headerControl}
       className={className}
+      variant="sidebar"
     >
       <InfoBlock label={formatMessage(messages.noDescriptionAdded)} />
     </SectionWithHeader>
