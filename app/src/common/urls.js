@@ -309,7 +309,7 @@ export const URLS = {
     removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
-  events: () => `${urlBase}activities/searches`,
+  events: () => `${urlCommonBase}activities/searches`,
   searchEventsBySubjectName:
     (projectName) =>
     (searchTerm = '') =>
