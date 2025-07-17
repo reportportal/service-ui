@@ -15,7 +15,7 @@
  */
 
 .meatball-menu {
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
   line-height: 20px;
 }
@@ -27,7 +27,7 @@
 }
 
 .option-link {
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   cursor: pointer;
   text-decoration: none;
   outline: none;

@@ -20,7 +20,7 @@ import { URLS } from 'common/urls';
 import { NAMESPACE, FETCH_EVENTS } from './constants';
 import { querySelector } from './selectors';
 
-function* fetchEvents(payload) {
+function* fetchEvents() {
   const data = yield select(querySelector);
 
   yield put(
