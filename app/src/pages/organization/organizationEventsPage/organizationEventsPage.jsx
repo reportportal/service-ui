@@ -15,9 +15,8 @@
  */
 
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
