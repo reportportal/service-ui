@@ -29,7 +29,7 @@ export const OrganizationAssignment = ({
 }: OrganizationAssignmentProps) => {
   const multiple = isMultiple && Array.isArray(value);
 
-  const updateItem = (index: number, updates: Partial<Organization>) => {
+  const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (multiple) {
       const updated = [...value];
       updated[index] = { ...updated[index], ...updates };
@@ -54,7 +54,7 @@ export const OrganizationAssignment = ({
           <div key={org.id}>
             <OrganizationItem
               value={org}
-              onChange={(updates) => updateItem(index, updates)}
+              onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
             />
           </div>
@@ -64,6 +64,6 @@ export const OrganizationAssignment = ({
   }
 
   if (!isMultiple && !Array.isArray(value)) {
-    return <OrganizationItem value={value} onChange={(updates) => updateItem(null, updates)} />;
+    return <OrganizationItem value={value} onChange={(updates) => updateItem(updates)} />;
   }
 };
