@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -33,81 +32,83 @@ import styles from './organizationEventsPage.scss';
 
 const cx = classNames.bind(styles);
 
-@connect((state) => ({
+const OrganizationEventsPageWrapper = ({
+  activePage = DEFAULT_PAGINATION[PAGE_KEY],
+  itemCount = null,
+  pageCount = null,
+  pageSize = DEFAULT_PAGINATION[SIZE_KEY],
+  sortingColumn = null,
+  sortingDirection = null,
+  onChangeSorting = () => {},
+  onChangePage = () => {},
+  onChangePageSize = () => {},
+  loading = false,
+  events = [],
+}) => {
+  return (
+    <div className={cx('organization-events-page')}>
+      <EventsToolbar />
+      <EventsGrid
+        data={events}
+        loading={loading}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+      />
+      {!!pageCount && !loading && (
+        <PaginationToolbar
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
+        />
+      )}
+    </div>
+  );
+};
+
+OrganizationEventsPageWrapper.propTypes = {
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number,
+  pageCount: PropTypes.number,
+  pageSize: PropTypes.number,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
+  onChangePage: PropTypes.func,
+  onChangePageSize: PropTypes.func,
+  loading: PropTypes.bool,
+  events: PropTypes.arrayOf(PropTypes.object),
+};
+
+OrganizationEventsPageWrapper.defaultProps = {
+  activePage: DEFAULT_PAGINATION[PAGE_KEY],
+  itemCount: null,
+  pageCount: null,
+  pageSize: DEFAULT_PAGINATION[SIZE_KEY],
+  sortingColumn: null,
+  sortingDirection: null,
+  onChangeSorting: () => {},
+  onChangePage: () => {},
+  onChangePageSize: () => {},
+  loading: false,
+  events: [],
+};
+
+const mapStateToProps = (state) => ({
   events: eventsSelector(state),
   loading: loadingSelector(state),
-}))
-@withSortingURL({
-  defaultFields: [ENTITY_CREATED_AT],
-  defaultDirection: SORTING_DESC,
-})
-@withPagination({
-  paginationSelector: eventsPaginationSelector,
-})
-export class OrganizationEventsPage extends Component {
-  static propTypes = {
-    activePage: PropTypes.number,
-    itemCount: PropTypes.number,
-    pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
-    sortingColumn: PropTypes.string,
-    sortingDirection: PropTypes.string,
-    onChangeSorting: PropTypes.func,
-    onChangePage: PropTypes.func,
-    onChangePageSize: PropTypes.func,
-    loading: PropTypes.bool,
-    events: PropTypes.arrayOf(PropTypes.object),
-  };
+});
 
-  static defaultProps = {
-    activePage: DEFAULT_PAGINATION[PAGE_KEY],
-    itemCount: null,
-    pageCount: null,
-    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
-    sortingColumn: null,
-    sortingDirection: null,
-    onChangeSorting: () => {},
-    onChangePage: () => {},
-    onChangePageSize: () => {},
-    loading: false,
-    events: [],
-  };
-  render() {
-    const {
-      activePage,
-      itemCount,
-      pageCount,
-      pageSize,
-      onChangePage,
-      onChangePageSize,
-      loading,
-      events,
-      sortingColumn,
-      sortingDirection,
-      onChangeSorting,
-    } = this.props;
-
-    return (
-      <div className={cx('organization-events-page')}>
-        <EventsToolbar />
-        <EventsGrid
-          data={events}
-          loading={loading}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
-        />
-        {!!pageCount && !loading && (
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
-        )}
-      </div>
-    );
-  }
-}
+export const OrganizationEventsPage = connect(mapStateToProps)(
+  withSortingURL({
+    defaultFields: [ENTITY_CREATED_AT],
+    defaultDirection: SORTING_DESC,
+  })(
+    withPagination({
+      paginationSelector: eventsPaginationSelector,
+    })(OrganizationEventsPageWrapper),
+  ),
+);

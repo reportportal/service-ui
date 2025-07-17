@@ -97,7 +97,7 @@ export const EntityItemStartTime = track()(
       <InputTimeDateRange
         presets={getTimeDateRangePresets(tracking, customProps.events)}
         onChange={(val) => {
-          onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
+          onChange({ condition: CONDITION_BETWEEN.toUpperCase(), value: formatValue({ ...val }) });
         }}
         value={parseDateTimeRange(value)}
         withoutDynamic={customProps.withoutDynamic}

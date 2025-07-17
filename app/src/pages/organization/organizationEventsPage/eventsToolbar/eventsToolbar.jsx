@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
@@ -26,22 +28,20 @@ import {
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
-import { defineMessages, useIntl } from 'react-intl';
 import { EventsEntities } from '../eventsEntities';
 import styles from './eventsToolbar.scss';
-import { useSelector } from 'react-redux';
 
 const messages = defineMessages({
   searchPlaceholder: {
-    id: 'administrateEventsPageToolbar.searchPlaceholder',
-    defaultMessage: 'Search by user, action, object type, object name',
+    id: 'OrganizationEventsPageToolbar.searchPlaceholder',
+    defaultMessage: 'Search by project name, subject name, action, object type, object name',
   },
   allOrganizations: {
-    id: 'administrateEventsPageToolbar.allOrganizations',
+    id: 'OrganizationEventsPageToolbar.allOrganizations',
     defaultMessage: 'All organizations',
   },
   activity: {
-    id: 'administrateEventsPageToolbar.activity',
+    id: 'OrganizationEventsPageToolbar.activity',
     defaultMessage: 'Activity',
   },
 });

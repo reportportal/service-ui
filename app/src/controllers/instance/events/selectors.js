@@ -24,10 +24,9 @@ import { createSelector } from 'reselect';
 import { createQueryParametersSelector } from 'controllers/pages';
 import { SORTING_KEY } from 'controllers/sorting';
 import { administrateDomainSelector } from '../selectors';
-import { DEFAULT_SORTING, NAMESPACE } from './constants';
+import { DEFAULT_SORTING } from './constants';
 import { getAppliedFilters } from './utils';
 import { activeOrganizationIdSelector } from 'controllers/organization';
-import { CONDITION_EQ } from 'components/filterEntities/constants';
 
 const domainSelector = (state) => administrateDomainSelector(state).events || {};
 
@@ -52,12 +51,7 @@ export const createEventsPageQueryParametersSelector = ({
         limit,
         pageNumber,
       );
-      const appliedFilters = getAppliedFilters(
-        filters,
-        organizationId,
-        'organizationId',
-        CONDITION_EQ.toUpperCase(),
-      );
+      const appliedFilters = getAppliedFilters(filters, organizationId, 'organizationId', true);
 
       return {
         ...alternativePaginationAndSortParams,
@@ -67,7 +61,6 @@ export const createEventsPageQueryParametersSelector = ({
   );
 
 export const querySelector = createEventsPageQueryParametersSelector({
-  namespace: NAMESPACE,
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });

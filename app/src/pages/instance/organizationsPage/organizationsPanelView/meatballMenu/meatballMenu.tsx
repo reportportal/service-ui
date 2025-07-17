@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE } from 'controllers/pages';
 import { messages } from '../../messages';
 import styles from './meatballMenu.scss';
-import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -36,7 +38,13 @@ interface MeatballMenuProps {
 
 export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+
+  const handleClick = (elementName: string) => {
+    dispatch(setActiveOrganizationAction(organization));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.organizationsSorting(elementName));
+  };
 
   return (
     <Popover
@@ -49,7 +57,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
               payload: { organizationSlug: organization?.slug },
             }}
             className={cx('option-link')}
-            onClick={() => dispatch(setActiveOrganizationAction(organization))}
+            onClick={() => handleClick('activity_menu')}
           >
             <span>{formatMessage(messages.activity)}</span>
           </Link>

@@ -23,13 +23,13 @@ import {
   reMappedOperationValuesMap,
 } from 'components/filterEntities/constants';
 
-export const getAppliedFilters = (filters, valueKey, filterKey, operation) => {
+export const getAppliedFilters = (filters, valueKey, filterKey, isUpperCase) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
 
   const projectIdFilterParam = {
     filter_key: filterKey,
     value: valueKey,
-    operation: operation || CONDITION_EQ,
+    operation: isUpperCase ? CONDITION_EQ.toUpperCase() : CONDITION_EQ,
   };
 
   const appliedFilters = Object.keys(filters).map((filter) => {
@@ -38,7 +38,7 @@ export const getAppliedFilters = (filters, valueKey, filterKey, operation) => {
 
       return {
         filter_key: filterName,
-        operation: CONDITION_CNT,
+        operation: isUpperCase ? CONDITION_CNT.toUpperCase() : CONDITION_CNT,
         value: filters[predefinedFilterKey],
       };
     }
@@ -49,10 +49,11 @@ export const getAppliedFilters = (filters, valueKey, filterKey, operation) => {
       filterName === ENTITY_SUBJECT_TYPE || filterName === ENTITY_EVENTS_OBJECT_TYPE
         ? filters[filter].toUpperCase()
         : filters[filter];
+    const filterOperation = reMappedOperationValuesMap[operation] || operation;
 
     return {
       filter_key: filterName,
-      operation: reMappedOperationValuesMap[operation] || operation,
+      operation: isUpperCase ? filterOperation.toUpperCase() : filterOperation,
       value,
     };
   });

@@ -50,4 +50,9 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'export',
     number: appliedFiltersCount,
   }),
+  meatballMenu: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: elementName,
+  }),
 };

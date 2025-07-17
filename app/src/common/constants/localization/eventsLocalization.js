@@ -30,6 +30,8 @@ import {
   PATTERN_RULE,
   INDEX,
   INVITATION_LINK,
+  APPLICATION,
+  RULE,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -305,5 +307,20 @@ export const objectTypesMessages = defineMessages({
   [INVITATION_LINK]: {
     id: 'EventObjectTypes.invitationLink',
     defaultMessage: 'Invitation link',
+  },
+});
+
+export const subjectTypesMessages = defineMessages({
+  [APPLICATION]: {
+    id: 'EventSubjectTypes.application',
+    defaultMessage: 'Application',
+  },
+  [USER]: {
+    id: 'EventSubjectTypes.user',
+    defaultMessage: 'User',
+  },
+  [RULE]: {
+    id: 'EventSubjectTypes.rule',
+    defaultMessage: 'Rule',
   },
 });
