@@ -57,6 +57,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: elementName,
   }),
+  activityPage: (page: string, organizationId: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    action: 'page_view',
+    organization_id: organizationId,
+    place: page,
+  }),
   viewOrganizationSettings: (page: string) => ({
     action: 'page_view',
     place: `organization_settings_${page}`,
