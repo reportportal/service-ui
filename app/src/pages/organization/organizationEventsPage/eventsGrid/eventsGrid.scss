@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,21 @@
   font-size: 12px;
 }
 
-.user-col {
+.subject-name-col {
+  width: 10%;
+  vertical-align: top;
+  font-size: 13px;
+  @include responsive-ellipsis($SCREEN_XS_MAX);
+}
+
+.project-name-col {
+  width: 10%;
+  vertical-align: top;
+  font-size: 13px;
+  @include responsive-ellipsis($SCREEN_XS_MAX);
+}
+
+.subject-type-col {
   width: 10%;
   vertical-align: top;
   font-size: 13px;
@@ -38,25 +52,23 @@
 }
 
 .action-col {
-  width: 20%;
+  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .object-type-col {
-  width: 15%;
+  width: 10%;
   vertical-align: top;
   font-size: 13px;
-  font-family: $FONT-SEMIBOLD;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .object-name-col {
-  width: 15%;
+  width: 10%;
   vertical-align: top;
   font-size: 13px;
-  font-family: $FONT-SEMIBOLD;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
@@ -64,10 +76,6 @@
   width: 15%;
   vertical-align: top;
   font-size: 13px;
-}
-
-.value-field {
-  font-family: $FONT-SEMIBOLD;
 }
 
 .events-grid-header,
@@ -78,11 +86,5 @@
       max-width: 0;
       display: none;
     }
-  }
-}
-
-.events-grid {
-  @media (max-width: $SCREEN_SM_MAX) {
-    table-layout: fixed;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
+import { useIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-
 import {
   EntityDropdown,
   EntityItemStartTime,
@@ -28,7 +25,6 @@ import {
   EntityContains,
   EntityInputConditional,
 } from 'components/filterEntities';
-import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
   CONDITION_IN,
   CONDITION_BETWEEN,
@@ -39,6 +35,8 @@ import {
   ENTITY_CREATED_AT,
   ENTITY_SUBJECT_NAME,
   ENTITY_EVENTS_OBJECT_TYPE,
+  ENTITY_SUBJECT_TYPE,
+  ENTITY_PROJECT_NAME,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -106,65 +104,79 @@ import {
   INDEX,
   INVITATION_LINK,
   INVITATION_LINK_FILTERING_OPTION,
+  APPLICATION,
+  RULE,
 } from 'common/constants/eventsObjectTypes';
-
 import {
   actionMessages,
   objectTypesMessages,
+  subjectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
 import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
+import { useSelector } from 'react-redux';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
-  userCol: { id: 'EventsGrid.userCol', defaultMessage: 'User' },
+  subjectNameCol: { id: 'EventsGrid.subjectNameCol', defaultMessage: 'Subject Name' },
+  subjectTypeCol: { id: 'EventsGrid.subjectTypeCol', defaultMessage: 'Subject Type' },
+  projectNameCol: { id: 'EventsGrid.projectNameCol', defaultMessage: 'Project Name' },
   actionCol: { id: 'EventsGrid.actionCol', defaultMessage: 'Action' },
   objectTypeCol: { id: 'EventsGrid.objectTypeCol', defaultMessage: 'Object Type' },
   objectNameCol: { id: 'EventsGrid.objectNameCol', defaultMessage: 'Object Name' },
   oldValueCol: { id: 'EventsGrid.oldValueCol', defaultMessage: 'Old Value' },
   newValueCol: { id: 'EventsGrid.newValueCol', defaultMessage: 'New Value' },
   contains: { id: 'EventsGrid.contains', defaultMessage: 'Contains' },
-  userSearchPlaceholder: {
+  subjectNamePlaceholder: {
     id: 'EventsGrid.userSearchPlaceholder',
-    defaultMessage: 'Enter username',
+    defaultMessage: 'Subject name',
   },
 });
-@connect(
-  (state) => ({
-    projectKey: projectKeySelector(state),
-  }),
-  {},
-)
-@injectIntl
-export class EventsEntities extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    filterValues: PropTypes.object,
-    render: PropTypes.func.isRequired,
-    projectKey: PropTypes.string.isRequired,
+
+export const EventsEntities = (props) => {
+  const { formatMessage } = useIntl();
+  const projectKey = useSelector(projectKeySelector);
+
+  const bindDefaultValue = (key, options = {}) => {
+    const { filterValues } = props;
+
+    if (key in filterValues) {
+      return filterValues[key];
+    }
+
+    return {
+      filteringField: key,
+      value: '',
+      ...options,
+    };
   };
 
-  static defaultProps = {
-    filterValues: {},
-  };
-
-  getEntities = () => {
-    const { intl, projectKey } = this.props;
+  const getEntities = () => {
     return [
       {
         id: ACTIVITIES,
         component: EntityContains,
-        value: this.bindDefaultValue(ACTIVITIES),
-        title: intl.formatMessage(messages.contains),
+        value: bindDefaultValue(ACTIVITIES),
+        title: formatMessage(messages.contains),
+        active: true,
+        removable: false,
+      },
+      {
+        id: ENTITY_PROJECT_NAME,
+        component: EntityInputConditional,
+        value: bindDefaultValue(ENTITY_PROJECT_NAME, {
+          condition: CONDITION_CNT,
+        }),
+        title: formatMessage(messages.projectNameCol),
         active: true,
         removable: false,
       },
       {
         id: ENTITY_EVENT_NAME,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_EVENT_NAME, {
+        value: bindDefaultValue(ENTITY_EVENT_NAME, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.actionCol),
+        title: formatMessage(messages.actionCol),
         active: true,
         removable: false,
         customProps: {
@@ -176,167 +188,167 @@ export class EventsEntities extends Component {
           },
           options: [
             {
-              label: intl.formatMessage(actionMessages[CREATE_DASHBOARD]),
+              label: formatMessage(actionMessages[CREATE_DASHBOARD]),
               value: CREATE_DASHBOARD,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_DASHBOARD]),
+              label: formatMessage(actionMessages[UPDATE_DASHBOARD]),
               value: UPDATE_DASHBOARD,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_DASHBOARD]),
+              label: formatMessage(actionMessages[DELETE_DASHBOARD]),
               value: DELETE_DASHBOARD,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_WIDGET]),
+              label: formatMessage(actionMessages[CREATE_WIDGET]),
               value: CREATE_WIDGET,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_WIDGET]),
+              label: formatMessage(actionMessages[UPDATE_WIDGET]),
               value: UPDATE_WIDGET,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_WIDGET]),
+              label: formatMessage(actionMessages[DELETE_WIDGET]),
               value: DELETE_WIDGET,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_FILTER]),
+              label: formatMessage(actionMessages[CREATE_FILTER]),
               value: CREATE_FILTER,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_FILTER]),
+              label: formatMessage(actionMessages[UPDATE_FILTER]),
               value: UPDATE_FILTER,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_FILTER]),
+              label: formatMessage(actionMessages[DELETE_FILTER]),
               value: DELETE_FILTER,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_DEFECT]),
+              label: formatMessage(actionMessages[CREATE_DEFECT]),
               value: CREATE_DEFECT,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_DEFECT]),
+              label: formatMessage(actionMessages[UPDATE_DEFECT]),
               value: UPDATE_DEFECT,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_DEFECT]),
+              label: formatMessage(actionMessages[DELETE_DEFECT]),
               value: DELETE_DEFECT,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_INTEGRATION]),
+              label: formatMessage(actionMessages[CREATE_INTEGRATION]),
               value: CREATE_INTEGRATION,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_INTEGRATION]),
+              label: formatMessage(actionMessages[UPDATE_INTEGRATION]),
               value: UPDATE_INTEGRATION,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_INTEGRATION]),
+              label: formatMessage(actionMessages[DELETE_INTEGRATION]),
               value: DELETE_INTEGRATION,
             },
             {
-              label: intl.formatMessage(actionMessages[START_LAUNCH]),
+              label: formatMessage(actionMessages[START_LAUNCH]),
               value: START_LAUNCH,
             },
             {
-              label: intl.formatMessage(actionMessages[FINISH_LAUNCH]),
+              label: formatMessage(actionMessages[FINISH_LAUNCH]),
               value: FINISH_LAUNCH,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_LAUNCH]),
+              label: formatMessage(actionMessages[DELETE_LAUNCH]),
               value: DELETE_LAUNCH,
             },
             {
-              label: intl.formatMessage(actionMessages[MARK_LAUNCH_AS_IMPORTANT]),
+              label: formatMessage(actionMessages[MARK_LAUNCH_AS_IMPORTANT]),
               value: MARK_LAUNCH_AS_IMPORTANT,
             },
             {
-              label: intl.formatMessage(actionMessages[UNMARK_LAUNCH_AS_IMPORTANT]),
+              label: formatMessage(actionMessages[UNMARK_LAUNCH_AS_IMPORTANT]),
               value: UNMARK_LAUNCH_AS_IMPORTANT,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_PROJECT]),
+              label: formatMessage(actionMessages[UPDATE_PROJECT]),
               value: UPDATE_PROJECT,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_ANALYZER]),
+              label: formatMessage(actionMessages[UPDATE_ANALYZER]),
               value: UPDATE_ANALYZER,
             },
             {
-              label: intl.formatMessage(actionMessages[POST_ISSUE]),
+              label: formatMessage(actionMessages[POST_ISSUE]),
               value: POST_ISSUE,
             },
             {
-              label: intl.formatMessage(actionMessages[LINK_ISSUE]),
+              label: formatMessage(actionMessages[LINK_ISSUE]),
               value: LINK_ISSUE,
             },
             {
-              label: intl.formatMessage(actionMessages[UNLINK_ISSUE]),
+              label: formatMessage(actionMessages[UNLINK_ISSUE]),
               value: UNLINK_ISSUE,
             },
             {
-              label: intl.formatMessage(actionMessages[ASSIGN_USER]),
+              label: formatMessage(actionMessages[ASSIGN_USER]),
               value: ASSIGN_USER,
             },
             {
-              label: intl.formatMessage(actionMessages[UNASSIGN_USER]),
+              label: formatMessage(actionMessages[UNASSIGN_USER]),
               value: UNASSIGN_USER,
             },
             {
-              label: intl.formatMessage(actionMessages[CHANGE_ROLE]),
+              label: formatMessage(actionMessages[CHANGE_ROLE]),
               value: CHANGE_ROLE,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_INVITATION_LINK]),
+              label: formatMessage(actionMessages[CREATE_INVITATION_LINK]),
               value: CREATE_INVITATION_LINK,
             },
             {
-              label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
+              label: formatMessage(actionMessages[GENERATE_INDEX]),
               value: GENERATE_INDEX,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_INDEX]),
+              label: formatMessage(actionMessages[DELETE_INDEX]),
               value: DELETE_INDEX,
             },
             {
-              label: intl.formatMessage(actionMessages[EVENT_ACTIONS_IMPORT]),
+              label: formatMessage(actionMessages[EVENT_ACTIONS_IMPORT]),
               value: ACTIONS_WITH_IMPORT,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_ITEM]),
+              label: formatMessage(actionMessages[UPDATE_ITEM]),
               value: UPDATE_ITEM,
             },
             {
-              label: intl.formatMessage(actionMessages[LINK_ISSUE_AA]),
+              label: formatMessage(actionMessages[LINK_ISSUE_AA]),
               value: LINK_ISSUE_AA,
             },
             {
-              label: intl.formatMessage(actionMessages[ANALYZE_ITEM]),
+              label: formatMessage(actionMessages[ANALYZE_ITEM]),
               value: ANALYZE_ITEM,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
+              label: formatMessage(actionMessages[UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS]),
               value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_PATTERN]),
+              label: formatMessage(actionMessages[CREATE_PATTERN]),
               value: CREATE_PATTERN,
             },
             {
-              label: intl.formatMessage(actionMessages[UPDATE_PATTERN]),
+              label: formatMessage(actionMessages[UPDATE_PATTERN]),
               value: UPDATE_PATTERN,
             },
             {
-              label: intl.formatMessage(actionMessages[DELETE_PATTERN]),
+              label: formatMessage(actionMessages[DELETE_PATTERN]),
               value: DELETE_PATTERN,
             },
             {
-              label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
+              label: formatMessage(actionMessages[MATCHED_PATTERN]),
               value: MATCHED_PATTERN,
             },
             {
-              label: intl.formatMessage(actionMessages[CREATE_PROJECT]),
+              label: formatMessage(actionMessages[CREATE_PROJECT]),
               value: CREATE_PROJECT,
             },
           ],
@@ -345,11 +357,11 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_CREATED_AT,
         component: EntityItemStartTime,
-        value: this.bindDefaultValue(ENTITY_CREATED_AT, {
+        value: bindDefaultValue(ENTITY_CREATED_AT, {
           value: '',
           condition: CONDITION_BETWEEN,
         }),
-        title: intl.formatMessage(messages.timeCol),
+        title: formatMessage(messages.timeCol),
         active: true,
         removable: false,
         customProps: {
@@ -360,10 +372,10 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_EVENTS_OBJECT_TYPE,
         component: EntityDropdown,
-        value: this.bindDefaultValue(ENTITY_EVENTS_OBJECT_TYPE, {
+        value: bindDefaultValue(ENTITY_EVENTS_OBJECT_TYPE, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.objectTypeCol),
+        title: formatMessage(messages.objectTypeCol),
         active: true,
         removable: false,
         customProps: {
@@ -371,56 +383,56 @@ export class EventsEntities extends Component {
           selectAll: true,
           options: [
             {
-              label: intl.formatMessage(objectTypesMessages[PROJECT]),
+              label: formatMessage(objectTypesMessages[PROJECT]),
               value: PROJECT,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[DEFECT_TYPE]),
+              label: formatMessage(objectTypesMessages[DEFECT_TYPE]),
               value: DEFECT_TYPE_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
+              label: formatMessage(objectTypesMessages[ITEM_ISSUE]),
               value: ITEM_ISSUE_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[LAUNCH]),
+              label: formatMessage(objectTypesMessages[LAUNCH]),
               value: LAUNCH,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[INTEGRATION]),
+              label: formatMessage(objectTypesMessages[INTEGRATION]),
               value: INTEGRATION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[DASHBOARD]),
+              label: formatMessage(objectTypesMessages[DASHBOARD]),
               value: DASHBOARD,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[USER]),
+              label: formatMessage(objectTypesMessages[USER]),
               value: USER,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[INVITATION_LINK]),
+              label: formatMessage(objectTypesMessages[INVITATION_LINK]),
               value: INVITATION_LINK_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[WIDGET]),
+              label: formatMessage(objectTypesMessages[WIDGET]),
               value: WIDGET,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[FILTER]),
+              label: formatMessage(objectTypesMessages[FILTER]),
               value: FILTER,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[IMPORT]),
+              label: formatMessage(objectTypesMessages[IMPORT]),
               value: IMPORT,
             },
-            { label: intl.formatMessage(objectTypesMessages[INDEX]), value: INDEX },
+            { label: formatMessage(objectTypesMessages[INDEX]), value: INDEX },
             {
-              label: intl.formatMessage(objectTypesMessages[EMAIL_CONFIG]),
+              label: formatMessage(objectTypesMessages[EMAIL_CONFIG]),
               value: EMAIL_CONFIG_FILTERING_OPTION,
             },
             {
-              label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
+              label: formatMessage(objectTypesMessages[PATTERN_RULE]),
               value: PATTERN_RULE_FILTERING_OPTION,
             },
           ],
@@ -429,36 +441,76 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_OBJECT_NAME,
         component: EntityInputConditional,
-        value: this.bindDefaultValue(ENTITY_OBJECT_NAME, {
+        value: bindDefaultValue(ENTITY_OBJECT_NAME, {
           condition: CONDITION_CNT,
         }),
-        title: intl.formatMessage(messages.objectNameCol),
+        title: formatMessage(messages.objectNameCol),
         active: true,
         removable: false,
       },
       {
-        id: ENTITY_SUBJECT_NAME,
-        component: EntitySearch,
-        value: this.bindDefaultValue(ENTITY_SUBJECT_NAME, {
+        id: ENTITY_SUBJECT_TYPE,
+        component: EntityDropdown,
+        value: bindDefaultValue(ENTITY_SUBJECT_TYPE, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.userCol),
+        title: formatMessage(messages.subjectTypeCol),
+        active: true,
+        removable: false,
+        customProps: {
+          multiple: true,
+          selectAll: true,
+          options: [
+            {
+              label: formatMessage(subjectTypesMessages[APPLICATION]),
+              value: APPLICATION,
+            },
+            {
+              label: formatMessage(subjectTypesMessages[USER]),
+              value: USER,
+            },
+            {
+              label: formatMessage(subjectTypesMessages[RULE]),
+              value: RULE,
+            },
+          ],
+        },
+      },
+      {
+        id: ENTITY_SUBJECT_NAME,
+        component: EntitySearch,
+        value: bindDefaultValue(ENTITY_SUBJECT_NAME, {
+          condition: CONDITION_IN,
+        }),
+        title: formatMessage(messages.subjectNameCol),
         active: true,
         removable: false,
         customProps: {
           getURI: URLS.projectUsernamesSearch(projectKey),
-          placeholder: intl.formatMessage(messages.userSearchPlaceholder),
+          placeholder: formatMessage(messages.subjectNamePlaceholder),
           minLength: 1,
         },
       },
     ];
   };
-  bindDefaultValue = bindDefaultValue;
-  render() {
-    const { render, ...rest } = this.props;
-    return render({
-      ...rest,
-      filterEntities: this.getEntities(),
-    });
-  }
-}
+
+  const { render, ...rest } = props;
+
+  return render({
+    intl: {
+      intl: formatMessage,
+    },
+    projectKey,
+    filterEntities: getEntities(),
+    ...rest,
+  });
+};
+
+EventsEntities.propTypes = {
+  filterValues: PropTypes.object,
+  render: PropTypes.func.isRequired,
+};
+
+EventsEntities.defaultProps = {
+  filterValues: {},
+};

@@ -58,7 +58,8 @@ export const ENTITY_EVENT_NAME = 'eventName';
 export const ENTITY_EVENTS_OBJECT_TYPE = 'objectType';
 export const ENTITY_SUBJECT_NAME = 'subjectName';
 export const ENTITY_SUBJECT_TYPE = 'subjectType';
+export const ENTITY_PROJECT_NAME = 'projectName';
 
 export const reMappedOperationValuesMap = {
-  [CONDITION_NOT_CNT]: CONDITION_NOT_CNT_EVENTS,
+  [CONDITION_NOT_CNT]: CONDITION_NOT_CNT_KEY,
 };

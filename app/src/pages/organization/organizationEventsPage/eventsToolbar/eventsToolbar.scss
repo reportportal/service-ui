@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,14 @@
  */
 
 .events-toolbar {
-  padding: 15px;
+  margin-bottom: 4px;
+}
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
+.top-breadcrumbs {
+  padding: 20px 0;
+}
+
+.filter {
+  padding: 16px 0 16px 25px;
+  background-color: $COLOR--white-two;
 }
