@@ -97,7 +97,7 @@ export class EntityDropdown extends Component {
     }
 
     this.props.onChange({
-      condition: this.props.value.condition.toUpperCase(),
+      condition: this.props.value.condition,
       value: multiple ? this.parseActionTypes(value) : value,
     });
   };

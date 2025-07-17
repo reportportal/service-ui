@@ -174,7 +174,7 @@ export const EventsEntities = (props) => {
         id: ENTITY_EVENT_NAME,
         component: EntityDropdown,
         value: bindDefaultValue(ENTITY_EVENT_NAME, {
-          condition: CONDITION_IN.toUpperCase(),
+          condition: CONDITION_IN,
         }),
         title: formatMessage(messages.actionCol),
         active: true,
@@ -359,7 +359,7 @@ export const EventsEntities = (props) => {
         component: EntityItemStartTime,
         value: bindDefaultValue(ENTITY_CREATED_AT, {
           value: '',
-          condition: CONDITION_BETWEEN.toUpperCase(),
+          condition: CONDITION_BETWEEN,
         }),
         title: formatMessage(messages.timeCol),
         active: true,
@@ -373,7 +373,7 @@ export const EventsEntities = (props) => {
         id: ENTITY_EVENTS_OBJECT_TYPE,
         component: EntityDropdown,
         value: bindDefaultValue(ENTITY_EVENTS_OBJECT_TYPE, {
-          condition: CONDITION_IN.toUpperCase(),
+          condition: CONDITION_IN,
         }),
         title: formatMessage(messages.objectTypeCol),
         active: true,
@@ -452,7 +452,7 @@ export const EventsEntities = (props) => {
         id: ENTITY_SUBJECT_TYPE,
         component: EntityDropdown,
         value: bindDefaultValue(ENTITY_SUBJECT_TYPE, {
-          condition: CONDITION_IN.toUpperCase(),
+          condition: CONDITION_IN,
         }),
         title: formatMessage(messages.subjectTypeCol),
         active: true,
