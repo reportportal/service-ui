@@ -17,7 +17,6 @@
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -25,6 +24,7 @@ import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { activeOrganizationNameSelector } from 'controllers/organization';
+import { InviteUserButton } from 'pages/inside/common/invitations';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 import styles from './projectTeamPageHeader.scss';
@@ -67,11 +67,7 @@ export const ProjectTeamPageHeader = ({
                 />
               </div>
             </div>
-            {hasPermission && (
-              <Button variant={'ghost'} onClick={onInvite}>
-                {formatMessage(messages.inviteUser)}
-              </Button>
-            )}
+            {hasPermission && <InviteUserButton onInvite={onInvite} />}
           </>
         )}
       </div>

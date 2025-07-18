@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
 import { activeOrganizationSelector } from 'controllers/organization';
+import { InviteUserButton } from 'pages/inside/common/invitations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
 import { messages } from '../../common/membersPage/membersPageHeader/messages';
@@ -36,6 +35,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 );
 
 export const OrganizationUsersPageHeader = ({
+  hasPermission,
   onInvite,
   isUsersLoading,
   searchValue,
@@ -63,9 +63,7 @@ export const OrganizationUsersPageHeader = ({
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_USERS_FIELD}
               />
             </div>
-            <Button variant={'ghost'} onClick={onInvite}>
-              {formatMessage(messages.inviteUser)}
-            </Button>
+            {hasPermission && <InviteUserButton onInvite={onInvite} />}
           </>
         )}
       </div>
@@ -74,6 +72,7 @@ export const OrganizationUsersPageHeader = ({
 };
 
 OrganizationUsersPageHeader.propTypes = {
+  hasPermission: PropTypes.bool,
   isUsersLoading: PropTypes.bool.isRequired,
   searchValue: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,

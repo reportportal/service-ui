@@ -73,4 +73,11 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'button_submit',
     type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
   }),
+  inviteUser: (withProject = false) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'invite',
+    modal: 'invite_user',
+    type: 'organization_level',
+    condition: `${withProject ? 'with' : 'without'}_project`,
+  }),
 };

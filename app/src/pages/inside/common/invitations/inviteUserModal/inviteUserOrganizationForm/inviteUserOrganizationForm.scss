@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-
-export type QueryParams = Record<string, string | number>;

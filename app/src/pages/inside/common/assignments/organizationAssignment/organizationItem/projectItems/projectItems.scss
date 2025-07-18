@@ -14,11 +14,34 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+.project {
+  display: flex;
+  align-items: center;
 }
 
-export type QueryParams = Record<string, string | number>;
+.name {
+  flex: 1 0 auto;
+}
+
+.controls {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.tooltip-wrapper {
+  width: fit-content;
+}
+
+.remove-button {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+}

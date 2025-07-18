@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,43 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
 import classNames from 'classnames/bind';
 import { FieldProvider } from 'components/fields';
 import styles from './fieldElement.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
-export const FieldElement = (props) => {
+interface FieldElementProps {
+  children: ReactNode;
+  label?: string;
+  description?: string;
+  descriptionSecondary?: string;
+  additionalInfo?: ReactNode;
+  className?: string;
+  childrenClassName?: string;
+  labelClassName?: string;
+  descriptionClassName?: string;
+  withoutProvider?: boolean;
+  dataAutomationId?: string;
+  isRequired?: boolean;
+  [key: string]: unknown;
+}
+
+export const FieldElement = (props: FieldElementProps) => {
   const {
-    label,
-    description,
-    descriptionSecondary,
+    label = '',
+    description = '',
+    descriptionSecondary = '',
     children,
-    className,
-    childrenClassName,
-    labelClassName,
-    descriptionClassName,
-    withoutProvider,
+    className = '',
+    childrenClassName = '',
+    labelClassName = '',
+    descriptionClassName = '',
+    withoutProvider = false,
     dataAutomationId,
-    isRequired,
-    additionalInfo,
+    isRequired = false,
+    additionalInfo = null,
     ...rest
   } = props;
   const getChildren = () =>
@@ -69,31 +84,4 @@ export const FieldElement = (props) => {
       {additionalInfo}
     </div>
   );
-};
-FieldElement.propTypes = {
-  children: PropTypes.node.isRequired,
-  label: PropTypes.string,
-  description: PropTypes.string,
-  descriptionSecondary: PropTypes.string,
-  additionalInfo: PropTypes.node,
-  className: PropTypes.string,
-  childrenClassName: PropTypes.string,
-  labelClassName: PropTypes.string,
-  descriptionClassName: PropTypes.string,
-  withoutProvider: PropTypes.bool,
-  dataAutomationId: PropTypes.string,
-  isRequired: PropTypes.bool,
-};
-FieldElement.defaultProps = {
-  label: '',
-  description: '',
-  descriptionSecondary: '',
-  additionalInfo: null,
-  className: '',
-  childrenClassName: '',
-  labelClassName: '',
-  descriptionClassName: '',
-  withoutProvider: false,
-  dataAutomationId: null,
-  isRequired: false,
 };

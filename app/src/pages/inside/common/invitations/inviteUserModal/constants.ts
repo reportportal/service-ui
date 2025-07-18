@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+export enum InvitationStatus {
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
 }
 
-export type QueryParams = Record<string, string | number>;
+export enum Level {
+  PROJECT = 'project',
+  ORGANIZATION = 'organization',
+}
+
+export const ERROR_CODES = {
+  FORBIDDEN: 4003,
+};
+
+export const settingsLinkName = 'Instance Invitation settings';
+export const settingsLink =
+  'https://reportportal.io/docs/admin-panel/ServerSettings/#instance-invitations_';

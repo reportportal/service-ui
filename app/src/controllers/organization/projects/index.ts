@@ -34,3 +34,4 @@ export {
   SORTING_KEY,
   FETCH_FILTERED_PROJECTS,
 } from './constants';
+export type { ProjectsSearchesItem, ProjectsSearchesResponseData } from './types';

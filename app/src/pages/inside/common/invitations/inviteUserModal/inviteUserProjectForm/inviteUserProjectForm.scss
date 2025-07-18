@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
-.wrapper {
-  margin-bottom: 24px;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.label {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--rp-ui-base-almost-black);
-  font-size: 13px;
-  line-height: 20px;
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-medium);
-
-  .asterisk {
-    position: absolute;
-    margin-top: -2.5px;
-    color: var(--rp-ui-base-e-300);
-    padding-left: 4px;
-  }
+.custom-tooltip {
+  width: 264px;
 }
 
-.description {
-  display: block;
-  margin: 0 0 4px 0;
-  color: var(--rp-ui-base-e-300);
+.tooltip {
+  width: 232px;
   font-size: 11px;
   line-height: 16px;
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-regular);
 }
 
-.description-alt {
-  @extend .description;
-  margin: 4px 0 0 0;
+.tooltip-wrapper {
+  height: 16px;
+  width: 16px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox {
+  margin: 0;
+
+  label {
+    font-weight: var(--rp-ui-base-fw-regular);
+  }
 }

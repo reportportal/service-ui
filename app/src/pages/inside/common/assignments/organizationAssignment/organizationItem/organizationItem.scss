@@ -14,38 +14,47 @@
  * limitations under the License.
  */
 
-.wrapper {
-  margin-bottom: 24px;
+.organization {
+  padding: 8px 16px 16px;
+  border-radius: 4px;
+  background-color: var(--rp-ui-base-bg-000);
 }
 
-.label {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--rp-ui-base-almost-black);
-  font-size: 13px;
-  line-height: 20px;
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-medium);
+.header {
+  display: flex;
+  align-items: center;
+}
 
-  .asterisk {
-    position: absolute;
-    margin-top: -2.5px;
-    color: var(--rp-ui-base-e-300);
-    padding-left: 4px;
+.name {
+  flex: 1 0 auto;
+  font-weight: var(--rp-ui-base-fw-medium);
+}
+
+.controls {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.remove-button {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 10px;
+    height: 10px;
   }
 }
 
-.description {
-  display: block;
-  margin: 0 0 4px 0;
-  color: var(--rp-ui-base-e-300);
-  font-size: 11px;
-  line-height: 16px;
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-regular);
+.add-project {
+  display: flex;
+  align-items: center;
+  padding: 8px 0px;
 }
 
-.description-alt {
-  @extend .description;
-  margin: 4px 0 0 0;
+.tooltip-wrapper {
+  width: fit-content;
 }
