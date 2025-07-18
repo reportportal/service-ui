@@ -92,7 +92,7 @@ const messages = defineMessages({
   },
   recipientsLabel: {
     id: 'AddEditNotificationCaseModal.recipientsLabel',
-    defaultMessage: 'Recipients',
+    defaultMessage: 'Email',
   },
   nameLabel: {
     id: 'AddEditNotificationModal.nameLabel',
