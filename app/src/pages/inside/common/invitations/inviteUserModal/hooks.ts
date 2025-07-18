@@ -26,6 +26,7 @@ import { FormDataMap } from './types';
 import { InviteUserProjectFormData } from './inviteUserProjectForm';
 import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 import { Organization } from '../../assignments/organizationAssignment';
+import { Level } from './constants';
 
 export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   const { formatMessage } = useIntl();
@@ -39,7 +40,7 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   );
 
   const getHeader = () => {
-    if (level === 'project') {
+    if (level === Level.PROJECT) {
       const message = ssoUsersOnly ? messages.assignUserTo : messages.inviteUserTo;
       return `${formatMessage(message)} ${projectName}`;
     }
@@ -63,7 +64,7 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
     const { email } = formData;
     let organizations = [];
 
-    if (level == 'project') {
+    if (level === Level.PROJECT) {
       const projectData = formData as InviteUserProjectFormData;
 
       organizations = [
@@ -79,7 +80,7 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
       ];
     }
 
-    if (level === 'organization') {
+    if (level === Level.ORGANIZATION) {
       const organizationData = formData as InviteUserOrganizationFormData;
       organizations = buildOrganizationsData([organizationData.organization]);
     }

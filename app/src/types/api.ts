@@ -18,23 +18,3 @@ export interface ApiError {
   errorCode: number;
   message: string;
 }
-
-export interface ProjectsSearchesItem {
-  id: number;
-  key: string;
-  organization_id: number;
-  created_at: string;
-  updated_at: string;
-  stats: unknown;
-  name: string;
-  slug: string;
-}
-
-export interface ProjectsSearchesResponseData {
-  offset: number;
-  limit: number;
-  total_count: number;
-  sort: string;
-  order: string;
-  items: ProjectsSearchesItem[];
-}

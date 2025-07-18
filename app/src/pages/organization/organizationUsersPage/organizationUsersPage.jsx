@@ -30,7 +30,7 @@ import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { InviteUserModal } from 'pages/inside/common/invitations/inviteUserModal';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { userRolesSelector } from 'controllers/pages';
 import { canInviteUserToOrganization } from 'common/utils/permissions';
@@ -62,7 +62,7 @@ export const OrganizationUsersPage = () => {
   const showInviteUserModal = () => {
     dispatch(
       showModalAction({
-        component: <InviteUserModal level="organization" onInvite={onInvite} />,
+        component: <InviteUserModal level={Level.ORGANIZATION} onInvite={onInvite} />,
       }),
     );
   };

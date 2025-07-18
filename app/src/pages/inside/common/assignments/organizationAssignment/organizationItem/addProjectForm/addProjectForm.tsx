@@ -28,7 +28,10 @@ import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { URLS } from 'common/urls';
-import { ProjectsSearchesItem, ProjectsSearchesResponseData } from 'types/api';
+import {
+  ProjectsSearchesItem,
+  ProjectsSearchesResponseData,
+} from 'controllers/organization/projects';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';

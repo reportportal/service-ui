@@ -37,7 +37,7 @@ import {
   activeOrganizationNameSelector,
 } from 'controllers/organization';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { ERROR_CODES, InvitationStatus, settingsLink, settingsLinkName } from './constants';
+import { ERROR_CODES, InvitationStatus, Level, settingsLink, settingsLinkName } from './constants';
 import { ExternalUserInvitationModal } from '../../modals/externalUserInvitationModal';
 import { useInviteUser } from './hooks';
 import {
@@ -97,7 +97,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
   const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
     const userData = buildUserData(formData);
     const withProject =
-      level === 'project'
+      level === Level.PROJECT
         ? false
         : userData.organizations.some(
             (org: Organization) => org.projects && org.projects.length > 0,
@@ -167,7 +167,7 @@ export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L
 
   let initialValues = {};
 
-  if (level === 'organization') {
+  if (level === Level.ORGANIZATION) {
     const organization: Organization = { id, name, role: MEMBER, projects: [] };
     initialValues = { organization };
   }

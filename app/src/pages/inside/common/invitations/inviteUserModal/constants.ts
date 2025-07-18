@@ -19,6 +19,11 @@ export enum InvitationStatus {
   ACTIVE = 'ACTIVE',
 }
 
+export enum Level {
+  PROJECT = 'project',
+  ORGANIZATION = 'organization',
+}
+
 export const ERROR_CODES = {
   FORBIDDEN: 4003,
 };

@@ -28,7 +28,7 @@ import styles from './organizationItem.scss';
 import { AddProjectButton } from './addProjectButton';
 import { Project, ProjectItems } from './projectItems';
 import { AddProjectForm } from './addProjectForm';
-import { ProjectsSearchesResponseData } from 'types/api';
+import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
 
 const cx = classNames.bind(styles) as typeof classNames;
 

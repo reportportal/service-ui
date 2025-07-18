@@ -15,13 +15,13 @@
  */
 
 import { InjectedFormProps } from 'redux-form';
-import { InvitationStatus } from './constants';
+import { InvitationStatus, Level } from './constants';
 import { InviteUserProjectFormData } from './inviteUserProjectForm';
 import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 
 export type FormDataMap = {
-  project: InviteUserProjectFormData;
-  organization: InviteUserOrganizationFormData;
+  [Level.PROJECT]: InviteUserProjectFormData;
+  [Level.ORGANIZATION]: InviteUserOrganizationFormData;
 };
 
 export type ModalProps<L extends keyof FormDataMap> = {
