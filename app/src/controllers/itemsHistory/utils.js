@@ -40,3 +40,37 @@ export const updateItemsHistoryLaunchAttributes = (items = [], launch = {}) => {
     return { ...item, resources };
   });
 };
+
+// Score utility functions
+export const getScoreFromAttributes = (attributes, key) => {
+  if (!attributes || !key) {
+    return null;
+  }
+  const attribute = attributes.find((attr) => attr.key === key);
+  return attribute ? parseFloat(attribute.value) : null;
+};
+
+export const getScoreCellColor = (score, highlightLessThan) => {
+  // Don't apply any color if threshold is not set
+  if (highlightLessThan === '' || highlightLessThan === null || highlightLessThan === undefined) {
+    return null;
+  }
+
+  const threshold = parseFloat(highlightLessThan);
+  if (isNaN(threshold)) {
+    return null;
+  }
+
+  if (score === null || score === undefined || isNaN(score)) {
+    return '#E3E7EC'; // Default gray for missing score when threshold is set
+  }
+
+  return score < threshold ? '#FFC0BD' : '#E3E7EC';
+};
+
+export const formatScoreValue = (score) => {
+  if (score === null || score === undefined) {
+    return '-';
+  }
+  return score.toString();
+};

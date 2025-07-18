@@ -41,6 +41,12 @@ export {
   HISTORY_BASE_ALL_LAUNCHES,
   HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
   UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
+  CELL_PREVIEW_DEFECT_TYPE,
+  CELL_PREVIEW_SCORE,
+  CELL_PREVIEW_DEFAULT_VALUE,
+  CELL_PREVIEW_CONFIG,
+  SCORE_KEY_CONFIG,
+  HIGHLIGHT_LESS_THAN_CONFIG,
 } from './constants';
 export { historySagas } from './sagas';
 export {
@@ -56,3 +62,11 @@ export {
   itemsHistorySelector,
   isEmptyHistorySelector,
 } from './selectors';
+export {
+  normalizeHistoryItem,
+  calculateMaxRowItemsCount,
+  updateItemsHistoryLaunchAttributes,
+  getScoreFromAttributes,
+  getScoreCellColor,
+  formatScoreValue,
+} from './utils';

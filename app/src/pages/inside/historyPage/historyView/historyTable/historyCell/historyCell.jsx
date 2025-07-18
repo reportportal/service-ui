@@ -16,11 +16,26 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { NOT_FOUND, RESETED } from 'common/constants/testStatuses';
+import { CELL_PREVIEW_SCORE } from 'controllers/itemsHistory/constants';
+import { getScoreFromAttributes, getScoreCellColor } from 'controllers/itemsHistory/utils';
 import styles from './historyCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const HistoryCell = ({ status, header, children, onClick, first, bottom, highlighted }) => {
+export const HistoryCell = ({
+  status,
+  header,
+  children,
+  onClick,
+  first,
+  bottom,
+  highlighted,
+  cellPreview,
+  scoreKey,
+  highlightLessThan,
+  testItem,
+}) => {
   const prefix = header ? 'header' : 'body';
   const className = cx('table-cell', `table-${prefix}-cell`, {
     [`table-${prefix}-cell-${status}`]: status,
@@ -28,13 +43,28 @@ export const HistoryCell = ({ status, header, children, onClick, first, bottom, 
     [`table-${prefix}-cell-bottom`]: bottom,
     highlighted,
   });
+
+  // Calculate score-based background color
+  let scoreStyle = {};
+  const isEmptyCell = status === NOT_FOUND || status === RESETED;
+  const shouldApplyScoreColor =
+    !header && cellPreview === CELL_PREVIEW_SCORE && scoreKey && highlightLessThan && !isEmptyCell;
+
+  if (shouldApplyScoreColor) {
+    const score = getScoreFromAttributes(testItem?.attributes, scoreKey);
+    const backgroundColor = getScoreCellColor(score, highlightLessThan);
+    if (backgroundColor) {
+      scoreStyle = { backgroundColor };
+    }
+  }
+
   return header ? (
     <th className={className} onClick={onClick}>
       {children}
     </th>
   ) : (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <td className={className} onClick={onClick}>
+    <td className={className} onClick={onClick} style={scoreStyle}>
       {children}
     </td>
   );
@@ -46,6 +76,10 @@ HistoryCell.propTypes = {
   first: PropTypes.bool,
   bottom: PropTypes.bool,
   highlighted: PropTypes.bool,
+  cellPreview: PropTypes.string,
+  scoreKey: PropTypes.string,
+  highlightLessThan: PropTypes.string,
+  testItem: PropTypes.object,
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   onClick: PropTypes.func,
 };
@@ -56,6 +90,10 @@ HistoryCell.defaultProps = {
   first: false,
   bottom: false,
   highlighted: false,
+  cellPreview: '',
+  scoreKey: '',
+  highlightLessThan: '',
+  testItem: null,
   children: null,
   onClick: () => {},
 };

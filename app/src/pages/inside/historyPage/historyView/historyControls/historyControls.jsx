@@ -19,11 +19,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { Input } from 'components/inputs/input';
 import {
   HISTORY_DEPTH_CONFIG,
   HISTORY_BASE_DEFAULT_VALUE,
   HISTORY_BASE_ALL_LAUNCHES,
   HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
+  CELL_PREVIEW_CONFIG,
+  CELL_PREVIEW_SCORE,
 } from 'controllers/itemsHistory/constants';
 import styles from './historyControls.scss';
 
@@ -46,6 +49,26 @@ const messages = defineMessages({
     id: 'HistoryControls.historyBaseSameName',
     defaultMessage: 'Launches with the same name',
   },
+  cellPreviewTitle: {
+    id: 'HistoryControls.cellPreviewTitle',
+    defaultMessage: 'Cell preview',
+  },
+  keyTitle: {
+    id: 'HistoryControls.keyTitle',
+    defaultMessage: 'Key',
+  },
+  highlightLessThanTitle: {
+    id: 'HistoryControls.highlightLessThanTitle',
+    defaultMessage: 'Highlight less than',
+  },
+  keyPlaceholder: {
+    id: 'HistoryControls.keyPlaceholder',
+    defaultMessage: 'Enter attribute key',
+  },
+  highlightLessThanPlaceholder: {
+    id: 'HistoryControls.highlightLessThanPlaceholder',
+    defaultMessage: 'Enter threshold',
+  },
 });
 
 @injectIntl
@@ -54,17 +77,29 @@ export class HistoryControls extends Component {
     intl: PropTypes.object.isRequired,
     historyDepth: PropTypes.string,
     historyBase: PropTypes.string,
+    cellPreview: PropTypes.string,
+    scoreKey: PropTypes.string,
+    highlightLessThan: PropTypes.string,
     isTestItemsList: PropTypes.bool,
     onChangeHistoryDepth: PropTypes.func,
     onChangeHistoryBase: PropTypes.func,
+    onChangeCellPreview: PropTypes.func,
+    onChangeScoreKey: PropTypes.func,
+    onChangeHighlightLessThan: PropTypes.func,
   };
 
   static defaultProps = {
     historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
     historyBase: HISTORY_BASE_DEFAULT_VALUE,
+    cellPreview: CELL_PREVIEW_CONFIG.defaultValue,
+    scoreKey: '',
+    highlightLessThan: '',
     isTestItemsList: false,
     onChangeHistoryDepth: () => {},
     onChangeHistoryBase: () => {},
+    onChangeCellPreview: () => {},
+    onChangeScoreKey: () => {},
+    onChangeHighlightLessThan: () => {},
   };
 
   launchModeOptions = [
@@ -78,15 +113,30 @@ export class HistoryControls extends Component {
     },
   ];
 
+  handleHighlightLessThanChange = (e) => {
+    const value = e.target.value;
+    // Only allow numbers and decimal point
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      this.props.onChangeHighlightLessThan(value);
+    }
+  };
+
   render() {
     const {
       intl: { formatMessage },
       historyDepth,
       historyBase,
+      cellPreview,
+      scoreKey,
+      highlightLessThan,
       isTestItemsList,
       onChangeHistoryDepth,
       onChangeHistoryBase,
+      onChangeCellPreview,
+      onChangeScoreKey,
     } = this.props;
+
+    const isScoreMode = cellPreview === CELL_PREVIEW_SCORE;
 
     return (
       <div className={cx('history-controls')}>
@@ -113,6 +163,45 @@ export class HistoryControls extends Component {
               />
             </div>
           </div>
+
+          <div className={cx('controls-item')}>
+            <p className={cx('control-name')}>{formatMessage(messages.cellPreviewTitle)}</p>
+            <div className={cx('control-container', 'medium')}>
+              <InputDropdown
+                options={CELL_PREVIEW_CONFIG.options}
+                value={cellPreview}
+                onChange={onChangeCellPreview}
+              />
+            </div>
+          </div>
+
+          {isScoreMode && (
+            <>
+              <div className={cx('controls-item')}>
+                <p className={cx('control-name')}>{formatMessage(messages.keyTitle)}</p>
+                <div className={cx('control-container', 'medium')}>
+                  <Input
+                    value={scoreKey}
+                    placeholder={formatMessage(messages.keyPlaceholder)}
+                    onChange={(e) => onChangeScoreKey(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className={cx('controls-item')}>
+                <p className={cx('control-name')}>
+                  {formatMessage(messages.highlightLessThanTitle)}
+                </p>
+                <div className={cx('control-container', 'small')}>
+                  <Input
+                    value={highlightLessThan}
+                    placeholder={formatMessage(messages.highlightLessThanPlaceholder)}
+                    onChange={this.handleHighlightLessThanChange}
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );

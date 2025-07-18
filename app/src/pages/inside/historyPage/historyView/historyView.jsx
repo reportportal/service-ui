@@ -19,7 +19,12 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
-import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
+import {
+  HISTORY_DEPTH_CONFIG,
+  CELL_PREVIEW_CONFIG,
+  SCORE_KEY_CONFIG,
+  HIGHLIGHT_LESS_THAN_CONFIG,
+} from 'controllers/itemsHistory';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { HistoryControls } from './historyControls';
 import { HistoryTable } from './historyTable';
@@ -45,6 +50,10 @@ export class HistoryView extends Component {
 
   state = {
     historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
+    cellPreview: getStorageItem(CELL_PREVIEW_CONFIG.name) || CELL_PREVIEW_CONFIG.defaultValue,
+    scoreKey: getStorageItem(SCORE_KEY_CONFIG.name) || SCORE_KEY_CONFIG.defaultValue,
+    highlightLessThan:
+      getStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name) || HIGHLIGHT_LESS_THAN_CONFIG.defaultValue,
   };
 
   changeHistoryDepth = (historyDepth) => {
@@ -59,6 +68,33 @@ export class HistoryView extends Component {
     }
   };
 
+  changeCellPreview = (cellPreview) => {
+    if (cellPreview !== this.state.cellPreview) {
+      this.setState({
+        cellPreview,
+      });
+      setStorageItem(CELL_PREVIEW_CONFIG.name, cellPreview);
+    }
+  };
+
+  changeScoreKey = (scoreKey) => {
+    if (scoreKey !== this.state.scoreKey) {
+      this.setState({
+        scoreKey,
+      });
+      setStorageItem(SCORE_KEY_CONFIG.name, scoreKey);
+    }
+  };
+
+  changeHighlightLessThan = (highlightLessThan) => {
+    if (highlightLessThan !== this.state.highlightLessThan) {
+      this.setState({
+        highlightLessThan,
+      });
+      setStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name, highlightLessThan);
+    }
+  };
+
   render() {
     const {
       onSelectItem,
@@ -68,20 +104,29 @@ export class HistoryView extends Component {
       onChangeHistoryBase,
       isTestItemsList,
     } = this.props;
-    const { historyDepth } = this.state;
+    const { historyDepth, cellPreview, scoreKey, highlightLessThan } = this.state;
 
     return (
       <div className={cx('history-view-wrapper')}>
         <HistoryControls
           historyDepth={historyDepth}
           historyBase={historyBase}
+          cellPreview={cellPreview}
+          scoreKey={scoreKey}
+          highlightLessThan={highlightLessThan}
           onChangeHistoryBase={onChangeHistoryBase}
           onChangeHistoryDepth={this.changeHistoryDepth}
+          onChangeCellPreview={this.changeCellPreview}
+          onChangeScoreKey={this.changeScoreKey}
+          onChangeHighlightLessThan={this.changeHighlightLessThan}
           isTestItemsList={isTestItemsList}
         />
         <HistoryTable
           historyDepth={historyDepth}
           historyBase={historyBase}
+          cellPreview={cellPreview}
+          scoreKey={scoreKey}
+          highlightLessThan={highlightLessThan}
           onSelectItem={onSelectItem}
           selectedItems={selectedItems}
           withGroupOperations={withGroupOperations}

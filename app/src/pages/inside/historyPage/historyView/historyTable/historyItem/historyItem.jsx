@@ -25,7 +25,9 @@ import TagIcon from 'common/img/tag-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
 import { updateItemsHistoryLaunchAttributesAction } from 'controllers/itemsHistory';
+import { CELL_PREVIEW_SCORE } from 'controllers/itemsHistory/constants';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { getScoreFromAttributes, formatScoreValue } from 'controllers/itemsHistory/utils';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -56,6 +58,9 @@ export class HistoryItem extends Component {
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     selectable: PropTypes.bool,
     singleDefectView: PropTypes.bool,
+    cellPreview: PropTypes.string,
+    scoreKey: PropTypes.string,
+    highlightLessThan: PropTypes.string,
     onSelectItem: PropTypes.func,
   };
 
@@ -64,6 +69,9 @@ export class HistoryItem extends Component {
     selectedItems: [],
     selectable: false,
     singleDefectView: false,
+    cellPreview: '',
+    scoreKey: '',
+    highlightLessThan: '',
     onSelectItem: () => {},
   };
 
@@ -110,15 +118,27 @@ export class HistoryItem extends Component {
     });
   };
 
+  renderScoreContent = () => {
+    const { testItem, scoreKey } = this.props;
+    const score = getScoreFromAttributes(testItem.attributes, scoreKey);
+
+    return (
+      <div className={cx('score-content')}>
+        <span className={cx('score-value')}>{formatScoreValue(score)}</span>
+      </div>
+    );
+  };
+
   handleItemSelection = () => {
     const { testItem, onSelectItem } = this.props;
     onSelectItem(testItem);
   };
 
   render() {
-    const { testItem, selectable } = this.props;
+    const { testItem, selectable, cellPreview, scoreKey, highlightLessThan } = this.props;
     const { status, issue = {} } = testItem;
     const selected = selectable ? this.isItemSelected() : false;
+    const isScoreMode = cellPreview === CELL_PREVIEW_SCORE && scoreKey && highlightLessThan;
 
     return (
       <div className={cx('history-item', { selectable, selected })}>
@@ -127,10 +147,19 @@ export class HistoryItem extends Component {
             <InputCheckbox value={selected} onChange={this.handleItemSelection} />
           </div>
         )}
-        {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
-        {issue.comment && <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />}
-        {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
-          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+
+        {isScoreMode ? (
+          this.renderScoreContent()
+        ) : (
+          <>
+            {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
+            {issue.comment && (
+              <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />
+            )}
+            {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
+              <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+            )}
+          </>
         )}
       </div>
     );
