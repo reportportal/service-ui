@@ -69,5 +69,4 @@ if (module.hot) {
     rerenderApp(app);
   });
 }
-
 rerenderApp(App);
