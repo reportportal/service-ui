@@ -24,7 +24,8 @@ import { querySelector } from 'controllers/instance/allUsers';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { ApiError, QueryParams } from 'types/common';
+import { QueryParams } from 'types/common';
+import { ApiError } from 'types/api';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 
 interface AllUsersExportProps {
