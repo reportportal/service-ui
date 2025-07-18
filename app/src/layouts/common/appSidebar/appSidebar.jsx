@@ -25,6 +25,8 @@ import { Sidebar } from 'componentLibrary/sidebar';
 import { userIdSelector } from 'controllers/user';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import { SAAS, EPAM } from 'controllers/appInfo/constants';
 import { getFAQOpenStatus } from './utils';
 import { ServiceWithPopover } from './helpAndService';
 import LogoLeftIcon from './img/logo-icon-inline.svg';
@@ -47,6 +49,8 @@ export const AppSidebar = ({
   const userId = useSelector(userIdSelector);
   const { trackEvent } = useTracking();
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
+  const instanceType = useSelector(instanceTypeSelector);
+  const isEnabled = instanceType === SAAS || instanceType === EPAM;
 
   const { formatMessage } = useIntl();
   const [isOpenAvatarPopover, setIsOpenAvatarPopover] = useState(false);
@@ -61,17 +65,19 @@ export const AppSidebar = ({
 
   const createFooterBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
     <>
-      <div className={cx('policy-block')}>
-        <a
-          className={cx('policy-block-link')}
-          href={referenceDictionary.rpEpamPolicy}
-          onClick={() => trackEvent(SIDEBAR_EVENTS.CLICK_PRIVACY_POLICY_LINK)}
-          target="_blank"
-        >
-          {formatMessage(messages.privacyPolicy)}
-          <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>
-        </a>
-      </div>
+      {isEnabled && (
+        <div className={cx('policy-block')}>
+          <a
+            className={cx('policy-block-link')}
+            href={referenceDictionary.rpEpamPolicy}
+            onClick={() => trackEvent(SIDEBAR_EVENTS.CLICK_PRIVACY_POLICY_LINK)}
+            target="_blank"
+          >
+            {formatMessage(messages.privacyPolicy)}
+            <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>
+          </a>
+        </div>
+      )}
       <ServiceWithPopover
         closeSidebar={closeSidebar}
         isOpenPopover={isOpenSupportPopover}
