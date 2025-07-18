@@ -19,34 +19,34 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { downloadFile } from 'common/utils/downloadFile';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
-import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { querySelector } from 'controllers/instance/organizations/selectors';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
+import { querySelector } from 'controllers/instance/allUsers';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { ApiError, QueryParams } from 'types/common';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 
-interface OrganizationsExportProps {
+interface AllUsersExportProps {
   appliedFiltersCount: number;
 }
 
 const messages = defineMessages({
   startExport: {
-    id: 'OrganizationsPage.startExport',
+    id: 'AllUsersPage.startExport',
     defaultMessage: 'Export has been started successfully',
   },
 });
 
-export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExportProps) => {
+export const AllUsersExport = ({ appliedFiltersCount }: AllUsersExportProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const query = useSelector(querySelector) as QueryParams;
 
   const handleClick = () => {
-    const filtersParams: QueryParams = { ...query, offset: 0 };
-    const data = prepareQueryFilters(filtersParams);
+    const filterParams = { ...query, offset: 0 };
+    const data = prepareQueryFilters(filterParams);
     delete data.limit;
 
     const requestParams = {
@@ -58,9 +58,9 @@ export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExport
     };
 
     dispatch(showSuccessNotification({ message: formatMessage(messages.startExport) }));
-    trackEvent(ORGANIZATION_PAGE_EVENTS.export(appliedFiltersCount));
+    trackEvent(ALL_USERS_PAGE_EVENTS.export(appliedFiltersCount));
 
-    downloadFile(URLS.organizationSearches(), requestParams).catch(({ message }: ApiError) => {
+    downloadFile(URLS.searchAllUsers(), requestParams).catch(({ message }: ApiError) => {
       dispatch(showDefaultErrorNotification({ message }));
     });
   };

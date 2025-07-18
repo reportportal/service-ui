@@ -60,4 +60,10 @@ export const ALL_USERS_PAGE_EVENTS = {
     element_name: 'delete',
     modal: 'delete_user',
   },
+  export: (appliedFiltersCount = 0) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'export',
+    number: appliedFiltersCount,
+  }),
 };
