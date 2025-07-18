@@ -109,6 +109,7 @@
   "AllUsersPage.invite": "Пригласить пользователя",
   "AllUsersPage.noResultsDescription": "Результаты поиска или фильтрации не совпали ни с одним из критериев. Пожалуйста, попробуйте использовать другие ключевые слова или измените настройки фильтра.",
   "AllUsersPage.searchPlaceholder": "Введите для поиска по названию",
+  "AllUsersPage.startExport": "Экспорт был успешно запущен",
   "AllUsersPage.title": "Все пользователи",
   "AnalysisConfigurations.analysisConfigurations": "конфигурацию Авто-Анализа",
   "AnalysisConfigurations.generateIndex": "индекс был сгенерирован",
