@@ -159,7 +159,6 @@ export class Layout extends Component {
             ) : (
               <ScrollWrapper
                 withBackToTop
-                withFooter
                 resetRequired={this.state.resetScroll}
                 onReset={this.unmarkScrollToReset}
               >
