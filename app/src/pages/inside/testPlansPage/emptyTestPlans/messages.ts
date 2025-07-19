@@ -26,10 +26,6 @@ export const messages = defineMessages({
     defaultMessage:
       "Track your project's progress and achievements by creating your first test plan. Test plans aid in planning and measuring success over time.",
   },
-  createTestPlansLabel: {
-    id: 'TestPlansPage.createTestPlanLabel',
-    defaultMessage: 'Create Test Plan',
-  },
   numerableBlockTitle: {
     id: 'TestPlansPage.numerableBlockTitle',
     defaultMessage: 'Why is it beneficial?',
