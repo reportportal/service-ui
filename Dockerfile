@@ -1,6 +1,5 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-
 FROM alpine:3.20.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
@@ -22,10 +21,16 @@ USER root
 
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
+COPY config.template.json /usr/share/nginx/html/config.template.json
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 USER $UID
 
 EXPOSE 8080
+
+ENTRYPOINT ["/entrypoint.sh"]
