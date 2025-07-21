@@ -40,10 +40,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     condition,
     type,
   }),
-  organizationsSorting: (type: string) => ({
+  organizationsSorting: (type: string, arrow = false) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
-    element_name: 'organizations_sorting',
+    element_name: `organizations_sorting${arrow ? '_arrow' : ''}`,
     type,
   }),
   export: (appliedFiltersCount = 0) => ({

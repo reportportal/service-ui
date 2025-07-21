@@ -27,6 +27,8 @@ import { assignedOrganizationsSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { useTracking } from 'react-tracking';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   ORGANIZATIONS_DEFAULT_SORT_COLUMN,
   SortingFields,
@@ -47,6 +49,7 @@ export const OrganizationsTable = ({
   onChangeSorting,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { userRole } = useSelector(userRolesSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
 
@@ -165,6 +168,7 @@ export const OrganizationsTable = ({
 
   const handleChangeSorting = ({ key }) => {
     onChangeSorting(key);
+    trackEvent(ORGANIZATION_PAGE_EVENTS.organizationsSorting(key, true));
   };
 
   return (
