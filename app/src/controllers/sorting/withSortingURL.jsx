@@ -20,63 +20,65 @@ import { connectRouter } from 'common/utils/connectRouter';
 import { SORTING_DESC, SORTING_ASC, SORTING_KEY } from './constants';
 import { parseSortingString, formatSortingString } from './utils';
 
-export const withSortingURL = ({
-  defaultFields = [],
-  defaultDirection,
-  staticFields = [],
-  namespace,
-  namespaceSelector,
-  sortingKey = SORTING_KEY,
-} = {}) => (WrappedComponent) => {
-  @connectRouter(
-    (query) => {
-      return {
-        sortingString: query[sortingKey],
+export const withSortingURL =
+  ({
+    defaultFields = [],
+    defaultDirection,
+    staticFields = [],
+    namespace,
+    namespaceSelector,
+    sortingKey = SORTING_KEY,
+  } = {}) =>
+  (WrappedComponent) => {
+    @connectRouter(
+      (query) => {
+        return {
+          sortingString: query[sortingKey],
+        };
+      },
+      {
+        updateSorting: (sortingString) => ({ [sortingKey]: sortingString }),
+      },
+      { namespace, namespaceSelector },
+    )
+    class SortingWrapper extends Component {
+      static propTypes = {
+        sortingString: PropTypes.string,
+        updateSorting: PropTypes.func,
       };
-    },
-    {
-      updateSorting: (sortingString) => ({ [sortingKey]: sortingString }),
-    },
-    { namespace, namespaceSelector },
-  )
-  class SortingWrapper extends Component {
-    static propTypes = {
-      sortingString: PropTypes.string,
-      updateSorting: PropTypes.func,
-    };
 
-    static defaultProps = {
-      sortingString: '',
-      updateSorting: () => {},
-    };
+      static defaultProps = {
+        sortingString: '',
+        updateSorting: () => {},
+      };
 
-    changeSorting = (field) => {
-      const { fields: oldFields, direction: oldDirection } = parseSortingString(
-        this.props.sortingString,
-      );
-      let direction = oldDirection || defaultDirection;
-      const fields = oldFields.length > 0 ? oldFields : defaultFields;
-      if (fields.includes(field)) {
-        direction = direction === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
-      } else {
-        direction = oldDirection ? SORTING_ASC : defaultDirection;
+      changeSorting = (field) => {
+        const { fields: oldFields, direction: oldDirection } = parseSortingString(
+          this.props.sortingString,
+        );
+        let direction = oldDirection || defaultDirection;
+        const fields = oldFields.length > 0 ? oldFields : defaultFields;
+        if (fields.includes(field)) {
+          direction = direction === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
+        } else {
+          direction = oldDirection ? SORTING_ASC : defaultDirection;
+        }
+        this.props.updateSorting(formatSortingString([field, ...staticFields], direction));
+      };
+
+      render() {
+        const { sortingString, updateSorting, ...rest } = this.props;
+        const { fields, direction } = parseSortingString(this.props.sortingString);
+        const sortingColumn = fields[0] || defaultFields[0];
+        return (
+          <WrappedComponent
+            sortingColumn={sortingColumn}
+            sortingDirection={direction || defaultDirection}
+            onChangeSorting={this.changeSorting}
+            {...rest}
+          />
+        );
       }
-      this.props.updateSorting(formatSortingString([field, ...staticFields], direction));
-    };
-
-    render() {
-      const { sortingString, updateSorting, ...rest } = this.props;
-      const { fields, direction } = parseSortingString(this.props.sortingString);
-      const sortingColumn = fields[0] || defaultFields[0];
-      return (
-        <WrappedComponent
-          sortingColumn={sortingColumn}
-          sortingDirection={direction || defaultDirection}
-          onChangeSorting={this.changeSorting}
-          {...rest}
-        />
-      );
     }
-  }
-  return SortingWrapper;
-};
+    return SortingWrapper;
+  };

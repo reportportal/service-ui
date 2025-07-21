@@ -37,7 +37,6 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
 
           return (
             <ServiceVersionItem
-              // eslint-disable-next-line react/no-array-index-key
               key={objKey}
               serviceName={value.name}
               serviceVersion={value.version}

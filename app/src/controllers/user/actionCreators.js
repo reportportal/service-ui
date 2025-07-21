@@ -35,6 +35,7 @@ import {
   DELETE_USER_ACCOUNT,
   SET_ACTIVE_PROJECT_KEY,
   SET_LOG_TIME_FORMAT,
+  UPDATE_USER_INFO,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -82,9 +83,9 @@ export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuc
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
 });
 
-export const deleteUserAccountAction = (onSuccess) => ({
+export const deleteUserAccountAction = (onSuccess, userId) => ({
   type: DELETE_USER_ACCOUNT,
-  payload: { onSuccess },
+  payload: { onSuccess, userId },
 });
 
 export const deleteApiKeySuccessAction = (apiKeyId) => ({
@@ -128,4 +129,9 @@ export const unassignFromProjectAction = (project) => ({
 export const unassignFromProjectSuccessAction = (project) => ({
   type: UNASSIGN_FROM_PROJECT_SUCCESS,
   payload: project,
+});
+
+export const updateUserInfoAction = (email, data, onSuccess) => ({
+  type: UPDATE_USER_INFO,
+  payload: { email, data, onSuccess },
 });

@@ -96,18 +96,16 @@ const createPrefixedAttributesSelector = (prefix) =>
         attribute.match(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`)
           ? {
               ...result,
-              [attribute.replace(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`, '')]: attributes[
-                attribute
-              ],
+              [attribute.replace(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`, '')]:
+                attributes[attribute],
             }
           : result,
       {},
     ),
   );
 
-export const analyzerAttributesSelector = createPrefixedAttributesSelector(
-  ANALYZER_ATTRIBUTE_PREFIX,
-);
+export const analyzerAttributesSelector =
+  createPrefixedAttributesSelector(ANALYZER_ATTRIBUTE_PREFIX);
 
 export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIBUTE_PREFIX);
 
@@ -145,7 +143,7 @@ export const projectNotificationsEnabledSelector = (state) =>
   projectNotificationsConfigurationSelector(state).enabled || false;
 
 export const projectNotificationsStateSelector = (state) =>
-  !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]?.toString() === 'true');
+  projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]?.toString() === 'true';
 
 export const projectPluginNotificationsStateSelector = (pluginName) =>
   createSelector(
@@ -169,12 +167,15 @@ export const defectColorsSelector = createSelector(projectConfigSelector, (confi
   return colors;
 });
 
-export const getDefectTypeSelector = createSelector(subTypesSelector, (subTypes) => (issueType) =>
-  Object.keys(subTypes).reduce(
-    (defectType, subType) =>
-      subTypes[subType].find((defectSubType) => defectSubType.locator === issueType) || defectType,
-    null,
-  ),
+export const getDefectTypeSelector = createSelector(
+  subTypesSelector,
+  (subTypes) => (issueType) =>
+    Object.keys(subTypes).reduce(
+      (defectType, subType) =>
+        subTypes[subType].find((defectSubType) => defectSubType.locator === issueType) ||
+        defectType,
+      null,
+    ),
 );
 
 /* PATTERN-ANALYSIS */

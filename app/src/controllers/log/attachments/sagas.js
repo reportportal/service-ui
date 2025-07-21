@@ -142,14 +142,14 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
     };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {} // eslint-disable-line no-empty
   }
 }
 
 function* downloadAttachment({ payload: { id, contentType } }) {
   const projectKey = yield select(projectKeySelector);
 
-  downloadFile(URLS.getFileById(projectKey, id), createAttachmentName(id, contentType));
+  downloadFile(URLS.getFileById(projectKey, id), {}, createAttachmentName(id, contentType));
 }
 
 function* openAttachmentInBrowser({ payload: id }) {

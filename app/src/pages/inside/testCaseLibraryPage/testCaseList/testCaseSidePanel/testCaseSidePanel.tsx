@@ -45,7 +45,7 @@ import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
@@ -138,7 +138,7 @@ export const TestCaseSidePanel = memo(
               aria-label={formatMessage(messages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
-              {Parser(CrossIcon)}
+              {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
           <PathBreadcrumb path={testCase.path} />

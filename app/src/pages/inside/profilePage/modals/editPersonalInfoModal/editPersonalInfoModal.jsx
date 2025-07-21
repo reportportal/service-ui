@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   namePlaceholder: {
     id: 'EditPersonalInformationModal.namePlaceholder',
-    defaultMessage: 'Enter user name',
+    defaultMessage: 'e.g. John Smith',
   },
   emailPlaceholder: {
     id: 'EditPersonalInformationModal.emailPlaceholder',
@@ -46,7 +46,7 @@ const messages = defineMessages({
   },
   nameLabel: {
     id: 'EditPersonalInformationModal.nameLabel',
-    defaultMessage: 'User name',
+    defaultMessage: 'Full name',
   },
   emailLabel: {
     id: 'EditPersonalInformationModal.emailLabel',

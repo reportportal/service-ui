@@ -128,24 +128,23 @@ export const pageRendering = {
 
 ### 6. Add Navigation
 
-To navigate to your new route, use the `redirect` function from `redux-first-router`:
+To navigate to your new route, dispatch router action.
 
 ```javascript
 import { useDispatch } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import { MY_NEW_PAGE } from 'controllers/pages';
 
 const MyComponent = () => {
   const dispatch = useDispatch();
   
   const handleNavigate = () => {
-    dispatch(redirect({
+    dispatch({
       type: MY_NEW_PAGE,
       payload: {
         organizationSlug: 'my-org',
         projectSlug: 'my-project',
       },
-    }));
+    });
   };
   
   return <button onClick={handleNavigate}>Go to My New Page</button>;

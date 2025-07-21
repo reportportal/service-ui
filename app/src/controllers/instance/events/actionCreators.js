@@ -16,6 +16,7 @@
 
 import { FETCH_EVENTS } from './constants';
 
-export const fetchEventsAction = () => ({
+export const fetchEventsAction = (payload) => ({
   type: FETCH_EVENTS,
+  payload,
 });

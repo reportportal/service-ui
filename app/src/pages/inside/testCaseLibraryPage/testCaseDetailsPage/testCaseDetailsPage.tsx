@@ -25,7 +25,7 @@ import { EditableTagsSection } from '../editableTagsSection';
 import { EditableDescriptionSection } from '../editableDescriptionSection';
 import { TestCase } from '../types';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const noopHandler = () => {};
 

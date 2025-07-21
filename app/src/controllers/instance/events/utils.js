@@ -23,13 +23,13 @@ import {
   reMappedOperationValuesMap,
 } from 'components/filterEntities/constants';
 
-export const getAppliedFilters = (filters, projectKey) => {
+export const getAppliedFilters = (filters, valueKey, filterKey, isUpperCase) => {
   const predefinedFilterKey = `predefinedFilter.${ACTIVITIES}`;
 
   const projectIdFilterParam = {
-    filter_key: 'projectName',
-    value: projectKey,
-    operation: CONDITION_EQ,
+    filter_key: filterKey,
+    value: valueKey,
+    operation: isUpperCase ? CONDITION_EQ.toUpperCase() : CONDITION_EQ,
   };
 
   const appliedFilters = Object.keys(filters).map((filter) => {
@@ -38,7 +38,7 @@ export const getAppliedFilters = (filters, projectKey) => {
 
       return {
         filter_key: filterName,
-        operation: CONDITION_CNT,
+        operation: isUpperCase ? CONDITION_CNT.toUpperCase() : CONDITION_CNT,
         value: filters[predefinedFilterKey],
       };
     }
@@ -49,15 +49,16 @@ export const getAppliedFilters = (filters, projectKey) => {
       filterName === ENTITY_SUBJECT_TYPE || filterName === ENTITY_EVENTS_OBJECT_TYPE
         ? filters[filter].toUpperCase()
         : filters[filter];
+    const filterOperation = reMappedOperationValuesMap[operation] || operation;
 
     return {
       filter_key: filterName,
-      operation: reMappedOperationValuesMap[operation] || operation,
+      operation: isUpperCase ? filterOperation.toUpperCase() : filterOperation,
       value,
     };
   });
 
   return {
-    search_criterias: [...appliedFilters, ...(projectKey ? [projectIdFilterParam] : [])],
+    search_criterias: [...appliedFilters, ...(valueKey ? [projectIdFilterParam] : [])],
   };
 };

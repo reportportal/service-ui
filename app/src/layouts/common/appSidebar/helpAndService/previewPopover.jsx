@@ -18,7 +18,6 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { withPopover } from 'componentLibrary/popover';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
 import HelpIcon from 'common/img/help-inline.svg';
 import { ServicesContent } from './servicesContent';
@@ -29,7 +28,7 @@ const cx = classNames.bind(styles);
 
 const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
   return (
-    <div className={cx('service-wrapper')} onClick={onClick}>
+    <button className={cx('service-wrapper')} onClick={onClick}>
       <button className={cx('service-block', { untouched: !isFaqTouched })}>
         <i>{Parser(HelpIcon)}</i>
       </button>
@@ -43,7 +42,7 @@ const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
           </div>
         </div>
       </button>
-    </div>
+    </button>
   );
 };
 

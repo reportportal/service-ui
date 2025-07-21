@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 import styles from './collapsibleSection.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface CollapsibleSectionProps {
   title: string;

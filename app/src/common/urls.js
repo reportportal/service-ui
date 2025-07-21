@@ -75,36 +75,48 @@ export const URLS = {
   launch: (projectKey, id) => removeTrailingSlash(`${urlBase}${projectKey}/launch/${id}`),
   launchStatus: (projectKey, ids) => `${urlBase}${projectKey}/launch/status?ids=${ids}`,
   launchByIds: (projectKey, ids) => `${urlBase}${projectKey}/launch?filter.in.id=${ids}`,
-  launchAttributeKeysSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/launch/attribute/keys?filter.cnt.attributeKey=${searchTerm}`,
-  itemAttributeKeysAllSearch: (projectKey, filterId, isLatest, launchesLimit) => (
-    searchTerm = '',
-  ) =>
-    `${urlBase}${projectKey}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=${searchTerm}`,
-  launchAttributeValuesSearch: (projectKey, key = '') => (searchTerm = '') =>
-    `${urlBase}${projectKey}/launch/attribute/values?${
-      key ? `filter.eq.attributeKey=${key}&` : ''
-    }filter.cnt.attributeValue=${searchTerm}`,
-  itemAttributeKeysByLaunchName: (projectKey, launchName) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/item/step/attribute/keys${getQueryParams({
-      'filter.eq.name': launchName || undefined,
-      'filter.cnt.attributeKey': searchTerm,
-    })}`,
-  itemAttributeValuesByLaunchName: (projectKey, launchName, key) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/item/step/attribute/values${getQueryParams({
-      'filter.eq.name': launchName || undefined,
-      'filter.eq.attributeKey': key || undefined,
-      'filter.cnt.attributeValue': searchTerm,
-    })}`,
+  launchAttributeKeysSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/attribute/keys?filter.cnt.attributeKey=${searchTerm}`,
+  itemAttributeKeysAllSearch:
+    (projectKey, filterId, isLatest, launchesLimit) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=${searchTerm}`,
+  launchAttributeValuesSearch:
+    (projectKey, key = '') =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/attribute/values?${
+        key ? `filter.eq.attributeKey=${key}&` : ''
+      }filter.cnt.attributeValue=${searchTerm}`,
+  itemAttributeKeysByLaunchName:
+    (projectKey, launchName) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/step/attribute/keys${getQueryParams({
+        'filter.eq.name': launchName || undefined,
+        'filter.cnt.attributeKey': searchTerm,
+      })}`,
+  itemAttributeValuesByLaunchName:
+    (projectKey, launchName, key) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/step/attribute/values${getQueryParams({
+        'filter.eq.name': launchName || undefined,
+        'filter.eq.attributeKey': key || undefined,
+        'filter.cnt.attributeValue': searchTerm,
+      })}`,
   MLSuggestions: (projectKey, itemId) => `${urlBase}${projectKey}/item/suggest/${itemId}`,
   MLSuggestionsByCluster: (projectKey, clusterId) =>
     `${urlBase}${projectKey}/item/suggest/cluster/${clusterId}`,
   choiceSuggestedItems: (projectKey) => `${urlBase}${projectKey}/item/suggest/choice`,
-  launchNameSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
+  launchNameSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
   launchesExistingNames: (projectKey) => `${urlBase}${projectKey}/launch/names`,
-  launchOwnersSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/launch/owners?filter.cnt.user=${searchTerm}`,
+  launchOwnersSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (projectKey, ids = []) => `${urlBase}${projectKey}/launch?ids=${ids.join(',')}`,
   launchesLatest: (projectKey, ids) =>
     `${urlBase}${projectKey}/launch/latest${getQueryParams({ ids })}`,
@@ -138,8 +150,10 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/projects/searches`,
   organizationUsers: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
-  projectDelete: ({ organizationId, projectId }) =>
+  organizationProjectById: ({ organizationId, projectId }) =>
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
+  organizationSettings: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/settings`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
@@ -167,8 +181,10 @@ export const URLS = {
   projectAddPattern: (projectKey) => `${urlBase}${projectKey}/settings/pattern`,
   projectUpdatePattern: (projectKey, patternId) =>
     `${urlBase}${projectKey}/settings/pattern/${patternId}`,
-  projectUsernamesSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}project/${projectKey}/usernames?filter.cnt.users=${searchTerm}`,
+  projectUsernamesSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}project/${projectKey}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (projectKey) => `${urlBase}project/${projectKey}/index`,
 
   projectStatus: (projectKey, interval) =>
@@ -209,23 +225,29 @@ export const URLS = {
   },
   testItemsLinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/link`,
   testItemsUnlinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/unlink`,
-  testItemAttributeKeysSearch: (projectKey, launch = '') => (searchTerm = '') => {
-    const params = {
-      ...(launch ? { launch } : {}),
-      'filter.cnt.attributeKey': searchTerm,
-    };
-    return `${urlBase}${projectKey}/item/attribute/keys${getQueryParams(params)}`;
-  },
-  testItemAttributeValuesSearch: (projectKey, launch = '', key = '') => (searchTerm = '') => {
-    const params = {
-      ...(launch ? { launch } : {}),
-      ...(key ? { 'filter.eq.attributeKey': key } : {}),
-      'filter.cnt.attributeValue': searchTerm,
-    };
-    return `${urlBase}${projectKey}/item/attribute/values${getQueryParams(params)}`;
-  },
-  testItemBTSIssuesSearch: (projectKey) => (searchTerm = '') =>
-    `${urlBase}${projectKey}/item/ticket/ids/all?term=${searchTerm}`,
+  testItemAttributeKeysSearch:
+    (projectKey, launch = '') =>
+    (searchTerm = '') => {
+      const params = {
+        ...(launch ? { launch } : {}),
+        'filter.cnt.attributeKey': searchTerm,
+      };
+      return `${urlBase}${projectKey}/item/attribute/keys${getQueryParams(params)}`;
+    },
+  testItemAttributeValuesSearch:
+    (projectKey, launch = '', key = '') =>
+    (searchTerm = '') => {
+      const params = {
+        ...(launch ? { launch } : {}),
+        ...(key ? { 'filter.eq.attributeKey': key } : {}),
+        'filter.cnt.attributeValue': searchTerm,
+      };
+      return `${urlBase}${projectKey}/item/attribute/values${getQueryParams(params)}`;
+    },
+  testItemBTSIssuesSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/ticket/ids/all?term=${searchTerm}`,
 
   logItem: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log${getQueryParams({
@@ -287,9 +309,11 @@ export const URLS = {
     removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
-  events: () => `${urlBase}activities/searches`,
-  searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
-    `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
+  events: () => `${urlCommonBase}activities/searches`,
+  searchEventsBySubjectName:
+    (projectName) =>
+    (searchTerm = '') =>
+      `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
 
   exportUsers: (filterEntities) =>
     `${urlBase}users/export${getQueryParams({

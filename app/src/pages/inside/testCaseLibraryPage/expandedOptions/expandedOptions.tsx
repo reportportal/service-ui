@@ -34,7 +34,7 @@ import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useTestCases } from '../hooks/useTestCases';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState(null);

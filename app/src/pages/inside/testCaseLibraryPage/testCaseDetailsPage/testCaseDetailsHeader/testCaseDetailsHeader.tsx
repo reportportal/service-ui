@@ -33,7 +33,7 @@ import { messages } from './messages';
 
 import styles from './testCaseDetailsHeader.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
@@ -82,7 +82,7 @@ export const TestCaseDetailsHeader = ({
         <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
         {testCase.name}
         <button type="button" className={cx('header__edit-button')}>
-          {Parser(PencilIcon)}
+          {Parser(PencilIcon as unknown as string)}
         </button>
       </div>
       <div className={cx('header__info-wrapper')}>
@@ -95,7 +95,7 @@ export const TestCaseDetailsHeader = ({
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
             <span className={cx('header__meta-value')}>{testCase.id}</span>
             <CopyToClipboard text={testCase.id} className={cx('header__copy')}>
-              {Parser(IconDuplicate)}
+              {Parser(IconDuplicate as unknown as string)}
             </CopyToClipboard>
           </div>
         </div>

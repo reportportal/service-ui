@@ -17,7 +17,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Popover, FilterOutlineIcon, FilterFilledIcon } from '@reportportal/ui-kit';
+import { Popover, FilterOutlineIcon, FilterFilledIcon, Button } from '@reportportal/ui-kit';
 import { FilterContent } from './filterContent';
 import styles from './filterButton.scss';
 
@@ -41,7 +41,14 @@ export const FilterButton = ({
 
   useEffect(() => {
     const { [searchProp]: value, ...filters } = definedFilters;
-    setAppliedFiltersCount(Object.keys(filters).length);
+    const filtersCount = Object.keys(filters).length;
+
+    if (appliedFiltersCount !== filtersCount) {
+      setAppliedFiltersCount(filtersCount);
+    }
+  }, [appliedFiltersCount, definedFilters, searchProp, setAppliedFiltersCount]);
+
+  useEffect(() => {
     filteredAction();
   }, []);
 
@@ -66,7 +73,7 @@ export const FilterButton = ({
       isOpened={isOpen}
       setIsOpened={setIsOpen}
     >
-      <div
+      <Button
         className={cx('filters-icon-container', {
           'with-applied': appliedFiltersCount,
           opened: isOpen,
@@ -81,7 +88,7 @@ export const FilterButton = ({
         {appliedFiltersCount ? (
           <span className={cx('filters-count')}>{appliedFiltersCount}</span>
         ) : null}
-      </div>
+      </Button>
     </Popover>
   );
 };

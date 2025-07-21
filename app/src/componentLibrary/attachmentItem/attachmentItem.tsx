@@ -19,7 +19,7 @@ import { useCallback, useMemo } from 'react';
 import { AddCsvIcon, AddJarIcon, AddImageIcon } from '@reportportal/ui-kit';
 import styles from './attachmentItem.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AttachmentItemProps {
   fileName: string;

@@ -59,6 +59,10 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
   },
+  updateProjectSuccess: {
+    id: 'ProjectsPage.updateProjectSuccess',
+    defaultMessage: 'The project has been updated successfully',
+  },
   addDefectTypeSuccess: {
     id: 'Project.addDefectTypeSuccess',
     defaultMessage: 'Defect Type has been successfully created',
@@ -176,6 +180,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  updateOrganizationSettingsSuccess: {
+    id: 'OrganizationSettingsPage.updateSettingsSuccess',
+    defaultMessage: 'Organization settings have been updated successfully',
+  },
 });
 
 @injectIntl
@@ -207,6 +215,7 @@ export class NotificationList extends PureComponent {
                   title={Parser(
                     DOMPurify.sanitize(
                       messageId ? formatMessage(messages[messageId], values) : message,
+                      { ADD_ATTR: ['target'] },
                     ),
                   )}
                   onClose={() => this.props.hideNotification(uid)}

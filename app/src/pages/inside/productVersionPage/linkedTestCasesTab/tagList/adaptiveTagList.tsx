@@ -23,7 +23,7 @@ import styles from './tagList.scss';
 
 import { messages } from './messages';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AdaptiveTagListProps {
   tags: string[];
@@ -134,7 +134,6 @@ export const AdaptiveTagList = ({
       getFullWidthOffset();
     }, 500);
 
-    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
   }, [listRef, isShowAllView, defaultVisibleLines, getFullWidthOffset, getVisibleLinesOffset]);
 

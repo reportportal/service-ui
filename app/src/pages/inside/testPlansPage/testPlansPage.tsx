@@ -27,7 +27,7 @@ import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { messages } from './messages';
 import styles from './testPlansPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();

@@ -73,6 +73,8 @@ import { OrganizationLayout } from 'layouts/organizationLayout';
 import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
+import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
+import { OrganizationEventsPage } from '../pages/organization/organizationEventsPage';
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 import { TestCaseLibraryPage, TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage';
 
@@ -112,8 +114,22 @@ export const pageRendering = {
     layout: InstanceLayout,
     rawContent: true,
   },
+  ORGANIZATIONS_ACTIVITY_PAGE: {
+    component: OrganizationEventsPage,
+    layout: OrganizationLayout,
+  },
   ORGANIZATION_PROJECTS_PAGE: {
     component: OrganizationProjectsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_PAGE: {
+    component: OrganizationSettingsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_TAB_PAGE: {
+    component: OrganizationSettingsPage,
     layout: OrganizationLayout,
     rawContent: true,
   },

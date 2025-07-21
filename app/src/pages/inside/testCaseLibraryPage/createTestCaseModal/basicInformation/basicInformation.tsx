@@ -28,7 +28,7 @@ import { messages } from './messages';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const BasicInformation = () => {
   const { formatMessage } = useIntl();

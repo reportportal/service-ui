@@ -50,7 +50,9 @@
     font-size: 13px;
   }
   .day-title {
-    font: 13px/13px $FONT-SEMIBOLD, sans-serif;
+    font:
+      13px/13px $FONT-SEMIBOLD,
+      sans-serif;
     color: $COLOR--gray-60;
     padding: 10px 0 0;
     margin: 10px 0;

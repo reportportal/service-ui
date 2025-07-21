@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_CNT } from 'components/filterEntities/constants';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
@@ -25,20 +27,29 @@ import {
   ACCOUNT_TYPE_FILTER_NAME,
   EMAIL_FILTER_NAME,
   EMAIL_FILTER_NAME_CONDITION,
+  timeRangeLastLoginValues,
   getAccountTypes,
   getEmailComparisons,
   getLastLogin,
   getPermissions,
   LAST_LOGIN_FILTER_NAME,
   USERS_PERMISSIONS_FILTER_NAME,
+  FILTER_FORM,
 } from 'components/main/filterButton';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import classNames from 'classnames/bind';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+} from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
 const cx = classNames.bind(styles);
+
+const selector = formValueSelector(FILTER_FORM);
 
 export const AllUsersFilter = ({
   entities,
@@ -53,6 +64,7 @@ export const AllUsersFilter = ({
   const accountTypes = getAccountTypes(formatMessage);
   const lastLogin = getLastLogin(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
+  const lastLoginDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
   const filters = {
     [USERS_PERMISSIONS_FILTER_NAME]: {
@@ -66,7 +78,6 @@ export const AllUsersFilter = ({
           props: {
             options: permissions,
             value: [],
-            placeholder: formatMessage(messages.permissionsPlaceholder),
           },
         },
       ],
@@ -99,7 +110,17 @@ export const AllUsersFilter = ({
           props: {
             value: '',
             options: lastLogin,
-            placeholder: formatMessage(messages.lastLoginPlaceholder),
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastLoginDate, timeRangeLastLoginValues),
+            notScrollable: true,
+            footer: (
+              <Field
+                name={LAST_LOGIN_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+                parse={formatDateRangeToMinutesString}
+              />
+            ),
           },
         },
       ],
@@ -134,16 +155,6 @@ export const AllUsersFilter = ({
     },
   };
 
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_LOGIN_FILTER_NAME,
-    );
-
-    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
-  };
-
   const defaultFilterState = {
     [USERS_PERMISSIONS_FILTER_NAME]: '',
     [ACCOUNT_TYPE_FILTER_NAME]: [],
@@ -159,6 +170,17 @@ export const AllUsersFilter = ({
     [EMAIL_FILTER_NAME_CONDITION]:
       entities[EMAIL_FILTER_NAME]?.condition || emailComparisons[0].value,
     [EMAIL_FILTER_NAME]: entities[EMAIL_FILTER_NAME]?.value || '',
+  };
+
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_LOGIN_FILTER_NAME]?.value,
+      LAST_LOGIN_FILTER_NAME,
+    );
+
+    return ALL_USERS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const getClearButtonState = (formValues) => {

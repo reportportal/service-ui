@@ -19,6 +19,7 @@ import {
   DELETE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
   FETCH_FILTERED_PROJECTS,
+  RENAME_PROJECT,
 } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
@@ -35,6 +36,11 @@ export const createProjectAction = (project) => ({
 
 export const deleteProjectAction = (project) => ({
   type: DELETE_PROJECT,
+  payload: project,
+});
+
+export const renameProjectAction = (project) => ({
+  type: RENAME_PROJECT,
   payload: project,
 });
 

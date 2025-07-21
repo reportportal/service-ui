@@ -33,4 +33,37 @@ export const ALL_USERS_PAGE_EVENTS = {
     condition,
     type,
   }),
+  clickProvideRevokeAdminRights: (provide = true, modal = false) => {
+    const name = `${provide ? 'provide' : 'revoke'}_admin_rights`;
+    const additionalParameters = modal ? { modal: name, element_name: name } : { icon_name: name };
+
+    return {
+      ...BASIC_EVENT_PARAMETERS,
+      place: 'all_users_page',
+      ...additionalParameters,
+    };
+  },
+  SORTING: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    icon_name: 'users_sorting',
+  },
+  OPEN_DELETE_USER_MODAL: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    icon_name: 'delete',
+  },
+  DELETE_USER: {
+    ...BASIC_EVENT_PARAMETERS,
+    category: 'all_users',
+    place: 'all_users_page',
+    element_name: 'delete',
+    modal: 'delete_user',
+  },
+  export: (appliedFiltersCount = 0) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'export',
+    number: appliedFiltersCount,
+  }),
 };

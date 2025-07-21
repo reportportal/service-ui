@@ -15,12 +15,14 @@
  */
 
 .filters-icon-container {
+  all: unset;
   height: 36px;
   width: 57px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   i.filter-icon {
     display: block;

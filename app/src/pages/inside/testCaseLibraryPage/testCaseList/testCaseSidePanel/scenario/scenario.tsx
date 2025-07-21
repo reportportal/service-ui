@@ -24,7 +24,7 @@ import { FieldSection } from './fieldSection';
 import { messages } from './messages';
 import styles from './scenario.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface ScenarioProps {
   scenario: IScenario;

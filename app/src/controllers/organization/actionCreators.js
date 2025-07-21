@@ -17,7 +17,10 @@
 import {
   FETCH_ORGANIZATION_BY_SLUG,
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
+  PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
   SET_ACTIVE_ORGANIZATION,
+  UPDATE_ORGANIZATION_SETTINGS,
+  UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
 } from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
@@ -32,5 +35,20 @@ export const fetchOrganizationBySlugAction = (payload) => ({
 
 export const setActiveOrganizationAction = (payload) => ({
   type: SET_ACTIVE_ORGANIZATION,
+  payload,
+});
+
+export const prepareActiveOrganizationSettingsAction = (payload) => ({
+  type: PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
+  payload,
+});
+
+export const updateOrganizationSettingsAction = (payload) => ({
+  type: UPDATE_ORGANIZATION_SETTINGS,
+  payload,
+});
+
+export const updateOrganizationSettingsSuccessAction = (payload) => ({
+  type: UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
   payload,
 });

@@ -33,22 +33,25 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = track()(
-  ({ value, customProps: { getLink }, className, tracking: { trackEvent } }) => {
-    const { id: dashboardId, name } = value;
-    return (
-      <NavLink
-        className={cx(className, 'name')}
-        to={getLink(dashboardId)}
-        onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
-        }}
-      >
-        {name}
-      </NavLink>
-    );
-  },
-);
+export const NameColumn = track()(({
+  value,
+  customProps: { getLink },
+  className,
+  tracking: { trackEvent },
+}) => {
+  const { id: dashboardId, name } = value;
+  return (
+    <NavLink
+      className={cx(className, 'name')}
+      to={getLink(dashboardId)}
+      onClick={() => {
+        trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
+      }}
+    >
+      {name}
+    </NavLink>
+  );
+});
 
 NameColumn.propTypes = {
   value: PropTypes.object,
@@ -199,24 +202,27 @@ EditColumn.defaultProps = {
   className: '',
 };
 
-export const DeleteColumn = track()(
-  ({ value, customProps, className, tracking: { trackEvent } }) => {
-    const { onDelete, disabled } = customProps;
-    const deleteItemHandler = () => {
-      const { id } = value;
-      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
-      onDelete(value);
-    };
+export const DeleteColumn = track()(({
+  value,
+  customProps,
+  className,
+  tracking: { trackEvent },
+}) => {
+  const { onDelete, disabled } = customProps;
+  const deleteItemHandler = () => {
+    const { id } = value;
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
+    onDelete(value);
+  };
 
-    return (
-      <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
-        <div className={cx('icon-holder')}>
-          <Icon type="icon-delete" onClick={deleteItemHandler} disabled={disabled} />
-        </div>
+  return (
+    <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
+      <div className={cx('icon-holder')}>
+        <Icon type="icon-delete" onClick={deleteItemHandler} disabled={disabled} />
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,

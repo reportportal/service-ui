@@ -175,16 +175,6 @@ export class InputDropdown extends Component {
     }
   };
 
-  handleAllClick = () => {
-    const filteredOptions = this.props.options.filter((item) => !item.disabled && !item.groupId);
-
-    if (this.props.value.length !== filteredOptions.length) {
-      this.props.onChange(filteredOptions.map((item) => item.value));
-    } else {
-      this.props.onChange([]);
-    }
-  };
-
   renderOptions() {
     const { options, multiple, value, independentGroupSelection, customClasses } = this.props;
 

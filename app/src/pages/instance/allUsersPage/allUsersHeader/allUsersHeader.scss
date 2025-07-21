@@ -43,12 +43,34 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 32px;
+
+  & > div:empty {
+    display: none;
+  }
+
+  i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.icons {
+.filters {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.primary-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.user-actions-group {
+  display: flex;
   gap: 8px;
 }
 
@@ -72,11 +94,4 @@
   outline: none;
   background: none;
   border: none;
-}
-
-.filters {
-  display: flex;
-  align-items: center;
-  margin-right: 24px;
-  gap: 10px;
 }

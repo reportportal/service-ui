@@ -30,7 +30,7 @@ import { messages } from './messages';
 
 import styles from './allTestCasesPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];

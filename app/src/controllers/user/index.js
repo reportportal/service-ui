@@ -42,12 +42,14 @@ export {
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
   unassignFromProjectAction,
+  updateUserInfoAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
   userInfoSelector,
   defaultProjectSelector,
   activeProjectSelector,
+  idSelector,
   userIdSelector,
   userEmailSelector,
   startTimeFormatSelector,

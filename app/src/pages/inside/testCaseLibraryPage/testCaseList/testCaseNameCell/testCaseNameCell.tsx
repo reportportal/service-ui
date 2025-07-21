@@ -20,7 +20,7 @@ import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import styles from './testCaseNameCell.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseNameCellProps {
   priority: TestCasePriority;

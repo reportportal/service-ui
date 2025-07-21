@@ -58,6 +58,7 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
   USER_PROFILE_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
@@ -65,6 +66,7 @@ import {
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
+  ORGANIZATIONS_ACTIVITY_PAGE,
   PRODUCT_VERSIONS_TAB_PAGE,
   PRODUCT_VERSIONS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
@@ -109,6 +111,7 @@ import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizat
 import {
   fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
+  prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
@@ -119,6 +122,7 @@ import {
 } from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
+import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -199,6 +203,13 @@ const routesMap = {
     },
   },
 
+  [ORGANIZATIONS_ACTIVITY_PAGE]: {
+    path: '/organizations/:organizationSlug/activity',
+    thunk: (dispatch) => {
+      dispatch(fetchOrganizationEventsDataAction());
+    },
+  },
+
   [ORGANIZATION_PROJECTS_PAGE]: {
     path: '/organizations/:organizationSlug/projects',
     thunk: (dispatch, getState) => {
@@ -219,8 +230,22 @@ const routesMap = {
     },
   },
 
-  [ORGANIZATION_SETTINGS_PAGE]: {
-    path: '/organizations/:organizationSlug/settings',
+  [ORGANIZATION_SETTINGS_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/settings',
+    (payload) => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
+  ),
+
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/settings/:settingsTab`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
   },
 
   [PROJECT_PAGE]: {
@@ -272,15 +297,13 @@ const routesMap = {
     },
   },
   [HISTORY_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
     },
   },
   [UNIQUE_ERRORS_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
       dispatch(fetchClustersAction());
     },
@@ -293,16 +316,14 @@ const routesMap = {
     },
   },
   [PROJECT_LOG_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
@@ -317,8 +338,7 @@ const routesMap = {
     },
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
-    path:
-      '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());
@@ -415,11 +435,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
       organizationSlug = hashOrganizationSlug;
       projectSlug = hashProjectSlug;
-    } else if (
-      hashOrganizationSlug &&
-      !hashProjectSlug &&
-      (isAssignedToTargetOrganization || assignmentNotRequired)
-    ) {
+    } else if (!hashProjectSlug && (isAssignedToTargetOrganization || assignmentNotRequired)) {
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
 
       organizationSlug = hashOrganizationSlug;

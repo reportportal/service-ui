@@ -140,7 +140,8 @@ export class UniqueErrorsActionPanel extends Component {
     onPostIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(),
+        postBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(),
       },
     });
     UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_ACTION &&
@@ -152,8 +153,10 @@ export class UniqueErrorsActionPanel extends Component {
     onLinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        addNewIssue: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(),
-        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(),
+        addNewIssue:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(),
+        loadBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_ACTION);
@@ -164,7 +167,8 @@ export class UniqueErrorsActionPanel extends Component {
     onUnlinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+        unlinkBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUES_ACTION);

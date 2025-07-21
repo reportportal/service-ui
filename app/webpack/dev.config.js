@@ -23,6 +23,7 @@ dotenv.config();
 
 module.exports = () => {
   if (!process.env.PROXY_PATH) {
+    // eslint-disable-next-line no-console
     console.log('========== Specify the PROXY_PATH variable in the .env file =========');
     process.exit(1);
   }
@@ -93,6 +94,7 @@ module.exports = () => {
           target: process.env.PROXY_PATH,
           changeOrigin: true,
           bypass(req) {
+            // eslint-disable-next-line no-console
             console.log(`proxy url: ${req.url}`);
           },
         },

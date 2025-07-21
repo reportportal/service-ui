@@ -12,7 +12,7 @@ import { Steps } from './steps';
 
 import styles from './testCaseDetails.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const messages = defineMessages({
   requirementsLink: {

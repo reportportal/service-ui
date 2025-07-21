@@ -18,7 +18,11 @@ import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effect
 import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  showErrorNotification,
+} from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import {
@@ -51,6 +55,7 @@ import {
   DELETE_API_KEY,
   FETCH_USER,
   DELETE_USER_ACCOUNT,
+  UPDATE_USER_INFO,
 } from './constants';
 import { userIdSelector, userInfoSelector } from './selectors';
 
@@ -186,7 +191,7 @@ function* fetchUserWorker() {
       );
 
       activeOrganization = activeOrganizationResponse?.items?.[0];
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {} // eslint-disable-line no-empty
 
     if (!isAssignedToTargetProject && assignmentNotRequired) {
       try {
@@ -195,11 +200,11 @@ function* fetchUserWorker() {
           URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
         );
         projectKey = currentProject?.items?.[0]?.key;
-      } catch (e) {} // eslint-disable-line no-empty
+      } catch {} // eslint-disable-line no-empty
     }
 
     const activeProject =
-      isAssignedToTargetProject || projectKey
+      targetActiveProject && (isAssignedToTargetProject || projectKey)
         ? targetActiveProject
         : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
 
@@ -239,7 +244,6 @@ function* addApiKey({ payload = {} }) {
       },
     });
 
-    // eslint-disable-next-line camelcase
     const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {
@@ -312,11 +316,10 @@ function* deleteApiKey({ payload = {} }) {
 }
 
 function* deleteUserAccount({ payload = {} }) {
-  const { onSuccess } = payload;
-  const user = yield select(userInfoSelector);
+  const { onSuccess, userId } = payload;
 
   try {
-    yield call(fetch, URLS.userInfo(user.id), {
+    yield call(fetch, URLS.userInfo(userId), {
       method: 'delete',
     });
     onSuccess();
@@ -327,6 +330,20 @@ function* deleteUserAccount({ payload = {} }) {
         type: NOTIFICATION_TYPES.ERROR,
       }),
     );
+  }
+}
+
+function* updateUserInfo({ payload = {} }) {
+  const { email, data, onSuccess } = payload;
+
+  try {
+    yield call(fetch, URLS.userInfo(email), {
+      method: 'put',
+      data,
+    });
+    onSuccess?.();
+  } catch ({ message }) {
+    yield put(showErrorNotification({ message }));
   }
 }
 
@@ -362,6 +379,10 @@ function* watchUnassignFromProject() {
   yield takeLatest(UNASSIGN_FROM_PROJECT, unassignFromProject);
 }
 
+function* watchUpdateUserInfo() {
+  yield takeEvery(UPDATE_USER_INFO, updateUserInfo);
+}
+
 export function* userSagas() {
   yield all([
     watchAssignToProject(),
@@ -372,5 +393,6 @@ export function* userSagas() {
     watchFetchApiKeys(),
     watchDeleteApiKey(),
     watchDeleteUserAccount(),
+    watchUpdateUserInfo(),
   ]);
 }

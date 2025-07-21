@@ -35,7 +35,7 @@ import { commonMessages } from './commonMessages';
 
 import styles from './testCaseLibraryPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestCaseLibraryPage = () => {
   const [isEmptyState, setEmptyState] = useState(true);
@@ -74,7 +74,7 @@ export const TestCaseLibraryPage = () => {
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
-                  icon={Parser(ImportIcon)}
+                  icon={Parser(ImportIcon as unknown as string)}
                   data-automation-id="importTestCase"
                   adjustWidthOn="content"
                 >

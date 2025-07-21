@@ -30,7 +30,7 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import styles from './testCaseList.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseListProps {
   testCases?: TestCase[];
