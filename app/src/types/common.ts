@@ -21,9 +21,4 @@ export interface ModalButtonProps extends ButtonProps {
   'data-automation-id'?: string;
 }
 
-export interface ApiError {
-  errorCode: number;
-  message: string;
-}
-
 export type QueryParams = Record<string, string | number>;

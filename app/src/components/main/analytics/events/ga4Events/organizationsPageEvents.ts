@@ -40,10 +40,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     condition,
     type,
   }),
-  organizationsSorting: (type: string) => ({
+  organizationsSorting: (type: string, arrow = false) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
-    element_name: 'organizations_sorting',
+    element_name: `organizations_sorting${arrow ? '_arrow' : ''}`,
     type,
   }),
   export: (appliedFiltersCount = 0) => ({
@@ -72,5 +72,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'general',
     element_name: 'button_submit',
     type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
+  }),
+  inviteUser: (withProject = false) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'invite',
+    modal: 'invite_user',
+    type: 'organization_level',
+    condition: `${withProject ? 'with' : 'without'}_project`,
   }),
 };

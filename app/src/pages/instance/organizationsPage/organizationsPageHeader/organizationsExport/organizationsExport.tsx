@@ -24,9 +24,9 @@ import { querySelector } from 'controllers/instance/organizations/selectors';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { ApiError, QueryParams } from 'types/common';
+import { QueryParams } from 'types/common';
+import { ApiError } from 'types/api';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { ORGANIZATIONS_EXPORT_LIMIT } from './constants';
 
 interface OrganizationsExportProps {
   appliedFiltersCount: number;
@@ -46,8 +46,9 @@ export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExport
   const query = useSelector(querySelector) as QueryParams;
 
   const handleClick = () => {
-    const filtersParams: QueryParams = { ...query, offset: 0, limit: ORGANIZATIONS_EXPORT_LIMIT };
+    const filtersParams: QueryParams = { ...query, offset: 0 };
     const data = prepareQueryFilters(filtersParams);
+    delete data.limit;
 
     const requestParams = {
       method: 'post',

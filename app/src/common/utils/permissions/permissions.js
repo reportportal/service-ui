@@ -44,6 +44,7 @@ export const canCreateProject = checkPermission(ACTIONS.CREATE_PROJECT);
 export const canDeleteProject = checkPermission(ACTIONS.DELETE_PROJECT);
 export const canRenameProject = checkPermission(ACTIONS.RENAME_PROJECT);
 export const canInviteUserToProject = checkPermission(ACTIONS.INVITE_USER_TO_PROJECT);
+export const canInviteUserToOrganization = checkPermission(ACTIONS.INVITE_USER_TO_ORGANIZATION);
 export const canChangeAccessProject = checkPermission(ACTIONS.CHANGE_ACCESS_PROJECT);
 export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
 export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);

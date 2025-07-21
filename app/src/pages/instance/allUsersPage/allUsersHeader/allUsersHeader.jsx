@@ -28,6 +28,7 @@ import { createFilterEntitiesURLContainer } from 'components/filterEntities/cont
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { showModalAction } from 'controllers/modal';
 import { AllUsersFilter } from './allUsersFilter';
+import { AllUsersExport } from './allUsersExport';
 import styles from './allUsersHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -88,30 +89,31 @@ export const AllUsersHeader = ({
       <div className={cx('header')}>
         <span className={cx('title')}>{formatMessage(messages.allUsersTitle)}</span>
         <div className={cx('actions')}>
-          <div className={cx('icons')}>
-            <div className={cx('filters')}>
-              <SearchFieldWithFilter
-                isLoading={isLoading}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                event={ALL_USERS_PAGE_EVENTS.SEARCH_ALL_USERS_FIELD}
-              />
-              <FilterEntitiesURLContainer
-                debounced={false}
-                additionalFilter="full_name"
-                render={({ entities, onChange }) => (
-                  <AllUsersFilter
-                    appliedFiltersCount={appliedFiltersCount}
-                    setAppliedFiltersCount={setAppliedFiltersCount}
-                    entities={entities}
-                    onFilterChange={onChange}
-                  />
-                )}
-              />
-            </div>
+          <div className={cx('filters')}>
+            <SearchFieldWithFilter
+              isLoading={isLoading}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              event={ALL_USERS_PAGE_EVENTS.SEARCH_ALL_USERS_FIELD}
+            />
+            <FilterEntitiesURLContainer
+              debounced={false}
+              additionalFilter="full_name"
+              render={({ entities, onChange }) => (
+                <AllUsersFilter
+                  appliedFiltersCount={appliedFiltersCount}
+                  setAppliedFiltersCount={setAppliedFiltersCount}
+                  entities={entities}
+                  onFilterChange={onChange}
+                />
+              )}
+            />
+          </div>
+          <div className={cx('primary-actions')}>
+            <AllUsersExport appliedFiltersCount={appliedFiltersCount} />
             {!ssoUsersOnly && (
-              <>
+              <div className={cx('user-actions-group')}>
                 <Button variant="ghost" onClick={onInvite}>
                   {formatMessage(messages.invite)}
                 </Button>
@@ -129,7 +131,7 @@ export const AllUsersHeader = ({
                     <MeatballMenuIcon />
                   </Button>
                 </Popover>
-              </>
+              </div>
             )}
           </div>
         </div>
