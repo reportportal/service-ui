@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-.test-plans-page {
-  &__header {
-    position: relative;
-    padding: 16px 0 16px 32px;
-    background-color: var(--rp-ui-base-bg-000);
-    border-bottom: 1px solid var(--rp-ui-base-e-100);
+.test-plans {
+  &__table-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 26px;
+  }
 
-    h1 {
-      color: var(--rp-ui-base-almost-black);
-      font-family: var(--rp-ui-base-font-family-heading);
-      font-size: 20px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 31px;
+  &__table-row {
+    cursor: pointer;
+
+    &:hover {
+      outline: 1px solid var(--rp-ui-base-topaz-focused);
+      border-radius: 4px;
     }
   }
 
-  &__breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+  &__table-cell-coverage {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--rp-ui-base-almost-black);
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
   }
 
-  &__actions {
-    position: absolute;
-    bottom: 12px;
-    right: 32px;
+  &__table-cell-icon {
     display: flex;
-    gap: 12px;
+    justify-content: center;
   }
 }

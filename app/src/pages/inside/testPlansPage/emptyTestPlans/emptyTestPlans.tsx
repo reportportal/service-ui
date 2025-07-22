@@ -20,6 +20,7 @@ import { useIntl } from 'react-intl';
 import { referenceDictionary } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
+import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
 
@@ -50,7 +51,7 @@ export const EmptyTestPlans = () => {
         documentationLink={referenceDictionary.rpDoc}
         buttons={[
           {
-            name: formatMessage(messages.createTestPlansLabel),
+            name: formatMessage(commonMessages.createTestPlan),
             dataAutomationId: 'createTestPlansButton',
             isCompact: true,
             handleButton: handleCreate,
