@@ -16,6 +16,7 @@
 
 .test-plans-page {
   &__header {
+    position: relative;
     padding: 16px 0 16px 32px;
     background-color: var(--rp-ui-base-bg-000);
     border-bottom: 1px solid var(--rp-ui-base-e-100);
@@ -35,5 +36,13 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
+  }
+
+  &__actions {
+    position: absolute;
+    bottom: 12px;
+    right: 32px;
+    display: flex;
+    gap: 12px;
   }
 }
