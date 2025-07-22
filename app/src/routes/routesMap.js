@@ -112,6 +112,7 @@ import {
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
+import { canSeeActivityOption } from 'common/utils/permissions';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -194,7 +195,16 @@ const routesMap = {
 
   [ORGANIZATIONS_ACTIVITY_PAGE]: {
     path: '/organizations/:organizationSlug/activity',
-    thunk: (dispatch) => {
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const hasAccess = canSeeActivityOption({ userRole: state.user.info.userRole });
+
+      if (!hasAccess) {
+        return dispatch({
+          type: ORGANIZATIONS_PAGE,
+        });
+      }
+
       dispatch(fetchOrganizationEventsDataAction());
     },
   },
