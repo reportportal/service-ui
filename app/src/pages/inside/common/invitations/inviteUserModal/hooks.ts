@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import DOMPurify from 'dompurify';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectNameSelector } from 'controllers/project';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { FormDataMap } from './types';
+import { showErrorNotification } from 'controllers/notification';
+import { ApiError } from 'types/api';
+import { FormDataMap, InvitationRequestData } from './types';
 import { InviteUserProjectFormData } from './inviteUserProjectForm';
 import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 import { Organization } from '../../assignments/organizationAssignment';
-import { Level } from './constants';
+import { ERROR_CODES, Level, settingsLink, settingsLinkName } from './constants';
 
 export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector) as string;
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
   const organizationId = useSelector(activeOrganizationIdSelector) as number;
@@ -88,9 +92,42 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
     return { email, organizations };
   };
 
+  const handleError = (err: ApiError, userData: InvitationRequestData) => {
+    const { errorCode, message: errMessage } = err;
+    const externalInviteForbidden = errorCode === ERROR_CODES.FORBIDDEN && ssoUsersOnly;
+    const epamInviteForbidden = errorCode === ERROR_CODES.EPAM_FORBIDDEN;
+    const duplicatedInvite = errorCode === ERROR_CODES.DUPLICATION;
+    let message = errMessage;
+
+    if (duplicatedInvite) {
+      message = formatMessage(
+        level === Level.PROJECT ? messages.duplicationProject : messages.duplicationOrganization,
+      );
+    }
+
+    if (epamInviteForbidden) {
+      message = formatMessage(messages.epamInviteForbidden);
+    }
+
+    if (externalInviteForbidden) {
+      message = formatMessage(messages.externalInviteForbidden, {
+        email: userData.email,
+        linkName: settingsLinkName,
+        a: (innerData) =>
+          DOMPurify.sanitize(
+            `<a href="${settingsLink}" target="_blank" rel="noopener">${innerData.join()}</a>`,
+            { ADD_ATTR: ['target'] },
+          ),
+      });
+    }
+
+    dispatch(showErrorNotification({ message }));
+  };
+
   return {
     header: getHeader(),
     okButtonTitle,
     buildUserData,
+    handleError,
   };
 };

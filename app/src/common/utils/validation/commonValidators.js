@@ -118,3 +118,9 @@ export const createDescriptionValidator = bindMessageToValidator(
 
 export const createKeywordMatcherValidator = (keyword) =>
   bindMessageToValidator(validate.keywordMatcher(keyword), 'keywordMatcherHint');
+
+export const emailInviteUserValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.requiredEmail, 'emailInviteUserHint'),
+  ]);

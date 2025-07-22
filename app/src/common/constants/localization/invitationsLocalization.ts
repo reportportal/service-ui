@@ -47,7 +47,7 @@ export const messages = defineMessages({
   },
   selectSearchProject: {
     id: 'InviteUser.selectSearchProject',
-    defaultMessage: 'Select or search for a project',
+    defaultMessage: 'Enter to select project',
   },
   canEdit: {
     id: 'InviteUser.canEdit',
@@ -93,8 +93,21 @@ export const messages = defineMessages({
     defaultMessage:
       'User with {email} is not in ReportPortal yet. New users can be added only via SSO. More info <a>{linkName}</a>',
   },
+  epamInviteForbidden: {
+    id: 'InviteUser.epamInviteForbidden',
+    defaultMessage:
+      'Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: delivery.epam.com',
+  },
   managersCanEditAll: {
     id: 'InviteUser.managersCanEditAll',
     defaultMessage: 'Managers can edit all projects within the organization',
+  },
+  duplicationProject: {
+    id: 'InviteUser.duplicationProject',
+    defaultMessage: 'User with this email is already assigned to the project',
+  },
+  duplicationOrganization: {
+    id: 'InviteUser.duplicationOrganization',
+    defaultMessage: 'User with this email is already assigned to the organization',
   },
 });

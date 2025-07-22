@@ -23,9 +23,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { showSuccessNotification } from 'controllers/notification';
 import { hideModalAction, showModalAction } from 'controllers/modal';
-import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { ModalButtonProps } from 'types/common';
 import { ApiError } from 'types/api';
 import { BoundValidator } from 'common/utils/validation/types';
@@ -37,7 +36,7 @@ import {
   activeOrganizationNameSelector,
 } from 'controllers/organization';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { ERROR_CODES, InvitationStatus, Level, settingsLink, settingsLinkName } from './constants';
+import { InvitationStatus, Level } from './constants';
 import { ExternalUserInvitationModal } from '../../modals/externalUserInvitationModal';
 import { useInviteUser } from './hooks';
 import {
@@ -48,6 +47,7 @@ import {
   InvitationRequestData,
 } from './types';
 import { Organization } from '../../assignments/organizationAssignment';
+import { getFormName } from './utils';
 
 export const InviteUser = <L extends keyof FormDataMap>({
   level,
@@ -60,8 +60,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
 }: InviteUserProps<L>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
-  const { header, okButtonTitle, buildUserData } = useInviteUser(level);
+  const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level);
 
   const inviteUser = async (userData: InvitationRequestData, withProject: boolean) => {
     try {
@@ -74,21 +73,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
 
       return invitedUser;
     } catch (err) {
-      const { errorCode, message: errMessage } = err as ApiError;
-      const externalInviteForbidden = errorCode === ERROR_CODES.FORBIDDEN && ssoUsersOnly;
-      const message = externalInviteForbidden
-        ? formatMessage(messages.externalInviteForbidden, {
-            email: userData.email,
-            linkName: settingsLinkName,
-            a: (innerData) =>
-              DOMPurify.sanitize(
-                `<a href="${settingsLink}" target="_blank" rel="noopener">${innerData.join()}</a>`,
-                { ADD_ATTR: ['target'] },
-              ),
-          })
-        : errMessage;
-
-      dispatch(showErrorNotification({ message }));
+      handleError(err as ApiError, userData);
 
       return null;
     }
@@ -173,10 +158,10 @@ export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L
   }
 
   const Form = reduxForm<FormDataMap[L]>({
-    form: `inviteUserForm_${level}`,
+    form: getFormName(level),
     validate: (formData) => {
       const { email } = formData;
-      const emailValidator: BoundValidator = commonValidators.emailCreateUserValidator();
+      const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
       return { email: emailValidator(email?.trim()) };
     },
     enableReinitialize: true,

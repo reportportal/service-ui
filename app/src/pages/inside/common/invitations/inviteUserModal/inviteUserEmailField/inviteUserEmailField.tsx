@@ -15,6 +15,8 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { change } from 'redux-form';
 import { FieldText } from '@reportportal/ui-kit';
 import FieldErrorHint from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -24,8 +26,17 @@ import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-export const InviteUserEmailField = () => {
+interface InviteUserEmailFieldProps {
+  formName: string;
+}
+
+export const InviteUserEmailField = ({ formName }: InviteUserEmailFieldProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
+  const handleClear = () => {
+    dispatch(change(formName, 'email', ''));
+  };
 
   return (
     <FieldElement name="email" className={cx('email')}>
@@ -36,6 +47,8 @@ export const InviteUserEmailField = () => {
           defaultWidth={false}
           label={formatMessage(messages.email)}
           type="email"
+          clearable
+          onClear={handleClear}
         />
       </FieldErrorHint>
     </FieldElement>

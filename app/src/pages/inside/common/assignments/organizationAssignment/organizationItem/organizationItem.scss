@@ -26,8 +26,11 @@
 }
 
 .name {
-  flex: 1 0 auto;
+  flex: 1;
   font-weight: var(--rp-ui-base-fw-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .controls {

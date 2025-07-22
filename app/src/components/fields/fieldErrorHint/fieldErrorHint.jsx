@@ -305,6 +305,10 @@ const messages = defineMessages({
     id: 'DeleteProjectModal.keywordMatcherHint',
     defaultMessage: 'The entered text does not match the required keyword',
   },
+  emailInviteUserHint: {
+    id: 'CreateUserModal.emailInviteUserHint',
+    defaultMessage: 'Please enter a valid email',
+  },
 });
 
 @injectIntl

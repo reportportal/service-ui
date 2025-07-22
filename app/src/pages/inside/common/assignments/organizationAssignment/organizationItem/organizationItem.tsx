@@ -100,7 +100,9 @@ export const OrganizationItem = ({ value, onChange, onRemove }: OrganizationItem
   return (
     <div className={cx('organization')}>
       <div className={cx('header')}>
-        <div className={cx('name')}>{name}</div>
+        <div className={cx('name')} title={name}>
+          {name}
+        </div>
         <div className={cx('controls')}>
           <Dropdown
             className={cx('role')}
