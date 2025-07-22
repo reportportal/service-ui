@@ -91,3 +91,4 @@ export const canWorkWithOrganizationsSorting = checkPermission(
 );
 export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
 export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
+export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
