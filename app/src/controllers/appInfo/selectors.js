@@ -33,7 +33,7 @@ import {
   ALLOW_DELETE_ACCOUNT,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
-  SERVER_FOOTER_LINKS_KEY,
+  SERVER_SIDEBAR_LINKS_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
 } from './constants';
 
@@ -67,9 +67,9 @@ export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
-export const serverFooterLinksSelector = createSelector(
+export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
-  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_FOOTER_LINKS_KEY] || `[]`),
+  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),
 );
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';

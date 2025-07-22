@@ -32,9 +32,10 @@ import fetchJsonp from 'fetch-jsonp';
 import { useTracking } from 'react-tracking';
 import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { LinkItem } from '../linkItem';
+import { serverSidebarLinksSelector } from 'controllers/appInfo';
 import { FAQWithPopover } from '../index';
-import styles from './servicesContent.scss';
 import { messages } from '../../messages';
+import styles from './servicesContent.scss';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +45,7 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
   const { trackEvent } = useTracking();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const customLinks = useSelector(serverSidebarLinksSelector);
   const [latestServiceVersions, setLatestServiceVersions] = useState({});
 
   const currentYear = new Date().getFullYear();
@@ -70,30 +72,19 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
 
   const ServiceContentItems = [
     {
-      linkTo: referenceDictionary.rpDoc,
-      message: messages.documentation,
-    },
-    {
       isInternal: true,
-      linkTo: getApiLink(),
-      message: messages.openAPI,
+      url: getApiLink(),
+      name: messages.openAPI,
     },
     {
-      linkTo: referenceDictionary.rpGitHub,
-      message: messages.github,
+      url: referenceDictionary.rpGitHub,
+      name: messages.github,
     },
     {
-      linkTo: referenceDictionary.rpSlack,
-      message: messages.slack,
+      url: referenceDictionary.rpDoc,
+      name: messages.documentation,
     },
-    {
-      linkTo: referenceDictionary.rpEmail,
-      message: messages.contactUs,
-    },
-    {
-      linkTo: referenceDictionary.rpEpam,
-      message: messages.epam,
-    },
+    ...customLinks,
   ];
 
   useEffect(() => {
@@ -131,18 +122,18 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
 
       {ServiceContentItems.map((contentItem) => (
         <LinkItem
-          link={contentItem.linkTo}
-          content={formatMessage(contentItem.message)}
+          link={contentItem.url}
+          content={formatMessage(contentItem.name)}
           onClick={() => {
             closePopover();
             closeSidebar();
-            const linkName = contentItem.message.defaultMessage;
+            const linkName = contentItem.name?.defaultMessage || 'custom_link';
             trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(linkName));
           }}
           className={cx('menu-item')}
           isInternal={contentItem.isInternal}
           activeClassName={cx('active')}
-          key={contentItem.linkTo.type || contentItem.linkTo}
+          key={contentItem.url.type || contentItem.url}
         />
       ))}
       <LinkItem

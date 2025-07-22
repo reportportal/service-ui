@@ -86,14 +86,6 @@ export const messages = defineMessages({
     id: 'Sidebar.footer.github',
     defaultMessage: 'GitHub',
   },
-  slack: {
-    id: 'Sidebar.footer.slack',
-    defaultMessage: 'Slack',
-  },
-  contactUs: {
-    id: 'Sidebar.footer.contactUs',
-    defaultMessage: 'Contact Us',
-  },
   epam: {
     id: 'Sidebar.footer.epam',
     defaultMessage: 'EPAM',
