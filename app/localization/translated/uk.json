@@ -1980,7 +1980,7 @@
   "Sidebar.filtersBtn": "Фільтри",
   "Sidebar.footer.currentVersion": "Поточна версія",
   "Sidebar.footer.documentation": "Документація",
-  "Sidebar.footer.github": "Опублікуйте нас на GitHub",
+  "Sidebar.footer.github": "Зробіть форк на GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
   "Sidebar.footer.rights": "© ReportPortal 2013-{currentYear}. Всі права захищені.",
   "Sidebar.footer.serviceIsOutdated": "Сервіс застарів",
