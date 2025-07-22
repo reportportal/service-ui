@@ -1980,7 +1980,7 @@
   "Sidebar.filtersBtn": "Фильтры",
   "Sidebar.footer.currentVersion": "Текущая версия",
   "Sidebar.footer.documentation": "Документация",
-  "Sidebar.footer.epam": "EPAM",
+  "Sidebar.footer.github": "Разместите нас на GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
   "Sidebar.footer.rights": "© ReportPortal 2013-{currentYear}. Все права защищены.",
   "Sidebar.footer.serviceIsOutdated": "Сервис устарел",

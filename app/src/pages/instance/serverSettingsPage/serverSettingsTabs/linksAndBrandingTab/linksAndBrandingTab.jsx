@@ -75,7 +75,7 @@ const messages = defineMessages({
 });
 
 const MAX_LINKS_COUNT = 5;
-const DEFAULT_FOOTER_LINKS = [
+const DEFAULT_SIDEBAR_LINKS = [
   {
     name: 'Fork us on GitHub',
     url: referenceDictionary.rpGitHub,
@@ -169,7 +169,7 @@ export const LinksAndBrandingTab = () => {
       <div className={cx('links-panel')}>
         <div className={cx('links-summary')}>
           <div className={cx('default-links')}>
-            {DEFAULT_FOOTER_LINKS.map((link) => (
+            {DEFAULT_SIDEBAR_LINKS.map((link) => (
               <div key={link.name} className={cx('link-item')}>
                 <div className={cx('link-item-name')}>{link.name}</div>
                 <div className={cx('link-item-url')}>{link.url}</div>
@@ -192,7 +192,7 @@ export const LinksAndBrandingTab = () => {
         <div className={cx('links-control')}>
           {isAddLinkFormVisible ? (
             <AddLinkForm
-              defaultLinks={DEFAULT_FOOTER_LINKS}
+              defaultLinks={DEFAULT_SIDEBAR_LINKS}
               customLinks={customLinks}
               onClose={handleAddLinkFormClose}
             />

@@ -123,7 +123,11 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
       {ServiceContentItems.map((contentItem) => (
         <LinkItem
           link={contentItem.url}
-          content={formatMessage(contentItem.name)}
+          content={
+            contentItem.name?.defaultMessage
+              ? formatMessage(contentItem.name.defaultMessage)
+              : contentItem.name
+          }
           onClick={() => {
             closePopover();
             closeSidebar();
