@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-export enum InvitationStatus {
-  PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
-}
+import { Level } from './constants';
 
-export enum Level {
-  PROJECT = 'project',
-  ORGANIZATION = 'organization',
-}
-
-export const ERROR_CODES = {
-  FORBIDDEN: 4003,
-  EPAM_FORBIDDEN: 4005,
-  DUPLICATION: 40912,
-};
-
-export const settingsLinkName = 'Instance Invitation settings';
-export const settingsLink =
-  'https://reportportal.io/docs/admin-panel/ServerSettings/#instance-invitations_';
+export const getFormName = (level: Level) => `inviteUserForm_${level}`;

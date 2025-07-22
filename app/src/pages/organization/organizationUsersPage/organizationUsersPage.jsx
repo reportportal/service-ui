@@ -69,7 +69,12 @@ export const OrganizationUsersPage = () => {
 
   const getEmptyPageState = () => {
     return searchValue === null ? (
-      <EmptyUsersPageState isLoading={isUsersLoading} isNotEmpty={!isEmptyUsers} hasPermission />
+      <EmptyUsersPageState
+        isLoading={isUsersLoading}
+        isNotEmpty={!isEmptyUsers}
+        hasPermission
+        showInviteUserModal={showInviteUserModal}
+      />
     ) : (
       <EmptyPageState
         label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
