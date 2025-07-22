@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { canSeeActivityOption } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { ORGANIZATIONS_ACTIVITY_PAGE } from 'controllers/pages';
+import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
 import { messages } from '../../messages';
 import styles from './meatballMenu.scss';
 
@@ -40,10 +41,11 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+  const userRoles = useSelector(userRolesSelector);
 
   const handleClick = (elementName: string) => {
     dispatch(setActiveOrganizationAction(organization));
-    trackEvent(ORGANIZATION_PAGE_EVENTS.organizationsSorting(elementName));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu(elementName));
   };
 
   return (
@@ -51,16 +53,18 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       placement={'bottom-end'}
       content={
         <div className={cx('meatball-menu')}>
-          <Link
-            to={{
-              type: ORGANIZATIONS_ACTIVITY_PAGE,
-              payload: { organizationSlug: organization?.slug },
-            }}
-            className={cx('option-link')}
-            onClick={() => handleClick('activity_menu')}
-          >
-            <span>{formatMessage(messages.activity)}</span>
-          </Link>
+          {canSeeActivityOption(userRoles) && (
+            <Link
+              to={{
+                type: ORGANIZATIONS_ACTIVITY_PAGE,
+                payload: { organizationSlug: organization?.slug },
+              }}
+              className={cx('option-link')}
+              onClick={() => handleClick('activity_menu')}
+            >
+              <span>{formatMessage(messages.activity)}</span>
+            </Link>
+          )}
         </div>
       }
     >

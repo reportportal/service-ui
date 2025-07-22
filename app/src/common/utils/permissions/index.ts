@@ -48,5 +48,6 @@ export {
   canUpdateUserInstanceRole,
   canExportOrganizations,
   canInviteUserToOrganization,
+  canSeeActivityOption,
 } from './permissions';
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';
