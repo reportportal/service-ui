@@ -49,12 +49,14 @@ export const AdaptiveTagList = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(!isShowAllView); // Only calculate for non-show-all-view
 
   const getFullWidthOffset = useCallback(() => {
     const parentElement = listRef.current;
     const hiddenSet = new Set<number>();
 
     if (!parentElement) {
+      setIsCalculating(false);
       return;
     }
 
@@ -63,6 +65,7 @@ export const AdaptiveTagList = ({
     );
 
     if (isEmpty(tagElementsWithoutButtons)) {
+      setIsCalculating(false);
       return;
     }
 
@@ -85,6 +88,7 @@ export const AdaptiveTagList = ({
 
     setHiddenIndices(hiddenSet);
     setCount(overflowedElementsCount);
+    setIsCalculating(false);
   }, [listRef]);
 
   const getVisibleLinesOffset = useCallback(() => {
@@ -92,6 +96,7 @@ export const AdaptiveTagList = ({
     const hiddenSet = new Set<number>();
 
     if (!parentElement || !defaultVisibleLines) {
+      setIsCalculating(false);
       return;
     }
 
@@ -100,6 +105,7 @@ export const AdaptiveTagList = ({
     );
 
     if (isEmpty(tagElementsWithoutButtons)) {
+      setIsCalculating(false);
       return;
     }
 
@@ -122,6 +128,7 @@ export const AdaptiveTagList = ({
     setHiddenIndices(hiddenSet);
     setCount(overflowedElementsCount);
     setIsExceedsVisibleLines(hasOverflow);
+    setIsCalculating(false);
   }, [defaultVisibleLines, listRef]);
 
   const getMaxHeightStyle = useMemo(() => {
@@ -156,7 +163,14 @@ export const AdaptiveTagList = ({
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
-  }, [listRef, isShowAllView, defaultVisibleLines, getFullWidthOffset, getVisibleLinesOffset]);
+  }, [
+    listRef,
+    isShowAllView,
+    defaultVisibleLines,
+    getFullWidthOffset,
+    getVisibleLinesOffset,
+    hiddenIndices,
+  ]);
 
   const toggleExpanded = useCallback(() => {
     setIsExpanded((prevState) => !prevState);
@@ -233,24 +247,34 @@ export const AdaptiveTagList = ({
         style={getMaxHeightStyle}
         ref={listRef}
       >
-        {tags.map((tag, index) => {
-          // Only hide tags when expanded is toggled, not during initial render for isShowAllView
-          const isHasHiddenIndex = !isExpanded && hiddenIndices.has(index);
-          const shouldHideTag = !isShowAllView && isHasHiddenIndex;
+        {isCalculating
+          ? tags.map((tag, index) => (
+              <div
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${index}-${tag}`}
+                className={cx('tag-list__item')}
+                style={{ visibility: 'hidden' }}
+              >
+                <div className={cx('tag-list__item-title')}>{tag}</div>
+              </div>
+            ))
+          : tags.map((tag, index) => {
+              const isHasHiddenIndex = !isExpanded && hiddenIndices.has(index);
+              const shouldHideTag = !isShowAllView && isHasHiddenIndex;
 
-          return (
-            <div
-              // eslint-disable-next-line react/no-array-index-key
-              key={`${index}-${tag}`}
-              className={cx('tag-list__item')}
-              style={{
-                display: shouldHideTag ? 'none' : 'flex',
-              }}
-            >
-              <div className={cx('tag-list__item-title')}>{tag}</div>
-            </div>
-          );
-        })}
+              return (
+                <div
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${index}-${tag}`}
+                  className={cx('tag-list__item')}
+                  style={{
+                    display: shouldHideTag ? 'none' : 'flex',
+                  }}
+                >
+                  <div className={cx('tag-list__item-title')}>{tag}</div>
+                </div>
+              );
+            })}
         {!isShowAllView && (
           <>
             {isExpanded && hideAllButtonTemplate}

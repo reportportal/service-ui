@@ -26,10 +26,9 @@
 
 .tag-list {
   display: flex;
-  gap: 8px 18px;
+  gap: 8px;
   flex-wrap: wrap;
-  padding-left: 11px;
-  height: 22px;
+  height: 20px;
   max-width: 450px;
   overflow: hidden;
 
@@ -59,42 +58,50 @@
     position: relative;
     border: 1px solid var(--rp-ui-base-e-200);
     border-left: none;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-radius: 0 4px 4px 0;
     max-width: 148px;
     min-width: 35px;
+    height: 20px;
+    margin-left: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    box-sizing: border-box;
 
     &::before {
-      position: absolute;
-      top: 2px;
-      left: -8px;
       content: '';
-      display: block;
-      width: 16px;
-      height: 16px;
-      border: 1px solid var(--rp-ui-base-e-200);
-      border-right: none;
-      border-top: none;
-      border-radius: 3px;
-      transform: rotate(45deg);
+      position: absolute;
+      left: -7px;
+      top: 2px;
+      width: 14px;
+      height: 13px;
+      border-left: 1px solid var(--rp-ui-base-e-200);
+      border-top: 1px solid var(--rp-ui-base-e-200);
+      transform: rotate(-45deg);
+      background-color: transparent;
+      border-radius: 2px;
     }
 
     &-title {
-      padding: 2px 6px 2px 0;
+      padding-right: 8px;
+      z-index: 1;
       font-family: $FONT-ROBOTO-REGULAR;
       font-size: 11px;
       line-height: 16px;
+      font-weight: 400;
       letter-spacing: 0;
-      vertical-align: middle;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       text-transform: lowercase;
       color: var(--rp-ui-base-e-400);
+      background-color: transparent;
     }
 
     &--count {
-      height: 22px;
+      height: 20px;
+      font-size: 11px;
       min-width: auto;
       margin-left: 18px;
       padding-right: 7px;
@@ -102,6 +109,10 @@
       cursor: pointer;
       color: var(--rp-ui-base-e-400);
       background-color: transparent;
+
+      &::before {
+        background-color: transparent;
+      }
     }
 
     &--button {
@@ -122,6 +133,8 @@
   button {
     @include mixins.button-reset;
     color: var(--rp-ui-color-primary-text);
+    font-weight: 400;
+    min-width: 50px;
   }
 }
 
