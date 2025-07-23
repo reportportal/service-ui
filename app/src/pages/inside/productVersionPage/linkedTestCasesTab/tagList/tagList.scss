@@ -37,6 +37,13 @@
     max-width: 850px;
   }
 
+  &--show-all-view {
+    height: auto;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+    max-height: 66px;
+  }
+
   &--expanded {
     height: auto;
     max-width: none;
@@ -100,6 +107,7 @@
     &--button {
       &-show-all-view {
         min-width: 45px;
+        font-weight: 400;
       }
 
       &-wrapper {

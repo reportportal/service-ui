@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-$Z-INDEX-DEFAULT: 1;
-$Z_INDEX-GRID_HEADER: 2;
-$Z_INDEX-STICKY-TOOLBAR: 3;
-$Z_INDEX-USER_BLOCK_DROPDOWN: 4;
-$Z_INDEX-INPUT_DROPDOWN: 4;
-$Z_INDEX-ALL_LATEST_DROPDOWN: 4;
-$Z-INDEX-POPUP: 10;
-$Z-INDEX-PAGE-CONTAINER-HEADER: 11;
-$Z-INDEX-HINT: 15;
-$Z-INDEX_AUTOCOMPLETE: 16;
-$Z-INDEX-SCROLL-WRAPPER: 17;
-$Z-INDEX-OVERLAY-PANEL: 100;
+// Default number of visible lines when isShowAllView is true
+export const DEFAULT_VISIBLE_LINES = 3;
+
+// Tag item dimensions
+export const TAG_LINE_HEIGHT = 22; // px
+export const TAG_GAP_HEIGHT = 8; // px between lines
+
+// Timing constants
+export const IMMEDIATE_DELAY = 0; // ms - for show-all-view mode
+export const FONT_LOADING_DELAY = 100; // ms - for width-based mode
+
+// Layout tolerance
+export const OFFSET_TOLERANCE = 20; // px - tolerance for line height calculations

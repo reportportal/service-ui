@@ -20,8 +20,15 @@ import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 import isEmpty from 'lodash.isempty';
 import styles from './tagList.scss';
-
 import { messages } from './messages';
+import {
+  DEFAULT_VISIBLE_LINES,
+  TAG_LINE_HEIGHT,
+  TAG_GAP_HEIGHT,
+  IMMEDIATE_DELAY,
+  FONT_LOADING_DELAY,
+  OFFSET_TOLERANCE,
+} from './constants';
 
 const cx = classNames.bind(styles);
 
@@ -34,7 +41,7 @@ interface AdaptiveTagListProps {
 export const AdaptiveTagList = ({
   tags,
   isShowAllView = false,
-  defaultVisibleLines = null,
+  defaultVisibleLines = DEFAULT_VISIBLE_LINES,
 }: AdaptiveTagListProps) => {
   const { formatMessage } = useIntl();
   const listRef = useRef(null);
@@ -67,8 +74,6 @@ export const AdaptiveTagList = ({
     tagElementsWithoutButtons.forEach((childElement, index) => {
       const elementRect = childElement.getBoundingClientRect();
       const elementOffsetTop = childElement.offsetTop;
-
-      // Check if element is on a different line OR extends beyond container width
       const isOnDifferentLine = elementOffsetTop !== firstElementOffsetTop;
       const isExtendingRightBoundary = elementRect.right > containerRight;
 
@@ -107,7 +112,7 @@ export const AdaptiveTagList = ({
     tagElementsWithoutButtons.forEach((childElement, index) => {
       const elementOffsetTop = childElement.offsetTop;
 
-      if (elementOffsetTop > maxAllowedTopOffset) {
+      if (elementOffsetTop > maxAllowedTopOffset + OFFSET_TOLERANCE) {
         hiddenSet.add(index);
         overflowedElementsCount += 1;
         hasOverflow = true;
@@ -119,20 +124,35 @@ export const AdaptiveTagList = ({
     setIsExceedsVisibleLines(hasOverflow);
   }, [defaultVisibleLines, listRef]);
 
+  const getMaxHeightStyle = useMemo(() => {
+    if (isShowAllView && defaultVisibleLines && !isExpanded) {
+      const lineHeight = TAG_LINE_HEIGHT;
+      const gapHeight = TAG_GAP_HEIGHT;
+      const maxHeight = lineHeight * defaultVisibleLines + gapHeight * (defaultVisibleLines - 1);
+      return {
+        maxHeight: `${maxHeight}px`,
+        overflow: 'hidden',
+      };
+    }
+    return {};
+  }, [isShowAllView, defaultVisibleLines, isExpanded]);
+
   useEffect(() => {
     const parentElement = listRef.current;
 
     if (!parentElement) {
       return;
     }
-    // It is needed because script executes earlier than font-family applies to the text
+
+    const delay = isShowAllView && defaultVisibleLines ? IMMEDIATE_DELAY : FONT_LOADING_DELAY;
+
     const timeoutId = setTimeout(() => {
       if (isShowAllView && defaultVisibleLines) {
         getVisibleLinesOffset();
-        return;
+      } else {
+        getFullWidthOffset();
       }
-      getFullWidthOffset();
-    }, 500);
+    }, delay);
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
@@ -208,20 +228,23 @@ export const AdaptiveTagList = ({
       <div
         className={cx('tag-list', 'tag-list--full-width', {
           'tag-list--expanded': isExpanded,
+          'tag-list--show-all-view': isShowAllView && !isExpanded,
         })}
+        style={getMaxHeightStyle}
         ref={listRef}
       >
         {tags.map((tag, index) => {
+          // Only hide tags when expanded is toggled, not during initial render for isShowAllView
           const isHasHiddenIndex = !isExpanded && hiddenIndices.has(index);
-          const isItemHidden =
-            isHasHiddenIndex || (isShowAllView && defaultVisibleLines && isHasHiddenIndex);
+          const shouldHideTag = !isShowAllView && isHasHiddenIndex;
+
           return (
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${index}-${tag}`}
               className={cx('tag-list__item')}
               style={{
-                display: isItemHidden ? 'none' : 'flex',
+                display: shouldHideTag ? 'none' : 'flex',
               }}
             >
               <div className={cx('tag-list__item-title')}>{tag}</div>

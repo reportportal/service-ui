@@ -62,9 +62,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     {
       titleKey: 'tagsTitle',
       defaultMessageKey: 'noTagsAdded',
-      childComponent: isEmpty(tags) ? null : (
-        <AdaptiveTagList tags={tags} isShowAllView defaultVisibleLines={2} />
-      ),
+      childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
     },
     {
       titleKey: 'scenarioTitle',
