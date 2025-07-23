@@ -220,6 +220,17 @@ export const AdaptiveTagList = ({
     );
   }, [formatMessage, handleButtonClick, isShowAllView, defaultVisibleLines]);
 
+  const handleTruncationCheck = useCallback((element: HTMLDivElement | null, tagText: string) => {
+    if (element) {
+      const isTruncated = element.scrollWidth > element.clientWidth;
+      if (isTruncated) {
+        element.setAttribute('title', tagText);
+      } else {
+        element.removeAttribute('title');
+      }
+    }
+  }, []);
+
   if (isEmpty(tags)) {
     return (
       <div className={cx('tag-list-wrapper')}>
@@ -253,7 +264,12 @@ export const AdaptiveTagList = ({
                 display: shouldHideTag ? 'none' : 'flex',
               }}
             >
-              <div className={cx('tag-list__item-title')}>{tag}</div>
+              <div
+                className={cx('tag-list__item-title')}
+                ref={(el) => handleTruncationCheck(el, tag)}
+              >
+                {tag}
+              </div>
             </div>
           );
         })}
