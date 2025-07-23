@@ -31,7 +31,7 @@ interface TestCaseNameCellProps {
 export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      <PriorityIcon priority={priority} className={cx('name-icon')} />
+      <PriorityIcon priority={priority} />
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
