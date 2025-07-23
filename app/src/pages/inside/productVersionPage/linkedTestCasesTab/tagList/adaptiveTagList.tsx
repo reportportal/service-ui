@@ -126,9 +126,9 @@ export const AdaptiveTagList = ({
 
   const getMaxHeightStyle = useMemo(() => {
     if (isShowAllView && defaultVisibleLines && !isExpanded) {
-      const lineHeight = TAG_LINE_HEIGHT;
-      const gapHeight = TAG_GAP_HEIGHT;
-      const maxHeight = lineHeight * defaultVisibleLines + gapHeight * (defaultVisibleLines - 1);
+      const maxHeight =
+        TAG_LINE_HEIGHT * defaultVisibleLines + TAG_GAP_HEIGHT * (defaultVisibleLines - 1);
+
       return {
         maxHeight: `${maxHeight}px`,
         overflow: 'hidden',
@@ -223,6 +223,7 @@ export const AdaptiveTagList = ({
   const handleTruncationCheck = useCallback((element: HTMLDivElement | null, tagText: string) => {
     if (element) {
       const isTruncated = element.scrollWidth > element.clientWidth;
+
       if (isTruncated) {
         element.setAttribute('title', tagText);
       } else {
@@ -253,7 +254,7 @@ export const AdaptiveTagList = ({
       >
         {tags.map((tag, index) => {
           const isHasHiddenIndex = !isExpanded && hiddenIndices.has(index);
-          const shouldHideTag = !isShowAllView && isHasHiddenIndex;
+          const isItemHidden = !isShowAllView && isHasHiddenIndex;
 
           return (
             <div
@@ -261,7 +262,7 @@ export const AdaptiveTagList = ({
               key={`${index}-${tag}`}
               className={cx('tag-list__item')}
               style={{
-                display: shouldHideTag ? 'none' : 'flex',
+                display: isItemHidden ? 'none' : 'flex',
               }}
             >
               <div
