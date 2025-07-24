@@ -26,8 +26,8 @@ export const mockTestCases: TestCase[] = [
     path: ['Order history', 'Data migration', 'Email notifications', 'Cart management'],
     tags: [
       'sso system',
-      'user interface improvements',
-      'battery usage analysis for a',
+      'user interface improvements user interface improvements',
+      'battery usage analysis for a user interface improvements',
       'cross-platform app speed t',
       'ui',
       'performance test',
