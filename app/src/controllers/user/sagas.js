@@ -36,7 +36,6 @@ import { findAssignedProjectByOrganization } from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
-  unassignFromProjectSuccessAction,
   setActiveProjectAction,
   fetchUserSuccessAction,
   fetchUserErrorAction,

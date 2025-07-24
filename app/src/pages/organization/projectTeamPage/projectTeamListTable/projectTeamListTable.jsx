@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
@@ -54,7 +54,6 @@ const ProjectTeamListTableWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const activeProjectKey = useSelector(activeProjectKeySelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectKey = useSelector(projectKeySelector);
   const userRoles = useSelector(userRolesSelector);
