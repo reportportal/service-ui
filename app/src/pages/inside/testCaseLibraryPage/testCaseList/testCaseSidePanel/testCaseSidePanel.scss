@@ -24,7 +24,7 @@
   border-left: 1px solid var(--rp-ui-base-e-100);
   display: flex;
   flex-direction: column;
-  z-index: 100;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
   box-shadow: -2px 0 8px var(--rp-ui-base-e-100);
 
   .header {

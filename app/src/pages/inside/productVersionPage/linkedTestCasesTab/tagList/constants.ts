@@ -14,34 +14,16 @@
  * limitations under the License.
  */
 
-.name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px 0;
-}
+// Default number of visible lines when isShowAllView is true
+export const DEFAULT_VISIBLE_LINES = 3;
 
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+// Tag item dimensions
+export const TAG_LINE_HEIGHT = 22; // px
+export const TAG_GAP_HEIGHT = 8; // px between lines
 
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 4px;
-}
+// Timing constants
+export const IMMEDIATE_DELAY = 0; // ms - for show-all-view mode
+export const FONT_LOADING_DELAY = 100; // ms - for width-based mode
 
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+// Layout tolerance
+export const OFFSET_TOLERANCE = 20; // px - tolerance for line height calculations
