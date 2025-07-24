@@ -71,19 +71,13 @@ export const ActionMenu = ({
 
     return (
       <>
-        {links.map(
-          (link) =>
-            link.hasPermission !== false && (
-              <Link
-                key={link.label}
-                to={link.to}
-                className={cx('action-item', link.className)}
-                onClick={link.onClick}
-              >
-                {link.label}
-              </Link>
-            ),
-        )}
+        {links
+          .filter(({ hasPermission = true }) => hasPermission)
+          .map(({ label, to, className, onClick }) => (
+            <Link key={label} to={to} className={cx('action-item', className)} onClick={onClick}>
+              {label}
+            </Link>
+          ))}
       </>
     );
   };
@@ -93,21 +87,20 @@ export const ActionMenu = ({
 
     return (
       <>
-        {actions.map(
-          (action) =>
-            action.hasPermission !== false && (
-              <button
-                key={action.label}
-                type="button"
-                className={cx('action-item', action.className, {
-                  'danger-button': action.danger,
-                })}
-                onClick={action.onClick}
-              >
-                {action.label}
-              </button>
-            ),
-        )}
+        {actions
+          .filter(({ hasPermission = true }) => hasPermission)
+          .map(({ label, className, danger, onClick }) => (
+            <button
+              key={label}
+              type="button"
+              className={cx('action-item', className, {
+                'danger-button': danger,
+              })}
+              onClick={onClick}
+            >
+              {label}
+            </button>
+          ))}
       </>
     );
   };
