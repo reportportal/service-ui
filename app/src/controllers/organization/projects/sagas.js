@@ -35,11 +35,13 @@ import {
   DELETE_PROJECT,
   FETCH_FILTERED_PROJECTS,
   RENAME_PROJECT,
+  UNASSIGN_FROM_PROJECT,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
+import { fetchUserAction, idSelector } from 'controllers/user';
 
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
@@ -169,6 +171,42 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
   }
 }
 
+function* unassignFromProject({ payload = {} }) {
+  const { user, project, onSuccess } = payload;
+  const { projectId } = project;
+  const { id: organizationId } = yield select(activeOrganizationSelector);
+  const currentUserId = yield select(idSelector);
+
+  const removeOperation = {
+    op: 'remove',
+    path: 'users',
+    value: [user.id],
+  };
+
+  try {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
+      method: 'patch',
+      data: [removeOperation],
+    });
+
+    yield put(
+      showSuccessNotification({
+        messageId: 'unassignProjectSuccess',
+        values: { name: user.fullName },
+      }),
+    );
+
+    if (currentUserId === user.id) {
+      yield put(fetchUserAction());
+    }
+
+    yield put(hideModalAction());
+    onSuccess?.();
+  } catch (_err) {
+    yield put(showErrorNotification({ messageId: 'unassignProjectError' }));
+  }
+}
+
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
 }
@@ -181,6 +219,10 @@ function* watchRenameProject() {
   yield takeEvery(RENAME_PROJECT, renameProject);
 }
 
+function* watchUnassignFromProject() {
+  yield takeEvery(UNASSIGN_FROM_PROJECT, unassignFromProject);
+}
+
 export function* projectsSagas() {
   yield all([
     watchFetchProjects(),
@@ -188,5 +230,6 @@ export function* projectsSagas() {
     watchDeleteProject(),
     watchFetchFilteredProjects(),
     watchRenameProject(),
+    watchUnassignFromProject(),
   ]);
 }

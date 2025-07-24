@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
-import Link from 'redux-first-router-link';
 import { useDispatch, useSelector } from 'react-redux';
 import { FC, useCallback, useMemo } from 'react';
-import { setActiveProjectKeyAction } from 'controllers/user';
+import { setActiveProjectKeyAction, UserInfo, userInfoSelector } from 'controllers/user';
 import {
   canDeleteProject,
   canInviteUserToProject,
   canRenameProject,
+  canAssignUnassignInternalUser,
 } from 'common/utils/permissions/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
@@ -33,9 +31,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RenameProjectModal } from '../../modals/renameProjectModal';
 import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
-import styles from './projectActionMenu.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
+import { ActionMenu, ActionItem, LinkItem } from 'components/actionMenu';
+import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
 
 interface ProjectDetails {
   projectName: string;
@@ -56,6 +53,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const roles = useSelector(userRolesSelector);
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const user = useSelector(userInfoSelector) as UserInfo;
 
   const handleDeleteProjectClick = useCallback(() => {
     const data = {
@@ -79,79 +77,80 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     dispatch(showModalAction({ component: <RenameProjectModal data={data} /> }));
   }, [dispatch, projectId, projectName]);
 
-  const actionsButtons = useMemo(() => {
+  const handleLinkClick = useCallback(() => {
+    dispatch(setActiveProjectKeyAction(projectKey));
+  }, [dispatch, projectKey]);
+
+  const handleAssignClick = useCallback(() => {
+    // TODO: Implement assign action
+  }, []);
+
+  const handleUnassignClick = useCallback(() => {
+    dispatch(
+      showModalAction({ component: <UnassignProjectModal user={user} project={details} /> }),
+    );
+  }, [details, dispatch, user]);
+
+  const links = useMemo(
+    (): LinkItem[] => [
+      {
+        label: formatMessage(messages.team),
+        to: {
+          type: 'PROJECT_MEMBERS_PAGE',
+          payload: { projectSlug, organizationSlug },
+        },
+        onClick: handleLinkClick,
+      },
+      {
+        label: formatMessage(messages.settings),
+        to: {
+          type: 'PROJECT_SETTINGS_PAGE',
+          payload: { projectSlug, organizationSlug },
+        },
+        onClick: handleLinkClick,
+      },
+    ],
+    [formatMessage, projectSlug, organizationSlug, handleLinkClick],
+  );
+
+  const actions = useMemo((): ActionItem[] => {
     const projectUserRoles = { ...roles, projectRole };
+    const isAssigned = !!projectRole;
+
     return [
       {
-        actionLabel: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-        onclick: handleRenameProjectClick,
+        label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+        onClick: handleRenameProjectClick,
         hasPermission: canRenameProject(projectUserRoles),
       },
       {
-        actionLabel: formatMessage(messages.actionInviteUser),
-        onclick: () => {},
+        label: formatMessage(messages.actionInviteUser),
+        onClick: () => {},
         hasPermission: canInviteUserToProject(projectUserRoles),
       },
       {
-        actionLabel: formatMessage(messages.actionUnassign),
-        onclick: () => {},
-        hasPermission: true,
+        label: isAssigned
+          ? formatMessage(COMMON_LOCALE_KEYS.UNASSIGN)
+          : formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
+        onClick: isAssigned ? handleUnassignClick : handleAssignClick,
+        hasPermission: canAssignUnassignInternalUser(roles),
       },
       {
-        actionLabel: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        onclick: handleDeleteProjectClick,
-        className: cx('delete-button'),
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        onClick: handleDeleteProjectClick,
         hasPermission: canDeleteProject(projectUserRoles),
+        danger: true,
       },
     ];
-  }, [roles, projectRole, formatMessage, handleRenameProjectClick, handleDeleteProjectClick]);
+  }, [
+    roles,
+    projectRole,
+    formatMessage,
+    handleRenameProjectClick,
+    handleDeleteProjectClick,
+    handleAssignClick,
+    handleUnassignClick,
+  ]);
 
-  return (
-    <Popover
-      placement="bottom-end"
-      content={
-        <div className={cx('action-dropdown')}>
-          <Link
-            to={{
-              type: 'PROJECT_MEMBERS_PAGE',
-              payload: { projectSlug, organizationSlug },
-            }}
-            className={cx('action-item')}
-            onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
-          >
-            <span>{formatMessage(messages.team)}</span>
-          </Link>
-          <Link
-            to={{
-              type: 'PROJECT_SETTINGS_PAGE',
-              payload: { projectSlug, organizationSlug },
-            }}
-            className={cx('action-item')}
-            onClick={() => dispatch(setActiveProjectKeyAction(projectKey))}
-          >
-            <span>{formatMessage(messages.settings)}</span>
-          </Link>
-          <div className={cx('divider')} />
-          {actionsButtons.map(
-            (button) =>
-              button.hasPermission && (
-                <button
-                  type="button"
-                  className={cx('action-item', button.className)}
-                  onClick={button.onclick}
-                  key={button.actionLabel}
-                >
-                  {button.actionLabel}
-                </button>
-              ),
-          )}
-        </div>
-      }
-      className={cx('actions-popover')}
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
+  return <ActionMenu links={links} actions={actions} showDivider={true} />;
 };

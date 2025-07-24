@@ -21,7 +21,6 @@ import {
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
   ASSIGN_TO_PROJECT_SUCCESS,
-  UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
   SET_API_KEYS,
   ADD_API_KEY_SUCCESS,
@@ -73,19 +72,6 @@ export const userAssignedProjectReducer = (state = {}, { type = '', payload = {}
         },
       };
     }
-    case UNASSIGN_FROM_PROJECT_SUCCESS: {
-      const { projectName } = payload;
-      return Object.keys(state).reduce(
-        (result, assignedProjectName) =>
-          assignedProjectName === projectName
-            ? result
-            : {
-                ...result,
-                [assignedProjectName]: state[assignedProjectName],
-              },
-        {},
-      );
-    }
     default:
       return state;
   }
@@ -96,11 +82,6 @@ export const userInfoReducer = (state = {}, { type = '', payload = {} }) => {
     case FETCH_USER_SUCCESS:
       return payload;
     case ASSIGN_TO_PROJECT_SUCCESS:
-    case UNASSIGN_FROM_PROJECT_SUCCESS:
-      return {
-        ...state,
-        assignedProjects: userAssignedProjectReducer(state.assignedProjects, { type, payload }),
-      };
     default:
       return state;
   }

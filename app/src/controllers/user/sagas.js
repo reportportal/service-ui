@@ -48,7 +48,6 @@ import {
 } from './actionCreators';
 import {
   ASSIGN_TO_PROJECT,
-  UNASSIGN_FROM_PROJECT,
   SET_ACTIVE_PROJECT,
   ADD_API_KEY,
   FETCH_API_KEYS,
@@ -97,35 +96,6 @@ function* assignToProject({ payload: project }) {
     yield put(
       showNotification({
         messageId: 'assignError',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
-  }
-}
-
-function* unassignFromProject({ payload: project }) {
-  const userId = yield select(userIdSelector);
-  const data = {
-    userNames: [userId],
-  };
-  try {
-    yield call(fetch, URLS.userUnassign(project), {
-      method: 'put',
-      data,
-    });
-    yield put(unassignFromProjectSuccessAction(project));
-    yield put(
-      showNotification({
-        messageId: 'unassignSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (err) {
-    const error = err.message;
-    yield put(
-      showNotification({
-        messageId: 'unassignError',
         type: NOTIFICATION_TYPES.ERROR,
         values: { error },
       }),
@@ -375,10 +345,6 @@ function* watchAssignToProject() {
   yield takeLatest(ASSIGN_TO_PROJECT, assignToProject);
 }
 
-function* watchUnassignFromProject() {
-  yield takeLatest(UNASSIGN_FROM_PROJECT, unassignFromProject);
-}
-
 function* watchUpdateUserInfo() {
   yield takeEvery(UPDATE_USER_INFO, updateUserInfo);
 }
@@ -386,7 +352,6 @@ function* watchUpdateUserInfo() {
 export function* userSagas() {
   yield all([
     watchAssignToProject(),
-    watchUnassignFromProject(),
     watchFetchUser(),
     watchSaveActiveProject(),
     watchAddApiKey(),

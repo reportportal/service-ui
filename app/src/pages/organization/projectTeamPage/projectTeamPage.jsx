@@ -49,7 +49,7 @@ export const ProjectTeamPage = () => {
 
   useEffect(() => {
     trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
-  }, []);
+  }, [trackEvent]);
 
   const onInvite = () => {
     dispatch(fetchMembersAction());

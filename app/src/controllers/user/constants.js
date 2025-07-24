@@ -37,8 +37,6 @@ export const SETTINGS_INITIAL_STATE = {
 export const ASSIGN_TO_PROJECT = 'assignToProject';
 export const ASSIGN_TO_PROJECT_SUCCESS = 'assignToProjectSuccess';
 export const ASSIGN_TO_PROJECT_ERROR = 'assignToProjectError';
-export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
-export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';
 
 export const FETCH_API_KEYS = 'fetchApiKeys';
 export const SET_API_KEYS = 'setApiKeys';

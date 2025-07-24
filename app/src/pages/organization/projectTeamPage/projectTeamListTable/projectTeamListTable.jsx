@@ -21,14 +21,13 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
 import { canSeeEmailMembers, getRoleTitle, getRoleBadgesData } from 'common/utils/permissions';
 import { projectKeySelector } from 'controllers/project';
-import { canSeeRowActionMenu } from 'common/utils/permissions/permissions';
+import { ProjectTeamActionMenu } from './projectTeamActionMenu/projectTeamActionMenu';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGINATION,
@@ -97,10 +96,14 @@ const ProjectTeamListTableWrapped = ({
               ),
             },
             permissions: formatMessage(getRoleTitle(projectRole)),
+            metaData: {
+              id,
+              fullName,
+            },
           };
         },
       ),
-    [members, activeProjectKey, organizationSlug, projectKey],
+    [members, organizationSlug, projectKey, currentUserId, formatMessage],
   );
 
   const primaryColumn = {
@@ -134,22 +137,6 @@ const ProjectTeamListTableWrapped = ({
     },
   );
 
-  const renderRowActions = () => (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-menu')}>
-          <p className={cx('add')}>Add</p>
-          <p className={cx('remove')}>Remove</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
-
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
     dispatch(fetchMembersAction());
@@ -162,7 +149,7 @@ const ProjectTeamListTableWrapped = ({
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
       showPagination={members.length > 0}
-      renderRowActions={canSeeRowActionMenu(userRoles) ? renderRowActions : null}
+      renderRowActions={(metaData) => <ProjectTeamActionMenu user={metaData} />}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}
