@@ -79,6 +79,10 @@
   &__content {
     width: 100%;
     min-width: 580px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
   }
 
   &__content-title {
