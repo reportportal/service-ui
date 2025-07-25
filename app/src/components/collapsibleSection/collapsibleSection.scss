@@ -17,6 +17,10 @@
 .collapsible-section {
   margin-bottom: 16px;
 
+  .header-row {
+    display: flex;
+  }
+
   .section-header {
     display: flex;
     align-items: center;

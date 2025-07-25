@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactElement, useState } from 'react';
+import { ReactElement, ReactNode, useState } from 'react';
 import classNames from 'classnames/bind';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 import styles from './collapsibleSection.scss';
@@ -53,6 +53,52 @@ export const CollapsibleSection = ({
         </div>
         <span className={cx('section-title')}>{title}</span>
       </button>
+      {isExpanded && (
+        <div className={cx('section-content')}>
+          {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+interface CollapsibleSectionWithHeaderControlProps {
+  title: string;
+  childComponent?: ReactElement;
+  defaultMessage?: string;
+  isInitiallyExpanded?: boolean;
+  HeaderControlComponent?: ({ isExpanded }) => ReactNode;
+}
+
+export const CollapsibleSectionWithHeaderControl = ({
+  title,
+  childComponent,
+  defaultMessage,
+  HeaderControlComponent,
+  isInitiallyExpanded = true,
+}: CollapsibleSectionWithHeaderControlProps) => {
+  const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <div className={cx('collapsible-section')}>
+      <div className={cx('header-row')}>
+        <button
+          type="button"
+          className={cx('section-header')}
+          onClick={handleToggle}
+          aria-expanded={isExpanded}
+        >
+          <div className={cx('chevron-wrapper', { rotated: isExpanded })}>
+            <ChevronDownDropdownIcon />
+          </div>
+          <span className={cx('section-title')}>{title}</span>
+        </button>
+        {HeaderControlComponent && <HeaderControlComponent isExpanded={isExpanded} />}
+      </div>
       {isExpanded && (
         <div className={cx('section-content')}>
           {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}
