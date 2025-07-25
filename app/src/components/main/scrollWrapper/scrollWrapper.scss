@@ -65,7 +65,7 @@
   transition: opacity 400ms;
 }
 .scrolling-content {
-  z-index: $Z-INDEX-SCROLL-WRAPPER;
+  z-index: 0;
   &.with-footer {
     display: flex;
     flex-direction: column;
