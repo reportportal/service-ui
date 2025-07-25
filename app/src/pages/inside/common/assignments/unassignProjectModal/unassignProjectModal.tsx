@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
-import { idSelector } from 'controllers/user';
+import { fetchUserAction, idSelector } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import styles from './unassignProjectModal.scss';
 import { unassignFromProjectAction } from 'controllers/organization/projects';
@@ -54,11 +54,20 @@ export const UnassignProjectModal = ({ user, project, onSuccess }: UnassignProje
     ? messages.unassignProjectSelfDescription
     : messages.unassignProjectUserDescription;
 
+  const handleUnassignSuccess = () => {
+    if (currentUserId === user.id) {
+      dispatch(fetchUserAction());
+    }
+
+    dispatch(hideModalAction());
+    onSuccess?.();
+  };
+
   const okButton: ModalButtonProps = {
     text: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
     children: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
     onClick: () => {
-      dispatch(unassignFromProjectAction(user, project, onSuccess));
+      dispatch(unassignFromProjectAction(user, project, handleUnassignSuccess));
     },
     'data-automation-id': 'submitButton',
   };

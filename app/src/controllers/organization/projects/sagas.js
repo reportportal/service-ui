@@ -41,7 +41,6 @@ import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
-import { fetchUserAction, idSelector } from 'controllers/user';
 
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
@@ -175,7 +174,6 @@ function* unassignFromProject({ payload = {} }) {
   const { user, project, onSuccess } = payload;
   const { projectId } = project;
   const { id: organizationId } = yield select(activeOrganizationSelector);
-  const currentUserId = yield select(idSelector);
 
   const removeOperation = {
     op: 'remove',
@@ -196,11 +194,6 @@ function* unassignFromProject({ payload = {} }) {
       }),
     );
 
-    if (currentUserId === user.id) {
-      yield put(fetchUserAction());
-    }
-
-    yield put(hideModalAction());
     onSuccess?.();
   } catch (_err) {
     yield put(showErrorNotification({ messageId: 'unassignProjectError' }));
