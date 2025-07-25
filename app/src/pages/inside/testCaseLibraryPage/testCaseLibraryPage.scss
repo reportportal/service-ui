@@ -22,7 +22,7 @@
   &__header {
     position: sticky;
     top: 0;
-    z-index: $Z-INDEX-PAGE-CONTAINER-HEADER;
+    z-index: 0;
     background-color: var(--rp-ui-base-bg-000);
     padding: 16px 32px 12px;
     border-bottom: 1px solid var(--rp-ui-base-e-100);
