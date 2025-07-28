@@ -154,6 +154,8 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/settings`,
+  organizationById: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,

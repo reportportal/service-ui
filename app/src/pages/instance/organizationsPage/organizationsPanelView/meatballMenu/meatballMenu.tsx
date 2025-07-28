@@ -20,10 +20,11 @@ import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { canSeeActivityOption } from 'common/utils/permissions';
+import { setActiveOrganizationAction, deleteOrganizationAction } from 'controllers/organization/actionCreators';
+import { canSeeActivityOption, canDeleteOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
 import { messages } from '../../messages';
 import styles from './meatballMenu.scss';
 
@@ -31,6 +32,8 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 interface Organization {
   slug: string;
+  id: string;
+  name: string;
 }
 
 interface MeatballMenuProps {
@@ -46,6 +49,22 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const handleClick = (elementName: string) => {
     dispatch(setActiveOrganizationAction(organization));
     trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu(elementName));
+  };
+
+  const handleDeleteClick = () => {
+    handleClick('delete_menu');
+    dispatch(showModalAction({
+      id: 'deleteOrganizationModal',
+      data: {
+        organizationName: organization.name,
+        onConfirm: () => {
+          dispatch(deleteOrganizationAction({
+            organizationId: organization.id,
+            organizationName: organization.name,
+          }));
+        },
+      },
+    }));
   };
 
   return (
@@ -64,6 +83,15 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
             >
               <span>{formatMessage(messages.activity)}</span>
             </Link>
+          )}
+          {canDeleteOrganization(userRoles) && (
+            <button
+              type="button"
+              className={cx('option-link', 'delete-option')}
+              onClick={handleDeleteClick}
+            >
+              <span>{formatMessage(messages.deleteOrganization)}</span>
+            </button>
           )}
         </div>
       }

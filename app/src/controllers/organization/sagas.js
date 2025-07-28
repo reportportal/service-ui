@@ -27,11 +27,15 @@ import {
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
   PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
   UPDATE_ORGANIZATION_SETTINGS,
+  DELETE_ORGANIZATION,
 } from './constants';
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
 import { fetch } from 'common/utils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
+import { hideModalAction } from 'controllers/modal';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { showSuccessNotification } from 'controllers/notification';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -103,12 +107,42 @@ function* updateOrganizationSettings({ payload: { organizationId, retentionPolic
   }
 }
 
+function* deleteOrganization({ payload: { organizationId, organizationName } }) {
+  try {
+    yield call(fetch, URLS.organizationById(organizationId), {
+      method: 'delete',
+    });
+
+    yield put(hideModalAction());
+    yield put(fetchFilteredOrganizationsAction());
+    yield put(
+      showSuccessNotification({
+        messageId: 'deleteOrganizationSuccess',
+        values: { name: organizationName },
+      }),
+    );
+    yield put(redirect({ type: ORGANIZATIONS_PAGE }));
+  } catch (err) {
+    const error = err.message;
+    yield put(
+      showDefaultErrorNotification({
+        messageId: 'deleteOrganizationError',
+        values: { error },
+      }),
+    );
+  }
+}
+
 function* watchPrepareActiveOrganizationSettings() {
   yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_SETTINGS, prepareActiveOrganizationSettings);
 }
 
 function* watchUpdateOrganizationSettings() {
   yield takeEvery(UPDATE_ORGANIZATION_SETTINGS, updateOrganizationSettings);
+}
+
+function* watchDeleteOrganization() {
+  yield takeEvery(DELETE_ORGANIZATION, deleteOrganization);
 }
 
 export function* organizationSagas() {
@@ -118,6 +152,7 @@ export function* organizationSagas() {
     watchFetchOrganizationSettings(),
     watchPrepareActiveOrganizationSettings(),
     watchUpdateOrganizationSettings(),
+    watchDeleteOrganization(),
     projectsSagas(),
     usersSagas(),
   ]);

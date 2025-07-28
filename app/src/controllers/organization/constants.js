@@ -28,3 +28,5 @@ export const PREPARE_ACTIVE_ORGANIZATION_SETTINGS = 'prepareActiveOrganizationSe
 
 export const UPDATE_ORGANIZATION_SETTINGS = 'updateOrganizationSettings';
 export const UPDATE_ORGANIZATION_SETTINGS_SUCCESS = 'updateOrganizationSettingsSuccess';
+
+export const DELETE_ORGANIZATION = 'deleteOrganization';

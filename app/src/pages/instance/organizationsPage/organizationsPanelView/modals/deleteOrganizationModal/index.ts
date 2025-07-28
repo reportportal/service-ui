@@ -1,5 +1,5 @@
-/*
- * Copyright 2019 EPAM Systems
+/*!
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-import * as validators from './validate';
-import * as boundValidators from './commonValidators';
-import * as asyncValidation from './asyncValidation';
-
-export { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
-
-export const validateAsync = asyncValidation;
-export const validate = validators;
-export const commonValidators = boundValidators;
-export const { createOrganizationNameValidator } = validators;
+export { default as DeleteOrganizationModal } from './deleteOrganizationModal'; 

@@ -35,6 +35,7 @@ import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
 import { messages } from './messages';
 import { NoAssignedEmptyPage } from './noAssignedEmptyPage';
+import './organizationsPanelView/modals/deleteOrganizationModal';
 import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);

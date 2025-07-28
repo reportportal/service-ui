@@ -85,6 +85,10 @@ export const itemNameEntity = composeValidators([
   isNotEmpty,
   ({ value }) => composeValidators([isNotEmpty, lengthRange(3, 256)])(value),
 ]);
+
+export const createOrganizationNameValidator = (expectedName) => (enteredName) =>
+  enteredName && enteredName.toLowerCase() === expectedName.toLowerCase();
+
 export const launchNumericEntity = composeValidators([
   isNotEmpty,
   ({ value }) => composeValidators([isNotEmpty, maxLength(18), regex(/^[0-9]+$/)])(value),

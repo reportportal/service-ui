@@ -33,4 +33,23 @@
   outline: none;
   background: none;
   border: none;
+  padding: 8px 12px;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+
+  &:hover {
+    color: var(--color-text-link);
+    background-color: var(--color-bg-hover);
+  }
+
+  &.delete-option {
+    color: var(--color-text-danger);
+
+    &:hover {
+      color: var(--color-text-danger-hover);
+      background-color: var(--color-bg-danger-hover);
+    }
+  }
 }

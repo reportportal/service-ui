@@ -59,6 +59,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
   },
+  deleteOrganizationSuccess: {
+    id: 'OrganizationsPage.deleteOrganizationSuccess',
+    defaultMessage: "The organization ''{name}'' has been deleted successfully",
+  },
+  deleteOrganizationError: {
+    id: 'OrganizationsPage.deleteOrganizationError',
+    defaultMessage: 'An error occurred during deleting the organization: {error}',
+  },
   updateProjectSuccess: {
     id: 'ProjectsPage.updateProjectSuccess',
     defaultMessage: 'The project has been updated successfully',
