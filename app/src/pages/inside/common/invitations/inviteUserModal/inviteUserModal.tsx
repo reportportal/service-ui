@@ -36,6 +36,7 @@ import {
   activeOrganizationNameSelector,
 } from 'controllers/organization';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { fetchUserAction, UserInfo, userInfoSelector } from 'controllers/user';
 import { InvitationStatus, Level } from './constants';
 import { ExternalUserInvitationModal } from '../../modals/externalUserInvitationModal';
 import { useInviteUser } from './hooks';
@@ -61,6 +62,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level);
+  const currentUser = useSelector(userInfoSelector) as UserInfo;
 
   const inviteUser = async (userData: InvitationRequestData, withProject: boolean) => {
     try {
@@ -70,6 +72,10 @@ export const InviteUser = <L extends keyof FormDataMap>({
       })) as InvitationResponseData;
 
       onInvite?.(withProject);
+
+      if (userData.email === currentUser.email) {
+        dispatch(fetchUserAction());
+      }
 
       return invitedUser;
     } catch (err) {

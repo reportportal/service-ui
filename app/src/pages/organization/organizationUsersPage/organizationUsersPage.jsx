@@ -31,7 +31,10 @@ import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
-import { activeOrganizationIdSelector } from 'controllers/organization';
+import {
+  activeOrganizationSelector,
+  fetchOrganizationBySlugAction,
+} from 'controllers/organization';
 import { userRolesSelector } from 'controllers/pages';
 import { canInviteUserToOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -47,7 +50,7 @@ export const OrganizationUsersPage = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const users = useSelector(usersSelector);
-  const organizationId = useSelector(activeOrganizationIdSelector);
+  const { id: organizationId, slug: organizationSlug } = useSelector(activeOrganizationSelector);
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
@@ -56,6 +59,7 @@ export const OrganizationUsersPage = () => {
 
   const onInvite = (withProject) => {
     dispatch(fetchOrganizationUsersAction(organizationId));
+    dispatch(fetchOrganizationBySlugAction(organizationSlug));
     trackEvent(ORGANIZATION_PAGE_EVENTS.inviteUser(withProject));
   };
 
