@@ -311,6 +311,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.assign',
     defaultMessage: 'Assign',
   },
+  UNASSIGN: {
+    id: 'Common.unassign',
+    defaultMessage: 'Unassign',
+  },
   EXPORT: {
     id: 'Common.export',
     defaultMessage: 'Export',

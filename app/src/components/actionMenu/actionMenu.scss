@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 .actions-popover {
   padding: 8px 0;
 }
@@ -20,34 +21,38 @@
 .action-dropdown {
   display: flex;
   flex-direction: column;
-  min-width: 120px;
+}
 
-  .action-item {
-    padding: 8px 16px;
-    align-items: center;
-    font-size: 13px;
-    line-height: 20px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    color: $COLOR--almost-black;
-    cursor: pointer;
-    text-decoration: none;
+.action-item {
+  display: flex;
+  align-items: start;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  &:focus,
+  &:focus-visible {
     outline: none;
-    background: none;
     border: none;
-    text-align: start;
+  }
 
-    &.delete-button {
-      color: $COLOR--error;
-    }
-
-    &:hover {
-      filter: brightness(80%);
-    }
+  &.danger-button {
+    color: var(--rp-ui-base-error);
   }
 }
 
 .divider {
   height: 1px;
-  background-color: $COLOR--e-100;
   margin: 8px 12px;
+  background-color: var(--rp-ui-base-e-100);
 }

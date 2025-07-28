@@ -20,6 +20,7 @@ export {
   createProjectAction,
   deleteProjectAction,
   renameProjectAction,
+  unassignFromProjectAction,
 } from './actionCreators';
 export { projectsReducer } from './reducer';
 export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
@@ -33,5 +34,6 @@ export {
   FETCH_ORGANIZATION_PROJECTS,
   SORTING_KEY,
   FETCH_FILTERED_PROJECTS,
+  UNASSIGN_FROM_PROJECT,
 } from './constants';
 export type { ProjectsSearchesItem, ProjectsSearchesResponseData } from './types';

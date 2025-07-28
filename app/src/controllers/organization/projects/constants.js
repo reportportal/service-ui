@@ -24,6 +24,7 @@ export const NAMESPACE = 'organizationProjects';
 export const CREATE_PROJECT = 'createProject';
 export const DELETE_PROJECT = 'deleteProject';
 export const RENAME_PROJECT = 'renameProject';
+export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
 export const DEFAULT_LIMITATION = 20;
 export const DEFAULT_OFFSET = 0;
 export const DEFAULT_SORT_COLUMN = 'name';

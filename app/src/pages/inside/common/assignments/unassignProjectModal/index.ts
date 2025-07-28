@@ -1,5 +1,5 @@
-/*
- * Copyright 2024 EPAM Systems
+/*!
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,4 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
-
-const PROJECT_PAGE = 'project';
-
-const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(PROJECT_PAGE);
-
-export const PROJECT_PAGE_EVENTS = {
-  SEARCH_PROJECT_TEAM_FIELD: {
-    ...BASIC_EVENT_PARAMETERS,
-    place: 'project_team',
-    element_name: 'search',
-  },
-};
+export { UnassignProjectModal } from './unassignProjectModal';

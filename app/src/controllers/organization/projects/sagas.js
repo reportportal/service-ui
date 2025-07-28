@@ -35,6 +35,7 @@ import {
   DELETE_PROJECT,
   FETCH_FILTERED_PROJECTS,
   RENAME_PROJECT,
+  UNASSIGN_FROM_PROJECT,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
@@ -169,6 +170,36 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
   }
 }
 
+function* unassignFromProject({ payload = {} }) {
+  const { user, project, onSuccess } = payload;
+  const { projectId } = project;
+  const { id: organizationId } = yield select(activeOrganizationSelector);
+
+  const removeOperation = {
+    op: 'remove',
+    path: 'users',
+    value: [user.id],
+  };
+
+  try {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
+      method: 'patch',
+      data: [removeOperation],
+    });
+
+    yield put(
+      showSuccessNotification({
+        messageId: 'unassignProjectSuccess',
+        values: { name: user.fullName },
+      }),
+    );
+
+    onSuccess?.();
+  } catch (_err) {
+    yield put(showErrorNotification({ messageId: 'unassignProjectError' }));
+  }
+}
+
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
 }
@@ -181,6 +212,10 @@ function* watchRenameProject() {
   yield takeEvery(RENAME_PROJECT, renameProject);
 }
 
+function* watchUnassignFromProject() {
+  yield takeEvery(UNASSIGN_FROM_PROJECT, unassignFromProject);
+}
+
 export function* projectsSagas() {
   yield all([
     watchFetchProjects(),
@@ -188,5 +223,6 @@ export function* projectsSagas() {
     watchDeleteProject(),
     watchFetchFilteredProjects(),
     watchRenameProject(),
+    watchUnassignFromProject(),
   ]);
 }

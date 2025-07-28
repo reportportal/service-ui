@@ -22,8 +22,6 @@ import {
   ASSIGN_TO_PROJECT,
   ASSIGN_TO_PROJECT_SUCCESS,
   ASSIGN_TO_PROJECT_ERROR,
-  UNASSIGN_FROM_PROJECT,
-  UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_API_KEYS,
   ADD_API_KEY,
   DELETE_API_KEY,
@@ -119,16 +117,6 @@ export const assignToProjectSuccessAction = (projectInfo) => ({
 export const assignToProjectErrorAction = (projectInfo) => ({
   type: ASSIGN_TO_PROJECT_ERROR,
   payload: projectInfo,
-});
-
-export const unassignFromProjectAction = (project) => ({
-  type: UNASSIGN_FROM_PROJECT,
-  payload: project,
-});
-
-export const unassignFromProjectSuccessAction = (project) => ({
-  type: UNASSIGN_FROM_PROJECT_SUCCESS,
-  payload: project,
 });
 
 export const updateUserInfoAction = (email, data, onSuccess) => ({

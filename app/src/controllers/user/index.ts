@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ export {
   ASSIGN_TO_PROJECT,
   ASSIGN_TO_PROJECT_SUCCESS,
   ASSIGN_TO_PROJECT_ERROR,
-  UNASSIGN_FROM_PROJECT_SUCCESS,
   SET_ACTIVE_PROJECT,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
@@ -41,7 +40,6 @@ export {
   assignToProjectAction,
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
-  unassignFromProjectAction,
   updateUserInfoAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
@@ -64,3 +62,4 @@ export {
   assignedOrganizationsSelector,
 } from './selectors';
 export { userSagas } from './sagas';
+export type { UserInfo } from './types';
