@@ -22,6 +22,7 @@ import { canInviteInternalUser } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { showModalAction } from 'controllers/modal';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -44,6 +45,7 @@ export const ProjectTeamPage = () => {
   const hasPermission = canInviteInternalUser(userRoles);
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
 
@@ -53,6 +55,7 @@ export const ProjectTeamPage = () => {
 
   const onInvite = () => {
     dispatch(fetchMembersAction());
+    dispatch(fetchProjectAction(projectKey, true));
   };
 
   const showInviteUserModal = () => {
