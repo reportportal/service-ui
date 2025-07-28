@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../common/css/mixins';
+
 .attachment-item {
   display: flex;
   align-items: center;
@@ -23,11 +25,33 @@
   border-radius: 4px;
   gap: 12px;
   cursor: pointer;
+  position: relative;
+  max-width: 250px;
 
   &:hover {
     .file-name {
       color: var(--rp-ui-base-topaz-hover);
     }
+  }
+
+  &--failed {
+    border: 1px solid var(--rp-ui-base-error);
+
+    .file-name {
+      opacity: 0.6;
+    }
+  }
+
+  &--uploading {
+    opacity: 0.8;
+
+    .file-name {
+      opacity: 0.6;
+    }
+  }
+
+  &--full-width {
+    max-width: 100%;
   }
 }
 
@@ -36,6 +60,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .attachment-item--failed &,
+  .attachment-item--uploading & {
+    opacity: 0.6;
+  }
 }
 
 .file-icon {
@@ -59,6 +88,9 @@
 }
 
 .file-name {
+  @include mixins.button-reset;
+
+  max-width: 100%;
   color: var(--rp-ui-base-almost-black);
   font-size: 13px;
   font-weight: 500;
@@ -67,6 +99,44 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  min-width: 0;
+  flex: 1;
+
+  .name-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+
+    .attachment-item--full-width & {
+      max-width: 100%;
+    }
+  }
+
+  &:hover {
+    color: var(--rp-ui-base-topaz-hover);
+  }
+}
+
+.download-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.file-name:hover .download-icon {
+  opacity: 1;
 }
 
 .file-details {
@@ -74,4 +144,61 @@
   font-size: 11px;
   font-weight: 400;
   line-height: 14px;
+}
+
+.upload-failed {
+  color: var(--rp-ui-base-error);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+  margin-top: 4px;
+}
+
+.upload-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--rp-ui-base-e-100);
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background-color: var(--rp-ui-base-topaz);
+  transition: width 0.3s ease;
+}
+
+.remove-button {
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    background-color: var(--rp-ui-base-e-100);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    path {
+      fill: var(--rp-ui-base-e-400);
+    }
+  }
+
+  &:hover svg path {
+    fill: var(--rp-ui-base-error);
+  }
 }

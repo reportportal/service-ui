@@ -68,6 +68,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
                 key={attachment.fileName}
                 fileName={attachment.fileName}
                 size={attachment.size}
+                isFullWidth
               />
             ))}
           </div>
