@@ -30,15 +30,16 @@
   .header {
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    padding: 24px 20px 16px 24px;
     border-bottom: 1px solid var(--rp-ui-base-e-100);
     flex-shrink: 0;
-    gap: 16px;
+    gap: 8px;
 
     &-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
+      margin-bottom: 8px;
     }
 
     &-meta {
@@ -170,7 +171,7 @@
 
   .content {
     flex: 1;
-    padding: 24px;
+    padding: 16px 24px;
     overflow-y: auto;
   }
 
