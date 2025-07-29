@@ -15,6 +15,7 @@
  */
 
 export const FETCH_USER = 'FETCH_USER';
+export const FETCH_USER_INFO = 'FETCH_USER_INFO';
 export const FETCH_USER_ERROR = 'fetchUserError';
 export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
 export const ACTIVITY_TIMESTAMP = 'activityTimestamp';
