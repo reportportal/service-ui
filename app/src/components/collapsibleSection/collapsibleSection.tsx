@@ -67,14 +67,14 @@ interface CollapsibleSectionWithHeaderControlProps {
   children?: ReactNode;
   defaultMessage?: string;
   isInitiallyExpanded?: boolean;
-  HeaderControlComponent?: ({ isExpanded }) => ReactNode;
+  headerControlComponent?: ReactNode;
 }
 
 export const CollapsibleSectionWithHeaderControl = ({
   title,
   children,
   defaultMessage,
-  HeaderControlComponent,
+  headerControlComponent,
   isInitiallyExpanded = true,
 }: CollapsibleSectionWithHeaderControlProps) => {
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
@@ -97,7 +97,7 @@ export const CollapsibleSectionWithHeaderControl = ({
           </div>
           <span className={cx('section-title')}>{title}</span>
         </button>
-        {HeaderControlComponent && <HeaderControlComponent isExpanded={isExpanded} />}
+        {headerControlComponent || null}
       </div>
       {isExpanded && (
         <div className={cx('section-content')}>

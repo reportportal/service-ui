@@ -58,14 +58,8 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       titleKey: 'tags',
       defaultMessageKey: 'noTagsAdded',
       childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
-      HeaderControl: ({ isExpanded }) => (
-        <Button
-          variant="text"
-          adjustWidthOn="content"
-          onClick={handleAddTags}
-          icon={<PlusIcon />}
-          disabled={!isExpanded}
-        >
+      headerControl: (
+        <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
           {headerControllKeys.ADD}
         </Button>
       ),
@@ -76,29 +70,26 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: isEmpty(testCaseDescription) ? null : (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      HeaderControl: ({ isExpanded }) =>
-        isEmpty(testCaseDescription) ? (
-          <Button
-            variant="text"
-            adjustWidthOn="content"
-            onClick={handleAddDescription}
-            className={cx('fixed-button-height')}
-            icon={<PlusIcon />}
-            disabled={!isExpanded}
-          >
-            {headerControllKeys.ADD}
-          </Button>
-        ) : (
-          <Button
-            variant="text"
-            adjustWidthOn="content"
-            iconPlace="end"
-            onClick={handleEditDescription}
-            className={cx('fixed-button-height')}
-            icon={<EditIcon />}
-            disabled={!isExpanded}
-          />
-        ),
+      headerControl: isEmpty(testCaseDescription) ? (
+        <Button
+          variant="text"
+          adjustWidthOn="content"
+          onClick={handleAddDescription}
+          className={cx('fixed-button-height')}
+          icon={<PlusIcon />}
+        >
+          {headerControllKeys.ADD}
+        </Button>
+      ) : (
+        <Button
+          variant="text"
+          adjustWidthOn="content"
+          iconPlace="end"
+          onClick={handleEditDescription}
+          className={cx('fixed-button-height')}
+          icon={<EditIcon />}
+        />
+      ),
     },
   ] as const;
 
@@ -153,12 +144,12 @@ export const TestCaseDetailsPage = () => {
               headerControllKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription,
               tags,
-            }).map(({ titleKey, defaultMessageKey, childComponent, HeaderControl }) => (
+            }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
                 title={formatMessage(messages[titleKey])}
                 defaultMessage={formatMessage(messages[defaultMessageKey])}
-                HeaderControlComponent={HeaderControl}
+                headerControlComponent={headerControl}
               >
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
