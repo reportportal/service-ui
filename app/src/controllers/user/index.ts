@@ -26,6 +26,7 @@ export {
 } from './constants';
 export {
   fetchUserAction,
+  fetchUserInfoAction,
   setActiveProjectAction,
   setActiveProjectKeyAction,
   setStartTimeFormatAction,

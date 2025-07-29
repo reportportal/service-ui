@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
-import { fetchUserAction, idSelector } from 'controllers/user';
+import { fetchUserInfoAction, idSelector } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import styles from './unassignProjectModal.scss';
 import { unassignFromProjectAction } from 'controllers/organization/projects';
@@ -56,7 +56,7 @@ export const UnassignProjectModal = ({ user, project, onSuccess }: UnassignProje
 
   const handleUnassignSuccess = () => {
     if (currentUserId === user.id) {
-      dispatch(fetchUserAction(true));
+      dispatch(fetchUserInfoAction());
     }
 
     dispatch(hideModalAction());

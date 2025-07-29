@@ -52,6 +52,7 @@ import {
   FETCH_API_KEYS,
   DELETE_API_KEY,
   FETCH_USER,
+  FETCH_USER_INFO,
   DELETE_USER_ACCOUNT,
   UPDATE_USER_INFO,
 } from './constants';
@@ -102,21 +103,19 @@ function* assignToProject({ payload: project }) {
   }
 }
 
-function* fetchUserWorker({ payload = {} }) {
-  const { fetchInfoOnly } = payload;
-  let user;
+function* fetchUserInfo() {
   try {
-    user = yield call(fetch, URLS.users());
+    const user = yield call(fetch, URLS.users());
     yield put(fetchUserSuccessAction(user));
   } catch (err) {
     yield put(fetchUserErrorAction());
-    return;
   }
+}
 
-  if (fetchInfoOnly) {
-    return;
-  }
+function* fetchUserWorker() {
+  yield call(fetchUserInfo);
 
+  const user = yield select(userInfoSelector);
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
 
@@ -342,6 +341,10 @@ function* watchSaveActiveProject() {
   yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
 }
 
+function* watchFetchUserInfo() {
+  yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -358,6 +361,7 @@ export function* userSagas() {
   yield all([
     watchAssignToProject(),
     watchFetchUser(),
+    watchFetchUserInfo(),
     watchSaveActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),

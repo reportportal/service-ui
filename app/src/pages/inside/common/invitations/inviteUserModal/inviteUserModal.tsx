@@ -36,7 +36,7 @@ import {
   activeOrganizationNameSelector,
 } from 'controllers/organization';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { fetchUserAction, UserInfo, userInfoSelector } from 'controllers/user';
+import { fetchUserInfoAction, UserInfo, userInfoSelector } from 'controllers/user';
 import { InvitationStatus, Level } from './constants';
 import { ExternalUserInvitationModal } from '../../modals/externalUserInvitationModal';
 import { useInviteUser } from './hooks';
@@ -74,7 +74,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
       onInvite?.(withProject);
 
       if (userData.email === currentUser.email) {
-        dispatch(fetchUserAction(true));
+        dispatch(fetchUserInfoAction());
       }
 
       return invitedUser;

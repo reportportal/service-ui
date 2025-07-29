@@ -27,6 +27,7 @@ import {
   DELETE_API_KEY,
   FETCH_USER_SUCCESS,
   FETCH_USER,
+  FETCH_USER_INFO,
   FETCH_USER_ERROR,
   DELETE_API_KEY_SUCCESS,
   ADD_API_KEY_SUCCESS,
@@ -93,9 +94,12 @@ export const deleteApiKeySuccessAction = (apiKeyId) => ({
 
 export const fetchApiKeysAction = () => ({ type: FETCH_API_KEYS });
 
-export const fetchUserAction = (fetchInfoOnly = false) => ({
+export const fetchUserAction = () => ({
   type: FETCH_USER,
-  payload: { fetchInfoOnly },
+});
+
+export const fetchUserInfoAction = () => ({
+  type: FETCH_USER_INFO,
 });
 
 export const setStartTimeFormatAction = (format) => ({
