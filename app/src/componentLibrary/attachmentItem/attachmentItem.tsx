@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import { useCallback, useMemo, MouseEvent } from 'react';
 import classNames from 'classnames/bind';
-import { useCallback, useMemo } from 'react';
-import { AddCsvIcon, AddJarIcon, AddImageIcon } from '@reportportal/ui-kit';
+import {
+  AddCsvIcon,
+  AddJarIcon,
+  AddImageIcon,
+  CloseIcon,
+  ExternalLinkIcon,
+} from '@reportportal/ui-kit';
 import styles from './attachmentItem.scss';
 
 const cx = classNames.bind(styles);
@@ -24,6 +30,12 @@ const cx = classNames.bind(styles);
 interface AttachmentItemProps {
   fileName: string;
   size: number;
+  uploadingProgress?: number;
+  isUploadFailed?: boolean;
+  onRemove?: () => void;
+  onDownload?: () => void;
+  isUploading?: boolean;
+  isFullWidth?: boolean;
 }
 
 const FILE_ICON_MAP = {
@@ -35,7 +47,16 @@ const getFileIconByExtension = (extension: string) => {
   return FILE_ICON_MAP[extension.toLowerCase()] ?? AddImageIcon;
 };
 
-export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
+export const AttachmentItem = ({
+  fileName,
+  size,
+  uploadingProgress = 0,
+  isUploadFailed = false,
+  onRemove,
+  onDownload,
+  isUploading = false,
+  isFullWidth = false,
+}: AttachmentItemProps) => {
   const getFileExtension = useCallback((name: string): string => {
     const parts = name.split('.');
     return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
@@ -45,19 +66,64 @@ export const AttachmentItem = ({ fileName, size }: AttachmentItemProps) => {
   const upperCaseExtension = fileExtension.toUpperCase();
   const IconComponent = useMemo(() => getFileIconByExtension(fileExtension), [fileExtension]);
 
+  const handleRemove = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      onRemove?.();
+    },
+    [onRemove],
+  );
+
+  const downloadFile = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+
+      if (!isUploadFailed) {
+        onDownload?.();
+      }
+    },
+    [onDownload, isUploadFailed],
+  );
+
   return (
-    <div className={cx('attachment-item')}>
+    <div
+      className={cx('attachment-item', {
+        'attachment-item--failed': isUploadFailed,
+        'attachment-item--uploading': isUploading,
+        'attachment-item--full-width': isFullWidth,
+      })}
+    >
       <div className={cx('attachment-icon')}>
         <div className={cx('file-icon')}>
           <IconComponent />
         </div>
       </div>
       <div className={cx('attachment-info')}>
-        <div className={cx('file-name')}>{fileName}</div>
-        <div className={cx('file-details')}>
-          {upperCaseExtension}, {size} MB
-        </div>
+        <button type="button" className={cx('file-name')} onClick={downloadFile}>
+          <span className={cx('name-text')}>{fileName}</span>
+          {!isUploading && !isUploadFailed && (
+            <span className={cx('download-icon')}>
+              <ExternalLinkIcon />
+            </span>
+          )}
+        </button>
+        {!isUploadFailed && (
+          <div className={cx('file-details')}>
+            {upperCaseExtension}, {size} MB
+          </div>
+        )}
+        {isUploadFailed && <div className={cx('upload-failed')}>Upload failed</div>}
       </div>
+      {onRemove && (
+        <button type="button" className={cx('remove-button')} onClick={handleRemove}>
+          <CloseIcon />
+        </button>
+      )}
+      {isUploading && uploadingProgress > 0 && (
+        <div className={cx('upload-progress')}>
+          <div className={cx('upload-progress-bar')} style={{ width: `${uploadingProgress}%` }} />
+        </div>
+      )}
     </div>
   );
 };

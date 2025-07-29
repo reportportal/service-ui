@@ -58,27 +58,83 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 17px 16px;
     border-top: 1px solid var(--rp-ui-base-e-100);
+    position: relative;
+  }
 
-    span {
-      color: var(--rp-ui-base-almost-black);
-      font-weight: 500;
-    }
+  &__attachment-title {
+    color: var(--rp-ui-base-almost-black);
+    font-weight: 500;
   }
 
   &__add-attachment {
     display: flex;
     column-gap: 8px;
     align-items: center;
+  }
 
-    span {
-      display: flex;
-      align-items: center;
-      column-gap: 4px;
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--rp-ui-base-e-400);
+  &__dropzone-text {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__files-list {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    gap: 12px;
+    border-top: 1px solid var(--rp-ui-base-e-100);
+    max-width: 100%;
+
+    &:has(> *:only-child) {
+      grid-template-columns: 1fr;
     }
   }
+}
+
+.dropzone-area {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 17px 16px;
+
+  &--active {
+    background-color: var(--rp-ui-base-bg-200);
+    border: 2px dashed var(--rp-ui-base-topaz);
+  }
+}
+
+.attachment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  pointer-events: none;
+
+  .attachment-area__add-attachment {
+    pointer-events: auto;
+    display: flex;
+    column-gap: 8px;
+    align-items: center;
+
+    button {
+      pointer-events: auto;
+    }
+  }
+}
+
+.hidden-file-input {
+  display: none;
 }

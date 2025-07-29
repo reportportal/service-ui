@@ -23,6 +23,8 @@
 
 .pagination {
   position: sticky;
+  display: flex;
+  justify-content: center;
   bottom: 0;
   background: var(--rp-ui-base-bg-100);
   padding: 5px 32px;
