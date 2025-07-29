@@ -102,7 +102,8 @@ function* assignToProject({ payload: project }) {
   }
 }
 
-function* fetchUserWorker() {
+function* fetchUserWorker({ payload = {} }) {
+  const { fetchInfoOnly } = payload;
   let user;
   try {
     user = yield call(fetch, URLS.users());
@@ -111,6 +112,11 @@ function* fetchUserWorker() {
     yield put(fetchUserErrorAction());
     return;
   }
+
+  if (fetchInfoOnly) {
+    return;
+  }
+
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
 

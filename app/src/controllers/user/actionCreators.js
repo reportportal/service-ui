@@ -93,7 +93,10 @@ export const deleteApiKeySuccessAction = (apiKeyId) => ({
 
 export const fetchApiKeysAction = () => ({ type: FETCH_API_KEYS });
 
-export const fetchUserAction = () => ({ type: FETCH_USER });
+export const fetchUserAction = (fetchInfoOnly = false) => ({
+  type: FETCH_USER,
+  payload: { fetchInfoOnly },
+});
 
 export const setStartTimeFormatAction = (format) => ({
   type: SET_START_TIME_FORMAT,

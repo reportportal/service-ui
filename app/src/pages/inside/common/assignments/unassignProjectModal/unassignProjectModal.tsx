@@ -56,7 +56,7 @@ export const UnassignProjectModal = ({ user, project, onSuccess }: UnassignProje
 
   const handleUnassignSuccess = () => {
     if (currentUserId === user.id) {
-      dispatch(fetchUserAction());
+      dispatch(fetchUserAction(true));
     }
 
     dispatch(hideModalAction());

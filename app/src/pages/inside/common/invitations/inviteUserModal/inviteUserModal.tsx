@@ -74,7 +74,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
       onInvite?.(withProject);
 
       if (userData.email === currentUser.email) {
-        dispatch(fetchUserAction());
+        dispatch(fetchUserAction(true));
       }
 
       return invitedUser;

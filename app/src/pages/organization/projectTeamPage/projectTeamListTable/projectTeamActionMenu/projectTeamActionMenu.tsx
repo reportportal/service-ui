@@ -25,11 +25,18 @@ import { showModalAction } from 'controllers/modal';
 import { ActionMenu } from 'components/actionMenu';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
-import { projectInfoIdSelector, projectNameSelector } from 'controllers/project';
+import {
+  projectInfoIdSelector,
+  projectNameSelector,
+  projectKeySelector,
+  fetchProjectAction,
+} from 'controllers/project';
 import { useTracking } from 'react-tracking';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { fetchMembersAction } from 'controllers/members';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { MANAGER } from 'common/constants/projectRoles';
 
 interface User {
   id: number;
@@ -48,15 +55,20 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
   const currentUserId = useSelector(idSelector) as number;
   const projectId = useSelector(projectInfoIdSelector) as number;
   const projectName = useSelector(projectNameSelector) as string;
+  const projectKey = useSelector(projectKeySelector) as string;
   const organizationSlug = useSelector(urlOrganizationSlugSelector) as string;
 
   const handleUnassignClick = useCallback(() => {
     const isCurrentUser = currentUserId === user.id;
+    const isAdmin = roles.userRole === ADMINISTRATOR;
+    const isManager = roles.organizationRole === MANAGER;
+
     const onSuccess = () => {
       dispatch(fetchMembersAction());
+      dispatch(fetchProjectAction(projectKey, true));
       trackEvent(PROJECT_PAGE_EVENTS.unassignUser(isCurrentUser));
 
-      if (isCurrentUser && organizationSlug) {
+      if (isCurrentUser && organizationSlug && !isAdmin && !isManager) {
         dispatch(
           redirect({
             type: ORGANIZATION_PROJECTS_PAGE,
@@ -77,7 +89,17 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
         ),
       }),
     );
-  }, [currentUserId, dispatch, projectId, projectName, trackEvent, user, organizationSlug]);
+  }, [
+    currentUserId,
+    dispatch,
+    projectId,
+    projectName,
+    trackEvent,
+    user,
+    organizationSlug,
+    roles,
+    projectKey,
+  ]);
 
   const actions = useMemo(() => {
     return [
