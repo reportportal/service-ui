@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactElement, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import classNames from 'classnames/bind';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 import styles from './collapsibleSection.scss';
@@ -23,21 +23,21 @@ const cx = classNames.bind(styles);
 
 interface CollapsibleSectionProps {
   title: string;
-  childComponent?: ReactElement;
+  children?: ReactNode;
   defaultMessage?: string;
   isInitiallyExpanded?: boolean;
 }
 
 export const CollapsibleSection = ({
   title,
-  childComponent,
+  children,
   defaultMessage,
   isInitiallyExpanded = true,
 }: CollapsibleSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prevState) => !prevState);
   };
 
   return (
@@ -55,7 +55,7 @@ export const CollapsibleSection = ({
       </button>
       {isExpanded && (
         <div className={cx('section-content')}>
-          {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}
+          {children || <div className={cx('default-content')}>{defaultMessage}</div>}
         </div>
       )}
     </div>
@@ -64,7 +64,7 @@ export const CollapsibleSection = ({
 
 interface CollapsibleSectionWithHeaderControlProps {
   title: string;
-  childComponent?: ReactElement;
+  children?: ReactNode;
   defaultMessage?: string;
   isInitiallyExpanded?: boolean;
   HeaderControlComponent?: ({ isExpanded }) => ReactNode;
@@ -72,7 +72,7 @@ interface CollapsibleSectionWithHeaderControlProps {
 
 export const CollapsibleSectionWithHeaderControl = ({
   title,
-  childComponent,
+  children,
   defaultMessage,
   HeaderControlComponent,
   isInitiallyExpanded = true,
@@ -80,7 +80,7 @@ export const CollapsibleSectionWithHeaderControl = ({
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prevState) => !prevState);
   };
 
   return (
@@ -101,7 +101,7 @@ export const CollapsibleSectionWithHeaderControl = ({
       </div>
       {isExpanded && (
         <div className={cx('section-content')}>
-          {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}
+          {children || <div className={cx('default-content')}>{defaultMessage}</div>}
         </div>
       )}
     </div>

@@ -115,12 +115,11 @@ const testCase: TestCase = {
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
-
   const [isTagsAdded, setIsTagsAdded] = useState(false);
   const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
 
   const handleAddTags = () => {
-    setIsTagsAdded(!isTagsAdded);
+    setIsTagsAdded((prevState) => !prevState);
   };
 
   const handleAddDescription = () => {
@@ -159,9 +158,10 @@ export const TestCaseDetailsPage = () => {
                 key={titleKey}
                 title={formatMessage(messages[titleKey])}
                 defaultMessage={formatMessage(messages[defaultMessageKey])}
-                childComponent={childComponent}
                 HeaderControlComponent={HeaderControl}
-              />
+              >
+                {childComponent}
+              </CollapsibleSectionWithHeaderControl>
             ))}
           </div>
           <div className={cx('page__main-content')}>
