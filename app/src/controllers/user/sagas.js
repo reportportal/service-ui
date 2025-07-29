@@ -107,15 +107,16 @@ function* fetchUserInfo() {
   try {
     const user = yield call(fetch, URLS.users());
     yield put(fetchUserSuccessAction(user));
+    return user;
   } catch (err) {
     yield put(fetchUserErrorAction());
   }
 }
 
 function* fetchUserWorker() {
-  yield call(fetchUserInfo);
+  const user = yield call(fetchUserInfo);
+  if (!user) return;
 
-  const user = yield select(userInfoSelector);
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
 
