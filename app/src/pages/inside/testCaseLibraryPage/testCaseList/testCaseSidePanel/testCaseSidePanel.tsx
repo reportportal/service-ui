@@ -17,6 +17,7 @@
 import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import {
   Button,
@@ -35,6 +36,7 @@ import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import isEmpty from 'lodash.isempty';
+import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
@@ -89,6 +91,8 @@ interface TestCaseSidePanelProps {
 
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
+    const dispatch = useDispatch();
+    const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -106,7 +110,10 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleOpenDetailsClick = () => {
-      // TODO: Implement open details functionality
+      dispatch({
+        type: TEST_CASE_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, testCaseSlug: testCase.id },
+      });
     };
 
     const handleAddToLaunchClick = () => {
