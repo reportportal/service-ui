@@ -14,20 +14,93 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import classNames from 'classnames/bind';
+import isEmpty from 'lodash.isempty';
+import { useIntl } from 'react-intl';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
+import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
-import styles from './testCaseDetailsPage.scss';
+import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { EditableTagsSection } from '../editableTagsSection';
-import { EditableDescriptionSection } from '../editableDescriptionSection';
 import { TestCase } from '../types';
+import { mockTestCases, mockedTestCaseDescription } from '../testCaseList/mockData';
+
+import styles from './testCaseDetailsPage.scss';
 
 const cx = classNames.bind(styles);
 
 const noopHandler = () => {};
+
+const COLLAPSIBLE_SECTIONS_CONFIG = ({
+  tags,
+  testCaseDescription,
+  headerControllKeys,
+  handleAddTags,
+  handleAddDescription,
+  handleEditDescription,
+}: {
+  tags: string[];
+  testCaseDescription: string;
+  headerControllKeys: { ADD: string };
+  handleAddTags: () => void;
+  handleAddDescription: () => void;
+  handleEditDescription: () => void;
+}) =>
+  [
+    {
+      titleKey: 'tags',
+      defaultMessageKey: 'noTagsAdded',
+      childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
+      HeaderControl: ({ isExpanded }) => (
+        <Button
+          variant="text"
+          adjustWidthOn="content"
+          onClick={handleAddTags}
+          icon={<PlusIcon />}
+          disabled={!isExpanded}
+        >
+          {headerControllKeys.ADD}
+        </Button>
+      ),
+    },
+    {
+      titleKey: 'description',
+      defaultMessageKey: 'noDescriptionAdded',
+      childComponent: isEmpty(testCaseDescription) ? null : (
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
+      ),
+      HeaderControl: ({ isExpanded }) =>
+        isEmpty(testCaseDescription) ? (
+          <Button
+            variant="text"
+            adjustWidthOn="content"
+            onClick={handleAddDescription}
+            className={cx('fixed-button-height')}
+            icon={<PlusIcon />}
+            disabled={!isExpanded}
+          >
+            {headerControllKeys.ADD}
+          </Button>
+        ) : (
+          <Button
+            variant="text"
+            adjustWidthOn="content"
+            iconPlace="end"
+            onClick={handleEditDescription}
+            className={cx('fixed-button-height')}
+            icon={<EditIcon />}
+            disabled={!isExpanded}
+          />
+        ),
+    },
+  ] as const;
 
 const testCase: TestCase = {
   id: '2775277527',
@@ -40,27 +113,64 @@ const testCase: TestCase = {
   path: ['24.2 PV'],
 };
 
-export const TestCaseDetailsPage = () => (
-  <SettingsLayout>
-    <ScrollWrapper resetRequired>
-      <div className={cx('page')}>
-        <TestCaseDetailsHeader
-          className={cx('page__header')}
-          testCase={testCase}
-          onAddToLaunch={noopHandler}
-          onAddToTestPlan={noopHandler}
-          onMenuAction={noopHandler}
-        />
-        <div className={cx('page__sidebar')}>
-          <EditableTagsSection onAddTag={noopHandler} variant="sidebar" />
-          <EditableDescriptionSection onAddDescription={noopHandler} />
+export const TestCaseDetailsPage = () => {
+  const { formatMessage } = useIntl();
+  const [isTagsAdded, setIsTagsAdded] = useState(false);
+  const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
+
+  const handleAddTags = () => {
+    setIsTagsAdded((prevState) => !prevState);
+  };
+
+  const handleAddDescription = () => {
+    setIsDescriptionAdded(true);
+  };
+
+  const handleEditDescription = () => {
+    setIsDescriptionAdded(false);
+  };
+
+  // TODO: Remove mock data after integration
+  const testCaseDescription = isDescriptionAdded ? mockedTestCaseDescription : testCase.description;
+  const tags = isTagsAdded ? mockTestCases[0].tags : testCase.tags;
+
+  return (
+    <SettingsLayout>
+      <ScrollWrapper resetRequired>
+        <div className={cx('page')}>
+          <TestCaseDetailsHeader
+            className={cx('page__header')}
+            testCase={testCase}
+            onAddToLaunch={noopHandler}
+            onAddToTestPlan={noopHandler}
+            onMenuAction={noopHandler}
+          />
+          <div className={cx('page__sidebar')}>
+            {COLLAPSIBLE_SECTIONS_CONFIG({
+              handleAddTags,
+              handleAddDescription,
+              handleEditDescription,
+              headerControllKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
+              testCaseDescription,
+              tags,
+            }).map(({ titleKey, defaultMessageKey, childComponent, HeaderControl }) => (
+              <CollapsibleSectionWithHeaderControl
+                key={titleKey}
+                title={formatMessage(messages[titleKey])}
+                defaultMessage={formatMessage(messages[defaultMessageKey])}
+                HeaderControlComponent={HeaderControl}
+              >
+                {childComponent}
+              </CollapsibleSectionWithHeaderControl>
+            ))}
+          </div>
+          <div className={cx('page__main-content')}>
+            <ScrollWrapper>
+              <DetailsEmptyState />
+            </ScrollWrapper>
+          </div>
         </div>
-        <div className={cx('page__main-content')}>
-          <ScrollWrapper>
-            <DetailsEmptyState />
-          </ScrollWrapper>
-        </div>
-      </div>
-    </ScrollWrapper>
-  </SettingsLayout>
-);
+      </ScrollWrapper>
+    </SettingsLayout>
+  );
+};

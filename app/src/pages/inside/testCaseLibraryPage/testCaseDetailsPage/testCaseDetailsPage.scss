@@ -31,10 +31,13 @@
     display: flex;
     grid-area: sidebar;
     flex-direction: column;
-    width: 360px;
     padding: 24px 32px;
     gap: 16px;
     border-right: 1px solid var(--rp-ui-base-e-100);
+
+    .fixed-button-height {
+      height: 22px;
+    }
   }
 
   &__main-content {

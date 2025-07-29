@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { CollapsibleSection } from './collapsibleSection';
+export { CollapsibleSection, CollapsibleSectionWithHeaderControl } from './collapsibleSection';

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactElement, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import classNames from 'classnames/bind';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 import styles from './collapsibleSection.scss';
@@ -23,21 +23,21 @@ const cx = classNames.bind(styles);
 
 interface CollapsibleSectionProps {
   title: string;
-  childComponent?: ReactElement;
+  children?: ReactNode;
   defaultMessage?: string;
   isInitiallyExpanded?: boolean;
 }
 
 export const CollapsibleSection = ({
   title,
-  childComponent,
+  children,
   defaultMessage,
   isInitiallyExpanded = true,
 }: CollapsibleSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prevState) => !prevState);
   };
 
   return (
@@ -55,7 +55,53 @@ export const CollapsibleSection = ({
       </button>
       {isExpanded && (
         <div className={cx('section-content')}>
-          {childComponent || <div className={cx('default-content')}>{defaultMessage}</div>}
+          {children || <div className={cx('default-content')}>{defaultMessage}</div>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+interface CollapsibleSectionWithHeaderControlProps {
+  title: string;
+  children?: ReactNode;
+  defaultMessage?: string;
+  isInitiallyExpanded?: boolean;
+  HeaderControlComponent?: ({ isExpanded }) => ReactNode;
+}
+
+export const CollapsibleSectionWithHeaderControl = ({
+  title,
+  children,
+  defaultMessage,
+  HeaderControlComponent,
+  isInitiallyExpanded = true,
+}: CollapsibleSectionWithHeaderControlProps) => {
+  const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
+
+  const handleToggle = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
+  return (
+    <div className={cx('collapsible-section')}>
+      <div className={cx('header-row')}>
+        <button
+          type="button"
+          className={cx('section-header')}
+          onClick={handleToggle}
+          aria-expanded={isExpanded}
+        >
+          <div className={cx('chevron-wrapper', { rotated: isExpanded })}>
+            <ChevronDownDropdownIcon />
+          </div>
+          <span className={cx('section-title')}>{title}</span>
+        </button>
+        {HeaderControlComponent && <HeaderControlComponent isExpanded={isExpanded} />}
+      </div>
+      {isExpanded && (
+        <div className={cx('section-content')}>
+          {children || <div className={cx('default-content')}>{defaultMessage}</div>}
         </div>
       )}
     </div>

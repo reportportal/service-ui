@@ -189,8 +189,9 @@ export const TestCaseSidePanel = memo(
               key={titleKey}
               title={formatMessage(messages[titleKey])}
               defaultMessage={formatMessage(messages[defaultMessageKey])}
-              childComponent={childComponent}
-            />
+            >
+              {childComponent}
+            </CollapsibleSection>
           ))}
         </div>
         <div className={cx('footer')}>
