@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { PropsWithChildren, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import isNumber from 'lodash.isnumber';
 import Dropzone from 'react-dropzone';
 import { uniqueId } from 'common/utils';
+import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
 import { Button, PlusIcon, DragAndDropIcon, DragNDropIcon, DeleteIcon } from '@reportportal/ui-kit';
 import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -35,7 +36,7 @@ interface AttachmentFile {
   fileName: string;
   size: number;
   uploadingProgress: number;
-  uploadFailed: boolean;
+  isUploadFailed: boolean;
   isUploading: boolean;
   uploaded: boolean;
 }
@@ -81,8 +82,10 @@ export const AttachmentArea = ({
   const simulateFileUpload = useCallback((fileId: string) => {
     const interval = setInterval(() => {
       setAttachedFiles((prev) =>
-        prev.map((f) =>
-          f.id === fileId ? { ...f, uploadingProgress: Math.min(f.uploadingProgress + 5, 100) } : f,
+        prev.map((file) =>
+          file.id === fileId
+            ? { ...file, uploadingProgress: Math.min(file.uploadingProgress + 5, 100) }
+            : file,
         ),
       );
     }, 500);
@@ -90,10 +93,10 @@ export const AttachmentArea = ({
     setTimeout(() => {
       clearInterval(interval);
       setAttachedFiles((prev) =>
-        prev.map((f) =>
-          f.id === fileId
-            ? { ...f, isUploading: false, uploaded: true, uploadingProgress: 100 }
-            : f,
+        prev.map((file) =>
+          file.id === fileId
+            ? { ...file, isUploading: false, uploaded: true, uploadingProgress: 100 }
+            : file,
         ),
       );
     }, 1000);
@@ -107,7 +110,7 @@ export const AttachmentArea = ({
         fileName: file.name,
         size: Math.max(1, Math.round(file.size / (1024 * 1024))), // Convert to MB, minimum 1MB
         uploadingProgress: 0,
-        uploadFailed: false,
+        isUploadFailed: false,
         isUploading: true,
         uploaded: false,
       };
@@ -125,56 +128,26 @@ export const AttachmentArea = ({
 
   const removeFile = useCallback(
     (fileId: string) => {
-      const updatedFiles = attachedFiles.filter((f) => f.id !== fileId);
+      const updatedFiles = attachedFiles.filter((file) => file.id !== fileId);
 
       handleFilesChange(updatedFiles);
     },
     [attachedFiles, handleFilesChange],
   );
 
-  const handleDownload = useCallback((file: AttachmentFile) => {
-    const url = URL.createObjectURL(file.file);
-    const link = document.createElement('a');
-
-    link.href = url;
-    link.download = file.fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const downloadFile = useCallback((file: AttachmentFile) => {
+    downloadFileFromBlob(file.file, file.fileName);
   }, []);
-
-  const validateFile = useCallback(
-    (file: File) => {
-      const errors: string[] = [];
-
-      if (maxFileSize && file.size > maxFileSize) {
-        errors.push(formatMessage(messages.incorrectFileSize));
-      }
-
-      if (acceptFileMimeTypes.length > 0) {
-        const fileExtension = file.name
-          .split('.')
-          .pop()
-          ?.toLowerCase();
-        const isValidType = acceptFileMimeTypes.some((type) =>
-          type.startsWith('.') ? fileExtension === type.slice(1) : file.type === type,
-        );
-
-        if (!isValidType) {
-          errors.push(formatMessage(messages.incorrectFileFormat));
-        }
-      }
-
-      return errors;
-    },
-    [maxFileSize, acceptFileMimeTypes, formatMessage],
-  );
 
   const onDrop = useCallback(
     (acceptedFiles: File[], _rejectedFiles: File[]) => {
       acceptedFiles.forEach((file) => {
-        const errors = validateFile(file);
+        const errors = validateFile(
+          file,
+          { maxFileSize, acceptFileMimeTypes },
+          formatMessage,
+          messages,
+        );
 
         if (isEmpty(errors)) {
           addFile(file);
@@ -184,7 +157,7 @@ export const AttachmentArea = ({
         console.error('File rejected:', errors);
       });
     },
-    [addFile, validateFile],
+    [addFile, maxFileSize, acceptFileMimeTypes, formatMessage],
   );
 
   const handleAddButtonClick = useCallback(() => {
@@ -192,12 +165,17 @@ export const AttachmentArea = ({
   }, []);
 
   const handleFileInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const { files } = event.target;
 
       if (files) {
         Array.from(files).forEach((file) => {
-          const errors = validateFile(file);
+          const errors = validateFile(
+            file,
+            { maxFileSize, acceptFileMimeTypes },
+            formatMessage,
+            messages,
+          );
 
           if (isEmpty(errors)) {
             addFile(file);
@@ -211,7 +189,7 @@ export const AttachmentArea = ({
         target.value = '';
       }
     },
-    [addFile, validateFile],
+    [addFile, maxFileSize, acceptFileMimeTypes, formatMessage],
   );
 
   return (
@@ -244,7 +222,6 @@ export const AttachmentArea = ({
               multiple
               maxSize={maxFileSize}
               accept={acceptFileMimeTypes.join(',')}
-              disabled={false}
             >
               <div className={cx('attachment-header')}>
                 <span className={cx('attachment-area__attachment-title')}>
@@ -259,8 +236,8 @@ export const AttachmentArea = ({
                     variant="text"
                     icon={<PlusIcon />}
                     adjustWidthOn="content"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={(event) => {
+                      event.stopPropagation();
                       handleAddButtonClick();
                     }}
                   >
@@ -273,13 +250,13 @@ export const AttachmentArea = ({
               ref={fileInputRef}
               type="file"
               multiple
-              style={{ display: 'none' }}
+              className={cx('hidden-file-input')}
               onChange={handleFileInputChange}
               accept={acceptFileMimeTypes.join(',')}
             />
           </div>
         )}
-        {attachedFiles.length > 0 && (
+        {!isEmpty(attachedFiles) && (
           <div className={cx('attachment-area__files-list')}>
             {attachedFiles.map((file) => (
               <AttachmentItem
@@ -287,10 +264,10 @@ export const AttachmentArea = ({
                 fileName={file.fileName}
                 size={file.size}
                 uploadingProgress={file.uploadingProgress}
-                uploadFailed={file.uploadFailed}
+                isUploadFailed={file.isUploadFailed}
                 isUploading={file.isUploading}
                 onRemove={() => removeFile(file.id)}
-                onDownload={() => handleDownload(file)}
+                onDownload={() => downloadFile(file)}
               />
             ))}
           </div>

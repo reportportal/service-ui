@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { useCallback, useMemo, MouseEvent } from 'react';
 import classNames from 'classnames/bind';
-import { useCallback, useMemo } from 'react';
 import {
   AddCsvIcon,
   AddJarIcon,
@@ -31,7 +31,7 @@ interface AttachmentItemProps {
   fileName: string;
   size: number;
   uploadingProgress?: number;
-  uploadFailed?: boolean;
+  isUploadFailed?: boolean;
   onRemove?: () => void;
   onDownload?: () => void;
   isUploading?: boolean;
@@ -51,7 +51,7 @@ export const AttachmentItem = ({
   fileName,
   size,
   uploadingProgress = 0,
-  uploadFailed = false,
+  isUploadFailed = false,
   onRemove,
   onDownload,
   isUploading = false,
@@ -67,28 +67,28 @@ export const AttachmentItem = ({
   const IconComponent = useMemo(() => getFileIconByExtension(fileExtension), [fileExtension]);
 
   const handleRemove = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
       onRemove?.();
     },
     [onRemove],
   );
 
-  const handleDownload = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
+  const downloadFile = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
 
-      if (!uploadFailed) {
+      if (!isUploadFailed) {
         onDownload?.();
       }
     },
-    [onDownload, uploadFailed],
+    [onDownload, isUploadFailed],
   );
 
   return (
     <div
       className={cx('attachment-item', {
-        'attachment-item--failed': uploadFailed,
+        'attachment-item--failed': isUploadFailed,
         'attachment-item--uploading': isUploading,
         'attachment-item--full-width': isFullWidth,
       })}
@@ -99,20 +99,20 @@ export const AttachmentItem = ({
         </div>
       </div>
       <div className={cx('attachment-info')}>
-        <button type="button" className={cx('file-name')} onClick={handleDownload}>
+        <button type="button" className={cx('file-name')} onClick={downloadFile}>
           <span className={cx('name-text')}>{fileName}</span>
-          {!isUploading && !uploadFailed && (
+          {!isUploading && !isUploadFailed && (
             <span className={cx('download-icon')}>
               <ExternalLinkIcon />
             </span>
           )}
         </button>
-        {!uploadFailed && (
+        {!isUploadFailed && (
           <div className={cx('file-details')}>
             {upperCaseExtension}, {size} MB
           </div>
         )}
-        {uploadFailed && <div className={cx('upload-failed')}>Upload failed</div>}
+        {isUploadFailed && <div className={cx('upload-failed')}>Upload failed</div>}
       </div>
       {onRemove && (
         <button type="button" className={cx('remove-button')} onClick={handleRemove}>

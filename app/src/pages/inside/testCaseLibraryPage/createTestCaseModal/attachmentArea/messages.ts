@@ -9,8 +9,8 @@ export const messages = defineMessages({
     id: 'createTestCaseModal.dropFilesHere',
     defaultMessage: 'Drop files here or press',
   },
-  uploadFailed: {
-    id: 'createTestCaseModal.uploadFailed',
+  isUploadFailed: {
+    id: 'createTestCaseModal.isUploadFailed',
     defaultMessage: 'Upload failed',
   },
   incorrectFileFormat: {
