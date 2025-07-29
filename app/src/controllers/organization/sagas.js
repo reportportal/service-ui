@@ -35,7 +35,6 @@ import { fetch } from 'common/utils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
-import { showSuccessNotification } from 'controllers/notification';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {

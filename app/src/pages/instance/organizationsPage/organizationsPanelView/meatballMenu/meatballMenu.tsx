@@ -20,11 +20,15 @@ import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { setActiveOrganizationAction, deleteOrganizationAction } from 'controllers/organization/actionCreators';
+import {
+  setActiveOrganizationAction,
+  deleteOrganizationAction,
+} from 'controllers/organization/actionCreators';
 import { canSeeActivityOption, canDeleteOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
+import DeleteOrganizationModal from '../modals/deleteOrganizationModal/deleteOrganizationModal';
 import { messages } from '../../messages';
 import styles from './meatballMenu.scss';
 
@@ -53,18 +57,22 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
 
   const handleDeleteClick = () => {
     handleClick('delete_menu');
-    dispatch(showModalAction({
-      id: 'deleteOrganizationModal',
-      data: {
-        organizationName: organization.name,
-        onConfirm: () => {
-          dispatch(deleteOrganizationAction({
+    const data = {
+      organizationName: organization.name,
+      onConfirm: () => {
+        dispatch(
+          deleteOrganizationAction({
             organizationId: organization.id,
             organizationName: organization.name,
-          }));
-        },
+          }),
+        );
       },
-    }));
+    };
+    dispatch(
+      showModalAction({
+        component: <DeleteOrganizationModal data={data} />,
+      }),
+    );
   };
 
   return (

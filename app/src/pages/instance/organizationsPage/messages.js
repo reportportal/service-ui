@@ -112,7 +112,8 @@ export const messages = defineMessages({
   },
   deleteOrganizationConfirmMessage: {
     id: 'OrganizationsPage.deleteOrganizationConfirmMessage',
-    defaultMessage: 'Are you sure you want to delete "{organizationName}" organization? All organization projects and data will be deleted.',
+    defaultMessage:
+      'Are you sure you want to delete "{organizationName}" organization? All organization projects and data will be deleted.',
   },
   confirmOrganizationNameEntry: {
     id: 'OrganizationsPage.confirmOrganizationNameEntry',

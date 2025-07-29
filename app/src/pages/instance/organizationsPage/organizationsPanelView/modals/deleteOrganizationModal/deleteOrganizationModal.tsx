@@ -28,7 +28,6 @@ import { ModalButtonProps } from 'types/common';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import { createOrganizationNameValidator } from 'common/utils/validation';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from '../../../messages';
 import styles from './deleteOrganizationModal.scss';
@@ -49,7 +48,8 @@ interface ModalProps {
   };
 }
 
-type DeleteOrganizationModalProps = InjectedFormProps<DeleteOrganizationFormProps, ModalProps> & ModalProps;
+type DeleteOrganizationModalProps = InjectedFormProps<DeleteOrganizationFormProps, ModalProps> &
+  ModalProps;
 
 const DeleteOrganizationModal: FC<DeleteOrganizationModalProps> = ({
   data: { onConfirm, organizationName },
@@ -115,4 +115,4 @@ export default reduxForm<DeleteOrganizationFormProps, ModalProps>({
       organizationName: organizationNameValidator(inputOrganizationValue),
     };
   },
-})(DeleteOrganizationModal); 
+})(DeleteOrganizationModal);

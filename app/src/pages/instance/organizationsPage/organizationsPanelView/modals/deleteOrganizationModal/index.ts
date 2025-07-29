@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { default as DeleteOrganizationModal } from './deleteOrganizationModal'; 
+export { default as DeleteOrganizationModal } from './deleteOrganizationModal';
