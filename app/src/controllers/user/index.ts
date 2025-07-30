@@ -63,4 +63,4 @@ export {
   assignedOrganizationsSelector,
 } from './selectors';
 export { userSagas } from './sagas';
-export type { UserInfo } from './types';
+export type { UserInfo, AssignedOrganizations } from './types';

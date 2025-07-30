@@ -29,3 +29,4 @@ export {
 } from './selectors';
 export { organizationSagas } from './sagas';
 export type { Organization } from './types';
+export { OrganizationType } from './types';

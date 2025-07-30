@@ -24,7 +24,7 @@ import { ModalButtonProps } from 'types/common';
 import { idSelector, UserInfo } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
-import { Organization } from 'controllers/organization/types';
+import { Organization } from 'controllers/organization';
 import { useHandleUnassignSuccess } from 'pages/inside/common/assignments';
 import styles from './unassignOrganizationModal.scss';
 

@@ -1,12 +1,7 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { UserInfo, fetchUserInfoAction, idSelector } from 'controllers/user';
-import { useDispatch } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
-import { Organization } from 'controllers/organization';
-import {
-  ORGANIZATION_EXTERNAL_TYPE,
-  ORGANIZATION_PERSONAL_TYPE,
-} from 'common/constants/organizationTypes';
+import { Organization, OrganizationType } from 'controllers/organization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { UPSA } from 'common/constants/accountType';
@@ -22,11 +17,11 @@ export const useCanUnassignOrganization = () => {
     const isUpsa = userType === UPSA;
     const isOrganizationOwner = userId === ownerId;
 
-    if (organizationType === ORGANIZATION_EXTERNAL_TYPE) {
+    if (organizationType === OrganizationType.EXTERNAL) {
       return (isCurrentUser || canAssignUnassignInternalUser(userRoles)) && !isUpsa;
     }
 
-    if (organizationType === ORGANIZATION_PERSONAL_TYPE) {
+    if (organizationType === OrganizationType.PERSONAL) {
       return (isCurrentUser || canAssignUnassignInternalUser(userRoles)) && !isOrganizationOwner;
     }
 

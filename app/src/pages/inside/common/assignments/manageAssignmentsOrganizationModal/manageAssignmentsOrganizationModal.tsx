@@ -23,15 +23,11 @@ import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { UserInfo, idSelector } from 'controllers/user';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
-import { Organization } from 'controllers/organization/types';
+import { Organization, OrganizationType } from 'controllers/organization';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { useHandleUnassignSuccess } from '../index';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { UPSA } from 'common/constants/accountType';
-import {
-  ORGANIZATION_EXTERNAL_TYPE,
-  ORGANIZATION_PERSONAL_TYPE,
-} from 'common/constants/organizationTypes';
 import styles from './manageAssignmentsOrganizationModal.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -68,8 +64,8 @@ export const ManageAssignmentsOrganizationModal = ({
 
   const renderUnassignButton = () => {
     const isUpsaUser = user.accountType === UPSA;
-    const isExternalOrg = organization.type === ORGANIZATION_EXTERNAL_TYPE;
-    const isPersonalOrg = organization.type === ORGANIZATION_PERSONAL_TYPE;
+    const isExternalOrg = organization.type === OrganizationType.EXTERNAL;
+    const isPersonalOrg = organization.type === OrganizationType.PERSONAL;
     const isOrganizationOwner = user.id === organization.ownerId;
     const isCurrentUser = currentUserId === user.id;
 

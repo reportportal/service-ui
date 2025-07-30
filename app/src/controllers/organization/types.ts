@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
+export enum OrganizationType {
+  EXTERNAL = 'EXTERNAL',
+  INTERNAL = 'INTERNAL',
+  PERSONAL = 'PERSONAL',
+}
+
 export interface Organization {
   id: number;
   name: string;
   slug: string;
-  type: string;
+  type: OrganizationType;
   ownerId: number;
 }

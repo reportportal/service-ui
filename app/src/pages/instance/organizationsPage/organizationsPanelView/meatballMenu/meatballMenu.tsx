@@ -24,7 +24,12 @@ import { setActiveOrganizationAction } from 'controllers/organization/actionCrea
 import { canSeeActivityOption } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
-import { assignedOrganizationsSelector, UserInfo, userInfoSelector } from 'controllers/user';
+import {
+  AssignedOrganizations,
+  assignedOrganizationsSelector,
+  UserInfo,
+  userInfoSelector,
+} from 'controllers/user';
 import {
   useCanUnassignOrganization,
   UnassignOrganizationModal,
@@ -44,7 +49,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const dispatch = useDispatch();
   const userRoles = useSelector(userRolesSelector);
   const currentUser = useSelector(userInfoSelector) as UserInfo;
-  const assignedOrganizations = useSelector(assignedOrganizationsSelector) as Organization[];
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
   const canUnassign = useCanUnassignOrganization();
 
   const isAssignedToOrganization = organization.slug in assignedOrganizations;
