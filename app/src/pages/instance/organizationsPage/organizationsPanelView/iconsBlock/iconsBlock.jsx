@@ -17,10 +17,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import {
-  ORGANIZATION_EXTERNAL_TYPE,
-  ORGANIZATION_INTERNAL_TYPE,
-} from 'common/constants/organizationTypes';
+import { OrganizationType } from 'controllers/organization';
 import Parser from 'html-react-parser';
 import { Tooltip } from '@reportportal/ui-kit';
 import SynchedIcon from './img/synched-organization-inline.svg';
@@ -40,7 +37,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
   return (
     <>
       {hasPermission &&
-        (organizationType === ORGANIZATION_EXTERNAL_TYPE ? (
+        (organizationType === OrganizationType.EXTERNAL ? (
           <Tooltip
             content={formatMessage(messages.synchedOrganization)}
             placement={'top'}
@@ -49,7 +46,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
             <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
           </Tooltip>
         ) : (
-          organizationType !== ORGANIZATION_INTERNAL_TYPE && (
+          organizationType !== OrganizationType.INTERNAL && (
             <Tooltip
               content={formatMessage(messages.personalOrganization)}
               placement={'top'}

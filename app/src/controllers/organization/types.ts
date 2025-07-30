@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-export {
-  prepareActiveOrganizationProjectsAction,
-  fetchOrganizationBySlugAction,
-  setActiveOrganizationAction,
-  updateOrganizationSettingsAction,
-} from './actionCreators';
-export { organizationReducer } from './reducer';
-export {
-  activeOrganizationSelector,
-  activeOrganizationNameSelector,
-  activeOrganizationIdSelector,
-  activeOrganizationSettingsSelector,
-} from './selectors';
-export { organizationSagas } from './sagas';
+export enum OrganizationType {
+  EXTERNAL = 'EXTERNAL',
+  INTERNAL = 'INTERNAL',
+  PERSONAL = 'PERSONAL',
+}
+
+export interface Organization {
+  id: number;
+  name: string;
+  slug: string;
+  type: OrganizationType;
+  ownerId: number;
+}

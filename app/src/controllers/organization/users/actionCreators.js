@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATION_USERS, PREPARE_ACTIVE_ORGANIZATION_USERS } from './constants';
+import {
+  FETCH_ORGANIZATION_USERS,
+  PREPARE_ACTIVE_ORGANIZATION_USERS,
+  UNASSIGN_FROM_ORGANIZATION,
+} from './constants';
 
 export const prepareActiveOrganizationUsersAction = (payload) => ({
   type: PREPARE_ACTIVE_ORGANIZATION_USERS,
@@ -27,3 +31,8 @@ export const fetchOrganizationUsersAction = (params) => {
     payload: params,
   };
 };
+
+export const unassignFromOrganizationAction = (user, organization, onSuccess) => ({
+  type: UNASSIGN_FROM_ORGANIZATION,
+  payload: { user, organization, onSuccess },
+});

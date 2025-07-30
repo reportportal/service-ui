@@ -189,7 +189,7 @@ function* unassignFromProject({ payload = {} }) {
 
     yield put(
       showSuccessNotification({
-        messageId: 'unassignProjectSuccess',
+        messageId: 'unassignSuccess',
         values: { name: user.fullName },
       }),
     );
