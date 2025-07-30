@@ -92,8 +92,8 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
       <div className={cx('create-test-case-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(createTestCase)}>
           <div className={cx('create-test-case-modal__container')}>
-            <BasicInformation />
-            <TestCaseDetails />
+            <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
+            <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />
           </div>
         </form>
         {isCreateTestCaseLoading && (

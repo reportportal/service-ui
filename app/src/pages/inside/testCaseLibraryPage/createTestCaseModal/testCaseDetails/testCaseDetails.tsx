@@ -40,7 +40,11 @@ const createEmptyStep = (): StepData => ({
   attachments: [],
 });
 
-export const TestCaseDetails = () => {
+interface TestCaseDetailsProps {
+  className?: string;
+}
+
+export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
 
@@ -59,8 +63,27 @@ export const TestCaseDetails = () => {
   const handleRemoveStep = (stepId: string) =>
     setSteps((prevState) => prevState.filter((step) => step.id !== stepId));
 
+  const handleMoveStep = ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => {
+    setSteps((prevState) => {
+      const currentIndex = prevState.findIndex((step) => step.id === stepId);
+      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+      const shouldNotMove = newIndex < 0 || newIndex >= prevState.length;
+
+      if (currentIndex === -1 || shouldNotMove) {
+        return prevState;
+      }
+
+      const reorderedSteps = [...prevState];
+      const [movedStep] = reorderedSteps.splice(currentIndex, 1);
+
+      reorderedSteps.splice(newIndex, 0, movedStep);
+
+      return reorderedSteps;
+    });
+  };
+
   return (
-    <div className={cx('test-case-details')}>
+    <div className={cx('test-case-details', className)}>
       <Template />
       <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
         <FieldErrorHint provideHint={false}>
@@ -71,7 +94,12 @@ export const TestCaseDetails = () => {
         <Precondition />
       </AttachmentArea>
       <FieldProvider name="steps">
-        <Steps steps={steps} onAddStep={handleAddStep} onRemoveStep={handleRemoveStep} />
+        <Steps
+          steps={steps}
+          onAddStep={handleAddStep}
+          onRemoveStep={handleRemoveStep}
+          onMoveStep={handleMoveStep}
+        />
       </FieldProvider>
     </div>
   );

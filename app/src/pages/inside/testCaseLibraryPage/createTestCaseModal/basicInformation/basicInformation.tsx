@@ -30,11 +30,15 @@ import styles from './basicInformation.scss';
 
 const cx = classNames.bind(styles);
 
-export const BasicInformation = () => {
+interface BasicInformationProps {
+  className?: string;
+}
+
+export const BasicInformation = ({ className }: BasicInformationProps) => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className={cx('basic-information')}>
+    <div className={cx('basic-information', className)}>
       <FieldProvider name="name" placeholder={formatMessage(messages.enterNameForTestCase)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
           <FieldText label={formatMessage(messages.testCaseName)} defaultWidth={false} isRequired />

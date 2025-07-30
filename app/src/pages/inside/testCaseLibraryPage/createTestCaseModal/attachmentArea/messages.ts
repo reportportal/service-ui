@@ -21,4 +21,12 @@ export const messages = defineMessages({
     id: 'createTestCaseModal.incorrectFileSize',
     defaultMessage: 'File size is too large',
   },
+  moveUp: {
+    id: 'createTestCaseModal.moveUp',
+    defaultMessage: 'Move one position up',
+  },
+  moveDown: {
+    id: 'createTestCaseModal.moveDown',
+    defaultMessage: 'Move one position down',
+  },
 });

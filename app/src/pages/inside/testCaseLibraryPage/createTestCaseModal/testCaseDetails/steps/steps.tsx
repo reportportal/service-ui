@@ -30,6 +30,7 @@ interface StepsProps {
   steps: StepData[];
   onAddStep: (index?: number) => void;
   onRemoveStep: (stepId: string) => void;
+  onMoveStep: ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => void;
 }
 
 const messages = defineMessages({
@@ -43,25 +44,25 @@ const messages = defineMessages({
   },
 });
 
-export const Steps = ({ steps, onAddStep, onRemoveStep }: StepsProps) => {
+export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps) => {
   const { formatMessage } = useIntl();
 
-  const renderFloatingAddStepButton = (index: number) => {
-    const isEverySecondStep = (index + 1) % 2 === 0;
+  const renderBetweenStepsArea = (index: number) => {
     const isLastStep = index === steps.length - 1;
 
     return (
-      isEverySecondStep &&
       !isLastStep && (
-        <Button
-          icon={<PlusIcon />}
-          className={cx('steps__floating-button')}
-          variant="text"
-          adjustWidthOn="content"
-          onClick={() => onAddStep(index)}
-        >
-          {formatMessage(messages.addStep)}
-        </Button>
+        <div className={cx('steps__between-area')}>
+          <Button
+            icon={<PlusIcon />}
+            className={cx('steps__floating-button')}
+            variant="text"
+            adjustWidthOn="content"
+            onClick={() => onAddStep(index)}
+          >
+            {formatMessage(messages.addStep)}
+          </Button>
+        </div>
       )
     );
   };
@@ -71,10 +72,15 @@ export const Steps = ({ steps, onAddStep, onRemoveStep }: StepsProps) => {
       <span className={cx('steps__label')}>{formatMessage(messages.steps)}</span>
       {steps.map((step, index) => (
         <div key={step.id} className={cx('steps__step-container')}>
-          <AttachmentArea isDraggable index={index} onRemove={() => onRemoveStep(step.id)}>
+          <AttachmentArea
+            isDraggable
+            index={index}
+            onRemove={() => onRemoveStep(step.id)}
+            onMove={(direction) => onMoveStep({ stepId: step.id, direction })}
+          >
             <Step stepId={step.id} />
           </AttachmentArea>
-          {renderFloatingAddStepButton(index)}
+          {renderBetweenStepsArea(index)}
         </div>
       ))}
       <div>
