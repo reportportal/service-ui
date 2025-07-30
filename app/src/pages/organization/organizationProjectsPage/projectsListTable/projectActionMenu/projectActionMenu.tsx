@@ -25,7 +25,11 @@ import {
 } from 'common/utils/permissions/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
-import { deleteProjectAction, renameProjectAction } from 'controllers/organization/projects';
+import {
+  deleteProjectAction,
+  fetchFilteredProjectAction,
+  renameProjectAction,
+} from 'controllers/organization/projects';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RenameProjectModal } from '../../modals/renameProjectModal';
@@ -86,8 +90,14 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   }, []);
 
   const handleUnassignClick = useCallback(() => {
+    const onSuccess = () => {
+      dispatch(fetchFilteredProjectAction());
+    };
+
     dispatch(
-      showModalAction({ component: <UnassignProjectModal user={user} project={details} /> }),
+      showModalAction({
+        component: <UnassignProjectModal user={user} project={details} onSuccess={onSuccess} />,
+      }),
     );
   }, [details, dispatch, user]);
 
