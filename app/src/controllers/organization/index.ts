@@ -1,5 +1,5 @@
-/*!
- * Copyright 2025 EPAM Systems
+/*
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-.meatball-menu {
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.menu-icon {
-  svg {
-    margin-bottom: 3px;
-  }
-}
-
-.option-link {
-  color: var(--rp-ui-base-almost-black);
-  cursor: pointer;
-  text-decoration: none;
-  outline: none;
-  background: none;
-  border: none;
-}
+export {
+  prepareActiveOrganizationProjectsAction,
+  fetchOrganizationBySlugAction,
+  setActiveOrganizationAction,
+  updateOrganizationSettingsAction,
+} from './actionCreators';
+export { organizationReducer } from './reducer';
+export {
+  activeOrganizationSelector,
+  activeOrganizationNameSelector,
+  activeOrganizationIdSelector,
+  activeOrganizationSettingsSelector,
+} from './selectors';
+export { organizationSagas } from './sagas';
+export type { Organization } from './types';

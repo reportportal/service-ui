@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,46 +14,28 @@
  * limitations under the License.
  */
 
-.actions-popover {
-  padding: 8px 0;
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.action-dropdown {
-  display: flex;
-  flex-direction: column;
-}
-
-.action-item {
-  display: flex;
-  align-items: start;
-  width: 100%;
-  padding: 8px 16px;
-  border: none;
-  background: none;
-  color: var(--rp-ui-base-almost-black);
+.confirmation-text {
+  font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
   line-height: 20px;
-  text-decoration: none;
-  box-sizing: border-box;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--rp-ui-base-bg-200);
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    border: none;
-  }
-
-  &.danger-button {
-    color: var(--rp-ui-base-error);
-  }
 }
 
-.divider {
-  height: 1px;
-  margin: 8px 12px;
-  background-color: var(--rp-ui-base-e-100);
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.tooltip-wrapper {
+  max-width: max-content;
+}
+
+.custom-tooltip {
+  width: 248px;
 }

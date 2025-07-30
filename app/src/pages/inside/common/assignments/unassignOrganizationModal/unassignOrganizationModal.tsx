@@ -1,0 +1,86 @@
+/*!
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { Modal } from '@reportportal/ui-kit';
+import classNames from 'classnames/bind';
+import { hideModalAction } from 'controllers/modal';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ModalButtonProps } from 'types/common';
+import { idSelector, UserInfo } from 'controllers/user';
+import { messages } from 'common/constants/localization/assignmentsLocalization';
+import { unassignFromOrganizationAction } from 'controllers/organization/users';
+import { Organization } from 'controllers/organization/types';
+import { useHandleUnassignSuccess } from 'pages/inside/common/assignments';
+import styles from './unassignOrganizationModal.scss';
+
+const cx = classNames.bind(styles) as typeof classNames;
+
+interface UnassignOrganizationModalProps {
+  user: UserInfo;
+  organization: Organization;
+  onUnassign?: () => void;
+}
+
+export const UnassignOrganizationModal = ({
+  user,
+  organization,
+  onUnassign,
+}: UnassignOrganizationModalProps) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const currentUserId = useSelector(idSelector) as number;
+  const isCurrentUser = currentUserId === user.id;
+  const headerMessage = isCurrentUser
+    ? messages.unassignFromOrganization
+    : messages.unassignOrganizationUser;
+  const descriptionMessage = isCurrentUser
+    ? messages.unassignFromOrganizationDescription
+    : messages.unassignOrganizationUserDescription;
+  const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
+
+  const okButton: ModalButtonProps = {
+    text: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
+    children: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
+    onClick: () => {
+      dispatch(unassignFromOrganizationAction(user, organization, handleUnassignSuccess));
+    },
+    'data-automation-id': 'submitButton',
+  };
+
+  const cancelButton: ModalButtonProps = {
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
+  };
+
+  return (
+    <Modal
+      title={formatMessage(headerMessage)}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      onClose={() => dispatch(hideModalAction())}
+    >
+      <div className={cx('modal-content')}>
+        {formatMessage(descriptionMessage, {
+          name: user.fullName,
+          organization: organization.name,
+          b: (innerData) => <b>{innerData}</b>,
+        })}
+      </div>
+    </Modal>
+  );
+};

@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
@@ -56,6 +56,10 @@ export const OrganizationUsersPage = () => {
   const isEmptyUsers = users.length === 0;
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canInviteUserToOrganization(userRoles);
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
+  }, [trackEvent]);
 
   const onInvite = (withProject) => {
     dispatch(fetchOrganizationUsersAction(organizationId));

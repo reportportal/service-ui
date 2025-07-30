@@ -43,13 +43,17 @@ const messages = defineMessages({
     id: 'ProjectsPage.assignError',
     defaultMessage: 'An error occurred during assigning to the project',
   },
-  unassignProjectSuccess: {
-    id: 'Assignment.unassignProjectSuccess',
+  unassignSuccess: {
+    id: 'Assignment.unassignSuccess',
     defaultMessage: 'User {name} has been unassigned successfully',
   },
   unassignProjectError: {
     id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  unassignOrganizationError: {
+    id: 'Assignment.unassignOrganizationError',
+    defaultMessage: 'An error occurred during unassigning from the organization',
   },
   deleteError: {
     id: 'ProjectsPage.deleteError',
