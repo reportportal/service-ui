@@ -29,6 +29,8 @@ export interface AssignedOrganization {
   organizationName: string;
 }
 
+export type AssignedOrganizations = Record<string, AssignedOrganization>;
+
 export interface UserMetadata {
   last_login: number;
 }

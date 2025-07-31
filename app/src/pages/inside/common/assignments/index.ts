@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,5 @@
  * limitations under the License.
  */
 
-export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
-export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
-export const UNASSIGN_FROM_ORGANIZATION = 'unassignFromOrganization';
-export const NAMESPACE = 'organizationUsers';
-export const SEARCH_KEY = 'full_name';
+export { useCanUnassignOrganization, useHandleUnassignSuccess } from './hooks';
+export { UnassignOrganizationModal } from './unassignOrganizationModal';

@@ -67,6 +67,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     action: 'page_view',
     place: `organization_settings_${page}`,
   }),
+  VIEW_ORGANIZATION_USERS: {
+    action: 'page_view',
+    place: 'organization_users',
+  },
   updateOrganizationSettings: ({ keepLaunches, keepLogs, keepScreenshots }) => ({
     ...SETTINGS_EVENT_PARAMETERS,
     place: 'general',
@@ -90,5 +94,27 @@ export const ORGANIZATION_PAGE_EVENTS = {
     ...BASIC_EVENT_PARAMETERS,
     place: 'activity',
     element_name: 'search',
+  },
+  meatballMenuUsers: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: elementName,
+  }),
+  manageAssignments: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: elementName,
+    modal: 'manage_assignments_of_user',
+  }),
+  unassignUser: (isCurrentUser: boolean) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'unassign',
+    modal: `unassign${isCurrentUser ? '' : '_user'}_from_organization`,
+  }),
+  UNASSIGN_SELF: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'unassign',
   },
 };

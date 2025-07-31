@@ -15,23 +15,29 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
-import Link from 'redux-first-router-link';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
+import { useCallback, useMemo } from 'react';
+import { ActionMenu } from 'components/actionMenu';
+import { showModalAction } from 'controllers/modal';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
+import {
+  AssignedOrganizations,
+  assignedOrganizationsSelector,
+  UserInfo,
+  userInfoSelector,
+} from 'controllers/user';
+import {
+  useCanUnassignOrganization,
+  UnassignOrganizationModal,
+} from 'pages/inside/common/assignments';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { messages } from '../../messages';
-import styles from './meatballMenu.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
-
-interface Organization {
-  slug: string;
-}
+import { Organization } from 'controllers/organization';
 
 interface MeatballMenuProps {
   organization: Organization;
@@ -42,35 +48,68 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const userRoles = useSelector(userRolesSelector);
+  const currentUser = useSelector(userInfoSelector) as UserInfo;
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
+  const canUnassign = useCanUnassignOrganization();
 
-  const handleClick = (elementName: string) => {
+  const isAssignedToOrganization = organization.slug in assignedOrganizations;
+
+  const handleActivityClick = useCallback(() => {
     dispatch(setActiveOrganizationAction(organization));
-    trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu(elementName));
-  };
+    trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu('activity_menu'));
+  }, [dispatch, organization, trackEvent]);
 
-  return (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('meatball-menu')}>
-          {canSeeActivityOption(userRoles) && (
-            <Link
-              to={{
-                type: ORGANIZATIONS_ACTIVITY_PAGE,
-                payload: { organizationSlug: organization?.slug },
-              }}
-              className={cx('option-link')}
-              onClick={() => handleClick('activity_menu')}
-            >
-              <span>{formatMessage(messages.activity)}</span>
-            </Link>
-          )}
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
+  const onUnassign = useCallback(() => {
+    dispatch(fetchFilteredOrganizationsAction());
+  }, [dispatch]);
+
+  const handleUnassignClick = useCallback(() => {
+    dispatch(
+      showModalAction({
+        component: (
+          <UnassignOrganizationModal
+            user={currentUser}
+            organization={organization}
+            onUnassign={onUnassign}
+          />
+        ),
+      }),
+    );
+    trackEvent(ORGANIZATION_PAGE_EVENTS.UNASSIGN_SELF);
+  }, [dispatch, currentUser, organization, onUnassign, trackEvent]);
+
+  const links = useMemo(
+    () => [
+      {
+        label: formatMessage(messages.activity),
+        to: {
+          type: ORGANIZATIONS_ACTIVITY_PAGE,
+          payload: { organizationSlug: organization?.slug },
+        },
+        hasPermission: canSeeActivityOption(userRoles),
+        onClick: handleActivityClick,
+      },
+    ],
+    [formatMessage, organization?.slug, userRoles, handleActivityClick],
   );
+
+  const actions = useMemo(
+    () => [
+      {
+        label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
+        onClick: handleUnassignClick,
+        hasPermission: isAssignedToOrganization && canUnassign(currentUser, organization),
+      },
+    ],
+    [
+      formatMessage,
+      handleUnassignClick,
+      isAssignedToOrganization,
+      canUnassign,
+      currentUser,
+      organization,
+    ],
+  );
+
+  return <ActionMenu links={links} actions={actions} />;
 };

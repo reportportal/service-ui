@@ -150,6 +150,8 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/projects/searches`,
   organizationUsers: (organizationId, preferencesObj = {}) =>
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
+  organizationUserById: ({ organizationId, userId }) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
   organizationProjectById: ({ organizationId, projectId }) =>
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>
