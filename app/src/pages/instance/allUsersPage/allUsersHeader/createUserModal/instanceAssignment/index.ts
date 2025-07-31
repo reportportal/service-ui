@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-export { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS } from './constants';
-export { fetchOrganizationsAction, fetchFilteredOrganizationsAction } from './actionCreators';
-export { organizationsReducer } from './reducer';
-export {
-  organizationsSelector,
-  organizationsListSelector,
-  organizationsListLoadingSelector,
-  organizationsListPaginationSelector,
-} from './selectors';
-export { organizationsSagas } from './sagas';
+export { InstanceAssignment } from './instanceAssignment';

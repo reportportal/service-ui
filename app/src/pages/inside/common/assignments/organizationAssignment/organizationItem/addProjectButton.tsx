@@ -16,11 +16,11 @@
 
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { Button, PlusIcon, Tooltip } from '@reportportal/ui-kit';
-import { messages } from 'common/constants/localization/invitationsLocalization';
 
 interface AddProjectButtonProps {
   onClick: () => void;
   tooltipContent: MessageDescriptor;
+  text: string;
   tooltipClassname?: string;
   disabled?: boolean;
 }
@@ -28,6 +28,7 @@ interface AddProjectButtonProps {
 export const AddProjectButton = ({
   onClick,
   tooltipContent,
+  text,
   tooltipClassname = '',
   disabled = false,
 }: AddProjectButtonProps) => {
@@ -41,7 +42,7 @@ export const AddProjectButton = ({
       onClick={onClick}
       disabled={disabled}
     >
-      {formatMessage(messages.addProject)}
+      {text}
     </Button>
   );
 

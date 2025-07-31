@@ -15,7 +15,7 @@
  */
 
 .organization {
-  padding: 8px 16px 16px;
+  padding: 8px 16px;
   border-radius: 4px;
   background-color: var(--rp-ui-base-bg-000);
 }
@@ -31,6 +31,25 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  gap: 8px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+}
+
+.rotated {
+  transform: rotate(270deg);
+}
+
+.collapsable {
+  padding-left: 24px;
 }
 
 .controls {

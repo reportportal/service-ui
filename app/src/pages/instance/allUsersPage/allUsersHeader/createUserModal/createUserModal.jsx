@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { commonValidators } from 'common/utils/validation';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { InstanceAssignment } from './instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
 import styles from './createUserModal.scss';
 
@@ -37,6 +38,7 @@ const EMAIL_FIELD = 'email';
 const PASSWORD_FIELD = 'password';
 const ADMIN_RIGHTS = 'adminRights';
 const CREATE_USER_FORM = 'createUserForm';
+const ORGANIZATIONS = 'organizations';
 
 const messages = defineMessages({
   createUserTitle: {
@@ -81,20 +83,26 @@ const messages = defineMessages({
     id: 'CreateUserModal.provideAdminRights',
     defaultMessage: 'Provide Admin rights',
   },
+  invite: {
+    id: 'CreateUserModal.invite',
+    defaultMessage: 'Organizations and projects to invite',
+  },
+  inviteDescription: {
+    id: 'CreateUserModal.inviteDescription',
+    defaultMessage:
+      'Add organizations and projects to specify where the invited user will have access',
+  },
 });
 
-export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
+export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const { onSubmit } = data;
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onCreateUser = (formData) => {
-    // In the second part of the task, the function will be added
-    onSubmit?.(formData);
+  const onCreateUser = () => {
     hideModal();
   };
 
@@ -126,8 +134,9 @@ export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
         </FieldProvider>
       }
       allowCloseOutside={!isSomeFieldFilled}
+      scrollable
     >
-      <div className={cx('modal-content')}>
+      <form className={cx('modal-content')}>
         <div className={cx('wrapper-message')}>
           <SystemMessage>{formatMessage(messages.description)}</SystemMessage>
         </div>
@@ -169,13 +178,21 @@ export const CreateUserModal = ({ data = {}, handleSubmit, invalid }) => {
             <ClipboardButton text={formValues?.[PASSWORD_FIELD]} />
           </div>
         </div>
-      </div>
+        <div className={cx('invite-wrapper')}>
+          <span className={cx('invite')}>{formatMessage(messages.invite)}</span>
+          <span className={cx('invite-description')}>
+            {formatMessage(messages.inviteDescription)}
+          </span>
+        </div>
+        <FieldElement name={ORGANIZATIONS}>
+          <InstanceAssignment />
+        </FieldElement>
+      </form>
     </Modal>
   );
 };
 
 CreateUserModal.propTypes = {
-  data: PropTypes.object,
   handleSubmit: PropTypes.func,
   invalid: PropTypes.bool.isRequired,
 };
