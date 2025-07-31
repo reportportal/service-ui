@@ -101,24 +101,16 @@ export class InputFilter extends Component {
 
   handleChangeInput = (e) => {
     this.props.onFilterStringChange(e.target.value);
-    this.props.tracking.trackEvent(this.props.eventsInfo.enterFilter);
+    if (this.props.value === '' && e.target.value !== '') {
+      this.props.tracking.trackEvent(this.props.eventsInfo.SEARCH_ACTIVITY_FIELD);
+    }
   };
 
   handleClickClear = () => this.props.onQuickClear();
 
   handleApply = () => {
     if (this.props.eventsInfo.CLICK_APPLY_BUTTON) {
-      const currentAppliedFilters = getAppliedFilters(this.props.filterEntities);
-
-      const analyticsData = Object.keys(currentAppliedFilters)
-        .filter((key) => this.prevAppliedFilters.current[key] !== currentAppliedFilters[key])
-        .join('#');
-
-      if (analyticsData) {
-        this.props.tracking.trackEvent(this.props.eventsInfo.CLICK_APPLY_BUTTON(analyticsData));
-      }
-
-      this.prevAppliedFilters.current = currentAppliedFilters;
+      this.props.tracking.trackEvent(this.props.eventsInfo.CLICK_APPLY_BUTTON);
     } else {
       this.props.tracking.trackEvent(this.props.eventsInfo.applyBtn);
     }

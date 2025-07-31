@@ -154,7 +154,7 @@ export class InputTimeDateRange extends Component {
         <input
           readOnly
           value={this.getDateRangeString()}
-          className={cx('current-value')}
+          className={cx('current-value', { placeholder: !(value?.start && value.end) })}
           onClick={this.onClickValueBlock}
         />
         <InputTimeDateRangeMenu

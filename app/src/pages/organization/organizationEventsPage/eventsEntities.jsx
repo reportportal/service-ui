@@ -128,7 +128,7 @@ const messages = defineMessages({
   contains: { id: 'EventsGrid.contains', defaultMessage: 'Contains' },
   subjectNamePlaceholder: {
     id: 'EventsGrid.userSearchPlaceholder',
-    defaultMessage: 'Subject name',
+    defaultMessage: 'Enter subject name',
   },
 });
 
