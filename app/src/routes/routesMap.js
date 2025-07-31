@@ -354,7 +354,15 @@ const routesMap = {
       payload: { ...payload, settingsTab: GENERAL },
     }),
   ),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/organizations/:organizationSlug/projects/:projectSlug/settings/:settingsTab/:subTab*`,
+  [PROJECT_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/projects/:projectSlug/settings/:settingsTab/:subTab*`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
+  },
   PROJECT_SANDBOX_PAGE: '/organizations/:organizationSlug/projects/:projectSlug/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+',
