@@ -17,7 +17,7 @@
 import {
   ORGANIZATION_EXTERNAL_TYPE,
   ORGANIZATION_INTERNAL_TYPE,
-} from 'common/constants/organizationTypes';
+} from '../../../common/constants/organizationTypes';
 
 interface OrganizationMetaCount {
   count: number;
