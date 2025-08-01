@@ -107,6 +107,7 @@ export const FilterContentWrapped = ({
             variant={'text'}
             onClick={clearAll}
             disabled={isClear}
+            adjustWidthOn="content"
           >
             {formatMessage(messages.clearAllFilters)}
           </Button>
