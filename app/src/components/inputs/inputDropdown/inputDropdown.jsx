@@ -175,6 +175,16 @@ export class InputDropdown extends Component {
     }
   };
 
+  handleAllClick = () => {
+    if (this.props.value.length !== this.props.options.length) {
+      this.props.onChange(
+        this.props.options.filter((item) => !item.disabled).map((item) => item.value),
+      );
+    } else {
+      this.props.onChange([]);
+    }
+  };
+
   renderOptions() {
     const { options, multiple, value, independentGroupSelection, customClasses } = this.props;
 
@@ -275,9 +285,11 @@ export class InputDropdown extends Component {
                     })}
                   >
                     {multiple && selectAll && (
-                      <span className={cx('select-all')}>
-                        <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
-                      </span>
+                      <div className={cx('select-all-block')} onClick={this.handleAllClick}>
+                        <span className={cx('select-all')}>
+                          <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
+                        </span>
+                      </div>
                     )}
                     <ScrollWrapper autoHeight autoHeightMax={300}>
                       {this.renderOptions()}

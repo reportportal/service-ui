@@ -84,6 +84,17 @@ export const ORGANIZATION_PAGE_EVENTS = {
     type: 'organization_level',
     condition: `${withProject ? 'with' : 'without'}_project`,
   }),
+  CLICK_APPLY_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    modal: 'filter_activity',
+    element_name: 'apply',
+  },
+  SEARCH_ACTIVITY_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'activity',
+    element_name: 'search',
+  },
   meatballMenuUsers: (elementName: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users',

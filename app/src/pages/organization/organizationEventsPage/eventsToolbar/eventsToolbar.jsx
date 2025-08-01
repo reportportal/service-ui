@@ -27,14 +27,14 @@ import {
   ORGANIZATIONS_PAGE,
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
-import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { EventsEntities } from '../eventsEntities';
 import styles from './eventsToolbar.scss';
 
 const messages = defineMessages({
   searchPlaceholder: {
     id: 'OrganizationEventsPageToolbar.searchPlaceholder',
-    defaultMessage: 'Search by project name, subject name, action, object type, object name',
+    defaultMessage: 'Search by user, action, object type, object name',
   },
   allOrganizations: {
     id: 'OrganizationEventsPageToolbar.allOrganizations',
@@ -81,7 +81,7 @@ export const EventsToolbar = () => {
               entitiesProvider={EventsEntities}
               filterValues={entities}
               onChange={onChange}
-              eventsInfo={ADMIN_EVENT_MONITORING_PAGE_EVENTS}
+              eventsInfo={ORGANIZATION_PAGE_EVENTS}
               placeholder={formatMessage(messages.searchPlaceholder)}
             />
           )}
