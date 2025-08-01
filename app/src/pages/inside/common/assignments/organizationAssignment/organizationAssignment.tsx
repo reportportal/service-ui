@@ -27,11 +27,9 @@ export const OrganizationAssignment = ({
   onChange,
   isMultiple = false,
 }: OrganizationAssignmentProps) => {
-  const multiple = isMultiple && Array.isArray(value);
-
   const updateItem = (updates: Partial<Organization>, index?: number) => {
-    if (multiple) {
-      const updated = [...value];
+    if (isMultiple) {
+      const updated = [...(value as Organization[])];
       updated[index] = { ...updated[index], ...updates };
       onChange?.(updated);
     } else {
@@ -40,30 +38,35 @@ export const OrganizationAssignment = ({
   };
 
   const removeItem = (index: number) => {
-    if (multiple) {
-      const updated = [...value];
+    if (isMultiple) {
+      const updated = [...(value as Organization[])];
       updated.splice(index, 1);
       onChange?.(updated);
     }
   };
 
-  if (multiple) {
+  if (isMultiple) {
+    if (!Array.isArray(value)) {
+      return;
+    }
+
     return (
-      <div>
-        {value.map((org: Organization, index: number) => (
+      <>
+        {value?.map((org: Organization, index: number) => (
           <div key={org.id}>
             <OrganizationItem
               value={org}
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
+              collapsable
             />
           </div>
         ))}
-      </div>
+      </>
     );
   }
 
-  if (!isMultiple && !Array.isArray(value)) {
-    return <OrganizationItem value={value} onChange={(updates) => updateItem(updates)} />;
-  }
+  return (
+    <OrganizationItem value={value as Organization} onChange={(updates) => updateItem(updates)} />
+  );
 };

@@ -16,7 +16,7 @@
 
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BaseIconButton, CloseIcon, Dropdown } from '@reportportal/ui-kit';
+import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
@@ -25,7 +25,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { PROJECTS_LIMIT } from './constants';
 import styles from './organizationItem.scss';
-import { AddProjectButton } from './addProjectButton';
+import { AddItemButton } from './addItemButton';
 import { Project, ProjectItems } from './projectItems';
 import { AddProjectForm } from './addProjectForm';
 import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
@@ -43,13 +43,20 @@ interface OrganizationItemProps {
   value: Organization;
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
+  collapsable?: boolean;
 }
 
-export const OrganizationItem = ({ value, onChange, onRemove }: OrganizationItemProps) => {
+export const OrganizationItem = ({
+  value,
+  onChange,
+  onRemove,
+  collapsable,
+}: OrganizationItemProps) => {
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
   const [totalProjects, setTotalProjects] = useState(0);
   const [addProjectFormOpen, setAddProjectFormOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const roleOptions = [MEMBER, MANAGER].map((role) => ({
     label: formatMessage(getOrgRoleTitle(role)),
     value: role,
@@ -97,10 +104,23 @@ export const OrganizationItem = ({ value, onChange, onRemove }: OrganizationItem
     onChange({ projects: updatedProjects });
   };
 
+  const handleCollapsable = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className={cx('organization')}>
       <div className={cx('header')}>
-        <div className={cx('name')} title={name}>
+        <div
+          className={cx('name', { pointer: collapsable })}
+          title={name}
+          onClick={collapsable ? handleCollapsable : null}
+        >
+          {collapsable && (
+            <div className={cx('icon', { rotated: !isOpen })}>
+              <DropdownIcon />
+            </div>
+          )}
           {name}
         </div>
         <div className={cx('controls')}>
@@ -118,32 +138,36 @@ export const OrganizationItem = ({ value, onChange, onRemove }: OrganizationItem
           )}
         </div>
       </div>
-
-      <ProjectItems
-        projects={projects}
-        canEditByDefault={role === MANAGER}
-        onChange={handleProjectChange}
-        onRemove={handleProjectRemove}
-      />
-
-      <div className={cx('add-project')}>
-        {addProjectFormOpen ? (
-          <AddProjectForm
+      {isOpen && (
+        <div className={cx({ collapsable })}>
+          <ProjectItems
             projects={projects}
-            organizationId={id}
             canEditByDefault={role === MANAGER}
-            onSave={handleAddProject}
-            onCancel={() => setAddProjectFormOpen(false)}
+            onChange={handleProjectChange}
+            onRemove={handleProjectRemove}
           />
-        ) : (
-          <AddProjectButton
-            tooltipClassname={cx('tooltip-wrapper')}
-            onClick={() => setAddProjectFormOpen(true)}
-            tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
-            disabled={noProjects || allProjectsAdded}
-          />
-        )}
-      </div>
+
+          <div className={cx('add-project')}>
+            {addProjectFormOpen ? (
+              <AddProjectForm
+                projects={projects}
+                organizationId={id}
+                canEditByDefault={role === MANAGER}
+                onSave={handleAddProject}
+                onCancel={() => setAddProjectFormOpen(false)}
+              />
+            ) : (
+              <AddItemButton
+                tooltipClassname={cx('tooltip-wrapper')}
+                onClick={() => setAddProjectFormOpen(true)}
+                tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
+                disabled={noProjects || allProjectsAdded}
+                text={formatMessage(messages.addProject)}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
