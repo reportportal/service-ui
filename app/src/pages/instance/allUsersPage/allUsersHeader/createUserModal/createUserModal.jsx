@@ -114,7 +114,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const hideModal = () => dispatch(hideModalAction());
 
   const createUserResponse = async ({ fullName, email, adminRights, password }) => {
-    return await fetch(URLS.createUser(), {
+    return fetch(URLS.createUser(), {
       method: 'post',
       data: {
         email,
@@ -167,7 +167,9 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
         );
         await Promise.all(assignPromises);
       }
-    } catch {} // eslint-disable-line no-empty
+    } catch {
+      /* empty */
+    }
   };
 
   const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
