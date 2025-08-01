@@ -17,7 +17,7 @@
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { Button, PlusIcon, Tooltip } from '@reportportal/ui-kit';
 
-interface AddProjectButtonProps {
+interface AddItemButtonProps {
   onClick: () => void;
   tooltipContent: MessageDescriptor;
   text: string;
@@ -25,13 +25,13 @@ interface AddProjectButtonProps {
   disabled?: boolean;
 }
 
-export const AddProjectButton = ({
+export const AddItemButton = ({
   onClick,
   tooltipContent,
   text,
   tooltipClassname = '',
   disabled = false,
-}: AddProjectButtonProps) => {
+}: AddItemButtonProps) => {
   const { formatMessage } = useIntl();
 
   const renderButton = () => (

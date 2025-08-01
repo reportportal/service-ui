@@ -38,6 +38,7 @@ export const URLS = {
     `${urlCommonBase}users/${userId}/avatar${getQueryParams({ at, loadThumbnail })}`,
   userAvatar: (userId, thumbnail, timestamp) =>
     `${urlCommonBase}users/${userId}/avatar${getQueryParams({ thumbnail, ts: timestamp })}`,
+  createUser: () => `${urlCommonBase}users`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
   dashboards: (projectKey, params) =>

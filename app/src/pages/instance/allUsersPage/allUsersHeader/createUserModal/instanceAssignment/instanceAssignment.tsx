@@ -43,7 +43,7 @@ import {
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
-import { AddProjectButton } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/addProjectButton';
+import { AddItemButton } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import styles from './instanceAssignment.scss';
 
@@ -181,7 +181,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
   const handleSubmit = () => {
     const organization = {
       ...selectedOrganization,
-      projects: [selectedProject],
+      projects: selectedProject ? [selectedProject] : [],
     };
     onChange([...organizations, organization]);
     setIsOpen(false);
@@ -266,7 +266,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
         </div>
       ) : (
         <div className={cx('add-button')}>
-          <AddProjectButton
+          <AddItemButton
             tooltipClassname={cx('tooltip')}
             onClick={() => setIsOpen(true)}
             tooltipContent={messages.availableOrganizations}

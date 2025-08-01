@@ -25,7 +25,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { PROJECTS_LIMIT } from './constants';
 import styles from './organizationItem.scss';
-import { AddProjectButton } from './addProjectButton';
+import { AddItemButton } from './addItemButton';
 import { Project, ProjectItems } from './projectItems';
 import { AddProjectForm } from './addProjectForm';
 import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
@@ -157,7 +157,7 @@ export const OrganizationItem = ({
                 onCancel={() => setAddProjectFormOpen(false)}
               />
             ) : (
-              <AddProjectButton
+              <AddItemButton
                 tooltipClassname={cx('tooltip-wrapper')}
                 onClick={() => setAddProjectFormOpen(true)}
                 tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}

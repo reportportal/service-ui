@@ -440,6 +440,7 @@
   "CreatePatternAnalysisModal.createPatternModalType": "Тип",
   "CreatePatternAnalysisModal.patternConditionPlaceholder": "Текстовое описание",
   "CreateProject": "создан",
+  "CreateUserModal.createdSuccessfully": "Пользователь был успешно создан.",
   "CreateUserModal.description": "В целях безопасности мы рекомендуем обновить пароль после первого входа в созданную учетную запись. Сохраните свои данные в целости и сохранности с помощью нового персонализированного пароля.",
   "CreateUserModal.email": "Электронная почта",
   "CreateUserModal.emailCreateUserHint": "Указан неверный адрес электронной почты. Пожалуйста, введите правильный адрес электронной почты",

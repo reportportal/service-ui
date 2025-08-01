@@ -440,6 +440,7 @@
   "CreatePatternAnalysisModal.createPatternModalType": "Тып",
   "CreatePatternAnalysisModal.patternConditionPlaceholder": "Тэкставае апісанне",
   "CreateProject": "створаны",
+  "CreateUserModal.createdSuccessfully": "Карыстальнік быў створаны.",
   "CreateUserModal.description": "У мэтах бяспекі мы рэкамендуем абнавіць пароль пасля першага ўваходу ў створаную ўліковы запіс. Захавайце свае дадзеныя ў цэласці і захаванасці з дапамогай новага персаналізаванага пароля.",
   "CreateUserModal.email": "Электронная пошта",
   "CreateUserModal.emailCreateUserHint": "Паказаны Няправільны адрас электроннай пошты. Калі ласка, увядзіце правільны адрас электроннай пошты",

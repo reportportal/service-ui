@@ -55,7 +55,6 @@ export const ALL_USERS_PAGE_EVENTS = {
   },
   DELETE_USER: {
     ...BASIC_EVENT_PARAMETERS,
-    category: 'all_users',
     place: 'all_users_page',
     element_name: 'delete',
     modal: 'delete_user',
@@ -65,5 +64,17 @@ export const ALL_USERS_PAGE_EVENTS = {
     place: 'all_users_page',
     element_name: 'export',
     number: appliedFiltersCount,
+  }),
+  CREATE_USER_MODAL: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'create_user',
+  },
+  createUser: (adminRights) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'create',
+    modal: 'create_user',
+    condition: adminRights ? 'provide_admin_rights' : 'no_provide_admin_rights',
   }),
 };

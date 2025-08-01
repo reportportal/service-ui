@@ -46,19 +46,22 @@ export const OrganizationAssignment = ({
   };
 
   if (isMultiple) {
+    if (!Array.isArray(value)) {
+      return;
+    }
+
     return (
       <>
-        {value &&
-          (value as Organization[])?.map((org: Organization, index: number) => (
-            <div key={org.id}>
-              <OrganizationItem
-                value={org}
-                onChange={(updates) => updateItem(updates, index)}
-                onRemove={() => removeItem(index)}
-                collapsable
-              />
-            </div>
-          ))}
+        {value?.map((org: Organization, index: number) => (
+          <div key={org.id}>
+            <OrganizationItem
+              value={org}
+              onChange={(updates) => updateItem(updates, index)}
+              onRemove={() => removeItem(index)}
+              collapsable
+            />
+          </div>
+        ))}
       </>
     );
   }
