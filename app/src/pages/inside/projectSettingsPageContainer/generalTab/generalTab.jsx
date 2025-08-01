@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
 import PropTypes from 'prop-types';
@@ -51,6 +51,7 @@ import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { activeOrganizationSettingsSelector } from 'controllers/organization';
 import { FieldElement } from '../content/elements';
 import styles from './generalTab.scss';
 import { messages } from './generalTabMessages';
@@ -98,6 +99,7 @@ const getAnalyticsData = (...periods) =>
     userRoles: userRolesSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
+    organizationSettings: activeOrganizationSettingsSelector(state),
   }),
   {
     showNotification,
@@ -127,14 +129,14 @@ export class GeneralTab extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     lang: PropTypes.string,
-    retention: PropTypes.number,
+    organizationSettings: PropTypes.object,
     formValues: PropTypes.object,
     isLoading: PropTypes.bool,
   };
 
   static defaultProps = {
     lang: 'en',
-    retention: null,
+    organizationSettings: {},
     isLoading: false,
     userRoles: {},
   };
@@ -146,20 +148,23 @@ export class GeneralTab extends Component {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
       interruptJobTime: Number(interruptJobTime),
-      keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
-      keepLogs: Number(this.getMinRetentionValue(keepLogs)),
-      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
+      keepLaunches: Number(this.getMinRetentionValue(keepLaunches, 'keepLaunches')),
+      keepLogs: Number(this.getMinRetentionValue(keepLogs, 'keepLogs')),
+      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots, 'keepScreenshots')),
     });
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.jobConfig, this.props.jobConfig)) {
+    if (
+      !isEqual(prevProps.jobConfig, this.props.jobConfig) ||
+      !isEqual(prevProps.organizationSettings, this.props.organizationSettings)
+    ) {
       const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
       this.props.initialize({
         interruptJobTime: Number(interruptJobTime),
-        keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
-        keepLogs: Number(this.getMinRetentionValue(keepLogs)),
-        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
+        keepLaunches: Number(this.getMinRetentionValue(keepLaunches, 'keepLaunches')),
+        keepLogs: Number(this.getMinRetentionValue(keepLogs, 'keepLogs')),
+        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots, 'keepScreenshots')),
       });
     }
   }
@@ -218,25 +223,41 @@ export class GeneralTab extends Component {
     { label: this.props.intl.formatMessage(settingsMessages.week1), value: daysToSeconds(7) },
   ];
 
-  getMinRetentionValue = (value) => {
-    const { retention } = this.props;
+  getRetentionLimits = () => {
+    const { attachments, launches, logs } = this.props.organizationSettings;
 
-    return retention === null || retention > value || retention === 0 ? value : retention;
+    return {
+      keepLaunches: launches?.period ? daysToSeconds(launches.period) : null,
+      keepLogs: logs?.period ? daysToSeconds(logs.period) : null,
+      keepScreenshots: attachments?.period ? daysToSeconds(attachments.period) : null,
+    };
   };
 
-  getRetentionOptions = () => {
-    const { retention, lang } = this.props;
+  getMinRetentionValue = (value, fieldName) => {
+    const retentionLimits = this.getRetentionLimits();
+    const retentionLimit = retentionLimits[fieldName];
 
-    if (!retention || retention === 0) {
+    return !retentionLimit || retentionLimit > value ? value : retentionLimit;
+  };
+
+  getRetentionOptions = (fieldName) => {
+    const { lang } = this.props;
+    const retentionLimits = this.getRetentionLimits();
+    const retentionLimit = retentionLimits[fieldName];
+
+    if (!retentionLimit) {
       return this.retentionOptions;
     }
 
     const options = this.retentionOptions.filter(
-      (option) => option.value <= retention && option.value !== 0,
+      (option) => option.value <= retentionLimit && option.value !== 0,
     );
 
-    if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
-      options.push({ label: secondsToDays(retention, lang), value: retention });
+    if (
+      (options.length && options[options.length - 1].value !== retentionLimit) ||
+      !options.length
+    ) {
+      options.push({ label: secondsToDays(retentionLimit, lang), value: retentionLimit });
     }
 
     return options;
@@ -250,7 +271,7 @@ export class GeneralTab extends Component {
     return { label: secondsToDays(value, this.props.lang), value };
   };
 
-  formatRetention = this.createValueFormatter(this.getRetentionOptions());
+  formatRetention = (fieldName) => this.createValueFormatter(this.getRetentionOptions(fieldName));
 
   formatInputValues = () => {
     const { formValues } = this.props;
@@ -268,7 +289,7 @@ export class GeneralTab extends Component {
 
   getLaunchesOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepLaunches');
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value !== 0 &&
@@ -284,7 +305,7 @@ export class GeneralTab extends Component {
 
   getLogOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepLogs');
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value === 0
@@ -302,14 +323,14 @@ export class GeneralTab extends Component {
       };
     });
     if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention(inputValues.keepLogs));
+      newOptions.push(this.formatRetention('keepLogs')(inputValues.keepLogs));
     }
     return newOptions;
   };
 
   getScreenshotsOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepScreenshots');
     const newOptions = options.map((elem) => {
       const isHidden =
         elem.value === 0 ? elem.value !== inputValues.keepLogs : elem.value > inputValues.keepLogs;
@@ -317,7 +338,7 @@ export class GeneralTab extends Component {
       return { ...elem, hidden };
     });
     if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention(inputValues.keepScreenshots));
+      newOptions.push(this.formatRetention('keepScreenshots')(inputValues.keepScreenshots));
     }
     return newOptions;
   };
@@ -364,7 +385,10 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepLaunches"
             label={intl.formatMessage(settingsMessages.keepLaunches)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLaunchesGeneral)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepLaunchesGeneral,
+              this.formatRetention('keepLaunches'),
+            )}
             description={intl.formatMessage(settingsMessages.keepLaunchesDescription)}
             disabled={isDisabled}
           >
@@ -377,7 +401,10 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepLogs"
             label={intl.formatMessage(settingsMessages.keepLogs)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLogsGeneral)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepLogsGeneral,
+              this.formatRetention('keepLogs'),
+            )}
             description={intl.formatMessage(settingsMessages.keepLogsDescription)}
             disabled={isDisabled}
           >
@@ -386,7 +413,10 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepScreenshots"
             label={intl.formatMessage(settingsMessages.keepScreenshots)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral,
+              this.formatRetention('keepScreenshots'),
+            )}
             description={intl.formatMessage(settingsMessages.keepScreenshotsDescription)}
             disabled={isDisabled}
           >

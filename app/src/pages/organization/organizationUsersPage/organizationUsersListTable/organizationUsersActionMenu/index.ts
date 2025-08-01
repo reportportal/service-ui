@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-.meatball-menu {
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.menu-icon {
-  svg {
-    margin-bottom: 3px;
-  }
-}
-
-.option-link {
-  color: var(--rp-ui-base-almost-black);
-  cursor: pointer;
-  text-decoration: none;
-  outline: none;
-  background: none;
-  border: none;
-}
+export { OrganizationUsersActionMenu } from './organizationUsersActionMenu';
