@@ -70,6 +70,7 @@ const OrgTeamListTableWrapped = ({
           instance_role: instanceRole,
           last_login_at: lastLogin,
           org_role: orgRole,
+          account_type: accountType,
         }) => {
           const projectsCount = stats.project_stats.total_count;
           const isCurrentUser = id === currentUser.id;
@@ -95,6 +96,7 @@ const OrgTeamListTableWrapped = ({
             metaData: {
               id,
               fullName,
+              accountType,
             },
           };
         },
