@@ -29,7 +29,7 @@ import { commonValidators } from 'common/utils/validation';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { InstanceAssignment } from './instanceAssignment';
+import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';

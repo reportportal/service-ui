@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { OrganizationType } from 'controllers/organization';
+import { Organization } from 'controllers/organization';
 
 interface OrganizationMetaCount {
   count: number;
@@ -32,11 +32,7 @@ interface OrganizationRelationships {
   };
 }
 
-export interface OrganizationSearchesItem {
-  id: number;
-  name: string;
-  slug: string;
-  type: OrganizationType;
+export interface OrganizationSearchesItem extends Omit<Organization, 'ownerId'> {
   relationships: OrganizationRelationships;
   created_at: string;
   updated_at: string;
