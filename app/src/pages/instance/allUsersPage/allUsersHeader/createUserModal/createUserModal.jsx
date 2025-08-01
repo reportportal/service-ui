@@ -34,7 +34,7 @@ import { hideModalAction } from 'controllers/modal';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
-import { ORGANIZATION_INTERNAL_TYPE } from '../../../../../common/constants/organizationTypes';
+import { OrganizationType } from 'controllers/organization';
 import styles from './createUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -120,7 +120,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
         email,
         full_name: fullName,
         instance_role: adminRights ? ADMINISTRATOR : USER,
-        account_type: ORGANIZATION_INTERNAL_TYPE,
+        account_type: OrganizationType.INTERNAL,
         password,
         active: true,
       },

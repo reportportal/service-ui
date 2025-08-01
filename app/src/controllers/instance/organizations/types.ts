@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  ORGANIZATION_EXTERNAL_TYPE,
-  ORGANIZATION_INTERNAL_TYPE,
-} from '../../../common/constants/organizationTypes';
+import { OrganizationType } from 'controllers/organization';
 
 interface OrganizationMetaCount {
   count: number;
@@ -39,7 +36,7 @@ export interface OrganizationSearchesItem {
   id: number;
   name: string;
   slug: string;
-  type: typeof ORGANIZATION_EXTERNAL_TYPE | typeof ORGANIZATION_INTERNAL_TYPE;
+  type: OrganizationType;
   relationships: OrganizationRelationships;
   created_at: string;
   updated_at: string;
