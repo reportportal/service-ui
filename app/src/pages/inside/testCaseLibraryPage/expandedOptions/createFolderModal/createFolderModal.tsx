@@ -15,15 +15,17 @@
  */
 
 import { ChangeEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
+import { Modal, FieldText, Toggle, BubblesLoader } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
 import { commonValidators } from 'common/utils/validation';
+import { createFoldersAction } from 'controllers/testCase/actionCreators';
+import { isCreatingFolderSelector } from 'controllers/testCase';
 import { commonMessages } from '../../commonMessages';
 import styles from './createFolderModal.scss';
 
@@ -51,9 +53,9 @@ const cx = classNames.bind(styles);
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
 const MAX_FIELD_LENGTH = 48;
 
-interface CreateFolderFormValues {
+export interface CreateFolderFormValues {
   folderName: string;
-  parentFolderName: string;
+  parentFolderName?: string;
 }
 interface CreateFolderModalProps {
   data: {
@@ -69,7 +71,7 @@ const CreateFolderModalComponent = ({
   initialValues,
 }: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
   const dispatch = useDispatch();
-
+  const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const { formatMessage } = useIntl();
 
   const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
@@ -77,9 +79,7 @@ const CreateFolderModalComponent = ({
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = (values: CreateFolderFormValues) => {
-    hideModal();
-
-    return values;
+    dispatch(createFoldersAction(values));
   };
 
   const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -97,13 +97,19 @@ const CreateFolderModalComponent = ({
   };
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children: isCreatingFolder ? (
+      <BubblesLoader className={cx('create-folder-modal__loading-button')} color="white" />
+    ) : (
+      formatMessage(COMMON_LOCALE_KEYS.CREATE)
+    ),
     onClick: handleSubmit(onSubmit),
+    disabled: isCreatingFolder,
     'data-automation-id': 'submitButton',
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isCreatingFolder,
     'data-automation-id': 'cancelButton',
   };
 
@@ -114,7 +120,7 @@ const CreateFolderModalComponent = ({
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
         <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
           <FieldErrorHint provideHint={false}>
             <FieldText
@@ -126,14 +132,18 @@ const CreateFolderModalComponent = ({
           </FieldErrorHint>
         </FieldProvider>
         {shouldRenderToggle && (
-          <Toggle value={isSubfolderToggled} onChange={handleToggle} className={cx('toggle')}>
+          <Toggle
+            value={isSubfolderToggled}
+            onChange={handleToggle}
+            className={cx('create-folder-modal__toggle')}
+          >
             {formatMessage(messages.createAsSubfolder)}
           </Toggle>
         )}
         {isSubfolderToggled && (
           <FieldProvider
             name="parentFolderName"
-            className={cx('parent-folder')}
+            className={cx('create-folder-modal__parent-folder')}
             placeholder={formatMessage(messages.searchFolderToSelect)}
           >
             <FieldErrorHint provideHint={false}>
@@ -147,6 +157,7 @@ const CreateFolderModalComponent = ({
             </FieldErrorHint>
           </FieldProvider>
         )}
+        {isCreatingFolder && <div className={cx('create-folder-modal__loading-overlay')} />}
       </form>
     </Modal>
   );

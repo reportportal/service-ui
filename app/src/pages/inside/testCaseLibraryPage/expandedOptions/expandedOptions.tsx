@@ -18,15 +18,15 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import isEmpty from 'lodash.isempty';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
 
+import { foldersSelector } from 'controllers/testCase';
 import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
-import { FOLDERS } from './mockData';
 import { Folder } from './folder';
 import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
 
@@ -41,7 +41,7 @@ export const ExpandedOptions = () => {
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-
+  const folders = useSelector(foldersSelector);
   const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
 
   const setAllTestCases = () => {
@@ -53,7 +53,7 @@ export const ExpandedOptions = () => {
       showModalAction({
         id: CREATE_FOLDER_MODAL_KEY,
         data: {
-          shouldRenderToggle: !isEmpty(FOLDERS),
+          shouldRenderToggle: !isEmpty(folders),
         },
         component: null,
       }),
@@ -106,7 +106,7 @@ export const ExpandedOptions = () => {
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {FOLDERS.map((folder) => (
+                {folders.map((folder) => (
                   <Folder
                     folder={folder}
                     key={folder.name}
