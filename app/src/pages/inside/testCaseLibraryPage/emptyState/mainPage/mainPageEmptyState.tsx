@@ -26,6 +26,7 @@ import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
 
+import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 import { CreateTestCaseModal } from '../../createTestCaseModal/createTestCaseModal';
@@ -60,6 +61,18 @@ export const MainPageEmptyState = () => {
     );
   };
 
+  const openCreateFolderModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_FOLDER_MODAL_KEY,
+        data: {
+          shouldRenderToggle: false,
+        },
+        component: null,
+      }),
+    );
+  };
+
   const benefits = [
     messages.createFolder,
     messages.addTestCases,
@@ -78,6 +91,7 @@ export const MainPageEmptyState = () => {
             name: formatMessage(commonMessages.createFolder),
             dataAutomationId: 'createFolderButton',
             isCompact: true,
+            handleButton: openCreateFolderModal,
           },
           {
             name: formatMessage(commonMessages.createTestCase),

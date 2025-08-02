@@ -14,33 +14,8 @@
  * limitations under the License.
  */
 
-.create-folder-modal {
-  &__form {
-    position: relative;
-  }
-
-  &__loading-button {
-    width: 50px;
-  }
-
-  &__loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--rp-ui-base-bg-100);
-    opacity: 30%;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  &__toggle {
-    width: fit-content;
-    margin-top: 16px;
-  }
-
-  &__parent-folder {
-    margin-top: 14px;
-  }
-}
+export const GET_FOLDERS = 'getFolders' as const;
+export const CREATE_FOLDER = 'createFolder' as const;
+export const UPDATE_FOLDERS = 'updateFolders' as const;
+export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
+export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;

@@ -176,6 +176,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  testCaseFolderCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
+    defaultMessage: 'Folder has been created successfully.',
+  },
 });
 
 @injectIntl

@@ -25,8 +25,8 @@ const cx = classNames.bind(styles);
 
 type Folder = {
   name: string;
-  testsCount?: number;
-  folders?: Folder[];
+  countOfTestCases?: number;
+  subFolders?: Folder[];
 };
 
 interface FolderProps {
@@ -64,8 +64,12 @@ export const Folder = ({
       aria-expanded={isOpen}
       aria-selected={activeFolder === folder.name}
     >
-      <div onClick={(event) => handleOpen({ event, name: folder.name, count: folder.testsCount })}>
-        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon />}
+      <div
+        onClick={(event) =>
+          handleOpen({ event, name: folder.name, count: folder.countOfTestCases })
+        }
+      >
+        {!isEmpty(folder.subFolders) && <ChevronDownDropdownIcon />}
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.name,
@@ -74,13 +78,13 @@ export const Folder = ({
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount}</span>
+          <span className={cx('folders-tree__item-title--counter')}>{folder.countOfTestCases}</span>
         </div>
       </div>
 
-      {isOpen && !isEmpty(folder.folders) && (
+      {isOpen && !isEmpty(folder.subFolders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder) => (
+          {folder.subFolders?.map((subfolder) => (
             <Folder
               folder={subfolder}
               key={subfolder.name}

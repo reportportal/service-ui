@@ -14,33 +14,8 @@
  * limitations under the License.
  */
 
-.create-folder-modal {
-  &__form {
-    position: relative;
-  }
+import { InitialStateType } from 'controllers/testCase/reducer';
 
-  &__loading-button {
-    width: 50px;
-  }
-
-  &__loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--rp-ui-base-bg-100);
-    opacity: 30%;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  &__toggle {
-    width: fit-content;
-    margin-top: 16px;
-  }
-
-  &__parent-folder {
-    margin-top: 14px;
-  }
-}
+export const foldersSelector = (state: InitialStateType) => state.testCase.folders.list || [];
+export const isCreatingFolderSelector = (state: InitialStateType) =>
+  state.testCase.folders.isCreatingFolder;

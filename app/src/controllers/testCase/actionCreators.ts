@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-.create-folder-modal {
-  &__form {
-    position: relative;
-  }
+import {
+  GET_FOLDERS,
+  CREATE_FOLDER,
+  UPDATE_FOLDERS,
+  START_CREATING_FOLDER,
+  STOP_CREATING_FOLDER,
+} from './constants';
 
-  &__loading-button {
-    width: 50px;
-  }
+export const startCreatingFolderAction = () => ({
+  type: START_CREATING_FOLDER,
+});
 
-  &__loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--rp-ui-base-bg-100);
-    opacity: 30%;
-    z-index: 10;
-    pointer-events: none;
-  }
+export const stopCreatingFolderAction = () => ({
+  type: STOP_CREATING_FOLDER,
+});
 
-  &__toggle {
-    width: fit-content;
-    margin-top: 16px;
-  }
+export const getFoldersAction = () => ({
+  type: GET_FOLDERS,
+});
 
-  &__parent-folder {
-    margin-top: 14px;
-  }
-}
+export const createFoldersAction = (folder) => ({
+  type: CREATE_FOLDER,
+  payload: folder,
+});
+
+export const updateFoldersAction = (folders) => ({
+  type: UPDATE_FOLDERS,
+  payload: folders,
+});
