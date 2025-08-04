@@ -21,4 +21,12 @@ export const messages = defineMessages({
     id: 'createTestCaseModal.dragToReorder',
     defaultMessage: 'Drag to reorder',
   },
+  moveUp: {
+    id: 'createTestCaseModal.moveUp',
+    defaultMessage: 'Move one position up',
+  },
+  moveDown: {
+    id: 'createTestCaseModal.moveDown',
+    defaultMessage: 'Move one position down',
+  },
 });
