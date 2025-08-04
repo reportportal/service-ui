@@ -809,7 +809,6 @@
   "EventsGrid.subjectTypeCol": "Тип суб'єкта",
   "EventsGrid.timeCol": "Час",
   "EventsGrid.subjectNameCol": "Ім'я суб'єкта",
-  "EventsGrid.userSearchPlaceholder": "Введіть назву теми",
   "EventSubjectTypes.application": "Застосування",
   "EventSubjectTypes.user": "Користувач",
   "EventSubjectTypes.rule": "Правило",

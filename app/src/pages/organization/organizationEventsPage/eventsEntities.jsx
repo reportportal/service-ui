@@ -126,10 +126,6 @@ const messages = defineMessages({
   oldValueCol: { id: 'EventsGrid.oldValueCol', defaultMessage: 'Old Value' },
   newValueCol: { id: 'EventsGrid.newValueCol', defaultMessage: 'New Value' },
   contains: { id: 'EventsGrid.contains', defaultMessage: 'Contains' },
-  subjectNamePlaceholder: {
-    id: 'EventsGrid.userSearchPlaceholder',
-    defaultMessage: 'Enter subject name',
-  },
 });
 
 export const EventsEntities = (props) => {
@@ -478,18 +474,13 @@ export const EventsEntities = (props) => {
       },
       {
         id: ENTITY_SUBJECT_NAME,
-        component: EntitySearch,
+        component: EntityInputConditional,
         value: bindDefaultValue(ENTITY_SUBJECT_NAME, {
-          condition: CONDITION_IN,
+          condition: CONDITION_CNT,
         }),
         title: formatMessage(messages.subjectNameCol),
         active: true,
         removable: false,
-        customProps: {
-          getURI: URLS.projectUsernamesSearch(projectKey),
-          placeholder: formatMessage(messages.subjectNamePlaceholder),
-          minLength: 1,
-        },
       },
     ];
   };
