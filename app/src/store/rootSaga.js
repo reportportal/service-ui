@@ -38,6 +38,7 @@ import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 import { organizationsSagas } from 'controllers/instance/organizations';
 import { organizationSagas } from 'controllers/organization';
 import { serverSettingsSagas } from 'controllers/appInfo';
+import { testCaseSagas } from 'controllers/testCase';
 
 const sagas = [
   notificationSagas,
@@ -63,6 +64,7 @@ const sagas = [
   pageSagas,
   pluginSagas,
   uniqueErrorsSagas,
+  testCaseSagas,
 ];
 
 export function* rootSagas() {

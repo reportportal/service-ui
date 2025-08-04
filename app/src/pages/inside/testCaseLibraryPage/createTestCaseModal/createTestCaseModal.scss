@@ -18,8 +18,28 @@
   max-width: 1020px;
   width: 100%;
 
+  &__content-wrapper {
+    position: relative;
+  }
+
   &__container {
     display: flex;
     column-gap: 16px;
+  }
+
+  &__loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--rp-ui-base-bg-100);
+    opacity: 50%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &__loading-button {
+    width: 50px;
   }
 }

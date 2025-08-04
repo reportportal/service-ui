@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import isNumber from 'lodash.isnumber';
+import { FieldText } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
@@ -61,7 +62,7 @@ export const TestCaseDetails = () => {
   return (
     <div className={cx('test-case-details')}>
       <Template />
-      <FieldProvider name="requirementsLink" placeholder={formatMessage(messages.enterLink)}>
+      <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
         <FieldErrorHint provideHint={false}>
           <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />
         </FieldErrorHint>
