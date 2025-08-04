@@ -25,5 +25,5 @@ export interface Organization {
   name: string;
   slug: string;
   type: OrganizationType;
-  ownerId: number;
+  owner_id: number;
 }
