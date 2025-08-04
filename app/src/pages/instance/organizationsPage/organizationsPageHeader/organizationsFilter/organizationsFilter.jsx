@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Field, formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
-import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
@@ -58,7 +57,6 @@ export const OrganizationsFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
@@ -262,7 +260,6 @@ export const OrganizationsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       defaultState={defaultFilterState}
-      filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
       searchProp="name"

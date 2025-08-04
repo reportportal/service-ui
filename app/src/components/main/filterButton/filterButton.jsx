@@ -31,7 +31,6 @@ export const FilterButton = ({
   defaultFilters,
   initialState,
   defaultState,
-  filteredAction,
   getClearButtonState,
   getApplyButtonState,
   searchProp,
@@ -48,10 +47,6 @@ export const FilterButton = ({
     }
   }, [appliedFiltersCount, definedFilters, searchProp, setAppliedFiltersCount]);
 
-  useEffect(() => {
-    filteredAction();
-  }, []);
-
   return (
     <Popover
       content={
@@ -60,7 +55,6 @@ export const FilterButton = ({
           setAppliedFiltersCount={setAppliedFiltersCount}
           onFilterChange={onFilterChange}
           defaultFilters={defaultFilters}
-          filteredAction={filteredAction}
           initialState={initialState}
           defaultState={defaultState}
           getClearButtonState={getClearButtonState}
@@ -107,7 +101,6 @@ FilterButton.propTypes = {
   defaultFilters: PropTypes.object,
   initialState: PropTypes.object.isRequired,
   defaultState: PropTypes.object.isRequired,
-  filteredAction: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
   searchProp: PropTypes.string.isRequired,

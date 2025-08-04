@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN, CONDITION_CNT } from 'components/filterEntities/constants';
-import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
   FilterButton,
   ACCOUNT_TYPE_FILTER_NAME,
@@ -58,7 +57,6 @@ export const AllUsersFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const permissions = getPermissions(formatMessage);
   const accountTypes = getAccountTypes(formatMessage);
@@ -224,7 +222,6 @@ export const AllUsersFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       defaultState={defaultFilterState}
-      filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
       searchProp="full_name"
