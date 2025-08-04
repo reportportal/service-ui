@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all, put } from 'redux-saga/effects';
+import { takeEvery, call, select, all, put, race } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { delay, fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
@@ -61,16 +61,25 @@ function* createFolder({ payload }) {
   try {
     const projectKey = yield select(projectKeySelector);
     const folders = yield select(foldersSelector);
-
-    yield call(delay, SPINNER_DEBOUNCE);
-    yield put(startCreatingFolderAction());
-    const folder = yield call(fetch, URLS.folder(projectKey), {
+    const apiCall = call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
         name: payload.folderName,
       },
     });
-    yield put(updateFoldersAction([...folders, folder]));
+    const { folder, spinner } = yield race({
+      folder: apiCall,
+      spinner: delay(SPINNER_DEBOUNCE),
+    });
+
+    if (spinner) {
+      yield put(startCreatingFolderAction());
+      const folderResult = yield apiCall;
+      yield put(updateFoldersAction([...folders, folderResult]));
+    } else if (folder) {
+      yield put(updateFoldersAction([...folders, folder]));
+    }
+
     yield put(hideModalAction());
     yield put(
       showSuccessNotification({
