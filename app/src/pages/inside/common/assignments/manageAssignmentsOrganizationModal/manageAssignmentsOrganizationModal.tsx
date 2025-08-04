@@ -63,11 +63,13 @@ export const ManageAssignmentsOrganizationModal = ({
   };
 
   const renderUnassignButton = () => {
-    const isUpsaUser = user.accountType === UPSA;
-    const isExternalOrg = organization.type === OrganizationType.EXTERNAL;
-    const isPersonalOrg = organization.type === OrganizationType.PERSONAL;
-    const isOrganizationOwner = user.id === organization.ownerId;
-    const isCurrentUser = currentUserId === user.id;
+    const { id: userId, accountType: userType } = user;
+    const { owner_id: ownerId, type: organizationType } = organization;
+    const isUpsaUser = userType === UPSA;
+    const isExternalOrg = organizationType === OrganizationType.EXTERNAL;
+    const isPersonalOrg = organizationType === OrganizationType.PERSONAL;
+    const isOrganizationOwner = userId === ownerId;
+    const isCurrentUser = currentUserId === userId;
 
     let isDisabled = false;
     let tooltipMessage: MessageDescriptor = null;

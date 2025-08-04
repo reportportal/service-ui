@@ -12,7 +12,7 @@ export const useCanUnassignOrganization = () => {
 
   return (targetUser: UserInfo, targetOrganization: Organization) => {
     const { id: userId, accountType: userType } = targetUser;
-    const { ownerId, type: organizationType } = targetOrganization;
+    const { owner_id: ownerId, type: organizationType } = targetOrganization;
     const isCurrentUser = currentUserId === userId;
     const isUpsa = userType === UPSA;
     const isOrganizationOwner = userId === ownerId;
