@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -33,7 +33,6 @@ import {
   messages as helpMessage,
   timeRangeValues,
 } from 'components/main/filterButton';
-import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import {
@@ -57,7 +56,6 @@ export const ProjectsFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
