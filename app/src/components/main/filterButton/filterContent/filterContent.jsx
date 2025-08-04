@@ -35,7 +35,6 @@ export const FilterContentWrapped = ({
   setAppliedFiltersCount,
   onFilterChange,
   defaultFilters,
-  filteredAction,
   initialState,
   defaultState,
   initialize,
@@ -85,7 +84,6 @@ export const FilterContentWrapped = ({
 
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
-    filteredAction();
     setIsOpen(false);
 
     if (event) {
@@ -132,7 +130,6 @@ FilterContentWrapped.propTypes = {
   defaultFilters: PropTypes.object.isRequired,
   initialState: PropTypes.object.isRequired,
   defaultState: PropTypes.object.isRequired,
-  filteredAction: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

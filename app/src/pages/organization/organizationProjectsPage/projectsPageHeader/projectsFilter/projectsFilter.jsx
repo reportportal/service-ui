@@ -226,7 +226,6 @@ export const ProjectsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       defaultState={defaultFilterState}
-      filteredAction={() => dispatch(fetchFilteredProjectAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
       searchProp="name"

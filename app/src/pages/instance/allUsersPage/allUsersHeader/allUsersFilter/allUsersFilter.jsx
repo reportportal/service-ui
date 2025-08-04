@@ -224,7 +224,6 @@ export const AllUsersFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       defaultState={defaultFilterState}
-      filteredAction={() => dispatch(fetchFilteredOrganizationsAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
       searchProp="full_name"
