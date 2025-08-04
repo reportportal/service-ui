@@ -69,6 +69,13 @@ export const OrganizationsFilter = ({
   ];
   const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
+  const onInput = (e) => {
+    const value = e.target.value;
+    const filtered = value.replace(/[^0-9]/g, '');
+    const cleaned = filtered.replace(/^0+/, '');
+    e.target.value = cleaned;
+  };
+
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {
       filterName: ORGANIZATION_TYPE_FILTER_NAME,
@@ -134,10 +141,12 @@ export const OrganizationsFilter = ({
           props: {
             value: '',
             placeholder: formatMessage(messages.launchesPlaceholder),
-            type: 'number',
             helpText: formatMessage(helpMessage.helpText),
             clearable: true,
             defaultWidth: false,
+            type: 'text',
+            pattern: '[0-9]*',
+            onInput,
           },
         },
       ],
@@ -165,10 +174,12 @@ export const OrganizationsFilter = ({
             value: '',
             helpText: formatMessage(helpMessage.helpText),
             placeholder: formatMessage(messages.usersPlaceholder),
-            type: 'number',
             defaultWidth: false,
             className: cx('input-field'),
             clearable: true,
+            type: 'text',
+            pattern: '[0-9]*',
+            onInput,
           },
         },
       ],

@@ -63,6 +63,13 @@ export const ProjectsFilter = ({
   const rangeComparisons = getRangeComparisons(formatMessage);
   const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
+  const onInput = (e) => {
+    const value = e.target.value;
+    const filtered = value.replace(/[^0-9]/g, '');
+    const cleaned = filtered.replace(/^0+/, '');
+    e.target.value = cleaned;
+  };
+
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
       filterName: LAST_RUN_DATE_FILTER_NAME,
@@ -111,10 +118,12 @@ export const ProjectsFilter = ({
           props: {
             value: '',
             placeholder: formatMessage(messages.launchesPlaceholder),
-            type: 'number',
             helpText: formatMessage(helpMessage.helpText),
             clearable: true,
             defaultWidth: false,
+            type: 'text',
+            pattern: '[0-9]*',
+            onInput,
           },
         },
       ],
@@ -140,10 +149,12 @@ export const ProjectsFilter = ({
           props: {
             value: '',
             placeholder: formatMessage(messages.usersPlaceholder),
-            type: 'number',
             helpText: formatMessage(helpMessage.helpText),
             clearable: true,
             defaultWidth: false,
+            type: 'text',
+            pattern: '[0-9]*',
+            onInput,
           },
         },
       ],
