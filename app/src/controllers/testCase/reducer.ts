@@ -19,6 +19,7 @@ import {
   UPDATE_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
+  SET_FOLDERS,
 } from 'controllers/testCase/constants';
 
 type Folder = {
@@ -42,10 +43,15 @@ export const INITIAL_STATE: InitialStateType = {
 
 const foldersReducer = (state = INITIAL_STATE.folders, { type, payload = {} }) => {
   switch (type) {
-    case UPDATE_FOLDERS:
+    case SET_FOLDERS:
       return {
         ...state,
         list: payload,
+      };
+    case UPDATE_FOLDERS:
+      return {
+        ...state,
+        list: [...state.list, payload],
       };
     case START_CREATING_FOLDER:
       return {

@@ -15,19 +15,19 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all, put, race } from 'redux-saga/effects';
+import { takeEvery, call, select, all, put, fork } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { delay, fetch } from 'common/utils';
+import { fetch, delayedPut } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { foldersSelector } from 'controllers/testCase/selectors';
 import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES } from './constants';
 import {
   updateFoldersAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
+  setFoldersAction,
   GetTestCasesParams,
 } from './actionCreators';
 
@@ -50,7 +50,7 @@ function* getFolders() {
   try {
     const projectKey = yield select(projectKeySelector);
     const folders = yield call(fetch, URLS.folder(projectKey));
-    yield put(updateFoldersAction(folders.content));
+    yield put(setFoldersAction(folders.content));
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
@@ -60,26 +60,14 @@ function* getFolders() {
 function* createFolder({ payload }) {
   try {
     const projectKey = yield select(projectKeySelector);
-    const folders = yield select(foldersSelector);
-    const apiCall = call(fetch, URLS.folder(projectKey), {
+    yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
+    const folder = yield call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
         name: payload.folderName,
       },
     });
-    const { folder, spinner } = yield race({
-      folder: apiCall,
-      spinner: delay(SPINNER_DEBOUNCE),
-    });
-
-    if (spinner) {
-      yield put(startCreatingFolderAction());
-      const folderResult = yield apiCall;
-      yield put(updateFoldersAction([...folders, folderResult]));
-    } else if (folder) {
-      yield put(updateFoldersAction([...folders, folder]));
-    }
-
+    yield put(updateFoldersAction(folder));
     yield put(hideModalAction());
     yield put(
       showSuccessNotification({

@@ -19,6 +19,7 @@ import {
   GET_FOLDERS,
   CREATE_FOLDER,
   UPDATE_FOLDERS,
+  SET_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
 } from './constants';
@@ -50,7 +51,12 @@ export const createFoldersAction = (folder) => ({
   payload: folder,
 });
 
-export const updateFoldersAction = (folders) => ({
-  type: UPDATE_FOLDERS,
+export const setFoldersAction = (folders) => ({
+  type: SET_FOLDERS,
   payload: folders,
+});
+
+export const updateFoldersAction = (folder) => ({
+  type: UPDATE_FOLDERS,
+  payload: folder,
 });
