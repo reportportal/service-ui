@@ -16,12 +16,10 @@
 
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
-import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import {
   EntityDropdown,
   EntityItemStartTime,
-  EntitySearch,
   EntityContains,
   EntityInputConditional,
 } from 'components/filterEntities';
