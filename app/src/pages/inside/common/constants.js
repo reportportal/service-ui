@@ -17,7 +17,7 @@
 import { defineMessages } from 'react-intl';
 
 export const ISSUE_OPERATION_MAX_ITEMS = 300;
-
+export const SPINNER_DEBOUNCE = 300;
 export const actionMessages = defineMessages({
   editDefects: {
     id: 'ActionPanel.editDefects',

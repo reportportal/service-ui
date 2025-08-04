@@ -45,8 +45,8 @@ export const TestCaseLibraryPage = () => {
   const projectName = useSelector(projectNameSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const isFolders = !!folders.length;
 
   useEffect(() => {
     dispatch(getFoldersAction());
@@ -65,7 +65,7 @@ export const TestCaseLibraryPage = () => {
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
             </div>
-            {!folders?.length || (
+            {!isFolders || (
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
@@ -83,10 +83,10 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div
             className={cx('test-case-library-page__content', {
-              'test-case-library-page__content--no-padding': !!folders?.length,
+              'test-case-library-page__content--no-padding': isFolders,
             })}
           >
-            {folders?.length ? <ExpandedOptions /> : <MainPageEmptyState />}
+            {isFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
           </div>
         </div>
       </ScrollWrapper>

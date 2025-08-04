@@ -18,9 +18,10 @@ import { takeEvery, call, select, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { delay, fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
-import { SPINNER_DEBOUNCE } from 'pages/inside/testCaseLibraryPage/constants';
+import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { foldersSelector } from 'controllers/testCase/selectors';
 import { GET_FOLDERS, CREATE_FOLDER } from './constants';
 import {
   updateFoldersAction,
@@ -42,15 +43,17 @@ function* getFolders() {
 function* createFolder({ payload }) {
   try {
     const projectKey = yield select(projectKeySelector);
+    const folders = yield select(foldersSelector);
 
     yield call(delay, SPINNER_DEBOUNCE);
     yield put(startCreatingFolderAction());
-    yield call(fetch, URLS.folder(projectKey), {
+    const folder = yield call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
         name: payload.folderName,
       },
     });
+    yield put(updateFoldersAction([...folders, folder]));
     yield put(hideModalAction());
     yield put(
       showSuccessNotification({
@@ -59,7 +62,6 @@ function* createFolder({ payload }) {
         values: {},
       }),
     );
-    yield getFolders();
   } catch (error) {
     yield put(
       showErrorNotification({

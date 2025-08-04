@@ -78,7 +78,9 @@ export const Folder = ({
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          <span className={cx('folders-tree__item-title--counter')}>{folder.countOfTestCases}</span>
+          <span className={cx('folders-tree__item-title--counter')}>
+            {folder.countOfTestCases || 0}
+          </span>
         </div>
       </div>
 
