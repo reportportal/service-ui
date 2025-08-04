@@ -42,4 +42,11 @@
   &__loading-button {
     width: 50px;
   }
+
+  &__scrollable-section {
+    flex: 1;
+    min-width: 0;
+    max-height: 500px;
+    overflow-y: auto;
+  }
 }
