@@ -31,44 +31,58 @@ interface DropdownOption {
 
 interface DropdownWithDescriptionProps {
   label: string;
-  selectedItem: DropdownOption;
   options: DropdownOption[];
   className?: string;
-  onChange: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  error?: string;
+  touched?: boolean;
+  selectedItem?: DropdownOption;
 }
 
 export const DropdownWithDescription = ({
   label,
-  selectedItem,
   options,
   className = '',
+  value,
   onChange,
-}: DropdownWithDescriptionProps) => (
-  <Dropdown
-    label={label}
-    value={selectedItem.value}
-    icon={selectedItem.icon}
-    options={options}
-    className={className}
-    renderOption={({ option, selected }) => {
-      const dropdownOption = option as DropdownOption;
+  selectedItem,
+  error,
+  touched,
+}: DropdownWithDescriptionProps) => {
+  const currentValue = value || selectedItem?.value || '';
+  const currentIcon =
+    selectedItem?.icon || options.find(({ value: itemValue }) => itemValue === currentValue)?.icon;
 
-      return (
-        <div
-          className={cx('dropdown-with-description', {
-            [cx('dropdown-with-description__selected')]: selected,
-          })}
-        >
-          {dropdownOption.icon}
-          <div>
-            <div className={cx('dropdown-with-description__label')}>{dropdownOption.label}</div>
-            <div className={cx('dropdown-with-description__description')}>
-              {dropdownOption.description}
+  return (
+    <Dropdown
+      label={label}
+      value={currentValue}
+      icon={currentIcon}
+      options={options}
+      className={className}
+      renderOption={({ option, selected }) => {
+        const dropdownOption = option as DropdownOption;
+
+        return (
+          <div
+            className={cx('dropdown-with-description', {
+              [cx('dropdown-with-description__selected')]: selected,
+            })}
+          >
+            {dropdownOption.icon}
+            <div>
+              <div className={cx('dropdown-with-description__label')}>{dropdownOption.label}</div>
+              <div className={cx('dropdown-with-description__description')}>
+                {dropdownOption.description}
+              </div>
             </div>
           </div>
-        </div>
-      );
-    }}
-    onChange={onChange}
-  />
-);
+        );
+      }}
+      error={error}
+      touched={touched}
+      onChange={onChange}
+    />
+  );
+};

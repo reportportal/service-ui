@@ -16,47 +16,28 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { CREATE_TEST_CASE_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
-import { TEST_CASE_DETAILS_PAGE } from 'controllers/pages/constants';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { hideModalAction, showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
+import { showModalAction } from 'controllers/modal';
 
 import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
-import { CreateTestCaseModal } from '../../createTestCaseModal/createTestCaseModal';
+import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from '../../createTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
-  const handleCreateTestCaseModalSubmit = (formValues) => {
-    // eslint-disable-next-line no-console
-    console.log('Form submitted with values:', formValues);
-    dispatch(hideModalAction());
-    dispatch({
-      type: TEST_CASE_DETAILS_PAGE,
-      payload: {
-        // temporary - will be replaced with actual ID generation
-        testCaseSlug: 'new',
-        organizationSlug,
-        projectSlug,
-      },
-    });
-  };
-
-  const openCreateTestCaseModal = () => {
+  const showCreateTestCaseModal = () => {
     dispatch(
       showModalAction({
         id: CREATE_TEST_CASE_MODAL_KEY,
         data: null,
-        component: <CreateTestCaseModal onSubmit={handleCreateTestCaseModalSubmit} />,
+        component: <CreateTestCaseModal />,
       }),
     );
   };
@@ -98,7 +79,7 @@ export const MainPageEmptyState = () => {
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
             variant: 'ghost',
-            handleButton: openCreateTestCaseModal,
+            handleButton: showCreateTestCaseModal,
           },
         ]}
       />

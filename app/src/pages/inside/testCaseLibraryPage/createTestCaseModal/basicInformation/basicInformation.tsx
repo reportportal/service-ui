@@ -16,7 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { FieldText, FieldTextFlex, PriorityUnspecifiedIcon } from '@reportportal/ui-kit';
+import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
@@ -30,12 +30,16 @@ import styles from './basicInformation.scss';
 
 const cx = classNames.bind(styles);
 
-export const BasicInformation = () => {
+interface BasicInformationProps {
+  className?: string;
+}
+
+export const BasicInformation = ({ className }: BasicInformationProps) => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className={cx('basic-information')}>
-      <FieldProvider name="testCaseName" placeholder={formatMessage(messages.enterNameForTestCase)}>
+    <div className={cx('basic-information', className)}>
+      <FieldProvider name="name" placeholder={formatMessage(messages.enterNameForTestCase)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
           <FieldText label={formatMessage(messages.testCaseName)} defaultWidth={false} isRequired />
         </FieldErrorHint>
@@ -45,48 +49,69 @@ export const BasicInformation = () => {
           <FieldText label={formatMessage(messages.folder)} defaultWidth={false} isRequired />
         </FieldErrorHint>
       </FieldProvider>
-      <FieldProvider name="priority" placeholder={formatMessage(messages.selectOrCreateFolder)}>
+      <FieldProvider name="priority">
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
           <DropdownWithDescription
             label={formatMessage(messages.priority)}
-            selectedItem={{
-              label: formatMessage(messages.priorityUnspecified),
-              icon: <PriorityUnspecifiedIcon />,
-              value: 'unspecified',
-            }}
             options={[
               {
                 label: formatMessage(messages.priorityBlocker),
                 value: 'blocker',
-                icon: <PriorityIcon priority="blocker" />,
+                icon: (
+                  <PriorityIcon
+                    priority="blocker"
+                    className={cx('basic-information__priority-icon')}
+                  />
+                ),
               },
               {
                 label: formatMessage(messages.priorityCritical),
                 value: 'critical',
-                icon: <PriorityIcon priority="critical" />,
+                icon: (
+                  <PriorityIcon
+                    priority="critical"
+                    className={cx('basic-information__priority-icon')}
+                  />
+                ),
               },
               {
                 label: formatMessage(messages.priorityHigh),
                 value: 'high',
-                icon: <PriorityIcon priority="high" />,
+                icon: (
+                  <PriorityIcon
+                    priority="high"
+                    className={cx('basic-information__priority-icon')}
+                  />
+                ),
               },
               {
                 label: formatMessage(messages.priorityMedium),
                 value: 'medium',
-                icon: <PriorityIcon priority="medium" />,
+                icon: (
+                  <PriorityIcon
+                    priority="medium"
+                    className={cx('basic-information__priority-icon')}
+                  />
+                ),
               },
               {
                 label: formatMessage(messages.priorityLow),
                 value: 'low',
-                icon: <PriorityIcon priority="low" />,
+                icon: (
+                  <PriorityIcon priority="low" className={cx('basic-information__priority-icon')} />
+                ),
               },
               {
                 label: formatMessage(messages.priorityUnspecified),
                 value: 'unspecified',
-                icon: <PriorityIcon priority="unspecified" />,
+                icon: (
+                  <PriorityIcon
+                    priority="unspecified"
+                    className={cx('basic-information__priority-icon')}
+                  />
+                ),
               },
             ]}
-            onChange={noop}
           />
         </FieldErrorHint>
       </FieldProvider>
@@ -95,7 +120,7 @@ export const BasicInformation = () => {
           <FieldTextFlex label={formatMessage(messages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
-      <EditableTagsSection onAddTag={noop} variant="modal" />
+      <EditableTagsSection variant="modal" onAddTag={noop} />
     </div>
   );
 };

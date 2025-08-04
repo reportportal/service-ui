@@ -346,4 +346,7 @@ export const URLS = {
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
   instanceSettings: () => `${urlBase}settings`,
+
+  testCase: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
 };

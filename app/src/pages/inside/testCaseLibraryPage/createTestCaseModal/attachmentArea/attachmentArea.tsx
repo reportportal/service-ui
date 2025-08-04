@@ -18,14 +18,26 @@ import { ChangeEvent, PropsWithChildren, useCallback, useRef, useState } from 'r
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import isNumber from 'lodash.isnumber';
+import isEmpty from 'lodash.isempty';
 import Dropzone from 'react-dropzone';
-import { uniqueId } from 'common/utils';
-import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
-import { Button, PlusIcon, DragAndDropIcon, DragNDropIcon, DeleteIcon } from '@reportportal/ui-kit';
+import {
+  Button,
+  PlusIcon,
+  DragAndDropIcon,
+  DragNDropIcon,
+  DeleteIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@reportportal/ui-kit';
+
 import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import isEmpty from 'lodash.isempty';
+import { uniqueId } from 'common/utils';
+import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
+import { noop } from 'pages/inside/testCaseLibraryPage/constants';
+
 import { messages } from './messages';
+
 import styles from './attachmentArea.scss';
 
 const cx = classNames.bind(styles);
@@ -51,6 +63,7 @@ interface AttachmentAreaProps {
   acceptFileMimeTypes?: string[];
   onRemove?: () => void;
   onFilesChange?: (files: AttachmentFile[]) => void;
+  onMove?: (direction: 'up' | 'down') => void;
 }
 
 export const AttachmentArea = ({
@@ -64,6 +77,7 @@ export const AttachmentArea = ({
   acceptFileMimeTypes = [],
   onRemove,
   onFilesChange,
+  onMove = noop,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
   const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
@@ -199,9 +213,27 @@ export const AttachmentArea = ({
           <div className={cx('attachment-area__drag')}>
             {areaNumber}
             {isDraggable && (
-              <Button variant="text" adjustWidthOn="content">
-                <DragNDropIcon />
-              </Button>
+              <>
+                <Button
+                  variant="text"
+                  adjustWidthOn="content"
+                  aria-label={formatMessage(messages.moveUp)}
+                  onClick={() => onMove('up')}
+                >
+                  <ArrowUpIcon />
+                </Button>
+                <Button variant="text" adjustWidthOn="content">
+                  <DragNDropIcon />
+                </Button>
+                <Button
+                  variant="text"
+                  adjustWidthOn="content"
+                  aria-label={formatMessage(messages.moveDown)}
+                  onClick={() => onMove('down')}
+                >
+                  <ArrowDownIcon />
+                </Button>
+              </>
             )}
           </div>
           {onRemove && (

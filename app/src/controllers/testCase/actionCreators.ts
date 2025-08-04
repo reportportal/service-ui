@@ -15,12 +15,23 @@
  */
 
 import {
+  GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
   UPDATE_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
 } from './constants';
+
+export interface GetTestCasesParams {
+  search?: string;
+  testFolderId?: number;
+}
+
+export const getTestCasesAction = (params?: GetTestCasesParams) => ({
+  type: GET_TEST_CASES,
+  payload: params,
+});
 
 export const startCreatingFolderAction = () => ({
   type: START_CREATING_FOLDER,

@@ -18,15 +18,15 @@
   &__table-container {
     display: flex;
     justify-content: center;
-    padding-top: 26px;
+    padding: 26px 32px;
   }
 
   &__table-row {
     cursor: pointer;
 
     &:hover {
-      outline: 1px solid var(--rp-ui-base-topaz-focused);
       border-radius: 4px;
+      box-shadow: var(--rp-ui-base-shadow-hover);
     }
   }
 

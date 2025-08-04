@@ -180,6 +180,14 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
     defaultMessage: 'Folder has been created successfully.',
   },
+  testCaseCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
+    defaultMessage: 'Test Case has been created successfully.',
+  },
+  testCaseCreationFailed: {
+    id: 'TestCaseLibraryPage.testCaseCreationFailed',
+    defaultMessage: 'Failed to create Test Case.',
+  },
 });
 
 @injectIntl

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Action } from 'redux';
 import { takeEvery, call, select, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { delay, fetch } from 'common/utils';
@@ -22,12 +23,28 @@ import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { foldersSelector } from 'controllers/testCase/selectors';
-import { GET_FOLDERS, CREATE_FOLDER } from './constants';
+import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES } from './constants';
 import {
   updateFoldersAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
+  GetTestCasesParams,
 } from './actionCreators';
+
+interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
+  payload?: GetTestCasesParams;
+}
+
+function* getTestCases(action: GetTestCasesAction) {
+  try {
+    const projectKey = yield select(projectKeySelector);
+
+    yield call(fetch, URLS.testCase(projectKey, action.payload));
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+}
 
 function* getFolders() {
   try {
@@ -83,6 +100,10 @@ function* watchCreateFolder() {
   yield takeEvery(CREATE_FOLDER, createFolder);
 }
 
+function* watchGetTestCases() {
+  yield takeEvery(GET_TEST_CASES, getTestCases);
+}
+
 export function* testCaseSagas() {
-  yield all([watchGetFolders(), watchCreateFolder()]);
+  yield all([watchGetTestCases(), watchGetFolders(), watchCreateFolder()]);
 }
