@@ -43,7 +43,7 @@ import {
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
-import { AddItemButton } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/addItemButton';
+import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import styles from './instanceAssignment.scss';
 

@@ -809,7 +809,6 @@
   "EventsGrid.subjectTypeCol": "Subject Type",
   "EventsGrid.timeCol": "Hora",
   "EventsGrid.subjectNameCol": "Subject Name",
-  "EventsGrid.userSearchPlaceholder": "Enter subject name",
   "EventSubjectTypes.application": "Application",
   "EventSubjectTypes.user": "User",
   "EventSubjectTypes.rule": "Rule",
