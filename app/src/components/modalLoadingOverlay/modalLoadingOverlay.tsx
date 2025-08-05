@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
-export { useDebouncedSpinner } from './useDebouncedSpinner';
+import classNames from 'classnames/bind';
+
+import styles from './modalLoadingOverlay.scss';
+
+const cx = classNames.bind(styles);
+
+interface ModalLoadingOverlayProps {
+  isVisible: boolean;
+}
+
+export const ModalLoadingOverlay = ({ isVisible }: ModalLoadingOverlayProps) => {
+  if (!isVisible) return null;
+
+  return <div className={cx('modal-loading-overlay')} />;
+};

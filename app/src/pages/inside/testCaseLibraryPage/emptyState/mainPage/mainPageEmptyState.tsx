@@ -22,25 +22,16 @@ import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
-
 import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
+
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from '../../createTestCaseModal';
+import { useCreateTestCaseModal } from '../../createTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-
-  const showCreateTestCaseModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_TEST_CASE_MODAL_KEY,
-        data: null,
-        component: <CreateTestCaseModal />,
-      }),
-    );
-  };
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   const openCreateFolderModal = () => {
     dispatch(
@@ -79,7 +70,7 @@ export const MainPageEmptyState = () => {
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
             variant: 'ghost',
-            handleButton: showCreateTestCaseModal,
+            handleButton: openCreateTestCaseModal,
           },
         ]}
       />

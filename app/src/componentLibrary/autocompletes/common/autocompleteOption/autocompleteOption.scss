@@ -74,6 +74,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  button {
+    min-width: unset;
+  }
 }
 
 .item,

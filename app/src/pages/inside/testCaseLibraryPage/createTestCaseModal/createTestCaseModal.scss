@@ -27,26 +27,11 @@
     column-gap: 16px;
   }
 
-  &__loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--rp-ui-base-bg-100);
-    opacity: 50%;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  &__loading-button {
-    width: 50px;
-  }
-
   &__scrollable-section {
     flex: 1;
     min-width: 0;
     max-height: 500px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 }

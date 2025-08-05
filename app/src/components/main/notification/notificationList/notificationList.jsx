@@ -188,6 +188,14 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
   },
+  testPlanCreatedSuccess: {
+    id: 'TestPlansPage.testPlanCreatedSuccess',
+    defaultMessage: 'Test Plan has been created successfully.',
+  },
+  testPlanCreationFailed: {
+    id: 'TestPlansPage.testPlanCreationFailed',
+    defaultMessage: 'Failed to create Test Plan.',
+  },
 });
 
 @injectIntl

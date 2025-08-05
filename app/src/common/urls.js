@@ -349,4 +349,6 @@ export const URLS = {
 
   testCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlan: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
 };

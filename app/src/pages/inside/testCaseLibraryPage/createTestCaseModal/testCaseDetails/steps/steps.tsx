@@ -75,6 +75,7 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
           <AttachmentArea
             isDraggable
             index={index}
+            totalCount={steps.length}
             onRemove={() => onRemoveStep(step.id)}
             onMove={(direction) => onMoveStep({ stepId: step.id, direction })}
           >

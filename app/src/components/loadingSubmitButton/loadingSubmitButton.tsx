@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
-export { useDebouncedSpinner } from './useDebouncedSpinner';
+import { PropsWithChildren } from 'react';
+import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
+
+import styles from './loadingSubmitButton.scss';
+
+const cx = classNames.bind(styles);
+
+interface LoadingSubmitButtonProps {
+  isLoading: boolean;
+}
+
+export const LoadingSubmitButton = ({
+  isLoading,
+  children,
+}: PropsWithChildren<LoadingSubmitButtonProps>) =>
+  isLoading ? <BubblesLoader className={cx('loading-submit-button')} color="white" /> : children;

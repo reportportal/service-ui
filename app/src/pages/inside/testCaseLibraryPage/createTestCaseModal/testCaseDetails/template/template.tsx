@@ -20,7 +20,7 @@ import { FieldNumber } from '@reportportal/ui-kit';
 
 import { FieldProvider } from 'components/fields';
 
-import { noop } from '../../../constants';
+import { noop } from 'common/utils';
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
 import styles from './template.scss';

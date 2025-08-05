@@ -17,16 +17,21 @@
 import { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, FieldText, Toggle, BubblesLoader } from '@reportportal/ui-kit';
+import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase';
+
 import { commonMessages } from '../../commonMessages';
+
 import styles from './createFolderModal.scss';
 
 const messages = defineMessages({
@@ -97,10 +102,10 @@ const CreateFolderModalComponent = ({
   };
 
   const okButton = {
-    children: isCreatingFolder ? (
-      <BubblesLoader className={cx('create-folder-modal__loading-button')} color="white" />
-    ) : (
-      formatMessage(COMMON_LOCALE_KEYS.CREATE)
+    children: (
+      <LoadingSubmitButton isLoading={isCreatingFolder}>
+        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+      </LoadingSubmitButton>
     ),
     onClick: handleSubmit(onSubmit),
     disabled: isCreatingFolder,
@@ -157,7 +162,7 @@ const CreateFolderModalComponent = ({
             </FieldErrorHint>
           </FieldProvider>
         )}
-        {isCreatingFolder && <div className={cx('create-folder-modal__loading-overlay')} />}
+        <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>
     </Modal>
   );
