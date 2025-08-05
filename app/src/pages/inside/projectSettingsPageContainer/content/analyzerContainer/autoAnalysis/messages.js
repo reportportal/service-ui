@@ -46,7 +46,7 @@ export const messages = defineMessages({
   minShouldMatchDescription: {
     id: 'AutoAnalysis.minShouldMatchDescription',
     defaultMessage:
-      'Percent of words equality between analyzed log and particular log from the search engine. If a log from the search engine has the value less then set, this log will be ignored for AA',
+      'Percent of words equality between analyzed log and particular log from the search engine. If a log from the search engine has the value less than set, this log will be ignored for AA',
   },
   sameNameLaunchesCaption: {
     id: 'AutoAnalysis.sameNameLaunchesCaption',
@@ -88,5 +88,14 @@ export const messages = defineMessages({
   allMessagesShouldMatch: {
     id: 'AutoAnalysis.allMessagesShouldMatch',
     defaultMessage: 'All logs with 3 or more rows should match',
+  },
+  largestRetryPriority: {
+    id: 'AutoAnalysis.largestRetryPriority',
+    defaultMessage: 'Largest Retry priority',
+  },
+  largestRetryPriorityDescription: {
+    id: 'AutoAnalysis.largestRetryPriorityDescription',
+    defaultMessage:
+      'Assigns the defect type based on the retry that has the highest number of passed nested steps (counted up to the first failed step).',
   },
 });
