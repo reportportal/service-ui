@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all, put, fork } from 'redux-saga/effects';
+import { takeEvery, call, select, all, put, fork, cancel } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
@@ -65,13 +65,14 @@ function* getFolders() {
 function* createFolder(action: CreateFolderAction) {
   try {
     const projectKey = yield select(projectKeySelector);
-    yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
+    const spinnerTask = yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
     const folder = yield call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
         name: action.payload.folderName,
       },
     });
+    cancel(spinnerTask);
     yield put(updateFoldersAction(folder));
     yield put(hideModalAction());
     yield put(
