@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-.create-test-case-modal {
-  max-width: 1020px;
-  width: 100%;
+import { useDispatch } from 'react-redux';
 
-  &__content-wrapper {
-    position: relative;
-  }
+import { showModalAction } from 'controllers/modal';
 
-  &__container {
-    display: flex;
-    column-gap: 16px;
-  }
+import { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from '../createTestPlanModal';
 
-  &__scrollable-section {
-    flex: 1;
-    min-width: 0;
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
+export const useCreateTestPlanModal = () => {
+  const dispatch = useDispatch();
+
+  const openModal = () => {
+    dispatch(
+      showModalAction({
+        id: CREATE_TEST_PLAN_MODAL_KEY,
+        data: null,
+        component: <CreateTestPlanModal />,
+      }),
+    );
+  };
+
+  return {
+    openModal,
+  };
+};

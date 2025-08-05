@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,4 @@
  * limitations under the License.
  */
 
-.create-test-case-modal {
-  max-width: 1020px;
-  width: 100%;
-
-  &__content-wrapper {
-    position: relative;
-  }
-
-  &__container {
-    display: flex;
-    column-gap: 16px;
-  }
-
-  &__scrollable-section {
-    flex: 1;
-    min-width: 0;
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
+export const noop = () => {};

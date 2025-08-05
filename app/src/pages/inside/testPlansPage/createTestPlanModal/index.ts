@@ -14,24 +14,4 @@
  * limitations under the License.
  */
 
-.create-test-case-modal {
-  max-width: 1020px;
-  width: 100%;
-
-  &__content-wrapper {
-    position: relative;
-  }
-
-  &__container {
-    display: flex;
-    column-gap: 16px;
-  }
-
-  &__scrollable-section {
-    flex: 1;
-    min-width: 0;
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
+export { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
