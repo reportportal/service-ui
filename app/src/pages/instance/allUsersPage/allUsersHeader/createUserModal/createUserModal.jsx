@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
+import { fetch } from 'common/utils';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -154,7 +155,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
     try {
       const response = await createUserResponse({ fullName, email, adminRights, password });
 
-      if (response.status === 201) {
+      if (response.id) {
         dispatch(
           showNotification({
             message: formatMessage(messages.createdSuccessfully),
