@@ -16,6 +16,7 @@
 
 import { InitialStateType } from 'controllers/testCase/reducer';
 
-export const foldersSelector = (state: InitialStateType) => state.testCase.folders.list || [];
-export const isCreatingFolderSelector = (state: InitialStateType) =>
+export const foldersSelector = (state: { testCase: InitialStateType }) =>
+  state.testCase.folders.list || [];
+export const isCreatingFolderSelector = (state: { testCase: InitialStateType }) =>
   state.testCase.folders.isCreatingFolder;

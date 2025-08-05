@@ -29,10 +29,15 @@ import {
   stopCreatingFolderAction,
   setFoldersAction,
   GetTestCasesParams,
+  CreateFolderParams,
 } from './actionCreators';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
+}
+
+interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
+  payload: CreateFolderParams;
 }
 
 function* getTestCases(action: GetTestCasesAction) {
@@ -57,14 +62,14 @@ function* getFolders() {
   }
 }
 
-function* createFolder({ payload }) {
+function* createFolder(action: CreateFolderAction) {
   try {
     const projectKey = yield select(projectKeySelector);
     yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
     const folder = yield call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
-        name: payload.folderName,
+        name: action.payload.folderName,
       },
     });
     yield put(updateFoldersAction(folder));

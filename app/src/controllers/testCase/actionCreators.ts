@@ -29,6 +29,10 @@ export interface GetTestCasesParams {
   testFolderId?: number;
 }
 
+export interface CreateFolderParams {
+  folderName: string;
+}
+
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
   type: GET_TEST_CASES,
   payload: params,
@@ -46,7 +50,7 @@ export const getFoldersAction = () => ({
   type: GET_FOLDERS,
 });
 
-export const createFoldersAction = (folder) => ({
+export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
   payload: folder,
 });
