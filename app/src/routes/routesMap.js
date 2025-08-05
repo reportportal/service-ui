@@ -50,7 +50,6 @@ import {
   TEST_ITEM_PAGE,
   pageSelector,
   clearPageStateAction,
-  adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
@@ -425,16 +424,16 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
       organizationSlug = hashOrganizationSlug;
     }
+  }
 
-    if ((isOrganizationPage && !hasPermissionOrganization) || (isProjectPage && !hasPermission)) {
-      dispatch(
-        redirect({
-          ...action,
-          payload: { ...action.payload, organizationSlug, projectSlug },
-          meta: {},
-        }),
-      );
-    }
+  if ((isOrganizationPage && !hasPermissionOrganization) || (isProjectPage && !hasPermission)) {
+    dispatch(
+      redirect({
+        ...action,
+        payload: { ...action.payload, organizationSlug, projectSlug },
+        meta: {},
+      }),
+    );
   }
 
   if (nextPageType !== currentPageType) {
