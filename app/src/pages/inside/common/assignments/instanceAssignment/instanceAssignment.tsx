@@ -147,6 +147,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
         role: organizationManager ? MANAGER : MEMBER,
         projects: [],
       });
+      setSelectedProject(null);
     } else {
       setSelectedOrganization(null);
     }
