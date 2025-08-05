@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
-export { getTestCasesAction } from './actionCreators';
+export { getFoldersAction, getTestCasesAction } from './actionCreators';
 export { testCaseSagas } from './sagas';
 export * from './constants';
+export { testCaseReducer } from './reducer';
+export * from './selectors';

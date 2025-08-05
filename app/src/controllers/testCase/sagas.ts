@@ -15,17 +15,29 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all } from 'redux-saga/effects';
-
+import { takeEvery, call, select, all, put, fork, cancel } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils/fetch';
+import { fetch, delayedPut } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
-
-import { GET_TEST_CASES } from './constants';
-import { GetTestCasesParams } from './actionCreators';
+import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
+import { hideModalAction } from 'controllers/modal';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES } from './constants';
+import {
+  updateFoldersAction,
+  startCreatingFolderAction,
+  stopCreatingFolderAction,
+  setFoldersAction,
+  GetTestCasesParams,
+  CreateFolderParams,
+} from './actionCreators';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
+}
+
+interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
+  payload: CreateFolderParams;
 }
 
 function* getTestCases(action: GetTestCasesAction) {
@@ -39,10 +51,62 @@ function* getTestCases(action: GetTestCasesAction) {
   }
 }
 
+function* getFolders() {
+  try {
+    const projectKey = yield select(projectKeySelector);
+    const folders = yield call(fetch, URLS.folder(projectKey));
+    yield put(setFoldersAction(folders.content));
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+}
+
+function* createFolder(action: CreateFolderAction) {
+  try {
+    const projectKey = yield select(projectKeySelector);
+    const spinnerTask = yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
+    const folder = yield call(fetch, URLS.folder(projectKey), {
+      method: 'POST',
+      data: {
+        name: action.payload.folderName,
+      },
+    });
+    cancel(spinnerTask);
+    yield put(updateFoldersAction(folder));
+    yield put(hideModalAction());
+    yield put(
+      showSuccessNotification({
+        message: null,
+        messageId: 'testCaseFolderCreatedSuccess',
+        values: {},
+      }),
+    );
+  } catch (error) {
+    yield put(
+      showErrorNotification({
+        message: error?.error,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopCreatingFolderAction());
+  }
+}
+
+function* watchGetFolders() {
+  yield takeEvery(GET_FOLDERS, getFolders);
+}
+
+function* watchCreateFolder() {
+  yield takeEvery(CREATE_FOLDER, createFolder);
+}
+
 function* watchGetTestCases() {
   yield takeEvery(GET_TEST_CASES, getTestCases);
 }
 
 export function* testCaseSagas() {
-  yield all([watchGetTestCases()]);
+  yield all([watchGetTestCases(), watchGetFolders(), watchCreateFolder()]);
 }

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { BreadcrumbsTreeIcon, Button, Toggle } from '@reportportal/ui-kit';
+import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -25,10 +26,10 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { foldersSelector, getFoldersAction } from 'controllers/testCase';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { ExpandedOptions } from './expandedOptions';
 import { commonMessages } from './commonMessages';
@@ -38,17 +39,19 @@ import styles from './testCaseLibraryPage.scss';
 const cx = classNames.bind(styles);
 
 export const TestCaseLibraryPage = () => {
-  const [isEmptyState, setEmptyState] = useState(true);
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const folders = useSelector(foldersSelector);
   const projectName = useSelector(projectNameSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-  // Temporary toggle for BA and designer review
-  const toggleEmptyState = () => {
-    setEmptyState((prevState) => !prevState);
-  };
-
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const isFolders = !!folders.length;
+
+  useEffect(() => {
+    dispatch(getFoldersAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <SettingsLayout>
@@ -61,16 +64,8 @@ export const TestCaseLibraryPage = () => {
             </div>
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
-              <Toggle
-                className={cx('test-case-library-page__toggle')}
-                value={isEmptyState}
-                data-automation-id=""
-                onChange={toggleEmptyState}
-              >
-                toggle content
-              </Toggle>
             </div>
-            {isEmptyState || (
+            {!isFolders || (
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
@@ -88,10 +83,10 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div
             className={cx('test-case-library-page__content', {
-              'test-case-library-page__content--no-padding': !isEmptyState,
+              'test-case-library-page__content--no-padding': isFolders,
             })}
           >
-            {isEmptyState ? <MainPageEmptyState /> : <ExpandedOptions />}
+            {isFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
           </div>
         </div>
       </ScrollWrapper>

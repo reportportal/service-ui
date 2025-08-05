@@ -14,14 +14,53 @@
  * limitations under the License.
  */
 
-import { GET_TEST_CASES } from './constants';
+import {
+  GET_TEST_CASES,
+  GET_FOLDERS,
+  CREATE_FOLDER,
+  UPDATE_FOLDERS,
+  SET_FOLDERS,
+  START_CREATING_FOLDER,
+  STOP_CREATING_FOLDER,
+} from './constants';
 
 export interface GetTestCasesParams {
   search?: string;
   testFolderId?: number;
 }
 
+export interface CreateFolderParams {
+  folderName: string;
+}
+
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
   type: GET_TEST_CASES,
   payload: params,
+});
+
+export const startCreatingFolderAction = () => ({
+  type: START_CREATING_FOLDER,
+});
+
+export const stopCreatingFolderAction = () => ({
+  type: STOP_CREATING_FOLDER,
+});
+
+export const getFoldersAction = () => ({
+  type: GET_FOLDERS,
+});
+
+export const createFoldersAction = (folder: CreateFolderParams) => ({
+  type: CREATE_FOLDER,
+  payload: folder,
+});
+
+export const setFoldersAction = (folders) => ({
+  type: SET_FOLDERS,
+  payload: folders,
+});
+
+export const updateFoldersAction = (folder) => ({
+  type: UPDATE_FOLDERS,
+  payload: folder,
 });

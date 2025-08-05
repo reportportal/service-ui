@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-export const GET_FOLDERS = 'getFolders' as const;
-export const CREATE_FOLDER = 'createFolder' as const;
-export const UPDATE_FOLDERS = 'updateFolders' as const;
-export const SET_FOLDERS = 'setFolders' as const;
-export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
-export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
-export const GET_TEST_CASES = 'getTestCases' as const;
+import { InitialStateType } from 'controllers/testCase/reducer';
+
+export const foldersSelector = (state: { testCase: InitialStateType }) =>
+  state.testCase.folders.list || [];
+export const isCreatingFolderSelector = (state: { testCase: InitialStateType }) =>
+  state.testCase.folders.isCreatingFolder;
