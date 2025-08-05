@@ -193,7 +193,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
       <FieldElement name="organizations" className={cx('organizations')}>
         <OrganizationAssignment isMultiple />
       </FieldElement>
-      {isOpen ? (
+      {isOpen || organizations.length === 0 ? (
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
             <div className={cx('autocomplete-label')}>{formatMessage(messages.organization)}</div>
