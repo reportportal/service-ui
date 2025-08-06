@@ -123,7 +123,7 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
-  MANUAL_LAUNCHES_PAGE: { component: ManualLaunchesPage, layout: ProjectLayout },
+  MANUAL_LAUNCHES_PAGE: { component: ManualLaunchesPage, layout: ProjectLayout, rawContent: true },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectTeamPage, rawContent: true, layout: ProjectLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: ProjectLayout },
