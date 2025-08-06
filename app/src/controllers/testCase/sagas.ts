@@ -72,7 +72,7 @@ function* createFolder(action: CreateFolderAction) {
         name: action.payload.folderName,
       },
     });
-    cancel(spinnerTask);
+    yield cancel(spinnerTask);
     yield put(updateFoldersAction(folder));
     yield put(hideModalAction());
     yield put(
