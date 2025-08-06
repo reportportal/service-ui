@@ -96,6 +96,6 @@ export const messages = defineMessages({
   largestRetryPriorityDescription: {
     id: 'AutoAnalysis.largestRetryPriorityDescription',
     defaultMessage:
-      'Assigns the defect type based on the retry that has the highest number of passed nested steps (counted up to the first failed step)',
+      'Assigns the defect type based on the retry that has the highest number of passed nested steps (counted up to the first failed step).',
   },
 });
