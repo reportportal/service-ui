@@ -45,4 +45,32 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.perPage',
     defaultMessage: 'per page',
   },
+  duplicateToFolder: {
+    id: 'TestCaseLibraryPage.duplicateToFolder',
+    defaultMessage: 'Duplicate to folder',
+  },
+  changePriority: {
+    id: 'TestCaseLibraryPage.changePriority',
+    defaultMessage: 'Change priority',
+  },
+  editTags: {
+    id: 'TestCaseLibraryPage.editTags',
+    defaultMessage: 'Edit tags',
+  },
+  delete: {
+    id: 'TestCaseLibraryPage.delete',
+    defaultMessage: 'Delete',
+  },
+  moveToFolder: {
+    id: 'TestCaseLibraryPage.moveToFolder',
+    defaultMessage: 'Move to Folder',
+  },
+  addToLaunch: {
+    id: 'TestCaseLibraryPage.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  addToTestPlan: {
+    id: 'TestCaseLibraryPage.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
+  },
 });

@@ -38,6 +38,8 @@ interface TestCaseListProps {
   currentPage?: number;
   itemsPerPage: number;
   searchValue?: string;
+  selectedRowIds: (number | string)[];
+  handleSelectedRowIds: (value: React.SetStateAction<(number | string)[]>) => void;
   onSearchChange?: (value: string) => void;
 }
 
@@ -46,12 +48,15 @@ export const TestCaseList = memo(
     testCases = mockTestCases,
     loading = false,
     currentPage = DEFAULT_CURRENT_PAGE,
+    selectedRowIds,
+    handleSelectedRowIds,
     itemsPerPage,
     searchValue = '',
     onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
+
     const dispatch = useDispatch();
     const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
 
@@ -65,6 +70,32 @@ export const TestCaseList = memo(
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId('');
+    };
+
+    const handleRowSelect = (id: number | string) => {
+      handleSelectedRowIds((selectedRows) => {
+        const isRowAlreadySelected = !!selectedRows.find((rowId) => rowId === id);
+        if (isRowAlreadySelected) {
+          return selectedRows.filter((rowId) => rowId !== id);
+        }
+        return [...selectedRows, id];
+      });
+    };
+
+    const handleAllSelect = () => {
+      handleSelectedRowIds((prevSelectedRowIds) => {
+        const currentDataIds = currentData.map((row) => row.id);
+        if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
+          return prevSelectedRowIds.filter(
+            (selectedRowId) => !currentDataIds.includes(String(selectedRowId)),
+          );
+        }
+
+        return [
+          ...prevSelectedRowIds,
+          ...currentDataIds.filter((id) => !prevSelectedRowIds.includes(id)),
+        ];
+      });
     };
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
@@ -155,10 +186,14 @@ export const TestCaseList = memo(
         </div>
         {!isEmptyList(currentData) ? (
           <Table
+            selectable
+            onToggleRowSelection={handleRowSelect}
+            selectedRowIds={selectedRowIds}
             data={tableData}
             fixedColumns={fixedColumns}
             primaryColumn={primaryColumn}
             sortableColumns={[]}
+            onToggleAllRowsSelection={handleAllSelect}
             className={cx('test-case-table')}
             rowClassName={cx('test-case-table-row')}
           />
