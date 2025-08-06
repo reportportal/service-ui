@@ -23,3 +23,8 @@ declare module '*.png' {
   const value: string;
   export default value;
 }
+
+declare module '*-inline.svg' {
+  const content: string;
+  export default content;
+}

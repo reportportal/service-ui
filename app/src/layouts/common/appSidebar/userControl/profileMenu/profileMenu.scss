@@ -19,10 +19,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background-color: $COLOR--darkmode-gray-475;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  background-color: var(--rp-ui-base-dark-e-450);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
   font-size: 13px;
-  color: $COLOR--darkmode-gray-100;
+  color: var(--rp-ui-base-dark-e-100);
   line-height: 20px;
   box-sizing: border-box;
   text-decoration: none;
@@ -32,20 +33,25 @@
   width: 208px;
   padding: 8px 0px;
 
-  &:hover:not(.active) {
-    color: $COLOR--white-two;
-
-    path {
-      fill: $COLOR--white-two;
-    }
-  }
-  &.active {
-    color: $COLOR--darkmode-topaz-text;
-  }
-
   svg {
     width: 16px;
     height: 16px;
     margin-right: 8px;
+
+    path {
+      fill: var(--rp-ui-base-dark-e-100);
+    }
+  }
+
+  &:hover:not(.active) {
+    color: var(--rp-ui-base-bg-000);
+
+    svg path {
+      fill: var(--rp-ui-base-bg-000);
+    }
+  }
+
+  &.active {
+    color: var(--rp-ui-base-dark-topaz-text);
   }
 }
