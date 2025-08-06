@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -26,9 +25,19 @@ import LogoutIcon from './img/log-out-inline.svg';
 import MyProfileIcon from './img/my-profile-inline.svg';
 import styles from './profileMenu.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
-export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage }) => {
+interface ProfileMenuProps {
+  closePopover: () => void;
+  closeSidebar: () => void;
+  linkToUserProfilePage: { type: string };
+}
+
+export const ProfileMenu = ({
+  closePopover,
+  closeSidebar,
+  linkToUserProfilePage,
+}: ProfileMenuProps) => {
   const dispatch = useDispatch();
 
   const onClickLogout = () => {
@@ -49,16 +58,10 @@ export const ProfileMenu = ({ closePopover, closeSidebar, linkToUserProfilePage 
         {Parser(MyProfileIcon)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
       </NavLink>
-      <Button className={cx('menu-item')} onClick={onClickLogout}>
+      <Button className={cx('menu-item')} onClick={onClickLogout} variant="text">
         {Parser(LogoutIcon)}
         <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
       </Button>
     </>
   );
-};
-
-ProfileMenu.propTypes = {
-  closePopover: PropTypes.func.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
-  linkToUserProfilePage: PropTypes.object.isRequired,
 };
