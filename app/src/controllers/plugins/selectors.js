@@ -26,13 +26,13 @@ import {
   sortItemsByGroupType,
   groupItems,
   filterIntegrationsByName,
-  filterEnabledPlugins,
+  filterEnabledExternalPlugins,
 } from './utils';
 
 export const domainSelector = (state) => state.plugins || {};
 
 export const pluginsSelector = (state) => {
-  return domainSelector(state).plugins;
+  return domainSelector(state).plugins || [];
 };
 export const publicPluginsSelector = (state) => {
   return domainSelector(state).publicPlugins;
@@ -40,7 +40,8 @@ export const publicPluginsSelector = (state) => {
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
-export const enabledPluginSelector = (state, name) => pluginByNameSelector(state, name).enabled;
+export const enabledPluginSelector = (state, name) =>
+  pluginByNameSelector(state, name)?.enabled || false;
 
 export const notificationPluginsSelector = createSelector(pluginsSelector, (plugins) => {
   return plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE);
@@ -52,13 +53,14 @@ const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
-export const enabledPluginNamesSelector = createSelector(pluginsSelector, (plugins) =>
-  filterEnabledPlugins(plugins).map((plugin) => plugin.name),
-);
-export const enabledPublicPluginNamesSelector = createSelector(publicPluginsSelector, (plugins) =>
-  filterEnabledPlugins(plugins).map((plugin) => plugin.name),
-);
 
+export const enabledExternalPluginsSelector = createSelector(pluginsSelector, (plugins) =>
+  filterEnabledExternalPlugins(plugins),
+);
+export const enabledExternalPublicPluginsSelector = createSelector(
+  publicPluginsSelector,
+  (plugins) => filterEnabledExternalPlugins(plugins),
+);
 export const availableGroupedPluginsSelector = createSelector(
   availablePluginsSelector,
   (availablePlugins) => {

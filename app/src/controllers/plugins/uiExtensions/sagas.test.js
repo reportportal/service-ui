@@ -113,8 +113,8 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
       });
       expect(fetchExtensionManifestsSuccessAction).toHaveBeenCalledTimes(1);
       expect(fetchExtensionManifestsSuccessAction).toHaveBeenCalledWith([
-        { name: 'extension1', pluginName: 'plugin1', binaryData: { metadata: 'manifest.json' } },
-        { name: 'extension1', pluginName: 'plugin2', binaryData: { metadata: 'manifest2.json' } },
+        { name: 'extension1', pluginName: 'plugin1' },
+        { name: 'extension1', pluginName: 'plugin2' },
       ]);
     });
   });

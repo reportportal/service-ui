@@ -49,7 +49,6 @@ import {
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
   DUPLICATE_DASHBOARD,
-  COPY_DASHBOARD_CONFIG,
 } from './constants';
 import { querySelector } from './selectors';
 import {
@@ -57,6 +56,7 @@ import {
   deleteDashboardSuccessAction,
   updateDashboardItemSuccessAction,
 } from './actionCreators';
+import { getDashboardNotificationAction, tryParseConfig } from './utils';
 
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
@@ -107,16 +107,17 @@ function* fetchDashboard() {
 function* addDashboard({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const owner = yield select(userIdSelector);
-  const { onSuccess, onError } = payload;
+  const { name, onSuccess, onError } = payload;
   const isPreconfigured = typeof payload.config !== 'undefined';
   try {
-    let response;
     let parsedConfig = null;
+    let url = URLS.dashboards(activeProject);
+    let data = payload;
 
     if (isPreconfigured) {
-      try {
-        parsedConfig = JSON.parse(payload.config);
-      } catch (error) {
+      parsedConfig = tryParseConfig(payload.config);
+
+      if (!parsedConfig) {
         if (onError) {
           onError();
         }
@@ -126,26 +127,25 @@ function* addDashboard({ payload }) {
             type: NOTIFICATION_TYPES.ERROR,
           }),
         );
+
         return;
       }
 
-      response = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
-        method: 'post',
-        data: {
-          name: payload.name,
-          description: payload.description,
-          config: parsedConfig,
-        },
-      });
+      url = URLS.dashboardPreconfigured(activeProject);
+      data = {
+        name: payload.name,
+        description: payload.description,
+        config: parsedConfig,
+      };
+    }
 
-      if (onSuccess) {
-        onSuccess();
-      }
-    } else {
-      response = yield call(fetch, URLS.dashboards(activeProject), {
-        method: 'post',
-        data: payload,
-      });
+    const response = yield call(fetch, url, {
+      method: 'post',
+      data,
+    });
+
+    if (onSuccess) {
+      onSuccess();
     }
 
     const { id } = response;
@@ -172,7 +172,8 @@ function* addDashboard({ payload }) {
     if (isPreconfigured && onError) {
       onError();
     }
-    yield put(showDefaultErrorNotification(error));
+
+    yield put(getDashboardNotificationAction(error, name));
   }
 }
 
@@ -200,23 +201,7 @@ function* duplicateDashboard({ payload: dashboard }) {
     );
     yield put(hideModalAction());
   } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-function* copyDashboardConfig({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
-  try {
-    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
-    yield call([navigator.clipboard, 'writeText'], JSON.stringify(config));
-    yield put(
-      showNotification({
-        messageId: 'dashboardConfigurationCopied',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+    yield put(getDashboardNotificationAction(error, dashboard.name));
   }
 }
 
@@ -224,11 +209,22 @@ function* updateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
   const { name, description, id } = dashboard;
 
-  yield call(fetch, URLS.dashboard(activeProject, id), {
-    method: 'put',
-    data: { name, description },
-  });
-  yield put(updateDashboardItemSuccessAction(dashboard));
+  try {
+    yield call(fetch, URLS.dashboard(activeProject, id), {
+      method: 'put',
+      data: { name, description },
+    });
+    yield put(updateDashboardItemSuccessAction(dashboard));
+    yield put(
+      showNotification({
+        messageId: 'updateDashboardSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(getDashboardNotificationAction(error, name));
+  }
 }
 
 function* updateDashboardWidgets({ payload: dashboard }) {
@@ -295,6 +291,5 @@ export function* dashboardSagas() {
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
-    yield takeEvery(COPY_DASHBOARD_CONFIG, copyDashboardConfig),
   ]);
 }

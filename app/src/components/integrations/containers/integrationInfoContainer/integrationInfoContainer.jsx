@@ -58,7 +58,7 @@ export class IntegrationInfoContainer extends Component {
 
   render() {
     const {
-      integrationType: { name, details = {}, type },
+      integrationType: { name, details = {}, type, pluginType },
       integrationType,
       projectIntegrations,
       globalIntegrations,
@@ -78,7 +78,6 @@ export class IntegrationInfoContainer extends Component {
             PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))
           }
           title={pluginTitle}
-          version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
           showToggleConfirmationModal={showToggleConfirmationModal}
@@ -93,6 +92,7 @@ export class IntegrationInfoContainer extends Component {
           removePluginSuccessCallback={removePluginSuccessCallback}
           pluginId={type}
           instanceType={name}
+          pluginType={pluginType}
           isGlobal={isGlobal}
           title={pluginTitle}
           events={events}

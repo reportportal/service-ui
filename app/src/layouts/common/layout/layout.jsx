@@ -147,7 +147,11 @@ export class Layout extends Component {
             )}
           </div>
           <div className={cx('content')}>
-            {Banner && <Banner />}
+            {Banner && (
+              <div className={cx('banner-container')}>
+                <Banner />
+              </div>
+            )}
             {rawContent ? (
               <>
                 {header}

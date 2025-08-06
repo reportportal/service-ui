@@ -16,8 +16,15 @@
 
 import { fetch } from 'common/utils/fetch';
 
-export const downloadFile = (url, fileNameFallback) => {
-  fetch(url, { responseType: 'blob' }, true).then((response) => {
+export const downloadFile = (url, requestParams = {}, fileNameFallback = '') => {
+  return fetch(
+    url,
+    {
+      responseType: 'blob',
+      ...requestParams,
+    },
+    true,
+  ).then((response) => {
     const data = response.data;
     const attachmentHeader = response.headers['content-disposition'];
     const extractedFileName = /filename="(.*?)"(?:$)/.exec(attachmentHeader);

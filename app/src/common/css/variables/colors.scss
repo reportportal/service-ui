@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// Deprecated, use colors as CSS custom properties from https://github.com/reportportal/ui-kit/blob/develop/src/assets/styles/themes/base.scss instead
 /* stylelint-disable color-no-hex */
 
 $COLOR--system-issue: #0274d1;
@@ -54,6 +55,7 @@ $COLOR--light-yellow: #f5f9ec;
 $COLOR--orangish: #fb7848;
 $COLOR--tealish: #39c2d7;
 $COLOR--tealish-hover: #d7f3f7;
+$COLOR--tealish-border: #b4d5e6;
 $COLOR--has-permission: #edf4da;
 $COLOR--khaki-green: #7f993a;
 $COLOR--white-two: #ffffff;

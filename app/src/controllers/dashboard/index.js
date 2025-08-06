@@ -26,7 +26,6 @@ export {
   changeFullScreenModeAction,
   duplicateDashboardAction,
   duplicateDashboardSuccessAction,
-  copyDashboardConfigAction,
 } from './actionCreators';
 export { dashboardReducer } from './reducer';
 export {

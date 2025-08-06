@@ -22,8 +22,11 @@ import { getExtensionUrl } from '../utils';
 import { useFederatedComponent } from '../hooks';
 import { extensionType } from '../extensionTypes';
 
-export function FederatedExtensionLoader({ extension, withPreloader, ...componentProps }) {
-  const { moduleName, scope, pluginName } = extension;
+export function FederatedExtensionLoader({ extension, withPreloader = false, ...componentProps }) {
+  const {
+    pluginName,
+    payload: { moduleName, scope },
+  } = extension;
   const url = getExtensionUrl(extension);
 
   const { failed, Component } = useFederatedComponent(scope, moduleName, url);
@@ -43,10 +46,6 @@ export function FederatedExtensionLoader({ extension, withPreloader, ...componen
   );
 }
 FederatedExtensionLoader.propTypes = {
-  extension: extensionType,
+  extension: extensionType.isRequired,
   withPreloader: PropTypes.bool,
-};
-FederatedExtensionLoader.defaultProps = {
-  extension: {},
-  withPreloader: false,
 };

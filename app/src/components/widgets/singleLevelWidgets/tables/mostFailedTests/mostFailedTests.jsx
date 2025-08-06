@@ -42,12 +42,13 @@ export class MostFailedTests extends Component {
   itemClickHandler = (uniqueId) => {
     const {
       widget: {
-        content: { latestLaunch },
+        content: { result },
       },
       getTestCaseNameLink,
       navigate,
     } = this.props;
-    const link = getTestCaseNameLink({ uniqueId, testItemIds: latestLaunch.id });
+    const launchId = result.find((item) => item.uniqueId === uniqueId)?.launchId;
+    const link = getTestCaseNameLink({ uniqueId, testItemIds: launchId });
 
     navigate(link);
   };
@@ -56,7 +57,7 @@ export class MostFailedTests extends Component {
     const {
       widget: {
         content,
-        contentParameters: { contentFields },
+        contentParameters: { contentFields, widgetOptions },
       },
     } = this.props;
 
@@ -65,7 +66,7 @@ export class MostFailedTests extends Component {
     return (
       <TestsTableWidget
         tests={content.result}
-        launch={content.latestLaunch}
+        launch={{ name: widgetOptions.launchNameFilter }}
         issueType={this.getIssueTypeMessage(issueType)}
         columns={cfg.columns}
         onItemClick={this.itemClickHandler}

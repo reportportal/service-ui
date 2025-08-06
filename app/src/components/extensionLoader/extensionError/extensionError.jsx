@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  *  limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { defineMessages, injectIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import PluginErrorImage from 'common/img/plugins/plugin-error.svg';
 import styles from './extensionError.scss';
 
@@ -31,12 +30,12 @@ const messages = defineMessages({
 
 const cx = classNames.bind(styles);
 
-export const ExtensionError = injectIntl(({ intl: { formatMessage } }) => (
-  <div className={cx('extension-error')}>
-    <img src={PluginErrorImage} alt="Plugin error" />
-    <p className={cx('message')}>{Parser(formatMessage(messages.message))}</p>
-  </div>
-));
-ExtensionError.propTypes = {
-  intl: PropTypes.object.isRequired,
+export const ExtensionError = () => {
+  const { formatMessage } = useIntl();
+  return (
+    <div className={cx('extension-error')}>
+      <img src={PluginErrorImage} alt="Plugin error" />
+      <p className={cx('message')}>{Parser(formatMessage(messages.message))}</p>
+    </div>
+  );
 };

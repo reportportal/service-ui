@@ -21,11 +21,11 @@ import { ErrorBoundary } from 'components/containers/errorBoundary';
 import { ExtensionError } from './extensionError';
 import { extensionType } from './extensionTypes';
 import { FederatedExtensionLoader } from './federatedExtensionLoader';
-import { StandaloneExtensionLoader } from './standaloneExtensionLoader';
+import { RemoteExtensionLoader } from './remoteExtensionLoader';
 
-function ExtensionLoader({ extension, withPreloader, ...componentProps }) {
+function ExtensionLoader({ extension, withPreloader = false, ...componentProps }) {
   return extension.pluginType === PLUGIN_TYPE_REMOTE ? (
-    <StandaloneExtensionLoader extension={extension} />
+    <RemoteExtensionLoader extension={extension} />
   ) : (
     <FederatedExtensionLoader
       extension={extension}
@@ -35,18 +35,14 @@ function ExtensionLoader({ extension, withPreloader, ...componentProps }) {
   );
 }
 ExtensionLoader.propTypes = {
-  extension: extensionType,
+  extension: extensionType.isRequired,
   withPreloader: PropTypes.bool,
-};
-ExtensionLoader.defaultProps = {
-  extension: {},
-  withPreloader: false,
 };
 
 export function ExtensionLoaderWrapper({
   extension,
-  withPreloader,
-  silentOnError,
+  withPreloader = false,
+  silentOnError = true,
   ...componentProps
 }) {
   return (
@@ -64,8 +60,4 @@ ExtensionLoaderWrapper.propTypes = {
   extension: extensionType.isRequired,
   withPreloader: PropTypes.bool,
   silentOnError: PropTypes.bool,
-};
-ExtensionLoaderWrapper.defaultProps = {
-  withPreloader: false,
-  silentOnError: true,
 };

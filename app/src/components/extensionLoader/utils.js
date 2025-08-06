@@ -14,18 +14,21 @@
  *  limitations under the License.
  */
 
+import DOMPurify from 'dompurify';
 import { URLS } from 'common/urls';
-import { MAIN_FILE_KEY } from 'controllers/plugins/uiExtensions/constants';
 
 const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
 
 export const getExtensionUrl = (extension) => {
-  const isDev = process.env.NODE_ENV === 'development';
-  const { pluginName, url: defaultUrl, binaryData = {} } = extension;
-  const fileName = binaryData[MAIN_FILE_KEY] || DEFAULT_EXTENSION_FILE_NAME;
+  const {
+    pluginName,
+    url: baseUrl,
+    payload: { url },
+  } = extension;
+  const fileName = DEFAULT_EXTENSION_FILE_NAME;
 
-  if (isDev && defaultUrl) {
-    return `${defaultUrl}/${fileName}`;
+  if (baseUrl) {
+    return DOMPurify.sanitize(new URL(url || `/${fileName}`, baseUrl));
   }
 
   return URLS.pluginPublicFile(pluginName, fileName);

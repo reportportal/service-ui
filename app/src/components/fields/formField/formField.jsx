@@ -29,7 +29,7 @@ export class FormField extends PureComponent {
     fieldWrapperClassName: PropTypes.string,
     customBlock: PropTypes.shape({
       wrapperClassName: PropTypes.string,
-      node: PropTypes.element,
+      node: PropTypes.node,
     }),
     label: PropTypes.string,
     onChange: PropTypes.func,

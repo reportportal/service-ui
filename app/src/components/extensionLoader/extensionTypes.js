@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@
  */
 
 import PropTypes from 'prop-types';
-import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
+import {
+  PLUGIN_TYPE_EXTENSION,
+  PLUGIN_TYPE_REMOTE,
+} from 'controllers/plugins/uiExtensions/constants';
+import { PLUGIN_ICON_TYPES } from 'components/integrations/constants';
 
 const embeddedExtensionType = PropTypes.shape({
   name: PropTypes.string.isRequired,
@@ -24,20 +28,27 @@ const embeddedExtensionType = PropTypes.shape({
   type: PropTypes.string.isRequired,
   moduleName: PropTypes.string,
   scope: PropTypes.string,
-  pluginName: PropTypes.string.isRequired,
 });
 
-const standaloneExtensionType = PropTypes.shape({
-  pluginName: PropTypes.string.isRequired,
-  pluginType: PropTypes.oneOf([PLUGIN_TYPE_REMOTE]),
-  // TODO: describe this field more specifically
-  type: PropTypes.string.isRequired,
+export const remoteExtensionIconType = PropTypes.shape({
+  type: PropTypes.oneOf([PLUGIN_ICON_TYPES.SVG, PLUGIN_ICON_TYPES.BASE_64, PLUGIN_ICON_TYPES.URL])
+    .isRequired,
+  content: PropTypes.string.isRequired,
+});
+
+const remoteExtensionType = PropTypes.shape({
+  slug: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  icon: remoteExtensionIconType.isRequired,
   url: PropTypes.string.isRequired,
-  internalRoute: PropTypes.string,
-  icon: PropTypes.shape({
-    url: PropTypes.string,
-    svg: PropTypes.string,
-  }),
 });
 
-export const extensionType = PropTypes.oneOfType([embeddedExtensionType, standaloneExtensionType]);
+export const extensionType = PropTypes.shape({
+  name: PropTypes.string,
+  pluginName: PropTypes.string.isRequired,
+  pluginType: PropTypes.oneOf([PLUGIN_TYPE_REMOTE, PLUGIN_TYPE_EXTENSION]),
+  // TODO: describe this field more specifically
+  extensionPoint: PropTypes.string.isRequired,
+  payload: PropTypes.oneOfType([embeddedExtensionType, remoteExtensionType]).isRequired,
+  url: PropTypes.string, // base extension url, if exists
+});

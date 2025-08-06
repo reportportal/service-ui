@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
 import { PLUGINS_SUPPORTS_MULTIPLE_INSTANCES, BUILTIN_PLUGINS } from './constants';
 
 export const isIntegrationSupportsMultipleInstances = (instanceType) =>
   PLUGINS_SUPPORTS_MULTIPLE_INSTANCES.indexOf(instanceType) !== -1;
 
 export const isPluginBuiltin = (instanceType) => BUILTIN_PLUGINS.indexOf(instanceType) !== -1;
+
+export const arePluginIntegrationsAllowed = (pluginType, metadata) => {
+  if (pluginType === PLUGIN_TYPE_REMOTE) {
+    return false;
+  }
+
+  return metadata && metadata.isIntegrationsAllowed !== undefined
+    ? metadata.isIntegrationsAllowed
+    : true;
+};

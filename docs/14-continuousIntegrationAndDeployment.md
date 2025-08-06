@@ -17,6 +17,6 @@ It contains the following steps:
 
 ## Deployment
 
-Once a PR is merged, it can be deployed to a Report Portal development instance. (can be found on [EPAM KB](https://kb.epam.com/display/EPMRPP/Knowledge+Transfer)).
+Once a PR is merged, it can be deployed to a ReportPortal development instance. (can be found on [EPAM KB](https://kb.epam.com/display/EPMRPP/Knowledge+Transfer)).
 
 We are using Jenkins to build and deploy the application (the link can also be found on KB).

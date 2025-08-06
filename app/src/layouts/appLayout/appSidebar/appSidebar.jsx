@@ -47,6 +47,7 @@ import {
   uiExtensionSidebarComponentsSelector,
   uiExtensionProjectPagesSelector,
 } from 'controllers/plugins/uiExtensions';
+import { RemotePluginIcon } from 'components/integrations/elements/pluginIcon/remotePluginIcon';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
@@ -158,16 +159,16 @@ export class AppSidebar extends Component {
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
     });
-    projectPageExtensions.forEach(({ icon, internalRoute }) => {
-      if (icon) {
+    projectPageExtensions.forEach(({ payload }) => {
+      if (payload.icon) {
         topItems.push({
           onClick: onClickNavBtn,
           link: {
             type: PROJECT_PLUGIN_PAGE,
-            payload: { projectId: activeProject, pluginPage: internalRoute },
+            payload: { projectId: activeProject, pluginPage: payload.slug },
           },
-          icon: icon.svg,
-          message: icon.title,
+          icon: <RemotePluginIcon icon={payload.icon} />,
+          message: payload.name,
         });
       }
     });

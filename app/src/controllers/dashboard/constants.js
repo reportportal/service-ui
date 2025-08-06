@@ -33,7 +33,6 @@ export const INITIAL_STATE = {
 export const NAMESPACE = 'dashboards';
 export const FETCH_DASHBOARDS = 'fetchDashboards';
 export const FETCH_DASHBOARD = 'fetchDashboard';
-export const COPY_DASHBOARD_CONFIG = 'copyDashboardConfig';
 export const ADD_DASHBOARD = 'addDashboard';
 export const ADD_DASHBOARD_SUCCESS = 'addDashboardSuccess';
 export const UPDATE_DASHBOARD = 'updateDashboard';
@@ -53,3 +52,6 @@ export const INCREASE_TOTAL_DASHBOARDS_LOCALLY = 'increaseTotalDashboardsLocally
 export const DECREASE_TOTAL_DASHBOARDS_LOCALLY = 'decreaseTotalDashboardsLocally';
 export const DEFAULT_SORT_COLUMN = 'creationDate';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_DESC);
+export const ERROR_CODES = {
+  DASHBOARD_EXISTS: 4091,
+};

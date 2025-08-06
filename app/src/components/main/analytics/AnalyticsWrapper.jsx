@@ -32,23 +32,24 @@ export const analyticsEventObserver = ReactObserver();
 @connect((state) => ({
   baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
-  entryType: assignedProjectsSelector(state)[projectIdSelector(state)]?.entryType,
+  assignedProject: assignedProjectsSelector(state)[projectIdSelector(state)],
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
-  dispatchOnMount: () => {
-    queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
-  },
-  dispatch: ({ baseEventParameters, gaMeasurementId, entryType, ...data }) => {
+  dispatch: ({ baseEventParameters, gaMeasurementId, assignedProject, isEnabled, ...data }) => {
+    if (!isEnabled) {
+      return;
+    }
+
     const {
       instanceId,
       buildVersion,
       userId,
       isAutoAnalyzerEnabled,
       isPatternAnalyzerEnabled,
-      projectInfoId,
       isAdmin,
       isAnalyzerAvailable,
     } = baseEventParameters;
+    const { projectId, entryType } = assignedProject || {};
 
     if ('place' in data) {
       const eventParameters = {
@@ -60,7 +61,7 @@ export const analyticsEventObserver = ReactObserver();
         timestamp: Date.now(),
         uid: `${userId}|${instanceId}`,
         kind: entryType || 'not_set',
-        ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
+        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
       GA4.event(data.action, eventParameters);
@@ -72,14 +73,16 @@ export class AnalyticsWrapper extends Component {
   static propTypes = {
     gaMeasurementId: PropTypes.string,
     children: PropTypes.node,
+    isEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
     children: null,
     gaMeasurementId: '',
+    isEnabled: false,
   };
 
-  componentDidMount() {
+  initialize() {
     const { gaMeasurementId } = this.props;
 
     GA4.initialize(gaMeasurementId || 'G-Z22WZS0E4E', {
@@ -87,6 +90,19 @@ export class AnalyticsWrapper extends Component {
         anonymizeIp: true,
       },
     });
+  }
+
+  componentDidMount() {
+    if (this.props.isEnabled) {
+      this.initialize();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.isEnabled && this.props.isEnabled) {
+      this.initialize();
+      analyticsEventObserver.emit('analyticsWasEnabled', 'active');
+    }
   }
 
   render() {

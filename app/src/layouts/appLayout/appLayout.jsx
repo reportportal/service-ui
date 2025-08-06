@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,22 @@
  */
 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Layout } from 'layouts/common/layout';
-import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
-import { DemoBanner } from './demoBanner';
+import { AppBanner } from './appBanner';
 
-const AppLayoutComponent = ({ children, isDemoInstance, rawContent }) => (
-  <Layout
-    Header={AppHeader}
-    Sidebar={AppSidebar}
-    Banner={isDemoInstance ? DemoBanner : null}
-    rawContent={rawContent}
-  >
+export const AppLayout = ({ children, rawContent }) => (
+  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={AppBanner} rawContent={rawContent}>
     {children}
   </Layout>
 );
 
-AppLayoutComponent.propTypes = {
+AppLayout.propTypes = {
   children: PropTypes.node,
-  isDemoInstance: PropTypes.bool,
   rawContent: PropTypes.bool,
 };
-AppLayoutComponent.defaultProps = {
+AppLayout.defaultProps = {
   children: null,
-  isDemoInstance: false,
   rawContent: false,
 };
-
-export const AppLayout = connect((state) => ({
-  isDemoInstance: isDemoInstanceSelector(state),
-}))(AppLayoutComponent);

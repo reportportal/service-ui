@@ -105,6 +105,15 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'import',
   },
+  CLICK_INTERRUPT_EXPORT_BANNER_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    icon_name: 'interrupt',
+  },
+  CLICK_INTERRUPT_EXPORT_MODAL_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'interrupt',
+    modal: 'interrupt_report_generation',
+  },
   ADD_NEW_WIDGET_BTN: {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_new_widget',
@@ -165,17 +174,9 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicLaunchMenuClickEventParameters,
     element_name: 'delete',
   },
-  CLICK_EXPORT_PDF: {
+  CLICK_EXPORT_REPORT: {
     ...basicLaunchMenuClickEventParameters,
-    element_name: 'pdf',
-  },
-  CLICK_EXPORT_HTML: {
-    ...basicLaunchMenuClickEventParameters,
-    element_name: 'html',
-  },
-  CLICK_EXPORT_XLS: {
-    ...basicLaunchMenuClickEventParameters,
-    element_name: 'xls',
+    element_name: 'export_report',
   },
   ADD_FILTER: {
     ...basicClickEventParametersLaunchPage,
@@ -328,6 +329,13 @@ export const LAUNCHES_MODAL_EVENTS = {
     modal: 'delete_launch',
     element_name: 'delete',
     condition: isBulk ? 'bulk' : 'single',
+  }),
+  getClickExportLaunchBtnModalEvent: (type, isWithAttachments) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'export_report',
+    element_name: 'export',
+    type,
+    status: isWithAttachments ? 'active' : 'disable',
   }),
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
