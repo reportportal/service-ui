@@ -62,7 +62,7 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
   validate: ({ name }) => ({
     name: commonValidators.requiredField(name),
   }),
-})(({ handleSubmit }) => {
+})(({ dirty, handleSubmit }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { isCreateTestPlanLoading, createTestPlan } = useCreateTestPlan();
@@ -88,6 +88,7 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
       okButton={okButton}
       className={cx('create-test-plan-modal')}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-test-plan-modal__content-wrapper')}>

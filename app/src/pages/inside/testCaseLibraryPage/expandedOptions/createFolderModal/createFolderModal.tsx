@@ -70,6 +70,7 @@ interface CreateFolderModalProps {
 
 const CreateFolderModalComponent = ({
   data: { shouldRenderToggle },
+  dirty,
   handleSubmit,
   change,
   untouch,
@@ -123,6 +124,7 @@ const CreateFolderModalComponent = ({
       title={formatMessage(commonMessages.createFolder)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       onClose={hideModal}
     >
       <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
