@@ -84,10 +84,10 @@ export const TestCaseList = memo(
 
     const handleAllSelect = () => {
       handleSelectedRowIds((prevSelectedRowIds) => {
-        const currentDataIds = currentData.map((row) => row.id);
+        const currentDataIds: (string | number)[] = currentData.map((row) => row.id);
         if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
           return prevSelectedRowIds.filter(
-            (selectedRowId) => !currentDataIds.includes(String(selectedRowId)),
+            (selectedRowId) => !currentDataIds.includes(selectedRowId),
           );
         }
 
