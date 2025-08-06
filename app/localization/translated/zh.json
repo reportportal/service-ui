@@ -198,8 +198,6 @@
   "AutoAnalysis.autoAnalysisDescription": "任何测试任务完成后，将立即主动开始自动分析",
   "AutoAnalysis.current": "仅当前推出",
   "AutoAnalysis.currentAndWithSameName": "当前和之前所有同名的发布",
-  "AutoAnalysis.largestRetryPriority": "Largest Retry priority",
-  "AutoAnalysis.largestRetryPriorityDescription": "Assigns the defect type based on the retry that has the highest number of passed nested steps (counted up to the first failed step).",
   "AutoAnalysis.minShouldMatch": "自动分析时匹配的最低精度",
   "AutoAnalysis.minShouldMatchDescription": "已分析的日志与来自Esearch engine的指定日志之间单词相等部分所占百分比。如果通过分析search engine的日志得到的值小于设置的值，那么该日志将被自动分析服务忽略",
   "AutoAnalysis.numberOfLogLines": "在search engine中应考虑的日志行数",

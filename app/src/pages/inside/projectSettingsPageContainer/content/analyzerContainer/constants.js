@@ -27,4 +27,3 @@ export const MIN_SHOULD_MATCH = 'minShouldMatch';
 export const SEARCH_LOGS_MIN_SHOULD_MATCH = 'searchLogsMinShouldMatch';
 export const UNIQUE_ERROR_ENABLED = 'uniqueError.enabled';
 export const UNIQUE_ERROR_REMOVE_NUMBERS = 'uniqueError.removeNumbers';
-export const LARGEST_RETRY_PRIORITY = 'largestRetryPriority';
