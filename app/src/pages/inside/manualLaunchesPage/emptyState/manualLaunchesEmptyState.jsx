@@ -11,7 +11,7 @@ import styles from './manualLaunchesEmptyState.scss';
 
 const cx = classNames.bind(styles);
 
-export const ManualLauncehsEmptyState = () => {
+export const ManualLaunchesEmptyState = () => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 

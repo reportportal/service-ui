@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
@@ -19,17 +18,4 @@ export const ManualLaunchesPageHeader = () => {
       projectName={projectName}
     />
   );
-};
-
-ManualLaunchesPageHeader.propTypes = {
-  isMembersLoading: PropTypes.bool.isRequired,
-  searchValue: PropTypes.string.isRequired,
-  setSearchValue: PropTypes.func.isRequired,
-  hasPermission: PropTypes.bool,
-  onInvite: PropTypes.func,
-};
-
-ManualLaunchesPageHeader.defaultProps = {
-  hasPermission: false,
-  onInvite: () => {},
 };
