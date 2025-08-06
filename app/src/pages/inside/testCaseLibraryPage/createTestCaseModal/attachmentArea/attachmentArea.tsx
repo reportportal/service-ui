@@ -32,9 +32,8 @@ import {
 
 import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { uniqueId } from 'common/utils';
+import { uniqueId, noop } from 'common/utils';
 import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
-import { noop } from 'pages/inside/testCaseLibraryPage/constants';
 
 import { messages } from './messages';
 
@@ -61,6 +60,7 @@ interface AttachmentAreaProps {
   isAttachmentBlockVisible?: boolean;
   maxFileSize?: number;
   acceptFileMimeTypes?: string[];
+  totalCount?: number;
   onRemove?: () => void;
   onFilesChange?: (files: AttachmentFile[]) => void;
   onMove?: (direction: 'up' | 'down') => void;
@@ -75,6 +75,7 @@ export const AttachmentArea = ({
   isAttachmentBlockVisible = true,
   maxFileSize = 134217728, // 128MB default
   acceptFileMimeTypes = [],
+  totalCount,
   onRemove,
   onFilesChange,
   onMove = noop,
@@ -84,6 +85,9 @@ export const AttachmentArea = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const areaNumber = isNumber(index) ? index + 1 : '';
+
+  const isMoveUpDisabled = index === 0;
+  const isMoveDownDisabled = totalCount ? index === totalCount - 1 : false;
 
   const handleFilesChange = useCallback(
     (files: AttachmentFile[]) => {
@@ -219,6 +223,7 @@ export const AttachmentArea = ({
                   adjustWidthOn="content"
                   aria-label={formatMessage(messages.moveUp)}
                   onClick={() => onMove('up')}
+                  disabled={isMoveUpDisabled}
                 >
                   <ArrowUpIcon />
                 </Button>
@@ -230,6 +235,7 @@ export const AttachmentArea = ({
                   adjustWidthOn="content"
                   aria-label={formatMessage(messages.moveDown)}
                   onClick={() => onMove('down')}
+                  disabled={isMoveDownDisabled}
                 >
                   <ArrowDownIcon />
                 </Button>

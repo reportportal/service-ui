@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
-export { useDebouncedSpinner } from './useDebouncedSpinner';
+import { put } from 'redux-saga/effects';
+
+export function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function* delayedPut(action, time) {
+  yield delay(time);
+  yield put(action);
+}

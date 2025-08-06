@@ -176,6 +176,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  testCaseFolderCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
+    defaultMessage: 'Folder has been created successfully.',
+  },
   testCaseCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
@@ -183,6 +187,14 @@ const messages = defineMessages({
   testCaseCreationFailed: {
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
+  },
+  testPlanCreatedSuccess: {
+    id: 'TestPlansPage.testPlanCreatedSuccess',
+    defaultMessage: 'Test Plan has been created successfully.',
+  },
+  testPlanCreationFailed: {
+    id: 'TestPlansPage.testPlanCreationFailed',
+    defaultMessage: 'Failed to create Test Plan.',
   },
 });
 

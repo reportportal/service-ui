@@ -66,6 +66,7 @@ export const URLS = {
   filters: (projectKey) => `${urlBase}${projectKey}/filter`,
   filtersSearch: (projectKey) =>
     `${urlBase}${projectKey}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
+  folder: (projectKey) => `${urlBase}project/${projectKey}/tms/folder`,
   searchFilterNames: (projectKey) => `${urlBase}${projectKey}/filter/names`,
   launchesFilters: (projectKey, ids = []) =>
     `${urlBase}${projectKey}/filter/filters?ids=${ids.join(',')}`,
@@ -348,4 +349,6 @@ export const URLS = {
 
   testCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlan: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
 };

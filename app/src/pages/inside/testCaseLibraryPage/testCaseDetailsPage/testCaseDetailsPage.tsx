@@ -26,6 +26,7 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { noop } from 'common/utils';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
@@ -35,8 +36,6 @@ import { mockTestCases, mockedTestCaseDescription } from '../testCaseList/mockDa
 import styles from './testCaseDetailsPage.scss';
 
 const cx = classNames.bind(styles);
-
-const noopHandler = () => {};
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
@@ -132,9 +131,9 @@ export const TestCaseDetailsPage = () => {
           <TestCaseDetailsHeader
             className={cx('page__header')}
             testCase={testCase}
-            onAddToLaunch={noopHandler}
-            onAddToTestPlan={noopHandler}
-            onMenuAction={noopHandler}
+            onAddToLaunch={noop}
+            onAddToTestPlan={noop}
+            onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>
             {COLLAPSIBLE_SECTIONS_CONFIG({

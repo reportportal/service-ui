@@ -15,3 +15,4 @@
  */
 
 export { TestPlansPage } from './testPlansPage';
+export { CREATE_TEST_PLAN_MODAL_KEY } from './createTestPlanModal';

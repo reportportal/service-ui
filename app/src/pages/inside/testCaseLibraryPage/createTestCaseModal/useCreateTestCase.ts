@@ -1,16 +1,15 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmissionError } from 'redux-form';
 import { useIntl } from 'react-intl';
 
 import { projectKeySelector } from 'controllers/project';
-import { debounce, fetch } from 'common/utils';
+import { fetch } from 'common/utils';
+import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { getTestCasesAction } from 'controllers/testCase';
 
-import { SPINNER_DEBOUNCE } from '../constants';
 import { CreateTestCaseFormData } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
 
@@ -23,14 +22,14 @@ export interface TestStep {
 const testFolderId = 1;
 
 export const useCreateTestCase = () => {
-  const [isCreateTestCaseLoading, setIsCreateTestCaseLoading] = useState(false);
+  const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector) as string;
   const { formatMessage } = useIntl();
 
   const createTestCase = async (payload: CreateTestCaseFormData) => {
     try {
-      debounce(() => setIsCreateTestCaseLoading(true), SPINNER_DEBOUNCE);
+      showSpinner();
 
       await fetch(URLS.testCase(projectKey), {
         method: 'post',
@@ -75,7 +74,7 @@ export const useCreateTestCase = () => {
         );
       }
     } finally {
-      setIsCreateTestCaseLoading(false);
+      hideSpinner();
     }
   };
 

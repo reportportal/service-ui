@@ -22,21 +22,25 @@ import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
+import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from '../../createTestCaseModal';
+import { useCreateTestCaseModal } from '../../createTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
-  const showCreateTestCaseModal = () => {
+  const openCreateFolderModal = () => {
     dispatch(
       showModalAction({
-        id: CREATE_TEST_CASE_MODAL_KEY,
-        data: null,
-        component: <CreateTestCaseModal />,
+        id: CREATE_FOLDER_MODAL_KEY,
+        data: {
+          shouldRenderToggle: false,
+        },
+        component: null,
       }),
     );
   };
@@ -59,13 +63,14 @@ export const MainPageEmptyState = () => {
             name: formatMessage(commonMessages.createFolder),
             dataAutomationId: 'createFolderButton',
             isCompact: true,
+            handleButton: openCreateFolderModal,
           },
           {
             name: formatMessage(commonMessages.createTestCase),
             dataAutomationId: 'createTestCaseButton',
             isCompact: true,
             variant: 'ghost',
-            handleButton: showCreateTestCaseModal,
+            handleButton: openCreateTestCaseModal,
           },
         ]}
       />
