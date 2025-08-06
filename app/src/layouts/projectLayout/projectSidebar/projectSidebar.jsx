@@ -36,6 +36,7 @@ import {
   PRODUCT_VERSIONS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   PROJECT_TEST_PLANS_PAGE,
+  MANUAL_LAUNCHES_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -46,6 +47,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from 'common/img/sidebar/dashboard-icon-inline.svg';
 import LaunchesIcon from 'common/img/sidebar/launches-icon-inline.svg';
+import ManualLaunchesIcon from 'common/img/sidebar/manual-launches-icon-inline.svg';
 import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
@@ -93,6 +95,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.manualLaunches.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: MANUAL_LAUNCHES_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: ManualLaunchesIcon,
+        message: formatMessage(messages.manualLaunches),
       },
       {
         onClick: (isSidebarCollapsed) =>
