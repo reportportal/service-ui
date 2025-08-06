@@ -62,7 +62,7 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
   }),
-})(({ handleSubmit }) => {
+})(({ dirty, handleSubmit }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
@@ -88,6 +88,7 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
       okButton={okButton}
       className={cx('create-test-case-modal')}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-test-case-modal__content-wrapper')}>
