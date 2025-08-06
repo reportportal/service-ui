@@ -27,11 +27,11 @@ import {
 } from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
+import { noop } from 'common/utils';
 import { messages } from './messages';
 
 import styles from './allTestCasesPage.scss';
 import { DotsMenuItem } from './types';
-import { noop } from '../constants';
 
 const cx = classNames.bind(styles);
 
