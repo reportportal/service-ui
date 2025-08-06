@@ -19,7 +19,7 @@ export interface TestStep {
   attachments?: string[];
 }
 
-const testFolderId = 60;
+const testFolderId = 1;
 
 export const useCreateTestCase = () => {
   const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
