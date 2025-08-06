@@ -61,7 +61,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.duplicateToFolder),
       onClick: noop,
-      title: formatMessage(messages.changePriority),
+      title: formatMessage(messages.duplicateToFolder),
       value: 'duplicateToFolder',
     },
     {
