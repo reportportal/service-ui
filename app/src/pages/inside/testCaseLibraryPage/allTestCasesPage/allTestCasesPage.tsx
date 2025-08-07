@@ -28,8 +28,8 @@ import {
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { noop } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
-
 import styles from './allTestCasesPage.scss';
 import { DotsMenuItem } from './types';
 
@@ -78,10 +78,10 @@ export const AllTestCasesPage = ({
       value: 'editTags',
     },
     {
-      label: formatMessage(messages.delete),
+      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       onClick: noop,
       type: 'danger',
-      title: formatMessage(messages.delete),
+      title: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       value: 'delete',
     },
   ];

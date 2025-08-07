@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, useState } from 'react';
+import { memo, SetStateAction, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
@@ -40,7 +40,7 @@ interface TestCaseListProps {
   itemsPerPage: number;
   searchValue?: string;
   selectedRowIds: (number | string)[];
-  handleSelectedRowIds: (value: React.SetStateAction<(number | string)[]>) => void;
+  handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
   onSearchChange?: (value: string) => void;
 }
 
@@ -74,9 +74,7 @@ export const TestCaseList = memo(
     };
 
     const handleRowSelect = (id: number | string) => {
-      handleSelectedRowIds((selectedRows) => {
-        return xor(selectedRows, [id]);
-      });
+      handleSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
     };
 
     const handleAllSelect = () => {
