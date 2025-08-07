@@ -454,7 +454,7 @@
   "CreatePatternAnalysisModal.createPatternModalType": "类型",
   "CreatePatternAnalysisModal.patternConditionPlaceholder": "请输入文字说明",
   "CreateProject": "is created",
-  "CreateUserModal.createdSuccessfully": "User has been created successfully.",
+  "CreateUserModal.createdSuccessfully": "User <b>{fullName}</b> has been created and assigned successfully",
   "CreateUserModal.description": "For security reasons, we recommend updating the password after the first login to the created account. Keep your data safe and secure with a new personalized password.",
   "CreateUserModal.email": "Email",
   "CreateUserModal.emailCreateUserHint": "Email is incorrect. Please enter correct email",

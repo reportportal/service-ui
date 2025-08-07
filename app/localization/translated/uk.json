@@ -454,7 +454,7 @@
   "CreatePatternAnalysisModal.createPatternModalType": "Тип",
   "CreatePatternAnalysisModal.patternConditionPlaceholder": "Текстовий опис",
   "CreateProject": "створени",
-  "CreateUserModal.createdSuccessfully": "Користувач був успішно створений.",
+  "CreateUserModal.createdSuccessfully": "Користувач <b>{fullName}</b> успішно створений і призначений",
   "CreateUserModal.description": "З метою безпеки ми рекомендуємо оновити пароль після першого входу в створений обліковий запис. Збережіть свої дані в цілості й схоронності за допомогою нового персоналізованого пароля.",
   "CreateUserModal.email": "Електронна пошта",
   "CreateUserModal.emailCreateUserHint": "Вказано невірну адресу електронної пошти. Будь ласка, введіть правильну адресу електронної пошти",

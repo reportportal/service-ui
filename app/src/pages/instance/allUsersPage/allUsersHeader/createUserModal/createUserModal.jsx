@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
+import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
@@ -101,7 +102,7 @@ const messages = defineMessages({
   },
   createdSuccessfully: {
     id: 'CreateUserModal.createdSuccessfully',
-    defaultMessage: 'User has been created successfully.',
+    defaultMessage: 'User <b>{fullName}</b> has been created and assigned successfully',
   },
 });
 
@@ -156,9 +157,13 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
       const response = await createUserResponse({ fullName, email, adminRights, password });
 
       if (response.id) {
+        const message = formatMessage(messages.createdSuccessfully, {
+          b: (innerData) => DOMPurify.sanitize(`<b>${innerData}</b>`),
+          fullName,
+        });
         dispatch(
           showNotification({
-            message: formatMessage(messages.createdSuccessfully),
+            message,
             type: NOTIFICATION_TYPES.SUCCESS,
           }),
         );
