@@ -52,6 +52,7 @@ export const AllTestCasesPage = ({
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
   const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const isAnyRowSelected = selectedRowIds.length > 0;
 
   // Calculate pagination values
   const totalItems = testCases.length;
@@ -115,7 +116,7 @@ export const AllTestCasesPage = ({
       {totalItems > 0 && (
         <div
           className={cx('sticky-wrapper', {
-            'sticky-wrapper--has-selected-items': selectedRowIds.length > 0,
+            'sticky-wrapper--has-selected-items': isAnyRowSelected,
           })}
         >
           <div className={cx('pagination')}>
