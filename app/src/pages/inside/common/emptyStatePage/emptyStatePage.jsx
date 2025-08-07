@@ -27,12 +27,14 @@ import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './emptyStatePage.scss';
 import plus from './img/empty-state-inline.svg';
+import play from './img/empty-manual-launches-icon-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
 import docs from './img/test-case-empty-state-inline.svg';
 import flag from './img/test-plans-empty-state-inline.svg';
+import { LinkComponent } from '../LinkComponent';
 
 const cx = classNames.bind(styles);
 
@@ -40,6 +42,7 @@ const images = {
   bell,
   rhombus,
   plus,
+  play,
   lines,
   branches,
   docs,
@@ -55,8 +58,10 @@ export const EmptyStatePage = ({
   imageType,
   documentationDataAutomationId,
   buttons,
+  links,
 }) => {
   const { formatMessage } = useIntl();
+
   return (
     <div className={cx('container')}>
       <span className={cx('img')}>{Parser(images[imageType])}</span>
@@ -81,6 +86,22 @@ export const EmptyStatePage = ({
           )}
         </div>
       )}
+      {!isEmpty(links) && (
+        <div className={cx('links')}>
+          {links.map(({ to, title: text, payload }) => (
+            <LinkComponent
+              key={to}
+              to={{
+                type: to,
+                payload,
+              }}
+              target="_self"
+            >
+              {text}
+            </LinkComponent>
+          ))}
+        </div>
+      )}
       {documentationLink && (
         <ExternalLink
           className={cx('link')}
@@ -101,7 +122,16 @@ EmptyStatePage.propTypes = {
   documentationLink: PropTypes.string,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches', 'docs', 'flag']),
+  imageType: PropTypes.oneOf([
+    'plus',
+    'play',
+    'rhombus',
+    'bell',
+    'lines',
+    'branches',
+    'docs',
+    'flag',
+  ]),
   documentationDataAutomationId: PropTypes.string,
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
@@ -114,6 +144,12 @@ EmptyStatePage.propTypes = {
       variant: PropTypes.oneOf(['primary', 'ghost', 'danger', 'text']),
     }),
   ),
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      link: PropTypes.string,
+      payload: PropTypes.object,
+    }),
+  ),
 };
 
 EmptyStatePage.defaultProps = {
@@ -124,4 +160,5 @@ EmptyStatePage.defaultProps = {
   handleDocumentationClick: null,
   imageType: 'plus',
   documentationDataAutomationId: 'emptyStatePageDocsLink',
+  links: [],
 };

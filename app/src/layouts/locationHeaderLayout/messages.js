@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-.members-page-header-container {
-  padding: 16px 32px 16px 32px;
-  border-bottom: 1px solid $COLOR--e-100;
-  background: $COLOR--bg-000;
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-}
+import { defineMessages } from 'react-intl';
 
-.header {
-  display: flex;
-  min-height: 31px;
-  justify-content: space-between;
-}
-
-.title {
-  font-family: $FONT-REGULAR;
-  font-size: 20px;
-  line-height: 31px;
-  color: $COLOR--almost-black;
-  text-transform: capitalize;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+export const messages = defineMessages({
+  allOrganizations: {
+    id: 'ProjectTeamPage.allOrganizations',
+    defaultMessage: 'All Organizations',
+  },
+});

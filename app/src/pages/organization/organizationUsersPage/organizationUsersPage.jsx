@@ -24,7 +24,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { messages } from '../common/membersPage/membersPageHeader/messages';
+import { messages } from '../messages';
 import styles from './organizationUsersPage.scss';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
