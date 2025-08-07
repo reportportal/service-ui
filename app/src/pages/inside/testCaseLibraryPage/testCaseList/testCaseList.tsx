@@ -21,6 +21,7 @@ import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
 import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
+import xor from 'lodash.xor';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -74,11 +75,7 @@ export const TestCaseList = memo(
 
     const handleRowSelect = (id: number | string) => {
       handleSelectedRowIds((selectedRows) => {
-        const isRowAlreadySelected = !!selectedRows.find((rowId) => rowId === id);
-        if (isRowAlreadySelected) {
-          return selectedRows.filter((rowId) => rowId !== id);
-        }
-        return [...selectedRows, id];
+        return xor(selectedRows, [id]);
       });
     };
 
