@@ -21,8 +21,10 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
+import { BaseAppState } from 'types/store';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
+import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
 
 import {
   GET_TEST_PLANS,
@@ -86,8 +88,16 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
 
     yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
-  } catch {
-    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE));
+  } catch (error) {
+    const locationPayload = (yield select(
+      (state: BaseAppState) => state.location?.payload,
+    )) as BaseAppState['location']['payload'];
+
+    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error));
+    yield put({
+      type: PROJECT_TEST_PLANS_PAGE,
+      payload: locationPayload,
+    });
   }
 }
 
