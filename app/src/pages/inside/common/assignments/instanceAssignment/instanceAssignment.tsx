@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import {
@@ -100,11 +100,32 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
     OrganizationSearchesItem[]
   >([]);
   const [selectedOrganization, setSelectedOrganization] = useState<Organization>(null);
-  const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>(null);
+  const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project>(null);
-  const [organizationManager, setOrganizationManager] = useState<boolean>(null);
-  const [canEditProject, setCanEditProject] = useState<boolean>(null);
+  const [organizationManager, setOrganizationManager] = useState<boolean>(false);
+  const [canEditProject, setCanEditProject] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (selectedOrganization) {
+      setSelectedOrganization({
+        ...selectedOrganization,
+        role: organizationManager ? MANAGER : MEMBER,
+        projects: selectedProject
+          ? [{ ...selectedProject, role: organizationManager || canEditProject ? EDITOR : VIEWER }]
+          : [],
+      });
+    }
+  }, [organizationManager]);
+
+  useEffect(() => {
+    if (selectedProject) {
+      setSelectedProject({
+        ...selectedProject,
+        role: canEditProject ? EDITOR : VIEWER,
+      });
+    }
+  }, [canEditProject]);
 
   const getRequestOrganizationsParams = (inputValue: string) => {
     return {
@@ -160,7 +181,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
       setSelectedProject({
         id: project.id,
         name: project.name,
-        role: canEditProject ? EDITOR : VIEWER,
+        role: organizationManager || canEditProject ? EDITOR : VIEWER,
       });
     } else {
       setSelectedProject(null);
@@ -186,6 +207,11 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
     };
     onChange([...organizations, organization]);
     setIsOpen(false);
+    setCanEditProject(false);
+    setOrganizationManager(false);
+    setOrganizationProjects([]);
+    setSelectedOrganization(null);
+    setSelectedProject(null);
   };
 
   return (
