@@ -53,10 +53,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.editTags',
     defaultMessage: 'Edit tags',
   },
-  delete: {
-    id: 'TestCaseLibraryPage.delete',
-    defaultMessage: 'Delete',
-  },
   moveToFolder: {
     id: 'TestCaseLibraryPage.moveToFolder',
     defaultMessage: 'Move to Folder',
