@@ -125,6 +125,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         : []),
       {
         onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.manualLaunches.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: MANUAL_LAUNCHES_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: ManualLaunchesIcon,
+        message: formatMessage(messages.manualLaunches),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
         link: {
           type: PROJECT_USERDEBUG_PAGE,

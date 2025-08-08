@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
+<<<<<<<< HEAD:app/src/pages/organization/projectTeamPage/projectTeamListTable/projectTeamActionMenu/index.ts
 export { ProjectTeamActionMenu } from './projectTeamActionMenu';
+========
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  allOrganizations: {
+    id: 'ProjectTeamPage.allOrganizations',
+    defaultMessage: 'All Organizations',
+  },
+});
+>>>>>>>> 6ed45d986 (Manual launches empty state (#4526)):app/src/layouts/locationHeaderLayout/messages.js
