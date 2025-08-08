@@ -65,14 +65,14 @@
 
     &::after {
       position: absolute;
-      content: "";
+      content: '';
       left: 0;
       bottom: 0;
       height: 30px;
       width: 352px;
       opacity: 0.8;
       pointer-events: none;
-      background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+      background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
     }
   }
 
@@ -87,7 +87,7 @@
 
   &__content-title {
     margin: 24px 0 24px 32px;
-    font-size:  17px;
+    font-size: 17px;
     font-family: $FONT-ROBOTO-REGULAR;
     font-weight: 500;
   }
