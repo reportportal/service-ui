@@ -48,8 +48,15 @@
   margin-top: 18px;
 }
 
-.buttons, .links {
+.buttons {
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+.text-buttons-container {
+  button {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }

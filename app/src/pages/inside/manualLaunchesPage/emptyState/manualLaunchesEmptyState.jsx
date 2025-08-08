@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -11,19 +11,19 @@ const cx = classNames.bind(styles);
 
 export const ManualLaunchesEmptyState = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 
   const payload = { organizationSlug, projectSlug };
-  const links = [
+
+  const buttons = [
     {
-      title: formatMessage(messages.testPlansLink),
-      to: PROJECT_TEST_PLANS_PAGE,
-      payload,
+      name: formatMessage(messages.testPlansLink),
+      type: PROJECT_TEST_PLANS_PAGE,
     },
     {
-      title: formatMessage(messages.testLibraryLink),
-      to: TEST_CASE_LIBRARY_PAGE,
-      payload,
+      name: formatMessage(messages.testLibraryLink),
+      type: TEST_CASE_LIBRARY_PAGE,
     },
   ];
 
@@ -33,7 +33,11 @@ export const ManualLaunchesEmptyState = () => {
         imageType="play"
         label={formatMessage(messages.noLaunches)}
         description={formatMessage(messages.noLaunchesDescription)}
-        links={links}
+        buttons={buttons.map(({ name, type }) => ({
+          name,
+          variant: 'text',
+          handleButton: () => dispatch({ type, payload }),
+        }))}
       />
     </div>
   );

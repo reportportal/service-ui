@@ -34,7 +34,6 @@ import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
 import docs from './img/test-case-empty-state-inline.svg';
 import flag from './img/test-plans-empty-state-inline.svg';
-import { LinkComponent } from '../LinkComponent';
 
 const cx = classNames.bind(styles);
 
@@ -58,7 +57,6 @@ export const EmptyStatePage = ({
   imageType,
   documentationDataAutomationId,
   buttons,
-  links,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -68,7 +66,11 @@ export const EmptyStatePage = ({
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
       {!isEmpty(buttons) && (
-        <div className={cx('buttons')}>
+        <div
+          className={cx('buttons', {
+            'text-buttons-container': buttons.every(({ variant }) => variant === 'text'),
+          })}
+        >
           {buttons.map(
             ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
               <Button
@@ -84,22 +86,6 @@ export const EmptyStatePage = ({
               </Button>
             ),
           )}
-        </div>
-      )}
-      {!isEmpty(links) && (
-        <div className={cx('links')}>
-          {links.map(({ to, title: text, payload }) => (
-            <LinkComponent
-              key={to}
-              to={{
-                type: to,
-                payload,
-              }}
-              target="_self"
-            >
-              {text}
-            </LinkComponent>
-          ))}
         </div>
       )}
       {documentationLink && (
@@ -144,12 +130,6 @@ EmptyStatePage.propTypes = {
       variant: PropTypes.oneOf(['primary', 'ghost', 'danger', 'text']),
     }),
   ),
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      link: PropTypes.string,
-      payload: PropTypes.object,
-    }),
-  ),
 };
 
 EmptyStatePage.defaultProps = {
@@ -160,5 +140,4 @@ EmptyStatePage.defaultProps = {
   handleDocumentationClick: null,
   imageType: 'plus',
   documentationDataAutomationId: 'emptyStatePageDocsLink',
-  links: [],
 };
