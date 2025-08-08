@@ -53,7 +53,7 @@ export const AllTestCasesPage = ({
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
   const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
-  const isAnyRowSelected = isEmpty(selectedRowIds);
+  const isAnyRowSelected = !isEmpty(selectedRowIds);
 
   // Calculate pagination values
   const totalItems = testCases.length;
