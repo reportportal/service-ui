@@ -29,6 +29,7 @@ import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { noop } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import isEmpty from 'lodash.isempty';
 import { messages } from './messages';
 import styles from './allTestCasesPage.scss';
 import { DotsMenuItem } from './types';
@@ -52,7 +53,7 @@ export const AllTestCasesPage = ({
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
   const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
-  const isAnyRowSelected = selectedRowIds.length > 0;
+  const isAnyRowSelected = isEmpty(selectedRowIds);
 
   // Calculate pagination values
   const totalItems = testCases.length;
