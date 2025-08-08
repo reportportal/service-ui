@@ -41,6 +41,7 @@ import {
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
   LAUNCHES_PAGE,
+  MANUAL_LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -263,6 +264,9 @@ const routesMap = {
       dispatch(unselectAllLaunchesAction());
     },
   ),
+  [MANUAL_LAUNCHES_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
+  },
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
     thunk: (dispatch) => {

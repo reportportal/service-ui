@@ -27,6 +27,7 @@ import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './emptyStatePage.scss';
 import plus from './img/empty-state-inline.svg';
+import play from './img/empty-manual-launches-icon-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
@@ -40,6 +41,7 @@ const images = {
   bell,
   rhombus,
   plus,
+  play,
   lines,
   branches,
   docs,
@@ -57,13 +59,18 @@ export const EmptyStatePage = ({
   buttons,
 }) => {
   const { formatMessage } = useIntl();
+
   return (
     <div className={cx('container')}>
       <span className={cx('img')}>{Parser(images[imageType])}</span>
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
       {!isEmpty(buttons) && (
-        <div className={cx('buttons')}>
+        <div
+          className={cx('buttons', {
+            'text-buttons-container': buttons.every(({ variant }) => variant === 'text'),
+          })}
+        >
           {buttons.map(
             ({ name, dataAutomationId, isDisabled, handleButton, icon, variant, isCompact }) => (
               <Button
@@ -101,7 +108,16 @@ EmptyStatePage.propTypes = {
   documentationLink: PropTypes.string,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
-  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell', 'lines', 'branches', 'docs', 'flag']),
+  imageType: PropTypes.oneOf([
+    'plus',
+    'play',
+    'rhombus',
+    'bell',
+    'lines',
+    'branches',
+    'docs',
+    'flag',
+  ]),
   documentationDataAutomationId: PropTypes.string,
   buttons: PropTypes.arrayOf(
     PropTypes.shape({

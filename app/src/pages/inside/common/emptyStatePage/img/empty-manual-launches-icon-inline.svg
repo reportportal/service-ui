@@ -1,0 +1,10 @@
+<svg width="168" height="120" viewBox="0 0 168 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 29H162V111.731C162 116.298 158.298 120 153.731 120H14.2687C9.70204 120 6 116.298 6 111.731V29Z" fill="#E3E7EC"/>
+<path d="M0 8.26875C0 3.70205 3.70205 0 8.26875 0H159.731C164.298 0 168 3.70205 168 8.26875V20H0V8.26875Z" fill="#E3E7EC"/>
+<ellipse cx="12" cy="10.2812" rx="4" ry="4.1125" fill="white"/>
+<ellipse cx="26" cy="10.2812" rx="4" ry="4.1125" fill="white"/>
+<ellipse cx="39.998" cy="10.2812" rx="4" ry="4.1125" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H168V107.731C168 112.298 164.298 116 159.731 116H8.26875C3.70205 116 0 112.298 0 107.731V20Z" fill="white"/>
+<rect opacity="0.7" x="8" y="28" width="152" height="80" rx="4" fill="#ECEFF4"/>
+<path d="M102.283 64.57C104.873 66.1236 104.873 69.8764 102.283 71.43L74.058 88.3652C71.3919 89.9649 68 88.0444 68 84.9352L68 51.0648C68 47.9556 71.3919 46.0351 74.058 47.6348L102.283 64.57Z" fill="#C1C7D0"/>
+</svg>
