@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ProjectTeamPageHeader } from './projectTeamPageHeader';
+export { LocationHeaderLayout } from './locationHeaderLayout';

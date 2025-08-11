@@ -18,13 +18,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { UserPageLocationLevel } from './userPageLocationLevel';
-import styles from './membersPageHeader.scss';
+import styles from './locationHeaderLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const MembersPageHeader = ({ title, children, organizationName, projectName }) => {
+export const LocationHeaderLayout = ({ title, children, organizationName, projectName }) => {
   return (
-    <div className={cx('members-page-header-container')}>
+    <div className={cx('location-header-container')}>
       <UserPageLocationLevel organizationName={organizationName} projectName={projectName} />
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
@@ -34,14 +34,14 @@ export const MembersPageHeader = ({ title, children, organizationName, projectNa
   );
 };
 
-MembersPageHeader.propTypes = {
+LocationHeaderLayout.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
   organizationName: PropTypes.string.isRequired,
   projectName: PropTypes.string,
 };
 
-MembersPageHeader.defaultProps = {
+LocationHeaderLayout.defaultProps = {
   children: null,
   projectName: null,
 };
