@@ -71,7 +71,14 @@ const getStatus = (status) => (status ? 'active' : 'disabled');
 const getSwitcher = (switcher) => (switcher ? 'on' : 'off');
 
 export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
-  clickSubmitInAutoAnalyzerTab: (number, status, condition, switcher, type) => ({
+  clickSubmitInAutoAnalyzerTab: (
+    number,
+    status,
+    condition,
+    switcher,
+    largestRetryPriority,
+    type,
+  ) => ({
     ...BASIC_EVENT_PARAMETERS_ANALYZER_TAB,
     place: `${ANALYZER}_auto_analyzer`,
     element_name: 'button_submit',
@@ -80,6 +87,7 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[condition],
     switcher,
     type,
+    icon_name: `${largestRetryPriority ? '' : 'un'}select_largest_retry_priority`,
   }),
 
   clickSubmitInSimilarItemsTab: (number) => ({

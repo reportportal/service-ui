@@ -198,6 +198,8 @@
   "AutoAnalysis.autoAnalysisDescription": "Активний авто-аналіз розпочнеться відразу після завершення будь-якого запуску",
   "AutoAnalysis.current": "Тільки поточний запуск",
   "AutoAnalysis.currentAndWithSameName": "Поточний і всі попередні запуски з такою ж назвою",
+  "AutoAnalysis.largestRetryPriority": "Пріоритет найдовшого (успішного) ретраю/повторної спроби",
+  "AutoAnalysis.largestRetryPriorityDescription": "Надає тип дефекту на основі ретраю з найбільшою кількістю поспіль успішних вкладених кроків (до першого збою)",
   "AutoAnalysis.minShouldMatch": "Мінімум повинен збігатися для авто-аналізу",
   "AutoAnalysis.minShouldMatchDescription": "Відсоток збігу слів між аналізованим логом та конкретним логом з пошукова система. Якщо в лозі з пошукова система значення менше встановленого, цей журнал буде ігноруватися для AA",
   "AutoAnalysis.numberOfLogLines": "Кількість рядків лога, які слід враховувати в пошукова система",
