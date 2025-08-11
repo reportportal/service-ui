@@ -27,6 +27,10 @@
 
 .test-case-table {
   margin-bottom: 32px;
+
+  > div:first-child > div:first-child {
+    padding: 4px 0 0 10px;
+  }
 }
 
 .test-case-table-row {
@@ -37,6 +41,10 @@
   border: 1px solid transparent;
   padding: 1px;
   box-sizing: content-box;
+
+  > div:first-child {
+    padding: 26px 0 0 8px;
+  }
 
   :global([class*='table-row-content']) {
     align-items: flex-start;
