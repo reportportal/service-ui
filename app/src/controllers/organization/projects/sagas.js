@@ -178,7 +178,7 @@ function* unassignFromProject({ payload = {} }) {
   const removeOperation = {
     op: 'remove',
     path: 'users',
-    value: [user.id],
+    value: [{ id: user.id }],
   };
 
   try {
