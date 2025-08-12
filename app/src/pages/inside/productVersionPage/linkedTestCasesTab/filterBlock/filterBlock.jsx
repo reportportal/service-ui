@@ -35,9 +35,9 @@ export const FilterBlock = ({ filters, clearAllFilters }) => {
       {filters.status && (
         <div className={cx('filter-block__status')}>
           {filters.status}
-          <div className={cx('filter-block__status-icon')} onClick={clearAllFilters}>
+          <button className={cx('filter-block__status-icon')} onClick={clearAllFilters}>
             <CloseIcon />
-          </div>
+          </button>
         </div>
       )}
       <Button className={cx('filter-block__add-button')} icon={<PlusIcon />} variant="text">

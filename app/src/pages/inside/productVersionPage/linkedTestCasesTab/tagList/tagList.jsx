@@ -89,9 +89,9 @@ export const TagList = ({ tags }) => {
         )}
       </div>
       {isCounterButtonVisible ? (
-        <div className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
+        <button className={cx('tag-list__item', 'tag-list__item--count')} onClick={toggleExpanded}>
           +{count}
-        </div>
+        </button>
       ) : null}
     </div>
   );
