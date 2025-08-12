@@ -175,6 +175,10 @@ export const prevTestItemSelector = ({ location }) => {
 
 export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
 
+/**
+ * @param {{ project?: { organizationSlug?: string } }} state
+ * @returns {string}
+ */
 export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
 
 export const urlOrganizationAndProjectSelector = createSelector(

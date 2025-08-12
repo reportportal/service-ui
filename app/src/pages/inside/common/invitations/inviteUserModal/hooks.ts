@@ -34,10 +34,10 @@ import { ERROR_CODES, Level, settingsLink, settingsLinkName } from './constants'
 export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectName = useSelector(projectNameSelector) as string;
+  const projectName = useSelector(projectNameSelector);
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
   const organizationId = useSelector(activeOrganizationIdSelector) as number;
-  const projectId = useSelector(projectInfoIdSelector) as number;
+  const projectId = useSelector(projectInfoIdSelector);
 
   const okButtonTitle = formatMessage(
     ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE,

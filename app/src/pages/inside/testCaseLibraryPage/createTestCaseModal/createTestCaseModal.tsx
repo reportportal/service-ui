@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { FormEvent, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm } from 'redux-form';
@@ -73,7 +74,7 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
         {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(createTestCase),
+    onClick: handleSubmit(createTestCase) as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isCreateTestCaseLoading,
   };
 
@@ -92,7 +93,7 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-test-case-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(createTestCase)}>
+        <form onSubmit={handleSubmit(createTestCase) as (event: FormEvent) => void}>
           <div className={cx('create-test-case-modal__container')}>
             <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
             <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />

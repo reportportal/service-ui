@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { useIntl } from 'react-intl';
 import { Table } from '@reportportal/ui-kit';
 

@@ -16,6 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -84,7 +85,7 @@ export const TestCaseDetailsHeader = ({
         <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
         {testCase.name}
         <button type="button" className={cx('header__edit-button')}>
-          <PencilIcon />
+          {Parser(PencilIcon as unknown as string)}
         </button>
       </div>
       <div className={cx('header__info-wrapper')}>
@@ -97,7 +98,7 @@ export const TestCaseDetailsHeader = ({
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
             <span className={cx('header__meta-value')}>{testCase.id}</span>
             <CopyToClipboard text={testCase.id} className={cx('header__copy')}>
-              <IconDuplicate />
+              {Parser(IconDuplicate as unknown as string)}
             </CopyToClipboard>
           </div>
         </div>

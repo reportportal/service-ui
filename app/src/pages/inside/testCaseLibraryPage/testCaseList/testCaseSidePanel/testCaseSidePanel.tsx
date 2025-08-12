@@ -18,6 +18,7 @@ import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
+import Parser from 'html-react-parser';
 import {
   Button,
   MeatballMenuIcon,
@@ -145,7 +146,7 @@ export const TestCaseSidePanel = memo(
               aria-label={formatMessage(messages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
-              <CrossIcon />
+              {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
           <PathBreadcrumb path={testCase.path} />

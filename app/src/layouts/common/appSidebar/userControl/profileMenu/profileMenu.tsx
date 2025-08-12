@@ -15,6 +15,7 @@
  */
 
 import { useDispatch } from 'react-redux';
+import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
@@ -54,11 +55,11 @@ export const ProfileMenu = ({
           closeSidebar();
         }}
       >
-        <MyProfileIcon />
+        {Parser(MyProfileIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
       </NavLink>
       <Button className={cx('menu-item')} onClick={onClickLogout} variant="text">
-        <LogoutIcon />
+        {Parser(LogoutIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
       </Button>
     </>
