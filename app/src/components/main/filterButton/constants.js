@@ -26,6 +26,7 @@ import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { GITHUB, INTERNAL, LDAP, SAML, SCIM, UPSA } from 'common/constants/accountType';
 import { messages } from './messages';
 
+export const FILTER_FORM = 'filter';
 export const ORGANIZATION_TYPE_FILTER_NAME = 'type';
 export const LAST_RUN_DATE_FILTER_NAME = 'last_launch_occurred';
 export const LAUNCHES_FILTER_NAME = 'launches';
@@ -38,20 +39,34 @@ export const LAST_LOGIN_FILTER_NAME = 'lastLogin';
 export const EMAIL_FILTER_NAME = 'email';
 export const EMAIL_FILTER_NAME_CONDITION = 'email_condition';
 
+export const timeRangeValues = [
+  '0;1440;+0300',
+  '-1440;1440;+0300',
+  '-8640;1440;+0300',
+  '-41760;1440;+0300',
+];
+
+export const timeRangeLastLoginValues = [
+  '-8640;1440;+0300',
+  '-41760;1440;+0300',
+  '-128160;1440;+0300',
+  '-525600;1440;+0300',
+];
+
 export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
-  { label: formatMessage(messages.today), value: 'today' },
-  { label: formatMessage(messages.last2days), value: 'last2days' },
-  { label: formatMessage(messages.last7days), value: 'last7days' },
-  { label: formatMessage(messages.last30days), value: 'last30days' },
+  { label: formatMessage(messages.today), value: timeRangeValues[0] },
+  { label: formatMessage(messages.last2days), value: timeRangeValues[1] },
+  { label: formatMessage(messages.last7days), value: timeRangeValues[2] },
+  { label: formatMessage(messages.last30days), value: timeRangeValues[3] },
 ];
 
 export const getLastLogin = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
-  { label: formatMessage(messages.last7days), value: 'last7days' },
-  { label: formatMessage(messages.last30days), value: 'last30days' },
-  { label: formatMessage(messages.last90days), value: 'last90days' },
-  { label: formatMessage(messages.moreThanYearAgo), value: 'moreThanYearAgo' },
+  { label: formatMessage(messages.last7days), value: timeRangeLastLoginValues[0] },
+  { label: formatMessage(messages.last30days), value: timeRangeLastLoginValues[1] },
+  { label: formatMessage(messages.last90days), value: timeRangeLastLoginValues[2] },
+  { label: formatMessage(messages.moreThanYearAgo), value: timeRangeLastLoginValues[3] },
 ];
 
 export const getRangeComparisons = (formatMessage) => [

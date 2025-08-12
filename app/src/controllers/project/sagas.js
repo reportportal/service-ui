@@ -24,7 +24,7 @@ import {
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
-import { setProjectIntegrationsAction } from 'controllers/plugins';
+import { setProjectIntegrationsAction } from 'controllers/plugins/actionCreators';
 import {
   addFilterAction,
   fetchUserFiltersSuccessAction,

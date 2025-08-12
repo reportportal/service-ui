@@ -22,7 +22,7 @@ import { FieldErrorHint, FieldProvider } from 'components/fields';
 
 import styles from './step.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const messages = defineMessages({
   instructions: {

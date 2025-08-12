@@ -51,3 +51,21 @@
   width: 100%;
   display: flex;
 }
+
+.invite-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .invite {
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
+  .invite-description {
+    color: var(--rp-ui-base-e-400);
+  }
+}
+
+.field-element {
+  margin-bottom: 0;
+}

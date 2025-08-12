@@ -191,7 +191,7 @@ export class InputConditionalAttributes extends Component {
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {inputConditions.length &&
+              {inputConditions.length > 0 &&
                 value?.condition &&
                 inputConditions.filter((condition) => condition.value === value.condition)[0]
                   .shortLabel}

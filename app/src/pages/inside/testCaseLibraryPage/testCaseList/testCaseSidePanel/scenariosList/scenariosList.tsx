@@ -19,7 +19,7 @@ import { Scenario } from '../scenario';
 import { IScenario } from '../../../types';
 import styles from './scenariosList.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface ScenariosListProps {
   scenarios: IScenario[];

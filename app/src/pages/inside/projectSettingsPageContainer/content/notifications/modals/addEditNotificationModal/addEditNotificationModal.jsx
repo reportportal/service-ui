@@ -21,14 +21,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal, Checkbox, Toggle } from '@reportportal/ui-kit';
+import { Modal, Checkbox, Toggle, Dropdown } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -93,7 +92,7 @@ const messages = defineMessages({
   },
   recipientsLabel: {
     id: 'AddEditNotificationCaseModal.recipientsLabel',
-    defaultMessage: 'Recipients',
+    defaultMessage: 'Email',
   },
   nameLabel: {
     id: 'AddEditNotificationModal.nameLabel',
@@ -394,7 +393,7 @@ const AddEditNotificationModal = ({
           className={cx('input')}
           dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
-          <Dropdown options={caseOptions} defaultWidth={false} />
+          <Dropdown options={caseOptions} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
@@ -451,16 +450,25 @@ const getDynamicFieldValidation = (type, inputValues, ruleFields = []) => {
     const inputDetails = inputValues[RULE_DETAILS_FIELD_KEY];
     return ruleFields.reduce(
       (acc, field) => {
-        const { type: validationType, errorMessage } = field.validation || {};
-        if (validate[validationType]) {
+        const { type: validationType, errorMessage, regex } = field.validation || {};
+        const value = inputDetails?.[field.name];
+
+        if (regex) {
+          try {
+            const dynamicRegex = new RegExp(regex);
+            if (!dynamicRegex.test(value)) {
+              acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
+            }
+          } catch {
+            acc[RULE_DETAILS_FIELD_KEY][field.name] = errorMessage;
+          }
+        } else if (validate[validationType]) {
           acc[RULE_DETAILS_FIELD_KEY][field.name] = bindMessageToValidator(
             validate[validationType],
             errorMessage,
-          )(inputDetails?.[field.name]);
+          )(value);
         } else if (field.required) {
-          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(
-            inputDetails?.[field.name],
-          );
+          acc[RULE_DETAILS_FIELD_KEY][field.name] = commonValidators.requiredField(value);
         }
         return acc;
       },

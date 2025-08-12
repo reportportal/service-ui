@@ -35,14 +35,14 @@ export {
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,
-  serverFooterLinksSelector,
+  serverSidebarLinksSelector,
   importantLaunchesEnabledSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
 export {
   ANALYTICS_ALL_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
-  SERVER_FOOTER_LINKS_KEY,
+  SERVER_SIDEBAR_LINKS_KEY,
   UPDATE_API_EXTENSIONS_RESULT,
   SSO_USERS_ONLY_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,

@@ -25,7 +25,7 @@ import { createTestCaseMenuItems } from '../configUtils';
 import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseExecutionCellProps {
   lastExecution: number;

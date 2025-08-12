@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,29 +43,33 @@
 .actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 32px;
 
-  .icons {
+  & > div:empty {
+    display: none;
+  }
+
+  i {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    i {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    &.filters-icon {
+      width: 57px;
+      height: 36px;
 
-      &.filters-icon {
-        width: 57px;
-        height: 36px;
-
-        svg {
-          width: 16px;
-          height: 16px;
-        }
+      svg {
+        width: 16px;
+        height: 16px;
       }
     }
   }
+}
+
+.search-icons {
+  display: flex;
+  gap: 10px;
 }
 
 .panel-icon {
@@ -85,6 +89,5 @@
 .filters {
   display: flex;
   align-items: center;
-  margin-right: 32px;
-  gap: 10px;
+  gap: 8px;
 }

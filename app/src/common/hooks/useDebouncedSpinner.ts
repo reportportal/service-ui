@@ -21,7 +21,7 @@ import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 
 export const useDebouncedSpinner = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const cancelDebouncedSetLoading = useRef(null);
+  const cancelDebouncedSetLoading = useRef<VoidFunction>(null);
 
   const debouncedSetLoading = debounce(() => setIsLoading(true), SPINNER_DEBOUNCE);
 

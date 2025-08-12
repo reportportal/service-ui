@@ -45,11 +45,9 @@ export const MainPageEmptyState = () => {
     );
   };
 
-  const benefits = [
-    messages.createFolder,
-    messages.addTestCases,
-    messages.tagTestCases,
-  ].map((translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })));
+  const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
+    (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
+  );
 
   return (
     <>

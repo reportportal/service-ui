@@ -18,9 +18,9 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
+import { ProjectDetails } from 'pages/organization/constants';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -37,14 +37,16 @@ import { useCreateTestCaseModal } from './createTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folders = useSelector(foldersSelector);
-  const projectName = useSelector(projectNameSelector);
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectName = useSelector(projectNameSelector) as string;
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
   const isFolders = !!folders.length;
@@ -71,7 +73,7 @@ export const TestCaseLibraryPage = () => {
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
-                  icon={Parser(ImportIcon)}
+                  icon={<ImportIcon />}
                   data-automation-id="importTestCase"
                   adjustWidthOn="content"
                 >

@@ -221,7 +221,7 @@ export class ProjectActivity extends Component {
           <div className={cx('row-content')} key={activity.id}>
             <UserAvatar
               className={cx('avatar-wrapper')}
-              userId={activity.user}
+              userId={activity.userId}
               projectKey={getProjectKey(activity)}
               alt="avatar"
             />

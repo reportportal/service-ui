@@ -176,10 +176,10 @@ export class InputDropdown extends Component {
   };
 
   handleAllClick = () => {
-    const filteredOptions = this.props.options.filter((item) => !item.disabled && !item.groupId);
-
-    if (this.props.value.length !== filteredOptions.length) {
-      this.props.onChange(filteredOptions.map((item) => item.value));
+    if (this.props.value.length !== this.props.options.length) {
+      this.props.onChange(
+        this.props.options.filter((item) => !item.disabled).map((item) => item.value),
+      );
     } else {
       this.props.onChange([]);
     }
@@ -285,9 +285,11 @@ export class InputDropdown extends Component {
                     })}
                   >
                     {multiple && selectAll && (
-                      <span className={cx('select-all')}>
-                        <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
-                      </span>
+                      <div className={cx('select-all-block')} onClick={this.handleAllClick}>
+                        <span className={cx('select-all')}>
+                          <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
+                        </span>
+                      </div>
                     )}
                     <ScrollWrapper autoHeight autoHeightMax={300}>
                       {this.renderOptions()}

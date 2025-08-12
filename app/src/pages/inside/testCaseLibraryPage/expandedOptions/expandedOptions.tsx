@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
@@ -34,7 +34,7 @@ import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useTestCases } from '../hooks/useTestCases';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState(null);

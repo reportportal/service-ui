@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
  */
 
 .filters-icon-container {
+  all: unset;
   height: 36px;
-  width: 57px;
+  min-width: 40px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
 
   i.filter-icon {
     display: block;
@@ -30,20 +33,20 @@
       height: 16px;
 
       path {
-        fill: $COLOR--e-300;
+        fill: var(--rp-ui-base-e-300);
       }
     }
   }
 
   &:focus-visible {
-    outline: 2px solid $COLOR--topaz;
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
 
   &:hover {
     i.filter-icon {
       svg {
         path {
-          fill: $COLOR--e-400;
+          fill: var(--rp-ui-base-e-400);
         }
       }
     }
@@ -53,7 +56,7 @@
     i.filter-icon {
       svg {
         path {
-          fill: $COLOR--topaz-pressed;
+          fill: var(--rp-ui-base-topaz-pressed);
         }
       }
     }
@@ -62,7 +65,7 @@
       i.filter-icon {
         svg {
           path {
-            fill: $COLOR--topaz-hover-2;
+            fill: var(--rp-ui-base-topaz-hover);
           }
         }
       }
@@ -71,13 +74,14 @@
 
   &.with-applied {
     gap: 8px;
-    background-color: $COLOR--bg-200;
+    padding: 8px 12px;
+    background-color: var(--rp-ui-base-bg-200);
 
     i.filter-icon {
       svg {
         path {
-          fill: $COLOR--topaz-2;
-          stroke: $COLOR--topaz-2;
+          fill: var(--rp-ui-base-topaz);
+          stroke: var(--rp-ui-base-topaz);
         }
       }
     }
@@ -85,37 +89,38 @@
     .filters-count {
       font-size: 13px;
       line-height: 20px;
-      color: $COLOR--topaz-2;
-      font-family: $FONT-ROBOTO-MEDIUM;
-    }
-
-    &:hover {
-      div i.filter-icon {
-        svg {
-          path {
-            fill: $COLOR--topaz-hover-2;
-            stroke: $COLOR--topaz-hover-2;
-          }
-        }
-      }
-
-      span.filters-count {
-        color: $COLOR--topaz-hover-2;
-      }
+      color: var(--rp-ui-base-topaz);
+      font-family: var(--rp-ui-base-font-family);
+      font-weight: var(--rp-ui-base-fw-medium);
     }
 
     &.opened {
       i.filter-icon {
         svg {
           path {
-            fill: $COLOR--topaz-pressed;
-            stroke: $COLOR--topaz-pressed;
+            fill: var(--rp-ui-base-topaz-pressed);
+            stroke: var(--rp-ui-base-topaz-pressed);
           }
         }
       }
 
       .filters-count {
-        color: $COLOR--topaz-pressed;
+        color: var(--rp-ui-base-topaz-pressed);
+      }
+    }
+
+    &:hover {
+      div i.filter-icon {
+        svg {
+          path {
+            fill: var(--rp-ui-base-topaz-hover);
+            stroke: var(--rp-ui-base-topaz-hover);
+          }
+        }
+      }
+
+      span.filters-count {
+        color: var(--rp-ui-base-topaz-hover);
       }
     }
   }

@@ -16,6 +16,10 @@
 
 import { createSelector } from 'reselect';
 import {
+  normalizeExtensionPluginModules,
+  normalizeRemotePluginModules,
+} from 'controllers/plugins/uiExtensions/utils';
+import {
   EXTENSION_TYPE_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
@@ -35,95 +39,111 @@ import {
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
   EXTENSION_TYPE_PROJECT_PAGE,
   PLUGIN_TYPE_REMOTE,
-  PLUGIN_TYPE_CORE,
+  PLUGIN_TYPE_EXTENSION,
+  REMOTE_EXTENSION_POINT_PROJECT_PAGE,
 } from './constants';
 import {
   domainSelector,
-  enabledPluginNamesSelector,
-  enabledPublicPluginNamesSelector,
+  enabledExternalPluginsSelector,
+  enabledExternalPublicPluginsSelector,
 } from '../selectors';
 
 const extensionManifestsSelector = (state) =>
   domainSelector(state).uiExtensions.extensionManifests || [];
 
-const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPluginNamesSelector) =>
-  createSelector(
-    pluginNamesSelector,
-    extensionManifestsSelector,
-    (enabledPluginNames, extensionManifests) => {
-      // TODO: update 'pluginType' usage once the backend for remote and core plugins will be ready
-      const uiExtensions = extensionManifests
-        .filter(
-          ({ pluginName, pluginType }) =>
-            enabledPluginNames.includes(pluginName) ||
-            pluginType === PLUGIN_TYPE_REMOTE ||
-            pluginType === PLUGIN_TYPE_CORE,
-        )
-        .reduce(
-          (acc, { extensions, ...commonManifestProperties }) =>
-            acc.concat(extensions.map((ext) => ({ ...ext, ...commonManifestProperties }))),
-          [],
-        );
+// Normalize different plugin types extensions to unify their processing in components
+const createExtensionSelectorByExtensionPoints = (
+  extensionPoints = [],
+  pluginsSelector = enabledExternalPluginsSelector,
+) =>
+  createSelector(pluginsSelector, extensionManifestsSelector, (plugins, manifests) => {
+    const extensions = plugins.reduce((acc, { pluginType, details, name }) => {
+      let manifest;
+      switch (pluginType) {
+        case PLUGIN_TYPE_REMOTE:
+          return acc.concat(
+            normalizeRemotePluginModules(details.modules, {
+              pluginName: name,
+              url: details.baseUrl,
+            }),
+          );
+        case PLUGIN_TYPE_EXTENSION:
+          manifest = manifests.find(({ pluginName }) => pluginName === name);
 
-      return uiExtensions.filter((extension) => extension.type === type);
-    },
-  );
+          if (manifest) {
+            return acc.concat(
+              normalizeExtensionPluginModules(manifest.extensions, {
+                pluginName: name,
+                url: manifest.url,
+                scope: manifest.scope,
+              }),
+            );
+          }
+          return acc;
+        default:
+          return acc;
+      }
+    }, []);
 
-export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
+    return extensions.filter((extension) => extensionPoints.includes(extension.extensionPoint));
+  });
+
+export const uiExtensionSettingsTabsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SETTINGS_TAB,
-);
-export const uiExtensionAdminPagesSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_PAGE,
-);
-export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
-);
-export const uiExtensionAdminSidebarComponentsSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionAdminSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
-);
-export const uiExtensionLaunchItemComponentsSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionLaunchItemComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
-);
-export const uiExtensionIntegrationFormFieldsSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionIntegrationFormFieldsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
-);
-export const uiExtensionIntegrationSettingsSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionIntegrationSettingsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_INTEGRATION_SETTINGS,
-);
-export const uiExtensionPostIssueFormSelector = createExtensionSelectorByType(
+]);
+export const uiExtensionPostIssueFormSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_POST_ISSUE_FORM,
-);
-export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByType(
+]);
+export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
-);
-export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByType(
+]);
+export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
+]);
+export const uiExtensionLoginBlockSelector = createExtensionSelectorByExtensionPoints(
+  [EXTENSION_TYPE_LOGIN_BLOCK],
+  enabledExternalPublicPluginsSelector,
 );
-export const uiExtensionLoginBlockSelector = createExtensionSelectorByType(
-  EXTENSION_TYPE_LOGIN_BLOCK,
-  enabledPublicPluginNamesSelector,
+export const uiExtensionLoginPageSelector = createExtensionSelectorByExtensionPoints(
+  [EXTENSION_TYPE_LOGIN_PAGE],
+  enabledExternalPublicPluginsSelector,
 );
-export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
-  EXTENSION_TYPE_LOGIN_PAGE,
-  enabledPublicPluginNamesSelector,
+export const uiExtensionRegistrationPageSelector = createExtensionSelectorByExtensionPoints(
+  [EXTENSION_TYPE_REGISTRATION_PAGE],
+  enabledExternalPublicPluginsSelector,
 );
-export const uiExtensionRegistrationPageSelector = createExtensionSelectorByType(
-  EXTENSION_TYPE_REGISTRATION_PAGE,
-  enabledPublicPluginNamesSelector,
-);
-export const uiExtensionProjectPagesSelector = createExtensionSelectorByType(
+export const uiExtensionProjectPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_PROJECT_PAGE,
-);
+  REMOTE_EXTENSION_POINT_PROJECT_PAGE,
+]);
 
-export const makeDecisionDefectCommentAddonSelector = createExtensionSelectorByType(
+export const makeDecisionDefectCommentAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
-);
-export const makeDecisionDefectTypeAddonSelector = createExtensionSelectorByType(
+]);
+export const makeDecisionDefectTypeAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
-);
-export const logStackTraceAddonSelector = createExtensionSelectorByType(
+]);
+export const logStackTraceAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
-);
-export const testItemDetailsAddonSelector = createExtensionSelectorByType(
+]);
+export const testItemDetailsAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
-);
+]);

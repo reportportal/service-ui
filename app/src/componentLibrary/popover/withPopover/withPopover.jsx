@@ -23,47 +23,45 @@ import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({
-  ContentComponent,
-  popoverWrapperClassName,
-  tabIndex,
-  ...popoverConfig
-}) => (WrappedComponent) => ({ isOpenPopover, togglePopover, ...props }) => {
-  const parentRef = useRef();
-  const [isOpened, setOpened] = useState(false);
+export const withPopover =
+  ({ ContentComponent, popoverWrapperClassName, tabIndex, ...popoverConfig }) =>
+  (WrappedComponent) =>
+  ({ isOpenPopover, togglePopover, ...props }) => {
+    const parentRef = useRef();
+    const [isOpened, setOpened] = useState(false);
 
-  const onClose = useCallback(() => {
-    if (togglePopover) {
-      togglePopover(false);
-    } else {
-      setOpened(false);
-    }
-  }, [togglePopover, setOpened]);
+    const onClose = useCallback(() => {
+      if (togglePopover) {
+        togglePopover(false);
+      } else {
+        setOpened(false);
+      }
+    }, [togglePopover, setOpened]);
 
-  const onClickHandle = () => {
-    if (togglePopover) {
-      togglePopover(!isOpenPopover);
-    } else {
-      setOpened(true);
-    }
+    const onClickHandle = () => {
+      if (togglePopover) {
+        togglePopover(!isOpenPopover);
+      } else {
+        setOpened(true);
+      }
+    };
+
+    const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
+
+    return (
+      <div className={cx('with-popover-wrapper')} ref={parentRef}>
+        <button
+          className={cx('with-popover', popoverWrapperClassName)}
+          onClick={onClickHandle}
+          tabIndex={tabIndex ?? -1}
+        >
+          <WrappedComponent isPopoverOpen={isPopoverOpened} {...props} />
+        </button>
+        {isPopoverOpened && (
+          <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
+            <ContentComponent closePopover={onClose} {...props} />
+          </Popover>
+        )}
+      </div>
+    );
   };
-
-  const isPopoverOpened = togglePopover ? isOpenPopover : isOpened;
-
-  return (
-    <div className={cx('with-popover-wrapper')} ref={parentRef}>
-      <button
-        className={cx('with-popover', popoverWrapperClassName)}
-        onClick={onClickHandle}
-        tabIndex={tabIndex ?? -1}
-      >
-        <WrappedComponent isPopoverOpen={isPopoverOpened} {...props} />
-      </button>
-      {isPopoverOpened && (
-        <Popover onClose={onClose} parentRef={parentRef} {...popoverConfig}>
-          <ContentComponent closePopover={onClose} {...props} />
-        </Popover>
-      )}
-    </div>
-  );
-};

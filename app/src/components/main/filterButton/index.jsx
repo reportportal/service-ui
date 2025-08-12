@@ -16,6 +16,7 @@
 
 export { FilterButton } from './filterButton';
 export {
+  FILTER_FORM,
   LAST_RUN_DATE_FILTER_NAME,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
@@ -27,6 +28,8 @@ export {
   LAST_LOGIN_FILTER_NAME,
   EMAIL_FILTER_NAME,
   EMAIL_FILTER_NAME_CONDITION,
+  timeRangeValues,
+  timeRangeLastLoginValues,
   getRangeComparisons,
   getTimeRange,
   getLastLogin,

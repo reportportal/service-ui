@@ -15,6 +15,7 @@
  */
 
 export const FETCH_USER = 'FETCH_USER';
+export const FETCH_USER_INFO = 'FETCH_USER_INFO';
 export const FETCH_USER_ERROR = 'fetchUserError';
 export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
 export const ACTIVITY_TIMESTAMP = 'activityTimestamp';
@@ -37,8 +38,6 @@ export const SETTINGS_INITIAL_STATE = {
 export const ASSIGN_TO_PROJECT = 'assignToProject';
 export const ASSIGN_TO_PROJECT_SUCCESS = 'assignToProjectSuccess';
 export const ASSIGN_TO_PROJECT_ERROR = 'assignToProjectError';
-export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
-export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';
 
 export const FETCH_API_KEYS = 'fetchApiKeys';
 export const SET_API_KEYS = 'setApiKeys';
@@ -47,3 +46,4 @@ export const ADD_API_KEY_SUCCESS = 'addApiKeySuccess';
 export const DELETE_API_KEY = 'deleteApiKey';
 export const DELETE_API_KEY_SUCCESS = 'deleteApiKeySuccess';
 export const DELETE_USER_ACCOUNT = 'deleteUserAccount';
+export const UPDATE_USER_INFO = 'updateUserInfo';

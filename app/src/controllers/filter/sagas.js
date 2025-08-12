@@ -25,12 +25,12 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { userFiltersSelector } from 'controllers/project/selectors';
+import { userFiltersSelector, projectKeySelector } from 'controllers/project/selectors';
 import {
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
 } from 'controllers/project/actionCreators';
-import { projectKeySelector } from 'controllers/project';
+
 import {
   urlOrganizationAndProjectSelector,
   PROJECT_LAUNCHES_PAGE,

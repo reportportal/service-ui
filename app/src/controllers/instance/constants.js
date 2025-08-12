@@ -16,6 +16,7 @@
 
 export const NAMESPACE = 'admin';
 export const FETCH_PROJECT_DATA = 'fetchProjectData';
+export const FETCH_ORGANIZATION_EVENTS_DATA = 'fetchOrganizationEventsData';
 
 export const DEFAULT_SORT_COLUMN = 'name';
 export const SORTING_KEY = 'order';

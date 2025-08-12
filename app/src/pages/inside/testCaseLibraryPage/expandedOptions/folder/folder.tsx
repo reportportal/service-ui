@@ -16,12 +16,12 @@
 
 import { useState, useCallback } from 'react';
 import classNames from 'classnames/bind';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import styles from './folder.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 type Folder = {
   name: string;

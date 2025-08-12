@@ -34,7 +34,7 @@ import { useCreateTestPlan } from './useCreateTestPlan';
 
 import styles from './createTestPlanModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
 

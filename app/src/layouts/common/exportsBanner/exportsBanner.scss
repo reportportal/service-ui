@@ -1,0 +1,59 @@
+.exports-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--tealish-border;
+  background-color: $COLOR--tealish-hover;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1370px;
+  padding: 0 15px;
+  margin: auto;
+}
+
+.description {
+  margin-right: 10px;
+  line-height: 20px;
+
+  b {
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+
+.loader {
+  display: inline-block;
+  width: 48px;
+  height: 6px;
+  margin-right: 16px;
+}
+
+.interrupt-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: $COLOR--deep-red;
+  cursor: pointer;
+}
+
+.icon {
+  height: 14px;
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: $COLOR--deep-red;
+  }
+}

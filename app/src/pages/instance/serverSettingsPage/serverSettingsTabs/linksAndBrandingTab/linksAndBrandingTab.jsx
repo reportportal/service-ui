@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import { SectionHeader } from 'components/main/sectionHeader';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { Footer, DEFAULT_FOOTER_LINKS } from 'layouts/common/footer';
+import { SectionHeader } from 'components/main/sectionHeader';
 import { useDispatch, useSelector } from 'react-redux';
-import { serverFooterLinksSelector, updateServerSettingsAction } from 'controllers/appInfo';
+import { serverSidebarLinksSelector, updateServerSettingsAction } from 'controllers/appInfo';
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
 import DOMPurify from 'dompurify';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DraggableLink } from './draggableLink';
 import { AddLinkForm } from './addLinkForm';
-import { prepareFooterLinksData } from './utils';
+import { prepareSidebarLinksData } from './utils';
 import styles from './linksAndBrandingTab.scss';
 
 const cx = classNames.bind(styles);
@@ -38,11 +38,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   formHeader: {
     id: 'LinksAndBrandingTab.formHeader',
-    defaultMessage: 'Footer Links',
+    defaultMessage: 'Sidebar links',
   },
   previewDescription: {
     id: 'LinksAndBrandingTab.previewDescription',
-    defaultMessage: 'You can configure the necessary links in the footer of the application.',
+    defaultMessage: `You can configure the necessary links in the sidebar 'Help and Service versions' block of the application.`,
   },
   deleteLinkHeader: {
     id: 'DeleteLinkDialog.deleteLinkHeader',
@@ -75,10 +75,20 @@ const messages = defineMessages({
 });
 
 const MAX_LINKS_COUNT = 5;
+const DEFAULT_SIDEBAR_LINKS = [
+  {
+    name: 'Fork us on GitHub',
+    url: referenceDictionary.rpGitHub,
+  },
+  {
+    name: 'Documentation',
+    url: referenceDictionary.rpDoc,
+  },
+];
 
 export const LinksAndBrandingTab = () => {
   const { formatMessage } = useIntl();
-  const customLinks = useSelector(serverFooterLinksSelector);
+  const customLinks = useSelector(serverSidebarLinksSelector);
   const [isAddLinkFormVisible, setIsAddLinkFormVisible] = useState(false);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -88,7 +98,7 @@ export const LinksAndBrandingTab = () => {
     const updatedLinks = customLinks.filter((link) => link.name !== linkName);
     dispatch(
       updateServerSettingsAction({
-        data: prepareFooterLinksData(updatedLinks),
+        data: prepareSidebarLinksData(updatedLinks),
         onSuccess: () => {
           dispatch(
             showNotification({
@@ -133,7 +143,7 @@ export const LinksAndBrandingTab = () => {
     updatedLinks.splice(toIndex, 0, customLinks[fromIndex]);
     dispatch(
       updateServerSettingsAction({
-        data: prepareFooterLinksData(updatedLinks),
+        data: prepareSidebarLinksData(updatedLinks),
         onSuccess: () => {
           dispatch(
             showNotification({
@@ -155,14 +165,11 @@ export const LinksAndBrandingTab = () => {
         <div className={cx('preview-description')}>
           {formatMessage(messages.previewDescription)}
         </div>
-        <div className={cx('preview-block')}>
-          <Footer className={cx('preview-footer')} isPreview />
-        </div>
       </div>
       <div className={cx('links-panel')}>
         <div className={cx('links-summary')}>
           <div className={cx('default-links')}>
-            {DEFAULT_FOOTER_LINKS.map((link) => (
+            {DEFAULT_SIDEBAR_LINKS.map((link) => (
               <div key={link.name} className={cx('link-item')}>
                 <div className={cx('link-item-name')}>{link.name}</div>
                 <div className={cx('link-item-url')}>{link.url}</div>
@@ -185,7 +192,7 @@ export const LinksAndBrandingTab = () => {
         <div className={cx('links-control')}>
           {isAddLinkFormVisible ? (
             <AddLinkForm
-              defaultLinks={DEFAULT_FOOTER_LINKS}
+              defaultLinks={DEFAULT_SIDEBAR_LINKS}
               customLinks={customLinks}
               onClose={handleAddLinkFormClose}
             />

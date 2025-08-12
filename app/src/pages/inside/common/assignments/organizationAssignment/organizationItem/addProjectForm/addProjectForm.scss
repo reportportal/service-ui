@@ -1,0 +1,73 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.form {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.projects {
+  position: relative;
+  flex: 1;
+}
+
+.custom-tooltip {
+  width: 264px;
+}
+
+.tooltip {
+  width: 232px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.tooltip-wrapper {
+  height: 16px;
+  width: 16px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-weight: var(--rp-ui-base-fw-regular);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.button {
+  width: 36px;
+  height: 36px;
+  padding: 10px;
+
+  &.save svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  &.cancel svg {
+    width: 10px;
+    height: 10px;
+  }
+}

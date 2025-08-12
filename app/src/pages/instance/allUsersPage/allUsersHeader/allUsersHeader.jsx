@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -28,6 +29,7 @@ import { createFilterEntitiesURLContainer } from 'components/filterEntities/cont
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { showModalAction } from 'controllers/modal';
 import { AllUsersFilter } from './allUsersFilter';
+import { AllUsersExport } from './allUsersExport';
 import styles from './allUsersHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -69,6 +71,7 @@ export const AllUsersHeader = ({
   appliedFiltersCount,
   setAppliedFiltersCount,
 }) => {
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(false);
@@ -80,6 +83,7 @@ export const AllUsersHeader = ({
         id: 'createUserModal',
       }),
     );
+    trackEvent(ALL_USERS_PAGE_EVENTS.CREATE_USER_MODAL);
     setIsOpen(false);
   };
 
@@ -88,30 +92,31 @@ export const AllUsersHeader = ({
       <div className={cx('header')}>
         <span className={cx('title')}>{formatMessage(messages.allUsersTitle)}</span>
         <div className={cx('actions')}>
-          <div className={cx('icons')}>
-            <div className={cx('filters')}>
-              <SearchFieldWithFilter
-                isLoading={isLoading}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                event={ALL_USERS_PAGE_EVENTS.SEARCH_ALL_USERS_FIELD}
-              />
-              <FilterEntitiesURLContainer
-                debounced={false}
-                additionalFilter="full_name"
-                render={({ entities, onChange }) => (
-                  <AllUsersFilter
-                    appliedFiltersCount={appliedFiltersCount}
-                    setAppliedFiltersCount={setAppliedFiltersCount}
-                    entities={entities}
-                    onFilterChange={onChange}
-                  />
-                )}
-              />
-            </div>
+          <div className={cx('filters')}>
+            <SearchFieldWithFilter
+              isLoading={isLoading}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              event={ALL_USERS_PAGE_EVENTS.SEARCH_ALL_USERS_FIELD}
+            />
+            <FilterEntitiesURLContainer
+              debounced={false}
+              additionalFilter="full_name"
+              render={({ entities, onChange }) => (
+                <AllUsersFilter
+                  appliedFiltersCount={appliedFiltersCount}
+                  setAppliedFiltersCount={setAppliedFiltersCount}
+                  entities={entities}
+                  onFilterChange={onChange}
+                />
+              )}
+            />
+          </div>
+          <div className={cx('primary-actions')}>
+            <AllUsersExport appliedFiltersCount={appliedFiltersCount} />
             {!ssoUsersOnly && (
-              <>
+              <div className={cx('user-actions-group')}>
                 <Button variant="ghost" onClick={onInvite}>
                   {formatMessage(messages.invite)}
                 </Button>
@@ -129,7 +134,7 @@ export const AllUsersHeader = ({
                     <MeatballMenuIcon />
                   </Button>
                 </Popover>
-              </>
+              </div>
             )}
           </div>
         </div>

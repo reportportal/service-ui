@@ -9,7 +9,7 @@ export const useActivePluginPageExtension = (extensionsSelector) => {
   const extension = React.useMemo(
     () =>
       extensions.find(
-        (ex) => activePluginPage === ex.internalRoute || activePluginPage === ex.name,
+        (ext) => activePluginPage === ext.payload.slug || activePluginPage === ext.payload.name,
       ),
     [extensions, activePluginPage],
   );

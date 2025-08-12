@@ -23,10 +23,7 @@ import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 
-const endOfToday = moment()
-  .add(1, 'days')
-  .startOf('day')
-  .valueOf();
+const endOfToday = moment().add(1, 'days').startOf('day').valueOf();
 
 export const getTimeDateRangePresets = (tracking, events) => [
   {
@@ -36,9 +33,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
       </div>
     ),
     getValue: () => ({
-      start: moment()
-        .startOf('day')
-        .valueOf(),
+      start: moment().startOf('day').valueOf(),
       end: endOfToday,
       dynamic: true,
     }),
@@ -50,10 +45,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
       </div>
     ),
     getValue: () => ({
-      start: moment()
-        .startOf('day')
-        .subtract(1, 'days')
-        .valueOf(),
+      start: moment().startOf('day').subtract(1, 'days').valueOf(),
       end: endOfToday,
       dynamic: true,
     }),
@@ -65,10 +57,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
       </div>
     ),
     getValue: () => ({
-      start: moment()
-        .startOf('day')
-        .subtract(7, 'days')
-        .valueOf(),
+      start: moment().startOf('day').subtract(7, 'days').valueOf(),
       end: endOfToday,
       dynamic: true,
     }),
@@ -80,10 +69,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
       </div>
     ),
     getValue: () => ({
-      start: moment()
-        .startOf('day')
-        .subtract(30, 'days')
-        .valueOf(),
+      start: moment().startOf('day').subtract(30, 'days').valueOf(),
       end: endOfToday,
       dynamic: true,
     }),

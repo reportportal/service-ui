@@ -19,9 +19,14 @@ import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
-import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import {
+  NOTIFICATION_TYPES,
+  showDefaultErrorNotification,
+  showErrorNotification,
+  showNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
-import { LAST_RUN_DATE_FILTER_NAME } from 'components/main/filterButton';
 import {
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
@@ -29,6 +34,8 @@ import {
   NAMESPACE,
   DELETE_PROJECT,
   FETCH_FILTERED_PROJECTS,
+  RENAME_PROJECT,
+  UNASSIGN_FROM_PROJECT,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
@@ -38,7 +45,7 @@ import { fetchOrganizationProjectsAction } from './actionCreators';
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const filtersParams = yield select(querySelector);
-  const data = prepareQueryFilters(filtersParams, LAST_RUN_DATE_FILTER_NAME);
+  const data = prepareQueryFilters(filtersParams);
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.organizationProjectsSearches(activeOrganizationId), {
@@ -78,7 +85,7 @@ function* createProject({ payload: { newProjectName: projectName } }) {
       }),
     );
   } catch (err) {
-    if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
+    if (ERROR_CODES.PROJECT_EXISTS.includes(err.errorCode)) {
       yield put(
         showNotification({
           messageId: 'projectExists',
@@ -105,7 +112,7 @@ function* watchCreateProject() {
 function* deleteProject({ payload: { projectId, projectName } }) {
   const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
   try {
-    yield call(fetch, URLS.projectDelete({ organizationId, projectId }), {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
       method: 'delete',
     });
 
@@ -131,6 +138,68 @@ function* deleteProject({ payload: { projectId, projectName } }) {
   }
 }
 
+function* renameProject({ payload: { projectId, newProjectName } }) {
+  const { id: organizationId } = yield select(activeOrganizationSelector);
+
+  const renameOperation = {
+    op: 'replace',
+    path: 'name',
+    value: newProjectName,
+  };
+
+  try {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
+      method: 'patch',
+      data: [renameOperation],
+    });
+
+    yield fetchFilteredProjects();
+    yield put(hideModalAction());
+    yield put(showSuccessNotification({ messageId: 'updateProjectSuccess' }));
+  } catch ({ errorCode, message }) {
+    if (ERROR_CODES.PROJECT_EXISTS.includes(errorCode)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'projectExists',
+          values: { name: newProjectName },
+        }),
+      );
+    } else {
+      yield put(showDefaultErrorNotification({ message }));
+    }
+  }
+}
+
+function* unassignFromProject({ payload = {} }) {
+  const { user, project, onSuccess } = payload;
+  const { projectId } = project;
+  const { id: organizationId } = yield select(activeOrganizationSelector);
+
+  const removeOperation = {
+    op: 'remove',
+    path: 'users',
+    value: [user.id],
+  };
+
+  try {
+    yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
+      method: 'patch',
+      data: [removeOperation],
+    });
+
+    yield put(
+      showSuccessNotification({
+        messageId: 'unassignSuccess',
+        values: { name: user.fullName },
+      }),
+    );
+
+    onSuccess?.();
+  } catch (_err) {
+    yield put(showErrorNotification({ messageId: 'unassignProjectError' }));
+  }
+}
+
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
 }
@@ -139,11 +208,21 @@ function* watchFetchFilteredProjects() {
   yield takeEvery(FETCH_FILTERED_PROJECTS, fetchFilteredProjects);
 }
 
+function* watchRenameProject() {
+  yield takeEvery(RENAME_PROJECT, renameProject);
+}
+
+function* watchUnassignFromProject() {
+  yield takeEvery(UNASSIGN_FROM_PROJECT, unassignFromProject);
+}
+
 export function* projectsSagas() {
   yield all([
     watchFetchProjects(),
     watchCreateProject(),
     watchDeleteProject(),
     watchFetchFilteredProjects(),
+    watchRenameProject(),
+    watchUnassignFromProject(),
   ]);
 }

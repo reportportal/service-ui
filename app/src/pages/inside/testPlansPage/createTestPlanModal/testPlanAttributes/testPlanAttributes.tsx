@@ -16,11 +16,11 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
+import { noop } from 'lodash';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 
-import { noop } from 'common/utils';
 import { messages } from '../messages';
 
 const AttributeListField = ({ input, ...rest }) => (

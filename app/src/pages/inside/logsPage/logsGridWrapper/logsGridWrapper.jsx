@@ -206,7 +206,6 @@ export class LogsGridWrapper extends Component {
         this.props.filter !== prevProps.filter ||
         this.props.pageSize !== prevProps.pageSize
       ) {
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ errorLogIndex: null, skipHighlightOnRender: false });
       }
     }

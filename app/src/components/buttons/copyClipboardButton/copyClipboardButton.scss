@@ -55,5 +55,7 @@
 }
 
 .clipboard {
+  all: unset;
   display: flex;
+  cursor: pointer;
 }

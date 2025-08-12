@@ -16,10 +16,11 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { useSelector } from 'react-redux';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ProjectDetails } from 'pages/organization/constants';
 import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
 import { BreadcrumbsTreeIcon, Button, RefreshIcon } from '@reportportal/ui-kit';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -32,13 +33,15 @@ import { commonMessages } from './commonMessages';
 
 import styles from './testPlansPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
-  const projectName = useSelector(projectNameSelector);
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectName = useSelector(projectNameSelector) as string;
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
   const { testPlans } = useTestPlans();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];

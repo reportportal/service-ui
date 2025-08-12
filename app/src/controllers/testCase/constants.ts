@@ -21,3 +21,8 @@ export const SET_FOLDERS = 'setFolders' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
 export const GET_TEST_CASES = 'getTestCases' as const;
+
+export type Folder = {
+  name: string;
+  countOfTestCases: number;
+};

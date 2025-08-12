@@ -97,7 +97,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   };
 
   const defectTypesLength = useMemo(
-    () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0),
+    () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName]?.length + acc, 0),
     [defectTypes],
   );
   const isEditable = canUpdateSettings(userRoles);
@@ -209,7 +209,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
               </div>
               <Divider />
               <div className={cx('group-content')} data-automation-id="defectTypesList">
-                {defectTypes[groupName].map((defectType, i) => (
+                {defectTypes[groupName]?.map((defectType, i) => (
                   <div key={defectType.id} data-automation-id="listItem">
                     <DefectTypeRow
                       data={defectType}

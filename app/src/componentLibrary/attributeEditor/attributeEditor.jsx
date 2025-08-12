@@ -146,15 +146,17 @@ export const AttributeEditor = ({
 
   const isValidForm = isFormValid();
 
-  const handleKeyDown = (handler) => ({ keyCode }) => {
-    if (keyCode === ENTER_KEY_CODE) {
-      handler();
+  const handleKeyDown =
+    (handler) =>
+    ({ keyCode }) => {
+      if (keyCode === ENTER_KEY_CODE) {
+        handler();
 
-      if (keyEditorRef.current) {
-        keyEditorRef.current.focus();
+        if (keyEditorRef.current) {
+          keyEditorRef.current.focus();
+        }
       }
-    }
-  };
+    };
 
   const refFunction = (node) => {
     keyEditorRef.current = node;
@@ -214,6 +216,7 @@ export const AttributeEditor = ({
       </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={isValidForm ? 0 : -1}
           className={cx('check-btn', { disabled: !isValidForm })}
           onClick={isValidForm ? handleSubmit : null}

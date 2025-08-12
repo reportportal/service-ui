@@ -34,7 +34,7 @@ import { TestStep, useCreateTestCase } from './useCreateTestCase';
 
 import styles from './createTestCaseModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 

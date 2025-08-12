@@ -32,24 +32,24 @@ export const analyticsEventObserver = ReactObserver();
 @connect((state) => ({
   baseEventParameters: baseEventParametersSelector(state),
   gaMeasurementId: gaMeasurementIdSelector(state),
-  entryType: assignedProjectsSelector(state)[urlProjectSlugSelector(state)]?.entryType,
+  assignedProject: assignedProjectsSelector(state)[urlProjectSlugSelector(state)],
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
     queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
   },
-  dispatch: ({ baseEventParameters, gaMeasurementId, entryType, ...data }) => {
+  dispatch: ({ baseEventParameters, gaMeasurementId, assignedProject, ...data }) => {
     const {
       instanceId,
       buildVersion,
       userId,
       isAutoAnalyzerEnabled,
       isPatternAnalyzerEnabled,
-      projectInfoId,
       isAdmin,
       isAnalyzerAvailable,
       organizationId,
     } = baseEventParameters;
+    const { projectId, entryType } = assignedProject || {};
 
     if ('place' in data) {
       const eventParameters = {
@@ -62,7 +62,7 @@ export const analyticsEventObserver = ReactObserver();
         organization_id: `${organizationId}|${instanceId}`,
         uid: `${userId}|${instanceId}`,
         kind: entryType || 'not_set',
-        ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
+        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
       GA4.event(data.action, eventParameters);

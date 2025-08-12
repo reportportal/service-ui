@@ -34,14 +34,12 @@ export const getPluginConfigureClickEvent = (category) => (pluginName) => ({
   action: `Click on button configure in ${pluginName}`,
   label: 'Open configuration table',
 });
-export const getPluginChoosePropertiesCheckboxClickEvent = (category) => (
-  pluginName,
-  property,
-) => ({
-  category,
-  action: `Click on checkboxes to choose properties for issue form in ${pluginName}`,
-  label: property,
-});
+export const getPluginChoosePropertiesCheckboxClickEvent =
+  (category) => (pluginName, property) => ({
+    category,
+    action: `Click on checkboxes to choose properties for issue form in ${pluginName}`,
+    label: property,
+  });
 
 export const getClickSaveBtnEditAuthorizationEvent = (category) => (pluginName) => ({
   category,

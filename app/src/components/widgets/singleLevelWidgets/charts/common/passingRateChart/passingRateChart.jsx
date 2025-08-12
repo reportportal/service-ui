@@ -92,12 +92,9 @@ export class PassingRateChart extends Component {
     const nodeElement = this.node;
 
     // eslint-disable-next-line func-names
-    d3.selectAll(nodeElement.querySelectorAll('.bar .c3-chart-texts .c3-text')).each(function(d) {
+    d3.selectAll(nodeElement.querySelectorAll('.bar .c3-chart-texts .c3-text')).each(function (d) {
       const selector = `c3-target-${d.id}`;
-      const barBox = d3
-        .selectAll(nodeElement.getElementsByClassName(selector))
-        .node()
-        .getBBox();
+      const barBox = d3.selectAll(nodeElement.getElementsByClassName(selector)).node().getBBox();
       const textElement = d3.select(this).node();
       const textBox = textElement.getBBox();
       let x = barBox.x + barBox.width / 2 - textBox.width / 2;

@@ -11,6 +11,60 @@ The migration strategy allows for gradual adoption:
 - **Incremental Migration**: Convert components one at a time
 - **Type Safety**: Gain TypeScript benefits without disrupting workflow
 
+## React Component Typing Best Practices
+
+### Why Not Use FC (FunctionComponent)?
+
+**Avoid using `FC` or `React.FC`** for the following reasons:
+
+1. **Unnecessary Verbosity**: `FC` adds extra type complexity without providing significant benefits
+2. **Generic Constraints**: `FC` can interfere with generic component typing
+3. **Modern React Patterns**: Current React TypeScript best practices favor direct function signatures
+
+### Recommended Approach
+
+Use direct function signatures with explicit props typing:
+
+```tsx
+// ✅ Good - Clean and explicit
+interface MyComponentProps {
+  title: string;
+  children?: ReactNode;
+}
+
+const MyComponent = ({ title, children }: MyComponentProps) => {
+  return <div>{title}{children}</div>;
+};
+
+// ❌ Avoid - Unnecessary FC wrapper
+const MyComponent: FC<MyComponentProps> = ({ title, children }) => {
+  return <div>{title}{children}</div>;
+};
+```
+
+### Return Type Inference
+
+TypeScript automatically infers the return type for React components, so explicit return types are unnecessary:
+
+```tsx
+// ✅ Good - Let TypeScript infer the return type
+const MyComponent = ({ title }: Props) => {
+  return <div>{title}</div>;
+};
+
+// ❌ Unnecessary - Explicit return type adds verbosity
+const MyComponent = ({ title }: Props): React.JSX.Element => {
+  return <div>{title}</div>;
+};
+```
+
+### When to Use Explicit Return Types
+
+Only add explicit return types when:
+- The component returns a union type that TypeScript can't infer
+- You need to constrain the return type for specific reasons
+- Working with complex generic components
+
 ## Migration Steps
 
 ### 1. Component Props Migration
@@ -18,7 +72,6 @@ The migration strategy allows for gradual adoption:
 #### Before (JSX with PropTypes):
 
 ```jsx
-import { FC } from 'react';
 import PropTypes from 'prop-types';
 
 const MyComponent = ({ title, items, onItemClick, loading }) => {
@@ -42,8 +95,6 @@ MyComponent.defaultProps = {
 #### After (TSX with TypeScript):
 
 ```tsx
-import { FC } from 'react';
-
 interface MyComponentProps {
   title: string;
   items?: string[];
@@ -51,12 +102,12 @@ interface MyComponentProps {
   loading?: boolean;
 }
 
-const MyComponent: FC<MyComponentProps> = ({
+const MyComponent = ({
   title,
   items = [],
   onItemClick = () => {},
   loading = false,
-}) => {
+}: MyComponentProps) => {
   // Component implementation
 };
 ```
@@ -106,7 +157,7 @@ interface ComponentState {
   error: string | null;
 }
 
-const MyComponent: FC<MyComponentProps> = ({ initialData = [] }) => {
+const MyComponent = ({ initialData = [] }: MyComponentProps) => {
   const [state, setState] = useState<ComponentState>({
     data: initialData,
     loading: false,
@@ -236,13 +287,13 @@ interface FormComponentProps {
   disabled?: boolean;
 }
 
-const FormComponent: FC<FormComponentProps> = ({
+const FormComponent = ({
   input,
   meta,
   placeholder,
   disabled,
   ...props
-}) => (
+}: FormComponentProps) => (
   <div>
     <input {...input} placeholder={placeholder} disabled={disabled} {...props} />
     {meta.touched && meta.error && (
@@ -264,7 +315,7 @@ interface ComponentProps {
   optional?: number;
 }
 
-const Component: FC<Props> = ({ required, optional = 42 }) => {
+const Component = ({ required, optional = 42 }: ComponentProps) => {
   // Use destructuring with defaults
 };
 ```
@@ -297,7 +348,7 @@ interface GenericListProps<T> {
   renderItem: (item: T) => ReactNode;
 }
 
-function GenericList<T>({ items, renderItem }: GenericListProps <T>) {
+function GenericList<T>({ items, renderItem }: GenericListProps<T>) {
   return (
     <ul>
       {items.map((item, index) => (
@@ -316,12 +367,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({
+const Button = ({
   variant = 'primary',
   loading = false,
   children,
   ...props
-}) => (
+}: ButtonProps) => (
   <button
     className={`btn btn-${variant} ${loading ? 'loading' : ''}`}
     disabled={loading}
@@ -337,7 +388,7 @@ const Button: FC<ButtonProps> = ({
 ### For Each Component:
 
 1. **Create Interface**: Define props interface replacing PropTypes
-2. **Add Type Annotations**: Add FC<Props> type annotation
+2. **Add Type Annotations**: Add function signature with props typing
 3. **Handle Defaults**: Use destructuring defaults instead of defaultProps
 4. **Update Event Handlers**: Add proper event types
 5. **State Typing**: Add interfaces for component state

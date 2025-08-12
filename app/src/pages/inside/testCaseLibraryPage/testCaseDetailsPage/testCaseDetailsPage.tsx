@@ -16,7 +16,7 @@
 
 import { useState } from 'react';
 import classNames from 'classnames/bind';
-import isEmpty from 'lodash.isempty';
+import { isEmpty, noop } from 'lodash';
 import { useIntl } from 'react-intl';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -26,7 +26,6 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { noop } from 'common/utils';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
@@ -35,19 +34,19 @@ import { mockTestCases, mockedTestCaseDescription } from '../testCaseList/mockDa
 
 import styles from './testCaseDetailsPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
   testCaseDescription,
-  headerControllKeys,
+  headerControlKeys,
   handleAddTags,
   handleAddDescription,
   handleEditDescription,
 }: {
   tags: string[];
   testCaseDescription: string;
-  headerControllKeys: { ADD: string };
+  headerControlKeys: { ADD: string };
   handleAddTags: () => void;
   handleAddDescription: () => void;
   handleEditDescription: () => void;
@@ -59,7 +58,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
       headerControl: (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
-          {headerControllKeys.ADD}
+          {headerControlKeys.ADD}
         </Button>
       ),
     },
@@ -77,7 +76,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
           className={cx('fixed-button-height')}
           icon={<PlusIcon />}
         >
-          {headerControllKeys.ADD}
+          {headerControlKeys.ADD}
         </Button>
       ) : (
         <Button
@@ -140,7 +139,7 @@ export const TestCaseDetailsPage = () => {
               handleAddTags,
               handleAddDescription,
               handleEditDescription,
-              headerControllKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
+              headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription,
               tags,
             }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (

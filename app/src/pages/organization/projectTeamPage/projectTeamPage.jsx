@@ -17,19 +17,21 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { useTracking } from 'react-tracking';
-import classNames from 'classnames/bind';
 import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
+import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { showModalAction } from 'controllers/modal';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { useTracking } from 'react-tracking';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
-import { messages } from '../messages';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
+import { messages } from '../common/membersPage/membersPageHeader/messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
+import { ProjectTeamPageHeader } from './projectTeamPageHeader';
 import { ProjectTeamListTable } from './projectTeamListTable';
 import styles from './projectTeamPage.scss';
 
@@ -43,22 +45,23 @@ export const ProjectTeamPage = () => {
   const hasPermission = canInviteInternalUser(userRoles);
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
 
   useEffect(() => {
     trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
-  }, []);
+  }, [trackEvent]);
 
   const onInvite = () => {
     dispatch(fetchMembersAction());
+    dispatch(fetchProjectAction(projectKey, true));
   };
 
   const showInviteUserModal = () => {
     dispatch(
       showModalAction({
-        id: 'inviteUserModal',
-        data: { onInvite },
+        component: <InviteUserModal level={Level.PROJECT} onInvite={onInvite} />,
       }),
     );
   };
@@ -82,7 +85,7 @@ export const ProjectTeamPage = () => {
 
   return (
     <div className={cx('project-team-page')}>
-      <LocationHeaderLayout
+      <ProjectTeamPageHeader
         hasPermission={hasPermission}
         onInvite={showInviteUserModal}
         isMembersLoading={isMembersLoading}

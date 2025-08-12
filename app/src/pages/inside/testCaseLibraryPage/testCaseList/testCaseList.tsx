@@ -21,7 +21,7 @@ import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
 import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
-import xor from 'lodash.xor';
+import { xor } from 'lodash';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -29,9 +29,10 @@ import { TestCaseSidePanel } from './testCaseSidePanel';
 import { mockTestCases } from './mockData';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
+import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseListProps {
   testCases?: TestCase[];
@@ -59,7 +60,9 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
 
     const dispatch = useDispatch();
-    const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+    const { organizationSlug, projectSlug } = useSelector(
+      urlOrganizationAndProjectSelector,
+    ) as ProjectDetails;
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;

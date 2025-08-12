@@ -292,9 +292,8 @@ export const AttributeList = ({
                 removeHandler,
                 attributeKeyValueRef,
               );
-              const handleAttributeWrapperKeyDown = createAttributeWrapperKeyDownHandler(
-                keyAttrValue,
-              );
+              const handleAttributeWrapperKeyDown =
+                createAttributeWrapperKeyDownHandler(keyAttrValue);
 
               return (
                 <EditableAttribute

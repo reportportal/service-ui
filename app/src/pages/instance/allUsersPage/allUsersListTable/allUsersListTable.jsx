@@ -23,7 +23,7 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { NAMESPACE } from 'controllers/instance/allUsers/constants';
+import { NAMESPACE, SORTING_KEY } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { ACCOUNT_TYPE_DISPLAY_MAP } from 'common/constants/accountType';
 import {
@@ -38,8 +38,13 @@ import {
   allUsersPaginationSelector,
   fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
+import { useTracking } from 'react-tracking';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
+import { canUpdateUserInstanceRole } from 'common/utils/permissions';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
+import { UpdateUserInstanceRole } from './updateUserInstanceRole';
+import { DeleteUser } from './deleteUser';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -60,21 +65,46 @@ const AllUsersListTableComponent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
+  const { trackEvent } = useTracking();
 
-  const renderRowActions = () => (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-menu')}>
-          <p>Manage assignments</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
+  const renderRowActions = ({ userId, email, fullName, instanceRole, isCurrentUser }) => {
+    const actions = [];
+
+    if (canUpdateUserInstanceRole && !isCurrentUser) {
+      actions.push(
+        <UpdateUserInstanceRole
+          key="update-role"
+          email={email}
+          fullName={fullName}
+          instanceRole={instanceRole}
+          className={cx('menu-item')}
+        />,
+      );
+    }
+
+    if (!isCurrentUser) {
+      actions.push(
+        <DeleteUser
+          key="delete-user"
+          fullName={fullName}
+          userId={userId}
+          className={cx('delete-user-item')}
+        />,
+      );
+    }
+
+    return (
+      <Popover
+        className={cx('popover')}
+        placement={'bottom-end'}
+        content={<div className={cx('row-action-menu')}>{actions.map((action) => action)}</div>}
+      >
+        <i className={cx('menu-icon')}>
+          <MeatballMenuIcon />
+        </i>
+      </Popover>
+    );
+  };
 
   const data = useMemo(
     () =>
@@ -85,7 +115,7 @@ const AllUsersListTableComponent = ({
 
         return {
           id: user.id,
-          fullName: {
+          full_name: {
             content: user.full_name,
             component: (
               <UserNameCell userId={user.id} fullName={user.full_name} badges={memberBadges} />
@@ -102,13 +132,20 @@ const AllUsersListTableComponent = ({
           },
           accountType: getDisplayAccountType(user.account_type),
           organizations: organizationsCount,
+          metaData: {
+            email: user.email,
+            fullName: user.full_name,
+            instanceRole: user.instance_role,
+            isCurrentUser,
+            userId: user.id,
+          },
         };
       }),
     [users, currentUser.id],
   );
 
   const primaryColumn = {
-    key: 'fullName',
+    key: 'full_name',
     header: formatMessage(messages.name),
   };
 
@@ -142,6 +179,7 @@ const AllUsersListTableComponent = ({
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
     dispatch(fetchAllUsersAction());
+    trackEvent(ALL_USERS_PAGE_EVENTS.SORTING);
   };
 
   return (
@@ -184,6 +222,7 @@ AllUsersListTableComponent.defaultProps = {
 export const AllUsersListTable = withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
   namespace: NAMESPACE,
 })(
   withPagination({

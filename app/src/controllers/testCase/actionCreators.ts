@@ -22,6 +22,7 @@ import {
   SET_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
+  Folder,
 } from './constants';
 
 export interface GetTestCasesParams {
@@ -55,12 +56,12 @@ export const createFoldersAction = (folder: CreateFolderParams) => ({
   payload: folder,
 });
 
-export const setFoldersAction = (folders) => ({
+export const setFoldersAction = (folders: Folder) => ({
   type: SET_FOLDERS,
   payload: folders,
 });
 
-export const updateFoldersAction = (folder) => ({
+export const updateFoldersAction = (folder: Folder) => ({
   type: UPDATE_FOLDERS,
   payload: folder,
 });

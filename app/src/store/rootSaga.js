@@ -38,6 +38,7 @@ import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 import { organizationsSagas } from 'controllers/instance/organizations';
 import { organizationSagas } from 'controllers/organization';
 import { serverSettingsSagas } from 'controllers/appInfo';
+import { exportsSagas } from 'controllers/exports/sagas';
 import { testCaseSagas } from 'controllers/testCase';
 
 const sagas = [
@@ -64,6 +65,7 @@ const sagas = [
   pageSagas,
   pluginSagas,
   uniqueErrorsSagas,
+  exportsSagas,
   testCaseSagas,
 ];
 
@@ -71,8 +73,7 @@ export function* rootSagas() {
   yield all(
     sagas.map((saga) =>
       // eslint-disable-next-line func-names
-      spawn(function*() {
-        // eslint-disable-next-line no-constant-condition
+      spawn(function* () {
         while (true) {
           try {
             yield call(saga);

@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 });
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
 const MAX_FIELD_LENGTH = 48;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, MouseEvent } from 'react';
+import { useCallback, useMemo, MouseEvent, FC, SVGProps } from 'react';
 import classNames from 'classnames/bind';
 import {
   AddCsvIcon,
@@ -25,7 +25,7 @@ import {
 } from '@reportportal/ui-kit';
 import styles from './attachmentItem.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AttachmentItemProps {
   fileName: string;
@@ -38,7 +38,7 @@ interface AttachmentItemProps {
   isFullWidth?: boolean;
 }
 
-const FILE_ICON_MAP = {
+const FILE_ICON_MAP: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   csv: AddCsvIcon,
   jar: AddJarIcon,
 } as const;

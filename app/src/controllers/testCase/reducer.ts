@@ -20,12 +20,8 @@ import {
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   SET_FOLDERS,
+  Folder,
 } from 'controllers/testCase/constants';
-
-type Folder = {
-  name: string;
-  countOfTestCases: number;
-};
 
 export type InitialStateType = {
   folders: {

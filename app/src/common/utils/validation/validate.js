@@ -49,11 +49,7 @@ export const passwordCreateUser = composeValidators([
   maxLength(256),
   regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
 ]);
-export const userName = composeValidators([
-  isNotEmpty,
-  regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),
-]);
-export const userCreateName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/i)]);
+export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
@@ -133,20 +129,22 @@ export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3
 export const footerLinkUrlLength = maxLength(1024);
 export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
 export const urlOrEmailValidator = (value) => email(value) || url(value);
-export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
-  if (!informOwner && !value.length) {
-    return false;
-  }
-  if (informOwner && !value.length) {
-    return true;
-  }
-  const checkIsStringWithEmailParts = regex(/@/);
-  if (value.some(checkIsStringWithEmailParts)) {
-    return value.filter(checkIsStringWithEmailParts).every(email);
-  }
+export const createNotificationRecipientsValidator =
+  (informOwner) =>
+  (value = []) => {
+    if (!informOwner && !value.length) {
+      return false;
+    }
+    if (informOwner && !value.length) {
+      return true;
+    }
+    const checkIsStringWithEmailParts = regex(/@/);
+    if (value.some(checkIsStringWithEmailParts)) {
+      return value.filter(checkIsStringWithEmailParts).every(email);
+    }
 
-  return true;
-};
+    return true;
+  };
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);

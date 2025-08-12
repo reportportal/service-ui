@@ -51,6 +51,12 @@
         display: none;
       }
 
+      article {
+        button {
+          background-color: transparent;
+        }
+      }
+
       .wrapper {
         &:not(.information-container) {
           padding: 0 10px;
