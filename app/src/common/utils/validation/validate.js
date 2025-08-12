@@ -26,7 +26,7 @@ import {
   isNotOnlySpaces,
 } from './validatorHelpers';
 
-export const required = isNotEmpty;
+export { isNotEmpty as required };
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
 export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
 export const rallyUrl = composeValidators([

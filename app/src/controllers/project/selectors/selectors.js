@@ -25,11 +25,8 @@ import {
   AA_ATTRIBUTE_ENABLED_KEY,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
   NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY,
-} from './constants';
-
-const projectSelector = (state) => state.project || {};
-
-export const projectInfoSelector = (state) => projectSelector(state).info || {};
+} from '../constants';
+import { projectSelector, projectInfoSelector } from './typed-selectors';
 
 export const projectInfoLoadingSelector = (state) => projectSelector(state).infoLoading;
 
@@ -39,8 +36,6 @@ export const projectMembersSelector = (state) => projectInfoSelector(state).user
 
 export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
 
-export const projectInfoIdSelector = (state) => projectInfoSelector(state).projectId;
-
 export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
 
 export const userFiltersSelector = (state) => projectPreferencesSelector(state).filters || [];
@@ -48,10 +43,6 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
 
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
-
-export const projectNameSelector = (state) => projectInfoSelector(state).projectName || '';
-
-export const projectKeySelector = (state) => projectInfoSelector(state).projectKey || '';
 
 export const autoAnalysisEnabledSelector = (state) =>
   projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY];

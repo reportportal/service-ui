@@ -17,12 +17,26 @@
 export const composeValidators = (validators) => (value) =>
   validators.every((validator) => validator(value));
 
+/**
+ * @param {string|number} value
+ */
 export const trimValue = (value) => (typeof value === 'string' ? value.trim() : value);
+/**
+ * @param {string|number} [value]
+ * @returns boolean
+ */
 export const isEmpty = (value) => {
   const trimmedValue = trimValue(value);
   return trimmedValue === '' || trimmedValue === undefined || trimmedValue === null;
 };
+/**
+ * @param {string|number} [value]
+ * @returns boolean
+ */
 export const isNotEmpty = (value) => !isEmpty(value);
+/**
+ * @returns boolean
+ */
 export const isNotOnlySpaces = (value) => !value || trimValue(value) !== '';
 export const min = (minValue) => (value) => Number(value) >= minValue;
 export const max = (maxValue) => (value) => Number(value) <= maxValue;
@@ -39,6 +53,12 @@ export const lengthRange = (minValue, maxValue) =>
   composeValidators([minLength(minValue), maxLength(maxValue)]);
 export const regex = (regexStr) => (value) => RegExp(regexStr).test(value);
 
+/**
+ * Binds an error message to a validator function
+ * @param {(value: unknown) => boolean} validator - Function that returns true if value is valid
+ * @param {string} errorMessage - Error message to return when validation fails
+ * @returns {(value: unknown) => string | undefined} Function that returns error message or undefined
+ */
 export const bindMessageToValidator = (validator, errorMessage) => (value) =>
   !validator(value) ? errorMessage : undefined;
 

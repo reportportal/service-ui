@@ -43,7 +43,7 @@ export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folders = useSelector(foldersSelector);
-  const projectName = useSelector(projectNameSelector) as string;
+  const projectName = useSelector(projectNameSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;

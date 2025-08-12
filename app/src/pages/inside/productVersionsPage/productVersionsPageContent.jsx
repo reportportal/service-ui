@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { Button } from '@reportportal/ui-kit';
 
 import {
@@ -29,7 +29,7 @@ import {
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { Tabs } from 'components/main/tabs';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { MarkdownEditor } from 'components/main/markdown';

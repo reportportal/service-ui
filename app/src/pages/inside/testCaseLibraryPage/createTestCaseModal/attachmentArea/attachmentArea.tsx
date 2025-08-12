@@ -170,7 +170,6 @@ export const AttachmentArea = ({
           addFile(file);
           return;
         }
-        // eslint-disable-next-line no-console
         console.error('File rejected:', errors);
       });
     },

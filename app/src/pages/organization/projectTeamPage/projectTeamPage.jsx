@@ -17,21 +17,21 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import classNames from 'classnames/bind';
 import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
-import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { showModalAction } from 'controllers/modal';
 import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useTracking } from 'react-tracking';
+import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
-import { messages } from '../common/membersPage/membersPageHeader/messages';
+import { messages } from '../messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
-import { ProjectTeamPageHeader } from './projectTeamPageHeader';
 import { ProjectTeamListTable } from './projectTeamListTable';
 import styles from './projectTeamPage.scss';
 
@@ -85,7 +85,7 @@ export const ProjectTeamPage = () => {
 
   return (
     <div className={cx('project-team-page')}>
-      <ProjectTeamPageHeader
+      <LocationHeaderLayout
         hasPermission={hasPermission}
         onInvite={showInviteUserModal}
         isMembersLoading={isMembersLoading}

@@ -78,8 +78,8 @@ export function* rootSagas() {
           try {
             yield call(saga);
             break;
-          } catch (e) {
-            console.error(e); // eslint-disable-line no-console
+          } catch (error) {
+            console.error(error);
           }
         }
       }),

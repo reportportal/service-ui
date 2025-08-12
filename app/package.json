@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
-    "eslint": "eslint --quiet",
+    "eslint": "eslint",
     "stylelint": "stylelint \"./**/*.scss\"",
     "lint": "npm run type-check && npm run eslint && npm run stylelint",
     "type-check": "tsc --noEmit",

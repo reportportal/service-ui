@@ -38,7 +38,7 @@ const cx = classNames.bind(styles) as typeof classNames;
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
-  const projectName = useSelector(projectNameSelector) as string;
+  const projectName = useSelector(projectNameSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
