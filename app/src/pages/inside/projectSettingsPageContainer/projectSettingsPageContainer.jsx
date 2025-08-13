@@ -93,7 +93,8 @@ export const ProjectSettingsPageContainer = () => {
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(title),
         },
-      }}, {});
+      };
+    }, {});
   }, [createTabLink, extensions]);
 
   const config = useMemo(() => {
