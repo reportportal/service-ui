@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -23,8 +23,7 @@ import * as validate from 'common/utils/validation/validate';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { Dropdown } from '@reportportal/ui-kit';
-import { FieldText } from 'componentLibrary/fieldText';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
 import { DEFAULT_FORM_CONFIG } from '../constants';
 import { messages } from '../messages';
