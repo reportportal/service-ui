@@ -65,7 +65,7 @@ const messages = defineMessages({
   },
   'analyzer.largestRetryPriority': {
     id: 'UpdateAnalysisSettings.largestRetryPriority',
-    defaultMessage: 'switch Largest Retry priority',
+    defaultMessage: 'switch Defect assignment based on the longest retry',
   },
   from: {
     id: 'AnalysisProperties.from',
