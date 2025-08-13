@@ -71,7 +71,6 @@ export class ChangePasswordBlock extends PureComponent {
       this.props.redirectToLoginPage();
     }
 
-    // eslint-disable-next-line no-nested-ternary
     return this.state.loading ? (
       <SpinningPreloader />
     ) : (

@@ -35,7 +35,7 @@ export interface CreateTestPlanFormData {
 export const useCreateTestPlan = () => {
   const { isLoading: isCreateTestPlanLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector) as string;
+  const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
 
   const createTestPlan = async (payload: CreateTestPlanFormData) => {
@@ -56,8 +56,8 @@ export const useCreateTestPlan = () => {
           messageId: 'testPlanCreatedSuccess',
         }),
       );
-    } catch (error) {
-      if (error?.message?.includes('tms_test_plan_name_unique')) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error?.message?.includes('tms_test_plan_name_unique')) {
         throw new SubmissionError({
           name: formatMessage(messages.duplicateTestPlanName),
         });

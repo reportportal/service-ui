@@ -14,33 +14,75 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { loadingSelector, usersSelector } from 'controllers/organization/users';
+import { useTracking } from 'react-tracking';
+import {
+  fetchOrganizationUsersAction,
+  loadingSelector,
+  usersSelector,
+} from 'controllers/organization/users';
 import { OrganizationTeamListTable } from 'pages/organization/organizationUsersPage/organizationUsersListTable/organizationUsersListTable';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { showModalAction } from 'controllers/modal';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
+import {
+  activeOrganizationSelector,
+  fetchOrganizationBySlugAction,
+} from 'controllers/organization';
+import { userRolesSelector } from 'controllers/pages';
+import { canInviteUserToOrganization } from 'common/utils/permissions';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from '../messages';
-import styles from './organizationUsersPage.scss';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
+import styles from './organizationUsersPage.scss';
 
 const cx = classNames.bind(styles);
 
 export const OrganizationUsersPage = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const users = useSelector(usersSelector);
+  const { id: organizationId, slug: organizationSlug } = useSelector(activeOrganizationSelector);
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
+  const userRoles = useSelector(userRolesSelector);
+  const hasPermission = canInviteUserToOrganization(userRoles);
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
+  }, [trackEvent]);
+
+  const onInvite = (withProject) => {
+    dispatch(fetchOrganizationUsersAction(organizationId));
+    dispatch(fetchOrganizationBySlugAction(organizationSlug));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.inviteUser(withProject));
+  };
+
+  const showInviteUserModal = () => {
+    dispatch(
+      showModalAction({
+        component: <InviteUserModal level={Level.ORGANIZATION} onInvite={onInvite} />,
+      }),
+    );
+  };
 
   const getEmptyPageState = () => {
     return searchValue === null ? (
-      <EmptyUsersPageState isLoading={isUsersLoading} isNotEmpty={!isEmptyUsers} hasPermission />
+      <EmptyUsersPageState
+        isLoading={isUsersLoading}
+        isNotEmpty={!isEmptyUsers}
+        hasPermission
+        showInviteUserModal={showInviteUserModal}
+      />
     ) : (
       <EmptyPageState
         label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
@@ -55,9 +97,11 @@ export const OrganizationUsersPage = () => {
     <ScrollWrapper>
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
+          hasPermission={hasPermission}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
+          onInvite={showInviteUserModal}
         />
         {isEmptyUsers ? getEmptyPageState() : <OrganizationTeamListTable users={users} />}
       </div>

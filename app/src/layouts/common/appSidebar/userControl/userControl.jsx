@@ -19,12 +19,10 @@ import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { Image } from 'components/main/image';
-import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
-import { URLS } from 'common/urls';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { withPopover } from 'componentLibrary/popover';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ProfileMenu } from './profileMenu';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
 import styles from './userControl.scss';
@@ -36,13 +34,13 @@ const UserControl = ({ onClick }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <div className={cx('user-block-wrapper')} onClick={onClick}>
+    <button className={cx('user-block-wrapper')} onClick={onClick}>
       <button className={cx('avatar-block')}>
-        <Image
-          className={cx('avatar-img')}
-          src={URLS.userAvatar(id, true, photoTimeStamp)}
-          alt="avatar"
-          fallback={DefaultUserImage}
+        <UserAvatar
+          className={cx('user-avatar')}
+          userId={id}
+          timestamp={photoTimeStamp}
+          thumbnail
         />
       </button>
       <div className={cx('user-control')}>
@@ -62,7 +60,7 @@ const UserControl = ({ onClick }) => {
           <div className={cx('user-email')}>{email}</div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

@@ -31,7 +31,6 @@ export const FilterButton = ({
   defaultFilters,
   initialState,
   defaultState,
-  filteredAction,
   getClearButtonState,
   getApplyButtonState,
   searchProp,
@@ -41,9 +40,12 @@ export const FilterButton = ({
 
   useEffect(() => {
     const { [searchProp]: value, ...filters } = definedFilters;
-    setAppliedFiltersCount(Object.keys(filters).length);
-    filteredAction();
-  }, []);
+    const filtersCount = Object.keys(filters).length;
+
+    if (appliedFiltersCount !== filtersCount) {
+      setAppliedFiltersCount(filtersCount);
+    }
+  }, [appliedFiltersCount, definedFilters, searchProp, setAppliedFiltersCount]);
 
   return (
     <Popover
@@ -53,7 +55,6 @@ export const FilterButton = ({
           setAppliedFiltersCount={setAppliedFiltersCount}
           onFilterChange={onFilterChange}
           defaultFilters={defaultFilters}
-          filteredAction={filteredAction}
           initialState={initialState}
           defaultState={defaultState}
           getClearButtonState={getClearButtonState}
@@ -66,7 +67,7 @@ export const FilterButton = ({
       isOpened={isOpen}
       setIsOpened={setIsOpen}
     >
-      <div
+      <button
         className={cx('filters-icon-container', {
           'with-applied': appliedFiltersCount,
           opened: isOpen,
@@ -81,7 +82,7 @@ export const FilterButton = ({
         {appliedFiltersCount ? (
           <span className={cx('filters-count')}>{appliedFiltersCount}</span>
         ) : null}
-      </div>
+      </button>
     </Popover>
   );
 };
@@ -100,7 +101,6 @@ FilterButton.propTypes = {
   defaultFilters: PropTypes.object,
   initialState: PropTypes.object.isRequired,
   defaultState: PropTypes.object.isRequired,
-  filteredAction: PropTypes.func.isRequired,
   getClearButtonState: PropTypes.func.isRequired,
   getApplyButtonState: PropTypes.func.isRequired,
   searchProp: PropTypes.string.isRequired,

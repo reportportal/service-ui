@@ -54,26 +54,30 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 const MAKE_DECISION = 'make_decision';
 
 const POST_ISSUE_EVENTS_INFO = {
-  postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  postBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 };
 const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  loadBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  addNewIssue:
+    UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
+      MAKE_DECISION,
+    ),
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 };
 const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
-    MAKE_DECISION,
-  ),
+  unlinkBtn:
+    UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
+      MAKE_DECISION,
+    ),
   cancelBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
@@ -235,7 +239,8 @@ export class UniqueErrorsPage extends Component {
     this.props.onUnlinkIssue(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
-        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+        unlinkBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
       },
     });
   };

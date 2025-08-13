@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { normalizeEventString } from 'components/main/analytics';
+import { normalizeEventString } from '../utils';
 import { getBasicClickEventParameters, getBasicSearchEventParameters } from './common/ga4Utils';
 
 const SIDEBAR = 'sidebar';

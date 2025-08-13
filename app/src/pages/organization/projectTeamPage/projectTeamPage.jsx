@@ -23,11 +23,13 @@ import { userRolesSelector } from 'controllers/pages';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { showModalAction } from 'controllers/modal';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { messages } from '../messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
@@ -43,22 +45,23 @@ export const ProjectTeamPage = () => {
   const hasPermission = canInviteInternalUser(userRoles);
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
 
   useEffect(() => {
     trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
-  }, []);
+  }, [trackEvent]);
 
   const onInvite = () => {
     dispatch(fetchMembersAction());
+    dispatch(fetchProjectAction(projectKey, true));
   };
 
   const showInviteUserModal = () => {
     dispatch(
       showModalAction({
-        id: 'inviteUserModal',
-        data: { onInvite },
+        component: <InviteUserModal level={Level.PROJECT} onInvite={onInvite} />,
       }),
     );
   };

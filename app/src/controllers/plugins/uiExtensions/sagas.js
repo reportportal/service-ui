@@ -53,18 +53,16 @@ export function* fetchExtensionManifests(action) {
       if (result.status !== 'fulfilled') {
         return acc;
       }
-      const { name: pluginName, details } = uiExtensionPlugins[index];
+      const { name: pluginName } = uiExtensionPlugins[index];
       return acc.concat({
         ...result.value,
         pluginName,
-        // TODO: make the entry point and other binary data part of the manifest on the plugin side
-        binaryData: details.binaryData,
       });
     }, []);
 
     yield put(fetchExtensionManifestsSuccessAction(manifestsArray));
   } catch (error) {
-    console.error('Plugin manifests load error'); // eslint-disable-line no-console
+    console.error('Plugin manifests load error');
   }
 }
 
@@ -74,7 +72,7 @@ export function* fetchExtensionManifest({ payload: plugin }) {
   if (!isManifestAvailable) {
     return;
   }
-  const { name: pluginName, details } = plugin;
+  const { name: pluginName } = plugin;
 
   try {
     const manifest = yield fetchPluginManifest(plugin);
@@ -83,11 +81,9 @@ export function* fetchExtensionManifest({ payload: plugin }) {
       updateExtensionManifestAction({
         ...manifest,
         pluginName,
-        // TODO: make the entry point and other binary data part of the manifest on the plugin side
-        binaryData: details.binaryData,
       }),
     );
   } catch (error) {
-    console.error(`${pluginName} plugin  manifest load error`); // eslint-disable-line no-console
+    console.error(`${pluginName} plugin  manifest load error`);
   }
 }

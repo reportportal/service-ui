@@ -31,11 +31,12 @@ import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
@@ -47,7 +48,7 @@ import { messages } from './messages';
 import styles from './testCaseSidePanel.scss';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
@@ -92,7 +93,9 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+    const { organizationSlug, projectSlug } = useSelector(
+      urlOrganizationAndProjectSelector,
+    ) as ProjectDetails;
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -143,7 +146,7 @@ export const TestCaseSidePanel = memo(
               aria-label={formatMessage(messages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
-              {Parser(CrossIcon)}
+              {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
           <PathBreadcrumb path={testCase.path} />
@@ -155,6 +158,7 @@ export const TestCaseSidePanel = memo(
                 <button
                   type="button"
                   className={cx('copy-button')}
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={handleCopyId}
                   aria-label={formatMessage(messages.copyId)}
                   data-automation-id="copy-test-case-id"

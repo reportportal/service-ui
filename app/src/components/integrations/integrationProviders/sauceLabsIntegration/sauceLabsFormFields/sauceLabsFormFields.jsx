@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { commonValidators } from 'common/utils/validation';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown } from '@reportportal/ui-kit';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldText } from 'componentLibrary/fieldText';
 import styles from './sauceLabsFormFields.scss';
@@ -127,7 +127,7 @@ export class SauceLabsFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.dataCenterOptions} defaultWidth={false} />
+            <Dropdown options={this.dataCenterOptions} />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>

@@ -28,7 +28,7 @@ import { TestCasePriority } from './types';
 
 import styles from './priorityIcon.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface PriorityIconProps {
   priority: TestCasePriority;

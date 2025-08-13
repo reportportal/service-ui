@@ -16,7 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { InjectedFormProps, reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { Modal, FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
@@ -33,8 +33,9 @@ import { commonMessages } from '../commonMessages';
 import { useCreateTestPlan } from './useCreateTestPlan';
 
 import styles from './createTestPlanModal.scss';
+import { FormEvent, MouseEvent } from 'react';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
 
@@ -59,10 +60,10 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
     description: '',
     attributes: [],
   },
-  validate: ({ name }) => ({
+  validate: ({ name }: { name: string }) => ({
     name: commonValidators.requiredField(name),
   }),
-})(({ dirty, handleSubmit }) => {
+})(({ dirty, handleSubmit }: InjectedFormProps<CreateTestPlanFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { isCreateTestPlanLoading, createTestPlan } = useCreateTestPlan();
@@ -73,7 +74,7 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
         {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(createTestPlan),
+    onClick: handleSubmit(createTestPlan) as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isCreateTestPlanLoading,
   };
 
@@ -92,7 +93,7 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-test-plan-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(createTestPlan)}>
+        <form onSubmit={handleSubmit(createTestPlan) as (event: FormEvent) => void}>
           <div className={cx('create-test-plan-modal__container')}>
             <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
               <FieldErrorHint provideHint={false}>

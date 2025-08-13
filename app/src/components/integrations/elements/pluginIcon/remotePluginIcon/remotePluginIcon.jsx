@@ -18,9 +18,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_ICON_TYPES } from 'components/integrations/constants';
+import { remoteExtensionIconType } from 'components/extensionLoader/extensionTypes';
 import { Image } from 'components/main/image';
 
-export const RemotePluginIcon = ({ icon = {}, className = '', ...rest }) => {
+export const RemotePluginIcon = ({
+  icon = {},
+  fallback = PLUGIN_DEFAULT_IMAGE,
+  className = '',
+  ...rest
+}) => {
   const { type, content } = icon;
 
   return type === PLUGIN_ICON_TYPES.SVG ? (
@@ -28,7 +34,7 @@ export const RemotePluginIcon = ({ icon = {}, className = '', ...rest }) => {
   ) : (
     <Image
       src={content}
-      fallback={PLUGIN_DEFAULT_IMAGE}
+      fallback={fallback}
       isStatic={type !== PLUGIN_ICON_TYPES.URL}
       preloaderColor="charcoal"
       className={className}
@@ -37,13 +43,7 @@ export const RemotePluginIcon = ({ icon = {}, className = '', ...rest }) => {
   );
 };
 RemotePluginIcon.propTypes = {
-  icon: PropTypes.shape({
-    type: PropTypes.oneOf([
-      PLUGIN_ICON_TYPES.SVG,
-      PLUGIN_ICON_TYPES.BASE_64,
-      PLUGIN_ICON_TYPES.URL,
-    ]),
-    content: PropTypes.string,
-  }),
+  icon: remoteExtensionIconType,
+  fallback: PropTypes.string,
   className: PropTypes.string,
 };

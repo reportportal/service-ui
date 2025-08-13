@@ -126,6 +126,7 @@ export class ProjectSelector extends Component {
                   ref(node);
                   this.controlNode = node;
                 }}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 tabIndex={0}
                 className={cx('current-project-block')}
                 onClick={this.toggleShowList}
@@ -148,7 +149,7 @@ export class ProjectSelector extends Component {
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
                   {Object.keys(projects)
-                    .sort()
+                    .sort((a, b) => a.localeCompare(b))
                     .map((project) => {
                       const { projectSlug, organizationSlug } = projects[project];
 

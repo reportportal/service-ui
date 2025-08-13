@@ -19,6 +19,8 @@ import {
   DELETE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
   FETCH_FILTERED_PROJECTS,
+  RENAME_PROJECT,
+  UNASSIGN_FROM_PROJECT,
 } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
@@ -38,6 +40,16 @@ export const deleteProjectAction = (project) => ({
   payload: project,
 });
 
+export const renameProjectAction = (project) => ({
+  type: RENAME_PROJECT,
+  payload: project,
+});
+
 export const fetchFilteredProjectAction = () => ({
   type: FETCH_FILTERED_PROJECTS,
+});
+
+export const unassignFromProjectAction = (user, project, onSuccess) => ({
+  type: UNASSIGN_FROM_PROJECT,
+  payload: { user, project, onSuccess },
 });

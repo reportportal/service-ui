@@ -92,9 +92,10 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     [organizationSlug, projectSlug],
   );
 
-  const indexingRunning = useMemo(() => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'), [
-    analyzerConfig,
-  ]);
+  const indexingRunning = useMemo(
+    () => JSON.parse(analyzerConfig[INDEXING_RUNNING] || 'false'),
+    [analyzerConfig],
+  );
 
   const checkIfConfirmationNeeded = (data) => {
     const newLogLinesValue = data[NUMBER_OF_LOG_LINES];

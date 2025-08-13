@@ -17,14 +17,14 @@
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { IScenario } from '../../../types';
 import { FieldSection } from './fieldSection';
 import { messages } from './messages';
 import styles from './scenario.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface ScenarioProps {
   scenario: IScenario;

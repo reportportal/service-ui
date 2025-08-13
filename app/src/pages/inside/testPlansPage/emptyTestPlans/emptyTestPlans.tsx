@@ -25,7 +25,7 @@ import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const benefitMessages = [
   messages.progressTracking,

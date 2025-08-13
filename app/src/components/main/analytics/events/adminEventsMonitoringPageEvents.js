@@ -15,7 +15,7 @@
  */
 
 import { ADMINISTRATE } from './adminProjectsPageEvents';
-import { getBasicClickEventParameters, normalizeEventParameter } from './common/ga4Utils';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 import { getRefineFiltersPanelEvents } from './common/testItemPages/actionEventsCreators';
 
 const basicEventMonitoringClickEventParams = getBasicClickEventParameters(ADMINISTRATE);
@@ -26,12 +26,6 @@ export const ADMIN_EVENT_MONITORING_PAGE_EVENTS = {
     place: 'search_field',
     icon_name: 'filter',
   },
-  CLICK_APPLY_BUTTON: (type) => ({
-    ...basicEventMonitoringClickEventParams,
-    modal: 'filter_monitoring',
-    element_name: 'apply',
-    type: normalizeEventParameter(type),
-  }),
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(ADMINISTRATE),
   },

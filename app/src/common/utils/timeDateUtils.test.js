@@ -21,6 +21,11 @@ import {
   daysBetween,
   getTimestampFromMinutes,
   getMinutesFromTimestamp,
+  hoursToSeconds,
+  daysToSeconds,
+  secondsToHours,
+  hoursToDays,
+  humanizeDays,
 } from './timeDateUtils';
 
 const NOW = Date.now();
@@ -124,5 +129,67 @@ describe('getTimestampFromMinutes', () => {
 describe('getMinutesFromTimestamp', () => {
   test('should return number', () => {
     expect(typeof getMinutesFromTimestamp(1514754000000)).toBe('number');
+  });
+});
+
+describe('hoursToSeconds', () => {
+  it('converts 1 hour to 3600 seconds', () => {
+    expect(hoursToSeconds(1)).toBe(3600);
+  });
+
+  it('converts 2.5 hours to 9000 seconds', () => {
+    expect(hoursToSeconds(2.5)).toBe(9000);
+  });
+});
+
+describe('daysToSeconds', () => {
+  it('converts 1 day to 86400 seconds', () => {
+    expect(daysToSeconds(1)).toBe(86400);
+  });
+
+  it('converts 0.5 days to 43200 seconds', () => {
+    expect(daysToSeconds(0.5)).toBe(43200);
+  });
+});
+
+describe('secondsToHours', () => {
+  it('converts 3600 seconds to 1 hour', () => {
+    expect(secondsToHours(3600)).toBe(1);
+  });
+
+  it('converts 9000 seconds to 2.5 hours', () => {
+    expect(secondsToHours(9000)).toBe(2.5);
+  });
+});
+
+describe('hoursToDays', () => {
+  it('converts 24 hours to 1 day', () => {
+    expect(hoursToDays(24)).toBe(1);
+  });
+
+  it('converts 36 hours to 1.5 days', () => {
+    expect(hoursToDays(36)).toBe(1.5);
+  });
+});
+
+describe('humanizeDays', () => {
+  it('should return "a day" for 1 day in English', () => {
+    expect(humanizeDays(1, 'en')).toBe('a day');
+  });
+
+  it('should return "5 days" for 5 days in English', () => {
+    expect(humanizeDays(5, 'en')).toBe('5 days');
+  });
+
+  it('should return "день" for 1 day in Russian', () => {
+    expect(humanizeDays(1, 'ru')).toBe('день');
+  });
+
+  it('should return "5 дней" for 5 days in Russian', () => {
+    expect(humanizeDays(5, 'ru')).toBe('5 дней');
+  });
+
+  it('should return "3 дня" for 3 days in Russian', () => {
+    expect(humanizeDays(3, 'ru')).toBe('3 дня');
   });
 });

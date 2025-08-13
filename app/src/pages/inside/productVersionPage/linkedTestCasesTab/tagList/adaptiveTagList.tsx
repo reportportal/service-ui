@@ -18,7 +18,7 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import styles from './tagList.scss';
 import { messages } from './messages';
 import {
@@ -30,7 +30,7 @@ import {
   OFFSET_TOLERANCE,
 } from './constants';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AdaptiveTagListProps {
   tags: string[];
@@ -44,7 +44,7 @@ export const AdaptiveTagList = ({
   defaultVisibleLines = DEFAULT_VISIBLE_LINES,
 }: AdaptiveTagListProps) => {
   const { formatMessage } = useIntl();
-  const listRef = useRef(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const [count, setCount] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
@@ -60,7 +60,7 @@ export const AdaptiveTagList = ({
 
     const tagElementsWithoutButtons = [...parentElement.children].filter(
       (child) => !child.classList.contains('tag-list__item--button'),
-    );
+    ) as HTMLElement[];
 
     if (isEmpty(tagElementsWithoutButtons)) {
       return;
@@ -97,7 +97,7 @@ export const AdaptiveTagList = ({
 
     const tagElementsWithoutButtons = [...parentElement.children].filter(
       (child) => !child.classList.contains('tag-list__item--button'),
-    );
+    ) as HTMLElement[];
 
     if (isEmpty(tagElementsWithoutButtons)) {
       return;

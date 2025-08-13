@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm } from 'redux-form';
 import { useSelector } from 'react-redux';
@@ -22,8 +23,8 @@ import { Button } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useEffect, useState } from 'react';
 import { FilterInput } from './filterInput/filterInput';
+import { FILTER_FORM } from '../constants';
 import { messages } from './messages';
 import styles from './filterContent.scss';
 
@@ -34,7 +35,6 @@ export const FilterContentWrapped = ({
   setAppliedFiltersCount,
   onFilterChange,
   defaultFilters,
-  filteredAction,
   initialState,
   defaultState,
   initialize,
@@ -46,7 +46,7 @@ export const FilterContentWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const formValues = useSelector((state) => getFormValues('filter')(state));
+  const formValues = useSelector((state) => getFormValues(FILTER_FORM)(state));
   const [isClear, setIsClear] = useState(true);
   const [isApply, setIsApply] = useState(true);
 
@@ -54,7 +54,9 @@ export const FilterContentWrapped = ({
     initialize(initialState);
   }, []);
 
-  const clearAll = () => initialize(defaultState);
+  const clearAll = () => {
+    initialize(defaultState);
+  };
 
   useEffect(() => {
     setIsClear(getClearButtonState(formValues));
@@ -70,6 +72,7 @@ export const FilterContentWrapped = ({
 
     const fields = Object.values(defaultFilters).reduce((acc, { filterName, defaultCondition }) => {
       const value = formData[filterName].toString();
+
       acc[filterName] = {
         value,
         condition: defaultCondition || formData[`${filterName}_condition`],
@@ -81,11 +84,10 @@ export const FilterContentWrapped = ({
 
     onFilterChange(fields);
     setAppliedFiltersCount(appliedFiltersCount);
-    filteredAction();
     setIsOpen(false);
 
     if (event) {
-      trackEvent(event(fields, initialState));
+      trackEvent(event(fields));
     }
   };
 
@@ -103,6 +105,7 @@ export const FilterContentWrapped = ({
             variant={'text'}
             onClick={clearAll}
             disabled={isClear}
+            adjustWidthOn="content"
           >
             {formatMessage(messages.clearAllFilters)}
           </Button>
@@ -127,7 +130,6 @@ FilterContentWrapped.propTypes = {
   defaultFilters: PropTypes.object.isRequired,
   initialState: PropTypes.object.isRequired,
   defaultState: PropTypes.object.isRequired,
-  filteredAction: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -141,5 +143,5 @@ FilterContentWrapped.defaultProps = {
 };
 
 export const FilterContent = reduxForm({
-  form: 'filter',
+  form: FILTER_FORM,
 })(FilterContentWrapped);

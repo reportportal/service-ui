@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 // SVG imports
 declare module '*.svg' {
-  const content: string;
-  export default content;
+  import { FC, SVGProps } from 'react';
+
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>;
+  export default ReactComponent;
 }
 
 // SCSS module imports
@@ -34,16 +36,16 @@ declare module '*.css' {
 
 // Image imports
 declare module '*.png' {
-  const src: string;
-  export default src;
+  const value: string;
+  export default value;
 }
 
 declare module '*.jpg' {
-  const src: string;
-  export default src;
+  const value: string;
+  export default value;
 }
 
 declare module '*.jpeg' {
-  const src: string;
-  export default src;
+  const value: string;
+  export default value;
 }

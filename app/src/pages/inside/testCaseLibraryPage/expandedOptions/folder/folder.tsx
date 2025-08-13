@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent } from 'react';
 import classNames from 'classnames/bind';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import styles from './folder.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 type Folder = {
   name: string;
@@ -45,7 +45,15 @@ export const Folder = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = useCallback(
-    ({ event, name, count }) => {
+    ({
+      event,
+      name,
+      count,
+    }: {
+      event: ReactMouseEvent<HTMLDivElement, MouseEvent>;
+      name: string;
+      count?: number;
+    }) => {
       event.stopPropagation();
 
       setIsOpen((prevState) => !prevState);

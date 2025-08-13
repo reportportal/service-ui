@@ -20,10 +20,8 @@ import { useIntl } from 'react-intl';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
 import {
@@ -41,6 +39,7 @@ import { SORTING_KEY } from 'controllers/organization/projects';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
+import { OrganizationUsersActionMenu } from './organizationUsersActionMenu';
 import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -58,23 +57,7 @@ const OrgTeamListTableWrapped = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { organizationSlug } = useSelector(urlOrganizationAndProjectSelector);
   const currentUser = useSelector(userInfoSelector);
-
-  const renderRowActions = () => (
-    <Popover
-      placement={'bottom-end'}
-      content={
-        <div className={cx('row-action-menu')}>
-          <p>Manage assignments</p>
-        </div>
-      }
-    >
-      <i className={cx('menu-icon')}>
-        <MeatballMenuIcon />
-      </i>
-    </Popover>
-  );
 
   const data = useMemo(
     () =>
@@ -87,6 +70,7 @@ const OrgTeamListTableWrapped = ({
           instance_role: instanceRole,
           last_login_at: lastLogin,
           org_role: orgRole,
+          account_type: accountType,
         }) => {
           const projectsCount = stats.project_stats.total_count;
           const isCurrentUser = id === currentUser.id;
@@ -109,10 +93,15 @@ const OrgTeamListTableWrapped = ({
             },
             permissions: orgRole,
             projects: projectsCount,
+            metaData: {
+              id,
+              fullName,
+              accountType,
+            },
           };
         },
       ),
-    [users, organizationSlug, currentUser.id],
+    [users, currentUser.id],
   );
 
   const primaryColumn = {
@@ -159,7 +148,7 @@ const OrgTeamListTableWrapped = ({
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
       showPagination={users.length > 0}
-      renderRowActions={renderRowActions}
+      renderRowActions={(metaData) => <OrganizationUsersActionMenu user={metaData} />}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}

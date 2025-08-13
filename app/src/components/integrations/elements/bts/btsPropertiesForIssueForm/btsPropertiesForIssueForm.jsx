@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, Dropdown } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -32,7 +32,6 @@ import { URLS } from 'common/urls';
 import { withPopover } from 'componentLibrary/popover';
 import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { InputWithEye } from 'components/inputs/inputWithEye';
@@ -425,7 +424,6 @@ export class BtsPropertiesForIssueForm extends Component {
                         value={this.state.issueType}
                         onChange={this.handleIssueTypeChange}
                         options={this.issueTypeDropdownOptions}
-                        defaultWidth={false}
                       />
                     </FieldErrorHint>
                   </FieldElement>

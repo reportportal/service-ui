@@ -18,6 +18,7 @@ export { NAMESPACE, FETCH_ORGANIZATION_USERS, SEARCH_KEY } from './constants';
 export {
   prepareActiveOrganizationUsersAction,
   fetchOrganizationUsersAction,
+  unassignFromOrganizationAction,
 } from './actionCreators';
 export { usersPaginationSelector, usersSelector, loadingSelector } from './selectors';
 export { usersSagas } from './sagas';

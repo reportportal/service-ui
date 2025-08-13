@@ -20,7 +20,7 @@ import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testC
 import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
 import styles from './stepsList.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface StepsListProps {
   steps: StepData[];

@@ -29,11 +29,11 @@ export const FilterInput = ({ filter, onChange }) => {
     <div className={cx('filter-item', fieldsWrapperClassName)}>
       <span className={cx('label')}>{title}</span>
       <div className={cx('container')}>
-        {fields.map(({ component, name, containerClassName, props }) => {
+        {fields.map(({ component, name, containerClassName, format, props }) => {
           const InputComponent = component;
           return (
             <div key={filterName} className={cx('input-wrapper', containerClassName)}>
-              <FieldProvider name={name} {...props}>
+              <FieldProvider name={name} format={format} {...props}>
                 <InputComponent onClear={() => onClear(name)} />
               </FieldProvider>
             </div>
@@ -55,6 +55,7 @@ FilterInput.propTypes = {
         component: PropTypes.elementType,
         name: PropTypes.string.isRequired,
         containerClassName: PropTypes.string,
+        format: PropTypes.func,
         props: PropTypes.object,
       }),
     ),

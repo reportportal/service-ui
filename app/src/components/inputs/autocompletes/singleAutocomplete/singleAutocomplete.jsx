@@ -82,14 +82,16 @@ export class SingleAutocomplete extends Component {
     nakedView: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItem === item,
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItem) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItem === item,
+        ...rest,
+      });
 
   render() {
     const {

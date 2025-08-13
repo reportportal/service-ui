@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import isNumber from 'lodash.isnumber';
+import { isNumber } from 'lodash';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
@@ -13,7 +13,7 @@ import { Steps } from './steps';
 
 import styles from './testCaseDetails.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const messages = defineMessages({
   requirementsLink: {

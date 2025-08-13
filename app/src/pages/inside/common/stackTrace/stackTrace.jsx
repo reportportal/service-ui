@@ -198,15 +198,8 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const {
-      items,
-      loadMore,
-      loading,
-      intl,
-      hideAdditionalCells,
-      designMode,
-      extensions,
-    } = this.props;
+    const { items, loadMore, loading, intl, hideAdditionalCells, designMode, extensions } =
+      this.props;
 
     return (
       <React.Fragment>

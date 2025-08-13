@@ -29,7 +29,7 @@ import {
  * @param values? {object}
  * @returns {{type: string, payload: {message: string, type: (string), uid: number}}}
  */
-export const showNotification = ({ type, messageId, message = '', values = {} }) => ({
+export const showNotification = ({ type, message = '', messageId = '', values = {} }) => ({
   type: SHOW_NOTIFICATION,
   payload: {
     message,
@@ -57,7 +57,7 @@ export const showDefaultErrorNotification = ({ message }) => ({
   },
 });
 
-export const showSuccessNotification = ({ messageId, message = '', values = {} }) =>
+export const showSuccessNotification = ({ message = '', messageId = '', values = {} }) =>
   showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.SUCCESS });
-export const showErrorNotification = ({ messageId, message = '', values = {} }) =>
+export const showErrorNotification = ({ message = '', messageId = '', values = {} }) =>
   showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.ERROR });

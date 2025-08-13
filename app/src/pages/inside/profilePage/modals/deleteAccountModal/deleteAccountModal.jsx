@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { logoutAction } from 'controllers/auth';
 import { Input } from 'components/inputs/input';
 import { ACCOUNT_REMOVED_PAGE } from 'controllers/pages';
-import { deleteUserAccountAction } from 'controllers/user';
+import { deleteUserAccountAction, idSelector } from 'controllers/user';
 import styles from './deleteAccountModal.scss';
 
 const cx = classNames.bind(styles);
@@ -62,6 +62,7 @@ const DeleteAccount = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
+  const userId = useSelector(idSelector);
   const [confirmationValue, setConfirmationValue] = useState('');
 
   const onChange = (e) => {
@@ -81,7 +82,7 @@ const DeleteAccount = ({ data }) => {
       dispatch(logoutAction(ACCOUNT_REMOVED_PAGE));
     };
 
-    dispatch(deleteUserAccountAction(onSuccess));
+    dispatch(deleteUserAccountAction(onSuccess, userId));
   };
 
   const deleteButton = {

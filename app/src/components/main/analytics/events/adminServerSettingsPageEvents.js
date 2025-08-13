@@ -96,11 +96,6 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     place: 'section_footer_links',
     link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
   }),
-  onClickFooterLink: (linkName, isPreview) => ({
-    ...basicClickEventParametersAdminServerSettingsPage,
-    place: isPreview ? 'preview_footer' : 'footer',
-    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? linkName : 'custom_link',
-  }),
   // GA3 events
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,

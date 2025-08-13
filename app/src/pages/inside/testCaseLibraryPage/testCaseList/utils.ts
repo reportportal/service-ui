@@ -17,7 +17,7 @@
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
 
-const dateFnsLocales = {
+const dateFnsLocales: Record<string, Locale> = {
   en: enUS,
   'en-US': enUS,
   ru,

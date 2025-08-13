@@ -77,6 +77,7 @@ export const HeaderConfig = ({ filters, setFilters }) => {
                   className={cx('filter-popover__item', 'filter-popover__item--popover', {
                     'filter-popover__item--popover-open': isInnerFilterOpen,
                   })}
+                  // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                   tabIndex={0}
                 >
                   <span>{formatMessage(messages.executionStatus)}</span>
@@ -98,6 +99,7 @@ export const HeaderConfig = ({ filters, setFilters }) => {
               'with-applied': appliedFiltersCount,
               opened: isMainFilterOpen,
             })}
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
             tabIndex={0}
           >
             <div className={cx('header-config__filters--filter-icon-wrapper')}>

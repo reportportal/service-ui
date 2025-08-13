@@ -20,7 +20,7 @@ import { BubblesLoader } from '@reportportal/ui-kit';
 
 import styles from './loadingSubmitButton.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface LoadingSubmitButtonProps {
   isLoading: boolean;

@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 
 import styles from './modalLoadingOverlay.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface ModalLoadingOverlayProps {
   isVisible: boolean;

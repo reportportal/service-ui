@@ -17,6 +17,10 @@
 import { URLS } from 'common/urls';
 import { GROUP_TYPES_BY_PLUGIN_NAMES_MAP } from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import {
+  PLUGIN_TYPE_EXTENSION,
+  PLUGIN_TYPE_REMOTE,
+} from 'controllers/plugins/uiExtensions/constants';
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
   integrations.filter((integration) => integration.integrationType.name === integrationName);
@@ -52,7 +56,10 @@ export const isPostIssueActionAvailable = (integrations) =>
 
 export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
 
-export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
+export const filterEnabledExternalPlugins = (plugins = []) =>
+  plugins.filter(
+    (item) => item.enabled && [PLUGIN_TYPE_REMOTE, PLUGIN_TYPE_EXTENSION].includes(item.pluginType),
+  );
 
 export const filterAvailablePlugins = (plugins = []) =>
   plugins.filter((item) => {

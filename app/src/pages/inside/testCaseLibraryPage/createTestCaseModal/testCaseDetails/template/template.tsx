@@ -15,17 +15,17 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
+import { noop } from 'lodash';
 import classNames from 'classnames/bind';
 import { FieldNumber } from '@reportportal/ui-kit';
 
 import { FieldProvider } from 'components/fields';
 
-import { noop } from 'common/utils';
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
 import styles from './template.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const messages = defineMessages({
   template: {

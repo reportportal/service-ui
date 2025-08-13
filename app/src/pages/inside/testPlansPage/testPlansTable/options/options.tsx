@@ -25,7 +25,7 @@ import { messages } from '../messages';
 
 import styles from './options.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const Options = () => {
   const { formatMessage } = useIntl();

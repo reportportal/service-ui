@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Field, formValueSelector } from 'redux-form';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
   FilterButton,
+  FILTER_FORM,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
@@ -28,16 +31,24 @@ import {
   getRangeComparisons,
   getTimeRange,
   messages as helpMessage,
+  timeRangeValues,
 } from 'components/main/filterButton';
-import { fetchFilteredProjectAction } from 'controllers/organization/projects';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+} from 'components/main/dateRange';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import styles from './projectsFilter.scss';
 
 const cx = classNames.bind(styles);
+
+const selector = formValueSelector(FILTER_FORM);
+
 export const ProjectsFilter = ({
   entities,
   onFilterChange,
@@ -45,10 +56,17 @@ export const ProjectsFilter = ({
   setAppliedFiltersCount,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const timeRange = getTimeRange(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
+  const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
+
+  const onInput = (e) => {
+    const value = e.target.value;
+    const filtered = value.replace(/[^0-9]/g, '');
+    const cleaned = filtered.replace(/^0+/, '');
+    e.target.value = cleaned;
+  };
 
   const filters = {
     [LAST_RUN_DATE_FILTER_NAME]: {
@@ -62,7 +80,17 @@ export const ProjectsFilter = ({
           props: {
             value: timeRange[0].value,
             options: timeRange,
-            placeholder: formatMessage(messages.lastRunDatePlaceholder),
+            formatDisplayedValue: (displayedValue) =>
+              formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
+            notScrollable: true,
+            footer: (
+              <Field
+                name={LAST_RUN_DATE_FILTER_NAME}
+                component={DateRangeFormField}
+                format={parseFormattedDate}
+                parse={formatDateRangeToMinutesString}
+              />
+            ),
           },
         },
       ],
@@ -88,10 +116,11 @@ export const ProjectsFilter = ({
           props: {
             value: '',
             placeholder: formatMessage(messages.launchesPlaceholder),
-            type: 'number',
             helpText: formatMessage(helpMessage.helpText),
             clearable: true,
             defaultWidth: false,
+            type: 'text',
+            onInput,
           },
         },
       ],
@@ -117,24 +146,15 @@ export const ProjectsFilter = ({
           props: {
             value: '',
             placeholder: formatMessage(messages.usersPlaceholder),
-            type: 'number',
             helpText: formatMessage(helpMessage.helpText),
             clearable: true,
             defaultWidth: false,
+            type: 'text',
+            onInput,
           },
         },
       ],
     },
-  };
-
-  const eventHandler = (fields, initialState) => {
-    const { type, condition } = getApplyFilterEventParams(
-      fields,
-      initialState,
-      LAST_RUN_DATE_FILTER_NAME,
-    );
-
-    return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
   };
 
   const defaultFilterState = {
@@ -155,6 +175,17 @@ export const ProjectsFilter = ({
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
   };
 
+  const eventHandler = (fields) => {
+    const { type, condition } = getApplyFilterEventParams(
+      fields,
+      initialFilterState,
+      entities[LAST_RUN_DATE_FILTER_NAME]?.value,
+      LAST_RUN_DATE_FILTER_NAME,
+    );
+
+    return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
+  };
+
   const getClearButtonState = (formValues) => {
     return [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
       (prop) => formValues?.[prop] === '',
@@ -166,7 +197,7 @@ export const ProjectsFilter = ({
       return false;
     }
 
-    let isApply = [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
+    let isApply = [LAUNCHES_FILTER_NAME, LAST_RUN_DATE_FILTER_NAME, TEAMMATES_FILTER_NAME].every(
       (prop) => formValues[prop] === initialFilterState[prop],
     );
 
@@ -193,7 +224,6 @@ export const ProjectsFilter = ({
       onFilterChange={onFilterChange}
       initialState={initialFilterState}
       defaultState={defaultFilterState}
-      filteredAction={() => dispatch(fetchFilteredProjectAction())}
       getClearButtonState={getClearButtonState}
       getApplyButtonState={getApplyButtonState}
       searchProp="name"

@@ -16,7 +16,6 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
-import { CONDITION_ANY } from 'components/filterEntities/constants';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -27,16 +26,9 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 };
 
 export const normalizeEventString = (string = '') =>
-  string
-    .trim()
-    .replace(/\s+|-/g, '_')
-    .toLowerCase();
+  string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-export const getAppVersion = (buildVersion) =>
-  buildVersion
-    ?.split('.')
-    .splice(0, 2)
-    .join('.');
+export const getAppVersion = (buildVersion) => buildVersion?.split('.').splice(0, 2).join('.');
 
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
   const {
@@ -76,15 +68,24 @@ export const baseEventParametersShape = PropTypes.shape({
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
 
-export const getApplyFilterEventParams = (fields, initialState, conditionProp) => {
-  const type = Object.keys(fields)
+export const getApplyFilterEventParams = (
+  fields,
+  initialState,
+  initialDateState,
+  conditionProp,
+) => {
+  const { [conditionProp]: dateField, ...fieldsWithoutDate } = fields;
+
+  let type = Object.keys(fieldsWithoutDate)
     .filter((field) => fields[field].value.toString() !== initialState[field].toString())
     .join('#');
 
-  const condition =
-    fields[conditionProp].value !== initialState[conditionProp]
-      ? fields[conditionProp]?.value || CONDITION_ANY
-      : undefined;
+  let condition;
 
-  return { type, condition };
+  if (dateField.value !== initialDateState) {
+    condition = dateField?.value;
+    type = `${type}#${conditionProp}`;
+  }
+
+  return { type, condition: condition || 'not_set' };
 };

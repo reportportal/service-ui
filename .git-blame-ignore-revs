@@ -1,0 +1,10 @@
+# https://www.git-tower.com/blog/how-to-exclude-commits-from-git-blame#option-1-creating-a-git-blame-ignore-revs-file
+
+# 2025-06-30 Apply upgraded prettier 3.6.2
+810d7aa8d4c0f9c37e9a7c50f6dc1b53d0932687
+
+# 2019-12-11 Update prettier to 1.19.1
+9465b83d2be2f9bc92bee12324f5bc875171e1b0
+
+# 2018-04-09 EPMRPP-33955: Apply prettier formatting
+1e1b2e622f25833a3c0aad95beb4a6ab6aa48e1b

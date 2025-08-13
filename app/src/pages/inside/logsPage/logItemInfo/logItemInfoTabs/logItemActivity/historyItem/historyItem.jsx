@@ -63,7 +63,6 @@ export class HistoryItem extends Component {
       newValue: PropTypes.string,
       field: PropTypes.string.isRequired,
     }).isRequired,
-    projectId: PropTypes.string.isRequired,
     filterId: PropTypes.string.isRequired,
     patterns: PropTypes.array,
     onClick: PropTypes.func,

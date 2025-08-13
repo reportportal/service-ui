@@ -30,11 +30,6 @@ const messages = defineMessages({
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full name may contain only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot. Space is permitted (from 3 to 256 symbols)',
-  },
-  nameCreateUserHint: {
-    id: 'CreateUserModal.nameCreateUserHint',
-    defaultMessage:
       'Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)',
   },
   passwordCreateUserHint: {
@@ -309,6 +304,10 @@ const messages = defineMessages({
   keywordMatcherHint: {
     id: 'DeleteProjectModal.keywordMatcherHint',
     defaultMessage: 'The entered text does not match the required keyword',
+  },
+  emailInviteUserHint: {
+    id: 'CreateUserModal.emailInviteUserHint',
+    defaultMessage: 'Please enter a valid email',
   },
   projectVersionLengthHint: {
     id: 'ListOfVersionsPage.projectVersionLengthHint',

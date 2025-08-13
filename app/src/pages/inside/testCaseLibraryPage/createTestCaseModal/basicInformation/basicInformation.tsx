@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { noop } from 'lodash';
 import classNames from 'classnames/bind';
 import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
@@ -23,12 +24,11 @@ import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTa
 import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
 
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { noop } from 'common/utils';
 import { messages } from './messages';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface BasicInformationProps {
   className?: string;

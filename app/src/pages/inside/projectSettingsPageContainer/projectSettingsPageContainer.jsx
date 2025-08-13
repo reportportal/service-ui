@@ -38,17 +38,17 @@ import {
   TEST_DATA,
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
+import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
+import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
 import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
+import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Integrations } from './content/integrations';
-import { DefectTypes } from './content/defectTypes';
-import { DemoDataTab } from './content/demoDataContent';
-import { Navigation } from './navigation';
-import { Header } from './header';
-import { PatternAnalysis } from './content/patternAnalysis';
-import { Notifications } from './content/notifications';
+import { Header } from 'pages/inside/common/header';
+import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
+import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { TestData, Environments } from './content/testLibrary';
@@ -205,7 +205,7 @@ export const ProjectSettingsPageContainer = () => {
       return null;
     }
     return config[activeTab].component;
-  }, [activeTab, config]);
+  }, [activeTab, config, dispatch]);
 
   return (
     <ProjectSettingsAnalyticsWrapper>

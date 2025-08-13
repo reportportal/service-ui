@@ -217,12 +217,12 @@ export class AnalyticsTab extends Component {
           <p className={cx('analytics-info')}>{Parser(formatMessage(messages.analyticsInfo))}</p>
 
           <div className={cx('analytics-list')}>
-            <div className={cx('analytics-list-toggler')} onClick={this.onListClick}>
+            <button className={cx('analytics-list-toggler')} onClick={this.onListClick}>
               <span>{formatMessage(messages.analyticsList)}</span>
               <span className={cx('arrow', { rotated: this.state.listShown })}>
                 {Parser(ArrowRightIcon)}
               </span>
-            </div>
+            </button>
 
             <div className={cx('list-message', { 'list-shown': this.state.listShown })}>
               <p>{formatMessage(messages.analyticsListMessage)}</p>
