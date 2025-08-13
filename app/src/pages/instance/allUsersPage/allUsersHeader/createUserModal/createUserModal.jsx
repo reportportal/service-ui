@@ -256,7 +256,14 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
             {formatMessage(messages.inviteDescription)}
           </span>
         </div>
-        <FieldArray name={ORGANIZATIONS} component={InstanceAssignment} />
+        <FieldArray
+          name={ORGANIZATIONS}
+          component={InstanceAssignment}
+          props={{
+            formName: CREATE_USER_FORM,
+            formNamespace: 'organization',
+          }}
+        />
       </form>
     </Modal>
   );

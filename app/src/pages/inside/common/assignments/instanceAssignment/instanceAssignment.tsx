@@ -103,11 +103,16 @@ const messages = defineMessages({
   },
 });
 
-interface InstanceAssignmentProps {
+interface InstanceAssignmentItem {
   id?: number;
   name: string;
   role: string;
   projects: Project[];
+}
+
+interface InstanceAssignmentProps extends MyFieldArrayProps<InstanceAssignmentItem> {
+  formName: string;
+  formNamespace?: string;
 }
 
 interface MyFieldArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -138,20 +143,23 @@ const FORM_FIELDS = {
   },
 };
 
-const selector = formValueSelector(CREATE_USER_FORM);
-
-export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignmentProps>) => {
+export const InstanceAssignment = ({
+  fields,
+  formName,
+  formNamespace,
+}: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const errors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state)) as {
+  const selector = formValueSelector(formName);
+  const errors = useSelector((state) => getFormSyncErrors(formName)(state)) as {
     organization: { name: string };
   };
-  const meta = useSelector((state) => getFormMeta(CREATE_USER_FORM)(state)) as {
+  const meta = useSelector((state) => getFormMeta(formName)(state)) as {
     organization?: { name?: { touched?: boolean } };
   };
   const hasOrgNameError = !!errors?.organization?.name && !!meta?.organization?.name?.touched;
   const organization = useSelector(
-    (state: ReduxFormState): Organization => selector(state, ORGANIZATION) as Organization,
+    (state: ReduxFormState): Organization => selector(state, formNamespace) as Organization,
   );
   const [notAssignedOrganizations, setNotAssignedOrganizations] = useState<
     OrganizationSearchesItem[]
@@ -164,7 +172,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
 
   const resetOrganization = () => {
     dispatch(
-      change(CREATE_USER_FORM, ORGANIZATION, {
+      change(formName, formNamespace, {
         name: null,
         role: false,
         projects: [],
@@ -209,7 +217,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
   };
 
   const handleSubmit = () => {
-    const { name, role, projects } = organization as InstanceAssignmentProps;
+    const { name, role, projects } = organization as InstanceAssignmentItem;
 
     setIsOpen(false);
     setOrganizationProjects([]);
