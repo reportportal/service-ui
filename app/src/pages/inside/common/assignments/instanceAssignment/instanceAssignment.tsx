@@ -17,7 +17,13 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { WrappedFieldArrayProps, formValueSelector, change, getFormSyncErrors } from 'redux-form';
+import {
+  WrappedFieldArrayProps,
+  formValueSelector,
+  change,
+  getFormSyncErrors,
+  getFormMeta,
+} from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -52,7 +58,7 @@ import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import {
   CREATE_USER_FORM,
   ORGANIZATIONS,
-} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal';
+} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 import styles from './instanceAssignment.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -140,7 +146,10 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
   const errors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state)) as {
     organization: { name: string };
   };
-  const hasOrgNameError = !!errors?.organization?.name;
+  const meta = useSelector((state) => getFormMeta(CREATE_USER_FORM)(state)) as {
+    organization?: { name?: { touched?: boolean } };
+  };
+  const hasOrgNameError = !!errors?.organization?.name && !!meta?.organization?.name?.touched;
   const organization = useSelector(
     (state: ReduxFormState): Organization => selector(state, ORGANIZATION) as Organization,
   );
