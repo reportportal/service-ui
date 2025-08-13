@@ -33,7 +33,6 @@ export const INITIAL_STATE = {
 export const NAMESPACE = 'dashboards';
 export const FETCH_DASHBOARDS = 'fetchDashboards';
 export const FETCH_DASHBOARD = 'fetchDashboard';
-export const COPY_DASHBOARD_CONFIG = 'copyDashboardConfig';
 export const ADD_DASHBOARD = 'addDashboard';
 export const ADD_DASHBOARD_SUCCESS = 'addDashboardSuccess';
 export const UPDATE_DASHBOARD = 'updateDashboard';
