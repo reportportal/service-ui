@@ -1,0 +1,65 @@
+/*
+  * Copyright 2025 EPAM Systems
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+
+.inactivity-timeout-form {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 65px;
+  margin-bottom: 40px;
+
+  .content {
+    display: flex;
+    gap: 26px;
+    padding-top: 25px;
+    justify-content: center;
+    align-items: center;
+
+    .label {
+      width: 154px;
+      color: $COLOR__charcoal-grey;
+      font-family: $FONT-REGULAR;
+      font-size: 13px;
+    }
+
+    .timeout-dropdown {
+      width: 100px;
+    }
+
+    .timeout-select-list {
+      width: 184px;
+    }
+
+    .description {
+      color: $COLOR--gray-60;
+      font-family: $FONT-REGULAR;
+      font-size: 12px;
+      line-height: 14px;
+      width: 300px;
+    }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+
+    .content {
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+      gap: 10px;
+    }
+  }
+}

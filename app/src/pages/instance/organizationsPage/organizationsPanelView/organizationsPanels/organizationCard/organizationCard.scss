@@ -1,0 +1,108 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.organization-card {
+  width: 384px;
+  place-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  box-sizing: border-box;
+  height: 160px;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--item;
+  background-color: $COLOR--white-two;
+
+  i {
+    display: block;
+    height: 16px;
+  }
+}
+
+.last-update,
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+  width: 98px;
+}
+
+.last-update {
+  width: auto;
+  max-width: 152px;
+}
+
+.icon {
+  width: 16px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.date {
+  min-height: 20px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.cart-info {
+  display: flex;
+  gap: 10px;
+}
+
+.organization-name {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tooltip-wrapper {
+  width: 16px;
+}
+
+.organization-link {
+  text-decoration: none;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover:not(.disabled) {
+    color: $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    color: $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--topaz-focused;
+  }
+}
+
+.organization-card-menu {
+  margin-left: auto;
+}

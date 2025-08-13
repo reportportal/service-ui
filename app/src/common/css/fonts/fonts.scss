@@ -18,9 +18,12 @@
   @font-face {
     font-family: $fontFamily;
     src: url('#{$filePath}.eot');
-    src: url('#{$filePath}.eot?#iefix') format('embedded-opentype'),
-      url('#{$filePath}.woff2') format('woff2'), url('#{$filePath}.woff') format('woff'),
-      url('#{$filePath}.ttf') format('truetype'), url('#{$filePath}.svg##{$svgMark}') format('svg');
+    src:
+      url('#{$filePath}.eot?#iefix') format('embedded-opentype'),
+      url('#{$filePath}.woff2') format('woff2'),
+      url('#{$filePath}.woff') format('woff'),
+      url('#{$filePath}.ttf') format('truetype'),
+      url('#{$filePath}.svg##{$svgMark}') format('svg');
     font-weight: normal;
     font-style: normal;
   }

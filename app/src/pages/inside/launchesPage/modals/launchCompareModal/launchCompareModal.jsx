@@ -34,7 +34,7 @@ import {
 import { withModal, ModalLayout } from 'components/main/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { LaunchesComparisonChart } from 'components/widgets/singleLevelWidgets/charts';
 import styles from './launchCompareModal.scss';
 
@@ -62,12 +62,12 @@ const contentParameters = {
 @withModal('launchCompareModal')
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class LaunchCompareModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     data: PropTypes.shape({
       ids: PropTypes.array,
     }).isRequired,
@@ -81,8 +81,8 @@ export class LaunchCompareModal extends Component {
   }
 
   componentDidMount() {
-    const { activeProject, data } = this.props;
-    fetch(URLS.launchesCompare(activeProject, data.ids.join(','))).then(this.prepareConfig);
+    const { projectKey, data } = this.props;
+    fetch(URLS.launchesCompare(projectKey, data.ids.join(','))).then(this.prepareConfig);
   }
 
   prepareConfig = (content) => {

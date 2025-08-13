@@ -22,18 +22,19 @@ import {
   ASSIGN_TO_PROJECT,
   ASSIGN_TO_PROJECT_SUCCESS,
   ASSIGN_TO_PROJECT_ERROR,
-  UNASSIGN_FROM_PROJECT,
-  UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_API_KEYS,
   ADD_API_KEY,
   DELETE_API_KEY,
   FETCH_USER_SUCCESS,
   FETCH_USER,
+  FETCH_USER_INFO,
   FETCH_USER_ERROR,
   DELETE_API_KEY_SUCCESS,
   ADD_API_KEY_SUCCESS,
   DELETE_USER_ACCOUNT,
+  SET_ACTIVE_PROJECT_KEY,
   SET_LOG_TIME_FORMAT,
+  UPDATE_USER_INFO,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -56,9 +57,14 @@ export const setApiKeysAction = (apiKeys = []) => ({
   payload: apiKeys,
 });
 
-export const setActiveProjectAction = (project) => ({
+export const setActiveProjectAction = (activeProject) => ({
   type: SET_ACTIVE_PROJECT,
-  payload: project,
+  payload: activeProject,
+});
+
+export const setActiveProjectKeyAction = (activeProjectKey) => ({
+  type: SET_ACTIVE_PROJECT_KEY,
+  payload: activeProjectKey,
 });
 
 export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({
@@ -76,9 +82,9 @@ export const deleteApiKeyAction = (apiKeyId, successMessage, errorMessage, onSuc
   payload: { apiKeyId, successMessage, errorMessage, onSuccess },
 });
 
-export const deleteUserAccountAction = (onSuccess) => ({
+export const deleteUserAccountAction = (onSuccess, userId) => ({
   type: DELETE_USER_ACCOUNT,
-  payload: { onSuccess },
+  payload: { onSuccess, userId },
 });
 
 export const deleteApiKeySuccessAction = (apiKeyId) => ({
@@ -88,7 +94,13 @@ export const deleteApiKeySuccessAction = (apiKeyId) => ({
 
 export const fetchApiKeysAction = () => ({ type: FETCH_API_KEYS });
 
-export const fetchUserAction = () => ({ type: FETCH_USER });
+export const fetchUserAction = () => ({
+  type: FETCH_USER,
+});
+
+export const fetchUserInfoAction = () => ({
+  type: FETCH_USER_INFO,
+});
 
 export const setStartTimeFormatAction = (format) => ({
   type: SET_START_TIME_FORMAT,
@@ -114,12 +126,7 @@ export const assignToProjectErrorAction = (projectInfo) => ({
   payload: projectInfo,
 });
 
-export const unassignFromProjectAction = (project) => ({
-  type: UNASSIGN_FROM_PROJECT,
-  payload: project,
-});
-
-export const unassignFromProjectSuccessAction = (project) => ({
-  type: UNASSIGN_FROM_PROJECT_SUCCESS,
-  payload: project,
+export const updateUserInfoAction = (email, data, onSuccess) => ({
+  type: UPDATE_USER_INFO,
+  payload: { email, data, onSuccess },
 });

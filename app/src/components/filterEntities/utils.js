@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { getAppliedFilters } from 'controllers/instance/events/utils';
+
 export function bindDefaultValue(key, options = {}) {
   const { filterValues } = this.props;
   if (key in filterValues) {
@@ -25,3 +27,17 @@ export function bindDefaultValue(key, options = {}) {
     ...options,
   };
 }
+
+export const prepareQueryFilters = (filtersParams) => {
+  const { limit, sort, offset, order, ...rest } = filtersParams;
+
+  const searchCriteria = getAppliedFilters(rest)?.search_criterias;
+
+  return {
+    limit,
+    sort,
+    offset,
+    order,
+    search_criteria: searchCriteria,
+  };
+};

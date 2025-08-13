@@ -14,24 +14,6 @@
  * limitations under the License.
  */
 
-.login {
-  height: 20px;
-  max-width: 100%;
-  margin-right: 140px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-transform: uppercase;
-  text-overflow: ellipsis;
-  line-height: 20px;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 16px;
-  color: $COLOR--charcoal-grey;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-right: 0;
-  }
-}
 .name-line {
   position: relative;
   display: flex;
@@ -39,11 +21,13 @@
   max-width: 100%;
   margin-bottom: 10px;
   box-sizing: border-box;
-  font-family: $FONT-REGULAR;
-  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
   color: $COLOR--charcoal-grey;
-  white-space: nowrap;
   line-height: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   &:hover {
     .pencil-icon {
@@ -73,7 +57,7 @@
   min-height: 20px;
   margin-bottom: 10px;
   line-height: 20px;
-  font-family: $FONT-SEMIBOLD;
+  font-family: $FONT-REGULAR;
   font-size: 14px;
   color: $COLOR--charcoal-grey;
 

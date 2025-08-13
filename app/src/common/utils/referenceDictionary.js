@@ -54,6 +54,30 @@ export const docsReferences = {
   projectConfigurationDocs: 'https://reportportal.io/docs/configuration/ProjectConfiguration',
 };
 
+export const faqDictionary = {
+  configureReporting:
+    'https://reportportal.io/docs/log-data-in-reportportal/test-framework-integration/',
+  improvePerformance:
+    'https://reportportal.io/docs/installation-steps/OptimalPerformanceHardwareSetup',
+  configureAnalyzer:
+    'https://reportportal.io/docs/issues-troubleshooting/ResolveAnalyzerKnownIssues',
+  integrateJira: 'https://reportportal.io/docs/plugins/AtlassianJiraServer',
+  configureCertificate: 'https://reportportal.io/docs/installation-steps/SetupTSLSSLInTraefik2.0.x',
+  fileStorageOptions:
+    'https://reportportal.io/docs/installation-steps/ReportPortal23.1FileStorageOptions',
+  pricingOptions: 'https://reportportal.io/pricing/saas',
+  rpEmailRequestSupport: 'mailto:support@reportportal.io?subject=Support Request from RP instance',
+};
+
+export const servicesUpdate = {
+  api: 'https://github.com/reportportal/service-api/releases',
+  uat: 'https://github.com/reportportal/service-authorization/releases',
+  index: 'https://github.com/reportportal/service-index/releases',
+  jobs: 'https://github.com/reportportal/service-jobs/releases',
+  ui: 'https://github.com/reportportal/service-ui/releases',
+  analyzer: 'https://github.com/reportportal/service-auto-analyzer/releases',
+};
+
 export const widgetDocsReferences = {
   testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch',
 };

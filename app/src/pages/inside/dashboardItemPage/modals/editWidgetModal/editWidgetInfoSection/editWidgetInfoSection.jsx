@@ -22,10 +22,10 @@ import styles from './editWidgetInfoSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const EditWidgetInfoSection = ({ projectId, widgetSettings, activeWidget }) => (
+export const EditWidgetInfoSection = ({ projectKey, widgetSettings, activeWidget }) => (
   <div className={cx('edit-widget-info-section')}>
     <WidgetInfoBlock
-      projectId={projectId}
+      projectKey={projectKey}
       activeWidget={activeWidget}
       widgetSettings={widgetSettings}
     />
@@ -33,7 +33,7 @@ export const EditWidgetInfoSection = ({ projectId, widgetSettings, activeWidget 
 );
 
 EditWidgetInfoSection.propTypes = {
-  projectId: PropTypes.string.isRequired,
+  projectKey: PropTypes.string.isRequired,
   widgetSettings: PropTypes.object,
   activeWidget: PropTypes.object,
 };

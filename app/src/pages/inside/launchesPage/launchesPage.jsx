@@ -32,9 +32,9 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { projectConfigSelector } from 'controllers/project';
+import { projectConfigSelector, projectKeySelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -62,7 +62,7 @@ import {
   updateLaunchLocallyAction,
   updateLaunchesLocallyAction,
 } from 'controllers/launch';
-import { prevTestItemSelector } from 'controllers/pages';
+import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
@@ -70,6 +70,7 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -109,8 +110,7 @@ const messages = defineMessages({
   (state) => ({
     debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
-    url: URLS.launches(activeProjectSelector(state)),
+    url: URLS.launches(projectKeySelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
@@ -119,6 +119,8 @@ const messages = defineMessages({
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
+    projectKey: projectKeySelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -160,7 +162,6 @@ export class LaunchesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     sortingString: PropTypes.string,
-    activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
     toggleAllLaunchesAction: PropTypes.func,
@@ -188,6 +189,8 @@ export class LaunchesPage extends Component {
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
     isDemoInstance: PropTypes.bool,
+    userRoles: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -217,6 +220,7 @@ export class LaunchesPage extends Component {
     deleteLaunchesAction: () => {},
     highlightItemId: null,
     isDemoInstance: false,
+    userRoles: {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -307,22 +311,22 @@ export class LaunchesPage extends Component {
     });
   };
   onAddDashboard = (dashboard) => {
-    const { activeProject } = this.props;
+    const { projectKey } = this.props;
     if (dashboard.id) {
       return Promise.resolve(dashboard);
     }
-    return fetch(URLS.dashboards(activeProject), {
+    return fetch(URLS.dashboards(projectKey), {
       method: 'post',
       data: dashboard,
     });
   };
   onAddWidget = (widget, closeModal, dashboard) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
     this.onAddDashboard(dashboard).then(({ id }) => {
-      fetch(URLS.addDashboardWidget(activeProject, id), {
+      fetch(URLS.addDashboardWidget(projectKey, id), {
         method: 'put',
         data: { addWidget: widget },
       })
@@ -368,10 +372,10 @@ export class LaunchesPage extends Component {
   };
   autoAnalyseItem = (launch, data) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
-    fetch(URLS.launchAnalyze(activeProject), {
+    fetch(URLS.launchAnalyze(projectKey), {
       method: 'POST',
       data: {
         ...data,
@@ -400,10 +404,10 @@ export class LaunchesPage extends Component {
 
   patternAnalyseItem = (launch, data) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
-    fetch(URLS.launchAnalyze(activeProject), {
+    fetch(URLS.launchAnalyze(projectKey), {
       method: 'POST',
       data: {
         ...data,
@@ -449,7 +453,7 @@ export class LaunchesPage extends Component {
   confirmDeleteItems = (items) => {
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject, ids), {
+    fetch(URLS.launches(this.props.projectKey, ids), {
       method: 'delete',
     })
       .then(() => {
@@ -498,7 +502,7 @@ export class LaunchesPage extends Component {
   };
 
   fetchLaunchStatus = (launches) => {
-    fetch(URLS.launchStatus(this.props.activeProject, launches), {
+    fetch(URLS.launchStatus(this.props.projectKey, launches), {
       method: 'get',
     }).then((launchesWithStatus) => {
       const newLaunchesInProgress = this.state.launchesInProgress.filter(
@@ -668,6 +672,7 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       isDemoInstance,
+      userRoles,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -677,6 +682,7 @@ export class LaunchesPage extends Component {
     };
 
     const { finishedLaunchesCount } = this.state;
+    const canManageActions = canBulkEditItems(userRoles);
 
     return (
       <FilterEntitiesContainer
@@ -751,6 +757,7 @@ export class LaunchesPage extends Component {
                 noItemsBlock={
                   isDemoInstance ? <NoItemsDemo onGenerate={this.refreshLaunch} /> : undefined
                 }
+                selectable={canManageActions || !debugMode}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

@@ -38,7 +38,12 @@ export {
   getMinutesFromTimestamp,
   formatDuration,
   secondsToDays,
+  hoursToSeconds,
+  daysToSeconds,
+  secondsToHours,
+  hoursToDays,
   getApproximateTime,
+  humanizeDays,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
@@ -57,4 +62,5 @@ export { createNamespacedActionPredicate } from './createNamespacedActionPredica
 export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
 export { createExternalLink } from './createExternalLink';
+export { findAssignedProjectByOrganization } from './findAssignedProjectByOrganization';
 export { combineNameAndEmailToFrom, separateFromIntoNameAndEmail } from './fieldTransformer';

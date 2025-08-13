@@ -14,60 +14,39 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { regex } from 'common/utils/validation/validatorHelpers';
 import { validate } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
-import { projectInfoSelector } from 'controllers/project/selectors';
 import PropTypes from 'prop-types';
 
 const messages = defineMessages({
   recipientsPlaceholder: {
     id: 'AddEditNotificationModal.recipientsPlaceholder',
-    defaultMessage: 'User name/Email',
+    defaultMessage: 'Email',
   },
   recipientsError: {
     id: 'AddEditNotificationModal.recipientsError',
-    defaultMessage: 'Please enter existent user name on your project or valid email',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
 });
 
-const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
+export const RecipientsContainer = ({ error, ...rest }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
+
   const [recipientsWithError, setRecipientsWithError] = useState([]);
 
-  const emailValidation = (email) => {
-    return regex(/@/)(email);
-  };
-
-  const getEmailValidationError = (v) => {
-    if (emailValidation(v)) {
-      return !validate.email(v) && 'error';
-    }
-    return false;
-  };
-
-  const getValidationError = (v) => {
-    const emailValidationErrorType = getEmailValidationError(v);
-    if (emailValidationErrorType) {
-      return emailValidationErrorType;
-    }
-
-    const hasError = !emailValidation(v) && !projectInfo.users.some((user) => user.login === v);
-    if (hasError) {
-      !recipientsWithError.includes(v) && setRecipientsWithError([...recipientsWithError, v]);
-      return 'error';
-    } else {
-      const currentRecipientsWithError = recipientsWithError.filter((login) => login !== v);
-      currentRecipientsWithError.length !== recipientsWithError.length &&
-        setRecipientsWithError(currentRecipientsWithError);
+  const getEmailValidationError = (email) => {
+    if (validate.email(email)) {
       return false;
     }
+    !recipientsWithError.includes(email) && setRecipientsWithError([...recipientsWithError, email]);
+
+    return 'error';
   };
 
   const clearItemsError = () => {
@@ -80,17 +59,18 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
     return [...new Set(emails)];
   };
 
-  const recipientsError = recipientsWithError.length ? formatMessage(messages.recipientsError) : '';
+  const recipientsError =
+    recipientsWithError.length > 0 ? formatMessage(messages.recipientsError) : '';
 
   return (
     <AsyncMultipleAutocomplete
       placeholder={formatMessage(messages.recipientsPlaceholder)}
       minLength={1}
-      getURI={URLS.projectUsernamesSearch(activeProject)}
+      getURI={URLS.projectUsernamesSearch(projectKey)}
       creatable
       editable
       createWithoutConfirmation
-      getItemValidationErrorType={getValidationError}
+      getItemValidationErrorType={getEmailValidationError}
       clearItemsError={clearItemsError}
       parseInputValueFn={parseEmailsString}
       error={error || recipientsError}
@@ -98,13 +78,11 @@ const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
     />
   );
 };
-RecipientsContainerComponent.propTypes = {
-  projectInfo: PropTypes.object.isRequired,
+
+RecipientsContainer.propTypes = {
   error: PropTypes.string,
 };
-RecipientsContainerComponent.defaultProps = {
+
+RecipientsContainer.defaultProps = {
   error: '',
 };
-export const RecipientsContainer = connect((state) => ({
-  projectInfo: projectInfoSelector(state),
-}))(RecipientsContainerComponent);

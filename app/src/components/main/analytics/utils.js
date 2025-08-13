@@ -26,16 +26,9 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 };
 
 export const normalizeEventString = (string = '') =>
-  string
-    .trim()
-    .replace(/\s+|-/g, '_')
-    .toLowerCase();
+  string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-export const getAppVersion = (buildVersion) =>
-  buildVersion
-    ?.split('.')
-    .splice(0, 2)
-    .join('.');
+export const getAppVersion = (buildVersion) => buildVersion?.split('.').splice(0, 2).join('.');
 
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
   const {
@@ -47,12 +40,14 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
+    organizationId,
   } = baseEventParameters;
 
   const eventParameters = {
     instanceID: instanceId,
     version: getAppVersion(buildVersion),
     uid: `${userId}|${instanceId}`,
+    organization_id: `${organizationId}|${instanceId}`,
     auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
@@ -72,3 +67,25 @@ export const baseEventParametersShape = PropTypes.shape({
   projectInfoId: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 }).isRequired;
+
+export const getApplyFilterEventParams = (
+  fields,
+  initialState,
+  initialDateState,
+  conditionProp,
+) => {
+  const { [conditionProp]: dateField, ...fieldsWithoutDate } = fields;
+
+  let type = Object.keys(fieldsWithoutDate)
+    .filter((field) => fields[field].value.toString() !== initialState[field].toString())
+    .join('#');
+
+  let condition;
+
+  if (dateField.value !== initialDateState) {
+    condition = dateField?.value;
+    type = `${type}#${conditionProp}`;
+  }
+
+  return { type, condition: condition || 'not_set' };
+};

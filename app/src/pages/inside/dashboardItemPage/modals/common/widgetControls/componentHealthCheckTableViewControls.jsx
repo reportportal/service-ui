@@ -33,7 +33,7 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -104,7 +104,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
   ]);
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @track()
 @injectIntl
@@ -115,7 +115,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -173,19 +173,14 @@ export class ComponentHealthCheckTableViewControls extends Component {
 
   getItemAttributeKeysAllSearchURL = () => {
     const {
-      activeProject,
+      projectKey,
       widgetSettings: { contentParameters, filters },
     } = this.props;
     const filterId = filters?.length && filters[0].value;
     const isLatest =
       contentParameters?.widgetOptions.latest || MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
-    return URLS.itemAttributeKeysAllSearch(
-      activeProject,
-      filterId,
-      isLatest,
-      DEFAULT_LAUNCHES_LIMIT,
-    );
+    return URLS.itemAttributeKeysAllSearch(projectKey, filterId, isLatest, DEFAULT_LAUNCHES_LIMIT);
   };
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {

@@ -17,10 +17,20 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
-import { SORTING_KEY } from 'controllers/sorting/constants';
+import { SORTING_KEY, SORTING_ORDER_KEY } from 'controllers/sorting/constants';
 import { getStorageItem } from 'common/utils/storageUtils';
-import { userIdSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  assignedOrganizationsSelector,
+  assignedProjectsSelector,
+  userAccountRoleSelector,
+  userIdSelector,
+} from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { MANAGER } from 'common/constants/projectRoles';
+import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -34,7 +44,6 @@ export const currentPathSelector = (state) => {
 };
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
-export const projectIdSelector = (state) => payloadSelector(state).projectId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
 export const filterIdSelector = (state) => payloadSelector(state).filterId || ALL;
 export const testItemIdsSelector = (state) =>
@@ -96,33 +105,55 @@ export const prevPagePropertiesSelector = (
   mapping,
 ) => commonPagePropertiesSelector(query, namespace, mapping);
 
-export const createQueryParametersSelector = ({
-  namespace: staticNamespace,
+export const createQueryParametersSelector =
+  ({
+    namespace: staticNamespace,
+    defaultPagination,
+    defaultSorting,
+    sortingKey = SORTING_KEY,
+  } = {}) =>
+  (state, namespace) => {
+    const calculatedNamespace = staticNamespace || namespace;
+    const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
+    const query = pagePropertiesSelector(state, calculatedNamespace);
+    const queryParameters = {
+      ...calculatedPagination,
+      [sortingKey]: defaultSorting || '',
+      ...query,
+    };
+    const defaultPageSize = calculatedPagination[SIZE_KEY];
+    if (Number(queryParameters[SIZE_KEY]) < 0) {
+      queryParameters[SIZE_KEY] = defaultPageSize;
+    }
+    if (Number(queryParameters[PAGE_KEY]) < 0) {
+      queryParameters[PAGE_KEY] = calculatedPagination[PAGE_KEY];
+    }
+    if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && calculatedNamespace) {
+      const userId = userIdSelector(state);
+      const userSettings = getStorageItem(`${userId}_settings`) || {};
+      queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
+    }
+
+    return queryParameters;
+  };
+
+export const createAlternativeQueryParametersSelector = ({
   defaultPagination,
   defaultSorting,
-} = {}) => (state, namespace) => {
-  const calculatedNamespace = staticNamespace || namespace;
-  const calculatedPagination = defaultPagination || DEFAULT_PAGINATION;
-  const query = pagePropertiesSelector(state, calculatedNamespace);
-  const queryParameters = {
-    ...calculatedPagination,
-    [SORTING_KEY]: defaultSorting || '',
-    ...query,
-  };
-  const defaultPageSize = calculatedPagination[SIZE_KEY];
-  if (Number(queryParameters[SIZE_KEY]) < 0) {
-    queryParameters[SIZE_KEY] = defaultPageSize;
-  }
-  if (Number(queryParameters[PAGE_KEY]) < 0) {
-    queryParameters[PAGE_KEY] = calculatedPagination[PAGE_KEY];
-  }
-  if ((!query[SIZE_KEY] || Number(query[SIZE_KEY]) < 0) && calculatedNamespace) {
-    const userId = userIdSelector(state);
-    const userSettings = getStorageItem(`${userId}_settings`) || {};
-    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || defaultPageSize;
-  }
-  return queryParameters;
-};
+  sortingKey,
+  namespace,
+} = {}) =>
+  createSelector(
+    createQueryParametersSelector({
+      defaultPagination,
+      defaultSorting,
+      sortingKey,
+      namespace,
+    }),
+    ({ [SIZE_KEY]: limit, [SORTING_ORDER_KEY]: sort, [PAGE_KEY]: pageNumber, ...rest }) => {
+      return { ...getAlternativePaginationAndSortParams(sort, limit, pageNumber), ...rest };
+    },
+  );
 
 export const launchIdSelector = (state) => {
   const testItemIds = testItemIdsArraySelector(state);
@@ -140,4 +171,100 @@ export const prevTestItemSelector = ({ location }) => {
   const prevPath = stringToArray(location.prev.payload.testItemIds, '/');
   if (currentPath.length >= prevPath.length) return null;
   return parseInt(prevPath[currentPath.length], 10);
+};
+
+export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
+
+export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
+
+export const urlOrganizationAndProjectSelector = createSelector(
+  [urlOrganizationSlugSelector, urlProjectSlugSelector, activeProjectSelector],
+  (organizationSlug, projectSlug, activeProject) => {
+    if (organizationSlug && projectSlug) {
+      return {
+        organizationSlug,
+        projectSlug,
+      };
+    }
+
+    return activeProject;
+  },
+);
+
+// TODO: User role selectors are stored here due to circular dependency
+export const activeProjectRoleSelector = createSelector(
+  urlProjectSlugSelector,
+  assignedProjectsSelector,
+  (projectSlug, assignedProjects) => {
+    const assignedProject = Object.values(assignedProjects || {}).find(
+      (project) => project.projectSlug === projectSlug,
+    );
+
+    return assignedProject?.projectRole;
+  },
+);
+
+const activeOrganizationRoleSelector = createSelector(
+  urlOrganizationSlugSelector,
+  assignedOrganizationsSelector,
+  (organizationSlug, assignedOrganizations) => {
+    const assignedOrganization = assignedOrganizations[organizationSlug];
+
+    return assignedOrganization?.organizationRole;
+  },
+);
+
+export const userRolesSelector = createSelector(
+  userAccountRoleSelector,
+  activeOrganizationRoleSelector,
+  activeProjectRoleSelector,
+  (userRole, organizationRole, projectRole) => ({
+    userRole,
+    organizationRole,
+    projectRole,
+  }),
+);
+
+export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
+  const assignedOrganizations = assignedOrganizationsSelector(state);
+  const assignedProjects = assignedProjectsSelector(state);
+  const { userRole, organizationRole } = userRolesSelector(state);
+
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = organizationRole === MANAGER;
+  let isAssignedToTargetOrganization = false;
+
+  const assignedProject = findAssignedProjectByOrganization(
+    assignedProjects,
+    assignedOrganizations[organizationSlug]?.organizationId,
+    projectSlug,
+  );
+
+  if (organizationSlug) {
+    isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
+  } else {
+    const organizationId = assignedProject?.organizationId || '';
+
+    isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
+      (key) => assignedOrganizations[key]?.organizationId === organizationId,
+    );
+  }
+
+  const isAssignedToTargetProject =
+    projectSlug && assignedProject && isAssignedToTargetOrganization;
+
+  const assignmentNotRequired = isAdmin || (isManager && isAssignedToTargetOrganization);
+
+  const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
+
+  const assignedProjectKey = assignedProject?.projectKey;
+
+  return {
+    isAdmin,
+    hasPermission,
+    assignedProjectKey,
+    assignmentNotRequired,
+    isAssignedToTargetProject,
+    isAssignedToTargetOrganization,
+  };
 };

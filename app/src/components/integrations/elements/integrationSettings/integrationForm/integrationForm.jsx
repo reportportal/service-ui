@@ -100,10 +100,9 @@ export class IntegrationForm extends Component {
       this.submitIntegrationSuccess,
       this.state.metaData,
     );
+
     this.props.tracking.trackEvent(
-      (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClickSubmit(
-        this.props.data.integrationType.name,
-      ),
+      PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.pluginName),
     );
   };
 

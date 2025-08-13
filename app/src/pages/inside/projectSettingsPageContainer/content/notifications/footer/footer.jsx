@@ -38,7 +38,7 @@ const cx = classNames.bind(styles);
 
 export const NotificationsFooter = ({ isReadOnly }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 
   const footerItems = [
     {
@@ -56,7 +56,8 @@ export const NotificationsFooter = ({ isReadOnly }) => {
       link: {
         type: PROJECT_SETTINGS_TAB_PAGE,
         payload: {
-          projectId: activeProject,
+          organizationSlug,
+          projectSlug,
           settingsTab: INTEGRATIONS,
         },
       },

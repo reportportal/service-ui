@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
 import PropTypes from 'prop-types';
@@ -22,10 +22,16 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
-import moment from 'moment';
-import { BubblesLoader, Button } from '@reportportal/ui-kit';
+import { BubblesLoader, Button, Dropdown } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
-import { fetch, secondsToDays } from 'common/utils';
+import {
+  daysToSeconds,
+  fetch,
+  hoursToDays,
+  hoursToSeconds,
+  secondsToDays,
+  secondsToHours,
+} from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
@@ -34,26 +40,25 @@ import {
   normalizeAttributesWithPrefix,
   JOB_ATTRIBUTE_PREFIX,
   projectInfoLoadingSelector,
+  projectKeySelector,
+  projectNameSelector,
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { FormField } from 'components/fields/formField';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { settingsMessages } from 'common/constants/localization/settingsLocalization';
+import { activeOrganizationSettingsSelector } from 'controllers/organization';
+import { FieldElement } from '../content/elements';
 import styles from './generalTab.scss';
-import { Messages } from './generalTabMessages';
+import { messages } from './generalTabMessages';
 
 const cx = classNames.bind(styles);
 
-const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
-const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
 const selector = formValueSelector('generalForm');
-const secondsToHours = (seconds) => moment.duration(seconds, 'seconds').asHours();
-const hoursToDays = (hours) => moment.duration(hours, 'hours').asDays();
 
 const getInactivityTimeoutAnalytics = (inactivityTimeoutSeconds) => {
   const inactivityTimeoutHours = secondsToHours(inactivityTimeoutSeconds);
@@ -87,13 +92,14 @@ const getAnalyticsData = (...periods) =>
 })
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectKey: projectKeySelector(state),
+    projectName: projectNameSelector(state),
     isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
+    organizationSettings: activeOrganizationSettingsSelector(state),
   }),
   {
     showNotification,
@@ -106,7 +112,8 @@ export class GeneralTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
     jobConfig: PropTypes.shape({
       interruptJobTime: PropTypes.string.isRequired,
       keepLogs: PropTypes.string.isRequired,
@@ -116,22 +123,22 @@ export class GeneralTab extends Component {
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
-    accountRole: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     lang: PropTypes.string,
-    retention: PropTypes.number,
+    organizationSettings: PropTypes.object,
     formValues: PropTypes.object,
     isLoading: PropTypes.bool,
   };
 
   static defaultProps = {
     lang: 'en',
-    retention: null,
+    organizationSettings: {},
     isLoading: false,
+    userRoles: {},
   };
   state = {
     processingData: false,
@@ -141,20 +148,23 @@ export class GeneralTab extends Component {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
       interruptJobTime: Number(interruptJobTime),
-      keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
-      keepLogs: Number(this.getMinRetentionValue(keepLogs)),
-      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
+      keepLaunches: Number(this.getMinRetentionValue(keepLaunches, 'keepLaunches')),
+      keepLogs: Number(this.getMinRetentionValue(keepLogs, 'keepLogs')),
+      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots, 'keepScreenshots')),
     });
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.jobConfig, this.props.jobConfig)) {
+    if (
+      !isEqual(prevProps.jobConfig, this.props.jobConfig) ||
+      !isEqual(prevProps.organizationSettings, this.props.organizationSettings)
+    ) {
       const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
       this.props.initialize({
         interruptJobTime: Number(interruptJobTime),
-        keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
-        keepLogs: Number(this.getMinRetentionValue(keepLogs)),
-        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
+        keepLaunches: Number(this.getMinRetentionValue(keepLaunches, 'keepLaunches')),
+        keepLogs: Number(this.getMinRetentionValue(keepLogs, 'keepLogs')),
+        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots, 'keepScreenshots')),
       });
     }
   }
@@ -176,10 +186,10 @@ export class GeneralTab extends Component {
         },
       },
     };
-    fetch(URLS.projectByName(this.props.projectId), { method: 'put', data })
+    fetch(URLS.projectByName(this.props.projectKey), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
+          message: this.props.intl.formatMessage(messages.updateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.updateConfigurationAttributesAction(data);
@@ -187,7 +197,7 @@ export class GeneralTab extends Component {
       })
       .catch(() => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(Messages.updateErrorNotification),
+          message: this.props.intl.formatMessage(messages.updateErrorNotification),
           type: NOTIFICATION_TYPES.ERROR,
         });
         this.setState({ processingData: false });
@@ -195,43 +205,59 @@ export class GeneralTab extends Component {
   };
 
   retentionOptions = [
-    { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
-    { label: this.props.intl.formatMessage(Messages.week2), value: daysToSeconds(14) },
-    { label: this.props.intl.formatMessage(Messages.week3), value: daysToSeconds(21) },
-    { label: this.props.intl.formatMessage(Messages.month1), value: daysToSeconds(30) },
-    { label: this.props.intl.formatMessage(Messages.month3), value: daysToSeconds(90) },
-    { label: this.props.intl.formatMessage(Messages.month6), value: daysToSeconds(180) },
-    { label: this.props.intl.formatMessage(Messages.forever), value: 0 },
+    { label: this.props.intl.formatMessage(settingsMessages.week1), value: daysToSeconds(7) },
+    { label: this.props.intl.formatMessage(settingsMessages.week2), value: daysToSeconds(14) },
+    { label: this.props.intl.formatMessage(settingsMessages.week3), value: daysToSeconds(21) },
+    { label: this.props.intl.formatMessage(settingsMessages.month1), value: daysToSeconds(30) },
+    { label: this.props.intl.formatMessage(settingsMessages.month3), value: daysToSeconds(90) },
+    { label: this.props.intl.formatMessage(settingsMessages.month6), value: daysToSeconds(180) },
+    { label: this.props.intl.formatMessage(settingsMessages.forever), value: 0 },
   ];
 
   interruptJobTime = [
-    { label: this.props.intl.formatMessage(Messages.hour1), value: hoursToSeconds(1) },
-    { label: this.props.intl.formatMessage(Messages.hour3), value: hoursToSeconds(3) },
-    { label: this.props.intl.formatMessage(Messages.hour6), value: hoursToSeconds(6) },
-    { label: this.props.intl.formatMessage(Messages.hour12), value: hoursToSeconds(12) },
-    { label: this.props.intl.formatMessage(Messages.day1), value: daysToSeconds(1) },
-    { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
+    { label: this.props.intl.formatMessage(settingsMessages.hour1), value: hoursToSeconds(1) },
+    { label: this.props.intl.formatMessage(settingsMessages.hour3), value: hoursToSeconds(3) },
+    { label: this.props.intl.formatMessage(settingsMessages.hour6), value: hoursToSeconds(6) },
+    { label: this.props.intl.formatMessage(settingsMessages.hour12), value: hoursToSeconds(12) },
+    { label: this.props.intl.formatMessage(settingsMessages.day1), value: daysToSeconds(1) },
+    { label: this.props.intl.formatMessage(settingsMessages.week1), value: daysToSeconds(7) },
   ];
 
-  getMinRetentionValue = (value) => {
-    const { retention } = this.props;
+  getRetentionLimits = () => {
+    const { attachments, launches, logs } = this.props.organizationSettings;
 
-    return retention === null || retention > value || retention === 0 ? value : retention;
+    return {
+      keepLaunches: launches?.period ? daysToSeconds(launches.period) : null,
+      keepLogs: logs?.period ? daysToSeconds(logs.period) : null,
+      keepScreenshots: attachments?.period ? daysToSeconds(attachments.period) : null,
+    };
   };
 
-  getRetentionOptions = () => {
-    const { retention, lang } = this.props;
+  getMinRetentionValue = (value, fieldName) => {
+    const retentionLimits = this.getRetentionLimits();
+    const retentionLimit = retentionLimits[fieldName];
 
-    if (!retention || retention === 0) {
+    return !retentionLimit || retentionLimit > value ? value : retentionLimit;
+  };
+
+  getRetentionOptions = (fieldName) => {
+    const { lang } = this.props;
+    const retentionLimits = this.getRetentionLimits();
+    const retentionLimit = retentionLimits[fieldName];
+
+    if (!retentionLimit) {
       return this.retentionOptions;
     }
 
     const options = this.retentionOptions.filter(
-      (option) => option.value <= retention && option.value !== 0,
+      (option) => option.value <= retentionLimit && option.value !== 0,
     );
 
-    if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
-      options.push({ label: secondsToDays(retention, lang), value: retention });
+    if (
+      (options.length && options[options.length - 1].value !== retentionLimit) ||
+      !options.length
+    ) {
+      options.push({ label: secondsToDays(retentionLimit, lang), value: retentionLimit });
     }
 
     return options;
@@ -245,17 +271,17 @@ export class GeneralTab extends Component {
     return { label: secondsToDays(value, this.props.lang), value };
   };
 
-  formatRetention = this.createValueFormatter(this.getRetentionOptions());
+  formatRetention = (fieldName) => this.createValueFormatter(this.getRetentionOptions(fieldName));
 
   formatInputValues = () => {
     const { formValues } = this.props;
     if (!formValues) {
-      return [];
+      return {};
     }
-    const arrValues = Object.entries(formValues).map((elem) => {
-      const [key, value] = elem;
-      return value === 0 ? [key, Infinity] : elem;
-    });
+    const arrValues = Object.entries(formValues).map(([key, value]) => [
+      key,
+      value === 0 ? Infinity : value,
+    ]);
     const mapValues = new Map(arrValues);
     const inputValues = Object.fromEntries(mapValues);
     return inputValues;
@@ -263,7 +289,7 @@ export class GeneralTab extends Component {
 
   getLaunchesOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepLaunches');
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value !== 0 &&
@@ -271,7 +297,7 @@ export class GeneralTab extends Component {
       return {
         ...elem,
         disabled,
-        title: this.props.intl.formatMessage(Messages.keepLaunchesTooltip),
+        title: this.props.intl.formatMessage(settingsMessages.keepLaunchesTooltip),
       };
     });
     return newOptions;
@@ -279,7 +305,7 @@ export class GeneralTab extends Component {
 
   getLogOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepLogs');
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value === 0
@@ -293,18 +319,18 @@ export class GeneralTab extends Component {
         ...elem,
         disabled,
         hidden,
-        title: this.props.intl.formatMessage(Messages.keepLogsTooltip),
+        title: this.props.intl.formatMessage(settingsMessages.keepLogsTooltip),
       };
     });
     if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention(inputValues.keepLogs));
+      newOptions.push(this.formatRetention('keepLogs')(inputValues.keepLogs));
     }
     return newOptions;
   };
 
   getScreenshotsOptions = () => {
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions();
+    const options = this.getRetentionOptions('keepScreenshots');
     const newOptions = options.map((elem) => {
       const isHidden =
         elem.value === 0 ? elem.value !== inputValues.keepLogs : elem.value > inputValues.keepLogs;
@@ -312,22 +338,25 @@ export class GeneralTab extends Component {
       return { ...elem, hidden };
     });
     if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention(inputValues.keepScreenshots));
+      newOptions.push(this.formatRetention('keepScreenshots')(inputValues.keepScreenshots));
     }
     return newOptions;
   };
 
-  createTrackingFunction = (createEvent, formatValue = this.formatRetention) => (value) => {
-    const label = formatValue(value).label;
-    this.props.tracking.trackEvent(createEvent(label));
-  };
+  createTrackingFunction =
+    (createEvent, formatValue = this.formatRetention) =>
+    (value) => {
+      const label = formatValue(value).label;
+      this.props.tracking.trackEvent(createEvent(label));
+    };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoading, projectId } = this.props;
+    const { intl, userRoles, isLoading, projectName } = this.props;
     const { processingData } = this.state;
-    const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
+    const canPerformUpdate = canUpdateSettings(userRoles);
+    const isDisabled = !canPerformUpdate || processingData;
     return isLoading ? (
       <SpinningPreloader />
     ) : (
@@ -335,108 +364,83 @@ export class GeneralTab extends Component {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
             <div className={cx('fake-input-label')}>
-              {intl.formatMessage(Messages.projectNameLabel)}
+              {intl.formatMessage(messages.projectNameLabel)}
             </div>
-            <div className={cx('fake-input')} title={projectId}>
-              {projectId}
+            <div className={cx('fake-input')} title={projectName}>
+              {projectName}
             </div>
           </div>
-          <FormField
+          <FieldElement
             name="interruptJobTime"
-            fieldWrapperClassName={cx('field-input')}
-            containerClassName={cx('field-container')}
-            labelClassName={cx('label')}
-            label={intl.formatMessage(Messages.interruptedJob)}
+            label={intl.formatMessage(messages.interruptedJob)}
             onChange={this.createTrackingFunction(
               SETTINGS_PAGE_EVENTS.inactivityTimeoutGeneral,
               this.formatInterruptJobTimes,
             )}
-            customBlock={{
-              wrapperClassName: cx('hint'),
-              node: <p>{intl.formatMessage(Messages.interruptedJobDescription)}</p>,
-            }}
+            description={intl.formatMessage(messages.interruptedJobDescription)}
             disabled={isDisabled}
-            format={this.formatInterruptJobTimes}
           >
-            <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
-              options={this.interruptJobTime}
-              mobileDisabled
-            />
-          </FormField>
-          <FormField
+            <Dropdown className={cx('dropdown')} options={this.interruptJobTime} mobileDisabled />
+          </FieldElement>
+          <FieldElement
             name="keepLaunches"
-            fieldWrapperClassName={cx('field-input')}
-            containerClassName={cx('field-container')}
-            labelClassName={cx('label')}
-            label={intl.formatMessage(Messages.keepLaunches)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLaunchesGeneral)}
-            customBlock={{
-              wrapperClassName: cx('hint'),
-              node: <p>{intl.formatMessage(Messages.keepLaunchesDescription)}</p>,
-            }}
+            label={intl.formatMessage(settingsMessages.keepLaunches)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepLaunchesGeneral,
+              this.formatRetention('keepLaunches'),
+            )}
+            description={intl.formatMessage(settingsMessages.keepLaunchesDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
             <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
+              className={cx('dropdown')}
               options={this.getLaunchesOptions()}
               mobileDisabled
             />
-          </FormField>
-          <FormField
+          </FieldElement>
+          <FieldElement
             name="keepLogs"
-            fieldWrapperClassName={cx('field-input')}
-            containerClassName={cx('field-container')}
-            labelClassName={cx('label')}
-            label={intl.formatMessage(Messages.keepLogs)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLogsGeneral)}
-            customBlock={{
-              wrapperClassName: cx('hint'),
-              node: <p>{intl.formatMessage(Messages.keepLogsDescription)}</p>,
-            }}
+            label={intl.formatMessage(settingsMessages.keepLogs)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepLogsGeneral,
+              this.formatRetention('keepLogs'),
+            )}
+            description={intl.formatMessage(settingsMessages.keepLogsDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
-            <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
-              options={this.getLogOptions()}
-              mobileDisabled
-            />
-          </FormField>
-          <FormField
+            <Dropdown className={cx('dropdown')} options={this.getLogOptions()} mobileDisabled />
+          </FieldElement>
+          <FieldElement
             name="keepScreenshots"
-            fieldWrapperClassName={cx('field-input')}
-            containerClassName={cx('field-container')}
-            labelClassName={cx('label')}
-            label={intl.formatMessage(Messages.keepScreenshots)}
-            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral)}
-            customBlock={{
-              wrapperClassName: cx('hint'),
-              node: <p>{intl.formatMessage(Messages.keepScreenshotsDescription)}</p>,
-            }}
+            label={intl.formatMessage(settingsMessages.keepScreenshots)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral,
+              this.formatRetention('keepScreenshots'),
+            )}
+            description={intl.formatMessage(settingsMessages.keepScreenshotsDescription)}
             disabled={isDisabled}
-            format={this.formatRetention}
           >
             <Dropdown
-              customClasses={{ dropdown: cx('dropdown') }}
+              className={cx('dropdown')}
               options={this.getScreenshotsOptions()}
               mobileDisabled
             />
-          </FormField>
-          <div className={cx('submit-block')}>
-            <Button type="submit" disabled={isDisabled}>
-              {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-            </Button>
-            {processingData && (
-              <div className={cx('preloader-block')}>
-                <BubblesLoader className={cx('preloader')} />
-                <span className={cx('preloader-text')}>
-                  {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
-                </span>
-              </div>
-            )}
-          </div>
+          </FieldElement>
+          {canPerformUpdate && (
+            <div className={cx('submit-block')}>
+              <Button type="submit" disabled={isDisabled}>
+                {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+              </Button>
+              {processingData && (
+                <div className={cx('preloader-block')}>
+                  <BubblesLoader className={cx('preloader')} />
+                  <span className={cx('preloader-text')}>
+                    {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.processData)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </form>
       </div>
     );

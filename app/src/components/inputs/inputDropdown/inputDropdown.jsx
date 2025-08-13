@@ -46,6 +46,7 @@ export class InputDropdown extends Component {
     independentGroupSelection: PropTypes.bool,
     customClasses: PropTypes.object,
     title: PropTypes.string,
+    readOnly: PropTypes.bool,
     placeholder: PropTypes.string,
   };
 
@@ -73,6 +74,7 @@ export class InputDropdown extends Component {
       container: '',
     },
     title: '',
+    readOnly: false,
     placeholder: '',
   };
   state = {
@@ -157,9 +159,12 @@ export class InputDropdown extends Component {
     const relatedSubOptions = this.props.options
       .filter((item) => item.groupRef === groupId)
       .map((item) => item.value);
+
     if (this.isGroupOptionSelected(groupId)) {
       this.props.onChange(
-        this.props.value.filter((item) => relatedSubOptions.indexOf(item) === -1),
+        this.props.value.filter(
+          (item) => item !== groupId && relatedSubOptions.indexOf(item) === -1,
+        ),
       );
     } else {
       this.props.onChange(
@@ -243,54 +248,57 @@ export class InputDropdown extends Component {
                     error,
                     touched,
                     'mobile-disabled': mobileDisabled,
+                    readonly: this.props.readOnly,
                   })}
-                  onClick={this.onClickSelectBlock}
+                  onClick={this.props.readOnly ? () => {} : this.onClickSelectBlock}
                 >
                   <span
                     className={cx('value', customClasses.value, { placeholder: !displayedValue })}
                   >
                     {displayedValue || placeholder}
                   </span>
-                  <span className={cx('arrow', customClasses.arrow)} />
+                  {!this.props.readOnly && <span className={cx('arrow', customClasses.arrow)} />}
                 </div>
               </div>
             )}
           </Reference>
-          <Popper
-            placement="bottom-start"
-            eventsEnabled={false}
-            modifiers={{
-              preventOverflow: { enabled: true },
-              flip: {
-                enabled: true,
-              },
-            }}
-          >
-            {({ placement, ref, style, scheduleUpdate }) => {
-              this.updatePosition = scheduleUpdate;
-              return (
-                <div
-                  ref={ref}
-                  style={style}
-                  data-placement={placement}
-                  className={cx('select-list', customClasses.selectList, {
-                    opened: this.state.opened,
-                  })}
-                >
-                  {multiple && selectAll && (
-                    <div className={cx('select-all-block')} onClick={this.handleAllClick}>
-                      <span className={cx('select-all')}>
-                        <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
-                      </span>
-                    </div>
-                  )}
-                  <ScrollWrapper autoHeight autoHeightMax={300}>
-                    {this.renderOptions()}
-                  </ScrollWrapper>
-                </div>
-              );
-            }}
-          </Popper>
+          {!this.props.readOnly && (
+            <Popper
+              placement="bottom-start"
+              eventsEnabled={false}
+              modifiers={{
+                preventOverflow: { enabled: true },
+                flip: {
+                  enabled: true,
+                },
+              }}
+            >
+              {({ placement, ref, style, scheduleUpdate }) => {
+                this.updatePosition = scheduleUpdate;
+                return (
+                  <div
+                    ref={ref}
+                    style={style}
+                    data-placement={placement}
+                    className={cx('select-list', customClasses.selectList, {
+                      opened: this.state.opened,
+                    })}
+                  >
+                    {multiple && selectAll && (
+                      <div className={cx('select-all-block')} onClick={this.handleAllClick}>
+                        <span className={cx('select-all')}>
+                          <FormattedMessage id={'Conditions.all'} defaultMessage={'All'} />
+                        </span>
+                      </div>
+                    )}
+                    <ScrollWrapper autoHeight autoHeightMax={300}>
+                      {this.renderOptions()}
+                    </ScrollWrapper>
+                  </div>
+                );
+              }}
+            </Popper>
+          )}
         </div>
       </Manager>
     );

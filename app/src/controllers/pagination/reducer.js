@@ -18,3 +18,12 @@ import { fetchReducer } from 'controllers/fetch';
 
 export const paginationReducer = (namespace, initialState = {}) =>
   fetchReducer(namespace, { contentPath: 'page', initialState });
+
+const payloadConverter = (payload) => ({
+  size: payload.limit,
+  totalElements: payload.total_count,
+  totalPages: Math.ceil(payload.total_count / payload.limit),
+});
+
+export const alternativePaginationReducer = (namespace, initialState = {}) =>
+  fetchReducer(namespace, { initialState }, payloadConverter);

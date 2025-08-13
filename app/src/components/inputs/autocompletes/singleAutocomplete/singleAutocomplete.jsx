@@ -16,8 +16,7 @@
 
 import React, { Component } from 'react';
 import Downshift from 'downshift';
-import Parser from 'html-react-parser';
-import CrossIcon from 'common/img/cross-icon-inline.svg';
+import { ClearIcon } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
@@ -83,14 +82,16 @@ export class SingleAutocomplete extends Component {
     nakedView: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItem === item,
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItem) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItem === item,
+        ...rest,
+      });
 
   render() {
     const {
@@ -161,7 +162,9 @@ export class SingleAutocomplete extends Component {
                         className={cx('input-control-btn', { 'mobile-disabled': mobileDisabled })}
                         onClick={clearSelection}
                       >
-                        <i className={cx('cross-icon')}>{Parser(CrossIcon)}</i>
+                        <i className={cx('clear-icon')}>
+                          <ClearIcon />
+                        </i>
                       </button>
                     )}
                   </div>

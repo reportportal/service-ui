@@ -23,7 +23,7 @@ import { URLS } from 'common/urls';
 import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { USER_ACTIONS_OPTIONS, ITEMS_INPUT_WIDTH, CONTENT_FIELDS } from './constants';
 import { DropdownControl, InputControl, TagsControl } from './controls';
@@ -60,13 +60,13 @@ const actionTypeValidator = (message) => bindMessageToValidator(validate.isNotEm
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class ProjectActivityControls extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -126,7 +126,7 @@ export class ProjectActivityControls extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
     } = this.props;
 
     return (
@@ -168,7 +168,7 @@ export class ProjectActivityControls extends Component {
             placeholder={formatMessage(messages.UsersPlaceholder)}
             minLength={3}
             maxLength={256}
-            getURI={URLS.projectUsernamesSearch(activeProject)}
+            getURI={URLS.projectUsernamesSearch(projectKey)}
             makeOptions={this.formatUsernames}
             multi
           />

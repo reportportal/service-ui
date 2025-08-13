@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
-import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
+import { FieldTextFlex, ThemeProvider } from '@reportportal/ui-kit';
 import { DynamicField } from '../dynamicField';
 
 export const MultilineTextField = (props) => {
@@ -27,15 +26,17 @@ export const MultilineTextField = (props) => {
   const parseInputValue = (value) => (value ? [value] : []);
 
   return (
-    <DynamicField
-      field={field}
-      format={formatInputValue}
-      parse={parseInputValue}
-      darkView={darkView}
-      {...rest}
-    >
-      <FieldTextFlex defaultWidth={false} variant={darkView ? 'dark' : 'light'} mobileDisabled />
-    </DynamicField>
+    <ThemeProvider theme={darkView ? 'dark' : 'light'}>
+      <DynamicField
+        field={field}
+        format={formatInputValue}
+        parse={parseInputValue}
+        darkView={darkView}
+        {...rest}
+      >
+        <FieldTextFlex defaultWidth={false} mobileDisabled />
+      </DynamicField>
+    </ThemeProvider>
   );
 };
 MultilineTextField.propTypes = {

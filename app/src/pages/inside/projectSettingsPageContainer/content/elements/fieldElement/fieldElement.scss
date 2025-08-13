@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,16 @@
 .label {
   display: block;
   margin-bottom: 4px;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   font-size: 13px;
   line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
 
   .asterisk {
     position: absolute;
     margin-top: -2.5px;
-    color: $COLOR--e-300;
+    color: var(--rp-ui-base-e-300);
     padding-left: 4px;
   }
 }
@@ -37,10 +38,11 @@
 .description {
   display: block;
   margin: 0 0 4px 0;
-  color: $COLOR--e-300;
+  color: var(--rp-ui-base-e-300);
   font-size: 11px;
   line-height: 16px;
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
 }
 
 .description-alt {

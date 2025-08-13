@@ -109,10 +109,9 @@ export class UserInfo extends Component {
   };
 
   render() {
-    const { userId, accountType, name, email } = this.props;
+    const { accountType, name, email } = this.props;
     return (
       <Fragment>
-        <div className={cx('login')}>{userId}</div>
         <div className={cx('name-line')}>
           <span className={cx('name')}>{name}</span>
           {accountType === INTERNAL && (

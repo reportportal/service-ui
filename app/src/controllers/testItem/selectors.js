@@ -33,8 +33,8 @@ import {
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
   pageSelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import {
@@ -163,7 +163,6 @@ const itemTitleFormatter = (item) => {
 };
 
 export const breadcrumbsSelector = createSelector(
-  activeProjectSelector,
   activeFilterSelector,
   parentItemsSelector,
   testItemIdsArraySelector,
@@ -171,8 +170,8 @@ export const breadcrumbsSelector = createSelector(
   debugModeSelector,
   filterIdSelector,
   isTestItemsListSelector,
+  urlOrganizationAndProjectSelector,
   (
-    projectId,
     filter,
     parentItems,
     testItemIdsArray,
@@ -180,7 +179,9 @@ export const breadcrumbsSelector = createSelector(
     debugMode,
     filterCategory,
     isTestItemsListView,
+    slugs,
   ) => {
+    const { organizationSlug, projectSlug } = slugs;
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = filter?.id || filterCategory;
@@ -192,8 +193,9 @@ export const breadcrumbsSelector = createSelector(
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
-            projectId,
+            projectSlug,
             filterId,
+            organizationSlug,
           },
           meta: {
             query: copyQuery(query, queryNamespacesToCopy),
@@ -215,9 +217,10 @@ export const breadcrumbsSelector = createSelector(
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
-              projectId,
+              projectSlug,
               filterId,
               testItemIds: TEST_ITEMS_TYPE_LIST,
+              organizationSlug,
             },
             meta: {
               query: copyQuery(query, queryNamespacesToCopy),
@@ -250,9 +253,10 @@ export const breadcrumbsSelector = createSelector(
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
-              projectId,
+              projectSlug,
               filterId,
               testItemIds: testItemIdsArray?.slice(0, i + 1).join('/'),
+              organizationSlug,
             },
             meta: {
               query: itemQuery,
@@ -447,10 +451,11 @@ export const defectLinkSelector = createSelector(
 );
 
 export const testCaseNameLinkSelector = (state) => (ownProps) => {
-  const projectId = activeProjectSelector(state);
+  const { organizationSlug, projectSlug } = urlOrganizationAndProjectSelector(state);
   const payload = {
-    projectId,
+    projectSlug,
     filterId: ALL,
+    organizationSlug,
   };
 
   return createLink(
@@ -473,9 +478,9 @@ export const testCaseNameLinkSelector = (state) => (ownProps) => {
 
 const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
   const { origin, pathname: pathPrefix } = window.location;
-  const { projectId, filterId } = payload;
+  const { organizationSlug, projectSlug, filterId } = payload;
 
-  return `${origin}${pathPrefix}#${projectId}/launches/${filterId}`;
+  return `${origin}${pathPrefix}#organizations/${organizationSlug}/projects/${projectSlug}/launches/${filterId}`;
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
@@ -559,17 +564,19 @@ export const uniqueErrorsLinkSelector = createSelector(
 );
 
 export const getLogItemLinkSelector = createSelector(
-  activeProjectSelector,
-  (activeProject) => (testItem) => {
-    const payload = {
-      projectId: activeProject,
-      filterId: ALL,
-    };
+  urlOrganizationAndProjectSelector,
+  ({ organizationSlug, projectSlug }) =>
+    (testItem) => {
+      const payload = {
+        projectSlug,
+        filterId: ALL,
+        organizationSlug,
+      };
 
-    const testItemPath = testItem.path.split('.').slice(0, -1);
-    const testItemIds = [testItem.launchId, ...testItemPath].join('/');
-    const itemId = testItem.id || testItem.itemId;
+      const testItemPath = testItem.path.split('.').slice(0, -1);
+      const testItemIds = [testItem.launchId, ...testItemPath].join('/');
+      const itemId = testItem.id || testItem.itemId;
 
-    return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
-  },
+      return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
+    },
 );

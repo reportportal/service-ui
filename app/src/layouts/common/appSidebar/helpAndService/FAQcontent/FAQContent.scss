@@ -1,0 +1,100 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin truncate($maxSize: 100%) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxSize;
+}
+
+.menu-item {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: $COLOR--darkmode-gray-475;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  color: $COLOR--darkmode-gray-100;
+  line-height: 20px;
+  box-sizing: border-box;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  width: 100%;
+
+  &:hover:not(.active) {
+    color: $COLOR--white-two;
+    background-color: $COLOR--darkmode-gray-500;
+
+    path {
+      fill: $COLOR--white-two;
+    }
+  }
+
+  &.active {
+    color: $COLOR--darkmode-topaz-text;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+}
+
+.with-divider {
+  position: relative;
+  margin-top: 33px;
+
+  &::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: $COLOR--almost-black;
+    margin: 16px;
+    position: absolute;
+    top: -33px;
+    width: calc(100% - 32px);
+    left: 0;
+  }
+}
+
+.assistance {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: left;
+  color: $COLOR--darkmode-gray-150;
+  padding: 8px 16px;
+  cursor: default;
+
+  .inline-ref {
+    display: inline;
+    color: $COLOR--darkmode-topaz-main;
+    text-decoration: none;
+    cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      transform: translateY(2px);
+    }
+  }
+}

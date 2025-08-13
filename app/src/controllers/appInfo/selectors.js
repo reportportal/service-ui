@@ -22,6 +22,7 @@ import {
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organization/selectors';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -30,10 +31,9 @@ import {
   INSTANCE_TYPE,
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
-  USER_SUGGESTIONS,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
-  SERVER_FOOTER_LINKS_KEY,
+  SERVER_SIDEBAR_LINKS_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
 } from './constants';
 
@@ -67,9 +67,9 @@ export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
-export const serverFooterLinksSelector = createSelector(
+export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
-  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_FOOTER_LINKS_KEY] || `[]`),
+  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),
 );
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
@@ -81,8 +81,6 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
-export const areUserSuggestionsAllowedSelector = (state) =>
-  (environmentSelector(state)[USER_SUGGESTIONS] || 'true') === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
@@ -93,6 +91,7 @@ export const baseEventParametersSelector = createSelector(
   isAdminSelector,
   analyzerExtensionsSelector,
   enabledPattersSelector,
+  activeOrganizationIdSelector,
   (
     instanceId,
     buildVersion,
@@ -103,6 +102,7 @@ export const baseEventParametersSelector = createSelector(
     isAdmin,
     analyzerExtensions,
     enabledPatterns,
+    organizationId,
   ) => ({
     instanceId,
     buildVersion,
@@ -113,5 +113,6 @@ export const baseEventParametersSelector = createSelector(
     projectInfoId,
     isAdmin,
     isAnalyzerAvailable: !!analyzerExtensions.length,
+    organizationId,
   }),
 );

@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -28,6 +27,7 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails';
 import { historyItemsSelector } from 'controllers/log';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { projectKeySelector } from 'controllers/project';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
@@ -44,7 +44,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const activeProject = useSelector(activeProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const activeFilter = useSelector(activeFilterSelector);
   const [currentItemsLoading, setCurrentItemsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,7 +62,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
     const itemIds = [];
     currentTestItems.forEach(({ id }) => itemIds.push(id));
     setCurrentItemsLoading(true);
-    fetch(URLS.bulkLastLogs(activeProject), {
+    fetch(URLS.bulkLastLogs(projectKey), {
       method: 'post',
       data: { itemIds, logLevel: 'ERROR' },
     })
@@ -105,13 +105,13 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
       let request;
       if (optionValue === ALL_LOADED_TI_FROM_HISTORY_LINE) {
         historyItems.forEach(({ id }) => itemIds.push(id));
-        request = fetch(URLS.bulkLastLogs(activeProject), {
+        request = fetch(URLS.bulkLastLogs(projectKey), {
           method: 'post',
           data: { itemIds, logLevel: 'ERROR' },
         });
       }
       if (searchMode) {
-        request = fetch(URLS.logSearch(activeProject, currentTestItems[0].id), {
+        request = fetch(URLS.logSearch(projectKey, currentTestItems[0].id), {
           method: 'post',
           data: requestData,
         });

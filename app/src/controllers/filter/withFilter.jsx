@@ -21,38 +21,40 @@ import { connectRouter, debounce } from 'common/utils';
 
 const FILTER_KEY = 'filter.cnt.name';
 
-export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (WrappedComponent) =>
-  connectRouter(
-    (query) => ({
-      filter: query[filterKey],
-    }),
-    {
-      updateFilter: (filter) => ({ [filterKey]: filter, [PAGE_KEY]: 1 }),
-    },
-    { namespace },
-  )(
-    class FilterWrapper extends Component {
-      static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;
+export const withFilter =
+  ({ filterKey = FILTER_KEY, namespace } = {}) =>
+  (WrappedComponent) =>
+    connectRouter(
+      (query) => ({
+        filter: query[filterKey],
+      }),
+      {
+        updateFilter: (filter) => ({ [filterKey]: filter, [PAGE_KEY]: 1 }),
+      },
+      { namespace },
+    )(
+      class FilterWrapper extends Component {
+        static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;
 
-      static propTypes = {
-        filter: PropTypes.string,
-        updateFilter: PropTypes.func,
-      };
+        static propTypes = {
+          filter: PropTypes.string,
+          updateFilter: PropTypes.func,
+        };
 
-      static defaultProps = {
-        filter: null,
-        updateFilter: () => {},
-      };
+        static defaultProps = {
+          filter: null,
+          updateFilter: () => {},
+        };
 
-      handleFilterChange = debounce((value) => {
-        this.props.updateFilter(value || undefined);
-      }, 300);
+        handleFilterChange = debounce((value) => {
+          this.props.updateFilter(value || undefined);
+        }, 1000);
 
-      render() {
-        const { filter, updateFilter, ...rest } = this.props;
-        return (
-          <WrappedComponent filter={filter} onFilterChange={this.handleFilterChange} {...rest} />
-        );
-      }
-    },
-  );
+        render() {
+          const { filter, updateFilter, ...rest } = this.props;
+          return (
+            <WrappedComponent filter={filter} onFilterChange={this.handleFilterChange} {...rest} />
+          );
+        }
+      },
+    );

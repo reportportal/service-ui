@@ -30,7 +30,7 @@ import { addExportAction, removeExportAction } from 'controllers/exports';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { ERROR_CANCELED } from 'common/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
 import { PDF_EXPORT, XLS_EXPORT, HTML_EXPORT } from './constants';
 import styles from './launchExportModal.scss';
 
@@ -78,7 +78,7 @@ export const LaunchExportModal = ({ id, name }) => {
   const [exportType, setExportType] = useState(PDF_EXPORT);
   const [isWithAttachments, setIsWithAttachments] = useState(false);
   const dispatch = useDispatch();
-  const projectId = useSelector(activeProjectSelector);
+  const projectKey = useSelector(activeProjectKeySelector);
 
   const exportOptions = [
     {
@@ -111,7 +111,7 @@ export const LaunchExportModal = ({ id, name }) => {
     };
 
     try {
-      await downloadFile(URLS.exportLaunch(projectId, id, exportType), {
+      await downloadFile(URLS.exportLaunch(projectKey, id, exportType), {
         params: { includeAttachments: isWithAttachments },
         abort: (cancelRequest) => dispatch(addExportAction({ id: requestId, cancelRequest })),
       });

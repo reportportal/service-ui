@@ -44,8 +44,9 @@ import {
   unlinkIssueAction,
   proceedWithValidItemsAction,
 } from 'controllers/uniqueErrors/clusterItems';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-
+import { userAccountRoleSelector } from 'controllers/user';
+import { activeProjectRoleSelector, userRolesSelector } from 'controllers/pages';
+import { canWorkWithTests } from 'common/utils/permissions';
 import styles from './uniqueErrorsActionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +60,7 @@ const cx = classNames.bind(styles);
     lastOperation: lastOperationSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -97,6 +99,7 @@ export class UniqueErrorsActionPanel extends Component {
     restorePath: PropTypes.func,
     proceedWithValidItems: PropTypes.func,
     projectRole: PropTypes.string.isRequired,
+    userRoles: PropTypes.object,
     selectedItems: PropTypes.array,
     showBreadcrumbs: PropTypes.bool,
     unselectAndFetchItems: PropTypes.func,
@@ -137,7 +140,8 @@ export class UniqueErrorsActionPanel extends Component {
     onPostIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(),
+        postBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(),
       },
     });
     UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_ACTION &&
@@ -149,8 +153,10 @@ export class UniqueErrorsActionPanel extends Component {
     onLinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        addNewIssue: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(),
-        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(),
+        addNewIssue:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(),
+        loadBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_ACTION);
@@ -161,7 +167,8 @@ export class UniqueErrorsActionPanel extends Component {
     onUnlinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
+        unlinkBtn:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
@@ -248,8 +255,10 @@ export class UniqueErrorsActionPanel extends Component {
       selectedItems,
       hasErrors,
       hasValidItems,
+      userRoles,
     } = this.props;
     const itemsActionDescriptors = this.getItemsActionDescriptors();
+    const canManageItems = canWorkWithTests(userRoles);
 
     return (
       <div
@@ -277,14 +286,16 @@ export class UniqueErrorsActionPanel extends Component {
         )}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
-          <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostMenuButton
-              title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-              items={itemsActionDescriptors}
-              disabled={!selectedItems.length}
-              onClick={this.onClickActionsButton}
-            />
-          </div>
+          {canManageItems && (
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostMenuButton
+                title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+                items={itemsActionDescriptors}
+                disabled={!selectedItems.length}
+                onClick={this.onClickActionsButton}
+              />
+            </div>
+          )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={this.onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />

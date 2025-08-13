@@ -33,18 +33,23 @@ export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
-export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
+export const email = composeValidators([
+  regex(/^(?![.])[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
+]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
-export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128}$/)]);
+export const login = composeValidators([isNotEmpty, email]);
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
 export const password = composeValidators([
   isNotEmpty,
   regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z\d\s])([^\s]){8,256}$/),
 ]);
-export const userName = composeValidators([
+export const passwordCreateUser = composeValidators([
   isNotEmpty,
-  regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),
+  minLength(8),
+  maxLength(256),
+  regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
 ]);
+export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
@@ -58,7 +63,8 @@ export const issueId = composeValidators([isNotEmpty, maxLength(128)]);
 export const ldapUrl = composeValidators([isNotEmpty, regex(/:\/\/.+/)]);
 export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 55)]);
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
-export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
+export const projectNamePattern = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_. ]+$/)]);
+export const projectNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
@@ -122,20 +128,22 @@ export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3
 export const footerLinkUrlLength = maxLength(1024);
 export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
 export const urlOrEmailValidator = (value) => email(value) || url(value);
-export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
-  if (!informOwner && !value.length) {
-    return false;
-  }
-  if (informOwner && !value.length) {
-    return true;
-  }
-  const checkIsStringWithEmailParts = regex(/@/);
-  if (value.some(checkIsStringWithEmailParts)) {
-    return value.filter(checkIsStringWithEmailParts).every(email);
-  }
+export const createNotificationRecipientsValidator =
+  (informOwner) =>
+  (value = []) => {
+    if (!informOwner && !value.length) {
+      return false;
+    }
+    if (informOwner && !value.length) {
+      return true;
+    }
+    const checkIsStringWithEmailParts = regex(/@/);
+    if (value.some(checkIsStringWithEmailParts)) {
+      return value.filter(checkIsStringWithEmailParts).every(email);
+    }
 
-  return true;
-};
+    return true;
+  };
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);
@@ -144,3 +152,5 @@ export const uniqueApiKeyName = (names) => (value) =>
 export const apiKeyNameShouldMatch = composeValidators([regex(/^[A-Za-z0-9-._~+/]+$/)]);
 export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
+export const keywordMatcher = (keyword) => (value) =>
+  keyword.toLowerCase().trim() === value?.toLowerCase()?.trim();

@@ -14,63 +14,64 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
-import { assignedProjectsSelector } from 'controllers/user';
+import { defineMessages, useIntl } from 'react-intl';
+import { availableProjectsSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
+import { BlockContainerBody } from '../blockContainer';
 import styles from './assignedProjectsBlock.scss';
-import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 
 const cx = classNames.bind(styles);
+
 const messages = defineMessages({
   headerNameCol: {
     id: 'AssignedProjectsBlock.headerNameCol',
-    defaultMessage: 'Projects',
+    defaultMessage: 'Assignments',
   },
   headerRoleCol: {
     id: 'AssignedProjectsBlock.headerRoleCol',
-    defaultMessage: 'Project role',
+    defaultMessage: 'Role',
+  },
+  organization: {
+    id: 'AssignedProjectsBlock.organization',
+    defaultMessage: 'Organization',
   },
 });
 
-@connect((state) => ({
-  projects: assignedProjectsSelector(state),
-}))
-@injectIntl
-export class AssignedProjectsBlock extends Component {
-  static propTypes = {
-    projects: PropTypes.object,
-    intl: PropTypes.object.isRequired,
-  };
-  static defaultProps = {
-    projects: [],
-  };
+export const AssignedProjectsBlock = () => {
+  const { formatMessage } = useIntl();
+  const availableProjects = useSelector(availableProjectsSelector);
 
-  render = () => {
-    const { intl, projects } = this.props;
-    return (
-      <div className={cx('assigned-projects-block')}>
-        <BlockContainerHeader>
-          <div className={cx('name-col')}>
-            {intl.formatMessage(messages.headerNameCol)}
-            {` (${Object.keys(projects).length})`}
-          </div>
-          <div className={cx('role-col')}>{intl.formatMessage(messages.headerRoleCol)}</div>
-        </BlockContainerHeader>
-        <ScrollWrapper autoHeight autoHeightMax={370}>
-          <BlockContainerBody>
-            {Object.keys(projects).map((project) => (
-              <div key={project} className={cx('project-item')}>
-                <div className={cx('name-col')}>{project}</div>
-                <div className={cx('role-col')}>{projects[project].projectRole}</div>
-              </div>
-            ))}
-          </BlockContainerBody>
-        </ScrollWrapper>
+  return (
+    <div className={cx('assigned-projects-block')}>
+      <div className={cx('assigned-projects-header')}>
+        <div className={cx('name-col')}>{formatMessage(messages.headerNameCol)}</div>
+        <div className={cx('role-col')}>{formatMessage(messages.headerRoleCol)}</div>
       </div>
-    );
-  };
-}
+      <ScrollWrapper autoHeight autoHeightMax={370}>
+        <BlockContainerBody>
+          {availableProjects.map(({ organizationName, organizationRole, projects }) => (
+            <>
+              <div key={organizationName} className={cx('organization-item')}>
+                <div className={cx('name-col')}>{organizationName}</div>
+                <div className={cx('role')}>
+                  <div className={cx('role-description')}>
+                    {formatMessage(messages.organization)}
+                  </div>
+                  <div className={cx('role-col')}>{organizationRole}</div>
+                </div>
+              </div>
+              {projects.map(({ projectKey, projectName, projectRole }) => (
+                <div key={projectKey} className={cx('project-item')}>
+                  <div className={cx('name-col')}>{projectName}</div>
+                  <div className={cx('role-col')}>{projectRole}</div>
+                </div>
+              ))}
+            </>
+          ))}
+        </BlockContainerBody>
+      </ScrollWrapper>
+    </div>
+  );
+};

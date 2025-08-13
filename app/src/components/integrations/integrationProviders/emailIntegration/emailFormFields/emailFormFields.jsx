@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -28,11 +28,9 @@ import {
 } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Checkbox } from '@reportportal/ui-kit';
+import { Checkbox, Dropdown, FieldText } from '@reportportal/ui-kit';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { FieldText } from 'componentLibrary/fieldText';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { separateFromIntoNameAndEmail } from 'common/utils';
 import {
   DEFAULT_FORM_CONFIG,
@@ -164,7 +162,7 @@ export class EmailFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.protocolOptions} defaultWidth={false} />
+            <Dropdown options={this.protocolOptions} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -211,7 +209,7 @@ export class EmailFormFields extends Component {
           onChange={this.onChangeAuthAvailability}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.authOptions} defaultWidth={false} />
+            <Dropdown options={this.authOptions} />
           </FieldErrorHint>
         </FieldElement>
         {authEnabled && (

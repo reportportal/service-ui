@@ -25,7 +25,7 @@ import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
 } from 'controllers/project';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
 import {
   fetchProjectNotificationsAction,
   updateNotificationStateAction,
@@ -55,12 +55,12 @@ export const Notifications = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const userRole = useSelector(userAccountRoleSelector);
+
+  const userRoles = useSelector(userRolesSelector);
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const loading = useSelector(projectNotificationsLoadingSelector);
-  const isReadOnly = !canUpdateSettings(userRole, projectRole);
+  const isReadOnly = !canUpdateSettings(userRoles);
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());

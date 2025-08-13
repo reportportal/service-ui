@@ -50,7 +50,7 @@ const localMessages = defineMessages({
     name: commonValidators.filterName(name),
   }),
   asyncValidate: ({ name }, dispatch, props) =>
-    validateAsync.filterNameUnique(props.activeProject, undefined, name),
+    validateAsync.filterNameUnique(props.projectKey, undefined, name),
   asyncChangeFields: ['name'],
   asyncBlurFields: ['name'],
   onChange: ({ name }, dispatcher, { onChange }) => onChange({ name }),
@@ -77,7 +77,7 @@ export class FilterAdd extends Component {
     valid: PropTypes.bool.isRequired,
     name: PropTypes.string,
     eventsInfo: PropTypes.object,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {

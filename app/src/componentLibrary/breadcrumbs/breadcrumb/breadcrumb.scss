@@ -28,10 +28,19 @@
   overflow: hidden;
   font-size: 13px;
   font-family: $FONT-REGULAR;
-  color: $COLOR--e-300;
+  color: $COLOR--e-400;
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.breadcrumb:last-child {
+  .breadcrumb-text {
+    color: $COLOR--e-200;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .link .breadcrumb-text {

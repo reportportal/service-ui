@@ -137,7 +137,6 @@ export class Layout extends Component {
       <div className={cx('layout')}>
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
           <div className={cx('sidebar-container')}>
-            <div className={cx('corner-area')} />
             {Sidebar && (
               <Sidebar
                 onClickNavBtn={() => {
@@ -160,7 +159,6 @@ export class Layout extends Component {
             ) : (
               <ScrollWrapper
                 withBackToTop
-                withFooter
                 resetRequired={this.state.resetScroll}
                 onReset={this.unmarkScrollToReset}
               >

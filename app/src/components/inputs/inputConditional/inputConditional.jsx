@@ -190,7 +190,7 @@ export class InputConditional extends Component {
             ))}
           </div>
         </div>
-        <i className={cx('clear-icon')} onClick={this.onClickClear} />
+        {value.value && <i className={cx('clear-icon')} onClick={this.onClickClear} />}
       </div>
     );
   }

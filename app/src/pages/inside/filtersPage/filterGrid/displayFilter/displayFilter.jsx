@@ -23,7 +23,7 @@ import styles from './displayFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => {
+export const DisplayFilter = ({ userFilters, filter, onChangeDisplay, readOnly }) => {
   const isFilterDisplayed = !!userFilters.find((item) => item.id === filter.id);
   return (
     <Fragment>
@@ -34,6 +34,7 @@ export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => {
         <InputSwitcher
           value={!!isFilterDisplayed}
           onChange={() => onChangeDisplay(isFilterDisplayed, filter)}
+          readOnly={readOnly}
         >
           <span className={cx('switcher-label')}>
             {isFilterDisplayed ? (
@@ -58,9 +59,11 @@ DisplayFilter.propTypes = {
   userFilters: PropTypes.array,
   filter: PropTypes.object,
   onChangeDisplay: PropTypes.func,
+  readOnly: PropTypes.bool,
 };
 DisplayFilter.defaultProps = {
   userFilters: [],
   filter: {},
   onChangeDisplay: () => {},
+  readOnly: false,
 };

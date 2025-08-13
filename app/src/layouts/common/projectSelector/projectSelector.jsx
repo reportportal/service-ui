@@ -28,11 +28,11 @@ import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
 
-const Tooltip = ({ activeProject }) => (
-  <div className={cx('project-selector-tooltip')}>{activeProject}</div>
+const Tooltip = ({ projectName }) => (
+  <div className={cx('project-selector-tooltip')}>{projectName}</div>
 );
 Tooltip.propTypes = {
-  activeProject: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
 };
 
 const CurrentProjectBlock = ({ getProjectName }) => {
@@ -62,7 +62,7 @@ const CurrentProjectNameWithTooltip = withTooltip({
 export class ProjectSelector extends Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.string),
-    activeProject: PropTypes.string,
+    projectName: PropTypes.string.isRequired,
     mobileOnly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -71,7 +71,6 @@ export class ProjectSelector extends Component {
   };
   static defaultProps = {
     projects: [],
-    activeProject: '',
     mobileOnly: false,
   };
 
@@ -105,14 +104,14 @@ export class ProjectSelector extends Component {
   };
 
   getProjectName = () => {
-    const { activeProject, mobileOnly } = this.props;
-    const projectName = activeProject.toString();
+    const { projectName, mobileOnly } = this.props;
+    const name = projectName.toString();
 
-    return mobileOnly ? projectName : `${projectName[0]}${projectName[projectName.length - 1]}`;
+    return mobileOnly ? projectName : `${name[0]}${name[name.length - 1]}`;
   };
 
   render() {
-    const { projects, mobileOnly, activeProject } = this.props;
+    const { projects, mobileOnly, projectName } = this.props;
     const { opened } = this.state;
 
     return (
@@ -127,13 +126,14 @@ export class ProjectSelector extends Component {
                   ref(node);
                   this.controlNode = node;
                 }}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 tabIndex={0}
                 className={cx('current-project-block')}
                 onClick={this.toggleShowList}
               >
                 <CurrentProjectNameWithTooltip
                   getProjectName={this.getProjectName}
-                  activeProject={activeProject}
+                  projectName={projectName}
                   showTooltip={!opened && !mobileOnly}
                 />
               </div>
@@ -148,17 +148,29 @@ export class ProjectSelector extends Component {
                 data-placement={placement}
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
-                  {projects.map((project) => (
-                    <NavLink
-                      to={{ type: PROJECT_PAGE, payload: { projectId: project } }}
-                      key={project}
-                      className={cx('project-list-item')}
-                      activeClassName={cx('active')}
-                      onClick={this.onClickProjectName}
-                    >
-                      <span title={project}>{project}</span>
-                    </NavLink>
-                  ))}
+                  {Object.keys(projects)
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((project) => {
+                      const { projectSlug, organizationSlug } = projects[project];
+
+                      return (
+                        <NavLink
+                          to={{
+                            type: PROJECT_PAGE,
+                            payload: {
+                              projectSlug,
+                              organizationSlug,
+                            },
+                          }}
+                          key={projectSlug}
+                          className={cx('project-list-item')}
+                          activeClassName={cx('active')}
+                          onClick={this.onClickProjectName}
+                        >
+                          <span title={projectName}>{projectName}</span>
+                        </NavLink>
+                      );
+                    })}
                 </ScrollWrapper>
               </div>
             )}

@@ -1,8 +1,4 @@
-build/
-*/**/build/
-*/**/sl_instrumented/
-.gradle/
-
+## IDE
 */**/.idea/
 .idea/
 *.ipr
@@ -13,17 +9,25 @@ build/
 .devcontainer
 .scannerwork
 
+## Compiled
+build/
+*/**/build/
+*/**/sl_instrumented/
+.gradle/
+.tsbuildinfo
+
+## Coverage
 coverage
 
 ## Binaries
 bin/
 
-##Vendor
+## Vendor
 vendor/*/
 !vendor/vendor.json
 
 ## Data
 data/
 
-##Release dir
+## Release dir
 release/

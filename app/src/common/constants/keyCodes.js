@@ -35,3 +35,16 @@ export const NUM_LOCK_6_KEY_CODE = 102;
 export const NUM_LOCK_7_KEY_CODE = 103;
 export const NUM_LOCK_8_KEY_CODE = 104;
 export const NUM_LOCK_9_KEY_CODE = 105;
+
+export const Keys = {
+  BACKSPACE: 'Backspace',
+  TAB: 'Tab',
+  ENTER: 'Enter',
+  ESCAPE: 'Escape',
+  SPACE: ' ',
+  ARROW_LEFT: 'ArrowLeft',
+  ARROW_UP: 'ArrowUp',
+  ARROW_RIGHT: 'ArrowRight',
+  ARROW_DOWN: 'ArrowDown',
+  DELETE: 'Delete',
+};

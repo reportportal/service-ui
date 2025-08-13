@@ -26,11 +26,11 @@ export const getBasicClickEventParameters = (category) =>
 export const getBasicChooseEventParameters = (category) =>
   getBasicEventParameters('choose', category);
 
+export const getBasicSearchEventParameters = (category) =>
+  getBasicEventParameters('search', category);
+
 export const getBasicPerformanceEventParameters = (category) =>
   getBasicEventParameters('performance', category);
 
 export const normalizeEventParameter = (parameter = '') =>
-  parameter
-    .toLowerCase()
-    .trim()
-    .replace(/\s+|-/g, '_');
+  parameter.toLowerCase().trim().replace(/\s+|-/g, '_');

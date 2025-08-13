@@ -16,8 +16,6 @@
 
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
-import { INTERNAL } from 'common/constants/accountType';
-import { projectInfoSelector } from 'controllers/project/selectors';
 import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
@@ -29,6 +27,7 @@ export const idSelector = (state) => userInfoSelector(state).id;
 export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const userEmailSelector = (state) => userInfoSelector(state).email || '';
 export const photoIdSelector = (state) => userInfoSelector(state).photoId;
+export const fullNameSelector = (state) => userInfoSelector(state).fullName;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;
@@ -36,27 +35,47 @@ export const logTimeFormatSelector = (state) =>
   settingsSelector(state).logTimeFormat || START_TIME_FORMAT_ABSOLUTE;
 export const photoTimeStampSelector = (state) => settingsSelector(state).photoTimeStamp || null;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
+export const assignedOrganizationsSelector = (state) =>
+  userInfoSelector(state).assignedOrganizations || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
-export const activeProjectRoleSelector = (state) => {
-  const activeProject = activeProjectSelector(state);
-  const assignedProject = assignedProjectsSelector(state)[activeProject];
-  return assignedProject?.projectRole;
-};
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
 
 export const availableProjectsSelector = createSelector(
   userInfoSelector,
-  projectInfoSelector,
-  activeProjectSelector,
-  isAdminSelector,
-  ({ assignedProjects }, { entryType = INTERNAL }, activeProjectName, isAdmin) => {
-    const isAssignedToProject = activeProjectName && assignedProjects[activeProjectName];
-    const isPropagatedToUnassignedProject = isAdmin && !isAssignedToProject;
+  ({ assignedProjects, assignedOrganizations }) => {
+    const assignedProjectMap = Object.keys(assignedProjects).map(
+      (assignedProject) => assignedProjects[assignedProject],
+    );
 
-    return isPropagatedToUnassignedProject
-      ? { ...assignedProjects, [activeProjectName]: { entryType } }
-      : assignedProjects;
+    return Object.keys(assignedOrganizations)
+      .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
+      .reduce((projects, assignedOrganization) => {
+        const { organizationSlug, organizationId, organizationName, organizationRole } =
+          assignedOrganizations[assignedOrganization];
+        const organizationProjects = assignedProjectMap
+          .filter((assignedProject) => assignedProject.organizationId === organizationId)
+          .map(({ projectName, projectSlug, projectKey, projectRole }) => ({
+            projectName,
+            projectSlug,
+            projectKey,
+            projectRole,
+          }));
+
+        return [
+          ...projects,
+          {
+            organizationSlug,
+            organizationName,
+            organizationRole,
+            projects: organizationProjects.sort((a, b) =>
+              a.projectName.toLowerCase() > b.projectName.toLowerCase() ? 1 : -1,
+            ),
+          },
+        ];
+      }, []);
   },
 );
 
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
+
+export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;

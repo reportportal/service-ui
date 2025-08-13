@@ -35,16 +35,12 @@ import {
 import { canUpdateSettings } from 'common/utils/permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import {
-  activeProjectRoleSelector,
-  activeProjectSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE, userRolesSelector } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
@@ -85,16 +81,15 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const { formatMessage } = useIntl();
 
   const dispatch = useDispatch();
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const activeProject = useSelector(activeProjectSelector);
-  const userRole = useSelector(userAccountRoleSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
+  const userRoles = useSelector(userRolesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const pluginNameInCamelCase = toCamelCase(pluginName);
   const isPluginNotificationsEnabled = useSelector(
     projectPluginNotificationsStateSelector(pluginNameInCamelCase),
   );
 
-  const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
+  const isUpdateSettingAvailable = canUpdateSettings(userRoles);
   const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
   const isActivationRequired = isUpdateSettingAvailable || rules?.length > 0;
   const isDisabledTooltipActivationRequired = !isPluginEnabled && isActivationRequired;
@@ -322,7 +317,8 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                     to={{
                       type: PROJECT_SETTINGS_TAB_PAGE,
                       payload: {
-                        projectId: activeProject,
+                        organizationSlug,
+                        projectSlug,
                         settingsTab: INTEGRATIONS,
                       },
                       meta: {
@@ -373,9 +369,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
               )}
             </div>
           ) : (
-            isUpdateSettingAvailable && (
-              <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
-            )
+            <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
           )}
         </div>
       </Layout>

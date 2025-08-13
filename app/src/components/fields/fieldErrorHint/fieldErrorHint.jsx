@@ -25,13 +25,21 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
-    defaultMessage:
-      'User name may contain only Latin, numeric characters, hyphen, underscore, dot (from 1 to 128 symbols)',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full name may contain only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot. Space is permitted (from 3 to 256 symbols)',
+      'Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)',
+  },
+  passwordCreateUserHint: {
+    id: 'CreateUserModal.passwordCreateUserHint',
+    defaultMessage:
+      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+  emailCreateUserHint: {
+    id: 'CreateUserModal.emailCreateUserHint',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
@@ -180,14 +188,18 @@ const messages = defineMessages({
     id: 'DefectTypesTab.defectShortNameHint',
     defaultMessage: "Defect Type abbreviation should have size from '1' to '4' characters",
   },
+  projectNamePatternHint: {
+    id: 'ProjectsPage.projectNamePatternHint',
+    defaultMessage:
+      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted',
+  },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
-    defaultMessage:
-      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)',
+    defaultMessage: "Project name should have size from '3' to '60' characters",
   },
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
-    defaultMessage: 'Project with the same name already exists in system',
+    defaultMessage: 'Project with the same name already exists in this organization',
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',
@@ -288,6 +300,14 @@ const messages = defineMessages({
   deleteAccountReasonSizeHint: {
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',
     defaultMessage: 'The field should have size not more than 128 symbols.',
+  },
+  keywordMatcherHint: {
+    id: 'DeleteProjectModal.keywordMatcherHint',
+    defaultMessage: 'The entered text does not match the required keyword',
+  },
+  emailInviteUserHint: {
+    id: 'CreateUserModal.emailInviteUserHint',
+    defaultMessage: 'Please enter a valid email',
   },
 });
 

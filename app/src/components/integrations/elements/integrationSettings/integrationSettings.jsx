@@ -23,13 +23,14 @@ import { BubblesLoader } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LDAP } from 'common/constants/pluginNames';
-import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+  urlOrganizationAndProjectSelector,
+  querySelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  userRolesSelector,
+} from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
   removeIntegrationAction,
@@ -51,11 +52,10 @@ export const IntegrationSettings = (props) => {
   const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const projectId = useSelector(projectIdSelector);
-  const activeProject = useSelector(activeProjectSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
-  const isEditable = canUpdateSettings(accountRole, userRole);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const userRoles = useSelector(userRolesSelector);
+  const isEditable = canUpdateSettings(userRoles);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -70,12 +70,12 @@ export const IntegrationSettings = (props) => {
   const namedSubPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+      payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
       meta: {
         query: omit(query, ['id']),
       },
     }),
-    [activeProject, query],
+    [organizationSlug, projectSlug, query],
   );
 
   const testIntegrationConnection = useCallback(() => {
@@ -84,7 +84,7 @@ export const IntegrationSettings = (props) => {
       const { isGlobal } = props;
       const fetchConnection = isGlobal
         ? fetch(URLS.testGlobalIntegrationConnection(props.data.id))
-        : fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id));
+        : fetch(URLS.testIntegrationConnection(projectKey, props.data.id));
 
       fetchConnection
         .then(() => {
@@ -96,7 +96,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, activeProject, projectId, props.preventTestConnection]);
+  }, [props.data, projectKey, props.preventTestConnection]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);

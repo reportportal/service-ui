@@ -56,7 +56,6 @@ export const TESTS_PAGE_EVENTS = {
   // GA3 events
   ...getCommonActionEvents(TEST_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
-  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
-    TEST_PAGE,
-  ),
+  getClickOnDeleteBtnDeleteItemModalEvent:
+    getClickOnDeleteBtnDeleteItemModalEventCreator(TEST_PAGE),
 };

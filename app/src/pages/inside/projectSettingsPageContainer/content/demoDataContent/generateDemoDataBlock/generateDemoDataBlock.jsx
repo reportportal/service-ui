@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
-import { projectIdSelector } from 'controllers/pages';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { Button } from '@reportportal/ui-kit';
@@ -30,6 +29,7 @@ import {
 } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { projectKeySelector } from 'controllers/project';
 import styles from './generateDemoDataBlock.scss';
 import { LabeledPreloader } from '../../elements';
 
@@ -58,7 +58,7 @@ const messages = defineMessages({
 export const GenerateDemoDataBlock = ({ className, onSuccess, onGenerate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
@@ -68,7 +68,7 @@ export const GenerateDemoDataBlock = ({ className, onSuccess, onGenerate }) => {
 
     trackEvent(PROJECT_SETTINGS_DEMO_DATA_EVENTS.CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB);
 
-    fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
+    fetch(URLS.generateDemoData(projectKey), { method: 'POST', data: {} })
       .then(() => {
         onSuccess();
         dispatch(

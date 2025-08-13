@@ -15,9 +15,12 @@
  */
 
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { findAssignedProjectByOrganization } from 'common/utils';
 import { InviteNewUserItem } from './inviteNewUserItem';
 import { UserItem } from './userItem';
 
@@ -31,19 +34,36 @@ const newOptionCreator = (inputValue) => ({
   externalUser: true,
   userLogin: inputValue,
 });
-const getURI = (isAdmin, projectId) => (input) =>
-  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId)(input);
-export const makeOptions = (projectId, isAdmin) => ({ content: options }) =>
-  options.map((option) => ({
-    userName: option.fullName || '',
-    userLogin: isAdmin ? option.userId : option.login,
-    email: option.email || '',
-    disabled: isAdmin ? !!option.assignedProjects[projectId] : false,
-    isAssigned: isAdmin ? !!option.assignedProjects[projectId] : false,
-    projectId,
-    userId: isAdmin ? option.userId : option.login,
-    assignedProjects: option.assignedProjects || {},
-  }));
+const getURI = (isAdmin, projectKey) => (input) =>
+  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
+export const makeOptions =
+  (isAdmin, projectKey, { organizationSlug, projectSlug }) =>
+  ({ content: options }) =>
+    options.map((option) => {
+      let isAssignedProject = false;
+
+      if (isAdmin) {
+        isAssignedProject = !!findAssignedProjectByOrganization(
+          option.assignedProjects,
+          option.assignedOrganizations[organizationSlug]?.organizationId,
+          projectSlug,
+        );
+      }
+
+      return {
+        userName: option.fullName || '',
+        userLogin: isAdmin ? option.userId : option.login,
+        email: option.email || '',
+        disabled: isAssignedProject,
+        isAssigned: isAssignedProject,
+        userAvatar: URLS.userAvatar(isAdmin ? option.userId : option.login, true),
+        assignedProjects: option.assignedProjects || {},
+        assignedOrganizations: option.assignedOrganizations || {},
+        userRole: option.userRole,
+        projectKey,
+        userId: isAdmin ? option.userId : option.login,
+      };
+    });
 
 const parseValueToString = (option) => (option ? option.userLogin : '');
 
@@ -61,7 +81,7 @@ const renderOption = (option, index, isNew, getItemProps) =>
 export const InputUserSearch = ({
   isAdmin,
   onChange,
-  projectId,
+  projectKey,
   value,
   error,
   touched,
@@ -69,12 +89,12 @@ export const InputUserSearch = ({
   creatable,
 }) => (
   <AsyncAutocomplete
-    getURI={getURI(isAdmin, projectId)}
+    getURI={getURI(isAdmin, projectKey)}
     onChange={onChange}
     error={error}
     touched={touched}
     isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(projectId, isAdmin)}
+    makeOptions={makeOptions(isAdmin, projectKey, useSelector(urlOrganizationAndProjectSelector))}
     createNewOption={newOptionCreator}
     value={value}
     parseValueToString={parseValueToString}
@@ -88,7 +108,7 @@ export const InputUserSearch = ({
 
 InputUserSearch.propTypes = {
   isAdmin: PropTypes.bool,
-  projectId: PropTypes.string,
+  projectKey: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   value: PropTypes.object,
@@ -99,7 +119,6 @@ InputUserSearch.propTypes = {
 
 InputUserSearch.defaultProps = {
   isAdmin: false,
-  projectId: '',
   onChange: () => {},
   placeholder: '',
   value: null,

@@ -53,7 +53,6 @@ import {
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { COMMON_LOCALE_KEYS, months, days } from 'common/constants/localization';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
@@ -72,20 +71,19 @@ import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
 import { CreateProject } from './activities/createProject';
 import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
+import { getProjectKey } from './activities/utils';
 
 const cx = classNames.bind(styles);
 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
-  projectId: projectIdSelector(state),
   lang: langSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,
@@ -223,8 +221,8 @@ export class ProjectActivity extends Component {
           <div className={cx('row-content')} key={activity.id}>
             <UserAvatar
               className={cx('avatar-wrapper')}
-              userId={activity.user}
-              projectId={this.props.projectId}
+              userId={activity.userId}
+              projectKey={getProjectKey(activity)}
               alt="avatar"
             />
             <div className={cx('activity-wrapper')}>

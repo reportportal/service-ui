@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ export const ICON_FILE_KEY = 'icon';
 // redux actions
 export const FETCH_EXTENSION_MANIFESTS_SUCCESS = 'fetchExtensionManifestsSuccess';
 export const UPDATE_EXTENSION_MANIFEST = 'updateExtensionManifest';
+export const ADD_EXTENSION_MANIFEST = 'addExtensionManifest';
 
 // plugin types
 export const PLUGIN_TYPE_REMOTE = 'REMOTE';

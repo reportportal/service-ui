@@ -20,6 +20,10 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { connect } from 'react-redux';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import styles from './emptyWidgetGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -30,29 +34,39 @@ const messages = defineMessages({
   },
   dashboardEmptyText: {
     id: 'DashboardItemPage.dashboardEmptyText',
-    defaultMessage: 'Add your first widget to analyse statistics',
+    defaultMessage: 'Add your first widget to start analyzing the statistics',
+  },
+  dashboardEmptyTextViewer: {
+    id: 'DashboardItemPage.dashboardEmptyTextViewer',
+    defaultMessage: 'Widgets will appear here once created by your team',
   },
   notMyDashboardEmptyHeader: {
     id: 'DashboardItemPage.notMyDashboardEmptyHeader',
-    defaultMessage: 'There are no widgets on this dashboard',
+    defaultMessage: 'No widgets yet',
   },
 });
 
+@connect((state) => ({
+  userRoles: userRolesSelector(state),
+}))
 @injectIntl
 export class EmptyWidgetGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     isDisable: PropTypes.bool,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
     action: () => {},
     isDisable: false,
+    userRoles: {},
   };
 
   render() {
-    const { action, intl, isDisable } = this.props;
+    const { action, intl, isDisable, userRoles } = this.props;
+    const isWorkWithDashboard = canWorkWithWidgets(userRoles);
 
     return (
       <div className={cx('empty-widget')}>
@@ -63,13 +77,17 @@ export class EmptyWidgetGrid extends Component {
         {!isDisable && (
           <Fragment>
             <p className={cx('empty-widget-text')}>
-              {intl.formatMessage(messages.dashboardEmptyText)}
+              {isWorkWithDashboard
+                ? intl.formatMessage(messages.dashboardEmptyText)
+                : intl.formatMessage(messages.dashboardEmptyTextViewer)}
             </p>
-            <div className={cx('empty-widget-content')}>
-              <GhostButton icon={AddDashboardIcon} onClick={action}>
-                {intl.formatMessage(messages.addNewWidget)}
-              </GhostButton>
-            </div>
+            {isWorkWithDashboard && (
+              <div className={cx('empty-widget-content')}>
+                <GhostButton icon={AddDashboardIcon} onClick={action}>
+                  {intl.formatMessage(messages.addNewWidget)}
+                </GhostButton>
+              </div>
+            )}
           </Fragment>
         )}
       </div>

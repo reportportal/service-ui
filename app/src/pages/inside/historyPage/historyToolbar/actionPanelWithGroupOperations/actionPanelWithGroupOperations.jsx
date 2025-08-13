@@ -31,7 +31,7 @@ import {
   proceedWithValidItemsAction,
   validationErrorsSelector,
 } from 'controllers/itemsHistory';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userAccountRoleSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
 import {
@@ -46,20 +46,19 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { activeProjectRoleSelector } from 'controllers/pages';
 import { HistoryActionPanel } from '../actionPanel';
 
 const getUnlinkIssueEventsInfo = (place) => ({
-  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
-    place,
-  ),
+  unlinkBtn:
+    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
   cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
 const getPostIssueEventsInfo = (place) => ({
-  postBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
-    place,
-  ),
+  postBtn:
+    HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
   cancelBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 });
@@ -67,9 +66,8 @@ const getPostIssueEventsInfo = (place) => ({
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    place,
-  ),
+  addNewIssue:
+    HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
   closeIcon: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 });
 
@@ -100,7 +98,6 @@ const getLinkIssueEventsInfo = (place) => ({
 export class ActionPanelWithGroupOperations extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
@@ -263,7 +260,6 @@ export class ActionPanelWithGroupOperations extends Component {
       intl: { formatMessage },
       tracking,
       selectedItems,
-      userId,
       deleteHistoryItems,
     } = this.props;
     tracking.trackEvent(HISTORY_PAGE_EVENTS.DELETE_ACTION);
@@ -278,7 +274,6 @@ export class ActionPanelWithGroupOperations extends Component {
           callback: this.unselectAndRefreshItems,
         });
       },
-      userId,
       parentLaunch: this.props.parentLaunch,
       eventsInfo: {},
     });
@@ -330,14 +325,8 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   render() {
-    const {
-      selectedItems,
-      validationErrors,
-      onUnselect,
-      onUnselectAll,
-      onRefresh,
-      parentItem,
-    } = this.props;
+    const { selectedItems, validationErrors, onUnselect, onUnselectAll, onRefresh, parentItem } =
+      this.props;
     const hasErrors = selectedItems.some((item) => !!validationErrors[item.id]);
 
     return (

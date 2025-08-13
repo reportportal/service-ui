@@ -8,6 +8,7 @@ export const ruleListPropTypes = {
   ruleItemContent: PropTypes.elementType,
   ruleItemContentProps: PropTypes.object,
   handleRuleItemClick: PropTypes.func,
+  readMode: PropTypes.bool,
   onRuleNameClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
 };
 export const ruleListDefaultProps = {
@@ -18,4 +19,5 @@ export const ruleListDefaultProps = {
   ruleItemContentProps: [],
   handleRuleItemClick: () => {},
   onRuleNameClick: null,
+  readMode: false,
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ export function* fetchExtensionManifests(action) {
 
   try {
     const results = yield Promise.allSettled(calls);
-    const metadataArray = results.reduce((acc, result, index) => {
+    const manifestsArray = results.reduce((acc, result, index) => {
       if (result.status !== 'fulfilled') {
         return acc;
       }
@@ -60,7 +60,7 @@ export function* fetchExtensionManifests(action) {
       });
     }, []);
 
-    yield put(fetchExtensionManifestsSuccessAction(metadataArray));
+    yield put(fetchExtensionManifestsSuccessAction(manifestsArray));
   } catch (error) {
     console.error('Plugin manifests load error'); // eslint-disable-line no-console
   }

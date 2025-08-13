@@ -21,6 +21,9 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
+import { userRolesSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import { getDashboardItemPageLinkSelector } from 'controllers/dashboard';
 import { messages } from './messages';
 import {
@@ -37,6 +40,7 @@ const cx = classNames.bind(styles);
 
 @injectIntl
 @connect((state) => ({
+  userRoles: userRolesSelector(state),
   getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
 }))
 export class DashboardTable extends Component {
@@ -50,6 +54,11 @@ export class DashboardTable extends Component {
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
+    userRoles: userRolesType,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -59,13 +68,15 @@ export class DashboardTable extends Component {
     onAddItem: () => {},
     dashboardItems: [],
     loading: false,
+    userRoles: {},
     filter: '',
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, onDuplicate, intl, getDashboardItemPageLink } = this.props;
+    const { onDeleteItem, onEditItem, intl, userRoles, onDuplicate, getDashboardItemPageLink } =
+      this.props;
 
-    return [
+    const columns = [
       {
         title: {
           full: intl.formatMessage(messages.dashboardName),
@@ -103,29 +114,36 @@ export class DashboardTable extends Component {
         },
         align: ALIGN_CENTER,
       },
-      {
-        title: {
-          full: intl.formatMessage(messages.edit),
-          short: intl.formatMessage(messages.edit),
-        },
-        component: EditColumn,
-        customProps: {
-          onEdit: onEditItem,
-        },
-        align: ALIGN_CENTER,
-      },
-      {
-        title: {
-          full: intl.formatMessage(messages.deleteDashboard),
-          short: intl.formatMessage(messages.deleteDashboard),
-        },
-        component: DeleteColumn,
-        customProps: {
-          onDelete: onDeleteItem,
-        },
-        align: ALIGN_CENTER,
-      },
     ];
+
+    if (canWorkWithDashboard(userRoles)) {
+      columns.push(
+        {
+          title: {
+            full: intl.formatMessage(messages.edit),
+            short: intl.formatMessage(messages.edit),
+          },
+          component: EditColumn,
+          customProps: {
+            onEdit: onEditItem,
+          },
+          align: ALIGN_CENTER,
+        },
+        {
+          title: {
+            full: intl.formatMessage(messages.deleteDashboard),
+            short: intl.formatMessage(messages.deleteDashboard),
+          },
+          component: DeleteColumn,
+          customProps: {
+            onDelete: onDeleteItem,
+          },
+          align: ALIGN_CENTER,
+        },
+      );
+    }
+
+    return columns;
   }
 
   render() {

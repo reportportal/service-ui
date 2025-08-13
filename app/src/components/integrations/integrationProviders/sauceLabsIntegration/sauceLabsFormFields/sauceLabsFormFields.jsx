@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { commonValidators } from 'common/utils/validation';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown, FieldText } from '@reportportal/ui-kit';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { FieldText } from 'componentLibrary/fieldText';
 import styles from './sauceLabsFormFields.scss';
 
 const cx = classNames.bind(styles);
@@ -127,7 +126,7 @@ export class SauceLabsFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.dataCenterOptions} defaultWidth={false} />
+            <Dropdown options={this.dataCenterOptions} />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>

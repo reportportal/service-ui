@@ -63,6 +63,12 @@
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
   }
 
+  &.readonly {
+    cursor: default;
+    border: none;
+    padding-left: 0;
+  }
+
   &.disabled {
     background-color: $COLOR--gray-91;
     cursor: default;

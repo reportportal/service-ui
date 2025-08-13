@@ -28,8 +28,8 @@ function* cancelExports() {
       }
     });
     yield put(resetExportsAction());
-  } catch (e) {
-    console.log('ERROR FROM EXPORTS: ', e);
+  } catch {
+    /* empty */
   }
 }
 

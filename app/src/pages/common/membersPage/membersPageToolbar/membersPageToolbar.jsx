@@ -22,7 +22,8 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -58,8 +59,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectRole: activeProjectRoleSelector(state),
-    accountRole: userAccountRoleSelector(state),
+    userRoles: userRolesSelector(state),
     ssoUsersOnly: ssoUsersOnlySelector(state),
   }),
   {
@@ -80,8 +80,7 @@ export class MembersPageToolbar extends React.Component {
     intl: PropTypes.object,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
-    projectRole: PropTypes.string,
-    accountRole: PropTypes.string,
+    userRoles: userRolesType,
     ssoUsersOnly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -93,8 +92,7 @@ export class MembersPageToolbar extends React.Component {
   static defaultProps = {
     intl: {},
     onInvite: () => {},
-    projectRole: '',
-    accountRole: '',
+    userRoles: {},
     ssoUsersOnly: false,
     onFilterChange: () => {},
   };
@@ -141,7 +139,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton
             icon={InviteUserIcon}
             onClick={this.showInviteUserModal}
-            disabled={!canInviteInternalUser(this.props.accountRole, this.props.projectRole)}
+            disabled={!canInviteInternalUser(this.props.userRoles)}
           >
             {this.props.intl.formatMessage(this.getButtonText())}
           </GhostButton>
