@@ -52,7 +52,7 @@ import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import {
   CREATE_USER_FORM,
   ORGANIZATIONS,
-} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/createUserModal';
+} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal';
 import styles from './instanceAssignment.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -110,7 +110,7 @@ interface MyFieldArrayProps<T> extends WrappedFieldArrayProps<T> {
   };
 }
 
-type ReduxFormState = {
+interface ReduxFormState {
   form: {
     createUserForm?: {
       values?: {
@@ -118,9 +118,20 @@ type ReduxFormState = {
       };
     };
   };
-};
+}
 
 const ORGANIZATION = 'organization';
+const FORM_FIELDS = {
+  ORGANIZATION: {
+    NAME: `${ORGANIZATION}.name`,
+    ROLE: `${ORGANIZATION}.role`,
+    PROJECTS: {
+      NAME: `${ORGANIZATION}.projects[0].name`,
+      ROLE: `${ORGANIZATION}.projects[0].role`,
+    },
+  },
+};
+
 const selector = formValueSelector(CREATE_USER_FORM);
 
 export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignmentProps>) => {
@@ -137,8 +148,8 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
     OrganizationSearchesItem[]
   >([]);
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
-  const [selectedProjectId, setSelectedProjectId] = useState<number>(null);
-  const [selectedOrganizationId, setSelectedOrganizationId] = useState<number>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const allOrganizations = fields.getAll();
 
@@ -234,7 +245,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
             <div className={cx('autocomplete-label')}>{formatMessage(messages.organization)}</div>
-            <FieldProvider name="organization.name">
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocomplete
                   placeholder={formatMessage(messages.organizationPlaceholder)}
@@ -250,12 +261,14 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
                 />
               </FieldErrorHint>
             </FieldProvider>
-            <FieldProvider name="organization.role">
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  dispatch(change(CREATE_USER_FORM, 'organization.role', checked));
-                  dispatch(change(CREATE_USER_FORM, 'organization.projects[0].role', checked));
+                  dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                  dispatch(
+                    change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
+                  );
                 }}
                 className={cx('autocomplete-checkbox')}
               >
@@ -265,7 +278,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
           </div>
           <div className={cx('autocomplete-wrapper')}>
             <div className={cx('autocomplete-label')}>{formatMessage(messages.project)}</div>
-            <FieldProvider name="organization.projects[0].name">
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocomplete
                   placeholder={formatMessage(messages.projectPlaceholder)}
@@ -280,7 +293,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
               </FieldErrorHint>
             </FieldProvider>
             <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
-              <FieldProvider name="organization.projects[0].role">
+              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
                 <Checkbox disabled={!selectedOrganizationId || !!organization.role}>
                   {formatMessage(messages.canEditProject)}
                 </Checkbox>

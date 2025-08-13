@@ -36,16 +36,17 @@ import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Event
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { OrganizationType } from 'controllers/organization';
+import {
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+  ADMIN_RIGHTS,
+  PASSWORD_FIELD,
+  EMAIL_FIELD,
+  FULL_NAME_FIELD,
+} from './constants';
 import styles from './createUserModal.scss';
 
 const cx = classNames.bind(styles);
-
-const FULL_NAME_FIELD = 'fullName';
-const EMAIL_FIELD = 'email';
-const PASSWORD_FIELD = 'password';
-const ADMIN_RIGHTS = 'adminRights';
-export const CREATE_USER_FORM = 'createUserForm';
-export const ORGANIZATIONS = 'organizations';
 
 const messages = defineMessages({
   createUserTitle: {

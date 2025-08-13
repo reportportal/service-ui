@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-export { CreateUserModal } from './createUserModal';
-export {
-  FULL_NAME_FIELD,
-  EMAIL_FIELD,
-  PASSWORD_FIELD,
-  ADMIN_RIGHTS,
-  CREATE_USER_FORM,
-  ORGANIZATIONS,
-} from './constants';
+export const FULL_NAME_FIELD = 'fullName';
+export const EMAIL_FIELD = 'email';
+export const PASSWORD_FIELD = 'password';
+export const ADMIN_RIGHTS = 'adminRights';
+export const CREATE_USER_FORM = 'createUserForm';
+export const ORGANIZATIONS = 'organizations';
