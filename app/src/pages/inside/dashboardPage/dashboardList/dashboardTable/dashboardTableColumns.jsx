@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -33,6 +32,7 @@ import { fetch } from 'common/utils';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
+import { userRolesSelector } from 'controllers/pages';
 
 const cx = classNames.bind(styles);
 
@@ -111,7 +111,6 @@ export const DuplicateColumn = track()(
       return fetch(url);
     };
     const userRoles = useSelector(userRolesSelector);
-
 
     useEffect(() => {
       if (opened) {
