@@ -246,11 +246,7 @@ export const InstanceAssignment = ({
   const handleProjectChange = (projectName: string) => {
     const project = organizationProjects.find(({ name }) => name === projectName);
 
-    if (project) {
-      setSelectedProjectId(project.id);
-    } else {
-      setSelectedProjectId(null);
-    }
+    setSelectedProjectId(project ? project.id : null);
   };
 
   return (
