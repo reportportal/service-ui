@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - 'develop'
+  push:
+    branches:
+      - 'feature/upcoming'
 
 jobs:
   variables-setup:
