@@ -373,6 +373,14 @@ export class FieldErrorHint extends Component {
             error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
             active,
             ...rest,
+            onChange: (...args) => {
+              if (typeof rest.onChange === 'function') {
+                rest.onChange(...args);
+              }
+              if (typeof children.props.onChange === 'function') {
+                children.props.onChange(...args);
+              }
+            },
           })}
         {provideHint && (
           <div
