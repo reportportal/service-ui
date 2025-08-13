@@ -49,6 +49,10 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
+import {
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/createUserModal';
 import styles from './instanceAssignment.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -116,17 +120,18 @@ type ReduxFormState = {
   };
 };
 
-const selector = formValueSelector('createUserForm');
+const ORGANIZATION = 'organization';
+const selector = formValueSelector(CREATE_USER_FORM);
 
 export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignmentProps>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const errors = useSelector((state) => getFormSyncErrors('createUserForm')(state)) as {
+  const errors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state)) as {
     organization: { name: string };
   };
   const hasOrgNameError = !!errors?.organization?.name;
   const organization = useSelector(
-    (state: ReduxFormState): Organization => selector(state, 'organization') as Organization,
+    (state: ReduxFormState): Organization => selector(state, ORGANIZATION) as Organization,
   );
   const [notAssignedOrganizations, setNotAssignedOrganizations] = useState<
     OrganizationSearchesItem[]
@@ -139,7 +144,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
 
   const resetOrganization = () => {
     dispatch(
-      change('createUserForm', 'organization', {
+      change(CREATE_USER_FORM, ORGANIZATION, {
         name: null,
         role: false,
         projects: [],
@@ -222,7 +227,7 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
 
   return (
     <div>
-      <FieldElement name="organizations" className={cx('organizations')}>
+      <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
         <OrganizationAssignment isMultiple />
       </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
@@ -249,8 +254,8 @@ export const InstanceAssignment = ({ fields }: MyFieldArrayProps<InstanceAssignm
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  dispatch(change('createUserForm', 'organization.role', checked));
-                  dispatch(change('createUserForm', 'organization.projects[0].role', checked));
+                  dispatch(change(CREATE_USER_FORM, 'organization.role', checked));
+                  dispatch(change(CREATE_USER_FORM, 'organization.projects[0].role', checked));
                 }}
                 className={cx('autocomplete-checkbox')}
               >

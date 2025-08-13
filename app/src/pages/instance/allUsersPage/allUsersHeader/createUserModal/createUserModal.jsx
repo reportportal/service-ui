@@ -44,8 +44,8 @@ const FULL_NAME_FIELD = 'fullName';
 const EMAIL_FIELD = 'email';
 const PASSWORD_FIELD = 'password';
 const ADMIN_RIGHTS = 'adminRights';
-const CREATE_USER_FORM = 'createUserForm';
-const ORGANIZATIONS = 'organizations';
+export const CREATE_USER_FORM = 'createUserForm';
+export const ORGANIZATIONS = 'organizations';
 
 const messages = defineMessages({
   createUserTitle: {
