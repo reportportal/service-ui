@@ -52,10 +52,18 @@
   border-top: 1px solid var(--rp-ui-base-e-100);
   margin-top: auto;
   height: 64px;
-}
 
-.selection-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__more-button {
+      padding: 7px 12px;
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
 }

@@ -29,7 +29,7 @@
   margin-bottom: 32px;
 
   > div:first-child > div:first-child {
-    padding: 4px 0 0 10px;
+    padding: 4px 0 0 8px;
   }
 }
 
@@ -38,8 +38,6 @@
   height: max-content;
   min-height: 80px;
   border-radius: 4px;
-  border: 1px solid transparent;
-  padding: 1px;
   box-sizing: content-box;
 
   > div:first-child {
@@ -49,14 +47,16 @@
   :global([class*='table-row-content']) {
     align-items: flex-start;
     min-height: 80px;
+    border: 1px solid transparent;
+    padding: 1px;
   }
 
-  &:hover {
+  &:hover > :global([class*='table-row-content']) {
     border: 1px solid var(--rp-ui-base-topaz-focused);
     padding: 1px;
   }
 
-  &:has(.selected) {
+  &:has(.selected) > :global([class*='table-row-content']) {
     border: 2px solid var(--rp-ui-base-topaz-focused);
     padding: 0;
   }
