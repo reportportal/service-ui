@@ -17,8 +17,8 @@
 import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isEmpty, noop } from 'lodash';
-import { Button, Pagination, Selection } from '@reportportal/ui-kit';
+import { isEmpty } from 'lodash';
+import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
@@ -27,11 +27,10 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
 import styles from './allTestCasesPage.scss';
-import { DotsMenuItem } from './types';
+import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -58,31 +57,19 @@ export const AllTestCasesPage = ({
   const totalItems = testCases.length;
   const totalPages = Math.ceil(totalItems / pageSize);
 
-  const dotsMenuItems: DotsMenuItem[] = [
+  const popoverItems: PopoverItem[] = [
     {
       label: formatMessage(messages.duplicateToFolder),
-      onClick: noop,
-      title: formatMessage(messages.duplicateToFolder),
-      value: 'duplicateToFolder',
     },
     {
       label: formatMessage(messages.changePriority),
-      onClick: noop,
-      title: formatMessage(messages.changePriority),
-      value: 'changePriority',
     },
     {
       label: formatMessage(messages.editTags),
-      onClick: noop,
-      title: formatMessage(messages.editTags),
-      value: 'editTags',
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      onClick: noop,
-      type: 'danger',
-      title: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      value: 'delete',
+      variant: 'destructive',
     },
   ];
 
@@ -148,7 +135,16 @@ export const AllTestCasesPage = ({
               onClearSelection={() => setSelectedRowIds([])}
             />
             <div className={cx('selection-controls')}>
-              <DotsMenuButton items={dotsMenuItems} />
+              <PopoverControl items={popoverItems} placement="bottom-end">
+                <Button
+                  variant="ghost"
+                  adjustWidthOn="content"
+                  onClick={() => {}}
+                  className={cx('selection-controls__more-button')}
+                >
+                  <MeatballMenuIcon />
+                </Button>
+              </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
               <Button>{formatMessage(messages.addToTestPlan)}</Button>
