@@ -26,7 +26,7 @@ import { messages } from './messages';
 
 import styles from './testPlansTable.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestPlansTableProps {
   testPlans: TestPlan[];

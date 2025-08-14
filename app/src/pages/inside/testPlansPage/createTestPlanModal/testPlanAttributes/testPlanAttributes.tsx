@@ -16,18 +16,32 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
+import { noop } from 'lodash';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 
-import { noop } from 'common/utils';
 import { messages } from '../messages';
 
-const AttributeListField = ({ input, ...rest }) => (
+interface AttributeListFieldProps {
+  input: {
+    value: unknown[];
+    onChange: VoidFunction;
+  };
+  attributes: Record<string, unknown>[];
+  onChange: VoidFunction;
+  disabled: boolean;
+  newAttrMessage: string;
+  maxLength: number;
+  customClass: string;
+  showButton: boolean;
+  editable: boolean;
+  defaultOpen: boolean;
+}
+
+const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
   <AttributeList
-    // eslint-disable-next-line react/jsx-props-no-spreading
     {...input}
-    // eslint-disable-next-line react/jsx-props-no-spreading
     {...rest}
     attributes={input.value || []}
     onChange={input.onChange}

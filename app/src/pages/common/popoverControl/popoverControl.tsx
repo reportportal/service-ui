@@ -21,7 +21,7 @@ import { Popover } from '@reportportal/ui-kit';
 
 import styles from './popoverControl.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export interface PopoverItem {
   label: string;

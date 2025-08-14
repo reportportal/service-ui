@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 {
   "compilerOptions": {
     "target": "ES2019",
     "module": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ES6", "ES2017", "ES2018", "ES2019"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES6",
+      "ES2017",
+      "ES2018",
+      "ES2019"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -26,7 +32,7 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -36,15 +42,33 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
     "paths": {
-      "components/*": ["components/*"],
-      "componentLibrary/*": ["componentLibrary/*"],
-      "controllers/*": ["controllers/*"],
-      "common/*": ["common/*"],
-      "pages/*": ["pages/*"],
-      "store/*": ["store/*"],
-      "routes/*": ["routes/*"],
-      "layouts/*": ["layouts/*"],
-      "analyticsEvents/*": ["components/main/analytics/events/ga4Events/*"]
+      "components/*": [
+        "components/*"
+      ],
+      "componentLibrary/*": [
+        "componentLibrary/*"
+      ],
+      "controllers/*": [
+        "controllers/*"
+      ],
+      "common/*": [
+        "common/*"
+      ],
+      "pages/*": [
+        "pages/*"
+      ],
+      "store/*": [
+        "store/*"
+      ],
+      "routes/*": [
+        "routes/*"
+      ],
+      "layouts/*": [
+        "layouts/*"
+      ],
+      "analyticsEvents/*": [
+        "components/main/analytics/events/ga4Events/*"
+      ]
     },
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo"

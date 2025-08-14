@@ -36,7 +36,7 @@ export const useTestCases = () => {
       setLoading(false);
     };
 
-    loadTestCases();
+    void loadTestCases();
   }, []);
 
   const filteredTestCases = useMemo(() => {
@@ -52,9 +52,10 @@ export const useTestCases = () => {
     );
   }, [testCases, searchValue]);
 
-  const hasTestCases = useMemo(() => filteredTestCases && filteredTestCases.length > 0, [
-    filteredTestCases,
-  ]);
+  const hasTestCases = useMemo(
+    () => filteredTestCases && filteredTestCases.length > 0,
+    [filteredTestCases],
+  );
 
   return {
     testCases,

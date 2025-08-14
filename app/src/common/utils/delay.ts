@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import { Action } from 'redux';
 import { put } from 'redux-saga/effects';
 
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function* delayedPut(action, time) {
+export function* delayedPut(action: Action, time: number) {
   yield delay(time);
   yield put(action);
 }

@@ -16,6 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 import classNames from 'classnames/bind';
 import {
   CONDITION_HAS,
@@ -191,7 +192,7 @@ export class InputConditionalAttributes extends Component {
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {inputConditions.length &&
+              {!isEmpty(inputConditions) &&
                 value?.condition &&
                 inputConditions.filter((condition) => condition.value === value.condition)[0]
                   .shortLabel}

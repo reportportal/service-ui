@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { isEmpty } from 'lodash';
+
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
-import isEmpty from 'lodash.isempty';
 import { messages } from './messages';
 import { TestCaseMenuAction } from './types';
 
-export const DEFAULT_FILTER_VALUE = 'all';
 export const DEFAULT_CURRENT_PAGE = 1;
 export const DEFAULT_ITEMS_PER_PAGE = 10;
 

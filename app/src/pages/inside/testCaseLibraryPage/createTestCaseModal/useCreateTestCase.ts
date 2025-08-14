@@ -24,7 +24,7 @@ const testFolderId = 1;
 export const useCreateTestCase = () => {
   const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector) as string;
+  const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
 
   const createTestCase = async (payload: CreateTestCaseFormData) => {
@@ -61,8 +61,8 @@ export const useCreateTestCase = () => {
         }),
       );
       dispatch(getTestCasesAction({ testFolderId }));
-    } catch (error) {
-      if (error?.message?.includes('tms_test_case_name_folder_unique')) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
           name: formatMessage(messages.duplicateTestCaseName),
         });

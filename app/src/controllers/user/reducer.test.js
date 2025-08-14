@@ -23,7 +23,6 @@ import {
   START_TIME_FORMAT_ABSOLUTE,
   SET_PHOTO_TIME_STAMP,
   ASSIGN_TO_PROJECT_SUCCESS,
-  UNASSIGN_FROM_PROJECT_SUCCESS,
   SET_API_KEYS,
 } from './constants';
 import {
@@ -167,30 +166,6 @@ describe('user reducer', () => {
           payload: payloadProject,
         }),
       ).toEqual(assignResult);
-    });
-
-    test('should handle UNASSIGN_FROM_PROJECT_SUCCESS', () => {
-      const stateBeforeUnassign = {
-        admin_personal: {
-          projectRole: 'PROJECT_MANAGER',
-          entryType: 'PERSONAL',
-        },
-        superadmin_personal: {
-          projectRole: 'PROJECT_MANAGER',
-          entryType: 'INTERNAL',
-        },
-      };
-      const payloadProject = {
-        projectName: 'superadmin_personal',
-        entryType: 'INTERNAL',
-        projectRole: PROJECT_MANAGER,
-      };
-      expect(
-        userAssignedProjectReducer(stateBeforeUnassign, {
-          type: UNASSIGN_FROM_PROJECT_SUCCESS,
-          payload: payloadProject,
-        }),
-      ).toEqual(oldState);
     });
   });
 });

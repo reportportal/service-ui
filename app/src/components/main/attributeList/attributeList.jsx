@@ -103,14 +103,17 @@ export const AttributeList = track()(
           maxCellWidth={maxCellWidth}
         />
       ))}
-      {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
-        <div className={cx('add-new-button')} onClick={onAddNew}>
-          +{' '}
-          {newAttrMessage || (
-            <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
-          )}
-        </div>
-      )}
+      {!hasEditedAttribute(attributes) &&
+        !disabled &&
+        showButton &&
+        attributes.length < maxLength && (
+          <div className={cx('add-new-button')} onClick={onAddNew}>
+            +{' '}
+            {newAttrMessage || (
+              <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+            )}
+          </div>
+        )}
     </Fragment>
   ),
 );

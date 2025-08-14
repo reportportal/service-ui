@@ -145,9 +145,9 @@ export class PluginsItem extends Component {
         </div>
         <div className={cx('plugins-additional-block')}>
           {toggleable && (
-            <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
+            <button className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
               <InputSwitcher value={this.state.isEnabled} onChange={this.onChangeHandler} />
-            </div>
+            </button>
           )}
         </div>
       </div>

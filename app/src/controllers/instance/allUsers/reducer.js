@@ -16,13 +16,13 @@
 
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { paginationReducer } from 'controllers/pagination';
+import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { ALL_USERS_PAGE } from 'controllers/pages';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { queueReducers } from 'common/utils/queueReducers';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
+import { initialPaginationState, NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
 
 const toggleUserRoleFormReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
@@ -43,7 +43,7 @@ const reducer = combineReducers({
     fetchReducer(NAMESPACE, { contentPath: 'items' }),
     toggleUserRoleFormReducer,
   ),
-  pagination: paginationReducer(NAMESPACE),
+  pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   loading: loadingReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
 });

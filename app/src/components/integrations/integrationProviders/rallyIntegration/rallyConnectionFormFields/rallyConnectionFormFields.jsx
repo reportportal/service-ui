@@ -23,7 +23,7 @@ import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown } from '@reportportal/ui-kit';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
 import { FieldText } from 'componentLibrary/fieldText';
 import { DEFAULT_FORM_CONFIG } from '../constants';
@@ -114,7 +114,7 @@ export class RallyConnectionFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.systemAuthTypes} defaultWidth={false} />
+            <Dropdown options={this.systemAuthTypes} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement

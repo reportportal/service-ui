@@ -18,25 +18,24 @@ import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 
-export const createCheckPermission = (permissionMap) => (permission) => ({
-  userRole,
-  organizationRole,
-  projectRole,
-} = {}) => {
-  if (userRole === ADMINISTRATOR) {
-    return true;
-  }
+export const createCheckPermission =
+  (permissionMap) =>
+  (permission) =>
+  ({ userRole, organizationRole, projectRole } = {}) => {
+    if (userRole === ADMINISTRATOR) {
+      return true;
+    }
 
-  if (organizationRole === MANAGER) {
-    return !!permissionMap[organizationRole][permission];
-  }
+    if (organizationRole === MANAGER) {
+      return !!permissionMap[organizationRole][permission];
+    }
 
-  if (permissionMap[organizationRole]?.[projectRole]) {
-    return !!permissionMap[organizationRole][projectRole][permission];
-  }
+    if (permissionMap[organizationRole]?.[projectRole]) {
+      return !!permissionMap[organizationRole][projectRole][permission];
+    }
 
-  return false;
-};
+    return false;
+  };
 
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 
@@ -45,6 +44,7 @@ export const canCreateProject = checkPermission(ACTIONS.CREATE_PROJECT);
 export const canDeleteProject = checkPermission(ACTIONS.DELETE_PROJECT);
 export const canRenameProject = checkPermission(ACTIONS.RENAME_PROJECT);
 export const canInviteUserToProject = checkPermission(ACTIONS.INVITE_USER_TO_PROJECT);
+export const canInviteUserToOrganization = checkPermission(ACTIONS.INVITE_USER_TO_ORGANIZATION);
 export const canChangeAccessProject = checkPermission(ACTIONS.CHANGE_ACCESS_PROJECT);
 export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
 export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);
@@ -76,7 +76,7 @@ export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_W
 export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
 export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
 export const canReportLaunches = checkPermission(ACTIONS.REPORT_LAUNCHES);
-export const canSeeOrganizationSettings = checkPermission(ACTIONS.SEE_ORGANIZATION_SETTINGS);
+export const canUpdateOrganizationSettings = checkPermission(ACTIONS.UPDATE_ORGANIZATION_SETTINGS);
 export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
 export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
 export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);
@@ -86,3 +86,9 @@ export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
 export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
 export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
 export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
+export const canWorkWithOrganizationsSorting = checkPermission(
+  ACTIONS.WORK_WITH_ORGANIZATIONS_SORTING,
+);
+export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
+export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
+export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);

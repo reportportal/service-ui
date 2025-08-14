@@ -35,7 +35,7 @@ export const useTestPlans = () => {
       setLoading(false);
     };
 
-    loadTestPlans();
+    void loadTestPlans();
   }, []);
 
   return {

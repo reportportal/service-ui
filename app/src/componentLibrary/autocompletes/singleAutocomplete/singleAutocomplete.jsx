@@ -87,14 +87,16 @@ export class SingleAutocomplete extends Component {
     useFixedPositioning: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItem === item,
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItem) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItem === item,
+        ...rest,
+      });
 
   handleKeyDown = (event, setHighlightedIndex) => {
     if (event.keyCode === TAB_KEY_CODE) {

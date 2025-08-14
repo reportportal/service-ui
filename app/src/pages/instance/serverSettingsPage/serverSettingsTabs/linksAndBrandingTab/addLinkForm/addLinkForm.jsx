@@ -31,7 +31,7 @@ import { FormField } from 'components/fields/formField';
 import { Input } from 'components/inputs/input';
 import { useTracking } from 'react-tracking';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { prepareFooterLinksData } from '../utils';
+import { prepareSidebarLinksData } from '../utils';
 import styles from './addLinkForm.scss';
 
 const cx = classNames.bind(styles);
@@ -60,7 +60,7 @@ const AddLink = ({ onClose, handleSubmit, customLinks }) => {
 
     dispatch(
       updateServerSettingsAction({
-        data: prepareFooterLinksData([...customLinks, targetLink]),
+        data: prepareSidebarLinksData([...customLinks, targetLink]),
         onSuccess: () => {
           dispatch(
             showNotification({

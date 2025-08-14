@@ -18,7 +18,11 @@ import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effect
 import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  showErrorNotification,
+} from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import {
@@ -32,7 +36,6 @@ import { findAssignedProjectByOrganization } from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
-  unassignFromProjectSuccessAction,
   setActiveProjectAction,
   fetchUserSuccessAction,
   fetchUserErrorAction,
@@ -44,13 +47,14 @@ import {
 } from './actionCreators';
 import {
   ASSIGN_TO_PROJECT,
-  UNASSIGN_FROM_PROJECT,
   SET_ACTIVE_PROJECT,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
   FETCH_USER,
+  FETCH_USER_INFO,
   DELETE_USER_ACCOUNT,
+  UPDATE_USER_INFO,
 } from './constants';
 import { userIdSelector, userInfoSelector } from './selectors';
 
@@ -99,44 +103,20 @@ function* assignToProject({ payload: project }) {
   }
 }
 
-function* unassignFromProject({ payload: project }) {
-  const userId = yield select(userIdSelector);
-  const data = {
-    userNames: [userId],
-  };
+function* fetchUserInfo() {
   try {
-    yield call(fetch, URLS.userUnassign(project), {
-      method: 'put',
-      data,
-    });
-    yield put(unassignFromProjectSuccessAction(project));
-    yield put(
-      showNotification({
-        messageId: 'unassignSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    const user = yield call(fetch, URLS.users());
+    yield put(fetchUserSuccessAction(user));
+    return user;
   } catch (err) {
-    const error = err.message;
-    yield put(
-      showNotification({
-        messageId: 'unassignError',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+    yield put(fetchUserErrorAction());
   }
 }
 
 function* fetchUserWorker() {
-  let user;
-  try {
-    user = yield call(fetch, URLS.users());
-    yield put(fetchUserSuccessAction(user));
-  } catch (err) {
-    yield put(fetchUserErrorAction());
-    return;
-  }
+  const user = yield call(fetchUserInfo);
+  if (!user) return;
+
   const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
   const { userId, assignedOrganizations, assignedProjects } = user;
 
@@ -186,7 +166,7 @@ function* fetchUserWorker() {
       );
 
       activeOrganization = activeOrganizationResponse?.items?.[0];
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {} // eslint-disable-line no-empty
 
     if (!isAssignedToTargetProject && assignmentNotRequired) {
       try {
@@ -195,11 +175,11 @@ function* fetchUserWorker() {
           URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
         );
         projectKey = currentProject?.items?.[0]?.key;
-      } catch (e) {} // eslint-disable-line no-empty
+      } catch {} // eslint-disable-line no-empty
     }
 
     const activeProject =
-      isAssignedToTargetProject || projectKey
+      targetActiveProject && (isAssignedToTargetProject || projectKey)
         ? targetActiveProject
         : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
 
@@ -239,7 +219,6 @@ function* addApiKey({ payload = {} }) {
       },
     });
 
-    // eslint-disable-next-line camelcase
     const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {
@@ -312,11 +291,10 @@ function* deleteApiKey({ payload = {} }) {
 }
 
 function* deleteUserAccount({ payload = {} }) {
-  const { onSuccess } = payload;
-  const user = yield select(userInfoSelector);
+  const { onSuccess, userId } = payload;
 
   try {
-    yield call(fetch, URLS.userInfo(user.id), {
+    yield call(fetch, URLS.userInfo(userId), {
       method: 'delete',
     });
     onSuccess();
@@ -327,6 +305,20 @@ function* deleteUserAccount({ payload = {} }) {
         type: NOTIFICATION_TYPES.ERROR,
       }),
     );
+  }
+}
+
+function* updateUserInfo({ payload = {} }) {
+  const { email, data, onSuccess } = payload;
+
+  try {
+    yield call(fetch, URLS.userInfo(email), {
+      method: 'put',
+      data,
+    });
+    onSuccess?.();
+  } catch ({ message }) {
+    yield put(showErrorNotification({ message }));
   }
 }
 
@@ -350,6 +342,10 @@ function* watchSaveActiveProject() {
   yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
 }
 
+function* watchFetchUserInfo() {
+  yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -358,19 +354,20 @@ function* watchAssignToProject() {
   yield takeLatest(ASSIGN_TO_PROJECT, assignToProject);
 }
 
-function* watchUnassignFromProject() {
-  yield takeLatest(UNASSIGN_FROM_PROJECT, unassignFromProject);
+function* watchUpdateUserInfo() {
+  yield takeEvery(UPDATE_USER_INFO, updateUserInfo);
 }
 
 export function* userSagas() {
   yield all([
     watchAssignToProject(),
-    watchUnassignFromProject(),
     watchFetchUser(),
+    watchFetchUserInfo(),
     watchSaveActiveProject(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),
     watchDeleteUserAccount(),
+    watchUpdateUserInfo(),
   ]);
 }

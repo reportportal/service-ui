@@ -36,6 +36,7 @@ import {
   Checkbox,
   Toggle,
   Modal as ModalLayoutComponent,
+  Dropdown,
 } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -186,7 +187,6 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';

@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import isEmpty from 'lodash.isempty';
+import { isEmpty } from 'lodash';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
@@ -34,10 +34,10 @@ import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useTestCases } from '../hooks/useTestCases';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
-  const [activeFolder, setActiveFolder] = useState(null);
+  const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -82,10 +82,7 @@ export const ExpandedOptions = () => {
           <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
             {formatMessage(commonMessages.folders)}
           </div>
-          <BaseIconButton
-            className={cx('expanded-options__sidebar-actions--search')}
-            onClick={setActiveFolder}
-          >
+          <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
             <SearchIcon />
           </BaseIconButton>
           <Button

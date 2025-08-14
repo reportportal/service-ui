@@ -23,7 +23,6 @@ import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
-import { Footer } from 'layouts/common/footer';
 import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -198,7 +197,6 @@ export class ScrollWrapper extends Component {
             </button>
           </div>
         )}
-        {this.props.withFooter && <Footer />}
       </Scrollbars>
     );
   }

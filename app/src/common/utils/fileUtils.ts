@@ -46,10 +46,7 @@ export const validateFile = (
   }
 
   if (acceptFileMimeTypes.length > 0) {
-    const fileExtension = file.name
-      .split('.')
-      .pop()
-      ?.toLowerCase();
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
     const isValidType = acceptFileMimeTypes.some((type) =>
       type.startsWith('.') ? fileExtension === type.slice(1) : file.type === type,
     );

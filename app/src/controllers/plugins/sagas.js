@@ -26,7 +26,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
 import { userIdSelector } from 'controllers/user';
-import { projectKeySelector } from 'controllers/project';
+import { projectKeySelector } from 'controllers/project/selectors';
 import {
   NAMESPACE,
   FETCH_PLUGINS,

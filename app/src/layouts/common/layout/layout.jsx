@@ -146,7 +146,11 @@ export class Layout extends Component {
             )}
           </div>
           <div className={cx('content')}>
-            {Banner && <Banner />}
+            {Banner && (
+              <div className={cx('banner-container')}>
+                <Banner />
+              </div>
+            )}
             {rawContent ? (
               <>
                 {header}
@@ -155,7 +159,6 @@ export class Layout extends Component {
             ) : (
               <ScrollWrapper
                 withBackToTop
-                withFooter
                 resetRequired={this.state.resetScroll}
                 onReset={this.unmarkScrollToReset}
               >

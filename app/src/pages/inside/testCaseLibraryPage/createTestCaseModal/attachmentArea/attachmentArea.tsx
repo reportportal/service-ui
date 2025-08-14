@@ -17,8 +17,7 @@
 import { ChangeEvent, PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import isNumber from 'lodash.isnumber';
-import isEmpty from 'lodash.isempty';
+import { isNumber, isEmpty, noop } from 'lodash';
 import Dropzone from 'react-dropzone';
 import {
   Button,
@@ -32,14 +31,14 @@ import {
 
 import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { uniqueId, noop } from 'common/utils';
+import { uniqueId } from 'common/utils';
 import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
 
 import { messages } from './messages';
 
 import styles from './attachmentArea.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AttachmentFile {
   id: string;
@@ -171,7 +170,6 @@ export const AttachmentArea = ({
           addFile(file);
           return;
         }
-        // eslint-disable-next-line no-console
         console.error('File rejected:', errors);
       });
     },

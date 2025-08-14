@@ -156,8 +156,8 @@ describe('validate.userName', () => {
   test('validation should be correct', () => {
     expect(validate.userName('abc')).toBe(true);
     expect(validate.userName('full name')).toBe(true);
-    expect(validate.userName('полное имя')).toBe(true);
     expect(validate.userName('full name with.some_symbols-123')).toBe(true);
+    expect(validate.userName("O'Connor")).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.userName(undefined)).toBe(false);
@@ -165,6 +165,7 @@ describe('validate.userName', () => {
     expect(validate.userName('  ')).toBe(false);
     expect(validate.userName('name#')).toBe(false);
     expect(validate.userName('Hello 世界')).toBe(false);
+    expect(validate.userName('полное имя')).toBe(false);
   });
 });
 

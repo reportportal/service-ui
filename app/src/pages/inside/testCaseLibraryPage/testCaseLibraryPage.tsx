@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
+import { ProjectDetails } from 'pages/organization/constants';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -36,18 +37,22 @@ import { commonMessages } from './commonMessages';
 import { useCreateTestCaseModal } from './createTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
+import { isEmpty } from 'lodash';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folders = useSelector(foldersSelector);
   const projectName = useSelector(projectNameSelector);
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
-  const isFolders = !!folders.length;
+  const hasFolders = !isEmpty(folders);
+
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   useEffect(() => {
@@ -67,11 +72,11 @@ export const TestCaseLibraryPage = () => {
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
             </div>
-            {!isFolders || (
+            {!hasFolders || (
               <div className={cx('test-case-library-page__actions')}>
                 <Button
                   variant="text"
-                  icon={Parser(ImportIcon)}
+                  icon={Parser(ImportIcon as unknown as string)}
                   data-automation-id="importTestCase"
                   adjustWidthOn="content"
                 >
@@ -89,10 +94,10 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div
             className={cx('test-case-library-page__content', {
-              'test-case-library-page__content--no-padding': isFolders,
+              'test-case-library-page__content--no-padding': hasFolders,
             })}
           >
-            {isFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
+            {hasFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
           </div>
         </div>
       </ScrollWrapper>

@@ -17,6 +17,7 @@
 import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { isEmpty, noop } from 'lodash';
 import { Button, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
@@ -27,14 +28,12 @@ import {
 } from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
-import { noop } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import isEmpty from 'lodash.isempty';
 import { messages } from './messages';
 import styles from './allTestCasesPage.scss';
 import { DotsMenuItem } from './types';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];

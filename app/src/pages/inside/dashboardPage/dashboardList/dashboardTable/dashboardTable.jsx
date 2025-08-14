@@ -73,14 +73,8 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const {
-      onDeleteItem,
-      onEditItem,
-      intl,
-      userRoles,
-      onDuplicate,
-      getDashboardItemPageLink,
-    } = this.props;
+    const { onDeleteItem, onEditItem, intl, userRoles, onDuplicate, getDashboardItemPageLink } =
+      this.props;
 
     const columns = [
       {

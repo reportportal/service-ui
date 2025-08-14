@@ -42,7 +42,6 @@ export const RadioButton = ({ option, value, onChange, onFocus, onBlur, classNam
   };
 
   return (
-    // eslint-disable-next-line
     <label
       id="radio-label"
       className={cx(variant, className, 'radio-button', {

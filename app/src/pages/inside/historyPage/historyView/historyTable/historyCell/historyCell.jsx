@@ -33,7 +33,6 @@ export const HistoryCell = ({ status, header, children, onClick, first, bottom, 
       {children}
     </th>
   ) : (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <td className={className} onClick={onClick}>
       {children}
     </td>

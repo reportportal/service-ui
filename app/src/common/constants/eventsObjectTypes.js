@@ -28,6 +28,8 @@ export const EMAIL_CONFIG = 'emailConfig';
 export const PATTERN_RULE = 'pattern';
 export const INDEX = 'index';
 export const INVITATION_LINK = 'invitationLink';
+export const APPLICATION = 'application';
+export const RULE = 'rule';
 
 export const EMAIL_CONFIG_FILTERING_OPTION = 'EMAIL_CONFIG';
 export const DEFECT_TYPE_FILTERING_OPTION = 'DEFECT_TYPE';

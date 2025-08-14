@@ -38,7 +38,7 @@ export const OrganizationsControl = ({
 }) => {
   const { trackEvent } = useTracking();
   return (
-    <div className={cx('organizations-control-wrapper')} onClick={onClick}>
+    <button className={cx('organizations-control-wrapper')} onClick={onClick}>
       <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
         {titles.shortTitle}
       </button>
@@ -77,7 +77,7 @@ export const OrganizationsControl = ({
           {Parser(OpenPopoverIcon)}
         </i>
       </button>
-    </div>
+    </button>
   );
 };
 

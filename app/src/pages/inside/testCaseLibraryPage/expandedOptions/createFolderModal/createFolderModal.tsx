@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, FormEvent, MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 });
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
 const MAX_FIELD_LENGTH = 48;
@@ -108,7 +108,7 @@ const CreateFolderModalComponent = ({
         {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(onSubmit),
+    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isCreatingFolder,
     'data-automation-id': 'submitButton',
   };
@@ -127,7 +127,10 @@ const CreateFolderModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
+      <form
+        onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}
+        className={cx('create-folder-modal__form')}
+      >
         <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
           <FieldErrorHint provideHint={false}>
             <FieldText

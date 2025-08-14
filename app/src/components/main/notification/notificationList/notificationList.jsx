@@ -44,12 +44,16 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred during assigning to the project',
   },
   unassignSuccess: {
-    id: 'ProjectsPage.unassignSuccess',
-    defaultMessage: 'You have been unassigned from the project',
+    id: 'Assignment.unassignSuccess',
+    defaultMessage: 'User {name} has been unassigned successfully',
   },
-  unassignError: {
-    id: 'ProjectsPage.unassignError',
+  unassignProjectError: {
+    id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  unassignOrganizationError: {
+    id: 'Assignment.unassignOrganizationError',
+    defaultMessage: 'An error occurred during unassigning from the organization',
   },
   deleteError: {
     id: 'ProjectsPage.deleteError',
@@ -58,6 +62,10 @@ const messages = defineMessages({
   deleteProjectSuccess: {
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
+  },
+  updateProjectSuccess: {
+    id: 'ProjectsPage.updateProjectSuccess',
+    defaultMessage: 'The project has been updated successfully',
   },
   addDefectTypeSuccess: {
     id: 'Project.addDefectTypeSuccess',
@@ -176,6 +184,10 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  updateOrganizationSettingsSuccess: {
+    id: 'OrganizationSettingsPage.updateSettingsSuccess',
+    defaultMessage: 'Organization settings have been updated successfully',
+  },
   testCaseFolderCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
     defaultMessage: 'Folder has been created successfully.',
@@ -227,6 +239,7 @@ export class NotificationList extends PureComponent {
                   title={Parser(
                     DOMPurify.sanitize(
                       messageId ? formatMessage(messages[messageId], values) : message,
+                      { ADD_ATTR: ['target'] },
                     ),
                   )}
                   onClose={() => this.props.hideNotification(uid)}

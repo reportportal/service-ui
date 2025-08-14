@@ -40,31 +40,6 @@
     font-size: 13px;
     line-height: 19px;
   }
-
-  .preview-block {
-    &::before {
-      width: 100%;
-      position: absolute;
-      content: '';
-      top: -14px;
-      background: linear-gradient(180deg, $COLOR--white-two 50%, transparent);
-      padding: 15px 30px;
-      left: -30px;
-    }
-
-    position: relative;
-    border-radius: 8px;
-    background: linear-gradient(180deg, $COLOR--white-two 0%, $COLOR--primary-gray 80% 100%);
-    box-shadow: 0px 6px 22px 0px rgba(0, 0, 0, 0.15);
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-    padding-top: 15px;
-  }
-
-  .preview-footer {
-    padding: 4px 12px;
-  }
 }
 
 .links-panel {

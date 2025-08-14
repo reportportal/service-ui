@@ -71,18 +71,19 @@ export const launchesDistinctLinksSelectorsMap = {
 export const getLaunchFilterLinkSelector = createSelector(
   urlOrganizationAndProjectSelector,
   launchDistinctSelector,
-  ({ organizationSlug, projectSlug }, allLatest) => (filter, active) => {
-    const filterId = active ? allLatest : filter;
+  ({ organizationSlug, projectSlug }, allLatest) =>
+    (filter, active) => {
+      const filterId = active ? allLatest : filter;
 
-    return {
-      type: PROJECT_LAUNCHES_PAGE,
-      payload: {
-        projectSlug,
-        filterId,
-        organizationSlug,
-      },
-    };
-  },
+      return {
+        type: PROJECT_LAUNCHES_PAGE,
+        payload: {
+          projectSlug,
+          filterId,
+          organizationSlug,
+        },
+      };
+    },
 );
 
 export const localSortingSelector = (state) => domainSelector(state).localSorting;

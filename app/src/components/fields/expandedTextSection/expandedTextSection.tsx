@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { messages } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList/messages';
 import styles from './expandedTextSection.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
 
 const OFFSET_COEFFICIENT = 1.4;
 

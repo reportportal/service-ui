@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { createAlternativeQueryParametersSelector } from 'controllers/pages/selectors';
 import { createSelectedItemsSelector } from 'controllers/groupOperations';
 import { SORTING_ASC } from 'controllers/sorting';
-import { NAMESPACE, SORTING_KEY } from './constants';
+import { DEFAULT_PAGINATION, NAMESPACE, SORTING_KEY } from './constants';
 import { administrateDomainSelector } from '../selectors';
 
 const domainSelector = (state) => administrateDomainSelector(state).allUsers || {};

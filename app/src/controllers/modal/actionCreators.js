@@ -16,7 +16,7 @@
 
 import { SHOW_MODAL, HIDE_MODAL, CONFIRM_MODAL } from './constants';
 
-export const showModalAction = ({ id, data, component }) => ({
+export const showModalAction = ({ id = '', data = {}, component = null }) => ({
   type: SHOW_MODAL,
   payload: {
     activeModal: { id, data, component },

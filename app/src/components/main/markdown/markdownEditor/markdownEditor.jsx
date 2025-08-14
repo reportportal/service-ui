@@ -148,10 +148,12 @@ export class MarkdownEditor extends React.Component {
     } = this.props;
     this.holder.value = value;
 
-    const toolbarActionWrapper = (action) => (...args) => {
-      action(...args);
-      this.props.tracking.trackEvent(eventsInfo.onClickToolbarIcon);
-    };
+    const toolbarActionWrapper =
+      (action) =>
+      (...args) => {
+        action(...args);
+        this.props.tracking.trackEvent(eventsInfo.onClickToolbarIcon);
+      };
 
     let toolbar = [
       {

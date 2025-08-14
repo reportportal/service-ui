@@ -22,7 +22,7 @@ import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES } from './constants';
+import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES, Folder } from './constants';
 import {
   updateFoldersAction,
   startCreatingFolderAction,
@@ -31,6 +31,7 @@ import {
   GetTestCasesParams,
   CreateFolderParams,
 } from './actionCreators';
+import { Task } from 'redux-saga';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
@@ -42,36 +43,38 @@ interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
 
 function* getTestCases(action: GetTestCasesAction) {
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = (yield select(projectKeySelector)) as string;
 
     yield call(fetch, URLS.testCase(projectKey, action.payload));
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 }
 
 function* getFolders() {
   try {
-    const projectKey = yield select(projectKeySelector);
-    const folders = yield call(fetch, URLS.folder(projectKey));
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const folders = (yield call(fetch, URLS.folder(projectKey))) as { content: Folder };
     yield put(setFoldersAction(folders.content));
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 }
 
 function* createFolder(action: CreateFolderAction) {
   try {
-    const projectKey = yield select(projectKeySelector);
-    const spinnerTask = yield fork(delayedPut, startCreatingFolderAction(), SPINNER_DEBOUNCE);
-    const folder = yield call(fetch, URLS.folder(projectKey), {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const spinnerTask = (yield fork(
+      delayedPut,
+      startCreatingFolderAction(),
+      SPINNER_DEBOUNCE,
+    )) as Task;
+    const folder = (yield call(fetch, URLS.folder(projectKey), {
       method: 'POST',
       data: {
         name: action.payload.folderName,
       },
-    });
+    })) as Folder;
     yield cancel(spinnerTask);
     yield put(updateFoldersAction(folder));
     yield put(hideModalAction());
@@ -82,10 +85,10 @@ function* createFolder(action: CreateFolderAction) {
         values: {},
       }),
     );
-  } catch (error) {
+  } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: error?.error,
+        message: (error as { error?: string })?.error,
         messageId: null,
         values: {},
       }),

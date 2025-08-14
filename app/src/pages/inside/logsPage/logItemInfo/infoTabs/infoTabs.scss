@@ -35,7 +35,9 @@
   cursor: pointer;
   color: $COLOR--gray-47;
   fill: $COLOR--gray-60;
-  transition: fill 0.2s, color 0.2s;
+  transition:
+    fill 0.2s,
+    color 0.2s;
   height: 40px;
   box-sizing: border-box;
   background-color: transparent;
