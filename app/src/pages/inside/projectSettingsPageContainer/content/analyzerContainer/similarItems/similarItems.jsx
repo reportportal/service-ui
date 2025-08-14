@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button } from '@reportportal/ui-kit';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
+import { Button, FieldNumber } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
@@ -45,7 +44,7 @@ const SimilarItems = ({
 
   useEffect(() => {
     initialize({
-      [SEARCH_LOGS_MIN_SHOULD_MATCH]: analyzerConfig[SEARCH_LOGS_MIN_SHOULD_MATCH],
+      [SEARCH_LOGS_MIN_SHOULD_MATCH]: analyzerConfig[SEARCH_LOGS_MIN_SHOULD_MATCH] || '',
     });
   }, []);
 

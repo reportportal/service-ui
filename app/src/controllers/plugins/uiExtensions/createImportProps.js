@@ -39,6 +39,7 @@ import {
   Dropdown,
   FieldText,
   FieldTextFlex,
+  FieldNumber,
 } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -187,7 +188,6 @@ import {
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
