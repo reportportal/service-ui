@@ -20,12 +20,8 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
 import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
-import {
-  CELL_PREVIEW_CONFIG,
-  ATTRIBUTE_KEY_CONFIG,
-  HIGHLIGHT_LESS_THAN_CONFIG,
-} from './constants';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
+import { CELL_PREVIEW_CONFIG, ATTRIBUTE_KEY_CONFIG, HIGHLIGHT_LESS_THAN_CONFIG } from './constants';
 import { HistoryControls } from './historyControls';
 import { HistoryTable } from './historyTable';
 import styles from './historyView.scss';
