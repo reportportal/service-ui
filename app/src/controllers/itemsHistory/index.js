@@ -32,21 +32,16 @@ export {
   updateItemsHistoryLaunchAttributesAction,
 } from './actionCreators';
 export {
-  FETCH_ITEMS_HISTORY,
-  OPTIMAL_HISTORY_DEPTH_FOR_RENDER,
-  HISTORY_ITEMS_TO_LOAD,
-  RESET_HISTORY,
-  HISTORY_DEPTH_CONFIG,
-  HISTORY_BASE_DEFAULT_VALUE,
   HISTORY_BASE_ALL_LAUNCHES,
   HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
   UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
   CELL_PREVIEW_DEFECT_TYPE,
-  CELL_PREVIEW_SCORE,
+  CELL_PREVIEW_ATTRIBUTE,
   CELL_PREVIEW_DEFAULT_VALUE,
   CELL_PREVIEW_CONFIG,
-  SCORE_KEY_CONFIG,
+  ATTRIBUTE_KEY_CONFIG,
   HIGHLIGHT_LESS_THAN_CONFIG,
+  CELL_HIGHLIGHT_COLORS,
 } from './constants';
 export { historySagas } from './sagas';
 export {
@@ -66,7 +61,4 @@ export {
   normalizeHistoryItem,
   calculateMaxRowItemsCount,
   updateItemsHistoryLaunchAttributes,
-  getScoreFromAttributes,
-  getScoreCellColor,
-  formatScoreValue,
 } from './utils';

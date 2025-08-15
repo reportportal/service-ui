@@ -87,7 +87,7 @@ export class HistoryTable extends Component {
     historyBase: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     cellPreview: PropTypes.string,
-    scoreKey: PropTypes.string,
+    attributeKey: PropTypes.string,
     highlightLessThan: PropTypes.string,
     selectedFilter: PropTypes.object,
     history: PropTypes.array,
@@ -111,7 +111,7 @@ export class HistoryTable extends Component {
     selectedItems: [],
     withGroupOperations: false,
     cellPreview: '',
-    scoreKey: '',
+    attributeKey: '',
     highlightLessThan: '',
     fetchItemsHistoryAction: () => {},
     link: () => {},
@@ -147,7 +147,7 @@ export class HistoryTable extends Component {
       defectTypes,
       historyBase,
       cellPreview,
-      scoreKey,
+      attributeKey,
       highlightLessThan,
     } = this.props;
     switch (historyItem.status) {
@@ -160,7 +160,7 @@ export class HistoryTable extends Component {
             highlighted={historyItem.isFilterItem}
             bottom={isLastRow}
             cellPreview={cellPreview}
-            scoreKey={scoreKey}
+            attributeKey={attributeKey}
             highlightLessThan={highlightLessThan}
             testItem={historyItem}
           >
@@ -183,7 +183,7 @@ export class HistoryTable extends Component {
             bottom={isLastRow}
             key={historyItem.id}
             cellPreview={cellPreview}
-            scoreKey={scoreKey}
+            attributeKey={attributeKey}
             highlightLessThan={highlightLessThan}
             testItem={historyItem}
           >
@@ -196,7 +196,7 @@ export class HistoryTable extends Component {
               selectable={withGroupOperations && !historyItem.isFilterItem}
               singleDefectView={withGroupOperations}
               cellPreview={cellPreview}
-              scoreKey={scoreKey}
+              attributeKey={attributeKey}
               highlightLessThan={highlightLessThan}
             />
           </HistoryCell>

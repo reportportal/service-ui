@@ -36,41 +36,15 @@ export const calculateMaxRowItemsCount = (history) =>
 
 export const updateItemsHistoryLaunchAttributes = (items = [], launch = {}) => {
   return items.map((item) => {
-    const resources = updateHistoryItemLaunchAttributes(item.resources, launch);
+    const resources = item.resources || [];
+    const launchResource = resources.find((resource) => resource.launchId === launch.id);
+    if (launchResource) {
+      return { ...item, resources: resources.map((resource) => 
+        resource.launchId === launch.id 
+          ? { ...resource, attributes: launch.attributes || [] }
+          : resource
+      )};
+    }
     return { ...item, resources };
   });
-};
-
-// Score utility functions
-export const getScoreFromAttributes = (attributes, key) => {
-  if (!attributes || !key) {
-    return null;
-  }
-  const attribute = attributes.find((attr) => attr.key === key);
-  return attribute ? parseFloat(attribute.value) : null;
-};
-
-export const getScoreCellColor = (score, highlightLessThan) => {
-  // Don't apply any color if threshold is not set
-  if (highlightLessThan === '' || highlightLessThan === null || highlightLessThan === undefined) {
-    return null;
-  }
-
-  const threshold = parseFloat(highlightLessThan);
-  if (isNaN(threshold)) {
-    return null;
-  }
-
-  if (score === null || score === undefined || isNaN(score)) {
-    return '#E3E7EC'; // Default gray for missing score when threshold is set
-  }
-
-  return score < threshold ? '#FFC0BD' : '#E3E7EC';
-};
-
-export const formatScoreValue = (score) => {
-  if (score === null || score === undefined) {
-    return '-';
-  }
-  return score.toString();
 };

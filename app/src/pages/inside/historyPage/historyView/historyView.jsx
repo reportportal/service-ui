@@ -22,7 +22,7 @@ import { getStorageItem, setStorageItem } from 'common/utils';
 import {
   HISTORY_DEPTH_CONFIG,
   CELL_PREVIEW_CONFIG,
-  SCORE_KEY_CONFIG,
+  ATTRIBUTE_KEY_CONFIG,
   HIGHLIGHT_LESS_THAN_CONFIG,
 } from 'controllers/itemsHistory';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -51,7 +51,7 @@ export class HistoryView extends Component {
   state = {
     historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
     cellPreview: getStorageItem(CELL_PREVIEW_CONFIG.name) || CELL_PREVIEW_CONFIG.defaultValue,
-    scoreKey: getStorageItem(SCORE_KEY_CONFIG.name) || SCORE_KEY_CONFIG.defaultValue,
+    attributeKey: getStorageItem(ATTRIBUTE_KEY_CONFIG.name) || ATTRIBUTE_KEY_CONFIG.defaultValue,
     highlightLessThan:
       getStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name) || HIGHLIGHT_LESS_THAN_CONFIG.defaultValue,
   };
@@ -77,12 +77,12 @@ export class HistoryView extends Component {
     }
   };
 
-  changeScoreKey = (scoreKey) => {
-    if (scoreKey !== this.state.scoreKey) {
+  changeAttributeKey = (attributeKey) => {
+    if (attributeKey !== this.state.attributeKey) {
       this.setState({
-        scoreKey,
+        attributeKey,
       });
-      setStorageItem(SCORE_KEY_CONFIG.name, scoreKey);
+      setStorageItem(ATTRIBUTE_KEY_CONFIG.name, attributeKey);
     }
   };
 
@@ -104,7 +104,7 @@ export class HistoryView extends Component {
       onChangeHistoryBase,
       isTestItemsList,
     } = this.props;
-    const { historyDepth, cellPreview, scoreKey, highlightLessThan } = this.state;
+    const { historyDepth, cellPreview, attributeKey, highlightLessThan } = this.state;
 
     return (
       <div className={cx('history-view-wrapper')}>
@@ -112,12 +112,12 @@ export class HistoryView extends Component {
           historyDepth={historyDepth}
           historyBase={historyBase}
           cellPreview={cellPreview}
-          scoreKey={scoreKey}
+          attributeKey={attributeKey}
           highlightLessThan={highlightLessThan}
           onChangeHistoryBase={onChangeHistoryBase}
           onChangeHistoryDepth={this.changeHistoryDepth}
           onChangeCellPreview={this.changeCellPreview}
-          onChangeScoreKey={this.changeScoreKey}
+          onChangeAttributeKey={this.changeAttributeKey}
           onChangeHighlightLessThan={this.changeHighlightLessThan}
           isTestItemsList={isTestItemsList}
         />
@@ -125,7 +125,7 @@ export class HistoryView extends Component {
           historyDepth={historyDepth}
           historyBase={historyBase}
           cellPreview={cellPreview}
-          scoreKey={scoreKey}
+          attributeKey={attributeKey}
           highlightLessThan={highlightLessThan}
           onSelectItem={onSelectItem}
           selectedItems={selectedItems}

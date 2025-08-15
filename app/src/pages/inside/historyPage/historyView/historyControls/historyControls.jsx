@@ -26,7 +26,7 @@ import {
   HISTORY_BASE_ALL_LAUNCHES,
   HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
   CELL_PREVIEW_CONFIG,
-  CELL_PREVIEW_SCORE,
+  CELL_PREVIEW_ATTRIBUTE,
 } from 'controllers/itemsHistory/constants';
 import styles from './historyControls.scss';
 
@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   keyTitle: {
     id: 'HistoryControls.keyTitle',
-    defaultMessage: 'Key',
+    defaultMessage: 'Attribute Key',
   },
   highlightLessThanTitle: {
     id: 'HistoryControls.highlightLessThanTitle',
@@ -78,13 +78,13 @@ export class HistoryControls extends Component {
     historyDepth: PropTypes.string,
     historyBase: PropTypes.string,
     cellPreview: PropTypes.string,
-    scoreKey: PropTypes.string,
+    attributeKey: PropTypes.string,
     highlightLessThan: PropTypes.string,
     isTestItemsList: PropTypes.bool,
     onChangeHistoryDepth: PropTypes.func,
     onChangeHistoryBase: PropTypes.func,
     onChangeCellPreview: PropTypes.func,
-    onChangeScoreKey: PropTypes.func,
+    onChangeAttributeKey: PropTypes.func,
     onChangeHighlightLessThan: PropTypes.func,
   };
 
@@ -92,13 +92,13 @@ export class HistoryControls extends Component {
     historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
     historyBase: HISTORY_BASE_DEFAULT_VALUE,
     cellPreview: CELL_PREVIEW_CONFIG.defaultValue,
-    scoreKey: '',
+    attributeKey: '',
     highlightLessThan: '',
     isTestItemsList: false,
     onChangeHistoryDepth: () => {},
     onChangeHistoryBase: () => {},
     onChangeCellPreview: () => {},
-    onChangeScoreKey: () => {},
+    onChangeAttributeKey: () => {},
     onChangeHighlightLessThan: () => {},
   };
 
@@ -127,16 +127,16 @@ export class HistoryControls extends Component {
       historyDepth,
       historyBase,
       cellPreview,
-      scoreKey,
+      attributeKey,
       highlightLessThan,
       isTestItemsList,
       onChangeHistoryDepth,
       onChangeHistoryBase,
       onChangeCellPreview,
-      onChangeScoreKey,
+      onChangeAttributeKey,
     } = this.props;
 
-    const isScoreMode = cellPreview === CELL_PREVIEW_SCORE;
+    const isAttributeMode = cellPreview === CELL_PREVIEW_ATTRIBUTE;
 
     return (
       <div className={cx('history-controls')}>
@@ -175,15 +175,15 @@ export class HistoryControls extends Component {
             </div>
           </div>
 
-          {isScoreMode && (
+          {isAttributeMode && (
             <>
               <div className={cx('controls-item')}>
                 <p className={cx('control-name')}>{formatMessage(messages.keyTitle)}</p>
                 <div className={cx('control-container', 'medium')}>
                   <Input
-                    value={scoreKey}
+                    value={attributeKey}
                     placeholder={formatMessage(messages.keyPlaceholder)}
-                    onChange={(e) => onChangeScoreKey(e.target.value)}
+                    onChange={(e) => onChangeAttributeKey(e.target.value)}
                   />
                 </div>
               </div>

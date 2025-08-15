@@ -60,7 +60,7 @@
   background: rgba(255, 255, 255, 0.75);
 }
 
-.score-content {
+.attribute-content {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +68,7 @@
   height: 100%;
 }
 
-.score-value {
+.attribute-value {
   font-size: 12px;
   font-weight: bold;
   color: $COLOR--charcoal-grey;
