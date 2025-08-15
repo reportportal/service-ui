@@ -56,8 +56,3 @@ export {
   itemsHistorySelector,
   isEmptyHistorySelector,
 } from './selectors';
-export {
-  normalizeHistoryItem,
-  calculateMaxRowItemsCount,
-  updateItemsHistoryLaunchAttributes,
-} from './utils';
