@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { CELL_HIGHLIGHT_COLORS } from 'controllers/itemsHistory/constants';
+import { CELL_HIGHLIGHT_COLORS } from './constants';
 
-// Attribute utility functions
 export const getAttributeValue = (attributes, key) => {
   if (!attributes || !key) {
     return null;
@@ -26,7 +25,6 @@ export const getAttributeValue = (attributes, key) => {
 };
 
 export const getAttributeCellColor = (value, highlightLessThan) => {
-  // Don't apply any color if threshold is not set
   if (highlightLessThan === '' || highlightLessThan === null || highlightLessThan === undefined) {
     return null;
   }
@@ -43,7 +41,7 @@ export const getAttributeCellColor = (value, highlightLessThan) => {
   if (value < threshold) {
     return CELL_HIGHLIGHT_COLORS.BELOW_THRESHOLD;
   }
-  
+
   return CELL_HIGHLIGHT_COLORS.ABOVE_THRESHOLD;
 };
 

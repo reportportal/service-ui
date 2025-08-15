@@ -19,12 +19,12 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
+import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
 import {
-  HISTORY_DEPTH_CONFIG,
   CELL_PREVIEW_CONFIG,
   ATTRIBUTE_KEY_CONFIG,
   HIGHLIGHT_LESS_THAN_CONFIG,
-} from 'controllers/itemsHistory';
+} from './constants';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { HistoryControls } from './historyControls';
 import { HistoryTable } from './historyTable';

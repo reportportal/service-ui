@@ -17,8 +17,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { NOT_FOUND, RESETED } from 'common/constants/testStatuses';
-import { CELL_PREVIEW_ATTRIBUTE } from 'controllers/itemsHistory/constants';
-import { getAttributeValue, getAttributeCellColor } from 'pages/inside/historyPage/utils';
+import { CELL_PREVIEW_ATTRIBUTE } from '../../constants';
+import { getAttributeValue, getAttributeCellColor } from '../../utils';
 import styles from './historyCell.scss';
 
 const cx = classNames.bind(styles);
@@ -48,7 +48,11 @@ export const HistoryCell = ({
   let attributeStyle = {};
   const isEmptyCell = status === NOT_FOUND || status === RESETED;
   const shouldApplyAttributeColor =
-    !header && cellPreview === CELL_PREVIEW_ATTRIBUTE && attributeKey && highlightLessThan && !isEmptyCell;
+    !header &&
+    cellPreview === CELL_PREVIEW_ATTRIBUTE &&
+    attributeKey &&
+    highlightLessThan &&
+    !isEmptyCell;
 
   if (shouldApplyAttributeColor) {
     const value = getAttributeValue(testItem?.attributes, attributeKey);

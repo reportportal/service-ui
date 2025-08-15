@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-export { default as HistoryPage } from './historyPage';
-export { default as HistoryPageContainer } from './historyPageContainer';
-export * from './utils';
+export { HistoryPageContainer as HistoryPage } from './historyPageContainer';

@@ -25,9 +25,8 @@ import {
   HISTORY_BASE_DEFAULT_VALUE,
   HISTORY_BASE_ALL_LAUNCHES,
   HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
-  CELL_PREVIEW_CONFIG,
-  CELL_PREVIEW_ATTRIBUTE,
 } from 'controllers/itemsHistory/constants';
+import { CELL_PREVIEW_CONFIG, CELL_PREVIEW_ATTRIBUTE } from '../constants';
 import styles from './historyControls.scss';
 
 const cx = classNames.bind(styles);

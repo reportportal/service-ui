@@ -36,15 +36,7 @@ export const calculateMaxRowItemsCount = (history) =>
 
 export const updateItemsHistoryLaunchAttributes = (items = [], launch = {}) => {
   return items.map((item) => {
-    const resources = item.resources || [];
-    const launchResource = resources.find((resource) => resource.launchId === launch.id);
-    if (launchResource) {
-      return { ...item, resources: resources.map((resource) => 
-        resource.launchId === launch.id 
-          ? { ...resource, attributes: launch.attributes || [] }
-          : resource
-      )};
-    }
+    const resources = updateHistoryItemLaunchAttributes(item.resources, launch);
     return { ...item, resources };
   });
 };

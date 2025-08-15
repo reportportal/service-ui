@@ -25,9 +25,9 @@ import TagIcon from 'common/img/tag-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
 import { updateItemsHistoryLaunchAttributesAction } from 'controllers/itemsHistory';
-import { CELL_PREVIEW_ATTRIBUTE } from 'controllers/itemsHistory/constants';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { getAttributeValue, formatAttributeValue } from 'pages/inside/historyPage/utils';
+import { CELL_PREVIEW_ATTRIBUTE } from '../../constants';
+import { getAttributeValue, formatAttributeValue } from '../../utils';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -138,7 +138,8 @@ export class HistoryItem extends Component {
     const { testItem, selectable, cellPreview, attributeKey, highlightLessThan } = this.props;
     const { status, issue = {} } = testItem;
     const selected = selectable ? this.isItemSelected() : false;
-    const isAttributeMode = cellPreview === CELL_PREVIEW_ATTRIBUTE && attributeKey && highlightLessThan;
+    const isAttributeMode =
+      cellPreview === CELL_PREVIEW_ATTRIBUTE && attributeKey && highlightLessThan;
 
     return (
       <div className={cx('history-item', { selectable, selected })}>
