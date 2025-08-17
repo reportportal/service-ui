@@ -17,20 +17,32 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
+  time: {
+    id: 'HistoryOfActions.time',
+    defaultMessage: 'Time',
   },
-  addToTestPlan: {
-    id: 'EditTestCasePage.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
+  user: {
+    id: 'HistoryOfActions.user',
+    defaultMessage: 'User',
   },
-  created: {
-    id: 'EditTestCasePage.created',
-    defaultMessage: 'Created:',
+  action: {
+    id: 'HistoryOfActions.action',
+    defaultMessage: 'Action',
   },
-  id: {
-    id: 'EditTestCasePage.id',
-    defaultMessage: 'ID:',
+  oldValue: {
+    id: 'HistoryOfActions.oldValue',
+    defaultMessage: 'Old Value',
+  },
+  newValue: {
+    id: 'HistoryOfActions.newValue',
+    defaultMessage: 'New Value',
+  },
+  searchInputPlaceholder: {
+    id: 'HistoryOfActions.searchInputPlaceholder',
+    defaultMessage: 'Type to search',
+  },
+  historyOfActions: {
+    id: 'HistoryOfActions.historyOfActions',
+    defaultMessage: 'History Of Actions',
   },
 });

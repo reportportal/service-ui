@@ -63,6 +63,7 @@ import {
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
+  TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -76,6 +77,7 @@ import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage'
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 import { TestCaseLibraryPage, TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage';
+import { HistoryOfActions } from 'pages/inside/testCaseLibraryPage/historyOfActions';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -191,6 +193,11 @@ export const pageRendering = {
   },
   [TEST_CASE_DETAILS_PAGE]: {
     component: TestCaseDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE]: {
+    component: HistoryOfActions,
     layout: ProjectLayout,
     rawContent: true,
   },

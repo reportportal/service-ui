@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.header {
+  position: relative;
+  padding: 16px 0 16px 32px;
+  background-color: var(--rp-ui-base-bg-000);
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
 
-export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
-  addToTestPlan: {
-    id: 'EditTestCasePage.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
-  },
-  created: {
-    id: 'EditTestCasePage.created',
-    defaultMessage: 'Created:',
-  },
-  id: {
-    id: 'EditTestCasePage.id',
-    defaultMessage: 'ID:',
-  },
-});
+  &__title {
+    color: var(--rp-ui-base-almost-black);
+    font-family: var(--rp-ui-base-font-family-heading);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 31px;
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  &__actions {
+    position: absolute;
+    bottom: 12px;
+    right: 32px;
+  }
+}
