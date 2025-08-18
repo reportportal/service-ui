@@ -111,7 +111,6 @@ describe('MarkdownViewer', () => {
     const wrapper = mount(<MarkdownViewer value={linkMock} />);
     const linkElement = wrapper.find('.markdown-viewer a');
     expect(linkElement).toHaveLength(1);
-    expect(linkElement.exists()).toBeTruthy();
     expect(linkElement.props().href).toBe('http://reportportal.io/');
   });
   test('quote elements are rendering correctly', () => {
