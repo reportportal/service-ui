@@ -102,4 +102,12 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.createSubfolderAction',
     defaultMessage: 'Create subfolder',
   },
+  testCaseLibraryBreadcrumb: {
+    id: 'TestCaseLibraryPage.testCaseLibraryBreadcrumb',
+    defaultMessage: 'Test Case Library',
+  },
+  historyOfActions: {
+    id: 'TestCaseLibraryPage.historyOfActions',
+    defaultMessage: 'History of Actions',
+  },
 });
