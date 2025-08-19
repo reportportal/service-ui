@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DOMPurify from 'dompurify';
 import Parser from 'html-react-parser';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -63,7 +62,8 @@ export class NoItemsDemo extends Component {
         <p className={cx('generate-demo-description')}>
           {Parser(
             formatMessage(messages.generateDemoDataDescription, {
-              a: (data) => `<a href="${docsReferences.implementOwnIntegrationDocs}" target="_blank">${data}</a>`,
+              a: (data) =>
+                `<a href="${docsReferences.implementOwnIntegrationDocs}" target="_blank">${data}</a>`,
             }),
           )}
         </p>
