@@ -191,7 +191,7 @@ export class HistoryControls extends Component {
                 <p className={cx('control-name')}>
                   {formatMessage(messages.highlightLessThanTitle)}
                 </p>
-                <div className={cx('control-container', 'small')}>
+                <div className={cx('control-container', 'medium')}>
                   <Input
                     value={highlightLessThan}
                     placeholder={formatMessage(messages.highlightLessThanPlaceholder)}
