@@ -26,11 +26,16 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ProjectDetails } from 'pages/organization/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { useSelector } from 'react-redux';
+import {
+  TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
+import { useDispatch, useSelector } from 'react-redux';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { TestCase } from '../../types';
 import { messages } from './messages';
+import { commonMessages } from '../../commonMessages';
 
 import styles from './testCaseDetailsHeader.scss';
 
@@ -55,31 +60,27 @@ export const TestCaseDetailsHeader = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const dispatch = useDispatch();
 
-  const breadcrumbDescriptors = [
-    {
-      id: 'test-case-library',
-      title: formatMessage(messages.testCaseLibraryBreadcrumb),
-      link: {
-        type: TEST_CASE_LIBRARY_PAGE,
-        payload: {
-          organizationSlug,
-          projectSlug,
-        },
-      },
-    },
-    {
-      id: testCase.id,
-      title: testCase.name,
-      link: {},
-    },
-  ];
+  const breadcrumbsTitles = {
+    mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
+    testTitle: testCase.name,
+  };
+
+  const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
+
+  const handleHistoryOfActions = () => {
+    dispatch({
+      type: TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
+      payload: { organizationSlug, projectSlug, testCaseSlug: testCase.id },
+    });
+  };
 
   return (
     <div className={cx('header', className)}>
       <div className={cx('header__breadcrumb')}>
         <BreadcrumbsTreeIcon />
-        <Breadcrumbs descriptors={breadcrumbDescriptors} />
+        <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header__title')}>
         <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
@@ -109,7 +110,8 @@ export const TestCaseDetailsHeader = ({
                 label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
               },
               {
-                label: formatMessage(messages.historyOfActions),
+                label: formatMessage(commonMessages.historyOfActions),
+                onClick: handleHistoryOfActions,
               },
               {
                 label: formatMessage(COMMON_LOCALE_KEYS.DELETE),

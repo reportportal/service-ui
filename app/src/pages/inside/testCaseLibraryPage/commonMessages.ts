@@ -37,4 +37,12 @@ export const commonMessages = defineMessages({
     id: 'TestCaseLibraryPage.folders',
     defaultMessage: 'Folders',
   },
+  testCaseLibraryBreadcrumb: {
+    id: 'TestCaseLibraryPage.testCaseLibraryBreadcrumb',
+    defaultMessage: 'Test Case Library',
+  },
+  historyOfActions: {
+    id: 'TestCaseLibraryPage.historyOfActions',
+    defaultMessage: 'History of Actions',
+  },
 });
