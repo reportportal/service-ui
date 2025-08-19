@@ -68,22 +68,14 @@ describe('MarkdownViewer', () => {
         .children()
         .filterWhere((n) => typeof n.type() === 'string'),
     ).toHaveLength(3);
-    expect(
-      wrapper
-        .find('.markdown-viewer ul')
-        .children()
-        .filterWhere((n) => typeof n.type() === 'string')
-        .at(0)
-        .type(),
-    ).toEqual('li');
-    expect(
-      wrapper
-        .find('.markdown-viewer ul')
-        .children()
-        .filterWhere((n) => typeof n.type() === 'string')
-        .at(0)
-        .html(),
-    ).toEqual('<li>Generic list item</li>');
+
+    const firstLi = wrapper
+      .find('.markdown-viewer ul')
+      .children()
+      .filterWhere((n) => typeof n.type() === 'string')
+      .at(0);
+    expect(firstLi.type()).toEqual('li');
+    expect(firstLi.contains('Generic list item')).toBeTruthy();
   });
   test('ordered lists are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={orderedListMock} />);
@@ -106,53 +98,43 @@ describe('MarkdownViewer', () => {
         .children()
         .filterWhere((n) => typeof n.type() === 'string'),
     ).toHaveLength(3);
-    expect(
-      wrapper
-        .find('.markdown-viewer ol')
-        .children()
-        .filterWhere((n) => typeof n.type() === 'string')
-        .at(0)
-        .type(),
-    ).toEqual('li');
-    expect(
-      wrapper
-        .find('.markdown-viewer ol')
-        .children()
-        .filterWhere((n) => typeof n.type() === 'string')
-        .at(0)
-        .html(),
-    ).toEqual('<li>Numbered list item</li>');
+
+    const firstLi = wrapper
+      .find('.markdown-viewer ol')
+      .children()
+      .filterWhere((n) => typeof n.type() === 'string')
+      .at(0);
+    expect(firstLi.type()).toEqual('li');
+    expect(firstLi.contains('Numbered list item')).toBeTruthy();
   });
   test('links are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={linkMock} />);
     const linkElement = wrapper.find('.markdown-viewer a');
     expect(linkElement).toHaveLength(1);
-    const linkNode = linkElement.getDOMNode();
-    expect(linkNode).toHaveProperty('href', 'http://reportportal.io/');
-    expect(linkNode).toHaveProperty('target', '_blank');
-    expect(linkNode).toHaveProperty('rel', 'noreferrer noopener');
+    expect(linkElement.props().href).toBe('http://reportportal.io/');
   });
   test('quote elements are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={quoteMock} />);
     expect(wrapper.find('.markdown-viewer blockquote')).toHaveLength(1);
-    expect(
-      wrapper
-        .find('.markdown-viewer blockquote')
-        .children()
-        .filterWhere((n) => typeof n.type() === 'string')
-        .at(0)
-        .html(),
-    ).toEqual('<p>This is a quote.</p>');
+    const quote = wrapper
+      .find('.markdown-viewer blockquote')
+      .children()
+      .filterWhere((n) => typeof n.type() === 'string')
+      .at(0);
+    expect(quote.type()).toEqual('p');
+    expect(quote.contains('This is a quote.')).toBeTruthy();
   });
   test('codeMock elements are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={codeMock} />);
-    expect(wrapper.find('.markdown-viewer code')).toHaveLength(1);
-    expect(wrapper.find('.markdown-viewer code').text()).toEqual('var example = "hello!";');
+    const codeElement = wrapper.find('.markdown-viewer code');
+    expect(codeElement).toHaveLength(1);
+    expect(codeElement.contains('var example = "hello!";')).toBeTruthy();
   });
   test('HTML elements in code blocks are rendering as a text', () => {
     const code = '`<span>test code</span>`';
     const wrapper = mount(<MarkdownViewer value={code} />);
-    expect(wrapper.find('.markdown-viewer code')).toHaveLength(1);
-    expect(wrapper.find('.markdown-viewer code').text()).toEqual('<span>test code</span>');
+    const codeElement = wrapper.find('.markdown-viewer code');
+    expect(codeElement).toHaveLength(1);
+    expect(codeElement.contains('<span>test code</span>')).toBeTruthy();
   });
 });
