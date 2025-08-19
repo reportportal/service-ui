@@ -21,6 +21,7 @@ import Parser from 'html-react-parser';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import DemoNoData from 'common/img/demo_no_data.svg';
+import { docsReferences } from 'common/utils/referenceDictionary';
 import { GenerateDemoDataBlock } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent/generateDemoDataBlock';
 import styles from './noItemsDemo.scss';
 
@@ -62,10 +63,7 @@ export class NoItemsDemo extends Component {
         <p className={cx('generate-demo-description')}>
           {Parser(
             formatMessage(messages.generateDemoDataDescription, {
-              a: (data) =>
-                DOMPurify.sanitize(
-                  `<a href='https://reportportal.io/docs/log-data-in-reportportal/ImplementOwnIntegration/' target='_blank'>${data}</a>`,
-                ),
+              a: (data) => `<a href="${docsReferences.implementOwnIntegrationDocs}" target="_blank">${data}</a>`,
             }),
           )}
         </p>
