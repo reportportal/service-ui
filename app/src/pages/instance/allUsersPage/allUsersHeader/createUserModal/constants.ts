@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { FieldText } from './fieldText';
-
-export { FieldText };
-
-export default FieldText;
+export const FULL_NAME_FIELD = 'fullName';
+export const EMAIL_FIELD = 'email';
+export const PASSWORD_FIELD = 'password';
+export const ADMIN_RIGHTS = 'adminRights';
+export const CREATE_USER_FORM = 'createUserForm';
+export const ORGANIZATIONS = 'organizations';

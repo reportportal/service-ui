@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -74,16 +74,14 @@ export const ProjectSettingsPageContainer = () => {
   );
 
   const extensionsConfig = useMemo(() => {
-    return extensions.reduce(
-      (acc, extension) => ({
+    return extensions.reduce((acc, extension) => {
+      const { name, payload } = extension;
+      const title = payload.title || payload.name;
+      return {
         ...acc,
-        [extension.name]: {
-          name: extension.title || extension.name,
-          link: createTabLink(
-            extension.name,
-            extension.initialPage?.payload,
-            extension.initialPage?.type,
-          ),
+        [name]: {
+          name: title,
+          link: createTabLink(name, payload.initialPage?.payload, payload.initialPage?.type),
           component: (
             <ExtensionLoader
               extension={extension}
@@ -93,11 +91,10 @@ export const ProjectSettingsPageContainer = () => {
             />
           ),
           mobileDisabled: true,
-          eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),
+          eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(title),
         },
-      }),
-      {},
-    );
+      };
+    }, {});
   }, [createTabLink, extensions]);
 
   const config = useMemo(() => {

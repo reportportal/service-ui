@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
@@ -24,10 +24,9 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { useDispatch } from 'react-redux';
-import { Modal } from '@reportportal/ui-kit';
+import { FieldText, Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { useTracking } from 'react-tracking';
-import { FieldText } from 'componentLibrary/fieldText';
 import { FieldElement } from '../../../elements';
 
 const messages = defineMessages({

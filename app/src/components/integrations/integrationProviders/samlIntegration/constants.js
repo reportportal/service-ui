@@ -17,3 +17,6 @@
 export const LAST_NAME_ATTRIBUTE_KEY = 'lastNameAttribute';
 export const FIRST_NAME_ATTRIBUTE_KEY = 'firstNameAttribute';
 export const FULL_NAME_ATTRIBUTE_KEY = 'fullNameAttribute';
+export const CALLBACK_URL_ATTRIBUTE_KEY = 'callbackUrl';
+export const PROVIDER_NAME_PLACEHOLDER = 'PROVIDER_NAME';
+export const CALLBACK_URL_PATH = `uat/login/saml2/sso`;

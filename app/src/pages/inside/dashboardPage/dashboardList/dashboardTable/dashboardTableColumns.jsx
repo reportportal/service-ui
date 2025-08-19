@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -25,11 +25,14 @@ import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
-import { copyDashboardConfigAction } from 'controllers/dashboard';
-import { userRolesSelector } from 'controllers/pages';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { fetch } from 'common/utils';
 import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
+import { userRolesSelector } from 'controllers/pages';
 
 const cx = classNames.bind(styles);
 
@@ -97,10 +100,21 @@ export const DuplicateColumn = track()(
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
+
+    const activeProject = useSelector(activeProjectSelector);
+
+    // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
+    const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
+
+    const fetchDashboardConfig = async () => {
+      const url = URLS.dashboardConfig(activeProject, value.id);
+      return fetch(url);
+    };
     const userRoles = useSelector(userRolesSelector);
 
     useEffect(() => {
       if (opened) {
+        setDashboardConfigPromise(fetchDashboardConfig());
         const handleOutsideClick = (e) => {
           if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
             setOpened(false);
@@ -125,10 +139,22 @@ export const DuplicateColumn = track()(
       setOpened(false);
     };
 
-    const handleCopyConfig = (e) => {
+    const handleCopyConfig = async (e) => {
       e.stopPropagation();
       trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
-      dispatch(copyDashboardConfigAction(value));
+
+      try {
+        const config = await dashboardConfigPromise;
+        await navigator.clipboard.writeText(JSON.stringify(config));
+        dispatch(
+          showSuccessNotification({
+            messageId: 'dashboardConfigurationCopied',
+          }),
+        );
+      } catch (error) {
+        dispatch(showDefaultErrorNotification(error));
+      }
+
       setOpened(false);
     };
 

@@ -20,10 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
-import { getFormValues, reduxForm } from 'redux-form';
+import { getFormValues, reduxForm, FieldArray } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
@@ -37,16 +36,17 @@ import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Event
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { OrganizationType } from 'controllers/organization';
+import {
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+  ADMIN_RIGHTS,
+  PASSWORD_FIELD,
+  EMAIL_FIELD,
+  FULL_NAME_FIELD,
+} from './constants';
 import styles from './createUserModal.scss';
 
 const cx = classNames.bind(styles);
-
-const FULL_NAME_FIELD = 'fullName';
-const EMAIL_FIELD = 'email';
-const PASSWORD_FIELD = 'password';
-const ADMIN_RIGHTS = 'adminRights';
-const CREATE_USER_FORM = 'createUserForm';
-const ORGANIZATIONS = 'organizations';
 
 const messages = defineMessages({
   createUserTitle: {
@@ -256,9 +256,14 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
             {formatMessage(messages.inviteDescription)}
           </span>
         </div>
-        <FieldElement name={ORGANIZATIONS}>
-          <InstanceAssignment />
-        </FieldElement>
+        <FieldArray
+          name={ORGANIZATIONS}
+          component={InstanceAssignment}
+          props={{
+            formName: CREATE_USER_FORM,
+            formNamespace: 'organization',
+          }}
+        />
       </form>
     </Modal>
   );
@@ -272,16 +277,22 @@ CreateUserModal.propTypes = {
 export default withModal('createUserModal')(
   reduxForm({
     form: CREATE_USER_FORM,
-    validate: ({ fullName, email, password }) => {
-      return {
-        [FULL_NAME_FIELD]: commonValidators.createPatternCreateUserNameValidator()(
-          fullName?.trim(),
-        ),
-        [EMAIL_FIELD]: commonValidators.emailCreateUserValidator()(email?.trim()),
-        [PASSWORD_FIELD]: commonValidators.createPatternCreateUserPasswordValidator()(
-          password?.trim(),
-        ),
-      };
+    validate: ({ fullName, email, password, organization }) => {
+      const errors = {};
+
+      errors[FULL_NAME_FIELD] = commonValidators.createPatternCreateUserNameValidator()(
+        fullName?.trim(),
+      );
+      errors[EMAIL_FIELD] = commonValidators.emailCreateUserValidator()(email?.trim());
+      errors[PASSWORD_FIELD] = commonValidators.createPatternCreateUserPasswordValidator()(
+        password?.trim(),
+      );
+
+      if (!organization?.name) {
+        errors.organization = { name: commonValidators.requiredField() };
+      }
+
+      return errors;
     },
   })(CreateUserModal),
 );

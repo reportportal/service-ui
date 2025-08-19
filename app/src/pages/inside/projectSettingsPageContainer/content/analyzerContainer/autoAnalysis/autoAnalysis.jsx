@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button, Checkbox, Dropdown } from '@reportportal/ui-kit';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
+import { Button, Checkbox, Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
@@ -90,7 +89,7 @@ const AutoAnalysis = ({
   useEffect(() => {
     initialize({
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfig[ANALYZER_ENABLED] || 'false'),
-      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH],
+      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH] || '',
       [ANALYZER_MODE]: analyzerConfig[ANALYZER_MODE],
       [NUMBER_OF_LOG_LINES]: analyzerConfig[NUMBER_OF_LOG_LINES],
       [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(analyzerConfig[ALL_MESSAGES_SHOULD_MATCH] || 'false'),
