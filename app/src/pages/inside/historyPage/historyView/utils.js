@@ -21,7 +21,12 @@ export const getAttributeValue = (attributes, key) => {
     return null;
   }
   const attribute = attributes.find((attr) => attr.key === key);
-  return attribute ? parseFloat(attribute.value) : null;
+
+  if (!attribute) {
+    return null;
+  }
+  const value = parseFloat(attribute.value);
+  return isNaN(value) ? null : value;
 };
 
 export const getAttributeCellColor = (value, highlightLessThan) => {
