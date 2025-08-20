@@ -18,7 +18,6 @@
     "test:coverage": "jest --coverage",
     "manage:translations": "webpack --env NODE_ENV=development --no-stats && npx babel-node ./localization/translatorRunner.js",
     "manage:translations:test": "webpack --env NODE_ENV=development --no-stats && babel-node ./localization/translatorRunnerCheck.js",
-    "precommit": "lint-staged",
     "postcommit": "git update-index --again"
   },
   "dependencies": {
