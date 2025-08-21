@@ -1,5 +1,11 @@
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
+type Tag = {
+  key: string;
+  value?: string;
+  id: number;
+};
+
 // The structure must be corrected after BE integration
 export interface IAttachment {
   fileName: string;
@@ -19,10 +25,13 @@ export interface TestCase {
   name: string;
   priority: TestCasePriority;
   path: string[];
-  tags: string[];
-  created: number;
+  tags: Tag[];
+  createdAt: number;
   description?: string;
-  lastExecution?: number;
+  updatedAt?: number;
   durationTime?: number;
   scenarios?: IScenario[];
+  testFolder: {
+    id: number;
+  };
 }

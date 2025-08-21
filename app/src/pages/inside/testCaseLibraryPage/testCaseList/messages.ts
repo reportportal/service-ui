@@ -25,10 +25,6 @@ export const messages = defineMessages({
     id: 'TestCaseList.searchPlaceholder',
     defaultMessage: 'Search test cases...',
   },
-  loadingMessage: {
-    id: 'TestCaseList.loadingMessage',
-    defaultMessage: 'Loading test cases...',
-  },
   noResultsFilteredMessage: {
     id: 'TestCaseList.noResultsFilteredMessage',
     defaultMessage: 'No test cases found matching your criteria',

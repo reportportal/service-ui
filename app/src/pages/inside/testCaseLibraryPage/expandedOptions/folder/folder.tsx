@@ -27,11 +27,12 @@ type Folder = {
   name: string;
   countOfTestCases?: number;
   subFolders?: Folder[];
+  id: number;
 };
 
 interface FolderProps {
   folder: Folder;
-  activeFolder: string | null;
+  activeFolder: number | null;
   setActiveFolder: (name: string) => void;
   setIsEmptyFolder: (count: boolean) => void;
 }
@@ -47,17 +48,17 @@ export const Folder = ({
   const handleOpen = useCallback(
     ({
       event,
-      name,
+      id,
       count,
     }: {
       event: ReactMouseEvent<HTMLDivElement, MouseEvent>;
-      name: string;
+      id: number;
       count?: number;
     }) => {
       event.stopPropagation();
 
       setIsOpen((prevState) => !prevState);
-      setActiveFolder(name);
+      setActiveFolder(id);
       setIsEmptyFolder(!count);
     },
     [setActiveFolder, setIsEmptyFolder],
@@ -70,17 +71,15 @@ export const Folder = ({
       })}
       role="treeitem"
       aria-expanded={isOpen}
-      aria-selected={activeFolder === folder.name}
+      aria-selected={activeFolder === folder.id}
     >
       <div
-        onClick={(event) =>
-          handleOpen({ event, name: folder.name, count: folder.countOfTestCases })
-        }
+        onClick={(event) => handleOpen({ event, id: folder.id, count: folder.countOfTestCases })}
       >
         {!isEmpty(folder.subFolders) && <ChevronDownDropdownIcon />}
         <div
           className={cx('folders-tree__item-title', {
-            'folders-tree__item-title--active': activeFolder === folder.name,
+            'folders-tree__item-title--active': activeFolder === folder.id,
           })}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>

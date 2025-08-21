@@ -21,7 +21,6 @@ export {
   projectSectionSelector,
   launchIdSelector,
   suiteIdSelector,
-  payloadSelector,
   testItemIdsSelector,
   testItemIdsArraySelector,
   createQueryParametersSelector,
@@ -46,6 +45,7 @@ export {
   activeProjectRoleSelector,
   userAssignedSelector,
 } from './selectors';
+export { urlFolderIdSelector, locationSelector, payloadSelector } from './typed-selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
 export {
@@ -104,8 +104,6 @@ export {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
-  TEST_CASE_DETAILS_PAGE,
-  TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';

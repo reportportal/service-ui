@@ -37,7 +37,7 @@ export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <AdaptiveTagList tags={tags} />
+          <AdaptiveTagList tags={tags} isShowAllView />
         </div>
       </div>
     </div>

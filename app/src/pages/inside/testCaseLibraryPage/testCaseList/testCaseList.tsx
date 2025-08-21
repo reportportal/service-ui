@@ -17,16 +17,15 @@
 import { memo, SetStateAction, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
-import { mockTestCases } from './mockData';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -47,7 +46,7 @@ interface TestCaseListProps {
 
 export const TestCaseList = memo(
   ({
-    testCases = mockTestCases,
+    testCases,
     loading = false,
     currentPage = DEFAULT_CURRENT_PAGE,
     selectedRowIds,
@@ -101,7 +100,7 @@ export const TestCaseList = memo(
     if (loading) {
       return (
         <div className={cx('test-case-list', 'loading')}>
-          <div className={cx('loading-message')}>{formatMessage(messages.loadingMessage)}</div>
+          <BubblesLoader />
         </div>
       );
     }
@@ -117,24 +116,24 @@ export const TestCaseList = memo(
             onClick={() => handleRowClick(testCase.id)}
           >
             <TestCaseNameCell
-              priority={testCase.priority}
+              priority={testCase.priority?.toLowerCase()}
               name={testCase.name}
-              tags={testCase.tags}
+              tags={testCase.tags?.map(({ key }) => key)}
             />
           </button>
         ),
       },
       lastExecution: {
-        content: testCase.lastExecution,
+        content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            lastExecution={testCase.lastExecution}
+            lastExecution={testCase.updatedAt}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
             onEditTestCase={() =>
               dispatch({
-                type: TEST_CASE_DETAILS_PAGE,
+                type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCaseSlug: testCase.id,
+                  testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
                   organizationSlug,
                   projectSlug,
                 },

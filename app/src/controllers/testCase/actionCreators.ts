@@ -23,11 +23,21 @@ import {
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   Folder,
+  GET_TEST_CASES_BY_FOLDER_ID,
+  GET_ALL_TEST_CASES,
+  START_LOADING_TEST_CASES,
+  STOP_LOADING_TEST_CASES,
+  SET_TEST_CASES,
 } from './constants';
+import { TestCase } from './reducer';
 
 export interface GetTestCasesParams {
   search?: string;
   testFolderId?: number;
+}
+
+export interface GetTestCasesByFolderIdParams {
+  folderId: number;
 }
 
 export interface CreateFolderParams {
@@ -37,6 +47,28 @@ export interface CreateFolderParams {
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
   type: GET_TEST_CASES,
   payload: params,
+});
+
+export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
+  type: GET_TEST_CASES_BY_FOLDER_ID,
+  payload: params.folderId,
+});
+
+export const getAllTestCasesAction = () => ({
+  type: GET_ALL_TEST_CASES,
+});
+
+export const startLoadingTestCasesAction = () => ({
+  type: START_LOADING_TEST_CASES,
+});
+
+export const stopLoadingTestCasesAction = () => ({
+  type: STOP_LOADING_TEST_CASES,
+});
+
+export const setTestCasesAction = (testCases: TestCase[]) => ({
+  type: SET_TEST_CASES,
+  payload: testCases,
 });
 
 export const startCreatingFolderAction = () => ({

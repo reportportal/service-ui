@@ -16,3 +16,4 @@
 
 export { TestCaseLibraryPage } from './testCaseLibraryPage';
 export { TestCaseDetailsPage } from './testCaseDetailsPage';
+export { TestCaseLibraryPageWrapper } from './testCaseLibraryPageWrapper';

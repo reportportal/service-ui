@@ -26,3 +26,8 @@ export type Folder = {
   name: string;
   countOfTestCases: number;
 };
+export const GET_TEST_CASES_BY_FOLDER_ID = 'getTestCasesByFolderId' as const;
+export const GET_ALL_TEST_CASES = 'getAllTestCases' as const;
+export const START_LOADING_TEST_CASES = 'startLoadingTestCases' as const;
+export const STOP_LOADING_TEST_CASES = 'stopLoadingTestCases' as const;
+export const SET_TEST_CASES = 'setTestCases' as const;

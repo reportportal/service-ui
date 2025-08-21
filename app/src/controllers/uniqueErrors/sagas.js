@@ -30,7 +30,7 @@ import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
-import { locationSelector } from 'controllers/pages/selectors';
+import { locationSelector } from 'controllers/pages';
 import { queryParametersSelector } from './selectors';
 import {
   CLEAR_CLUSTER_ITEMS,

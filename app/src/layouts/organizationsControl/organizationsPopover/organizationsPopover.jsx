@@ -31,7 +31,7 @@ import { NavLink } from 'components/main/navLink';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { useTracking } from 'react-tracking';
-import { locationSelector } from 'controllers/pages/selectors';
+import { locationSelector } from 'controllers/pages';
 import routesMap from 'routes/routesMap';
 import { OrganizationsItem } from './organizationsItem';
 import styles from './organizationsPopover.scss';
