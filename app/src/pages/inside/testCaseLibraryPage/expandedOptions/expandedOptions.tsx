@@ -23,7 +23,8 @@ import { isEmpty } from 'lodash';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
-
+import { canCreateTestCaseFolder } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
@@ -42,6 +43,7 @@ export const ExpandedOptions = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folders = useSelector(foldersSelector);
+  const userRoles = useSelector(userRolesSelector);
   const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
 
   const setAllTestCases = () => {
@@ -85,15 +87,17 @@ export const ExpandedOptions = () => {
           <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
             <SearchIcon />
           </BaseIconButton>
-          <Button
-            onClick={showCreateFolderModal}
-            variant="text"
-            icon={<PlusIcon />}
-            className={cx('expanded-options__sidebar-actions--create')}
-            adjustWidthOn="content"
-          >
-            {formatMessage(commonMessages.createFolder)}
-          </Button>
+          {canCreateTestCaseFolder(userRoles) && (
+            <Button
+              onClick={showCreateFolderModal}
+              variant="text"
+              icon={<PlusIcon />}
+              className={cx('expanded-options__sidebar-actions--create')}
+              adjustWidthOn="content"
+            >
+              {formatMessage(commonMessages.createFolder)}
+            </Button>
+          )}
         </div>
         <div className={cx('expanded-options__sidebar-folders-wrapper')}>
           <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>

@@ -15,38 +15,61 @@
  */
 
 import Parser from 'html-react-parser';
+import { FC, SVGProps } from 'react';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
+import { userRolesSelector } from 'controllers/pages';
+import { canCreateTestCase, canImportTestCases } from 'common/utils/permissions';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 
+interface Button {
+  name: string;
+  dataAutomationId: string;
+  icon: FC<SVGProps<SVGSVGElement>>;
+  variant?: string;
+  isCompact: boolean;
+}
 export const FolderEmptyState = () => {
   const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
+
+  const availableButtons = () => {
+    const buttons: Button[] = [];
+
+    if (canCreateTestCase(userRoles)) {
+      buttons.push({
+        name: formatMessage(commonMessages.createTestCase),
+        dataAutomationId: 'createTestCaseButton',
+        icon: PlusIconInline,
+        isCompact: true,
+      });
+    }
+
+    if (canImportTestCases(userRoles)) {
+      buttons.push({
+        name: formatMessage(messages.importTestCases),
+        dataAutomationId: 'importTestCaseButton',
+        variant: 'ghost',
+        icon: ImportIcon,
+        isCompact: true,
+      });
+    }
+
+    return buttons;
+  };
 
   return (
     <EmptyStatePage
       title={formatMessage(messages.emptyPageTitle)}
       description={Parser(formatMessage(messages.folderEmptyPageDescription))}
       imageType="docs"
-      buttons={[
-        {
-          name: formatMessage(commonMessages.createTestCase),
-          dataAutomationId: 'createTestCaseButton',
-          icon: PlusIconInline,
-          isCompact: true,
-        },
-        {
-          name: formatMessage(messages.importTestCases),
-          dataAutomationId: 'importTestCaseButton',
-          variant: 'ghost',
-          icon: ImportIcon,
-          isCompact: true,
-        },
-      ]}
+      buttons={availableButtons()}
     />
   );
 };

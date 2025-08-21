@@ -27,18 +27,31 @@ import {
   RerunIcon,
   DurationIcon,
 } from '@reportportal/ui-kit';
+import { isEmpty } from 'lodash';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import {
+  canAddTestCaseToLaunch,
+  canAddTestCaseToTestPlan,
+  canDeleteTestCase,
+  canDuplicateTestCase,
+  canEditTestCase,
+  canMoveTestCase,
+} from 'common/utils/permissions';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { isEmpty } from 'lodash';
-import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  TEST_CASE_DETAILS_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { TestCase, IScenario } from '../../types';
+import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
@@ -93,6 +106,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
+    const userRoles = useSelector(userRolesSelector);
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -106,7 +120,18 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
-    const menuItems = createTestCaseMenuItems(formatMessage);
+    const getExcludedActions = () => {
+      const excludedActions: TestCaseMenuAction[] = [];
+
+      if (!canEditTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.EDIT);
+      if (!canDeleteTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.DELETE);
+      if (!canDuplicateTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.DUPLICATE);
+      if (!canMoveTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.MOVE);
+
+      return excludedActions;
+    };
+
+    const menuItems = createTestCaseMenuItems(formatMessage, {}, getExcludedActions());
 
     const handleThreeDotsClick = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -230,22 +255,26 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          <Button
-            variant="ghost"
-            className={cx('action-button')}
-            onClick={handleAddToLaunchClick}
-            data-automation-id="test-case-add-to-launch"
-          >
-            {formatMessage(messages.addToLaunch)}
-          </Button>
-          <Button
-            variant="primary"
-            className={cx('action-button', 'last-button')}
-            onClick={handleAddToTestPlanClick}
-            data-automation-id="test-case-add-to-test-plan"
-          >
-            {formatMessage(messages.addToTestPlan)}
-          </Button>
+          {canAddTestCaseToLaunch(userRoles) && (
+            <Button
+              variant="ghost"
+              className={cx('action-button')}
+              onClick={handleAddToLaunchClick}
+              data-automation-id="test-case-add-to-launch"
+            >
+              {formatMessage(messages.addToLaunch)}
+            </Button>
+          )}
+          {canAddTestCaseToTestPlan(userRoles) && (
+            <Button
+              variant="primary"
+              className={cx('action-button', 'last-button')}
+              onClick={handleAddToTestPlanClick}
+              data-automation-id="test-case-add-to-test-plan"
+            >
+              {formatMessage(messages.addToTestPlan)}
+            </Button>
+          )}
         </div>
       </div>
     );

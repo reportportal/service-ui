@@ -27,8 +27,13 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { canCreateTestCase, canImportTestCases } from 'common/utils/permissions';
 import { projectNameSelector } from 'controllers/project';
-import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { foldersSelector, getFoldersAction } from 'controllers/testCase';
 
 import { MainPageEmptyState } from './emptyState/mainPage';
@@ -49,6 +54,7 @@ export const TestCaseLibraryPage = () => {
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const userRoles = useSelector(userRolesSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
   const hasFolders = !isEmpty(folders);
@@ -74,21 +80,25 @@ export const TestCaseLibraryPage = () => {
             </div>
             {!hasFolders || (
               <div className={cx('test-case-library-page__actions')}>
-                <Button
-                  variant="text"
-                  icon={Parser(ImportIcon as unknown as string)}
-                  data-automation-id="importTestCase"
-                  adjustWidthOn="content"
-                >
-                  {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
-                </Button>
-                <Button
-                  variant="ghost"
-                  data-automation-id="createTestCase"
-                  onClick={openCreateTestCaseModal}
-                >
-                  {formatMessage(commonMessages.createTestCase)}
-                </Button>
+                {canImportTestCases(userRoles) && (
+                  <Button
+                    variant="text"
+                    icon={Parser(ImportIcon as unknown as string)}
+                    data-automation-id="importTestCase"
+                    adjustWidthOn="content"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
+                  </Button>
+                )}
+                {canCreateTestCase(userRoles) && (
+                  <Button
+                    variant="ghost"
+                    data-automation-id="createTestCase"
+                    onClick={openCreateTestCaseModal}
+                  >
+                    {formatMessage(commonMessages.createTestCase)}
+                  </Button>
+                )}
               </div>
             )}
           </div>
