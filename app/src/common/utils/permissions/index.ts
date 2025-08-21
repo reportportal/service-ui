@@ -61,8 +61,9 @@ export {
   canEditTestCaseScenario,
   canEditTestCaseTag,
   canMoveTestCase,
-  canImportTestCases,
   canCreateTestCaseFolder,
+  // TEST CASES
+  canImportTestCases,
   // TEST PLAN
   canEditTestPlan,
   canDeleteTestPlan,

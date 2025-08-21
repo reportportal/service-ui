@@ -107,18 +107,20 @@ export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNC
 export const canAddTestCaseToLaunch = checkPermission(ACTIONS.ADD_TEST_CASE_TO_LAUNCH);
 export const canAddTestCaseToTestPlan = checkPermission(ACTIONS.ADD_TEST_CASE_TO_TEST_PLAN);
 export const canCreateTestCase = checkPermission(ACTIONS.CREATE_TEST_CASE);
-export const canCreateTestCaseFolder = checkPermission(ACTIONS.CREATE_TEST_CASE_FOLDER);
 export const canDeleteTestCase = checkPermission(ACTIONS.DELETE_TEST_CASE);
 export const canDuplicateTestCase = checkPermission(ACTIONS.DUPLICATE_TEST_CASE);
 export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
 export const canEditTestCaseDescription = checkPermission(ACTIONS.EDIT_TEST_CASE_DESCRIPTION);
 export const canEditTestCaseScenario = checkPermission(ACTIONS.EDIT_TEST_CASE_SCENARIO);
 export const canEditTestCaseTag = checkPermission(ACTIONS.EDIT_TEST_CASE_TAG);
-export const canImportTestCases = checkPermission(ACTIONS.IMPORT_TEST_CASES);
 export const canMoveTestCase = checkPermission(ACTIONS.MOVE_TEST_CASE);
 export const canDoTestCaseBulkActions = checkPermission(ACTIONS.TEST_CASE_BULK_ACTIONS);
+// TEST CASES
+export const canImportTestCases = checkPermission(ACTIONS.IMPORT_TEST_CASES);
 // TEST PLAN
 export const canCreateTestPlan = checkPermission(ACTIONS.CREATE_TEST_PLAN);
 export const canDeleteTestPlan = checkPermission(ACTIONS.DELETE_TEST_PLAN);
 export const canDuplicateTestPlan = checkPermission(ACTIONS.DUPLICATE_TEST_PLAN);
 export const canEditTestPlan = checkPermission(ACTIONS.EDIT_TEST_PLAN);
+// TEST CASE FOLDER
+export const canCreateTestCaseFolder = checkPermission(ACTIONS.CREATE_TEST_CASE_FOLDER);
