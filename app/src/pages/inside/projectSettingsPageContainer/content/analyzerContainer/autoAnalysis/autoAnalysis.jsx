@@ -37,6 +37,7 @@ import {
   ALL_MESSAGES_SHOULD_MATCH,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
+  LARGEST_RETRY_PRIORITY,
   MIN_SHOULD_MATCH,
   NUMBER_OF_LOG_LINES,
 } from '../constants';
@@ -91,6 +92,7 @@ const AutoAnalysis = ({
       [ANALYZER_MODE]: analyzerConfig[ANALYZER_MODE],
       [NUMBER_OF_LOG_LINES]: analyzerConfig[NUMBER_OF_LOG_LINES],
       [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(analyzerConfig[ALL_MESSAGES_SHOULD_MATCH] || 'false'),
+      [LARGEST_RETRY_PRIORITY]: JSON.parse(analyzerConfig[LARGEST_RETRY_PRIORITY] || 'false'),
     });
   }, []);
 
@@ -107,6 +109,7 @@ const AutoAnalysis = ({
         data[ANALYZER_ENABLED],
         data[ANALYZER_MODE],
         data[ALL_MESSAGES_SHOULD_MATCH],
+        data[LARGEST_RETRY_PRIORITY],
         numberOfLogLines,
       ),
     );
@@ -194,6 +197,15 @@ const AutoAnalysis = ({
           dataAutomationId={ALL_MESSAGES_SHOULD_MATCH + FIELD}
         >
           <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
+        </FieldElement>
+        <FieldElement
+          name={LARGEST_RETRY_PRIORITY}
+          description={formatMessage(messages.largestRetryPriorityDescription)}
+          format={Boolean}
+          disabled={isFieldDisabled}
+          dataAutomationId={LARGEST_RETRY_PRIORITY + FIELD}
+        >
+          <Checkbox>{formatMessage(messages.largestRetryPriority)}</Checkbox>
         </FieldElement>
         <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
           {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
