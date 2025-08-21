@@ -153,7 +153,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {testCase.path?.length && <PathBreadcrumb path={testCase.path} />}
+          {Boolean(testCase.path?.length) && <PathBreadcrumb path={testCase.path} />}
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -193,7 +193,6 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            // todo should be changed to use correct data
             tags: testCase.tags?.map(({ key }) => key),
             scenarios: mockedScenarios,
             steps: mockedStepsData,

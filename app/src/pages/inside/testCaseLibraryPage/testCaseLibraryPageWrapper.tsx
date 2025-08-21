@@ -22,18 +22,17 @@ import { payloadSelector } from 'controllers/pages';
 
 export const TestCaseLibraryPageWrapper = () => {
   const { testCasePageRoute } = useSelector(payloadSelector) as string | string[];
+  const folderRegExp = /^folder\/([^/]+)$/;
+  const testCaseRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)$/;
+  const historyOfActionsRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/;
   let folderMatch: boolean;
   let testCaseMatch: boolean;
   let historyOfActionsMatch: boolean;
 
   if (typeof testCasePageRoute === 'string') {
-    folderMatch = Boolean(testCasePageRoute.match(/^folder\/([^/]+)$/)?.length);
-    testCaseMatch = Boolean(
-      testCasePageRoute.match(/^folder\/([^/]+)\/test-cases\/([^/]+)$/)?.length,
-    );
-    historyOfActionsMatch = Boolean(
-      testCasePageRoute.match(/^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/)?.length,
-    );
+    folderMatch = Boolean(folderRegExp.exec(testCasePageRoute));
+    testCaseMatch = Boolean(testCaseRegExp.exec(testCasePageRoute));
+    historyOfActionsMatch = Boolean(historyOfActionsRegExp.exec(testCasePageRoute));
   } else if (Array.isArray(testCasePageRoute)) {
     folderMatch = Boolean(testCasePageRoute[0] === 'folder' && testCasePageRoute[1]);
     testCaseMatch = Boolean(testCasePageRoute[2] === 'test-cases' && testCasePageRoute[3]);
