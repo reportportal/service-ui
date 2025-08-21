@@ -99,7 +99,7 @@ export const TestCaseDetailsHeader = ({
         <div className={cx('header__meta')}>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.created)}</span>
-            <span className={cx('header__meta-value')}>{testCase.created}</span>
+            <span className={cx('header__meta-value')}>{testCase.createdAt}</span>
           </div>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>

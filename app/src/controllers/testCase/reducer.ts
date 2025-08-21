@@ -26,11 +26,6 @@ import {
   SET_TEST_CASES,
 } from 'controllers/testCase/constants';
 
-type Folder = {
-  name: string;
-  countOfTestCases: number;
-};
-
 export type TestCase = {
   name: string;
   id: number;

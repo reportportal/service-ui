@@ -33,7 +33,7 @@ type Folder = {
 interface FolderProps {
   folder: Folder;
   activeFolder: number | null;
-  setActiveFolder: (name: string) => void;
+  setActiveFolder: (name: number) => void;
   setIsEmptyFolder: (count: boolean) => void;
 }
 
