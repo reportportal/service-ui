@@ -30,6 +30,7 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -56,7 +57,7 @@ export const TestCaseList = memo(
     onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
-    const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
+    const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const dispatch = useDispatch();
     const { organizationSlug, projectSlug } = useSelector(
@@ -67,12 +68,12 @@ export const TestCaseList = memo(
     const endIndex = startIndex + itemsPerPage;
     const currentData = testCases.slice(startIndex, endIndex);
 
-    const handleRowClick = (testCaseId: string) => {
+    const handleRowClick = (testCaseId: number) => {
       setSelectedTestCaseId(testCaseId);
     };
 
     const handleCloseSidePanel = () => {
-      setSelectedTestCaseId('');
+      setSelectedTestCaseId(null);
     };
 
     const handleRowSelect = (id: number | string) => {
@@ -116,7 +117,7 @@ export const TestCaseList = memo(
             onClick={() => handleRowClick(testCase.id)}
           >
             <TestCaseNameCell
-              priority={testCase.priority?.toLowerCase()}
+              priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
               tags={testCase.tags?.map(({ key }) => key)}
             />
