@@ -49,5 +49,21 @@ export {
   canExportOrganizations,
   canInviteUserToOrganization,
   canSeeActivityOption,
+  // TEST CASE
+  canAddTestCaseToLaunch,
+  canAddTestCaseToTestPlan,
+  canCreateTestCase,
+  canDeleteTestCase,
+  canDuplicateTestCase,
+  canEditTestCase,
+  canEditTestCaseDescription,
+  canEditTestCaseScenario,
+  canEditTestCaseTag,
+  canMoveTestCase,
+  // TEST CASES
+  canImportTestCases,
+  // TEST CASE FOLDER
+  canCreateTestCaseFolder,
 } from './permissions';
+
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

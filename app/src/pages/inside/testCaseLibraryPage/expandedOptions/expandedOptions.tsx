@@ -58,6 +58,7 @@ export const ExpandedOptions = () => {
   const projectSlug = useSelector(urlProjectSlugSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
+  const userRoles = useSelector(userRolesSelector);
   const folderIdNumber = Number(folderId);
 
   useEffect(() => {
@@ -146,15 +147,17 @@ export const ExpandedOptions = () => {
           <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
             <SearchIcon />
           </BaseIconButton>
-          <Button
-            onClick={showCreateFolderModal}
-            variant="text"
-            icon={<PlusIcon />}
-            className={cx('expanded-options__sidebar-actions--create')}
-            adjustWidthOn="content"
-          >
-            {formatMessage(commonMessages.createFolder)}
-          </Button>
+          {canCreateTestCaseFolder(userRoles) && (
+            <Button
+              onClick={showCreateFolderModal}
+              variant="text"
+              icon={<PlusIcon />}
+              className={cx('expanded-options__sidebar-actions--create')}
+              adjustWidthOn="content"
+            >
+              {formatMessage(commonMessages.createFolder)}
+            </Button>
+          )}
         </div>
         <div className={cx('expanded-options__sidebar-folders-wrapper')}>
           <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>

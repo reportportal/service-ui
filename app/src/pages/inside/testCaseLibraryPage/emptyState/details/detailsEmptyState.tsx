@@ -16,13 +16,31 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
+import { userRolesSelector } from 'controllers/pages';
+import { canEditTestCaseScenario } from 'common/utils/permissions';
 
 import { messages } from '../messages';
 
 export const DetailsEmptyState = () => {
   const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
+
+  const actionButtons = () => {
+    const buttons: Record<string, string | boolean>[] = [];
+
+    if (canEditTestCaseScenario(userRoles)) {
+      buttons.push({
+        isCompact: true,
+        name: formatMessage(messages.editScenario),
+        variant: 'primary',
+      });
+    }
+
+    return buttons;
+  };
 
   return (
     <EmptyStatePage
@@ -30,13 +48,7 @@ export const DetailsEmptyState = () => {
       description={Parser(formatMessage(messages.scenarioDescription))}
       imageType="plus"
       documentationLink={referenceDictionary.rpDoc}
-      buttons={[
-        {
-          isCompact: true,
-          name: formatMessage(messages.editScenario),
-          variant: 'primary',
-        },
-      ]}
+      buttons={actionButtons()}
     />
   );
 };
