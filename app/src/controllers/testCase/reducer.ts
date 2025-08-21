@@ -25,16 +25,7 @@ import {
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
 } from 'controllers/testCase/constants';
-
-export type TestCase = {
-  name: string;
-  id: number;
-  priority: string;
-  testFolder: {
-    id: number;
-  };
-  tags: string[];
-};
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export type InitialStateType = {
   folders: {

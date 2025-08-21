@@ -29,7 +29,7 @@ import {
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
 } from './constants';
-import { TestCase } from './reducer';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesParams {
   search?: string;

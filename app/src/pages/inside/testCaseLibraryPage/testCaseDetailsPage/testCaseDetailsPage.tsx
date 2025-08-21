@@ -92,7 +92,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 
 const testCase: TestCase = {
-  id: '2775277527',
+  id: 27752,
   name: '24.2 PV',
   createdAt: 1751362404546,
   priority: 'high',
@@ -124,29 +124,9 @@ export const TestCaseDetailsPage = () => {
 
   // TODO: Remove mock data after integration
   const mockedTags = [
-    'sso system',
-    'user interface improvements user interface improvements',
-    'battery usage analysis for a user interface improvements',
-    'cross-platform app speed t',
-    'ui',
-    'performance test',
-    'security check',
-    'user flow',
-    'ui',
-    'performance test',
-    'security check',
-    'user flow',
-    'ui',
-    'performance test',
-    'security check',
-    'user flow',
-    'ui',
-    'performance test',
-    'security check',
-    'user flow',
-    'ui',
-    'performance test',
-    'security check',
+    { key: 'sso system', id: 1 },
+    { key: 'user interface improvements user interface improvements', id: 2 },
+    { key: 'battery usage analysis for a user interface improvements', id: 3 },
   ];
   const testCaseDescription = isDescriptionAdded ? mockedTestCaseDescription : testCase.description;
   const tags = isTagsAdded ? mockedTags : testCase.tags;
@@ -169,7 +149,7 @@ export const TestCaseDetailsPage = () => {
               handleEditDescription,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription,
-              tags,
+              tags: tags.map(({ key }) => key),
             }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}

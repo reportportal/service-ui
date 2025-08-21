@@ -61,7 +61,7 @@ export const ExpandedOptions = () => {
 
   useEffect(() => {
     if (folderId) {
-      dispatch(getTestCaseByFolderIdAction({ folderId: folderId as number }));
+      dispatch(getTestCaseByFolderIdAction({ folderId: Number(folderId) }));
     } else {
       dispatch(getAllTestCasesAction());
     }

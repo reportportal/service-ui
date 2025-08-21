@@ -42,7 +42,7 @@ import {
   stopLoadingTestCasesAction,
   setTestCasesAction,
 } from './actionCreators';
-import { TestCase } from './reducer';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Task } from 'redux-saga';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {

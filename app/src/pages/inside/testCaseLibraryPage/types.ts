@@ -21,7 +21,7 @@ export interface IScenario {
 }
 
 export interface TestCase {
-  id: string;
+  id: number;
   name: string;
   priority: TestCasePriority;
   path: string[];

@@ -21,7 +21,7 @@ import { TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage/testCaseDe
 import { payloadSelector } from 'controllers/pages';
 
 export const TestCaseLibraryPageWrapper = () => {
-  const { testCasePageRoute } = useSelector(payloadSelector) as string | string[];
+  const testCasePageRoute = useSelector(payloadSelector).testCasePageRoute;
   const folderRegExp = /^folder\/([^/]+)$/;
   const testCaseRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)$/;
   const historyOfActionsRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/;
