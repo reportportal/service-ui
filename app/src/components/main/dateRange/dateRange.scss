@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 8px 12px;
+  height: 100px;
 }
 
 .time-range {
@@ -33,10 +34,19 @@
 }
 
 .date-picker-wrapper {
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 13px;
-  line-height: 20px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.date-picker-container {
+  width: 200px;
+  box-sizing: border-box;
+}
+
+.date-picker-label {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
 }
