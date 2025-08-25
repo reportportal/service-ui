@@ -21,7 +21,7 @@ import { useCallback, useMemo } from 'react';
 import { ActionMenu } from 'components/actionMenu';
 import { showModalAction } from 'controllers/modal';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { canSeeActivityOption } from 'common/utils/permissions';
+import { canSeeActivityOption, canDeleteOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
 import {
@@ -36,8 +36,9 @@ import {
 } from 'pages/inside/common/assignments';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
-import { messages } from '../../messages';
+import { DeleteOrganizationModal } from '../modals/deleteOrganizationsModal';
 import { Organization } from 'controllers/organization';
+import { messages } from '../../messages';
 
 interface MeatballMenuProps {
   organization: Organization;
@@ -59,7 +60,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu('activity_menu'));
   }, [dispatch, organization, trackEvent]);
 
-  const onUnassign = useCallback(() => {
+  const onConfirm = useCallback(() => {
     dispatch(fetchFilteredOrganizationsAction());
   }, [dispatch]);
 
@@ -70,13 +71,22 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
           <UnassignOrganizationModal
             user={currentUser}
             organization={organization}
-            onUnassign={onUnassign}
+            onUnassign={onConfirm}
           />
         ),
       }),
     );
     trackEvent(ORGANIZATION_PAGE_EVENTS.UNASSIGN_SELF);
-  }, [dispatch, currentUser, organization, onUnassign, trackEvent]);
+  }, [dispatch, currentUser, organization, onConfirm, trackEvent]);
+
+  const handleDeleteClick = useCallback(() => {
+    dispatch(
+      showModalAction({
+        component: <DeleteOrganizationModal organization={organization} onDelete={onConfirm} />,
+      }),
+    );
+    trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu('delete_via_menu'));
+  }, [dispatch, organization, onConfirm, trackEvent]);
 
   const links = useMemo(
     () => [
@@ -100,6 +110,12 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
         onClick: handleUnassignClick,
         hasPermission: isAssignedToOrganization && canUnassign(currentUser, organization),
       },
+      {
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        onClick: handleDeleteClick,
+        hasPermission: canDeleteOrganization(userRoles),
+        danger: true,
+      },
     ],
     [
       formatMessage,
@@ -108,6 +124,8 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       canUnassign,
       currentUser,
       organization,
+      handleDeleteClick,
+      userRoles,
     ],
   );
 

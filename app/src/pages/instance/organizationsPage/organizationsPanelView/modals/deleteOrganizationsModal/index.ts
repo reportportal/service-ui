@@ -1,5 +1,5 @@
-/*
- * Copyright 2024 EPAM Systems
+/*!
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-import {
-  FETCH_ORGANIZATIONS,
-  FETCH_FILTERED_ORGANIZATIONS,
-  DELETE_ORGANIZATION,
-} from './constants';
+import DeleteOrganizationModal from './deleteOrganizationModal';
 
-export const fetchOrganizationsAction = () => ({
-  type: FETCH_ORGANIZATIONS,
-});
-
-export const fetchFilteredOrganizationsAction = () => ({
-  type: FETCH_FILTERED_ORGANIZATIONS,
-});
-
-export const deleteOrganizationAction = (organizationId, onSuccess) => ({
-  type: DELETE_ORGANIZATION,
-  payload: { organizationId, onSuccess },
-});
+export { DeleteOrganizationModal };
