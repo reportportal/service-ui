@@ -1,3 +1,5 @@
+import { isString } from 'lodash';
+
 type LocationInfo = {
   payload: {
     testCasePageRoute: string | string[];
@@ -8,21 +10,21 @@ type State = {
   location: LocationInfo;
 };
 
-export const locationSelector = (state: State): LocationInfo => state.location;
+export const locationSelector = (state: State) => state.location;
 
-export const payloadSelector = (state: State): LocationInfo['payload'] =>
-  locationSelector(state).payload;
+export const payloadSelector = (state: State) => locationSelector(state).payload;
 
 export const urlTestCaseSlugSelector = (state: State): string => {
   const testCasePageRoute = payloadSelector(state).testCasePageRoute;
+  let testCaseId: string | undefined;
 
-  if (testCasePageRoute && typeof testCasePageRoute === 'string') {
-    return testCasePageRoute.split('/')[3];
+  if (testCasePageRoute && isString(testCasePageRoute)) {
+    testCaseId = testCasePageRoute.split('/')[3];
   } else if (Array.isArray(testCasePageRoute)) {
-    return testCasePageRoute?.[3];
+    testCaseId = testCasePageRoute?.[3];
   }
 
-  return '';
+  return isString(testCaseId) ? testCaseId : '';
 };
 
 export const urlFolderIdSelector = (state: State): string => {

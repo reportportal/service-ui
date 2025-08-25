@@ -118,7 +118,12 @@ export const TestCaseSidePanel = memo(
         payload: {
           organizationSlug,
           projectSlug,
-          testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
+          testCasePageRoute: [
+            'folder',
+            String(testCase.testFolder.id),
+            'test-cases',
+            String(testCase.id),
+          ],
         },
       });
     };

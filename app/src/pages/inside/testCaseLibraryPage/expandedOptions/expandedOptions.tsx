@@ -60,7 +60,8 @@ export const ExpandedOptions = () => {
   const folders = useSelector(foldersSelector);
 
   useEffect(() => {
-    if (folderId) {
+    const parsed = Number(folderId);
+    if (folderId !== '' && Number.isFinite(parsed)) {
       dispatch(getTestCaseByFolderIdAction({ folderId: Number(folderId) }));
     } else {
       dispatch(getAllTestCasesAction());
@@ -158,7 +159,7 @@ export const ExpandedOptions = () => {
                   .map((folder) => (
                     <Folder
                       folder={folder}
-                      key={folder.name}
+                      key={folder.id}
                       activeFolder={activeFolder}
                       setActiveFolder={handleFolderClick}
                       setIsEmptyFolder={setIsEmptyFolder}

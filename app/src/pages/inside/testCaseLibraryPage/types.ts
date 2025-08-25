@@ -28,7 +28,7 @@ export interface TestCase {
   tags: Tag[];
   createdAt: number;
   description?: string;
-  updatedAt?: number;
+  updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];
   testFolder: {

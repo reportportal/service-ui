@@ -21,22 +21,34 @@ import { TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage/testCaseDe
 import { payloadSelector } from 'controllers/pages';
 
 export const TestCaseLibraryPageWrapper = () => {
-  const testCasePageRoute = useSelector(payloadSelector).testCasePageRoute;
+  const payload = useSelector(payloadSelector);
+  const testCasePageRoute = payload?.testCasePageRoute;
   const folderRegExp = /^folder\/([^/]+)$/;
   const testCaseRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)$/;
   const historyOfActionsRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/;
-  let folderMatch: boolean;
-  let testCaseMatch: boolean;
-  let historyOfActionsMatch: boolean;
+  let folderMatch: boolean = false;
+  let testCaseMatch: boolean = false;
+  let historyOfActionsMatch: boolean = false;
 
   if (typeof testCasePageRoute === 'string') {
-    folderMatch = Boolean(folderRegExp.exec(testCasePageRoute));
-    testCaseMatch = Boolean(testCaseRegExp.exec(testCasePageRoute));
-    historyOfActionsMatch = Boolean(historyOfActionsRegExp.exec(testCasePageRoute));
+    folderMatch = folderRegExp.test(testCasePageRoute);
+    testCaseMatch = testCaseRegExp.test(testCasePageRoute);
+    historyOfActionsMatch = historyOfActionsRegExp.test(testCasePageRoute);
   } else if (Array.isArray(testCasePageRoute)) {
-    folderMatch = Boolean(testCasePageRoute[0] === 'folder' && testCasePageRoute[1]);
-    testCaseMatch = Boolean(testCasePageRoute[2] === 'test-cases' && testCasePageRoute[3]);
-    historyOfActionsMatch = Boolean(testCasePageRoute[4] === 'historyOfActions');
+    folderMatch = Boolean(
+      testCasePageRoute[0] === 'folder' && testCasePageRoute[1] && !testCasePageRoute[2],
+    );
+    testCaseMatch = Boolean(
+      testCasePageRoute[0] === 'folder' &&
+        testCasePageRoute[2] === 'test-cases' &&
+        testCasePageRoute[3] &&
+        !testCasePageRoute[4],
+    );
+    historyOfActionsMatch = Boolean(
+      testCasePageRoute[0] === 'folder' &&
+        testCasePageRoute[2] === 'test-cases' &&
+        testCasePageRoute[4] === 'historyOfActions',
+    );
   }
 
   if (historyOfActionsMatch) {
@@ -50,4 +62,6 @@ export const TestCaseLibraryPageWrapper = () => {
   if (!testCasePageRoute || folderMatch) {
     return <TestCaseLibraryPage />;
   }
+
+  return <TestCaseLibraryPage />;
 };

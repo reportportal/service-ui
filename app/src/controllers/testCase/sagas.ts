@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all, put, fork, cancel } from 'redux-saga/effects';
+import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
@@ -50,7 +50,7 @@ interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
 }
 
 interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
-  payload?: GetTestCasesByFolderIdParams;
+  payload: GetTestCasesByFolderIdParams;
 }
 
 interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
@@ -89,6 +89,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   } catch (error: unknown) {
     const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
 
+    yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
         message: errorMessage,
@@ -114,6 +115,7 @@ function* getAllTestCases(): Generator {
   } catch (error: unknown) {
     const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
 
+    yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
         message: errorMessage,
@@ -186,11 +188,11 @@ function* watchGetTestCases() {
 }
 
 function* watchGetTestCasesByFolderId() {
-  yield takeEvery(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
+  yield takeLatest(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
 }
 
 function* watchGetAllTestCases() {
-  yield takeEvery(GET_ALL_TEST_CASES, getAllTestCases);
+  yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
 }
 
 export function* testCaseSagas() {

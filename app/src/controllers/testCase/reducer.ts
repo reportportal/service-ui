@@ -76,12 +76,15 @@ const foldersReducer = (state = INITIAL_STATE.folders, { type, payload = {} }) =
   }
 };
 
-const testCasesReducer = (state = INITIAL_STATE.testCases, { type, payload = {} }) => {
-  switch (type) {
+const testCasesReducer = (
+  state = INITIAL_STATE.testCases,
+  action: { type: string; payload?: unknown },
+) => {
+  switch (action.type) {
     case SET_TEST_CASES:
       return {
         ...state,
-        list: payload,
+        list: Array.isArray(action.payload) ? (action.payload as TestCase[]) : [],
       };
     case START_LOADING_TEST_CASES:
       return {
