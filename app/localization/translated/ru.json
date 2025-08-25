@@ -1730,6 +1730,7 @@
   "OrganizationsPage.createNewOrganization": "Создайте новую организацию, чтобы начать свой путь на портале отчетов",
   "OrganizationsPage.createOrganization": "Создать организацию",
   "OrganizationsPage.deleteOrganization": "Удалить организацию",
+  "OrganizationsPage.deleteOrganizationError": "Произошла ошибка при удалении организации",
   "OrganizationsPage.deleteOrganizationModalDescription": "Вы уверены, что хотите удалить организацию <b>{name}</b>? Это необратимое действие также удалит все проекты и связанные с ними данные в этой организации.",
   "OrganizationsPage.deleteOrganizationSuccess": "Организация успешно удалена",
   "OrganizationsPage.description": "Список доступных вам организаций в данный момент пуст. Пожалуйста, свяжитесь со своим администратором, чтобы получить назначение в уже существующую организацию.",

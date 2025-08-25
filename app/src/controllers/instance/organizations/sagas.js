@@ -64,7 +64,7 @@ function* deleteOrganization({ payload: { organizationId } }) {
     const error = err.message;
     yield put(
       showErrorNotification({
-        messageId: 'deleteError',
+        messageId: 'deleteOrganizationError',
         values: { error },
       }),
     );

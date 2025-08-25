@@ -1731,6 +1731,7 @@
   "OrganizationsPage.createNewOrganization": "Create a new organization to begin your ReportPortal journey",
   "OrganizationsPage.createOrganization": "Create Organization",
   "OrganizationsPage.deleteOrganization": "Delete organization",
+  "OrganizationsPage.deleteOrganizationError": "An error occurred during deleting the organization",
   "OrganizationsPage.deleteOrganizationModalDescription": "Are you sure you want to delete the <b>{name}</b> organization? This irreversible action will also delete all projects and associated data under this organization.",
   "OrganizationsPage.deleteOrganizationSuccess": "The organization has been deleted successfully",
   "OrganizationsPage.description": "The list of organizations available to you is currently empty. Please contact your Administrator to be assigned to an existing one.",
