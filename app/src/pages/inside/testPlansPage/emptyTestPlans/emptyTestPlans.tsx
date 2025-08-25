@@ -17,7 +17,10 @@
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { referenceDictionary } from 'common/utils';
+import { canCreateTestPlan } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { useCreateTestPlanModal } from '../hooks';
@@ -26,6 +29,13 @@ import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
+
+interface ActionButton {
+  name: string;
+  dataAutomationId: string;
+  isCompact: boolean;
+  handleButton: () => void;
+}
 
 const benefitMessages = [
   messages.progressTracking,
@@ -36,9 +46,25 @@ const benefitMessages = [
 export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
+  const userRoles = useSelector(userRolesSelector);
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
+
+  const availableActions = () => {
+    const actions: ActionButton[] = [];
+
+    if (canCreateTestPlan(userRoles)) {
+      actions.push({
+        name: formatMessage(commonMessages.createTestPlan),
+        dataAutomationId: 'createTestPlansButton',
+        isCompact: true,
+        handleButton: openModal,
+      });
+    }
+
+    return actions;
+  };
 
   return (
     <div className={cx('empty-test-plans')}>
@@ -47,14 +73,7 @@ export const EmptyTestPlans = () => {
         description={Parser(formatMessage(messages.pageDescription))}
         imageType="flag"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={[
-          {
-            name: formatMessage(commonMessages.createTestPlan),
-            dataAutomationId: 'createTestPlansButton',
-            isCompact: true,
-            handleButton: openModal,
-          },
-        ]}
+        buttons={availableActions()}
       />
       <NumerableBlock
         items={benefits}
