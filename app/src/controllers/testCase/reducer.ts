@@ -15,12 +15,14 @@
  */
 
 import { combineReducers } from 'redux';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { fetchReducer } from 'controllers/fetch';
+import { loadingReducer } from 'controllers/loading';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import {
-  UPDATE_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
-  SET_FOLDERS,
-  Folder,
+  NAMESPACE,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
@@ -30,7 +32,7 @@ import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 export type InitialStateType = {
   folders: {
     isCreatingFolder: boolean;
-    list: Folder[];
+    loading: boolean;
   };
   testCases: {
     isLoading: boolean;
@@ -40,8 +42,8 @@ export type InitialStateType = {
 
 export const INITIAL_STATE: InitialStateType = {
   folders: {
-    list: [],
     isCreatingFolder: false,
+    loading: false,
   },
   testCases: {
     isLoading: false,
@@ -49,28 +51,15 @@ export const INITIAL_STATE: InitialStateType = {
   },
 };
 
-const foldersReducer = (state = INITIAL_STATE.folders, { type, payload = {} }) => {
-  switch (type) {
-    case SET_FOLDERS:
-      return {
-        ...state,
-        list: payload,
-      };
-    case UPDATE_FOLDERS:
-      return {
-        ...state,
-        list: [...state.list, payload],
-      };
+const isCreatingFolderReducer = (
+  state = INITIAL_STATE.folders.isCreatingFolder,
+  action: { type: string },
+) => {
+  switch (action.type) {
     case START_CREATING_FOLDER:
-      return {
-        ...state,
-        isCreatingFolder: true,
-      };
+      return true;
     case STOP_CREATING_FOLDER:
-      return {
-        ...state,
-        isCreatingFolder: false,
-      };
+      return false;
     default:
       return state;
   }
@@ -101,7 +90,13 @@ const testCasesReducer = (
   }
 };
 
-export const testCaseReducer = combineReducers({
-  folders: foldersReducer,
+const reducer = combineReducers({
+  folders: combineReducers({
+    data: fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
+    isCreatingFolder: isCreatingFolderReducer,
+    loading: loadingReducer(NAMESPACE),
+  }),
   testCases: testCasesReducer,
 });
+
+export const testCaseReducer = createPageScopedReducer(reducer, [TEST_CASE_LIBRARY_PAGE]);
