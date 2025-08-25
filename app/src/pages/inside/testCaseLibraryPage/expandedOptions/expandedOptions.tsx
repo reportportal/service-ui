@@ -58,22 +58,18 @@ export const ExpandedOptions = () => {
     projectSlug: string;
   };
   const folders = useSelector(foldersSelector);
+  const folderIdNumber = Number(folderId);
 
   useEffect(() => {
-    const parsed = Number(folderId);
-    if (folderId !== '' && Number.isFinite(parsed)) {
-      dispatch(getTestCaseByFolderIdAction({ folderId: Number(folderId) }));
+    if (folderId !== '' && Number.isFinite(folderIdNumber)) {
+      dispatch(getTestCaseByFolderIdAction({ folderId: folderIdNumber }));
     } else {
       dispatch(getAllTestCasesAction());
     }
   }, [folderId, dispatch]);
 
   useEffect(() => {
-    if (folderId) {
-      setActiveFolder(Number(folderId));
-    } else {
-      setActiveFolder(null);
-    }
+    setActiveFolder(folderId ? folderIdNumber : null);
   }, [folderId, folders]);
 
   const setAllTestCases = () => {
@@ -177,7 +173,7 @@ export const ExpandedOptions = () => {
           ) : (
             <AllTestCasesPage
               testCases={testCases}
-              searchValue={''}
+              searchValue=""
               setSearchValue={() => {}}
               loading={isLoadingTestCases}
             />
