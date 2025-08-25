@@ -62,9 +62,8 @@ const DeleteOrganizationModal = ({
   const { trackEvent } = useTracking();
 
   const onSubmit = () => {
-    dispatch(deleteOrganizationAction(organization.id));
+    dispatch(deleteOrganizationAction(organization.id, onDelete));
     dispatch(hideModalAction());
-    onDelete?.();
     trackEvent(ORGANIZATION_PAGE_EVENTS.DELETE_ORGANIZATION);
   };
 

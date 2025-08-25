@@ -54,12 +54,13 @@ function* fetchFilteredOrganizations() {
   );
 }
 
-function* deleteOrganization({ payload: { organizationId } }) {
+function* deleteOrganization({ payload: { organizationId, onSuccess } }) {
   try {
     yield call(fetch, URLS.organizationById(organizationId), {
       method: 'delete',
     });
     yield put(showSuccessNotification({ messageId: 'deleteOrganizationSuccess' }));
+    onSuccess?.();
   } catch (err) {
     const error = err.message;
     yield put(
