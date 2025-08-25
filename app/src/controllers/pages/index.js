@@ -42,10 +42,10 @@ export {
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
   activeProjectRoleSelector,
   userAssignedSelector,
 } from './selectors';
+export { userRolesSelector } from './userRolesSelector';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
 export {

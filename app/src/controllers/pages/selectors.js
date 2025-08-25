@@ -33,6 +33,7 @@ import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
 import { stringToArray } from './utils';
+import { userRolesSelector } from './';
 
 export const locationSelector = (state) => state.location || {};
 export const payloadSelector = (state) => locationSelector(state).payload || {};
@@ -216,27 +217,6 @@ export const activeProjectRoleSelector = createSelector(
 
     return assignedProject?.projectRole;
   },
-);
-
-const activeOrganizationRoleSelector = createSelector(
-  urlOrganizationSlugSelector,
-  assignedOrganizationsSelector,
-  (organizationSlug, assignedOrganizations) => {
-    const assignedOrganization = assignedOrganizations[organizationSlug];
-
-    return assignedOrganization?.organizationRole;
-  },
-);
-
-export const userRolesSelector = createSelector(
-  userAccountRoleSelector,
-  activeOrganizationRoleSelector,
-  activeProjectRoleSelector,
-  (userRole, organizationRole, projectRole) => ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }),
 );
 
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
