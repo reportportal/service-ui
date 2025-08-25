@@ -357,8 +357,13 @@ export class ProjectsAndRolesColumn extends Component {
             {expandRoleSelection &&
               ReactDOM.createPortal(
                 <Popper
-                  positionFixed={false}
-                  modifiers={{ preventOverflow: { enabled: false } }}
+                  positionFixed
+                  modifiers={{
+                    preventOverflow: {
+                      enabled: false,
+                      boundariesElement: 'scrollParent',
+                    },
+                  }}
                   placement="bottom"
                   hide={false}
                 >

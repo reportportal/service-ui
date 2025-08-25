@@ -215,6 +215,7 @@ export class RolesRow extends Component {
             options={this.getRolesMap()}
             value={value}
             onChange={this.dropdownHandler}
+            useFixedPositioning
           />
         </div>
         {this.renderIconComponent()}
