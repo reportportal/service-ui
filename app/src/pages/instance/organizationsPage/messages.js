@@ -102,4 +102,17 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.activity',
     defaultMessage: 'Activity',
   },
+  deleteOrganization: {
+    id: 'OrganizationsPage.deleteOrganization',
+    defaultMessage: 'Delete organization',
+  },
+  confirmDeleteOrganizationMessage: {
+    id: 'OrganizationsPage.deleteOrganizationModalDescription',
+    defaultMessage:
+      'Are you sure you want to delete the <b>{name}</b> organization? This irreversible action will also delete all projects and associated data under this organization.',
+  },
+  confirmOrganizationNameEntry: {
+    id: 'OrganizationsPage.confirmOrganizationNameEntry',
+    defaultMessage: 'To confirm, please enter the name of the organization',
+  },
 });

@@ -117,4 +117,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: 'unassign',
   },
+  DELETE_ORGANIZATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'delete',
+    modal: 'delete_organization',
+  },
 };
