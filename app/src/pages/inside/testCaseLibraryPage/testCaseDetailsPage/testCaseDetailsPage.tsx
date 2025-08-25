@@ -95,6 +95,7 @@ const testCase: TestCase = {
   id: 27752,
   name: '24.2 PV',
   createdAt: 1751362404546,
+  updatedAt: 1754562404546,
   priority: 'high',
   tags: [],
   description: '',
