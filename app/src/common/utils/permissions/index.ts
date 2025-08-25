@@ -60,10 +60,10 @@ export {
   canEditTestCaseScenario,
   canEditTestCaseTag,
   canMoveTestCase,
-  // TEST CASES
   canImportTestCases,
-  // TEST CASE FOLDER
   canCreateTestCaseFolder,
+  // TEST PLAN
+  canCreateTestPlan,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

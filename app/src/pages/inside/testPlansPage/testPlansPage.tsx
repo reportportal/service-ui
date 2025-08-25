@@ -27,14 +27,18 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { projectNameSelector } from 'controllers/project';
-import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
-
 import { useCreateTestPlanModal } from './hooks';
 import { TestPlansTable } from './testPlansTable';
 import { commonMessages } from './commonMessages';
 
 import styles from './testPlansPage.scss';
+import { canCreateTestPlan } from 'common/utils/permissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -43,6 +47,7 @@ export const TestPlansPage = () => {
   const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
+  const userRoles = useSelector(userRolesSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -91,9 +96,15 @@ export const TestPlansPage = () => {
               >
                 {formatMessage(commonMessages.refreshPage)}
               </Button>
-              <Button variant="ghost" data-automation-id="createTestPlanButton" onClick={openModal}>
-                {formatMessage(commonMessages.createTestPlan)}
-              </Button>
+              {canCreateTestPlan(userRoles) && (
+                <Button
+                  variant="ghost"
+                  data-automation-id="createTestPlanButton"
+                  onClick={openModal}
+                >
+                  {formatMessage(commonMessages.createTestPlan)}
+                </Button>
+              )}
             </div>
           )}
         </header>
