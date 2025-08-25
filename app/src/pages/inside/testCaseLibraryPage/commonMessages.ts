@@ -110,4 +110,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.historyOfActions',
     defaultMessage: 'History of Actions',
   },
+  loadingFolders: {
+    id: 'TestCaseLibraryPage.loadingFolders',
+    defaultMessage: 'Loading folders...',
+  },
 });
