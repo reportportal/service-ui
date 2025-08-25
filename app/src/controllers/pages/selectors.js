@@ -23,7 +23,6 @@ import {
   activeProjectSelector,
   assignedOrganizationsSelector,
   assignedProjectsSelector,
-  userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
