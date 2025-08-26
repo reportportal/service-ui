@@ -16,21 +16,32 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { canCreateTestCase, canCreateTestCaseFolder } from 'common/utils/permissions';
 import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
+import { userRolesSelector } from 'controllers/pages';
 import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 import { useCreateTestCaseModal } from '../../createTestCaseModal';
 
+interface ActionButton {
+  name: string;
+  dataAutomationId: string;
+  isCompact: boolean;
+  variant?: string;
+  handleButton: () => void;
+}
+
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const userRoles = useSelector(userRolesSelector);
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   const openCreateFolderModal = () => {
@@ -49,6 +60,31 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
+  const availableButtons = () => {
+    const buttons: ActionButton[] = [];
+
+    if (canCreateTestCaseFolder(userRoles)) {
+      buttons.push({
+        name: formatMessage(commonMessages.createFolder),
+        dataAutomationId: 'createFolderButton',
+        isCompact: true,
+        handleButton: openCreateFolderModal,
+      });
+    }
+
+    if (canCreateTestCase(userRoles)) {
+      buttons.push({
+        name: formatMessage(commonMessages.createTestCase),
+        dataAutomationId: 'createTestCaseButton',
+        isCompact: true,
+        variant: 'ghost',
+        handleButton: openCreateTestCaseModal,
+      });
+    }
+
+    return buttons;
+  };
+
   return (
     <>
       <EmptyStatePage
@@ -56,21 +92,7 @@ export const MainPageEmptyState = () => {
         description={Parser(formatMessage(messages.emptyPageDescription))}
         imageType="docs"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={[
-          {
-            name: formatMessage(commonMessages.createFolder),
-            dataAutomationId: 'createFolderButton',
-            isCompact: true,
-            handleButton: openCreateFolderModal,
-          },
-          {
-            name: formatMessage(commonMessages.createTestCase),
-            dataAutomationId: 'createTestCaseButton',
-            isCompact: true,
-            variant: 'ghost',
-            handleButton: openCreateTestCaseModal,
-          },
-        ]}
+        buttons={availableButtons()}
       />
       <NumerableBlock
         items={benefits}
