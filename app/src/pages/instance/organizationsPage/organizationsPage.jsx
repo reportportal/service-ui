@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { userRolesSelector } from 'controllers/pages';
 import { canCreateOrganization } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
@@ -26,6 +27,7 @@ import { EmptyPageState } from 'pages/common';
 import {
   organizationsListLoadingSelector,
   organizationsListSelector,
+  organizationsListPaginationSelector,
 } from 'controllers/instance/organizations';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -41,13 +43,30 @@ import { NoAssignedEmptyPage } from './noAssignedEmptyPage';
 import { createOrganizationAction } from 'controllers/organization';
 import { CreateOrganizationModal } from './modals/createOrganizationModal';
 import { INTERNAL } from 'common/constants/accountType';
+import { withPagination } from 'controllers/pagination';
+import { withSortingURL } from 'controllers/sorting';
+import {
+  NAMESPACE,
+  ORGANIZATIONS_DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
+} from 'controllers/instance/organizations/constants';
+import { SORTING_ASC } from 'controllers/sorting';
 import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);
 const PANEL_VIEW = 'PanelView';
 const TABLE_VIEW = 'TableView';
 
-export const OrganizationsPage = () => {
+const OrganizationsPageComponent = ({
+  sortingDirection,
+  onChangeSorting,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -58,7 +77,6 @@ export const OrganizationsPage = () => {
   const userId = useSelector(userIdSelector);
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
-  const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
   );
@@ -137,7 +155,7 @@ export const OrganizationsPage = () => {
       {!noAssignedOrganizations && (
         <OrganizationsPageHeader
           hasPermission={hasPermission}
-          isEmpty={isEmptyOrganizations && searchValue === null && appliedFiltersCount === 0}
+          isEmpty={itemCount === 0 && searchValue === null && appliedFiltersCount === 0}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
           openPanelView={openPanelView}
@@ -148,14 +166,45 @@ export const OrganizationsPage = () => {
           onCreateOrganization={onCreateOrganization}
         />
       )}
-      {isEmptyOrganizations ? (
+      {itemCount === 0 ? (
         getEmptyPageState()
       ) : (
         <OrganizationsPanelView
           organizationsList={organizationsList}
           isOpenTableView={isOpenTableView}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          pageSize={pageSize}
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
         />
       )}
     </div>
   );
 };
+
+OrganizationsPageComponent.propTypes = {
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
+  pageSize: PropTypes.number,
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number,
+  pageCount: PropTypes.number,
+  onChangePage: PropTypes.func,
+  onChangePageSize: PropTypes.func,
+};
+
+export const OrganizationsPage = withSortingURL({
+  defaultDirection: SORTING_ASC,
+  defaultFields: [ORGANIZATIONS_DEFAULT_SORT_COLUMN],
+  sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
+})(
+  withPagination({
+    paginationSelector: organizationsListPaginationSelector,
+    namespace: NAMESPACE,
+  })(OrganizationsPageComponent),
+);

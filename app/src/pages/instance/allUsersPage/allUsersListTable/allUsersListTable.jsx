@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,10 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { NAMESPACE, SORTING_KEY } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { ACCOUNT_TYPE_DISPLAY_MAP } from 'common/constants/accountType';
-import {
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_PAGINATION,
-  PAGE_KEY,
-  withPagination,
-} from 'controllers/pagination';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import {
-  DEFAULT_SORT_COLUMN,
-  allUsersPaginationSelector,
-  fetchAllUsersAction,
-} from 'controllers/instance/allUsers';
+import { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { useTracking } from 'react-tracking';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
@@ -51,7 +40,7 @@ const cx = classNames.bind(styles);
 
 const getDisplayAccountType = (accountType) => ACCOUNT_TYPE_DISPLAY_MAP[accountType] || accountType;
 
-const AllUsersListTableComponent = ({
+export const AllUsersListTable = ({
   users,
   onChangeSorting,
   sortingDirection,
@@ -188,7 +177,7 @@ const AllUsersListTableComponent = ({
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
-      showPagination={users.length > 0}
+      showPagination={itemCount > 0}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}
@@ -201,7 +190,7 @@ const AllUsersListTableComponent = ({
   );
 };
 
-AllUsersListTableComponent.propTypes = {
+AllUsersListTable.propTypes = {
   users: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
@@ -213,20 +202,8 @@ AllUsersListTableComponent.propTypes = {
   onChangePageSize: PropTypes.func.isRequired,
 };
 
-AllUsersListTableComponent.defaultProps = {
+AllUsersListTable.defaultProps = {
   users: [],
   pageSize: DEFAULT_PAGE_SIZE,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
-
-export const AllUsersListTable = withSortingURL({
-  defaultFields: [DEFAULT_SORT_COLUMN],
-  defaultDirection: SORTING_ASC,
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-})(
-  withPagination({
-    paginationSelector: allUsersPaginationSelector,
-    namespace: NAMESPACE,
-  })(AllUsersListTableComponent),
-);
