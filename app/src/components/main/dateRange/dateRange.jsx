@@ -45,24 +45,28 @@ export const DateRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
       <div className={cx('title')}>{formatMessage(messages.customRange)}</div>
       <div className={cx('time-range')}>
         <div className={cx('date-picker-wrapper')}>
-          {formatMessage(messages.from)}
-          <DatePicker
-            value={startDate}
-            startDate={startDate}
-            endDate={endDate}
-            onChange={setStartDate}
-            selects={'start'}
-          />
+          <span className={cx('date-picker-label')}>{formatMessage(messages.from)}</span>
+          <div className={cx('date-picker-container')}>
+            <DatePicker
+              value={startDate}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={setStartDate}
+              selects={'start'}
+            />
+          </div>
         </div>
         <div className={cx('date-picker-wrapper')}>
-          {formatMessage(messages.to)}
-          <DatePicker
-            value={endDate}
-            startDate={startDate}
-            endDate={endDate}
-            onChange={setEndDate}
-            selects={'end'}
-          />
+          <span className={cx('date-picker-label')}>{formatMessage(messages.to)}</span>
+          <div className={cx('date-picker-container')}>
+            <DatePicker
+              value={endDate}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={setEndDate}
+              selects={'end'}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -132,5 +132,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     ...BASIC_EVENT_PARAMETERS,
     element_name: 'tooltip_create_organization',
     place: 'all_organizations',
+  DELETE_ORGANIZATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'delete',
+    modal: 'delete_organization',
   },
 };

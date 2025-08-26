@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,39 +14,12 @@
  * limitations under the License.
  */
 
-.time-range-wrapper {
+.modal-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 8px 12px;
-  height: 100px;
-}
 
-.time-range {
-  display: flex;
-  gap: 16px;
-}
-
-.title {
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 14px;
-  line-height: 24px;
-}
-
-.date-picker-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.date-picker-container {
-  width: 200px;
-  box-sizing: border-box;
-}
-
-.date-picker-label {
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 13px;
-  line-height: 20px;
-  text-align: center;
+  b {
+    font-weight: var(--rp-ui-base-fw-bold);
+  }
 }

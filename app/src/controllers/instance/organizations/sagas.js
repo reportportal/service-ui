@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { showDefaultErrorNotification } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showErrorNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { querySelector } from './selectors';
-import { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS, NAMESPACE } from './constants';
+import {
+  FETCH_ORGANIZATIONS,
+  FETCH_FILTERED_ORGANIZATIONS,
+  NAMESPACE,
+  DELETE_ORGANIZATION,
+} from './constants';
+import { fetch } from 'common/utils';
 
 function* fetchOrganizations() {
   try {
@@ -30,10 +40,6 @@ function* fetchOrganizations() {
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
-}
-
-function* watchFetchOrganizations() {
-  yield takeEvery(FETCH_ORGANIZATIONS, fetchOrganizations);
 }
 
 function* fetchFilteredOrganizations() {
@@ -48,10 +54,40 @@ function* fetchFilteredOrganizations() {
   );
 }
 
-function* watchFetchFilteredProjects() {
+function* deleteOrganization({ payload: { organizationId, onSuccess } }) {
+  try {
+    yield call(fetch, URLS.organizationById(organizationId), {
+      method: 'delete',
+    });
+    yield put(showSuccessNotification({ messageId: 'deleteOrganizationSuccess' }));
+    onSuccess?.();
+  } catch (err) {
+    const error = err.message;
+    yield put(
+      showErrorNotification({
+        messageId: 'deleteOrganizationError',
+        values: { error },
+      }),
+    );
+  }
+}
+
+function* watchFetchOrganizations() {
+  yield takeEvery(FETCH_ORGANIZATIONS, fetchOrganizations);
+}
+
+function* watchFetchFilteredOrganizations() {
   yield takeEvery(FETCH_FILTERED_ORGANIZATIONS, fetchFilteredOrganizations);
 }
 
+function* watchDeleteOrganization() {
+  yield takeEvery(DELETE_ORGANIZATION, deleteOrganization);
+}
+
 export function* organizationsSagas() {
-  yield all([watchFetchOrganizations(), watchFetchFilteredProjects()]);
+  yield all([
+    watchFetchOrganizations(),
+    watchFetchFilteredOrganizations(),
+    watchDeleteOrganization(),
+  ]);
 }
