@@ -44,13 +44,12 @@ import { createOrganizationAction } from 'controllers/organization';
 import { CreateOrganizationModal } from './modals/createOrganizationModal';
 import { INTERNAL } from 'common/constants/accountType';
 import { withPagination } from 'controllers/pagination';
-import { withSortingURL } from 'controllers/sorting';
+import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import {
   NAMESPACE,
   ORGANIZATIONS_DEFAULT_SORT_COLUMN,
   SORTING_KEY,
 } from 'controllers/instance/organizations/constants';
-import { SORTING_ASC } from 'controllers/sorting';
 import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -58,6 +57,7 @@ const PANEL_VIEW = 'PanelView';
 const TABLE_VIEW = 'TableView';
 
 const OrganizationsPageComponent = ({
+  sortingColumn,
   sortingDirection,
   onChangeSorting,
   pageSize,
@@ -172,6 +172,7 @@ const OrganizationsPageComponent = ({
         <OrganizationsPanelView
           organizationsList={organizationsList}
           isOpenTableView={isOpenTableView}
+          sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           pageSize={pageSize}
@@ -187,6 +188,7 @@ const OrganizationsPageComponent = ({
 };
 
 OrganizationsPageComponent.propTypes = {
+  sortingColumn: PropTypes.string,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   pageSize: PropTypes.number,

@@ -40,13 +40,12 @@ import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
 import { ProjectsListTable } from './projectsListTable';
 import { withPagination } from 'controllers/pagination';
-import { withSortingURL } from 'controllers/sorting';
+import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import {
   NAMESPACE,
   DEFAULT_SORT_COLUMN,
   SORTING_KEY,
 } from 'controllers/organization/projects/constants';
-import { SORTING_ASC } from 'controllers/sorting';
 import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);

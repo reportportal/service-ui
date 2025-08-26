@@ -26,11 +26,10 @@ import {
   usersSelector,
   usersPaginationSelector,
 } from 'controllers/organization/users';
-import { NAMESPACE } from 'controllers/organization/users/constants';
+import { NAMESPACE, SORTING_KEY } from 'controllers/organization/users/constants';
 import { withPagination } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
-import { SORTING_KEY } from 'controllers/organization/projects';
 import { OrganizationTeamListTable } from 'pages/organization/organizationUsersPage/organizationUsersListTable/organizationUsersListTable';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptyPageState } from 'pages/common';
