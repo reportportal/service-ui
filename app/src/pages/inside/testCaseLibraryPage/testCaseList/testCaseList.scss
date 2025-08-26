@@ -40,10 +40,6 @@
   border-radius: 4px;
   box-sizing: content-box;
 
-  > div:first-child {
-    padding: 26px 0 0 8px;
-  }
-
   :global([class*='table-row-content']) {
     align-items: flex-start;
     min-height: 80px;
