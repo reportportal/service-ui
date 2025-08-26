@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { CreateOrganizationModal } from './createOrganizationModal';
+import CreateOrganizationModal from './createOrganizationModal';
+
+export { CreateOrganizationModal };

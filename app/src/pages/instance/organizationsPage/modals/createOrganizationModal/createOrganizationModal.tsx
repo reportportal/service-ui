@@ -22,10 +22,10 @@ import { Modal, FieldText } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
-import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { hideModalAction } from 'controllers/modal';
+import { BoundValidator } from 'common/utils/validation/types';
 import { messages } from '../../messages';
 
 const ORGANIZATION_NAME_FIELD = 'organizationName';
@@ -34,16 +34,12 @@ interface CreateOrganizationFormData {
   organizationName: string;
 }
 
-interface ModalData {
+interface CreateOrganizationModalProps {
   onSubmit: (organizationName: string) => void;
 }
 
-interface CreateOrganizationModalProps {
-  data?: ModalData;
-}
-
-export const CreateOrganizationModal = ({
-  data,
+const CreateOrganizationModal = ({
+  onSubmit,
   handleSubmit,
   anyTouched,
   invalid,
@@ -53,7 +49,6 @@ export const CreateOrganizationModal = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
-  const { onSubmit } = data;
   const onCreateOrganization = ({ organizationName }: CreateOrganizationFormData) => {
     if (onSubmit) {
       onSubmit(organizationName);
@@ -89,15 +84,14 @@ export const CreateOrganizationModal = ({
   );
 };
 
-export default withModal('createOrganizationModal')(
-  reduxForm<CreateOrganizationFormData, CreateOrganizationModalProps>({
-    form: 'createOrganizationForm',
-    validate: ({ organizationName }) => {
-      const trimmedProjectName = organizationName?.trim();
-      return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        organizationName: commonValidators.createOrganizationNameValidator()(trimmedProjectName),
-      };
-    },
-  })(CreateOrganizationModal),
-);
+export default reduxForm<CreateOrganizationFormData, CreateOrganizationModalProps>({
+  form: 'createOrganizationForm',
+  validate: ({ organizationName }) => {
+    const trimmedOrganizationName = organizationName?.trim();
+    const organizationNameValidator: BoundValidator = commonValidators.createProjectNameValidator();
+
+    return {
+      [ORGANIZATION_NAME_FIELD]: organizationNameValidator(trimmedOrganizationName),
+    };
+  },
+})(CreateOrganizationModal);

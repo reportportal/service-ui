@@ -130,6 +130,7 @@ export const ORGANIZATION_PAGE_EVENTS = {
   },
   HOVER_CREATE_BUTTON: {
     ...BASIC_EVENT_PARAMETERS,
+    action: 'tooltip_view',
     element_name: 'tooltip_create_organization',
     place: 'all_organizations',
   },

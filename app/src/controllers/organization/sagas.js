@@ -20,9 +20,8 @@ import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import {
-  NOTIFICATION_TYPES,
   showDefaultErrorNotification,
-  showNotification,
+  showErrorNotification,
   showSuccessNotification,
 } from 'controllers/notification';
 import { fetchFilteredProjectAction, projectsSagas } from './projects';
@@ -130,27 +129,20 @@ function* createOrganization({ payload: { name, type } }) {
       },
     });
     yield put(hideModalAction());
-    yield put(
-      showNotification({
-        messageId: 'createOrganizationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    yield put(showSuccessNotification({ messageId: 'createOrganizationSuccess' }));
     yield put(fetchFilteredOrganizationsAction());
   } catch (err) {
     if (ERROR_CODES.ORGANIZATION_EXISTS.includes(err.errorCode)) {
       yield put(
-        showNotification({
+        showErrorNotification({
           messageId: 'organizationExists',
-          type: NOTIFICATION_TYPES.ERROR,
           values: { name },
         }),
       );
     } else {
       yield put(
-        showNotification({
+        showErrorNotification({
           messageId: 'failureDefault',
-          type: NOTIFICATION_TYPES.ERROR,
           values: { error: err.message },
         }),
       );

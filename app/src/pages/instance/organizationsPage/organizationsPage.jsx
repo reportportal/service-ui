@@ -39,6 +39,7 @@ import { OrganizationsPanelView } from './organizationsPanelView';
 import { messages } from './messages';
 import { NoAssignedEmptyPage } from './noAssignedEmptyPage';
 import { createOrganizationAction } from 'controllers/organization';
+import { CreateOrganizationModal } from './modals/createOrganizationModal';
 import { INTERNAL } from 'common/constants/accountType';
 import styles from './organizationsPage.scss';
 
@@ -75,20 +76,19 @@ export const OrganizationsPage = () => {
     updateStorageItem(`${userId}_settings`, { organizationsPanel: TABLE_VIEW });
   };
 
+  const onSubmitCreateOrganization = (newOrganizationName) => {
+    dispatch(
+      createOrganizationAction({
+        name: newOrganizationName,
+        type: INTERNAL,
+      }),
+    );
+  };
+
   const onCreateOrganization = () => {
     dispatch(
       showModalAction({
-        id: 'createOrganizationModal',
-        data: {
-          onSubmit: (newOrganizationName) => {
-            dispatch(
-              createOrganizationAction({
-                name: newOrganizationName,
-                type: INTERNAL,
-              }),
-            );
-          },
-        },
+        component: <CreateOrganizationModal onSubmit={onSubmitCreateOrganization} />,
       }),
     );
     trackEvent(ORGANIZATION_PAGE_EVENTS.CLICK_CREATE_ORGANIZATION);
