@@ -15,6 +15,7 @@
  */
 
 import { useSelector } from 'react-redux';
+import { isString } from 'lodash';
 import { HistoryOfActions } from 'pages/inside/testCaseLibraryPage/historyOfActions';
 import { TestCaseLibraryPage } from 'pages/inside/testCaseLibraryPage/testCaseLibraryPage';
 import { TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage';
@@ -26,29 +27,24 @@ export const TestCaseLibraryPageWrapper = () => {
   const folderRegExp = /^folder\/([^/]+)$/;
   const testCaseRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)$/;
   const historyOfActionsRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/;
-  let folderMatch: boolean = false;
-  let testCaseMatch: boolean = false;
-  let historyOfActionsMatch: boolean = false;
+  let folderMatch = false;
+  let testCaseMatch = false;
+  let historyOfActionsMatch = false;
 
-  if (typeof testCasePageRoute === 'string') {
+  if (isString(testCasePageRoute)) {
     folderMatch = folderRegExp.test(testCasePageRoute);
     testCaseMatch = testCaseRegExp.test(testCasePageRoute);
     historyOfActionsMatch = historyOfActionsRegExp.test(testCasePageRoute);
   } else if (Array.isArray(testCasePageRoute)) {
-    folderMatch = Boolean(
-      testCasePageRoute[0] === 'folder' && testCasePageRoute[1] && !testCasePageRoute[2],
-    );
+    const isFolderExists = testCasePageRoute[0] === 'folder';
+    const isTestCaseExists = testCasePageRoute[2] === 'test-cases';
+    const isHistoryOfActionsExists = testCasePageRoute[4] === 'historyOfActions';
+
+    folderMatch = Boolean(isFolderExists && testCasePageRoute[1] && !testCasePageRoute[2]);
     testCaseMatch = Boolean(
-      testCasePageRoute[0] === 'folder' &&
-        testCasePageRoute[2] === 'test-cases' &&
-        testCasePageRoute[3] &&
-        !testCasePageRoute[4],
+      isFolderExists && isTestCaseExists && testCasePageRoute[3] && !testCasePageRoute[4],
     );
-    historyOfActionsMatch = Boolean(
-      testCasePageRoute[0] === 'folder' &&
-        testCasePageRoute[2] === 'test-cases' &&
-        testCasePageRoute[4] === 'historyOfActions',
-    );
+    historyOfActionsMatch = Boolean(isFolderExists && isTestCaseExists && isHistoryOfActionsExists);
   }
 
   if (historyOfActionsMatch) {

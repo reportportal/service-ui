@@ -46,7 +46,7 @@ export const urlTestCaseSlugSelector = (state: State): string => {
 export const urlFolderIdSelector = (state: State): string => {
   const testCasePageRoute = payloadSelector(state).testCasePageRoute || '';
 
-  if (testCasePageRoute && typeof testCasePageRoute === 'string') {
+  if (testCasePageRoute && isString(testCasePageRoute)) {
     return testCasePageRoute.split('/')[1];
   } else if (Array.isArray(testCasePageRoute)) {
     return testCasePageRoute?.[1];
