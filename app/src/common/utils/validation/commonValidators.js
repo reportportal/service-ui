@@ -99,8 +99,8 @@ export const createProjectNameValidator = () =>
 export const createOrganizationNameValidator = () =>
   composeBoundValidators([
     requiredField,
-    bindMessageToValidator(validate.projectNameLength, 'organizationNameLengthHint'),
-    bindMessageToValidator(validate.projectNamePattern, 'organizationNamePatternHint'),
+    bindMessageToValidator(validate.organizationNameLength, 'organizationNameLengthHint'),
+    bindMessageToValidator(validate.organizationNamePattern, 'organizationNamePatternHint'),
   ]);
 
 export const createFooterLinkNameValidator = (links) =>
