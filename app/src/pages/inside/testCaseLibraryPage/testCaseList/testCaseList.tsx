@@ -19,7 +19,11 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlOrganizationAndProjectSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
@@ -31,6 +35,7 @@ import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { canDoTestCaseBulkActions } from 'common/utils/permissions/permissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -62,6 +67,7 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const dispatch = useDispatch();
+    const userRoles = useSelector(userRolesSelector);
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -188,7 +194,7 @@ export const TestCaseList = memo(
           <>
             {!isEmptyList(currentData) ? (
               <Table
-                selectable
+                selectable={canDoTestCaseBulkActions(userRoles)}
                 onToggleRowSelection={handleRowSelect}
                 selectedRowIds={selectedRowIds}
                 data={tableData}
