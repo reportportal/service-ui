@@ -101,6 +101,8 @@ export const canWorkWithOrganizationsSorting = checkPermission(
 export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
 export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
 export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
+// MANUAL LAUNCHES
+export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
 // TEST CASE
 export const canAddTestCaseToLaunch = checkPermission(ACTIONS.ADD_TEST_CASE_TO_LAUNCH);
 export const canAddTestCaseToTestPlan = checkPermission(ACTIONS.ADD_TEST_CASE_TO_TEST_PLAN);
@@ -114,7 +116,6 @@ export const canEditTestCaseTag = checkPermission(ACTIONS.EDIT_TEST_CASE_TAG);
 export const canMoveTestCase = checkPermission(ACTIONS.MOVE_TEST_CASE);
 export const canImportTestCases = checkPermission(ACTIONS.IMPORT_TEST_CASES);
 export const canCreateTestCaseFolder = checkPermission(ACTIONS.CREATE_TEST_CASE_FOLDER);
-
 // TEST PLAN
 export const canCreateTestPlan = checkPermission(ACTIONS.CREATE_TEST_PLAN);
 export const canDeleteTestPlan = checkPermission(ACTIONS.DELETE_TEST_PLAN);
