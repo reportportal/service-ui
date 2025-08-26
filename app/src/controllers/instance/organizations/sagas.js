@@ -29,6 +29,7 @@ import {
   FETCH_FILTERED_ORGANIZATIONS,
   NAMESPACE,
   DELETE_ORGANIZATION,
+  ERROR_CODES,
 } from './constants';
 import { fetch } from 'common/utils';
 
@@ -61,14 +62,12 @@ function* deleteOrganization({ payload: { organizationId, onSuccess } }) {
     });
     yield put(showSuccessNotification({ messageId: 'deleteOrganizationSuccess' }));
     onSuccess?.();
-  } catch (err) {
-    const error = err.message;
-    yield put(
-      showErrorNotification({
-        messageId: 'deleteOrganizationError',
-        values: { error },
-      }),
-    );
+  } catch ({ errorCode }) {
+    yield put(showErrorNotification({ messageId: 'deleteOrganizationError' }));
+
+    if (errorCode === ERROR_CODES.NOT_FOUND) {
+      yield fetchFilteredOrganizations();
+    }
   }
 }
 

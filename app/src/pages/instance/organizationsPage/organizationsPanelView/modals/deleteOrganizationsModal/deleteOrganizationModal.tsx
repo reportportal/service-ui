@@ -56,6 +56,7 @@ const DeleteOrganizationModal = ({
   handleSubmit,
   anyTouched,
   invalid,
+  dirty,
 }: DeleteOrganizationModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -83,6 +84,7 @@ const DeleteOrganizationModal = ({
       title={formatMessage(messages.deleteOrganization)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
     >
       <div className={cx('modal-content')}>
         <p>
