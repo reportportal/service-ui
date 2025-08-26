@@ -91,6 +91,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectExists',
     defaultMessage: "Project with the same name ''{name}'' already exists in this organization",
   },
+  createOrganizationSuccess: {
+    id: 'OrganizationsPage.createOrganizationSuccess',
+    defaultMessage: 'The organization has been created successfully',
+  },
+  organizationExists: {
+    id: 'OrganizationsPage.organizationExists',
+    defaultMessage: "Organization with the same name ''{name}'' already exists on the instance",
+  },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
     defaultMessage: 'Global integrations successfully applied',

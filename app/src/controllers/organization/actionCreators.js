@@ -21,6 +21,7 @@ import {
   SET_ACTIVE_ORGANIZATION,
   UPDATE_ORGANIZATION_SETTINGS,
   UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
+  CREATE_ORGANIZATION,
 } from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
@@ -50,5 +51,10 @@ export const updateOrganizationSettingsAction = (payload) => ({
 
 export const updateOrganizationSettingsSuccessAction = (payload) => ({
   type: UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
+  payload,
+});
+
+export const createOrganizationAction = (payload) => ({
+  type: CREATE_ORGANIZATION,
   payload,
 });

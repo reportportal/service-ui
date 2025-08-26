@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { useState } from 'react';
 import { userRolesSelector } from 'controllers/pages';
 import { canCreateOrganization } from 'common/utils/permissions';
@@ -30,11 +31,15 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { assignedOrganizationsSelector, userIdSelector } from 'controllers/user';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { showModalAction } from 'controllers/modal';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
 import { messages } from './messages';
 import { NoAssignedEmptyPage } from './noAssignedEmptyPage';
+import { createOrganizationAction } from 'controllers/organization';
+import { INTERNAL } from 'common/constants/accountType';
 import styles from './organizationsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -43,6 +48,8 @@ const TABLE_VIEW = 'TableView';
 
 export const OrganizationsPage = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
   const userRoles = useSelector(userRolesSelector);
   const hasPermission = canCreateOrganization(userRoles);
   const organizationsList = useSelector(organizationsListSelector);
@@ -66,6 +73,25 @@ export const OrganizationsPage = () => {
   const openTableView = () => {
     setIsOpenTableView(true);
     updateStorageItem(`${userId}_settings`, { organizationsPanel: TABLE_VIEW });
+  };
+
+  const onCreateOrganization = () => {
+    dispatch(
+      showModalAction({
+        id: 'createOrganizationModal',
+        data: {
+          onSubmit: (newOrganizationName) => {
+            dispatch(
+              createOrganizationAction({
+                name: newOrganizationName,
+                type: INTERNAL,
+              }),
+            );
+          },
+        },
+      }),
+    );
+    trackEvent(ORGANIZATION_PAGE_EVENTS.CLICK_CREATE_ORGANIZATION);
   };
 
   const getEmptyPageState = () => {
@@ -93,6 +119,7 @@ export const OrganizationsPage = () => {
           hasPermission ? messages.createNewOrganization : messages.description,
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
+        onClick={onCreateOrganization}
       />
     ) : (
       <EmptyPageState
@@ -118,6 +145,7 @@ export const OrganizationsPage = () => {
           isOpenTableView={isOpenTableView}
           appliedFiltersCount={appliedFiltersCount}
           setAppliedFiltersCount={setAppliedFiltersCount}
+          onCreateOrganization={onCreateOrganization}
         />
       )}
       {isEmptyOrganizations ? (

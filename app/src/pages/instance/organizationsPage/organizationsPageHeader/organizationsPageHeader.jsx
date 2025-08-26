@@ -18,7 +18,8 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { BaseIconButton } from '@reportportal/ui-kit';
+import { useTracking } from 'react-tracking';
+import { BaseIconButton, Button, PlusIcon, Tooltip } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
@@ -37,9 +38,10 @@ import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
 import { messages } from '../messages';
-import styles from './organizationsPageHeader.scss';
 import { OrganizationsSorting } from './organizationsSorting';
 import { OrganizationsExport } from './organizationsExport';
+import styles from './organizationsPageHeader.scss';
+import { pluginByNameSelector } from 'controllers/plugins';
 
 const cx = classNames.bind(styles);
 
@@ -58,10 +60,17 @@ export const OrganizationsPageHeader = ({
   isOpenTableView,
   appliedFiltersCount,
   setAppliedFiltersCount,
+  onCreateOrganization,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
   const userRoles = useSelector(userRolesSelector);
+  const organizationPlugin = useSelector((state) => pluginByNameSelector(state, 'organization'));
+
+  const onMouseEnter = () => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.HOVER_CREATE_BUTTON);
+  };
 
   return (
     <div className={cx('organizations-page-header-container')}>
@@ -114,6 +123,35 @@ export const OrganizationsPageHeader = ({
                 <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
               )}
             </div>
+            {organizationPlugin?.enabled ? (
+              <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateOrganization}>
+                {formatMessage(messages.createOrganization)}
+              </Button>
+            ) : (
+              <Tooltip
+                content={formatMessage(
+                  organizationPlugin
+                    ? messages.pluginIsDisabledMessage
+                    : messages.notUploadedPluginMessage,
+                )}
+                tooltipClassName={cx(
+                  organizationPlugin ? 'tooltip-not-uploaded' : 'tooltip-disabled',
+                )}
+                wrapperClassName={cx('tooltip-wrapper')}
+                placement="bottom"
+              >
+                <div onMouseEnter={onMouseEnter}>
+                  <Button
+                    variant={'ghost'}
+                    icon={<PlusIcon />}
+                    onClick={onCreateOrganization}
+                    disabled
+                  >
+                    {formatMessage(messages.createOrganization)}
+                  </Button>
+                </div>
+              </Tooltip>
+            )}
           </div>
         )}
       </div>
@@ -130,6 +168,7 @@ OrganizationsPageHeader.propTypes = {
   isOpenTableView: PropTypes.bool.isRequired,
   appliedFiltersCount: PropTypes.bool.isRequired,
   setAppliedFiltersCount: PropTypes.func.isRequired,
+  onCreateOrganization: PropTypes.func.isRequired,
 };
 
 OrganizationsPageHeader.defaultProps = {
