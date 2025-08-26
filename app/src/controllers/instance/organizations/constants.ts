@@ -44,3 +44,7 @@ export enum SortingFields {
 }
 
 export const ORGANIZATIONS_DEFAULT_SORT_COLUMN = SortingFields.NAME;
+
+export const ERROR_CODES = {
+  NOT_FOUND: 40429,
+};
