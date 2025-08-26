@@ -158,7 +158,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {isEmpty(testCase.path) && <PathBreadcrumb path={testCase.path} />}
+          {!isEmpty(testCase.path) && <PathBreadcrumb path={testCase.path} />}
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>

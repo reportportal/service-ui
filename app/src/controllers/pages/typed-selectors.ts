@@ -40,7 +40,7 @@ export const urlTestCaseSlugSelector = (state: State): string => {
     testCaseId = testCasePageRoute?.[3];
   }
 
-  return isString(testCaseId) ? testCaseId : '';
+  return testCaseId ? String(testCaseId) : '';
 };
 
 export const urlFolderIdSelector = (state: State): string => {
