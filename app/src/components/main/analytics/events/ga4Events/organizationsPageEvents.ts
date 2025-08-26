@@ -117,6 +117,23 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: 'unassign',
   },
+  CLICK_CREATE_ORGANIZATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'create_organization',
+  },
+  CLICK_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'create',
+    modal: 'create_organization',
+    place: 'all_organizations',
+  },
+  HOVER_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    action: 'tooltip_view',
+    element_name: 'tooltip_create_organization',
+    place: 'all_organizations',
+  },
   DELETE_ORGANIZATION: {
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',

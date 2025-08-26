@@ -19,9 +19,15 @@ import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
-import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showErrorNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
 import { fetchFilteredProjectAction, projectsSagas } from './projects';
 import {
+  CREATE_ORGANIZATION,
+  ERROR_CODES,
   FETCH_ORGANIZATION_BY_SLUG,
   FETCH_ORGANIZATION_SETTINGS,
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
@@ -32,6 +38,8 @@ import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
 import { fetch } from 'common/utils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
+import { hideModalAction } from 'controllers/modal';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
@@ -111,6 +119,41 @@ function* watchUpdateOrganizationSettings() {
   yield takeEvery(UPDATE_ORGANIZATION_SETTINGS, updateOrganizationSettings);
 }
 
+function* createOrganization({ payload: { name, type } }) {
+  try {
+    yield call(fetch, URLS.organizationList(), {
+      method: 'post',
+      data: {
+        name,
+        type,
+      },
+    });
+    yield put(hideModalAction());
+    yield put(showSuccessNotification({ messageId: 'createOrganizationSuccess' }));
+    yield put(fetchFilteredOrganizationsAction());
+  } catch (err) {
+    if (ERROR_CODES.ORGANIZATION_EXISTS.includes(err.errorCode)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'organizationExists',
+          values: { name },
+        }),
+      );
+    } else {
+      yield put(
+        showErrorNotification({
+          messageId: 'failureDefault',
+          values: { error: err.message },
+        }),
+      );
+    }
+  }
+}
+
+function* watchCreateOrganization() {
+  yield takeEvery(CREATE_ORGANIZATION, createOrganization);
+}
+
 export function* organizationSagas() {
   yield all([
     watchFetchOrganizationProjects(),
@@ -118,6 +161,7 @@ export function* organizationSagas() {
     watchFetchOrganizationSettings(),
     watchPrepareActiveOrganizationSettings(),
     watchUpdateOrganizationSettings(),
+    watchCreateOrganization(),
     projectsSagas(),
     usersSagas(),
   ]);

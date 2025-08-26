@@ -29,6 +29,10 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.createOrganization',
     defaultMessage: 'Create Organization',
   },
+  createOrganizationModalTitle: {
+    id: 'OrganizationsPage.createOrganizationModalTitle',
+    defaultMessage: 'Create organization',
+  },
   createNewOrganization: {
     id: 'OrganizationsPage.createNewOrganization',
     defaultMessage: 'Create a new organization to begin your ReportPortal journey',
@@ -101,6 +105,22 @@ export const messages = defineMessages({
   activity: {
     id: 'OrganizationsPage.activity',
     defaultMessage: 'Activity',
+  },
+  notUploadedPluginMessage: {
+    id: 'OrganizationsPage.notUploadedPluginMessage',
+    defaultMessage: `Creating an organization requires the ‘Organizations’ plugin. Please refer to our documentation for more details.`,
+  },
+  pluginIsDisabledMessage: {
+    id: 'OrganizationsPage.pluginIsDisabledMessage',
+    defaultMessage: `Activate the 'Organizations' plugin on the Plugins page to allow for the creation of organizations.`,
+  },
+  createOrganizationLabel: {
+    id: 'OrganizationsPage.createOrganizationLabel',
+    defaultMessage: 'Name',
+  },
+  createOrganizationPlaceholder: {
+    id: 'OrganizationsPage.createOrganizationPlaceholder',
+    defaultMessage: 'Enter organization’s name ',
   },
   deleteOrganization: {
     id: 'OrganizationsPage.deleteOrganization',
