@@ -38,8 +38,9 @@ import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import {
   TEST_CASE_LIBRARY_PAGE,
-  urlOrganizationAndProjectSelector,
   urlFolderIdSelector,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
 } from 'controllers/pages';
 import styles from './expandedOptions.scss';
 
@@ -53,10 +54,8 @@ export const ExpandedOptions = () => {
   const folderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector) as {
-    organizationSlug: string;
-    projectSlug: string;
-  };
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const folders = useSelector(foldersSelector);
   const folderIdNumber = Number(folderId);
 
