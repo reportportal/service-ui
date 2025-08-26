@@ -50,9 +50,7 @@ const CreateOrganizationModal = ({
   const { trackEvent } = useTracking();
 
   const onCreateOrganization = ({ organizationName }: CreateOrganizationFormData) => {
-    if (onSubmit) {
-      onSubmit(organizationName);
-    }
+    onSubmit(organizationName);
     trackEvent(ORGANIZATION_PAGE_EVENTS.CLICK_CREATE_BUTTON);
   };
   const hideModal = () => dispatch(hideModalAction());
