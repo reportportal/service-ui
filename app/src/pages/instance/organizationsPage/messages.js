@@ -121,6 +121,7 @@ export const messages = defineMessages({
   createOrganizationPlaceholder: {
     id: 'OrganizationsPage.createOrganizationPlaceholder',
     defaultMessage: 'Enter organization’s name ',
+  },
   deleteOrganization: {
     id: 'OrganizationsPage.deleteOrganization',
     defaultMessage: 'Delete organization',
