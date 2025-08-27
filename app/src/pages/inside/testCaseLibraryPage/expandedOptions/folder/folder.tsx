@@ -28,34 +28,22 @@ interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setActiveFolder: (id: number) => void;
-  setIsEmptyFolder: (count: boolean) => void;
 }
 
-export const Folder = ({
-  folder,
-  setActiveFolder,
-  activeFolder,
-  setIsEmptyFolder,
-}: FolderProps) => {
+export const Folder = ({ folder, setActiveFolder, activeFolder }: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = useCallback(
-    ({
-      event,
-      id,
-      count,
-    }: {
-      event: ReactMouseEvent<HTMLDivElement, MouseEvent>;
-      id: number;
-      count?: number;
-    }) => {
-      event.stopPropagation();
+  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+    event.stopPropagation();
+    setIsOpen((prevState) => !prevState);
+  }, []);
 
-      setIsOpen((prevState) => !prevState);
-      setActiveFolder(id);
-      setIsEmptyFolder(!count);
+  const handleFolderTitleClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.stopPropagation();
+      setActiveFolder(folder.id);
     },
-    [setActiveFolder, setIsEmptyFolder],
+    [setActiveFolder, folder.id],
   );
 
   return (
@@ -67,14 +55,13 @@ export const Folder = ({
       aria-expanded={isOpen}
       aria-selected={activeFolder === folder.id}
     >
-      <div
-        onClick={(event) => handleOpen({ event, id: folder.id, count: folder.testsCount })}
-      >
-        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon />}
+      <div className={cx('folders-tree__item-content')}>
+        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
           })}
+          onClick={handleFolderTitleClick}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
@@ -91,7 +78,6 @@ export const Folder = ({
               key={subfolder.id}
               activeFolder={activeFolder}
               setActiveFolder={setActiveFolder}
-              setIsEmptyFolder={setIsEmptyFolder}
             />
           ))}
         </ul>

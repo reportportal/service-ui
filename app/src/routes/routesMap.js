@@ -101,7 +101,7 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
-import { getFoldersAction } from 'controllers/testCase';
+import { getFoldersAction, needsToLoadFoldersSelector } from 'controllers/testCase';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
@@ -391,8 +391,13 @@ const routesMap = {
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
   [TEST_CASE_LIBRARY_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
-    thunk: (dispatch) => {
-      dispatch(getFoldersAction());
+    thunk: (dispatch, getState) => {
+      const state = getState();
+
+      // Only dispatch getFoldersAction if folders are not already loaded
+      if (needsToLoadFoldersSelector(state)) {
+        dispatch(getFoldersAction());
+      }
     },
   },
   [PRODUCT_VERSIONS_PAGE]: redirectRoute(

@@ -33,7 +33,6 @@ import {
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
-import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
 import { Folder } from './folder';
 import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
@@ -50,7 +49,6 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
-  const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folderId = useSelector(urlFolderIdSelector);
@@ -68,11 +66,11 @@ export const ExpandedOptions = () => {
     } else {
       dispatch(getAllTestCasesAction());
     }
-  }, [folderId, dispatch]);
+  }, [folderId, folderIdNumber, dispatch]);
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);
-  }, [folderId, folders]);
+  }, [folderId, folderIdNumber, folders]);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -179,7 +177,6 @@ export const ExpandedOptions = () => {
                       key={folder.id || `${folder.name}-${idx}`}
                       activeFolder={activeFolder}
                       setActiveFolder={handleFolderClick}
-                      setIsEmptyFolder={setIsEmptyFolder}
                     />
                   ))}
                 </ul>
@@ -190,16 +187,12 @@ export const ExpandedOptions = () => {
       </div>
       <ScrollWrapper>
         <div className={cx('expanded-options__content')}>
-          {isEmptyFolder ? (
-            <FolderEmptyState />
-          ) : (
-            <AllTestCasesPage
-              testCases={testCases}
-              searchValue=""
-              setSearchValue={() => {}}
-              loading={isLoadingTestCases || areFoldersLoading}
-            />
-          )}
+          <AllTestCasesPage
+            testCases={testCases}
+            searchValue=""
+            setSearchValue={() => {}}
+            loading={isLoadingTestCases || areFoldersLoading}
+          />
         </div>
       </ScrollWrapper>
     </div>

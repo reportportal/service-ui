@@ -26,7 +26,7 @@ interface TestCaseState {
   };
   testCases?: {
     isLoading?: boolean;
-    list?: any[];
+    list?: unknown[];
   };
 }
 
@@ -50,8 +50,7 @@ export const isCreatingFolderSelector = (state: RootState): boolean =>
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
 
-export const testCasesSelector = (state: RootState) =>
-  state.testCase?.testCases?.list || [];
+export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
@@ -93,5 +92,13 @@ export const transformedFoldersSelector = createSelector(
     });
 
     return folderMap.get(null).folders;
+  },
+);
+
+export const needsToLoadFoldersSelector = createSelector(
+  foldersSelector,
+  areFoldersLoadingSelector,
+  (folders, isLoading): boolean => {
+    return folders.length === 0 && !isLoading;
   },
 );
