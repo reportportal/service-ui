@@ -31,13 +31,13 @@ interface TestCaseNameCellProps {
 export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      <PriorityIcon priority={priority} />
+      {priority && <PriorityIcon priority={priority} />}
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
         </div>
         <div className={cx('tags-section')}>
-          <AdaptiveTagList tags={tags} />
+          <AdaptiveTagList tags={tags} isShowAllView />
         </div>
       </div>
     </div>
