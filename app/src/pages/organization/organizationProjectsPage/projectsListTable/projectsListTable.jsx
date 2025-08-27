@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,13 @@ import { Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
 import {
   activeOrganizationSelector,
   prepareActiveOrganizationProjectsAction,
 } from 'controllers/organization';
-import {
-  DEFAULT_LIMITATION,
-  DEFAULT_PAGE_SIZE_OPTIONS,
-  DEFAULT_SORT_COLUMN,
-  projectsPaginationSelector,
-  SORTING_KEY,
-} from 'controllers/organization/projects';
-import { NAMESPACE } from 'controllers/organization/projects/constants';
+import { DEFAULT_LIMITATION, DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/organization/projects';
 import { ProjectActionMenu } from 'pages/organization/organizationProjectsPage/projectsListTable/projectActionMenu';
 import { messages } from '../messages';
 import { ProjectName } from './projectName';
@@ -126,7 +118,7 @@ export const ProjectsListTable = ({
 
   return (
     <PaginationWrapper
-      showPagination={projects.length > 0}
+      showPagination={itemCount > 0}
       pageSize={pageSize}
       activePage={activePage}
       totalItems={itemCount}
@@ -168,15 +160,3 @@ ProjectsListTable.defaultProps = {
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
   pageSize: DEFAULT_LIMITATION,
 };
-
-export const ProjectsListTableWrapper = withSortingURL({
-  defaultFields: [DEFAULT_SORT_COLUMN],
-  defaultDirection: SORTING_ASC,
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-})(
-  withPagination({
-    paginationSelector: projectsPaginationSelector,
-    namespace: NAMESPACE,
-  })(ProjectsListTable),
-);

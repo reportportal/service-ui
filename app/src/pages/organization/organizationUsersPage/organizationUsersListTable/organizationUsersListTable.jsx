@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_SORT_COLUMN } from 'controllers/members/constants';
-import {
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_PAGINATION,
-  PAGE_KEY,
-  withPagination,
-} from 'controllers/pagination';
-import {
-  NAMESPACE,
-  prepareActiveOrganizationUsersAction,
-  usersPaginationSelector,
-} from 'controllers/organization/users';
-import { SORTING_KEY } from 'controllers/organization/projects';
+import { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
+import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
@@ -44,7 +32,7 @@ import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
 
-const OrgTeamListTableWrapped = ({
+export const OrganizationTeamListTable = ({
   users,
   onChangeSorting,
   sortingDirection,
@@ -147,7 +135,7 @@ const OrgTeamListTableWrapped = ({
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
-      showPagination={users.length > 0}
+      showPagination={itemCount > 0}
       renderRowActions={(metaData) => <OrganizationUsersActionMenu user={metaData} />}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
@@ -160,7 +148,7 @@ const OrgTeamListTableWrapped = ({
   );
 };
 
-OrgTeamListTableWrapped.propTypes = {
+OrganizationTeamListTable.propTypes = {
   users: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
@@ -172,20 +160,8 @@ OrgTeamListTableWrapped.propTypes = {
   onChangePageSize: PropTypes.func.isRequired,
 };
 
-OrgTeamListTableWrapped.defaultProps = {
+OrganizationTeamListTable.defaultProps = {
   users: [],
   pageSize: DEFAULT_PAGE_SIZE,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
-
-export const OrganizationTeamListTable = withSortingURL({
-  defaultFields: [DEFAULT_SORT_COLUMN],
-  defaultDirection: SORTING_ASC,
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-})(
-  withPagination({
-    paginationSelector: usersPaginationSelector,
-    namespace: NAMESPACE,
-  })(OrgTeamListTableWrapped),
-);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
+import PropTypes from 'prop-types';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { loadingSelector, allUsersSelector } from 'controllers/instance/allUsers';
+import {
+  loadingSelector,
+  allUsersSelector,
+  allUsersPaginationSelector,
+} from 'controllers/instance/allUsers';
+import {
+  NAMESPACE,
+  DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
+} from 'controllers/instance/allUsers/constants';
+import { withPagination } from 'controllers/pagination';
+import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import classNames from 'classnames/bind';
 import { AllUsersHeader } from './allUsersHeader';
 import { AllUsersListTable } from './allUsersListTable';
@@ -35,7 +47,16 @@ const messages = defineMessages({
   },
 });
 
-export const AllUsersPage = () => {
+const AllUsersPageComponent = ({
+  sortingDirection,
+  onChangeSorting,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+}) => {
   const { formatMessage } = useIntl();
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
@@ -51,15 +72,48 @@ export const AllUsersPage = () => {
         appliedFiltersCount={appliedFiltersCount}
         setAppliedFiltersCount={setAppliedFiltersCount}
       />
-      {users.length === 0 && !isLoading ? (
+      {itemCount === 0 && !isLoading ? (
         <EmptyPageState
           label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
           description={formatMessage(messages.noResultsDescription)}
           emptyIcon={NoResultsIcon}
         />
       ) : (
-        <AllUsersListTable users={users} />
+        <AllUsersListTable
+          users={users}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          pageSize={pageSize}
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
+        />
       )}
     </div>
   );
 };
+
+AllUsersPageComponent.propTypes = {
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
+  pageSize: PropTypes.number,
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number,
+  pageCount: PropTypes.number,
+  onChangePage: PropTypes.func,
+  onChangePageSize: PropTypes.func,
+};
+
+export const AllUsersPage = withSortingURL({
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
+})(
+  withPagination({
+    paginationSelector: allUsersPaginationSelector,
+    namespace: NAMESPACE,
+  })(AllUsersPageComponent),
+);
