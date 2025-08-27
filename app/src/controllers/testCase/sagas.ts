@@ -15,14 +15,21 @@
  */
 
 import { Action } from 'redux';
-import { takeEvery, call, select, all, put, fork, cancel } from 'redux-saga/effects';
+import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { GET_FOLDERS, CREATE_FOLDER, GET_TEST_CASES, Folder } from './constants';
+import {
+  GET_FOLDERS,
+  CREATE_FOLDER,
+  GET_TEST_CASES,
+  GET_TEST_CASES_BY_FOLDER_ID,
+  GET_ALL_TEST_CASES,
+  Folder,
+} from './constants';
 import {
   updateFoldersAction,
   startCreatingFolderAction,
@@ -30,15 +37,33 @@ import {
   setFoldersAction,
   GetTestCasesParams,
   CreateFolderParams,
+  GetTestCasesByFolderIdParams,
+  startLoadingTestCasesAction,
+  stopLoadingTestCasesAction,
+  setTestCasesAction,
 } from './actionCreators';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Task } from 'redux-saga';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
 }
 
+interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
+  payload: GetTestCasesByFolderIdParams;
+}
+
 interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
   payload: CreateFolderParams;
+}
+
+function isErrorWithMessage(error: unknown): error is { message: string } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as { message?: unknown }).message === 'string'
+  );
 }
 
 function* getTestCases(action: GetTestCasesAction) {
@@ -48,6 +73,58 @@ function* getTestCases(action: GetTestCasesAction) {
     yield call(fetch, URLS.testCase(projectKey, action.payload));
   } catch (error) {
     console.error(error);
+  }
+}
+
+function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
+  yield put(startLoadingTestCasesAction());
+
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const result = (yield call(fetch, URLS.testCasesByFolderId(projectKey, action.payload))) as {
+      content: TestCase[];
+    };
+
+    yield put(setTestCasesAction(result.content));
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
+
+    yield put(setTestCasesAction([]));
+    yield put(
+      showErrorNotification({
+        message: errorMessage,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopLoadingTestCasesAction());
+  }
+}
+
+function* getAllTestCases(): Generator {
+  yield put(startLoadingTestCasesAction());
+
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const result = (yield call(fetch, URLS.allTestCases(projectKey))) as {
+      content: TestCase[];
+    };
+
+    yield put(setTestCasesAction(result.content));
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
+
+    yield put(setTestCasesAction([]));
+    yield put(
+      showErrorNotification({
+        message: errorMessage,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopLoadingTestCasesAction());
   }
 }
 
@@ -110,6 +187,20 @@ function* watchGetTestCases() {
   yield takeEvery(GET_TEST_CASES, getTestCases);
 }
 
+function* watchGetTestCasesByFolderId() {
+  yield takeLatest(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
+}
+
+function* watchGetAllTestCases() {
+  yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
+}
+
 export function* testCaseSagas() {
-  yield all([watchGetTestCases(), watchGetFolders(), watchCreateFolder()]);
+  yield all([
+    watchGetTestCases(),
+    watchGetFolders(),
+    watchCreateFolder(),
+    watchGetTestCasesByFolderId(),
+    watchGetAllTestCases(),
+  ]);
 }

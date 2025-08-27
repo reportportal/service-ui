@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
@@ -24,28 +24,74 @@ import { isEmpty } from 'lodash';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
 
-import { foldersSelector } from 'controllers/testCase';
+import {
+  foldersSelector,
+  getAllTestCasesAction,
+  getTestCaseByFolderIdAction,
+  isLoadingTestCasesSelector,
+  testCasesSelector,
+} from 'controllers/testCase';
 import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
 import { Folder } from './folder';
 import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
-
-import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
-import { useTestCases } from '../hooks/useTestCases';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlFolderIdSelector,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
+} from 'controllers/pages';
+import styles from './expandedOptions.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
-  const [activeFolder, setActiveFolder] = useState<string | null>(null);
+  const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const folderId = useSelector(urlFolderIdSelector);
+  const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
+  const testCases = useSelector(testCasesSelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const folders = useSelector(foldersSelector);
-  const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
+  const folderIdNumber = Number(folderId);
+
+  useEffect(() => {
+    if (folderId !== '' && Number.isFinite(folderIdNumber)) {
+      dispatch(getTestCaseByFolderIdAction({ folderId: folderIdNumber }));
+    } else {
+      dispatch(getAllTestCasesAction());
+    }
+  }, [folderId, dispatch]);
+
+  useEffect(() => {
+    setActiveFolder(folderId ? folderIdNumber : null);
+  }, [folderId, folders]);
 
   const setAllTestCases = () => {
     setActiveFolder(null);
+    dispatch({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+      },
+    });
+  };
+
+  const handleFolderClick = (id: number) => {
+    setActiveFolder(id);
+    dispatch({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        testCasePageRoute: ['folder', id],
+        organizationSlug,
+        projectSlug,
+      },
+    });
   };
 
   const showCreateFolderModal = () => {
@@ -103,15 +149,17 @@ export const ExpandedOptions = () => {
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {folders.map((folder) => (
-                  <Folder
-                    folder={folder}
-                    key={folder.name}
-                    activeFolder={activeFolder}
-                    setActiveFolder={setActiveFolder}
-                    setIsEmptyFolder={setIsEmptyFolder}
-                  />
-                ))}
+                {folders
+                  .filter((folder) => !folder.parentFolderId)
+                  .map((folder) => (
+                    <Folder
+                      folder={folder}
+                      key={folder.id}
+                      activeFolder={activeFolder}
+                      setActiveFolder={handleFolderClick}
+                      setIsEmptyFolder={setIsEmptyFolder}
+                    />
+                  ))}
               </ul>
             </div>
           </ScrollWrapper>
@@ -119,14 +167,14 @@ export const ExpandedOptions = () => {
       </div>
       <ScrollWrapper>
         <div className={cx('expanded-options__content')}>
-          {isEmptyFolder || !hasTestCases ? (
+          {isEmptyFolder ? (
             <FolderEmptyState />
           ) : (
             <AllTestCasesPage
-              testCases={filteredTestCases}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              loading={loading}
+              testCases={testCases}
+              searchValue=""
+              setSearchValue={() => {}}
+              loading={isLoadingTestCases}
             />
           )}
         </div>

@@ -30,7 +30,7 @@ import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { TestCase } from '../types';
-import { mockTestCases, mockedTestCaseDescription } from '../testCaseList/mockData';
+import { mockedTestCaseDescription } from '../testCaseList/mockData';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -92,14 +92,18 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 
 const testCase: TestCase = {
-  id: '2775277527',
+  id: 27752,
   name: '24.2 PV',
-  created: 1751362404546,
+  createdAt: 1751362404546,
+  updatedAt: 1754562404546,
   priority: 'high',
   tags: [],
   description: '',
   scenarios: [],
   path: ['24.2 PV'],
+  testFolder: {
+    id: 10,
+  },
 };
 
 export const TestCaseDetailsPage = () => {
@@ -120,8 +124,13 @@ export const TestCaseDetailsPage = () => {
   };
 
   // TODO: Remove mock data after integration
+  const mockedTags = [
+    { key: 'sso system', id: 1 },
+    { key: 'user interface improvements user interface improvements', id: 2 },
+    { key: 'battery usage analysis for a user interface improvements', id: 3 },
+  ];
   const testCaseDescription = isDescriptionAdded ? mockedTestCaseDescription : testCase.description;
-  const tags = isTagsAdded ? mockTestCases[0].tags : testCase.tags;
+  const tags = isTagsAdded ? mockedTags : testCase.tags;
 
   return (
     <SettingsLayout>
@@ -141,7 +150,7 @@ export const TestCaseDetailsPage = () => {
               handleEditDescription,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription,
-              tags,
+              tags: tags.map(({ key }) => key),
             }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}

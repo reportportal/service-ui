@@ -17,20 +17,20 @@
 import { memo, SetStateAction, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
-import { mockTestCases } from './mockData';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -47,7 +47,7 @@ interface TestCaseListProps {
 
 export const TestCaseList = memo(
   ({
-    testCases = mockTestCases,
+    testCases,
     loading = false,
     currentPage = DEFAULT_CURRENT_PAGE,
     selectedRowIds,
@@ -57,7 +57,7 @@ export const TestCaseList = memo(
     onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
-    const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
+    const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const dispatch = useDispatch();
     const { organizationSlug, projectSlug } = useSelector(
@@ -68,12 +68,12 @@ export const TestCaseList = memo(
     const endIndex = startIndex + itemsPerPage;
     const currentData = testCases.slice(startIndex, endIndex);
 
-    const handleRowClick = (testCaseId: string) => {
+    const handleRowClick = (testCaseId: number) => {
       setSelectedTestCaseId(testCaseId);
     };
 
     const handleCloseSidePanel = () => {
-      setSelectedTestCaseId('');
+      setSelectedTestCaseId(null);
     };
 
     const handleRowSelect = (id: number | string) => {
@@ -101,7 +101,7 @@ export const TestCaseList = memo(
     if (loading) {
       return (
         <div className={cx('test-case-list', 'loading')}>
-          <div className={cx('loading-message')}>{formatMessage(messages.loadingMessage)}</div>
+          <BubblesLoader />
         </div>
       );
     }
@@ -117,24 +117,24 @@ export const TestCaseList = memo(
             onClick={() => handleRowClick(testCase.id)}
           >
             <TestCaseNameCell
-              priority={testCase.priority}
+              priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
-              tags={testCase.tags}
+              tags={testCase.tags?.map(({ key }) => key)}
             />
           </button>
         ),
       },
       lastExecution: {
-        content: testCase.lastExecution,
+        content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            lastExecution={testCase.lastExecution}
+            lastExecution={testCase.updatedAt}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
             onEditTestCase={() =>
               dispatch({
-                type: TEST_CASE_DETAILS_PAGE,
+                type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCaseSlug: testCase.id,
+                  testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
                   organizationSlug,
                   projectSlug,
                 },

@@ -27,7 +27,8 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
-  TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
+  urlFolderIdSelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,6 +61,7 @@ export const TestCaseDetailsHeader = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const folderId = useSelector(urlFolderIdSelector);
   const dispatch = useDispatch();
 
   const breadcrumbsTitles = {
@@ -71,8 +73,12 @@ export const TestCaseDetailsHeader = ({
 
   const handleHistoryOfActions = () => {
     dispatch({
-      type: TEST_CASE_DETAILS_HISTORY_OF_ACTIONS_PAGE,
-      payload: { organizationSlug, projectSlug, testCaseSlug: testCase.id },
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+        testCasePageRoute: ['folder', folderId, 'test-cases', testCase.id, 'historyOfActions'],
+      },
     });
   };
 
@@ -93,7 +99,7 @@ export const TestCaseDetailsHeader = ({
         <div className={cx('header__meta')}>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.created)}</span>
-            <span className={cx('header__meta-value')}>{testCase.created}</span>
+            <span className={cx('header__meta-value')}>{testCase.createdAt}</span>
           </div>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>

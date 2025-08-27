@@ -21,12 +21,20 @@ import {
   STOP_CREATING_FOLDER,
   SET_FOLDERS,
   Folder,
+  START_LOADING_TEST_CASES,
+  STOP_LOADING_TEST_CASES,
+  SET_TEST_CASES,
 } from 'controllers/testCase/constants';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export type InitialStateType = {
   folders: {
     isCreatingFolder: boolean;
     list: Folder[];
+  };
+  testCases: {
+    isLoading: boolean;
+    list: TestCase[];
   };
 };
 
@@ -34,6 +42,10 @@ export const INITIAL_STATE: InitialStateType = {
   folders: {
     list: [],
     isCreatingFolder: false,
+  },
+  testCases: {
+    isLoading: false,
+    list: [],
   },
 };
 
@@ -64,6 +76,32 @@ const foldersReducer = (state = INITIAL_STATE.folders, { type, payload = {} }) =
   }
 };
 
+const testCasesReducer = (
+  state = INITIAL_STATE.testCases,
+  action: { type: string; payload?: unknown },
+) => {
+  switch (action.type) {
+    case SET_TEST_CASES:
+      return {
+        ...state,
+        list: Array.isArray(action.payload) ? (action.payload as TestCase[]) : [],
+      };
+    case START_LOADING_TEST_CASES:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case STOP_LOADING_TEST_CASES:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    default:
+      return state;
+  }
+};
+
 export const testCaseReducer = combineReducers({
   folders: foldersReducer,
+  testCases: testCasesReducer,
 });

@@ -20,3 +20,7 @@ export const foldersSelector = (state: { testCase: InitialStateType }) =>
   state.testCase.folders.list || [];
 export const isCreatingFolderSelector = (state: { testCase: InitialStateType }) =>
   state.testCase.folders.isCreatingFolder;
+export const isLoadingTestCasesSelector = (state: { testCase: InitialStateType }) =>
+  state.testCase.testCases.isLoading;
+export const testCasesSelector = (state: { testCase: InitialStateType }) =>
+  state.testCase.testCases.list || [];

@@ -37,7 +37,7 @@ import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { isEmpty } from 'lodash';
-import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { TestCase, IScenario } from '../../types';
 import { formatTimestamp, formatDuration } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
@@ -114,8 +114,17 @@ export const TestCaseSidePanel = memo(
 
     const handleOpenDetailsClick = () => {
       dispatch({
-        type: TEST_CASE_DETAILS_PAGE,
-        payload: { organizationSlug, projectSlug, testCaseSlug: testCase.id },
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          testCasePageRoute: [
+            'folder',
+            String(testCase.testFolder.id),
+            'test-cases',
+            String(testCase.id),
+          ],
+        },
       });
     };
 
@@ -149,7 +158,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          <PathBreadcrumb path={testCase.path} />
+          {!isEmpty(testCase.path) && <PathBreadcrumb path={testCase.path} />}
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -168,16 +177,14 @@ export const TestCaseSidePanel = memo(
               </div>
               <div className={cx('meta-item-row')}>
                 <span className={cx('meta-label')}>Created:</span>
-                <span className={cx('meta-value')}>{formatTimestamp(testCase.created)}</span>
+                <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
               </div>
             </div>
             <div className={cx('meta-row')}>
-              {!!testCase.lastExecution && (
+              {!!testCase.updatedAt && (
                 <div className={cx('meta-item-row')}>
                   <RerunIcon />
-                  <span className={cx('meta-value')}>
-                    {formatTimestamp(testCase.lastExecution)}
-                  </span>
+                  <span className={cx('meta-value')}>{formatTimestamp(testCase.updatedAt)}</span>
                 </div>
               )}
               {!!testCase.durationTime && (
@@ -191,7 +198,7 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            ...testCase,
+            tags: testCase.tags?.map(({ key }) => key),
             scenarios: mockedScenarios,
             steps: mockedStepsData,
             testCaseDescription: mockedTestCaseDescription,

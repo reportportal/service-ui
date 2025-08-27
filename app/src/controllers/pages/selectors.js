@@ -31,11 +31,15 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
+import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE } from './constants';
 import { stringToArray } from './utils';
+import {
+  urlTestCaseSlugSelector,
+  urlFolderIdSelector,
+  locationSelector,
+  payloadSelector,
+} from './typed-selectors';
 
-export const locationSelector = (state) => state.location || {};
-export const payloadSelector = (state) => locationSelector(state).payload || {};
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
 export const currentPathSelector = (state) => {
@@ -186,11 +190,9 @@ export const urlProjectSlugSelector = (state) => payloadSelector(state).projectS
 export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
 
 /**
- * @param {{ project?: { testCaseSlug?: string } }} state
- * @returns {string}
+ * @param {Object} state
+ * @returns {{ organizationSlug: string, projectSlug: string } | string}
  */
-export const urlTestCaseSlugSelector = (state) => payloadSelector(state).testCaseSlug || '';
-
 export const urlOrganizationAndProjectSelector = createSelector(
   [urlOrganizationSlugSelector, urlProjectSlugSelector, activeProjectSelector],
   (organizationSlug, projectSlug, activeProject) => {
@@ -294,8 +296,8 @@ export const urlTestCaseLibrarySelector = createSelector(
 
 export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageTitle = '' }) =>
   createSelector(
-    [urlTestCaseLibrarySelector],
-    ({ organizationSlug, projectSlug, testCaseSlug }) => {
+    [urlTestCaseLibrarySelector, urlFolderIdSelector],
+    ({ organizationSlug, projectSlug, testCaseSlug }, folderId) => {
       const breadcrumbs = [
         {
           id: 'test-case-library',
@@ -313,8 +315,12 @@ export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageT
           title: testTitle,
           ...(pageTitle && {
             link: {
-              type: TEST_CASE_DETAILS_PAGE,
-              payload: { organizationSlug, projectSlug, testCaseSlug },
+              type: TEST_CASE_LIBRARY_PAGE,
+              payload: {
+                organizationSlug,
+                projectSlug,
+                testCasePageRoute: ['folder', folderId, 'test-cases', testCaseSlug],
+              },
             },
           }),
         },
