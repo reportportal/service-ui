@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { MeatballMenuIcon, Button, Popover } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
+import { ActionMenu } from 'components/actionMenu';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/instance/allUsers/constants';
 import { SearchField } from 'components/fields/searchField';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
@@ -74,7 +74,6 @@ export const AllUsersHeader = ({
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
 
   const openCreateUserModal = () => {
@@ -84,7 +83,6 @@ export const AllUsersHeader = ({
       }),
     );
     trackEvent(ALL_USERS_PAGE_EVENTS.CREATE_USER_MODAL);
-    setIsOpen(false);
   };
 
   return (
@@ -120,20 +118,19 @@ export const AllUsersHeader = ({
                 <Button variant="ghost" onClick={onInvite}>
                   {formatMessage(messages.invite)}
                 </Button>
-                <Popover
-                  placement={'bottom-end'}
-                  isOpened={isOpen}
-                  setIsOpened={setIsOpen}
-                  content={
-                    <button className={cx('popover-content')} onClick={openCreateUserModal}>
-                      {formatMessage(messages.createUser)}
-                    </button>
+                <ActionMenu
+                  actions={[
+                    {
+                      label: formatMessage(messages.createUser),
+                      onClick: openCreateUserModal,
+                    },
+                  ]}
+                  trigger={
+                    <Button variant="ghost" className={cx('meatball-button')}>
+                      <MeatballMenuIcon />
+                    </Button>
                   }
-                >
-                  <Button variant="ghost" className={cx('meatball-button')}>
-                    <MeatballMenuIcon />
-                  </Button>
-                </Popover>
+                />
               </div>
             )}
           </div>
