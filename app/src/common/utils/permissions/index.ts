@@ -44,6 +44,7 @@ export {
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
+  canSeeOrganizationMembers,
   canWorkWithOrganizationsSorting,
   canUpdateUserInstanceRole,
   canExportOrganizations,

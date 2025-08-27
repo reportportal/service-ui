@@ -1757,6 +1757,7 @@
   "OrganizationsPage.pluginIsDisabledMessage": "Активуйте плагін 'Організації' на сторінці плагінів, щоб дозволити створення організацій.",
   "OrganizationsPage.projects": "Проекти",
   "OrganizationsPage.searchPlaceholder": "Пошук по назві",
+  "OrganizationsPage.settings": "Налаштування",
   "OrganizationsPage.startExport": "Експорт був успішно запущений",
   "OrganizationsPage.synchedOrganization": "Синхронізована організація",
   "OrganizationsPage.title": "Всі організації",

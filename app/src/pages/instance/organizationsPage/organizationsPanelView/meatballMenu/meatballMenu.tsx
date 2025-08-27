@@ -21,9 +21,18 @@ import { useCallback, useMemo } from 'react';
 import { ActionMenu } from 'components/actionMenu';
 import { showModalAction } from 'controllers/modal';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { canSeeActivityOption, canDeleteOrganization } from 'common/utils/permissions';
+import {
+  canSeeActivityOption,
+  canDeleteOrganization,
+  canSeeOrganizationMembers,
+} from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
+import {
+  ORGANIZATIONS_ACTIVITY_PAGE,
+  ORGANIZATION_USERS_PAGE,
+  ORGANIZATION_SETTINGS_PAGE,
+  userRolesSelector,
+} from 'controllers/pages';
 import {
   AssignedOrganizations,
   assignedOrganizationsSelector,
@@ -54,6 +63,18 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const canUnassign = useCanUnassignOrganization();
 
   const isAssignedToOrganization = organization.slug in assignedOrganizations;
+  const organizationRole = assignedOrganizations[organization.slug]?.organizationRole;
+  const organizationUserRoles = useMemo(
+    () => ({ ...userRoles, organizationRole }),
+    [userRoles, organizationRole],
+  );
+
+  const handleLinkClick = useCallback(
+    (elementName: string) => {
+      trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu(elementName));
+    },
+    [trackEvent],
+  );
 
   const handleActivityClick = useCallback(() => {
     dispatch(setActiveOrganizationAction(organization));
@@ -91,16 +112,33 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const links = useMemo(
     () => [
       {
+        label: formatMessage(messages.users),
+        to: {
+          type: ORGANIZATION_USERS_PAGE,
+          payload: { organizationSlug: organization.slug },
+        },
+        hasPermission: canSeeOrganizationMembers(organizationUserRoles),
+        onClick: () => handleLinkClick('users_via_menu'),
+      },
+      {
+        label: formatMessage(messages.settings),
+        to: {
+          type: ORGANIZATION_SETTINGS_PAGE,
+          payload: { organizationSlug: organization.slug },
+        },
+        onClick: () => handleLinkClick('settings_via_menu'),
+      },
+      {
         label: formatMessage(messages.activity),
         to: {
           type: ORGANIZATIONS_ACTIVITY_PAGE,
-          payload: { organizationSlug: organization?.slug },
+          payload: { organizationSlug: organization.slug },
         },
-        hasPermission: canSeeActivityOption(userRoles),
+        hasPermission: canSeeActivityOption(organizationUserRoles),
         onClick: handleActivityClick,
       },
     ],
-    [formatMessage, organization?.slug, userRoles, handleActivityClick],
+    [formatMessage, organization.slug, organizationUserRoles, handleActivityClick, handleLinkClick],
   );
 
   const actions = useMemo(
@@ -113,7 +151,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: handleDeleteClick,
-        hasPermission: canDeleteOrganization(userRoles),
+        hasPermission: canDeleteOrganization(organizationUserRoles),
         danger: true,
       },
     ],
@@ -125,7 +163,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       currentUser,
       organization,
       handleDeleteClick,
-      userRoles,
+      organizationUserRoles,
     ],
   );
 
