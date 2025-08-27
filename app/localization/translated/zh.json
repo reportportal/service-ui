@@ -1756,6 +1756,7 @@
   "OrganizationsPage.pluginIsDisabledMessage": "Activate the 'Organizations' plugin on the Plugins page to allow for the creation of organizations.",
   "OrganizationsPage.projects": "Projects",
   "OrganizationsPage.searchPlaceholder": "按名称搜索",
+  "OrganizationsPage.settings": "Settings",
   "OrganizationsPage.startExport": "Export has been started successfully",
   "OrganizationsPage.synchedOrganization": "Synched organization",
   "OrganizationsPage.title": "All Organizations",

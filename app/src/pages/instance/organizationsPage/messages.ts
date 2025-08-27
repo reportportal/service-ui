@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +105,10 @@ export const messages = defineMessages({
   activity: {
     id: 'OrganizationsPage.activity',
     defaultMessage: 'Activity',
+  },
+  settings: {
+    id: 'OrganizationsPage.settings',
+    defaultMessage: 'Settings',
   },
   notUploadedPluginMessage: {
     id: 'OrganizationsPage.notUploadedPluginMessage',
