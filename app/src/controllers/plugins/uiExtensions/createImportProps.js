@@ -154,7 +154,6 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
-import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
@@ -196,6 +195,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
 import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
+import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
 
 const BUTTONS = {
   GhostButton,

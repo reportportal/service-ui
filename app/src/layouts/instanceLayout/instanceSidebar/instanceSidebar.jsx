@@ -25,15 +25,11 @@ import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
-  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   USER_PROFILE_PAGE,
   ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import {
-  uiExtensionAdminPagesSelector,
-  uiExtensionSidebarComponentsSelector,
-} from 'controllers/plugins/uiExtensions';
+import { uiExtensionAdminSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import OrganizationsIcon from 'common/img/sidebar/organizations-icon-inline.svg';
@@ -51,8 +47,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
-  const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
-  const adminPageExtensions = useSelector(uiExtensionAdminPagesSelector);
+  const sidebarExtensions = useSelector(uiExtensionAdminSidebarComponentsSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
   const noAssignedOrganizations =
     Object.keys(assignedOrganizations).length === 0 && userRoles.userRole !== ADMINISTRATOR;
@@ -99,17 +94,6 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
           message: formatMessage(messages.plugins),
         },
       );
-
-      adminPageExtensions
-        .filter((ext) => !!ext.buttonIcon)
-        .forEach((extension) =>
-          sidebarItems.push({
-            onClick: onClickNavBtn,
-            link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
-            icon: extension.buttonIcon,
-            message: extension.buttonLabel || extension.name,
-          }),
-        );
     }
 
     sidebarExtensions.forEach((extension) =>
