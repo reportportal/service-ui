@@ -95,14 +95,6 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    if (loading) {
-      return (
-        <div className={cx('test-case-list', 'loading')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
-
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
       name: {
@@ -166,46 +158,58 @@ export const TestCaseList = memo(
           <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              <SearchField
-                isLoading={loading}
-                searchValue={searchValue}
-                setSearchValue={onSearchChange}
-                onFilterChange={onSearchChange}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-              />
-              <div className={cx('filter-icon')}>
-                <FilterOutlineIcon />
-              </div>
+              {loading ? null : (
+                <>
+                  <SearchField
+                    isLoading={loading}
+                    searchValue={searchValue}
+                    setSearchValue={onSearchChange}
+                    onFilterChange={onSearchChange}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
+                  />
+                  <div className={cx('filter-icon')}>
+                    <FilterOutlineIcon />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-        {!isEmptyList(currentData) ? (
-          <Table
-            selectable
-            onToggleRowSelection={handleRowSelect}
-            selectedRowIds={selectedRowIds}
-            data={tableData}
-            fixedColumns={fixedColumns}
-            primaryColumn={primaryColumn}
-            sortableColumns={[]}
-            onToggleAllRowsSelection={handleAllSelect}
-            className={cx('test-case-table')}
-            rowClassName={cx('test-case-table-row')}
-          />
-        ) : (
-          <div className={cx('no-results')}>
-            <div className={cx('no-results-message')}>
-              {searchValue
-                ? formatMessage(messages.noResultsFilteredMessage)
-                : formatMessage(messages.noResultsEmptyMessage)}
-            </div>
+        {loading ? (
+          <div className={cx('test-case-list', 'loading')}>
+            <BubblesLoader />
           </div>
+        ) : (
+          <>
+            {!isEmptyList(currentData) ? (
+              <Table
+                selectable
+                onToggleRowSelection={handleRowSelect}
+                selectedRowIds={selectedRowIds}
+                data={tableData}
+                fixedColumns={fixedColumns}
+                primaryColumn={primaryColumn}
+                sortableColumns={[]}
+                onToggleAllRowsSelection={handleAllSelect}
+                className={cx('test-case-table')}
+                rowClassName={cx('test-case-table-row')}
+              />
+            ) : (
+              <div className={cx('no-results')}>
+                <div className={cx('no-results-message')}>
+                  {searchValue
+                    ? formatMessage(messages.noResultsFilteredMessage)
+                    : formatMessage(messages.noResultsEmptyMessage)}
+                </div>
+              </div>
+            )}
+            <TestCaseSidePanel
+              testCase={selectedTestCase}
+              isVisible={!!selectedTestCaseId}
+              onClose={handleCloseSidePanel}
+            />
+          </>
         )}
-        <TestCaseSidePanel
-          testCase={selectedTestCase}
-          isVisible={!!selectedTestCaseId}
-          onClose={handleCloseSidePanel}
-        />
       </div>
     );
   },
