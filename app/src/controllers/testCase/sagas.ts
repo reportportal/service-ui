@@ -57,15 +57,6 @@ interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
   payload: CreateFolderParams;
 }
 
-function isErrorWithMessage(error: unknown): error is { message: string } {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'message' in error &&
-    typeof (error as { message?: unknown }).message === 'string'
-  );
-}
-
 function* getTestCases(action: GetTestCasesAction) {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
@@ -86,15 +77,11 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     };
 
     yield put(setTestCasesAction(result.content));
-  } catch (error: unknown) {
-    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
-
+  } catch {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        message: errorMessage,
-        messageId: null,
-        values: {},
+        messageId: 'testCaseLoadingFailed',
       }),
     );
   } finally {
@@ -112,15 +99,11 @@ function* getAllTestCases(): Generator {
     };
 
     yield put(setTestCasesAction(result.content));
-  } catch (error: unknown) {
-    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
-
+  } catch {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        message: errorMessage,
-        messageId: null,
-        values: {},
+        messageId: 'testCaseLoadingFailed',
       }),
     );
   } finally {
