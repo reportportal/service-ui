@@ -124,10 +124,12 @@ export const HISTORY_PAGE_EVENTS = {
     label: 'Close panel with selected items',
   },
   // EDIT_DEFECT_MODAL
-  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectAllSimilarItemsEvent(HISTORY_PAGE),
-  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectSpecificSimilarItemEvent(HISTORY_PAGE),
+  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+    HISTORY_PAGE,
+  ),
+  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL: getEditToInvestigateSelectSpecificSimilarItemEvent(
+    HISTORY_PAGE,
+  ),
   CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(HISTORY_PAGE),
   // UNLINK_ISSUE_MODAL
   UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(HISTORY_PAGE),
@@ -136,8 +138,9 @@ export const HISTORY_PAGE_EVENTS = {
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(HISTORY_PAGE),
   // DELETE_ITEM_MODAL
-  getClickOnDeleteBtnDeleteItemModalEvent:
-    getClickOnDeleteBtnDeleteItemModalEventCreator(HISTORY_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    HISTORY_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(HISTORY_PAGE),
