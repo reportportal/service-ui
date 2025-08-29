@@ -43,6 +43,7 @@ const CreateOrganizationModal = ({
   handleSubmit,
   anyTouched,
   invalid,
+  dirty,
 }: InjectedFormProps<CreateOrganizationFormData, CreateOrganizationModalProps> &
   CreateOrganizationModalProps) => {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const CreateOrganizationModal = ({
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={hideModal}
+      allowCloseOutside={!dirty}
     >
       <FieldProvider name={ORGANIZATION_NAME_FIELD}>
         <FieldErrorHint provideHint={false}>
@@ -86,7 +88,9 @@ export default reduxForm<CreateOrganizationFormData, CreateOrganizationModalProp
   form: 'createOrganizationForm',
   validate: ({ organizationName }) => {
     const trimmedOrganizationName = organizationName?.trim();
-    const organizationNameValidator: BoundValidator = commonValidators.createProjectNameValidator();
+    const organizationNameValidator: BoundValidator = (
+      commonValidators.createOrganizationNameValidator as () => BoundValidator
+    )();
 
     return {
       [ORGANIZATION_NAME_FIELD]: organizationNameValidator(trimmedOrganizationName),
