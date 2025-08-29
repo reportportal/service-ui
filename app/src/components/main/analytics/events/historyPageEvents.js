@@ -40,11 +40,12 @@ import {
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
-import { getBasicClickEventParameters } from './common/ga4Utils';
+import { getBasicClickEventParameters, getBasicSelectEventParameters, normalizeEventParameterCase } from './common/ga4Utils';
 
 export const HISTORY_PAGE = 'history';
 
 const basicClickEventParametersHistoryPage = getBasicClickEventParameters(HISTORY_PAGE);
+const basicSelectEventParametersHistoryPage = getBasicSelectEventParameters(HISTORY_PAGE);
 const { PROCEED_VALID_ITEMS, EDIT_ITEMS_ACTION } = getCommonActionEvents(HISTORY_PAGE);
 
 export const HISTORY_PAGE_EVENTS = {
@@ -71,15 +72,24 @@ export const HISTORY_PAGE_EVENTS = {
     element_name: 'item_name',
   },
   getSelectHistoryDepthEvent: (depth) => ({
-    ...basicClickEventParametersHistoryPage,
+    ...basicSelectEventParametersHistoryPage,
     element_name: 'history_depth',
     number: depth,
   }),
   getSelectHistoryBaseEvent: (isAllLaunches) => ({
-    ...basicClickEventParametersHistoryPage,
+    ...basicSelectEventParametersHistoryPage,
     element_name: 'history_base',
     type: isAllLaunches ? 'all_launches' : 'launches_with_same_name',
   }),
+  getSelectHistoryCellPreviewEvent: (type) => ({
+    ...basicSelectEventParametersHistoryPage,
+    element_name: 'cell_preview',
+    type: normalizeEventParameterCase(type),
+  }),
+  CELL_PREVIEW_ATTRIBUTE_CONFIGURED: {
+    ...basicSelectEventParametersHistoryPage,
+    element_name: 'cell_preview_attribute',
+  },
   CLICK_CROSS_BTN_NEAR_COMPARE_FILTER: {
     ...basicClickEventParametersHistoryPage,
     icon_name: 'cross_filter',
