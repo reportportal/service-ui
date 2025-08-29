@@ -82,7 +82,7 @@ export class HistoryView extends Component {
         attributeKey,
       });
       setStorageItem(ATTRIBUTE_KEY_CONFIG.name, attributeKey);
-      
+
       if (attributeKey.trim() && this.state.highlightLessThan.trim()) {
         this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CELL_PREVIEW_ATTRIBUTE_CONFIGURED);
       }
@@ -95,7 +95,7 @@ export class HistoryView extends Component {
         highlightLessThan,
       });
       setStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name, highlightLessThan);
-      
+
       if (this.state.attributeKey.trim() && highlightLessThan.trim()) {
         this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CELL_PREVIEW_ATTRIBUTE_CONFIGURED);
       }
