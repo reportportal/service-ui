@@ -29,14 +29,14 @@ import {
 import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
-import { 
-  GET_FOLDERS, 
-  CREATE_FOLDER, 
-  GET_TEST_CASES, 
+import {
+  GET_FOLDERS,
+  CREATE_FOLDER,
+  GET_TEST_CASES,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
-  NAMESPACE, 
-  Folder 
+  NAMESPACE,
+  Folder,
 } from './constants';
 import {
   getFoldersAction,
@@ -178,7 +178,7 @@ function* getFolders() {
     yield put(fetchErrorAction(NAMESPACE, error));
     yield put(
       showDefaultErrorNotification({
-        message: 'An error occurred. Please try again later',
+        message: error instanceof Error ? error.message : undefined,
       }),
     );
   }
