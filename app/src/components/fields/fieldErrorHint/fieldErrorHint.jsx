@@ -208,7 +208,7 @@ const messages = defineMessages({
   organizationNamePatternHint: {
     id: 'OrganizationsPage.organizationNamePatternHint',
     defaultMessage:
-      'Organization name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted',
+      'Organization name may contain only Latin, numeric characters, hyphen, underscore, apostrophe, dot. Space is permitted',
   },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',

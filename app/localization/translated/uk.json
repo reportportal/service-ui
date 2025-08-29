@@ -1750,7 +1750,7 @@
   "OrganizationsPage.organizationExists": "Організація з такою ж назвою ''{name}'' вже існує в екземплярі",
   "OrganizationsPage.organizationName": "Назва організації",
   "OrganizationsPage.organizationNameLengthHint": "Назва організації має бути розміром від '3' до '60' символів",
-  "OrganizationsPage.organizationNamePatternHint": "Назва організації може містити тільки латиницю, цифри, дефіс, підкреслення, точку. Допускається використання прогалин",
+  "OrganizationsPage.organizationNamePatternHint": "Назва організації може містити тільки латиницю, цифри, дефіс, підкреслення, апостроф, точку. Допускається використання прогалин",
   "OrganizationsPage.organizationProjects": "Організаційні проекти",
   "OrganizationsPage.organizationUsers": "Користувачі організації",
   "OrganizationsPage.personalOrganization": "Особиста організація",

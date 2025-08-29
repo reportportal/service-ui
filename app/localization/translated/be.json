@@ -1750,7 +1750,7 @@
   "OrganizationsPage.organizationExists": "Арганізацыя з такой жа назвай ''{name}'' ужо існуе ў экзэмпляры",
   "OrganizationsPage.organizationName": "Назва арганізацыі",
   "OrganizationsPage.organizationNameLengthHint": "Назва арганізацыі павінна быць памерам ад '3' да '60' знакаў",
-  "OrganizationsPage.organizationNamePatternHint": "Назва арганізацыі можа ўтрымліваць толькі лацінку, лічбы, злучок, падкрэсліванне, кропку. Дапускаецца выкарыстанне прабелаў",
+  "OrganizationsPage.organizationNamePatternHint": "Назва арганізацыі можа ўтрымліваць толькі лацінку, лічбы, злучок, падкрэсліванне, апостраф, кропку. Дапускаецца выкарыстанне прабелаў",
   "OrganizationsPage.organizationProjects": "Арганізацыйныя праекты",
   "OrganizationsPage.organizationUsers": "Карыстальнікі арганізацыі",
   "OrganizationsPage.personalOrganization": "Асабістая арганізацыя",

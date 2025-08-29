@@ -154,5 +154,8 @@ export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
 export const keywordMatcher = (keyword) => (value) =>
   keyword.toLowerCase().trim() === value?.toLowerCase()?.trim();
-export const organizationNamePattern = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_. ]+$/)]);
+export const organizationNamePattern = composeValidators([
+  isNotEmpty,
+  regex(/^[0-9a-zA-Z-'_. ]+$/),
+]);
 export const organizationNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);

@@ -1749,7 +1749,7 @@
   "OrganizationsPage.organizationExists": "Organization with the same name ''{name}'' already exists on the instance",
   "OrganizationsPage.organizationName": "Organization name",
   "OrganizationsPage.organizationNameLengthHint": "Organization name should have size from '3' to '60' characters",
-  "OrganizationsPage.organizationNamePatternHint": "Organization name may contain only Latin, numeric characters, hyphen, underscore, dot. Space is permitted",
+  "OrganizationsPage.organizationNamePatternHint": "Organization name may contain only Latin, numeric characters, hyphen, underscore, apostrophe, dot. Space is permitted",
   "OrganizationsPage.organizationProjects": "Organization projects",
   "OrganizationsPage.organizationUsers": "Organization users",
   "OrganizationsPage.personalOrganization": "Personal organization",
