@@ -1750,7 +1750,7 @@
   "OrganizationsPage.organizationExists": "Организация с тем же названием ''{name}'' уже существует на экземпляре",
   "OrganizationsPage.organizationName": "Название организации",
   "OrganizationsPage.organizationNameLengthHint": "Название организации должно иметь длину от '3' до '60' символов.",
-  "OrganizationsPage.organizationNamePatternHint": "Название организации может содержать только латинские символы, цифры, дефис, подчёркивание и точку. Пробелы допускаются.",
+  "OrganizationsPage.organizationNamePatternHint": "Название организации может содержать только латинские символы, цифры, дефис, подчёркивание, апостроф и точку. Пробелы допускаются.",
   "OrganizationsPage.organizationProjects": "Организационные проекты",
   "OrganizationsPage.organizationUsers": "Пользователи организации",
   "OrganizationsPage.personalOrganization": "Персональная организация",
