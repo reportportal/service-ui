@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState, FormEvent, MouseEvent } from 'react';
+import { ChangeEvent, useState, MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
@@ -82,10 +82,24 @@ const CreateFolderModalComponent = ({
 
   const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
 
+  // Going to be resolved to id by folder name with UI search control
+  // Currently directly accepts id from name input
+  const coerceToNumericId = (value: unknown): number | undefined => {
+    if (value == null || value === '') return undefined;
+    const id = Number(value);
+    return Number.isFinite(id) ? id : undefined;
+  };
+
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = (values: CreateFolderFormValues) => {
-    dispatch(createFoldersAction(values));
+    const idFromNameInput = coerceToNumericId(values.parentFolderName);
+    dispatch(
+      createFoldersAction({
+        folderName: values.folderName,
+        ...(idFromNameInput !== undefined ? { parentFolderId: idFromNameInput } : {}),
+      }),
+    );
   };
 
   const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -127,10 +141,8 @@ const CreateFolderModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form
-        onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}
-        className={cx('create-folder-modal__form')}
-      >
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+      <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
         <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
           <FieldErrorHint provideHint={false}>
             <FieldText
@@ -173,7 +185,7 @@ const CreateFolderModalComponent = ({
   );
 };
 
-withModal(CREATE_FOLDER_MODAL_KEY)(
+export default withModal(CREATE_FOLDER_MODAL_KEY)(
   reduxForm<CreateFolderFormValues, CreateFolderModalProps>({
     form: 'create-folder-modal-form',
     initialValues: {

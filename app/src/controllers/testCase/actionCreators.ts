@@ -18,11 +18,8 @@ import {
   GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
-  UPDATE_FOLDERS,
-  SET_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
-  Folder,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   START_LOADING_TEST_CASES,
@@ -42,6 +39,11 @@ export interface GetTestCasesByFolderIdParams {
 
 export interface CreateFolderParams {
   folderName: string;
+  parentFolderId?: number;
+}
+
+export interface GetFoldersParams {
+  projectKey?: string;
 }
 
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
@@ -79,21 +81,12 @@ export const stopCreatingFolderAction = () => ({
   type: STOP_CREATING_FOLDER,
 });
 
-export const getFoldersAction = () => ({
+export const getFoldersAction = (params?: GetFoldersParams) => ({
   type: GET_FOLDERS,
+  payload: params,
 });
 
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
-  payload: folder,
-});
-
-export const setFoldersAction = (folders: Folder) => ({
-  type: SET_FOLDERS,
-  payload: folders,
-});
-
-export const updateFoldersAction = (folder: Folder) => ({
-  type: UPDATE_FOLDERS,
   payload: folder,
 });

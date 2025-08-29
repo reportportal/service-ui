@@ -21,17 +21,18 @@ import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-k
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { showModalAction } from 'controllers/modal';
-
 import {
-  foldersSelector,
+  transformedFoldersSelector,
+  areFoldersLoadingSelector,
+  TransformedFolder,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
   isLoadingTestCasesSelector,
   testCasesSelector,
 } from 'controllers/testCase';
-import { FolderEmptyState } from '../emptyState/folder';
+
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { showModalAction } from 'controllers/modal';
 import { commonMessages } from '../commonMessages';
 import { Folder } from './folder';
 import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
@@ -48,7 +49,6 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
-  const [isEmptyFolder, setIsEmptyFolder] = useState(false);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folderId = useSelector(urlFolderIdSelector);
@@ -56,7 +56,8 @@ export const ExpandedOptions = () => {
   const testCases = useSelector(testCasesSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const folders = useSelector(foldersSelector);
+  const folders = useSelector(transformedFoldersSelector);
+  const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const folderIdNumber = Number(folderId);
 
   useEffect(() => {
@@ -65,11 +66,22 @@ export const ExpandedOptions = () => {
     } else {
       dispatch(getAllTestCasesAction());
     }
-  }, [folderId, dispatch]);
+  }, [folderId, folderIdNumber, dispatch]);
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);
-  }, [folderId, folders]);
+  }, [folderId, folderIdNumber, folders]);
+
+  const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
+    const countFolderTestCases = (folder: TransformedFolder): number => {
+      return (folder.folders ?? []).reduce(
+        (subTotal: number, subFolder: TransformedFolder): number =>
+          subTotal + countFolderTestCases(subFolder),
+        folder.testsCount || 0,
+      );
+    };
+    return total + countFolderTestCases(folder);
+  }, 0);
 
   const setAllTestCases = () => {
     setActiveFolder(null);
@@ -84,6 +96,7 @@ export const ExpandedOptions = () => {
 
   const handleFolderClick = (id: number) => {
     setActiveFolder(id);
+    dispatch(getTestCaseByFolderIdAction({ folderId: id }));
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -120,7 +133,9 @@ export const ExpandedOptions = () => {
             <span className={cx('sidebar-header__title--text')}>
               {formatMessage(commonMessages.allTestCases)}
             </span>
-            <span className={cx('sidebar-header__title--counter')}>1234</span>
+            <span className={cx('sidebar-header__title--counter')}>
+              {areFoldersLoading ? '...' : totalTestCases.toLocaleString()}
+            </span>
           </button>
         </div>
         <div className={cx('expanded-options__sidebar-separator')} />
@@ -144,39 +159,40 @@ export const ExpandedOptions = () => {
         <div className={cx('expanded-options__sidebar-folders-wrapper')}>
           <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
             <div className={cx('expanded-options__sidebar-folders')}>
-              <ul
-                className={cx('folders-tree', 'folders-tree--outer')}
-                role="tree"
-                aria-labelledby="tree_label"
-              >
-                {folders
-                  .filter((folder) => !folder.parentFolderId)
-                  .map((folder) => (
+              {areFoldersLoading ? (
+                <div className={cx('folders-loading')} role="status" aria-live="polite">
+                  <div className={cx('folders-loading__text')}>
+                    {formatMessage(commonMessages.loadingFolders)}
+                  </div>
+                </div>
+              ) : (
+                <ul
+                  className={cx('folders-tree', 'folders-tree--outer')}
+                  role="tree"
+                  aria-labelledby="tree_label"
+                >
+                  {folders.map((folder, idx) => (
                     <Folder
                       folder={folder}
-                      key={folder.id}
+                      key={folder.id || `${folder.name}-${idx}`}
                       activeFolder={activeFolder}
                       setActiveFolder={handleFolderClick}
-                      setIsEmptyFolder={setIsEmptyFolder}
                     />
                   ))}
-              </ul>
+                </ul>
+              )}
             </div>
           </ScrollWrapper>
         </div>
       </div>
       <ScrollWrapper>
         <div className={cx('expanded-options__content')}>
-          {isEmptyFolder ? (
-            <FolderEmptyState />
-          ) : (
-            <AllTestCasesPage
-              testCases={testCases}
-              searchValue=""
-              setSearchValue={() => {}}
-              loading={isLoadingTestCases}
-            />
-          )}
+          <AllTestCasesPage
+            testCases={testCases}
+            searchValue=""
+            setSearchValue={() => {}}
+            loading={isLoadingTestCases || areFoldersLoading}
+          />
         </div>
       </ScrollWrapper>
     </div>

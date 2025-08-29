@@ -19,49 +19,31 @@ import classNames from 'classnames/bind';
 import { isEmpty } from 'lodash';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
+import { TransformedFolder } from 'controllers/testCase';
 import styles from './folder.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-type Folder = {
-  name: string;
-  countOfTestCases?: number;
-  subFolders?: Folder[];
-  id: number;
-};
-
 interface FolderProps {
-  folder: Folder;
+  folder: TransformedFolder;
   activeFolder: number | null;
-  setActiveFolder: (name: number) => void;
-  setIsEmptyFolder: (count: boolean) => void;
+  setActiveFolder: (id: number) => void;
 }
 
-export const Folder = ({
-  folder,
-  setActiveFolder,
-  activeFolder,
-  setIsEmptyFolder,
-}: FolderProps) => {
+export const Folder = ({ folder, setActiveFolder, activeFolder }: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = useCallback(
-    ({
-      event,
-      id,
-      count,
-    }: {
-      event: ReactMouseEvent<HTMLDivElement, MouseEvent>;
-      id: number;
-      count?: number;
-    }) => {
-      event.stopPropagation();
+  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+    event.stopPropagation();
+    setIsOpen((prevState) => !prevState);
+  }, []);
 
-      setIsOpen((prevState) => !prevState);
-      setActiveFolder(id);
-      setIsEmptyFolder(!count);
+  const handleFolderTitleClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.stopPropagation();
+      setActiveFolder(folder.id);
     },
-    [setActiveFolder, setIsEmptyFolder],
+    [setActiveFolder, folder.id],
   );
 
   return (
@@ -73,33 +55,29 @@ export const Folder = ({
       aria-expanded={isOpen}
       aria-selected={activeFolder === folder.id}
     >
-      <div
-        onClick={(event) => handleOpen({ event, id: folder.id, count: folder.countOfTestCases })}
-      >
-        {!isEmpty(folder.subFolders) && <ChevronDownDropdownIcon />}
+      <div className={cx('folders-tree__item-content')}>
+        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
           })}
+          onClick={handleFolderTitleClick}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          <span className={cx('folders-tree__item-title--counter')}>
-            {folder.countOfTestCases || 0}
-          </span>
+          <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
         </div>
       </div>
 
-      {isOpen && !isEmpty(folder.subFolders) && (
+      {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.subFolders?.map((subfolder) => (
+          {folder.folders?.map((subfolder) => (
             <Folder
               folder={subfolder}
-              key={subfolder.name}
+              key={subfolder.id}
               activeFolder={activeFolder}
               setActiveFolder={setActiveFolder}
-              setIsEmptyFolder={setIsEmptyFolder}
             />
           ))}
         </ul>
