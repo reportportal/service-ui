@@ -52,6 +52,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
 export const OrganizationsPageHeader = ({
+  hasPermission,
   isEmpty,
   searchValue,
   setSearchValue,
@@ -123,35 +124,36 @@ export const OrganizationsPageHeader = ({
                 <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
               )}
             </div>
-            {organizationPlugin?.enabled ? (
-              <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateOrganization}>
-                {formatMessage(messages.createOrganization)}
-              </Button>
-            ) : (
-              <Tooltip
-                content={formatMessage(
-                  organizationPlugin
-                    ? messages.pluginIsDisabledMessage
-                    : messages.notUploadedPluginMessage,
-                )}
-                tooltipClassName={cx(
-                  organizationPlugin ? 'tooltip-not-uploaded' : 'tooltip-disabled',
-                )}
-                wrapperClassName={cx('tooltip-wrapper')}
-                placement="bottom"
-              >
-                <div onMouseEnter={onMouseEnter}>
-                  <Button
-                    variant={'ghost'}
-                    icon={<PlusIcon />}
-                    onClick={onCreateOrganization}
-                    disabled
-                  >
-                    {formatMessage(messages.createOrganization)}
-                  </Button>
-                </div>
-              </Tooltip>
-            )}
+            {hasPermission &&
+              (organizationPlugin?.enabled ? (
+                <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateOrganization}>
+                  {formatMessage(messages.createOrganization)}
+                </Button>
+              ) : (
+                <Tooltip
+                  content={formatMessage(
+                    organizationPlugin
+                      ? messages.pluginIsDisabledMessage
+                      : messages.notUploadedPluginMessage,
+                  )}
+                  tooltipClassName={cx(
+                    organizationPlugin ? 'tooltip-not-uploaded' : 'tooltip-disabled',
+                  )}
+                  wrapperClassName={cx('tooltip-wrapper')}
+                  placement="bottom"
+                >
+                  <div onMouseEnter={onMouseEnter}>
+                    <Button
+                      variant={'ghost'}
+                      icon={<PlusIcon />}
+                      onClick={onCreateOrganization}
+                      disabled
+                    >
+                      {formatMessage(messages.createOrganization)}
+                    </Button>
+                  </div>
+                </Tooltip>
+              ))}
           </div>
         )}
       </div>
@@ -160,6 +162,7 @@ export const OrganizationsPageHeader = ({
 };
 
 OrganizationsPageHeader.propTypes = {
+  hasPermission: PropTypes.bool,
   isEmpty: PropTypes.bool,
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
