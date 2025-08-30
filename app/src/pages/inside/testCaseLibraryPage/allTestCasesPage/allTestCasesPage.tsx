@@ -105,12 +105,9 @@ export const AllTestCasesPage = ({
           handleSelectedRowIds={setSelectedRowIds}
         />
       </div>
-      {totalItems > 0 && (
-        <div
-          className={cx('sticky-wrapper', {
-            'sticky-wrapper--has-selected-items': isAnyRowSelected,
-          })}
-        >
+
+      <div className={cx('sticky-wrapper')}>
+        {totalItems > 0 && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
@@ -130,31 +127,31 @@ export const AllTestCasesPage = ({
               }}
             />
           </div>
-          {selectedRowIds.length > 0 && (
-            <div className={cx('selection')}>
-              <Selection
-                selectedCount={selectedRowIds.length}
-                onClearSelection={() => setSelectedRowIds([])}
-              />
-              <div className={cx('selection-controls')}>
-                <PopoverControl items={popoverItems} placement="bottom-end">
-                  <Button
-                    variant="ghost"
-                    adjustWidthOn="content"
-                    onClick={() => {}}
-                    className={cx('selection-controls__more-button')}
-                  >
-                    <MeatballMenuIcon />
-                  </Button>
-                </PopoverControl>
-                <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
-                <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-                <Button>{formatMessage(messages.addToTestPlan)}</Button>
-              </div>
+        )}
+        {isAnyRowSelected && (
+          <div className={cx('selection')}>
+            <Selection
+              selectedCount={selectedRowIds.length}
+              onClearSelection={() => setSelectedRowIds([])}
+            />
+            <div className={cx('selection-controls')}>
+              <PopoverControl items={popoverItems} placement="bottom-end">
+                <Button
+                  variant="ghost"
+                  adjustWidthOn="content"
+                  onClick={() => {}}
+                  className={cx('selection-controls__more-button')}
+                >
+                  <MeatballMenuIcon />
+                </Button>
+              </PopoverControl>
+              <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
+              <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
+              <Button>{formatMessage(messages.addToTestPlan)}</Button>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
