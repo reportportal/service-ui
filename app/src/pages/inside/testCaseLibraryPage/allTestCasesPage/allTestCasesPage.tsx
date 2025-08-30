@@ -125,31 +125,29 @@ export const AllTestCasesPage = ({
               }}
             />
           </div>
-        </div>
-      )}
-      {selectedRowIds.length > 0 && (
-        <div className={cx('sticky-wrapper')}>
-          <div className={cx('selection')}>
-            <Selection
-              selectedCount={selectedRowIds.length}
-              onClearSelection={() => setSelectedRowIds([])}
-            />
-            <div className={cx('selection-controls')}>
-              <PopoverControl items={popoverItems} placement="bottom-end">
-                <Button
-                  variant="ghost"
-                  adjustWidthOn="content"
-                  onClick={() => {}}
-                  className={cx('selection-controls__more-button')}
-                >
-                  <MeatballMenuIcon />
-                </Button>
-              </PopoverControl>
-              <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
-              <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button>{formatMessage(messages.addToTestPlan)}</Button>
+          {selectedRowIds.length > 0 && (
+            <div className={cx('selection')}>
+              <Selection
+                selectedCount={selectedRowIds.length}
+                onClearSelection={() => setSelectedRowIds([])}
+              />
+              <div className={cx('selection-controls')}>
+                <PopoverControl items={popoverItems} placement="bottom-end">
+                  <Button
+                    variant="ghost"
+                    adjustWidthOn="content"
+                    onClick={() => {}}
+                    className={cx('selection-controls__more-button')}
+                  >
+                    <MeatballMenuIcon />
+                  </Button>
+                </PopoverControl>
+                <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
+                <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
+                <Button>{formatMessage(messages.addToTestPlan)}</Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </>
