@@ -31,6 +31,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from './messages';
 import styles from './allTestCasesPage.scss';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -85,6 +86,10 @@ export const AllTestCasesPage = ({
     setPageSize(size);
     setActivePage(DEFAULT_CURRENT_PAGE);
   };
+
+  if (isEmpty(testCases)) {
+    return <FolderEmptyState />;
+  }
 
   return (
     <>

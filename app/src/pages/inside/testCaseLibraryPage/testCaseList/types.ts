@@ -19,7 +19,6 @@ export interface FilterOption {
   value: string;
 }
 
-// eslint-disable-next-line no-shadow
 export enum TestCaseMenuAction {
   DUPLICATE = 'duplicate',
   EDIT = 'edit',

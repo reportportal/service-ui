@@ -19,7 +19,11 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlFolderIdSelector,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
@@ -31,6 +35,7 @@ import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { foldersSelector } from 'controllers/testCase';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -63,6 +68,9 @@ export const TestCaseList = memo(
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
+    const folderId = useSelector(urlFolderIdSelector);
+    const folders = useSelector(foldersSelector);
+    const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -97,14 +105,6 @@ export const TestCaseList = memo(
     };
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
-
-    if (loading) {
-      return (
-        <div className={cx('test-case-list', 'loading')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
 
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
@@ -162,53 +162,66 @@ export const TestCaseList = memo(
     ];
 
     const isEmptyList = (value: TestCase[]) => !value.length || value.length === 0;
+    const listTitle = selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
 
     return (
       <div className={cx('test-case-list')}>
         <div className={cx('controls')}>
-          <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
+          <div className={cx('controls-title')}>{listTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              <SearchField
-                isLoading={loading}
-                searchValue={searchValue}
-                setSearchValue={onSearchChange}
-                onFilterChange={onSearchChange}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-              />
-              <div className={cx('filter-icon')}>
-                <FilterOutlineIcon />
-              </div>
+              {loading ? null : (
+                <>
+                  <SearchField
+                    isLoading={loading}
+                    searchValue={searchValue}
+                    setSearchValue={onSearchChange}
+                    onFilterChange={onSearchChange}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
+                  />
+                  <div className={cx('filter-icon')}>
+                    <FilterOutlineIcon />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-        {!isEmptyList(currentData) ? (
-          <Table
-            selectable
-            onToggleRowSelection={handleRowSelect}
-            selectedRowIds={selectedRowIds}
-            data={tableData}
-            fixedColumns={fixedColumns}
-            primaryColumn={primaryColumn}
-            sortableColumns={[]}
-            onToggleAllRowsSelection={handleAllSelect}
-            className={cx('test-case-table')}
-            rowClassName={cx('test-case-table-row')}
-          />
-        ) : (
-          <div className={cx('no-results')}>
-            <div className={cx('no-results-message')}>
-              {searchValue
-                ? formatMessage(messages.noResultsFilteredMessage)
-                : formatMessage(messages.noResultsEmptyMessage)}
-            </div>
+        {loading ? (
+          <div className={cx('test-case-list', 'loading')}>
+            <BubblesLoader />
           </div>
+        ) : (
+          <>
+            {!isEmptyList(currentData) ? (
+              <Table
+                selectable
+                onToggleRowSelection={handleRowSelect}
+                selectedRowIds={selectedRowIds}
+                data={tableData}
+                fixedColumns={fixedColumns}
+                primaryColumn={primaryColumn}
+                sortableColumns={[]}
+                onToggleAllRowsSelection={handleAllSelect}
+                className={cx('test-case-table')}
+                rowClassName={cx('test-case-table-row')}
+              />
+            ) : (
+              <div className={cx('no-results')}>
+                <div className={cx('no-results-message')}>
+                  {searchValue
+                    ? formatMessage(messages.noResultsFilteredMessage)
+                    : formatMessage(messages.noResultsEmptyMessage)}
+                </div>
+              </div>
+            )}
+            <TestCaseSidePanel
+              testCase={selectedTestCase}
+              isVisible={!!selectedTestCaseId}
+              onClose={handleCloseSidePanel}
+            />
+          </>
         )}
-        <TestCaseSidePanel
-          testCase={selectedTestCase}
-          isVisible={!!selectedTestCaseId}
-          onClose={handleCloseSidePanel}
-        />
       </div>
     );
   },
