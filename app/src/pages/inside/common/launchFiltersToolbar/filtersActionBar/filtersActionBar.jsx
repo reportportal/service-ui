@@ -17,9 +17,7 @@
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import { canWorkWithFilters } from 'common/utils/permissions';
-import { useSelector } from 'react-redux';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { FilterControls } from './filterControls';
 import { FiltersSorting } from '../../filtersSorting';
 import styles from './filtersActionBar.scss';
@@ -40,13 +38,12 @@ export const FiltersActionBar = ({
   onChangeSorting,
   sortingString,
 }) => {
-  const userRoles = useSelector(userRolesSelector);
-  const hasFilterPermissions = canWorkWithFilters(userRoles);
+  const { canWorkWithFilters } = useUserPermissions();
 
   return (
     <div className={cx('filters-action-bar')}>
       <div className={cx('info-section')}>
-        {hasFilterPermissions && unsaved && (
+        {canWorkWithFilters && unsaved && (
           <div className={cx('unsaved-message')}>
             <span className={cx('asterisk')}>*</span>
             <FormattedMessage
@@ -58,7 +55,7 @@ export const FiltersActionBar = ({
       </div>
       <div className={cx('controls-section')}>
         <FiltersSorting filter={filter} sortingString={sortingString} onChange={onChangeSorting} />
-        {hasFilterPermissions && (
+        {canWorkWithFilters && (
           <FilterControls
             cloneDisabled={cloneDisabled}
             editDisabled={editDisabled}

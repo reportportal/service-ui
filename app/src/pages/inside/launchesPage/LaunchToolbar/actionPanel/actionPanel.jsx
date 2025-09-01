@@ -20,8 +20,6 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { canBulkEditItems } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
@@ -35,8 +33,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
-import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { createExternalLink, docsReferences } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
 
@@ -86,15 +84,14 @@ export const ActionPanel = ({
   finishedLaunchesCount,
 }) => {
   const breadcrumbs = useSelector(breadcrumbsSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canBulkEditItems, canWorkWithWidgets } = useUserPermissions();
   const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets(userRoles);
-  const canManageActions = canBulkEditItems(userRoles);
-  const isShowImportButton = canManageActions && !debugMode && !Number.isInteger(activeFilterId);
+  const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets;
+  const isShowImportButton = canBulkEditItems && !debugMode && !Number.isInteger(activeFilterId);
   const onClickActionButton = () => trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
 
   const createActionDescriptors = () => {
@@ -102,7 +99,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canManageActions,
+        hidden: debugMode || !canBulkEditItems,
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
@@ -113,7 +110,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
-        hidden: debugMode || !canManageActions,
+        hidden: debugMode || !canBulkEditItems,
         onClick: () => {
           onMerge();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'));
@@ -131,7 +128,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode || !canManageActions,
+        hidden: debugMode || !canBulkEditItems,
         onClick: () => {
           onMove();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'));
@@ -146,7 +143,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
-        hidden: !canManageActions,
+        hidden: !canBulkEditItems,
         onClick: () => {
           onForceFinish();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'));
@@ -155,7 +152,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
-        hidden: !canManageActions,
+        hidden: !canBulkEditItems,
         onClick: () => {
           onDelete();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'));
@@ -208,7 +205,7 @@ export const ActionPanel = ({
             </GhostButton>
           </div>
         )}
-        {(canManageActions || !debugMode) && (
+        {(canBulkEditItems || !debugMode) && (
           <div className={cx('action-button', 'tablet-hidden')}>
             <GhostMenuButton
               tooltip={!selectedLaunches.length ? formatMessage(messages.actionsBtnTooltip) : null}

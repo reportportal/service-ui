@@ -16,22 +16,20 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
-import { userRolesSelector } from 'controllers/pages';
-import { canEditTestCaseScenario } from 'common/utils/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 
 export const DetailsEmptyState = () => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const { canEditTestCaseScenario } = useUserPermissions();
 
   const actionButtons = () => {
     const buttons: Record<string, string | boolean>[] = [];
 
-    if (canEditTestCaseScenario(userRoles)) {
+    if (canEditTestCaseScenario) {
       buttons.push({
         isCompact: true,
         name: formatMessage(messages.editScenario),

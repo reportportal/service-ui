@@ -23,8 +23,6 @@ import { isEmpty } from 'lodash';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { showModalAction } from 'controllers/modal';
-import { canCreateTestCaseFolder } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { FolderEmptyState } from '../emptyState/folder';
 import { commonMessages } from '../commonMessages';
@@ -34,6 +32,7 @@ import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
 import styles from './expandedOptions.scss';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useTestCases } from '../hooks/useTestCases';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -43,7 +42,7 @@ export const ExpandedOptions = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const folders = useSelector(foldersSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestCaseFolder } = useUserPermissions();
   const { filteredTestCases, loading, hasTestCases, searchValue, setSearchValue } = useTestCases();
 
   const setAllTestCases = () => {
@@ -87,7 +86,7 @@ export const ExpandedOptions = () => {
           <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
             <SearchIcon />
           </BaseIconButton>
-          {canCreateTestCaseFolder(userRoles) && (
+          {canCreateTestCaseFolder && (
             <Button
               onClick={showCreateFolderModal}
               variant="text"

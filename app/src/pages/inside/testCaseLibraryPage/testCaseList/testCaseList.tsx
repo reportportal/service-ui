@@ -18,13 +18,8 @@ import { memo, SetStateAction, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FilterOutlineIcon, Table } from '@reportportal/ui-kit';
-import { canDoTestCaseBulkActions } from 'common/utils/permissions/permissions';
 import { SearchField } from 'components/fields/searchField';
-import {
-  TEST_CASE_DETAILS_PAGE,
-  urlOrganizationAndProjectSelector,
-  userRolesSelector,
-} from 'controllers/pages';
+import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
@@ -36,6 +31,7 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -65,7 +61,7 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<string>('');
 
     const dispatch = useDispatch();
-    const userRoles = useSelector(userRolesSelector);
+    const { canDoTestCaseBulkActions } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -190,7 +186,7 @@ export const TestCaseList = memo(
         </div>
         {!isEmptyList(currentData) ? (
           <Table
-            selectable={canDoTestCaseBulkActions(userRoles)}
+            selectable={canDoTestCaseBulkActions}
             onToggleRowSelection={handleRowSelect}
             selectedRowIds={selectedRowIds}
             data={tableData}

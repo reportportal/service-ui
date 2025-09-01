@@ -16,14 +16,13 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { canCreateTestCase, canCreateTestCaseFolder } from 'common/utils/permissions';
 import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
 
 import { messages } from '../messages';
@@ -41,7 +40,7 @@ interface ActionButton {
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestCase, canCreateTestCaseFolder } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   const openCreateFolderModal = () => {
@@ -63,7 +62,7 @@ export const MainPageEmptyState = () => {
   const availableButtons = () => {
     const buttons: ActionButton[] = [];
 
-    if (canCreateTestCaseFolder(userRoles)) {
+    if (canCreateTestCaseFolder) {
       buttons.push({
         name: formatMessage(commonMessages.createFolder),
         dataAutomationId: 'createFolderButton',
@@ -72,7 +71,7 @@ export const MainPageEmptyState = () => {
       });
     }
 
-    if (canCreateTestCase(userRoles)) {
+    if (canCreateTestCase) {
       buttons.push({
         name: formatMessage(commonMessages.createTestCase),
         dataAutomationId: 'createTestCaseButton',

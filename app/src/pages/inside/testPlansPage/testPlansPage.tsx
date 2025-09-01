@@ -25,18 +25,14 @@ import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
 import { BreadcrumbsTreeIcon, Button, RefreshIcon } from '@reportportal/ui-kit';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { projectNameSelector } from 'controllers/project';
-import {
-  PROJECT_DASHBOARD_PAGE,
-  urlOrganizationAndProjectSelector,
-  userRolesSelector,
-} from 'controllers/pages';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useTestPlans } from 'pages/inside/testPlansPage/testPlansTable/useTestPlans';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateTestPlanModal } from './hooks';
 import { TestPlansTable } from './testPlansTable';
 import { commonMessages } from './commonMessages';
 
 import styles from './testPlansPage.scss';
-import { canCreateTestPlan } from 'common/utils/permissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -44,7 +40,7 @@ export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestPlan } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -66,7 +62,7 @@ export const TestPlansPage = () => {
               <Button variant="text" data-automation-id="refreshPageButton" icon={<RefreshIcon />}>
                 {formatMessage(commonMessages.refreshPage)}
               </Button>
-              {canCreateTestPlan(userRoles) && (
+              {canCreateTestPlan && (
                 <Button
                   variant="ghost"
                   data-automation-id="createTestPlanButton"

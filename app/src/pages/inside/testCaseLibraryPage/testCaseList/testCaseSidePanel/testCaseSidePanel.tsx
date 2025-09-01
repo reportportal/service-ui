@@ -31,25 +31,14 @@ import { isEmpty } from 'lodash';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import {
-  canAddTestCaseToLaunch,
-  canAddTestCaseToTestPlan,
-  canDeleteTestCase,
-  canDuplicateTestCase,
-  canEditTestCase,
-  canMoveTestCase,
-} from 'common/utils/permissions';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { TEST_CASE_DETAILS_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import {
-  TEST_CASE_DETAILS_PAGE,
-  urlOrganizationAndProjectSelector,
-  userRolesSelector,
-} from 'controllers/pages';
 import { TestCase, IScenario } from '../../types';
 import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, formatDuration } from '../utils';
@@ -106,7 +95,14 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const userRoles = useSelector(userRolesSelector);
+    const {
+      canEditTestCase,
+      canDeleteTestCase,
+      canDuplicateTestCase,
+      canMoveTestCase,
+      canAddTestCaseToLaunch,
+      canAddTestCaseToTestPlan,
+    } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -123,10 +119,10 @@ export const TestCaseSidePanel = memo(
     const getExcludedActions = () => {
       const excludedActions: TestCaseMenuAction[] = [];
 
-      if (!canEditTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.EDIT);
-      if (!canDeleteTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.DELETE);
-      if (!canDuplicateTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.DUPLICATE);
-      if (!canMoveTestCase(userRoles)) excludedActions.push(TestCaseMenuAction.MOVE);
+      if (!canEditTestCase) excludedActions.push(TestCaseMenuAction.EDIT);
+      if (!canDeleteTestCase) excludedActions.push(TestCaseMenuAction.DELETE);
+      if (!canDuplicateTestCase) excludedActions.push(TestCaseMenuAction.DUPLICATE);
+      if (!canMoveTestCase) excludedActions.push(TestCaseMenuAction.MOVE);
 
       return excludedActions;
     };
@@ -255,7 +251,7 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          {canAddTestCaseToLaunch(userRoles) && (
+          {canAddTestCaseToLaunch && (
             <Button
               variant="ghost"
               className={cx('action-button')}
@@ -265,7 +261,7 @@ export const TestCaseSidePanel = memo(
               {formatMessage(messages.addToLaunch)}
             </Button>
           )}
-          {canAddTestCaseToTestPlan(userRoles) && (
+          {canAddTestCaseToTestPlan && (
             <Button
               variant="primary"
               className={cx('action-button', 'last-button')}

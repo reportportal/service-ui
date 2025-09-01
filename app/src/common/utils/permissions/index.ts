@@ -54,6 +54,7 @@ export {
   canAddTestCaseToTestPlan,
   canCreateTestCase,
   canDeleteTestCase,
+  canDoTestCaseBulkActions,
   canDuplicateTestCase,
   canEditTestCase,
   canEditTestCaseDescription,
@@ -63,6 +64,9 @@ export {
   canImportTestCases,
   canCreateTestCaseFolder,
   // TEST PLAN
+  canEditTestPlan,
+  canDeleteTestPlan,
+  canDuplicateTestPlan,
   canCreateTestPlan,
 } from './permissions';
 

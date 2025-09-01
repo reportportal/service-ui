@@ -18,7 +18,6 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { isEmpty, noop } from 'lodash';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -27,8 +26,7 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { canEditTestCaseDescription, canEditTestCaseTag } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
@@ -54,14 +52,14 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   handleAddDescription: () => void;
   handleEditDescription: () => void;
 }) => {
-  const userRoles = useSelector(userRolesSelector);
+  const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
 
   return [
     {
       titleKey: 'tags',
       defaultMessageKey: 'noTagsAdded',
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: canEditTestCaseTag(userRoles) && (
+      headerControl: canEditTestCaseTag && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
           {headerControlKeys.ADD}
         </Button>
@@ -73,7 +71,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      headerControl: canEditTestCaseDescription(userRoles) && (
+      headerControl: canEditTestCaseDescription && (
         <Button
           variant="text"
           adjustWidthOn="content"

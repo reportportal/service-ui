@@ -20,12 +20,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
-import { canUpdateSettings } from 'common/utils/permissions';
+import { Toggle } from '@reportportal/ui-kit';
 import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
 } from 'controllers/project';
-import { userRolesSelector } from 'controllers/pages';
 import {
   fetchProjectNotificationsAction,
   updateNotificationStateAction,
@@ -34,7 +33,7 @@ import { notificationPluginsSelector } from 'controllers/plugins/selectors';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { Toggle } from '@reportportal/ui-kit';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { FieldElement, FormattedDescription } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -56,11 +55,11 @@ export const Notifications = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
-  const userRoles = useSelector(userRolesSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const loading = useSelector(projectNotificationsLoadingSelector);
-  const isReadOnly = !canUpdateSettings(userRoles);
+  const isReadOnly = !canUpdateSettings;
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());

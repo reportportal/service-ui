@@ -41,13 +41,14 @@ import {
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeMembers } = useUserPermissions();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const organizationName = useSelector(activeOrganizationNameSelector);
@@ -69,7 +70,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canSeeMembers(userRoles)) {
+    if (canSeeMembers) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),

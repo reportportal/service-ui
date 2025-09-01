@@ -54,6 +54,9 @@
       "common/*": [
         "common/*"
       ],
+      "hooks/*": [
+        "hooks/*"
+      ],
       "pages/*": [
         "pages/*"
       ],

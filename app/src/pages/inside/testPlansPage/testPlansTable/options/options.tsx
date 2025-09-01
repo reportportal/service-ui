@@ -19,25 +19,19 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { messages } from '../messages';
 
 import styles from './options.scss';
-import { useSelector } from 'react-redux';
-import { userRolesSelector } from 'controllers/pages';
-import {
-  canDeleteTestPlan,
-  canDuplicateTestPlan,
-  canEditTestPlan,
-} from 'common/utils/permissions/permissions';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const Options = () => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const userRoles = useSelector(userRolesSelector);
+  const { canEditTestPlan, canDuplicateTestPlan, canDeleteTestPlan } = useUserPermissions();
 
   const menuConfig = [
     { check: canEditTestPlan, label: messages.editTestPlan },
@@ -46,7 +40,7 @@ export const Options = () => {
   ];
 
   const menuItems = menuConfig
-    .filter(({ check }) => check(userRoles))
+    .filter(({ check }) => check)
     .map(({ label, variant }) => ({ label: formatMessage(label), variant }) as PopoverItem);
 
   if (!menuItems.length) return null;
