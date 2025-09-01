@@ -29,8 +29,9 @@ import {
 } from 'controllers/organization';
 import { DEFAULT_LIMITATION, DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/organization/projects';
 import { ProjectActionMenu } from 'pages/organization/organizationProjectsPage/projectsListTable/projectActionMenu';
-import { messages } from '../messages';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { ProjectName } from './projectName';
+import { messages } from '../messages';
 import styles from './projectsListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -127,6 +128,7 @@ export const ProjectsListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('projects-pagination-wrapper')}
+      changePageSizeEvent={PROJECTS_PAGE_EVENTS.changePageSize}
     >
       <Table
         data={data}

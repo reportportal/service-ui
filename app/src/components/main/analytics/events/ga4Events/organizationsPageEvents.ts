@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
@@ -140,4 +140,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'delete',
     modal: 'delete_organization',
   },
+  changePageSize: (pageSize: number) => ({
+    ...getBasicChooseEventParameters(ORGANIZATION_PAGE),
+    element_name: 'page_size_control',
+    number: pageSize,
+    place: 'all_organizations',
+  }),
 };

@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Pagination } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -24,8 +25,21 @@ import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationWrapper = ({ children, showPagination, className, ...paginationProps }) => {
+export const PaginationWrapper = ({
+  children,
+  showPagination,
+  className,
+  changePageSize,
+  changePageSizeEvent,
+  ...paginationProps
+}) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+
+  const changePageSizeHandle = (newSize) => {
+    changePageSize(newSize);
+    trackEvent(changePageSizeEvent(newSize));
+  };
 
   return (
     <div className={cx('pagination-wrapper', className)}>
@@ -35,7 +49,7 @@ export const PaginationWrapper = ({ children, showPagination, className, ...pagi
       {showPagination && (
         <div className={cx('pagination')}>
           <Pagination
-            {...paginationProps}
+            changePageSize={changePageSizeHandle}
             captions={{
               items: formatMessage(messages.items),
               of: formatMessage(messages.of),
@@ -44,6 +58,7 @@ export const PaginationWrapper = ({ children, showPagination, className, ...pagi
               goAction: formatMessage(messages.go),
               perPage: formatMessage(messages.perPage),
             }}
+            {...paginationProps}
           />
         </div>
       )}
@@ -53,11 +68,14 @@ export const PaginationWrapper = ({ children, showPagination, className, ...pagi
 
 PaginationWrapper.propTypes = {
   showPagination: PropTypes.bool.isRequired,
+  changePageSize: PropTypes.func.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
+  changePageSizeEvent: PropTypes.object,
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
+  changePageSizeEvent: null,
 };
