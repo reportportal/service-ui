@@ -28,6 +28,7 @@ import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell
 import { MembersListTable } from '../../../common/users/membersListTable';
 import { messages } from '../../../common/users/membersListTable/messages';
 import { OrganizationUsersActionMenu } from './organizationUsersActionMenu';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import styles from './organizationUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -144,6 +145,7 @@ export const OrganizationTeamListTable = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
+      changePageSizeEvent={ORGANIZATION_PAGE_EVENTS.changePageSize('organization_users')}
     />
   );
 };

@@ -186,6 +186,7 @@ export const AllUsersListTable = ({
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
       renderRowActions={renderRowActions}
+      changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
     />
   );
 };
