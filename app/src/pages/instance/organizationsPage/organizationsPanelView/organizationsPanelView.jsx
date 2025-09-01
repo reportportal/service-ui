@@ -18,13 +18,14 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   DEFAULT_LIMITATION,
   DEFAULT_PAGE_SIZE_OPTIONS,
 } from 'controllers/instance/organizations/constants';
-import styles from './organizationsPanelView.scss';
 import { OrganizationsPanels } from './organizationsPanels';
 import { OrganizationsTable } from './organizationsTable';
+import styles from './organizationsPanelView.scss';
 
 const cx = classNames.bind(styles);
 
@@ -51,6 +52,7 @@ export const OrganizationsPanelView = ({
     changePage={onChangePage}
     changePageSize={onChangePageSize}
     className={cx('organizations-pagination-wrapper')}
+    event={ORGANIZATION_PAGE_EVENTS.changePageSize}
   >
     {isOpenTableView ? (
       <OrganizationsTable
