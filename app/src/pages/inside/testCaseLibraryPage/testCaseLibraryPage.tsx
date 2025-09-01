@@ -26,14 +26,10 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { canCreateTestCase, canImportTestCases } from 'common/utils/permissions';
 import { projectNameSelector } from 'controllers/project';
-import {
-  PROJECT_DASHBOARD_PAGE,
-  urlOrganizationAndProjectSelector,
-  userRolesSelector,
-} from 'controllers/pages';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { ExpandedOptions } from './expandedOptions';
 import { MainPageEmptyState } from './emptyState/mainPage';
@@ -49,7 +45,7 @@ export const TestCaseLibraryPage = () => {
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const folders = useSelector(foldersSelector);
   const hasFolders = folders && folders.length > 0;
@@ -69,7 +65,7 @@ export const TestCaseLibraryPage = () => {
               {formatMessage(commonMessages.testCaseLibraryHeader)}
             </div>
             <div className={cx('test-case-library-page__actions')}>
-              {canImportTestCases(userRoles) && (
+              {canImportTestCases && (
                 <Button
                   variant="text"
                   icon={Parser(ImportIcon as unknown as string)}
@@ -79,7 +75,7 @@ export const TestCaseLibraryPage = () => {
                   {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                 </Button>
               )}
-              {canCreateTestCase(userRoles) && (
+              {canCreateTestCase && (
                 <Button variant="ghost" data-automation-id="createTestCase">
                   {formatMessage(commonMessages.createTestCase)}
                 </Button>

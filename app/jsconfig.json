@@ -6,6 +6,7 @@
       "components/*": ["src/components/*"],
       "controllers/*": ["src/controllers/*"],
       "common/*": ["src/common/*"],
+      "hooks/*": ["src/hooks/*"],
       "pages/*": ["src/pages/*"],
       "store/*": ["src/store/*"],
       "routes/*": ["src/routes/*"],

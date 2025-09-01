@@ -32,15 +32,8 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
-import {
-  canAddTestCaseToLaunch,
-  canAddTestCaseToTestPlan,
-  canDeleteTestCase,
-  canDuplicateTestCase,
-  canEditTestCase,
-} from 'common/utils/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { TestCase } from '../../types';
@@ -67,7 +60,13 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const {
+    canDeleteTestCase,
+    canDuplicateTestCase,
+    canEditTestCase,
+    canAddTestCaseToLaunch,
+    canAddTestCaseToTestPlan,
+  } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -100,10 +99,10 @@ export const TestCaseDetailsHeader = ({
       },
     ];
 
-    if (canDuplicateTestCase(userRoles)) {
+    if (canDuplicateTestCase) {
       items.push({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
     }
-    if (canDeleteTestCase(userRoles)) {
+    if (canDeleteTestCase) {
       items.push({
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         variant: 'destructive',
@@ -122,7 +121,7 @@ export const TestCaseDetailsHeader = ({
       <div className={cx('header__title')}>
         <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
         {testCase.name}
-        {canEditTestCase(userRoles) && (
+        {canEditTestCase && (
           <button type="button" className={cx('header__edit-button')}>
             {Parser(PencilIcon as unknown as string)}
           </button>
@@ -154,12 +153,12 @@ export const TestCaseDetailsHeader = ({
             </Button>
           </PopoverControl>
 
-          {canAddTestCaseToLaunch(userRoles) && (
+          {canAddTestCaseToLaunch && (
             <Button onClick={onAddToLaunch} variant="ghost" disabled>
               {formatMessage(messages.addToLaunch)}
             </Button>
           )}
-          {canAddTestCaseToTestPlan(userRoles) && (
+          {canAddTestCaseToTestPlan && (
             <Button onClick={onAddToTestPlan} variant="ghost">
               {formatMessage(messages.addToTestPlan)}
             </Button>

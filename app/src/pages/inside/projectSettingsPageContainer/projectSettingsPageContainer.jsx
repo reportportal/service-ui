@@ -23,7 +23,6 @@ import {
   querySelector,
   settingsTabSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
@@ -41,11 +40,11 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
-import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
@@ -64,7 +63,7 @@ export const ProjectSettingsPageContainer = () => {
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
@@ -139,7 +138,7 @@ export const ProjectSettingsPageContainer = () => {
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
         link: createTabLink(ANALYSIS, {
-          subTab: canUpdateSettings(userRoles) ? 'indexSettings' : 'autoAnalysis',
+          subTab: canUpdateSettings ? 'indexSettings' : 'autoAnalysis',
         }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
@@ -176,7 +175,7 @@ export const ProjectSettingsPageContainer = () => {
         mobileDisabled: true,
       },
     };
-    if (!canSeeDemoData(userRoles)) {
+    if (!canSeeDemoData) {
       delete navConfig[DEMO_DATA];
     }
     Object.keys(extensionsConfig).forEach((key) => {
@@ -187,7 +186,7 @@ export const ProjectSettingsPageContainer = () => {
       }
     });
     return { ...navConfig, ...extensionsConfig };
-  }, [formatMessage, createTabLink, userRoles, extensionsConfig]);
+  }, [formatMessage, createTabLink, extensionsConfig]);
 
   const navigation = useMemo(() => {
     if (subPage) {

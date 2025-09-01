@@ -43,6 +43,7 @@ import {
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './expandedOptions.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -58,7 +59,7 @@ export const ExpandedOptions = () => {
   const projectSlug = useSelector(urlProjectSlugSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestCaseFolder } = useUserPermissions();
   const folderIdNumber = Number(folderId);
 
   useEffect(() => {
@@ -147,7 +148,7 @@ export const ExpandedOptions = () => {
           <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
             <SearchIcon />
           </BaseIconButton>
-          {canCreateTestCaseFolder(userRoles) && (
+          {canCreateTestCaseFolder && (
             <Button
               onClick={showCreateFolderModal}
               variant="text"

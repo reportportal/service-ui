@@ -17,10 +17,8 @@
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { referenceDictionary } from 'common/utils';
-import { canCreateTestPlan } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { useCreateTestPlanModal } from '../hooks';
@@ -46,7 +44,7 @@ const benefitMessages = [
 export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestPlan } = useUserPermissions();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
@@ -54,7 +52,7 @@ export const EmptyTestPlans = () => {
   const availableActions = () => {
     const actions: ActionButton[] = [];
 
-    if (canCreateTestPlan(userRoles)) {
+    if (canCreateTestPlan) {
       actions.push({
         name: formatMessage(commonMessages.createTestPlan),
         dataAutomationId: 'createTestPlansButton',
