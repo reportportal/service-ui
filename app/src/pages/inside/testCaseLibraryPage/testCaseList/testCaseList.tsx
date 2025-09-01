@@ -23,7 +23,6 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
