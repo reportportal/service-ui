@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { canCreateManualLaunch } from 'common/utils/permissions/permissions';
 import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages/constants';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from '../messages';
 import styles from './manualLaunchesEmptyState.scss';
 
@@ -15,15 +14,15 @@ export const ManualLaunchesEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateManualLaunch } = useUserPermissions();
 
   const payload = { organizationSlug, projectSlug };
 
-  const descriptionMessage = canCreateManualLaunch(userRoles)
+  const descriptionMessage = canCreateManualLaunch
     ? formatMessage(messages.noLaunchesDescription)
     : '';
 
-  const buttons = canCreateManualLaunch(userRoles)
+  const buttons = canCreateManualLaunch
     ? [
         {
           name: formatMessage(messages.testPlansLink),

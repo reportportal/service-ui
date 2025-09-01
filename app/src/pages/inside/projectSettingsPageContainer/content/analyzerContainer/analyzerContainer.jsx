@@ -22,7 +22,6 @@ import {
   payloadSelector,
   PROJECT_SETTINGS_TAB_PAGE,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
 import {
   projectKeySelector,
@@ -40,8 +39,8 @@ import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';
 import {
@@ -68,12 +67,12 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const isAnalyzerServiceAvailable = !!analyzerExtensions.length;
   const analyzerUnavailableTitle = !isAnalyzerServiceAvailable
     ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
     : null;
-  const hasPermission = canUpdateSettings(userRoles);
+  const hasPermission = canUpdateSettings;
 
   useEffect(() => {
     dispatch(fetchConfigurationAttributesAction(projectKey));

@@ -22,12 +22,10 @@ import { useTracking } from 'react-tracking';
 import { MarkdownViewer } from 'components/main/markdown';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
-import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { canManageBTSIssues, canWorkWithDefectTypes } from 'common/utils/permissions/permissions';
-import { useSelector } from 'react-redux';
-import { userRolesSelector } from 'controllers/pages';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';
@@ -75,9 +73,7 @@ PALabel.propTypes = {
 
 export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, disabled }) => {
   const { trackEvent } = useTracking();
-  const userRoles = useSelector(userRolesSelector);
-  const canUnlinkIssue = canManageBTSIssues(userRoles);
-  const canChangeDefectTypes = canWorkWithDefectTypes(userRoles);
+  const { canManageBTSIssues, canWorkWithDefectTypes } = useUserPermissions();
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const onClickEdit = (event) => {
     event && trackEvent(event);
@@ -98,15 +94,15 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
-            className={cx({ readonly: disabled || !canChangeDefectTypes })}
+            className={cx({ readonly: disabled || !canWorkWithDefectTypes })}
             onClick={
-              disabled || !canChangeDefectTypes
+              disabled || !canWorkWithDefectTypes
                 ? null
                 : () => onClickEdit(events.onEditEvent?.(eventData))
             }
           />
         )}
-        {canChangeDefectTypes && (
+        {canWorkWithDefectTypes && (
           <div
             className={cx('edit-icon')}
             onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
@@ -120,7 +116,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
           issues={issue.externalSystemIssues}
           onClick={onClickIssue}
           onRemove={onRemove}
-          readOnly={!canUnlinkIssue}
+          readOnly={!canManageBTSIssues}
         />
       </div>
       <div className={cx('comment')}>

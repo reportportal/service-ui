@@ -16,15 +16,13 @@
 
 import Parser from 'html-react-parser';
 import { FC, SVGProps } from 'react';
-import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
-import { userRolesSelector } from 'controllers/pages';
-import { canCreateTestCase, canImportTestCases } from 'common/utils/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
@@ -47,12 +45,12 @@ interface Button {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
 
   const availableButtons = () => {
     const buttons: Button[] = [];
 
-    if (canCreateTestCase(userRoles)) {
+    if (canCreateTestCase) {
       buttons.push({
         name: formatMessage(commonMessages.createTestCase),
         dataAutomationId: 'createTestCaseButton',
@@ -61,7 +59,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
       });
     }
 
-    if (canImportTestCases(userRoles)) {
+    if (canImportTestCases) {
       buttons.push({
         name: formatMessage(messages.importTestCases),
         dataAutomationId: 'importTestCaseButton',

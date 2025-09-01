@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { userRolesSelector } from 'controllers/pages';
-import { canCreateOrganization } from 'common/utils/permissions';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
@@ -30,6 +28,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { assignedOrganizationsSelector, userIdSelector } from 'controllers/user';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
@@ -43,8 +42,7 @@ const TABLE_VIEW = 'TableView';
 
 export const OrganizationsPage = () => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canCreateOrganization(userRoles);
+  const { canCreateOrganization } = useUserPermissions();
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
   const userId = useSelector(userIdSelector);
@@ -56,7 +54,8 @@ export const OrganizationsPage = () => {
   );
 
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
-  const noAssignedOrganizations = Object.keys(assignedOrganizations).length === 0 && !hasPermission;
+  const noAssignedOrganizations =
+    Object.keys(assignedOrganizations).length === 0 && !canCreateOrganization;
 
   const openPanelView = () => {
     setIsOpenTableView(false);
@@ -83,14 +82,16 @@ export const OrganizationsPage = () => {
 
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={hasPermission}
+        hasPermission={canCreateOrganization}
         emptyIcon={EmptyIcon}
         icon={<PlusIcon />}
         label={formatMessage(
-          hasPermission ? messages.noOrganizationsYet : messages.noOrganizationsAvailableYet,
+          canCreateOrganization
+            ? messages.noOrganizationsYet
+            : messages.noOrganizationsAvailableYet,
         )}
         description={formatMessage(
-          hasPermission ? messages.createNewOrganization : messages.description,
+          canCreateOrganization ? messages.createNewOrganization : messages.description,
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
       />
@@ -109,7 +110,7 @@ export const OrganizationsPage = () => {
     <div className={cx('organizations-page')}>
       {!noAssignedOrganizations && (
         <OrganizationsPageHeader
-          hasPermission={hasPermission}
+          hasPermission={canCreateOrganization}
           isEmpty={isEmptyOrganizations && searchValue === null && appliedFiltersCount === 0}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

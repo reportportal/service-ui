@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import React from 'react';
+import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
@@ -29,8 +29,7 @@ import { loadingSelector } from 'controllers/uniqueErrors';
 import { fetchParentLaunchSuccessAction } from 'controllers/testItem/actionCreators';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { canWorkWithTests } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { RP_CLUSTER_LAST_RUN } from '../constants';
 import { messages } from '../messages';
 import styles from './emptyUniqueErrors.scss';
@@ -42,13 +41,13 @@ export const EmptyUniqueErrors = ({ parentLaunch }) => {
   const { trackEvent } = useTracking();
   const loading = useSelector(loadingSelector);
   const dispatch = useDispatch();
-  const userRoles = useSelector(userRolesSelector);
+  const { canWorkWithTests } = useUserPermissions();
 
   const { status, metadata, analysing } = parentLaunch;
   const clusterActive = analysing?.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
   const disabled = status === IN_PROGRESS;
   const lastRunAnalysis = metadata?.[RP_CLUSTER_LAST_RUN];
-  const canManageItems = canWorkWithTests(userRoles);
+  const canManageItems = canWorkWithTests;
 
   const openModal = () => {
     dispatch(

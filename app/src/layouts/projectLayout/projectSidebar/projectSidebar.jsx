@@ -18,10 +18,9 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { useIntl } from 'react-intl';
-import { canSeeMembers, canWorkWithFilters } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
   PROJECT_DASHBOARD_PAGE,
@@ -58,13 +57,14 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeMembers, canWorkWithFilters } = useUserPermissions();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -118,7 +118,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canWorkWithFilters(userRoles)) {
+    if (canWorkWithFilters) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
@@ -128,7 +128,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       });
     }
 
-    if (canSeeMembers(userRoles)) {
+    if (canSeeMembers) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
