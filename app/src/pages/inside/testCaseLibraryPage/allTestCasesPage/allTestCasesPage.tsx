@@ -105,12 +105,9 @@ export const AllTestCasesPage = ({
           handleSelectedRowIds={setSelectedRowIds}
         />
       </div>
-      {totalItems > 0 && (
-        <div
-          className={cx('sticky-wrapper', {
-            'sticky-wrapper--has-selected-items': isAnyRowSelected,
-          })}
-        >
+
+      <div className={cx('sticky-wrapper')}>
+        {totalItems > 0 && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
@@ -130,10 +127,8 @@ export const AllTestCasesPage = ({
               }}
             />
           </div>
-        </div>
-      )}
-      {selectedRowIds.length > 0 && (
-        <div className={cx('sticky-wrapper')}>
+        )}
+        {isAnyRowSelected && (
           <div className={cx('selection')}>
             <Selection
               selectedCount={selectedRowIds.length}
@@ -155,8 +150,8 @@ export const AllTestCasesPage = ({
               <Button>{formatMessage(messages.addToTestPlan)}</Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };

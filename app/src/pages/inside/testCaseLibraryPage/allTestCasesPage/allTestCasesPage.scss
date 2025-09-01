@@ -34,14 +34,10 @@
 }
 
 .sticky-wrapper {
-  position: absolute;
+  position: sticky;
   width: 100%;
   bottom: 0;
   z-index: $Z-INDEX-POPUP;
-
-  &--has-selected-items {
-    bottom: 64px;
-  }
 }
 
 .selection {
