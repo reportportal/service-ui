@@ -29,8 +29,8 @@ export const PaginationWrapper = ({
   children,
   showPagination,
   className,
-  event,
   changePageSize,
+  changePageSizeEvent,
   ...paginationProps
 }) => {
   const { formatMessage } = useIntl();
@@ -38,7 +38,7 @@ export const PaginationWrapper = ({
 
   const changePageSizeHandle = (newSize) => {
     changePageSize(newSize);
-    trackEvent(event(newSize));
+    trackEvent(changePageSizeEvent(newSize));
   };
 
   return (
@@ -71,11 +71,11 @@ PaginationWrapper.propTypes = {
   changePageSize: PropTypes.func.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
-  event: PropTypes.object,
+  changePageSizeEvent: PropTypes.object,
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
-  event: null,
+  changePageSizeEvent: null,
 };

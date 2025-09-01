@@ -52,7 +52,7 @@ export const OrganizationsPanelView = ({
     changePage={onChangePage}
     changePageSize={onChangePageSize}
     className={cx('organizations-pagination-wrapper')}
-    event={ORGANIZATION_PAGE_EVENTS.changePageSize}
+    changePageSizeEvent={ORGANIZATION_PAGE_EVENTS.changePageSize}
   >
     {isOpenTableView ? (
       <OrganizationsTable

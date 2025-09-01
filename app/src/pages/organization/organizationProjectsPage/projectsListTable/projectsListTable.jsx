@@ -128,7 +128,7 @@ export const ProjectsListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('projects-pagination-wrapper')}
-      event={PROJECTS_PAGE_EVENTS.changePageSize}
+      changePageSizeEvent={PROJECTS_PAGE_EVENTS.changePageSize}
     >
       <Table
         data={data}

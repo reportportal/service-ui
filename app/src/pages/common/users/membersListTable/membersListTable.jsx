@@ -50,7 +50,7 @@ export const MembersListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('members-pagination-wrapper')}
-      event={ALL_USERS_PAGE_EVENTS.changePageSize}
+      changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
     >
       <Table
         data={data}
