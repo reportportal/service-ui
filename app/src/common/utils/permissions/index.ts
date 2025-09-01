@@ -40,6 +40,8 @@ export {
   canReadData,
   canSeeDemoData,
   canWorkWithTests,
+  canRenameProject,
+  canInviteUserToProject,
   canSeeEmailMembers,
   canSeeSidebarOptions,
   canCreateOrganization,
