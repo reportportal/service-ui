@@ -50,7 +50,6 @@ import {
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, projectKeySelector } from 'controllers/project';
-import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
 
@@ -248,9 +247,6 @@ export class LaunchLevelEntities extends Component {
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
-        customProps: {
-          events: LAUNCHES_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
-        },
       },
       {
         id: ENTITY_ATTRIBUTE,

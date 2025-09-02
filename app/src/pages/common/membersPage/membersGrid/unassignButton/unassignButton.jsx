@@ -15,7 +15,6 @@
  */
 
 import { Fragment, Component } from 'react';
-import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -30,7 +29,6 @@ import { urlProjectSlugSelector, userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userIdSelector, assignedProjectsSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
 import { projectKeySelector } from 'controllers/project';
 
@@ -89,7 +87,6 @@ const messages = defineMessages({
   }),
   { showNotification, showModalAction },
 )
-@track()
 export class UnassignButton extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -101,10 +98,6 @@ export class UnassignButton extends Component {
     entryType: PropTypes.string,
     showNotification: PropTypes.func,
     fetchData: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
@@ -129,8 +122,7 @@ export class UnassignButton extends Component {
     this.props.entryType === 'PERSONAL' &&
     this.props.projectSlug === `${this.props.userId.replace('.', '_')}_personal`;
   showUnassignModal = () => {
-    const { tracking, intl, userId, projectSlug } = this.props;
-    tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
+    const { intl, userId, projectSlug } = this.props;
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
