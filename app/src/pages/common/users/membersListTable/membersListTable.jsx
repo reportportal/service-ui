@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { Table } from '@reportportal/ui-kit';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/members/constants';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
-import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import styles from './membersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -38,6 +37,7 @@ export const MembersListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
+  changePageSizeEvent,
 }) => {
   return (
     <PaginationWrapper
@@ -50,7 +50,7 @@ export const MembersListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('members-pagination-wrapper')}
-      changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
+      changePageSizeEvent={changePageSizeEvent}
     >
       <Table
         data={data}
@@ -81,4 +81,5 @@ MembersListTable.propTypes = {
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
+  changePageSizeEvent: PropTypes.func.isRequired,
 };

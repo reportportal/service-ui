@@ -142,6 +142,7 @@ export const AllUsersListTable = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
+      changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
       renderRowActions={(user) => <AllUsersActionMenu user={user} />}
     />
   );

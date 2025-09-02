@@ -71,11 +71,11 @@ PaginationWrapper.propTypes = {
   changePageSize: PropTypes.func.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
-  changePageSizeEvent: PropTypes.object,
+  changePageSizeEvent: PropTypes.func,
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
-  changePageSizeEvent: null,
+  changePageSizeEvent: () => {},
 };

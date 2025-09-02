@@ -140,10 +140,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'delete',
     modal: 'delete_organization',
   },
-  changePageSize: (pageSize: number) => ({
+  getChangePageSizeEvent: (place: string) => (pageSize: number) => ({
     ...getBasicChooseEventParameters(ORGANIZATION_PAGE),
     element_name: 'page_size_control',
     number: pageSize,
-    place: 'all_organizations',
+    place,
   }),
 };
