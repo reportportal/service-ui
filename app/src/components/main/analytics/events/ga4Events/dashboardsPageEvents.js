@@ -81,6 +81,12 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
+  clickOnMostFailedTestCaseName: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'test_name',
+    type: 'most_failed_test_cases',
+    number: dashboardId,
+  }),
   clickOnIssueTicket: (dashboardId) => (pluginName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'issue_ticket',
