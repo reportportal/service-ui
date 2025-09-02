@@ -86,9 +86,7 @@ export class TestsTableRow extends Component {
         <div className={cx('col', 'col-name')} onClick={this.itemClickHandler}>
           <span className={cx('test-name-wrapper')}>
             <span className={cx('test-text')}>{name}</span>
-            {opensLinkInNewTab && (
-              <i className={cx('external-icon')}>{Parser(ExternalLinkIcon)}</i>
-            )}
+            {opensLinkInNewTab && <i className={cx('external-icon')}>{Parser(ExternalLinkIcon)}</i>}
           </span>
         </div>
         {Matrix && count && (

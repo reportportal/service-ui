@@ -69,7 +69,7 @@ export const MostFailedTests = ({ widget }) => {
       issueType={getIssueTypeMessage(issueType)}
       columns={cfg.columns}
       onItemClick={itemClickHandler}
-      opensLinkInNewTab={true}
+      opensLinkInNewTab
     />
   );
 };

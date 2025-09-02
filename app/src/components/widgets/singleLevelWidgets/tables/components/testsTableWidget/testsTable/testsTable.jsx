@@ -25,7 +25,13 @@ import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTable = ({ tests, columns, getMatrixTooltip, onItemClick, opensLinkInNewTab }) => (
+export const TestsTable = ({
+  tests,
+  columns,
+  getMatrixTooltip,
+  onItemClick,
+  opensLinkInNewTab,
+}) => (
   <div className={cx('tests-table')}>
     <ScrollWrapper>
       <TestsTableHeader columns={columns} />
