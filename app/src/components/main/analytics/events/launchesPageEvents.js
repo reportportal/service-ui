@@ -21,7 +21,6 @@ import {
 } from './common/testItemPages/modalEventsCreators';
 import {
   getClickOnAttributesEvent,
-  getRefineFiltersPanelEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickSelectAllItemsEvent,

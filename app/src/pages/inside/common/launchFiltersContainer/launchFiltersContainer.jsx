@@ -112,19 +112,6 @@ export class LaunchFiltersContainer extends Component {
     this.props.resetLocalSorting();
   }
 
-  getFiltersCountStatistic = (filterArray) => {
-    let savedFilters = 0;
-    let unsavedFilters = 0;
-    filterArray.forEach((filter) => {
-      if (filter.id < 0) {
-        unsavedFilters += 1;
-      } else {
-        savedFilters += 1;
-      }
-    });
-    return `${savedFilters}#${unsavedFilters}`;
-  };
-
   getConditions = () => {
     const { activeFilter } = this.props;
     if (!activeFilter) {

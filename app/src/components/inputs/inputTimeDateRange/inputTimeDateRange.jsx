@@ -60,7 +60,6 @@ export class InputTimeDateRange extends Component {
     onFocus: () => {},
     onBlur: () => {},
     withoutDynamic: false,
-    events: {},
   };
 
   state = {
