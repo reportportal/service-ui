@@ -145,7 +145,7 @@ export const OrganizationTeamListTable = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
-      changePageSizeEvent={ORGANIZATION_PAGE_EVENTS.changePageSize('organization_users')}
+      changePageSizeEvent={ORGANIZATION_PAGE_EVENTS.getChangePageSizeEvent('organization_users')}
     />
   );
 };
