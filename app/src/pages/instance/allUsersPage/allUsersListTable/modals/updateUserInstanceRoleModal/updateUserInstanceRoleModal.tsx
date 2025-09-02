@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
@@ -23,30 +22,59 @@ import { ModalButtonProps } from 'types/common';
 import { Modal } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import styles from './updateUserInstanceRoleModal.scss';
+import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
+import { messages } from './messages';
+import { updateUserInfoAction } from 'controllers/user';
+import { showSuccessNotification } from 'controllers/notification';
+import { useTracking } from 'react-tracking';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface UpdateUserInstanceRoleModalProps {
-  title: string;
-  description: ReactNode;
-  onConfirm: () => void;
+  user: {
+    id: number;
+    email: string;
+    fullName: string;
+    instanceRole: string;
+  };
+  onSuccess?: () => void;
 }
 
 export const UpdateUserInstanceRoleModal = ({
-  title,
-  description,
-  onConfirm,
+  user,
+  onSuccess,
 }: UpdateUserInstanceRoleModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const isAdmin = user.instanceRole === ADMINISTRATOR;
+  const newRole = isAdmin ? USER : ADMINISTRATOR;
+  const title = formatMessage(isAdmin ? messages.revokeAdminRights : messages.provideAdminRights);
+  const description = formatMessage(
+    isAdmin ? messages.revokeAdminRightsDescription : messages.provideAdminRightsDescription,
+    { name: user.fullName, b: (innerData) => <b>{innerData}</b> },
+  );
+
+  const handleConfirm = () => {
+    const data = { role: newRole };
+    const handleUpdateSuccess = () => {
+      dispatch(
+        showSuccessNotification({
+          message: formatMessage(messages.successMessage, { name: user.fullName }),
+        }),
+      );
+      dispatch(hideModalAction());
+      onSuccess?.();
+      trackEvent(ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(!isAdmin, true));
+    };
+    dispatch(updateUserInfoAction(user.email, data, handleUpdateSuccess));
+  };
 
   const okButton: ModalButtonProps = {
     text: title,
     children: title,
-    onClick: () => {
-      onConfirm();
-      dispatch(hideModalAction());
-    },
+    onClick: handleConfirm,
     'data-automation-id': 'submitButton',
   };
 

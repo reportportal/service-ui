@@ -22,6 +22,10 @@ import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import styles from './deleteUserModal.scss';
+import { deleteUserAccountAction } from 'controllers/user';
+import { useTracking } from 'react-tracking';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
+import { showSuccessNotification } from 'controllers/notification';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -34,25 +38,44 @@ export const messages = defineMessages({
     id: 'DeleteUserModal.description',
     defaultMessage: `Are you sure you want to delete <b>{name}</b> from the Instance?`,
   },
+  successfully: {
+    id: 'DeleteUser.successfully',
+    defaultMessage: 'The user has been deleted successfully',
+  },
 });
 
 interface DeleteUserModalProps {
-  fullName: string;
-  onConfirm: () => void;
+  user: {
+    id: number;
+    fullName: string;
+  };
+  onSuccess?: () => void;
 }
 
-export const DeleteUserModal = ({ fullName, onConfirm }: DeleteUserModalProps) => {
+export const DeleteUserModal = ({ user, onSuccess }: DeleteUserModalProps) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
+
+  const handleConfirm = () => {
+    const handleDeleteSuccess = () => {
+      dispatch(
+        showSuccessNotification({
+          message: formatMessage(messages.successfully, { name: user.fullName }),
+        }),
+      );
+      dispatch(hideModalAction());
+      onSuccess?.();
+      trackEvent(ALL_USERS_PAGE_EVENTS.DELETE_USER);
+    };
+    dispatch(deleteUserAccountAction(handleDeleteSuccess, user.id));
+  };
 
   const okButton: ModalButtonProps = {
     text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     variant: 'danger',
-    onClick: () => {
-      onConfirm();
-      dispatch(hideModalAction());
-    },
+    onClick: handleConfirm,
     'data-automation-id': 'submitButton',
   };
 
@@ -70,7 +93,7 @@ export const DeleteUserModal = ({ fullName, onConfirm }: DeleteUserModalProps) =
       onClose={() => dispatch(hideModalAction())}
     >
       {formatMessage(messages.description, {
-        name: fullName,
+        name: user.fullName,
         b: (innerData) => <b>{innerData}</b>,
       })}
     </Modal>

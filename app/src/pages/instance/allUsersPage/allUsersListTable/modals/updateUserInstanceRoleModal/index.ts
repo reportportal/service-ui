@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export { UpdateUserInstanceRole } from './updateUserInstanceRole';
+export { UpdateUserInstanceRoleModal } from './updateUserInstanceRoleModal';
+export { messages } from './messages';
