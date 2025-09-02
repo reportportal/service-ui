@@ -15,7 +15,6 @@
  */
 
 import { Fragment, Component } from 'react';
-import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import DOMPurify from 'dompurify';
@@ -27,7 +26,6 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
 import { urlProjectSlugSelector, userRolesSelector } from 'controllers/pages';
 import { userIdSelector } from 'controllers/user';
-import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -58,7 +56,6 @@ const messages = defineMessages({
   }),
   { showNotification },
 )
-@track()
 export class ProjectRole extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -68,10 +65,6 @@ export class ProjectRole extends Component {
     userId: PropTypes.string,
     currentUser: PropTypes.string,
     canChangeRole: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     projectKey: PropTypes.string.isRequired,
     projectSlug: PropTypes.string.isRequired,
   };
@@ -88,13 +81,12 @@ export class ProjectRole extends Component {
   };
 
   onChangeRole = (val) => {
-    const { intl, userId, tracking } = this.props;
+    const { intl, userId } = this.props;
     const param = {
       users: {},
     };
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
-    tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
     fetch(URLS.projectByName(this.props.projectKey), {
       method: 'put',
       data: param,

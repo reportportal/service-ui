@@ -88,7 +88,6 @@ export class MembersPage extends Component {
   };
 
   searchUser = (filterQuery) => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.ENTER_SEARCH_PARAM);
     this.props.onFilterChange(filterQuery);
   };
 

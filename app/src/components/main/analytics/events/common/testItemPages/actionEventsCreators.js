@@ -187,17 +187,6 @@ export const getRefineFiltersPanelEvents = (category) => ({
     action: 'Choose time for filter by start time on Launches.',
     label: date,
   }),
-  getStartTimeCustomRange: (date) => ({
-    category,
-    action: 'Choose time for filter by start time on Launches',
-    label: date,
-  }),
-  getStartTimeDynamicUpdate: (state) => ({
-    category,
-    action:
-      'Choose time for filter by start time on Launches and click on checkbox "Dynamic update"',
-    label: state ? 'Add checkmark' : 'Remove checkmark',
-  }),
 });
 
 export const getClickIssueTicketEvent = (category) => (pluginName) => ({

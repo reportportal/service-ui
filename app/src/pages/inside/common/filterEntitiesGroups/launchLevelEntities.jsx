@@ -248,9 +248,6 @@ export class LaunchLevelEntities extends Component {
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
-        customProps: {
-          events: LAUNCHES_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
-        },
       },
       {
         id: ENTITY_ATTRIBUTE,

@@ -104,12 +104,10 @@ export class MembersPageToolbar extends React.Component {
   };
 
   showInviteUserModal = () => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_USER_CLICK);
     this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
   };
 
   showPermissionMapModal = () => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.PERMISSION_MAP_CLICK);
     this.props.showModalAction({ id: 'permissionMapModal' });
   };
 
