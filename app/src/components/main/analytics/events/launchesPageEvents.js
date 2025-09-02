@@ -179,10 +179,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     element_name: 'add_filters',
   },
   getClickOnAnalyzeUniqueErrorsEvent: getClickOnAnalyzeUniqueErrorsEventCreator(LAUNCHES_PAGE),
-  // GA3 events
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
-  },
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
