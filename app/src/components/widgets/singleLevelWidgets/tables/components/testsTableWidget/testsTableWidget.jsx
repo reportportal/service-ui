@@ -32,6 +32,7 @@ export const TestsTableWidget = ({
   getMatrixTooltip,
   hideInfoBlock,
   onItemClick,
+  opensLinkInNewTab,
 }) => {
   const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
 
@@ -44,6 +45,7 @@ export const TestsTableWidget = ({
           tests={tests}
           getMatrixTooltip={getMatrixTooltip}
           onItemClick={onItemClick}
+          opensLinkInNewTab={opensLinkInNewTab}
         />
       </div>
     </div>
@@ -58,6 +60,7 @@ TestsTableWidget.propTypes = {
   getMatrixTooltip: func,
   onItemClick: func,
   hideInfoBlock: bool,
+  opensLinkInNewTab: bool,
 };
 
 TestsTableWidget.defaultProps = {
@@ -65,4 +68,5 @@ TestsTableWidget.defaultProps = {
   hideInfoBlock: false,
   getMatrixTooltip: null,
   onItemClick: null,
+  opensLinkInNewTab: false,
 };
