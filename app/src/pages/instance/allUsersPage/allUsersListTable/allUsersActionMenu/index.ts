@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { DeleteUser } from './deleteUser';
+export { AllUsersActionMenu } from './allUsersActionMenu';

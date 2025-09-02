@@ -20,7 +20,6 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
@@ -30,10 +29,8 @@ import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { useTracking } from 'react-tracking';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
-import { canUpdateUserInstanceRole } from 'common/utils/permissions';
+import { AllUsersActionMenu } from './allUsersActionMenu';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
-import { UpdateUserInstanceRole } from './updateUserInstanceRole';
-import { DeleteUser } from './deleteUser';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -55,45 +52,6 @@ export const AllUsersListTable = ({
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
   const { trackEvent } = useTracking();
-
-  const renderRowActions = ({ userId, email, fullName, instanceRole, isCurrentUser }) => {
-    const actions = [];
-
-    if (canUpdateUserInstanceRole && !isCurrentUser) {
-      actions.push(
-        <UpdateUserInstanceRole
-          key="update-role"
-          email={email}
-          fullName={fullName}
-          instanceRole={instanceRole}
-          className={cx('menu-item')}
-        />,
-      );
-    }
-
-    if (!isCurrentUser) {
-      actions.push(
-        <DeleteUser
-          key="delete-user"
-          fullName={fullName}
-          userId={userId}
-          className={cx('delete-user-item')}
-        />,
-      );
-    }
-
-    return (
-      <Popover
-        className={cx('popover')}
-        placement={'bottom-end'}
-        content={<div className={cx('row-action-menu')}>{actions.map((action) => action)}</div>}
-      >
-        <i className={cx('menu-icon')}>
-          <MeatballMenuIcon />
-        </i>
-      </Popover>
-    );
-  };
 
   const data = useMemo(
     () =>
@@ -125,8 +83,7 @@ export const AllUsersListTable = ({
             email: user.email,
             fullName: user.full_name,
             instanceRole: user.instance_role,
-            isCurrentUser,
-            userId: user.id,
+            id: user.id,
           },
         };
       }),
@@ -185,8 +142,8 @@ export const AllUsersListTable = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
-      renderRowActions={renderRowActions}
       changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
+      renderRowActions={(user) => <AllUsersActionMenu user={user} />}
     />
   );
 };
