@@ -85,6 +85,8 @@ export class HistoryControls extends Component {
     onChangeCellPreview: PropTypes.func,
     onChangeAttributeKey: PropTypes.func,
     onChangeHighlightLessThan: PropTypes.func,
+    onAttributeKeyBlur: PropTypes.func,
+    onHighlightLessThanBlur: PropTypes.func,
   };
 
   static defaultProps = {
@@ -99,6 +101,8 @@ export class HistoryControls extends Component {
     onChangeCellPreview: () => {},
     onChangeAttributeKey: () => {},
     onChangeHighlightLessThan: () => {},
+    onAttributeKeyBlur: () => {},
+    onHighlightLessThanBlur: () => {},
   };
 
   launchModeOptions = [
@@ -133,6 +137,8 @@ export class HistoryControls extends Component {
       onChangeHistoryBase,
       onChangeCellPreview,
       onChangeAttributeKey,
+      onAttributeKeyBlur,
+      onHighlightLessThanBlur,
     } = this.props;
 
     const isAttributeMode = cellPreview === CELL_PREVIEW_ATTRIBUTE;
@@ -183,6 +189,7 @@ export class HistoryControls extends Component {
                     value={attributeKey}
                     placeholder={formatMessage(messages.keyPlaceholder)}
                     onChange={(e) => onChangeAttributeKey(e.target.value)}
+                    onBlur={onAttributeKeyBlur}
                   />
                 </div>
               </div>
@@ -196,6 +203,7 @@ export class HistoryControls extends Component {
                     value={highlightLessThan}
                     placeholder={formatMessage(messages.highlightLessThanPlaceholder)}
                     onChange={this.handleHighlightLessThanChange}
+                    onBlur={onHighlightLessThanBlur}
                   />
                 </div>
               </div>
