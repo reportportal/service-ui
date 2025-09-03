@@ -37,7 +37,7 @@ interface OwnerBlockProps {
 export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: OwnerBlockProps) => {
   const { formatMessage } = useIntl();
   const ownerRef = useRef<HTMLSpanElement>(null);
-  const [ownerTitle, setOwnerTitle] = useState('');
+  const [ownerTitle, setOwnerTitle] = useState<string | undefined>(undefined);
 
   const clickHandler = () => {
     onClick(owner);
@@ -50,7 +50,7 @@ export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: Owne
       if (offsetWidth < scrollWidth) {
         setOwnerTitle(owner);
       } else {
-        setOwnerTitle(null);
+        setOwnerTitle(undefined);
       }
     }
   }, [owner]);
