@@ -49,8 +49,6 @@ export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: Owne
 
       if (offsetWidth < scrollWidth) {
         setOwnerTitle(owner);
-      } else {
-        setOwnerTitle(undefined);
       }
     }
   }, [owner]);
