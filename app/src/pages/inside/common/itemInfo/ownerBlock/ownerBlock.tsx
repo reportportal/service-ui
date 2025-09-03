@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './ownerBlock.scss';
@@ -36,22 +35,10 @@ interface OwnerBlockProps {
 
 export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: OwnerBlockProps) => {
   const { formatMessage } = useIntl();
-  const ownerRef = useRef<HTMLSpanElement>(null);
-  const [ownerTitle, setOwnerTitle] = useState<string | undefined>(undefined);
 
   const clickHandler = () => {
     onClick(owner);
   };
-
-  useEffect(() => {
-    if (ownerRef.current) {
-      const { offsetWidth, scrollWidth } = ownerRef.current;
-
-      if (offsetWidth < scrollWidth) {
-        setOwnerTitle(owner);
-      }
-    }
-  }, [owner]);
 
   return (
     <div
@@ -60,7 +47,7 @@ export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: Owne
       onClick={clickHandler}
     >
       <div className={cx('owner-icon')} />
-      <span ref={ownerRef} className={cx('owner')} title={ownerTitle}>
+      <span className={cx('owner')} title={owner}>
         {owner}
       </span>
     </div>
