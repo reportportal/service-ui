@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useEffect, useRef, useState } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
 import styles from './ownerBlock.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
+
 const messages = defineMessages({
   ownerTitle: {
     id: 'OwnerBlock.ownerTitle',
@@ -28,29 +28,43 @@ const messages = defineMessages({
   },
 });
 
-export const OwnerBlock = injectIntl(({ intl, owner, disabled, onClick }) => {
+interface OwnerBlockProps {
+  owner: string;
+  disabled?: boolean;
+  onClick?: (owner: string) => void;
+}
+
+export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: OwnerBlockProps) => {
+  const { formatMessage } = useIntl();
+  const ownerRef = useRef<HTMLSpanElement>(null);
+  const [ownerTitle, setOwnerTitle] = useState('');
+
   const clickHandler = () => {
     onClick(owner);
   };
+
+  useEffect(() => {
+    if (ownerRef.current) {
+      const { offsetWidth, scrollWidth } = ownerRef.current;
+
+      if (offsetWidth < scrollWidth) {
+        setOwnerTitle(owner);
+      } else {
+        setOwnerTitle(null);
+      }
+    }
+  }, [owner]);
+
   return (
     <div
       className={cx('owner-block', { disabled })}
-      title={intl.formatMessage(messages.ownerTitle)}
+      title={formatMessage(messages.ownerTitle)}
       onClick={clickHandler}
     >
       <div className={cx('owner-icon')} />
-      <span className={cx('owner')}>{owner}</span>
+      <span ref={ownerRef} className={cx('owner')} title={ownerTitle}>
+        {owner}
+      </span>
     </div>
   );
-});
-
-OwnerBlock.propTypes = {
-  owner: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-OwnerBlock.defaultProps = {
-  disabled: false,
-  onClick: () => {},
 };
