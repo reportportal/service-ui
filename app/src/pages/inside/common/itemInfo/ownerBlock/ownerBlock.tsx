@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
 import styles from './ownerBlock.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles) as typeof classNames;
+
 const messages = defineMessages({
   ownerTitle: {
     id: 'OwnerBlock.ownerTitle',
@@ -28,29 +27,29 @@ const messages = defineMessages({
   },
 });
 
-export const OwnerBlock = injectIntl(({ intl, owner, disabled, onClick }) => {
+interface OwnerBlockProps {
+  owner: string;
+  disabled?: boolean;
+  onClick?: (owner: string) => void;
+}
+
+export const OwnerBlock = ({ owner, disabled = false, onClick = () => {} }: OwnerBlockProps) => {
+  const { formatMessage } = useIntl();
+
   const clickHandler = () => {
     onClick(owner);
   };
+
   return (
     <div
       className={cx('owner-block', { disabled })}
-      title={intl.formatMessage(messages.ownerTitle)}
+      title={formatMessage(messages.ownerTitle)}
       onClick={clickHandler}
     >
       <div className={cx('owner-icon')} />
-      <span className={cx('owner')}>{owner}</span>
+      <span className={cx('owner')} title={owner}>
+        {owner}
+      </span>
     </div>
   );
-});
-
-OwnerBlock.propTypes = {
-  owner: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-OwnerBlock.defaultProps = {
-  disabled: false,
-  onClick: () => {},
 };
