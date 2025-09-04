@@ -22,6 +22,7 @@ import {
   UPDATE_ORGANIZATION_SETTINGS,
   UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
   CREATE_ORGANIZATION,
+  RENAME_ORGANIZATION,
 } from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
@@ -57,4 +58,9 @@ export const updateOrganizationSettingsSuccessAction = (payload) => ({
 export const createOrganizationAction = (payload) => ({
   type: CREATE_ORGANIZATION,
   payload,
+});
+
+export const renameOrganizationAction = (organizationId, newOrganizationName, onSuccess) => ({
+  type: RENAME_ORGANIZATION,
+  payload: { organizationId, newOrganizationName, onSuccess },
 });

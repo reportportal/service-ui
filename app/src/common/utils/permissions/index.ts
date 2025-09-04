@@ -51,5 +51,6 @@ export {
   canInviteUserToOrganization,
   canSeeActivityOption,
   canDeleteOrganization,
+  canRenameOrganization,
 } from './permissions';
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

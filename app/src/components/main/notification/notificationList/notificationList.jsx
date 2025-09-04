@@ -204,6 +204,10 @@ const messages = defineMessages({
     id: 'OrganizationSettingsPage.updateSettingsSuccess',
     defaultMessage: 'Organization settings have been updated successfully',
   },
+  updateOrganizationNameSuccess: {
+    id: 'OrganizationsPage.updateOrganizationNameSuccess',
+    defaultMessage: 'Organization name has been updated successfully',
+  },
 });
 
 @injectIntl

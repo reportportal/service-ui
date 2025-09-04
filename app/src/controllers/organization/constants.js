@@ -30,7 +30,8 @@ export const UPDATE_ORGANIZATION_SETTINGS = 'updateOrganizationSettings';
 export const UPDATE_ORGANIZATION_SETTINGS_SUCCESS = 'updateOrganizationSettingsSuccess';
 
 export const CREATE_ORGANIZATION = 'createOrganization';
+export const RENAME_ORGANIZATION = 'renameOrganization';
 
 export const ERROR_CODES = {
-  ORGANIZATION_EXISTS: [4091, 4095],
+  ORGANIZATION_EXISTS: [4091, 4095, 40016],
 };
