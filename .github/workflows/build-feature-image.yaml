@@ -20,7 +20,7 @@ jobs:
       - name: Create variables
         id: vars
         run: |
-          echo "tag=$(echo ${{ github.head_ref }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "tag=$(echo ${{ github.head_ref || github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
       tag: ${{ steps.vars.outputs.tag }}
@@ -34,6 +34,6 @@ jobs:
       aws-region: ${{ vars.AWS_REGION }}
       image-tag: ${{ needs.variables-setup.outputs.tag }}
       version: ${{ needs.variables-setup.outputs.tag }}
-      branch: ${{ github.head_ref }}
+      branch: ${{ github.head_ref || github.ref_name }}
       date: ${{ needs.variables-setup.outputs.date }}
     secrets: inherit
