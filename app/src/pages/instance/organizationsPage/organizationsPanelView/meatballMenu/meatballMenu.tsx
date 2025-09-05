@@ -45,6 +45,7 @@ import {
   UnassignOrganizationModal,
 } from 'pages/inside/common/assignments';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ORGANIZATION } from 'common/constants/pluginNames';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { Organization, OrganizationType } from 'controllers/organization';
 import { Plugin, pluginByNameSelector } from 'controllers/plugins';
@@ -64,7 +65,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const currentUser = useSelector(userInfoSelector) as UserInfo;
   const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
   const organizationPlugin = useSelector(
-    (state) => pluginByNameSelector(state, 'organization') as Plugin,
+    (state) => pluginByNameSelector(state, ORGANIZATION) as Plugin,
   );
   const canUnassign = useCanUnassignOrganization();
   const isAssignedToOrganization = organization.slug in assignedOrganizations;
