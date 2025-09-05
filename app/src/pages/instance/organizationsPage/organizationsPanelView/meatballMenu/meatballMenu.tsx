@@ -25,6 +25,7 @@ import {
   canSeeActivityOption,
   canDeleteOrganization,
   canSeeOrganizationMembers,
+  canRenameOrganization,
 } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
@@ -44,9 +45,12 @@ import {
   UnassignOrganizationModal,
 } from 'pages/inside/common/assignments';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ORGANIZATION } from 'common/constants/pluginNames';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { Organization, OrganizationType } from 'controllers/organization';
+import { Plugin, pluginByNameSelector } from 'controllers/plugins';
+import { RenameOrganizationModal } from 'pages/inside/common/modals/renameOrganizationModal';
 import { DeleteOrganizationModal } from '../modals/deleteOrganizationsModal';
-import { Organization } from 'controllers/organization';
 import { messages } from '../../messages';
 
 interface MeatballMenuProps {
@@ -60,8 +64,10 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const userRoles = useSelector(userRolesSelector);
   const currentUser = useSelector(userInfoSelector) as UserInfo;
   const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
+  const organizationPlugin = useSelector(
+    (state) => pluginByNameSelector(state, ORGANIZATION) as Plugin,
+  );
   const canUnassign = useCanUnassignOrganization();
-
   const isAssignedToOrganization = organization.slug in assignedOrganizations;
   const organizationRole = assignedOrganizations[organization.slug]?.organizationRole;
   const organizationUserRoles = useMemo(
@@ -109,6 +115,15 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenu('delete_via_menu'));
   }, [dispatch, organization, onConfirm, trackEvent]);
 
+  const handleRenameClick = useCallback(() => {
+    dispatch(
+      showModalAction({
+        component: <RenameOrganizationModal organization={organization} onRename={onConfirm} />,
+      }),
+    );
+    handleLinkClick('rename_via_menu');
+  }, [dispatch, organization, onConfirm, handleLinkClick]);
+
   const links = useMemo(
     () => [
       {
@@ -144,6 +159,14 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const actions = useMemo(
     () => [
       {
+        label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+        onClick: handleRenameClick,
+        hasPermission:
+          canRenameOrganization(organizationUserRoles) &&
+          organizationPlugin?.enabled &&
+          organization.type !== OrganizationType.PERSONAL,
+      },
+      {
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
         onClick: handleUnassignClick,
         hasPermission: isAssignedToOrganization && canUnassign(currentUser, organization),
@@ -164,6 +187,8 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       organization,
       handleDeleteClick,
       organizationUserRoles,
+      handleRenameClick,
+      organizationPlugin?.enabled,
     ],
   );
 

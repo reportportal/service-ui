@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,3 +69,11 @@ export {
   uiExtensionIntegrationFormFieldsSelector,
   uiExtensionPostIssueFormSelector,
 } from './uiExtensions';
+export type {
+  Plugin,
+  PluginDetails,
+  PluginBinaryData,
+  PluginDeveloper,
+  PluginMetadata,
+  PluginRuleField,
+} from './types';

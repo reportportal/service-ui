@@ -146,4 +146,10 @@ export const ORGANIZATION_PAGE_EVENTS = {
     number: pageSize,
     place,
   }),
+  renameOrganization: (place: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'rename',
+    modal: 'rename_organization',
+    place,
+  }),
 };

@@ -32,6 +32,7 @@ import {
   FETCH_ORGANIZATION_SETTINGS,
   PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
   PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
+  RENAME_ORGANIZATION,
   UPDATE_ORGANIZATION_SETTINGS,
 } from './constants';
 import { activeOrganizationSelector } from './selectors';
@@ -154,6 +155,34 @@ function* watchCreateOrganization() {
   yield takeEvery(CREATE_ORGANIZATION, createOrganization);
 }
 
+function* renameOrganization({ payload: { organizationId, newOrganizationName, onSuccess } }) {
+  try {
+    yield call(fetch, URLS.organizationById(organizationId), {
+      method: 'put',
+      data: {
+        name: newOrganizationName,
+      },
+    });
+    yield put(showSuccessNotification({ messageId: 'updateOrganizationNameSuccess' }));
+    onSuccess?.();
+  } catch ({ errorCode, message }) {
+    if (ERROR_CODES.ORGANIZATION_EXISTS.includes(errorCode)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'organizationExists',
+          values: { name: newOrganizationName },
+        }),
+      );
+    } else {
+      yield put(showDefaultErrorNotification({ message }));
+    }
+  }
+}
+
+function* watchRenameOrganization() {
+  yield takeEvery(RENAME_ORGANIZATION, renameOrganization);
+}
+
 export function* organizationSagas() {
   yield all([
     watchFetchOrganizationProjects(),
@@ -162,6 +191,7 @@ export function* organizationSagas() {
     watchPrepareActiveOrganizationSettings(),
     watchUpdateOrganizationSettings(),
     watchCreateOrganization(),
+    watchRenameOrganization(),
     projectsSagas(),
     usersSagas(),
   ]);
