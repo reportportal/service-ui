@@ -22,16 +22,25 @@ import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import {
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
+  START_DELETING_FOLDER,
+  STOP_DELETING_FOLDER,
   NAMESPACE,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
+  DELETE_FOLDER_SUCCESS,
+  CREATE_FOLDER_SUCCESS,
 } from 'controllers/testCase/constants';
+import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { queueReducers } from 'common/utils';
+import { DeleteFolderSuccessParams } from './actionCreators';
 
 export type InitialStateType = {
   folders: {
+    data: Folder[];
     isCreatingFolder: boolean;
+    isDeletingFolder: boolean;
     loading: boolean;
   };
   testCases: {
@@ -42,7 +51,9 @@ export type InitialStateType = {
 
 export const INITIAL_STATE: InitialStateType = {
   folders: {
+    data: [],
     isCreatingFolder: false,
+    isDeletingFolder: false,
     loading: false,
   },
   testCases: {
@@ -59,6 +70,20 @@ const isCreatingFolderReducer = (
     case START_CREATING_FOLDER:
       return true;
     case STOP_CREATING_FOLDER:
+      return false;
+    default:
+      return state;
+  }
+};
+
+const isDeletingFolderReducer = (
+  state = INITIAL_STATE.folders.isDeletingFolder,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case START_DELETING_FOLDER:
+      return true;
+    case STOP_DELETING_FOLDER:
       return false;
     default:
       return state;
@@ -90,10 +115,30 @@ const testCasesReducer = (
   }
 };
 
+const folderReducer = (
+  state = INITIAL_STATE.folders.data,
+  action: { type: string; payload?: DeleteFolderSuccessParams & Folder },
+) => {
+  switch (action.type) {
+    case DELETE_FOLDER_SUCCESS: {
+      return state.filter(({ id }) => !action.payload.deletedFolderIds.includes(id));
+    }
+    case CREATE_FOLDER_SUCCESS: {
+      return [...state, action.payload];
+    }
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   folders: combineReducers({
-    data: fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
+    data: queueReducers(
+      fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
+      folderReducer,
+    ),
     isCreatingFolder: isCreatingFolderReducer,
+    isDeletingFolder: isDeletingFolderReducer,
     loading: loadingReducer(NAMESPACE),
   }),
   testCases: testCasesReducer,

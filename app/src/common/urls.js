@@ -382,4 +382,5 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testFolders: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
+  deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
 };

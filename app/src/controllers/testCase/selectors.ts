@@ -15,13 +15,14 @@
  */
 
 import { createSelector } from 'reselect';
-import { Folder, TransformedFolder } from './constants';
+import { Folder, TransformedFolder } from './types';
 import { InitialStateType } from './reducer';
 
 interface TestCaseState {
   folders?: {
     data?: Folder[];
     isCreatingFolder?: boolean;
+    isDeletingFolder?: boolean;
     loading?: boolean;
   };
   testCases?: {
@@ -46,6 +47,9 @@ export const foldersSelector = (state: RootState): Folder[] =>
 
 export const isCreatingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isCreatingFolder || false;
+
+export const isDeletingFolderSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.isDeletingFolder || false;
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;

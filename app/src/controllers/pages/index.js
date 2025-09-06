@@ -38,8 +38,6 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
-  urlProjectSlugSelector,
-  urlOrganizationSlugSelector,
   urlOrganizationAndProjectSelector,
   userRolesSelector,
   activeProjectRoleSelector,
@@ -106,4 +104,10 @@ export {
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';
-export { urlFolderIdSelector, locationSelector, payloadSelector } from './typed-selectors';
+export {
+  urlFolderIdSelector,
+  locationSelector,
+  payloadSelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+} from './typed-selectors';

@@ -134,7 +134,7 @@ export const TestCaseList = memo(
               dispatch({
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
+                  testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
                   organizationSlug,
                   projectSlug,
                 },

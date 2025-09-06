@@ -49,4 +49,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.loadingFolders',
     defaultMessage: 'Loading folders...',
   },
+  deleteFolder: {
+    id: 'TestCaseLibraryPage.deleteFolder',
+    defaultMessage: 'Delete folder',
+  },
 });
