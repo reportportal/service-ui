@@ -33,8 +33,4 @@ export const messages = defineMessages({
     id: 'EditTestCasePage.id',
     defaultMessage: 'ID:',
   },
-  historyOfActions: {
-    id: 'ProductVersionPage.historyOfActions',
-    defaultMessage: 'History of actions',
-  },
 });

@@ -15,7 +15,6 @@
  */
 
 import Parser from 'html-react-parser';
-import { FC, SVGProps } from 'react';
 import { useIntl } from 'react-intl';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -25,20 +24,14 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+import { ActionButton } from '../../types';
 
-interface Button {
-  name: string;
-  dataAutomationId: string;
-  icon: FC<SVGProps<SVGSVGElement>>;
-  variant?: string;
-  isCompact: boolean;
-}
 export const FolderEmptyState = () => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
 
-  const availableButtons = () => {
-    const buttons: Button[] = [];
+  const getAvailableButtons = () => {
+    const buttons: ActionButton[] = [];
 
     if (canCreateTestCase) {
       buttons.push({
@@ -46,6 +39,7 @@ export const FolderEmptyState = () => {
         dataAutomationId: 'createTestCaseButton',
         icon: PlusIconInline,
         isCompact: true,
+        handleButton: () => {},
       });
     }
 
@@ -56,6 +50,7 @@ export const FolderEmptyState = () => {
         variant: 'ghost',
         icon: ImportIcon,
         isCompact: true,
+        handleButton: () => {},
       });
     }
 
@@ -67,7 +62,7 @@ export const FolderEmptyState = () => {
       title={formatMessage(messages.emptyPageTitle)}
       description={Parser(formatMessage(messages.folderEmptyPageDescription))}
       imageType="docs"
-      buttons={availableButtons()}
+      buttons={getAvailableButtons()}
     />
   );
 };

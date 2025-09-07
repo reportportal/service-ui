@@ -41,8 +41,4 @@ export const messages = defineMessages({
     id: 'HistoryOfActions.searchInputPlaceholder',
     defaultMessage: 'Type to search',
   },
-  historyOfActions: {
-    id: 'HistoryOfActions.historyOfActions',
-    defaultMessage: 'History Of Actions',
-  },
 });

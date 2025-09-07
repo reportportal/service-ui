@@ -49,20 +49,17 @@ export const EmptyTestPlans = () => {
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const availableActions = () => {
-    const actions: ActionButton[] = [];
-
-    if (canCreateTestPlan) {
-      actions.push({
-        name: formatMessage(commonMessages.createTestPlan),
-        dataAutomationId: 'createTestPlansButton',
-        isCompact: true,
-        handleButton: openModal,
-      });
-    }
-
-    return actions;
-  };
+  const getAvailableActions = (): ActionButton[] =>
+    canCreateTestPlan
+      ? [
+          {
+            name: formatMessage(commonMessages.createTestPlan),
+            dataAutomationId: 'createTestPlansButton',
+            isCompact: true,
+            handleButton: openModal,
+          },
+        ]
+      : [];
 
   return (
     <div className={cx('empty-test-plans')}>
@@ -71,7 +68,7 @@ export const EmptyTestPlans = () => {
         description={Parser(formatMessage(messages.pageDescription))}
         imageType="flag"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={availableActions()}
+        buttons={getAvailableActions()}
       />
       <NumerableBlock
         items={benefits}

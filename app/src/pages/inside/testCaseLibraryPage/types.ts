@@ -1,3 +1,4 @@
+import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
 type Tag = {
@@ -34,4 +35,13 @@ export interface TestCase {
   testFolder: {
     id: number;
   };
+}
+
+export interface ActionButton {
+  name: string;
+  dataAutomationId: string;
+  icon?: FC<SVGProps<SVGSVGElement>>;
+  isCompact: boolean;
+  variant?: string;
+  handleButton: () => void;
 }

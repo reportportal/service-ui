@@ -37,18 +37,18 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { TestCase, IScenario } from '../../types';
 import { TestCaseMenuAction } from '../types';
-import { formatTimestamp, formatDuration } from '../utils';
+import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
 import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
-import styles from './testCaseSidePanel.scss';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
+import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -116,18 +116,18 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
-    const getExcludedActions = () => {
-      const excludedActions: TestCaseMenuAction[] = [];
+    const permissionMap = [
+      { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
+      { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+      { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
+      { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
+    ];
 
-      if (!canEditTestCase) excludedActions.push(TestCaseMenuAction.EDIT);
-      if (!canDeleteTestCase) excludedActions.push(TestCaseMenuAction.DELETE);
-      if (!canDuplicateTestCase) excludedActions.push(TestCaseMenuAction.DUPLICATE);
-      if (!canMoveTestCase) excludedActions.push(TestCaseMenuAction.MOVE);
-
-      return excludedActions;
-    };
-
-    const menuItems = createTestCaseMenuItems(formatMessage, {}, getExcludedActions());
+    const menuItems = createTestCaseMenuItems(
+      formatMessage,
+      {},
+      getExcludedActionsFromPermissionMap(permissionMap),
+    );
 
     const handleThreeDotsClick = () => {
       setIsMenuOpen(!isMenuOpen);
