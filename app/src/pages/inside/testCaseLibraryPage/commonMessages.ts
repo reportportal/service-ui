@@ -43,7 +43,7 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   },
   historyOfActions: {
     id: 'TestCaseLibraryPage.historyOfActions',
-    defaultMessage: 'History of Actions',
+    defaultMessage: 'History of actions',
   },
   loadingFolders: {
     id: 'TestCaseLibraryPage.loadingFolders',
