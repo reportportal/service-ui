@@ -100,7 +100,7 @@ export const TestCaseDetailsHeader = ({
     ];
 
     if (canDuplicateTestCase) {
-      items.push({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
+      items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
     }
 
     if (canDeleteTestCase) {
