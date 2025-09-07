@@ -46,13 +46,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const [isBlockHovered, setIsBlockHovered] = useState(false);
 
   useEffect(() => {
-    if (areToolsOpen || isBlockHovered) {
-      setAreToolsShown(true);
-    }
-
-    if (!areToolsOpen && !isBlockHovered) {
-      setAreToolsShown(false);
-    }
+    setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
   const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {

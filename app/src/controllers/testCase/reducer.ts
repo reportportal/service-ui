@@ -62,6 +62,10 @@ export const INITIAL_STATE: InitialStateType = {
   },
 };
 
+type FolderActions =
+  | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
+  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder };
+
 const isCreatingFolderReducer = (
   state = INITIAL_STATE.folders.isCreatingFolder,
   action: { type: string },
@@ -115,10 +119,7 @@ const testCasesReducer = (
   }
 };
 
-const folderReducer = (
-  state = INITIAL_STATE.folders.data,
-  action: { type: string; payload?: DeleteFolderSuccessParams & Folder },
-) => {
+const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions) => {
   switch (action.type) {
     case DELETE_FOLDER_SUCCESS: {
       return state.filter(({ id }) => !action.payload.deletedFolderIds.includes(id));
