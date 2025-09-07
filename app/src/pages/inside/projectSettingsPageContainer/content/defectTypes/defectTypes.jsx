@@ -99,7 +99,6 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName]?.length + acc, 0),
     [defectTypes],
   );
-  const isEditable = canUpdateSettings;
   const canAddNewDefectType = defectTypesLength < MAX_DEFECT_TYPES_COUNT;
   const isInformationMessage =
     defectTypesLength >= WARNING_DEFECT_TYPES_COUNT && canAddNewDefectType;
@@ -122,10 +121,10 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   useEffect(() => {
     setHeaderTitleNode(
       <>
-        {isEditable && (
+        {canUpdateSettings && (
           <span className={cx('button')}>
             <Button
-              disabled={!isEditable || !canAddNewDefectType}
+              disabled={!canUpdateSettings || !canAddNewDefectType}
               onClick={() =>
                 onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
                   trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
@@ -141,7 +140,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
 
     return () => setHeaderTitleNode(null);
-  }, [defectTypes, canAddNewDefectType, isEditable]);
+  }, [defectTypes, canAddNewDefectType, canUpdateSettings]);
 
   return (
     <SettingsPageContent>
@@ -189,7 +188,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                     {formatMessage(messages[groupName.toLowerCase()])}
                   </div>
                 </div>
-                {isEditable && (
+                {canUpdateSettings && (
                   <CreateDefect
                     formatMessage={formatMessage}
                     onClick={() =>
@@ -214,7 +213,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                       data={defectType}
                       parentType={defectTypes[groupName][0]}
                       group={i === 0 ? defectTypes[groupName] : null}
-                      isPossibleUpdateSettings={isEditable}
+                      isPossibleUpdateSettings={canUpdateSettings}
                     />
                     <Divider />
                   </div>

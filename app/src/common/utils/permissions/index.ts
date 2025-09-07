@@ -43,6 +43,7 @@ export {
   canRenameProject,
   canInviteUserToProject,
   canSeeEmailMembers,
+  canSeeRowActionMenu,
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
@@ -51,6 +52,8 @@ export {
   canExportOrganizations,
   canInviteUserToOrganization,
   canSeeActivityOption,
+  // MANUAL LAUNCH
+  canCreateManualLaunch,
   // TEST CASE
   canAddTestCaseToLaunch,
   canAddTestCaseToTestPlan,

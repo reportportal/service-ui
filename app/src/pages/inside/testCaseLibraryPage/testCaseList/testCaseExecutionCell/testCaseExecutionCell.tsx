@@ -17,11 +17,13 @@
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { formatRelativeTime } from '../utils';
+import { formatRelativeTime, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
@@ -44,40 +46,25 @@ export const TestCaseExecutionCell = ({
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
     useUserPermissions();
 
-  const getExcludedActions = () => {
-    const actions: TestCaseMenuAction[] = [];
-
-    if (!canDuplicateTestCase) {
-      actions.push(TestCaseMenuAction.DUPLICATE);
-    }
-
-    if (!canEditTestCase) {
-      actions.push(TestCaseMenuAction.EDIT);
-    }
-
-    if (!canMoveTestCase) {
-      actions.push(TestCaseMenuAction.MOVE);
-    }
-
-    if (!canDeleteTestCase) {
-      actions.push(TestCaseMenuAction.DELETE);
-    }
-
-    return actions;
-  };
+  const permissionMap = [
+    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
+    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
+    { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
+    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+  ];
 
   const menuItems = createTestCaseMenuItems(
     formatMessage,
     {
       [TestCaseMenuAction.EDIT]: onEditTestCase,
     },
-    getExcludedActions(),
+    getExcludedActionsFromPermissionMap(permissionMap),
   );
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div className={cx('execution-time')}>{formatRelativeTime(lastExecution, locale)}</div>
-      {!!menuItems.length && (
+      {!isEmpty(menuItems) && (
         <div
           role="menuitem"
           tabIndex={0}

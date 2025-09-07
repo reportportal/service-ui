@@ -34,7 +34,6 @@ export const IntegrationsList = (props) => {
   const { availableIntegrations, onItemClick } = props;
   const { trackEvent } = useTracking();
   const { canUpdateSettings } = useUserPermissions();
-  const isEditor = canUpdateSettings;
 
   const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations'));
@@ -64,10 +63,12 @@ export const IntegrationsList = (props) => {
       ) : (
         <EmptyStatePage
           title={formatMessage(
-            isEditor ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
+            canUpdateSettings ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
           )}
           description={formatMessage(
-            isEditor ? messages.noIntegrationsDescription : messages.noIntegrationsYetDescription,
+            canUpdateSettings
+              ? messages.noIntegrationsDescription
+              : messages.noIntegrationsYetDescription,
           )}
           documentationLink={docsReferences.emptyStateIntegrationsDocs}
           handleDocumentationClick={handleDocumentationClick}

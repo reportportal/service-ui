@@ -72,7 +72,6 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const analyzerUnavailableTitle = !isAnalyzerServiceAvailable
     ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
     : null;
-  const hasPermission = canUpdateSettings;
 
   useEffect(() => {
     dispatch(fetchConfigurationAttributesAction(projectKey));
@@ -151,7 +150,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
 
   const tabsConfig = useMemo(
     () => ({
-      ...(hasPermission
+      ...(canUpdateSettings
         ? {
             [INDEX_SETTINGS]: {
               name: formatMessage(messages.indexSettings),
@@ -163,7 +162,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
                   isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
                   analyzerUnavailableTitle={analyzerUnavailableTitle}
                   onFormSubmit={updateProjectConfig}
-                  hasPermission={hasPermission}
+                  hasPermission={canUpdateSettings}
                 />
               ),
             },
@@ -176,7 +175,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <AutoAnalysis
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
             analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
@@ -189,7 +188,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <SimilarItems
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
           />
         ),
       },
@@ -200,7 +199,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <UniqueErrors
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
             analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
@@ -210,7 +209,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     [
       analyzerConfig,
       createTabLink,
-      hasPermission,
+      canUpdateSettings,
       analyzerUnavailableTitle,
       isAnalyzerServiceAvailable,
       indexingRunning,

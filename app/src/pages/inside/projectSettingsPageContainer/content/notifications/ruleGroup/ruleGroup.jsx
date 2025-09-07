@@ -60,8 +60,8 @@ import {
   RuleList,
 } from '../../elements';
 import { messages } from '../messages';
-import styles from './ruleGroup.scss';
 import { EmptyRuleState } from '../emptyRuleState';
+import styles from './ruleGroup.scss';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
@@ -89,9 +89,8 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
     projectPluginNotificationsStateSelector(pluginNameInCamelCase),
   );
 
-  const isUpdateSettingAvailable = canUpdateSettings;
-  const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
-  const isActivationRequired = isUpdateSettingAvailable || rules?.length > 0;
+  const isReadOnly = !canUpdateSettings || !isPluginEnabled;
+  const isActivationRequired = canUpdateSettings || rules?.length > 0;
   const isDisabledTooltipActivationRequired = !isPluginEnabled && isActivationRequired;
   const isEmailIntegrationRequired =
     pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
@@ -312,7 +311,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
             isEmailIntegrationRequired && (
               <div className={cx('integrate-configurations')}>
                 <p>{formatMessage(messages.notConfiguredIntegration)}</p>
-                {isUpdateSettingAvailable && (
+                {canUpdateSettings && (
                   <LinkComponent
                     to={{
                       type: PROJECT_SETTINGS_TAB_PAGE,
@@ -356,7 +355,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 dataAutomationId="notificationsRulesList"
                 className={cx('rule-group-list')}
               />
-              {isUpdateSettingAvailable && (
+              {canUpdateSettings && (
                 <Button
                   className={cx('add-rule')}
                   onClick={onAdd}

@@ -26,19 +26,16 @@ export const DetailsEmptyState = () => {
   const { formatMessage } = useIntl();
   const { canEditTestCaseScenario } = useUserPermissions();
 
-  const actionButtons = () => {
-    const buttons: Record<string, string | boolean>[] = [];
-
-    if (canEditTestCaseScenario) {
-      buttons.push({
-        isCompact: true,
-        name: formatMessage(messages.editScenario),
-        variant: 'primary',
-      });
-    }
-
-    return buttons;
-  };
+  const getActionButtons = () =>
+    canEditTestCaseScenario
+      ? [
+          {
+            isCompact: true,
+            name: formatMessage(messages.editScenario),
+            variant: 'primary',
+          },
+        ]
+      : [];
 
   return (
     <EmptyStatePage
@@ -46,7 +43,7 @@ export const DetailsEmptyState = () => {
       description={Parser(formatMessage(messages.scenarioDescription))}
       imageType="plus"
       documentationLink={referenceDictionary.rpDoc}
-      buttons={actionButtons()}
+      buttons={getActionButtons()}
     />
   );
 };

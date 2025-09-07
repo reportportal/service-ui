@@ -15,7 +15,6 @@
  */
 
 import Parser from 'html-react-parser';
-import { FC, SVGProps } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
@@ -26,6 +25,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
 
@@ -35,20 +35,12 @@ interface FolderEmptyStateProps {
   folderTitle: string;
 }
 
-interface Button {
-  name: string;
-  dataAutomationId: string;
-  icon: FC<SVGProps<SVGSVGElement>>;
-  variant?: string;
-  isCompact: boolean;
-}
-
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
 
-  const availableButtons = () => {
-    const buttons: Button[] = [];
+  const getAvailableButtons = () => {
+    const buttons: ActionButton[] = [];
 
     if (canCreateTestCase) {
       buttons.push({
@@ -56,6 +48,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         dataAutomationId: 'createTestCaseButton',
         icon: PlusIconInline,
         isCompact: true,
+        handleButton: () => {},
       });
     }
 
@@ -66,6 +59,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         variant: 'ghost',
         icon: ImportIcon,
         isCompact: true,
+        handleButton: () => {},
       });
     }
 
@@ -79,7 +73,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         title={formatMessage(messages.emptyPageTitle)}
         description={Parser(formatMessage(messages.folderEmptyPageDescription))}
         imageType="docs"
-        buttons={availableButtons()}
+        buttons={getAvailableButtons()}
       />
     </div>
   );

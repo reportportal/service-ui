@@ -59,7 +59,6 @@ export const Notifications = () => {
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const loading = useSelector(projectNotificationsLoadingSelector);
-  const isReadOnly = !canUpdateSettings;
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());
@@ -87,7 +86,7 @@ export const Notifications = () => {
         >
           <div className={cx('toggle')}>
             <Toggle
-              disabled={isReadOnly}
+              disabled={!canUpdateSettings}
               value={isAllNotificationsEnabled}
               onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
             >
@@ -106,7 +105,7 @@ export const Notifications = () => {
           rules={notificationRulesByTypes[item.name] || []}
         />
       ))}
-      <NotificationsFooter isReadOnly={isReadOnly} />
+      <NotificationsFooter isReadOnly={!canUpdateSettings} />
     </SettingsPageContent>
   );
 };

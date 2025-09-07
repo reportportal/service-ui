@@ -28,14 +28,7 @@ import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expand
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 import { useCreateTestCaseModal } from '../../createTestCaseModal';
-
-interface ActionButton {
-  name: string;
-  dataAutomationId: string;
-  isCompact: boolean;
-  variant?: string;
-  handleButton: () => void;
-}
+import { ActionButton } from '../../types';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
@@ -59,7 +52,7 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const availableButtons = () => {
+  const getAvailableButtons = () => {
     const buttons: ActionButton[] = [];
 
     if (canCreateTestCaseFolder) {
@@ -91,7 +84,7 @@ export const MainPageEmptyState = () => {
         description={Parser(formatMessage(messages.emptyPageDescription))}
         imageType="docs"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={availableButtons()}
+        buttons={getAvailableButtons()}
       />
       <NumerableBlock
         items={benefits}

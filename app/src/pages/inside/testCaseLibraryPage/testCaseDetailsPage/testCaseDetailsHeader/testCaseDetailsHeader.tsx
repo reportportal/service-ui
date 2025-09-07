@@ -91,10 +91,10 @@ export const TestCaseDetailsHeader = ({
     });
   };
 
-  const menuItems = () => {
+  const getMenuItems = () => {
     const items: PopoverItem[] = [
       {
-        label: formatMessage(messages.historyOfActions),
+        label: formatMessage(commonMessages.historyOfActions),
         onClick: handleHistoryOfActions,
       },
     ];
@@ -102,6 +102,7 @@ export const TestCaseDetailsHeader = ({
     if (canDuplicateTestCase) {
       items.push({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
     }
+
     if (canDeleteTestCase) {
       items.push({
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -142,7 +143,7 @@ export const TestCaseDetailsHeader = ({
           </div>
         </div>
         <div className={cx('header__actions')}>
-          <PopoverControl items={menuItems()} placement="bottom-end">
+          <PopoverControl items={getMenuItems()} placement="bottom-end">
             <Button
               variant="ghost"
               adjustWidthOn="content"

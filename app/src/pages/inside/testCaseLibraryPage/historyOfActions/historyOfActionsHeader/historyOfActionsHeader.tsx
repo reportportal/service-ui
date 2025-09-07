@@ -45,7 +45,7 @@ export const HistoryOfActionsHeader = ({
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
     testTitle: testCaseName,
-    pageTitle: formatMessage(messages.historyOfActions),
+    pageTitle: formatMessage(commonMessages.historyOfActions),
   };
 
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));

@@ -60,7 +60,6 @@ export const IntegrationInfo = (props) => {
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const isAbleToClick = canUpdateSettings;
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
@@ -269,18 +268,22 @@ export const IntegrationInfo = (props) => {
       ) : (
         <EmptyStatePage
           title={formatMessage(
-            isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
+            canUpdateSettings
+              ? messages.noGlobalIntegrationsMessage
+              : messages.noGlobalIntegrationsYet,
           )}
           description={formatMessage(
-            isAbleToClick
+            canUpdateSettings
               ? messages.noGlobalIntegrationsDescription
               : messages.noGlobalIntegrationsYetDescription,
           )}
           handleDocumentationClick={handleDocumentationClick}
           buttons={[
             {
-              name: isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null,
-              isDisabled: !isAbleToClick,
+              name: canUpdateSettings
+                ? formatMessage(messages.noGlobalIntegrationsButtonAdd)
+                : null,
+              isDisabled: !canUpdateSettings,
               dataAutomationId: 'addProjectIntegrationButton',
               handleButton: onAddProjectIntegration,
             },
@@ -297,9 +300,9 @@ export const IntegrationInfo = (props) => {
             data={plugin}
             onAddProjectIntegration={onAddProjectIntegration}
             onResetProjectIntegration={onResetProjectIntegration}
-            isAbleToClick={isAbleToClick}
+            isAbleToClick={canUpdateSettings}
             availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable && isAbleToClick}
+            withButton={isAtLeastOneIntegrationAvailable && canUpdateSettings}
             breadcrumbs={integrationListBreadcrumbs}
           />
           {renderIntegrationList()}
