@@ -174,7 +174,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: handleDeleteClick,
-        hasPermission: canDeleteOrganization(organizationUserRoles),
+        hasPermission: canDeleteOrganization(organizationUserRoles) && organizationPlugin?.enabled,
         danger: true,
       },
     ],
