@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - 'feature/upcoming'
+  workflow_dispatch:
 
 jobs:
   variables-setup:

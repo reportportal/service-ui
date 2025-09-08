@@ -101,12 +101,6 @@ function* watchLogout() {
 }
 
 function* loginSuccessHandler({ payload }) {
-  yield put(
-    showNotification({
-      messageId: 'successLogin',
-      type: NOTIFICATION_TYPES.SUCCESS,
-    }),
-  );
   setStorageItem(ACTIVITY_TIMESTAMP, Date.now());
 
   yield put(
@@ -145,6 +139,13 @@ function* loginSuccessHandler({ payload }) {
         };
     yield put(redirect(page));
   }
+
+  yield put(
+    showNotification({
+      messageId: 'successLogin',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
 }
 
 function* watchLoginSuccess() {
