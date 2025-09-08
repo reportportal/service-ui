@@ -35,6 +35,7 @@ import {
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_SIDEBAR_LINKS_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
+  PERSONAL_ORGANIZATIONS_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -63,6 +64,8 @@ export const analyzerExtensionsSelector = (state) => extensionsSelector(state).a
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
+export const personalOrganizationsSelector = (state) =>
+  extensionsConfigSelector(state)[PERSONAL_ORGANIZATIONS_KEY].toLowerCase() === 'true';
 export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
