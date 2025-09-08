@@ -65,7 +65,7 @@ export const authExtensionsSelector = (state) => uatInfoSelector(state).authExte
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const personalOrganizationsSelector = (state) =>
-  extensionsConfigSelector(state)[PERSONAL_ORGANIZATIONS_KEY].toLowerCase() === 'true';
+  extensionsConfigSelector(state)[PERSONAL_ORGANIZATIONS_KEY]?.toLowerCase() === 'true';
 export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
