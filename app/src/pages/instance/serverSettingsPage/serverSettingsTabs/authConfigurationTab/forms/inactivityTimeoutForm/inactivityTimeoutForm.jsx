@@ -15,7 +15,7 @@
  */
 
 import classNames from 'classnames/bind';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,6 +91,7 @@ export const InactivityTimeoutForm = () => {
       <ServerSettingsField
         label={formatMessage(messages.label)}
         description={formatMessage(messages.description)}
+        descriptionClassName={cx('description')}
       >
         <InputDropdown
           customClasses={{

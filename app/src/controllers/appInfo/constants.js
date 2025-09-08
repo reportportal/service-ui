@@ -19,6 +19,7 @@ export const APP_INFO_NAMESPACE = 'appInfo';
 export const ANALYTICS_INSTANCE_KEY = 'server.details.instance';
 export const ANALYTICS_ALL_KEY = 'server.analytics.all';
 export const SSO_USERS_ONLY_KEY = 'server.users.sso';
+export const PERSONAL_ORGANIZATIONS_KEY = 'server.features.personal-organization.enabled';
 export const SERVER_SESSION_EXPIRATION_KEY = 'server.session.expiration';
 export const SERVER_SIDEBAR_LINKS_KEY = 'server.sidebar.links';
 export const IMPORTANT_LAUNCHES_FEATURE_KEY = 'server.features.important.enabled';
