@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-export const mockedTestPlans = [
-  {
-    name: 'Test Plan Sprint 3 February',
-    covered: 340,
-    total: 358,
-    coverage: 98,
-  },
-  {
-    name: 'Production Build Regression 1.01',
-    covered: 320,
-    total: 380,
-    coverage: 92,
-  },
-  {
-    name: 'Production Build Regression 1.00',
-    covered: 250,
-    total: 350,
-    coverage: 75,
-  },
-];
+export { getTestPlansAction } from './actionCreators';
+export { testPlanSagas } from './sagas';
+export * from './constants';
+export { testPlanReducer } from './reducer';
+export * from './selectors';

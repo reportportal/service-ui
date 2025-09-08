@@ -37,8 +37,4 @@ export const messages = defineMessages({
     id: 'CreateTestPlanModal.addAttributes',
     defaultMessage: 'Add Attributes',
   },
-  duplicateTestPlanName: {
-    id: 'CreateTestPlanModal.duplicateTestPlanName',
-    defaultMessage: 'Test plan with the same name already exists',
-  },
 });

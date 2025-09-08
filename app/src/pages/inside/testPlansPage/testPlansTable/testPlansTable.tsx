@@ -21,7 +21,7 @@ import { Table, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ProgressBar } from './progressBar';
 import { Options } from './options';
-import { TestPlan } from './types';
+import { TestPlanDto } from 'controllers/testPlan';
 import { messages } from './messages';
 
 import styles from './testPlansTable.scss';
@@ -29,33 +29,47 @@ import styles from './testPlansTable.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestPlansTableProps {
-  testPlans: TestPlan[];
+  testPlans: TestPlanDto[];
 }
 
 export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage, formatNumber } = useIntl();
 
-  const currentTestPlans = testPlans.map(({ name, coverage, total, covered }) => ({
-    id: name,
-    testPlanName: name,
-    coveredTotal: `${covered} / ${total}`,
-    coverage: {
-      component: <div className={cx('test-plans__table-cell-coverage')}>{coverage}%</div>,
+  const currentTestPlans = testPlans.map(
+    ({ id, name, totalTestCases = 0, coveredTestCases = 0 }) => {
+      const coverage = totalTestCases === 0 ? 0 : coveredTestCases / totalTestCases;
+
+      return {
+        id,
+        testPlanName: name,
+        coveredTotal: `${coveredTestCases} / ${totalTestCases}`,
+        coverage: {
+          component: (
+            <div className={cx('test-plans__table-cell-coverage')}>
+              {formatNumber(coverage, {
+                style: 'percent',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+              })}
+            </div>
+          ),
+        },
+        progressBar: {
+          component: <ProgressBar progress={coverage * 100} />,
+        },
+        options: {
+          component: <Options />,
+        },
+        icon: {
+          component: (
+            <div className={cx('test-plans__table-cell-icon')}>
+              <ChevronRightBreadcrumbsIcon />
+            </div>
+          ),
+        },
+      };
     },
-    progressBar: {
-      component: <ProgressBar progress={coverage} />,
-    },
-    options: {
-      component: <Options />,
-    },
-    icon: {
-      component: (
-        <div className={cx('test-plans__table-cell-icon')}>
-          <ChevronRightBreadcrumbsIcon />
-        </div>
-      ),
-    },
-  }));
+  );
 
   const primaryColumn = {
     key: 'testPlanName',
@@ -81,7 +95,7 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
       key: 'coverage',
       header: formatMessage(messages.coverage),
       width: 70,
-      align: 'center' as const,
+      align: 'left' as const,
     },
     {
       key: 'options',

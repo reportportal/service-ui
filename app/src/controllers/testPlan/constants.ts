@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-export type TestPlan = {
+export const GET_TEST_PLANS = 'getTestPlans' as const;
+export const NAMESPACE = 'testPlan' as const;
+export const defaultSortParam = 'createdDate,desc';
+
+export type TestPlanDto = {
+  id: number;
   name: string;
-  covered: number;
-  total: number;
-  coverage: number;
+  totalTestCases: number;
+  coveredTestCases: number;
+  description?: string;
 };
