@@ -23,6 +23,8 @@ import { canCreateOrganization } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
+import { pluginByNameSelector } from 'controllers/plugins';
+import { ORGANIZATION } from 'common/constants/pluginNames';
 import { EmptyPageState } from 'pages/common';
 import {
   organizationsListLoadingSelector,
@@ -75,6 +77,7 @@ const OrganizationsPageComponent = ({
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
   const userId = useSelector(userIdSelector);
+  const organizationPlugin = useSelector((state) => pluginByNameSelector(state, ORGANIZATION));
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
   const [isOpenTableView, setIsOpenTableView] = useState(
@@ -103,13 +106,13 @@ const OrganizationsPageComponent = ({
     );
   };
 
-  const onCreateOrganization = () => {
+  const onCreateOrganization = (element = '') => {
     dispatch(
       showModalAction({
         component: <CreateOrganizationModal onSubmit={onSubmitCreateOrganization} />,
       }),
     );
-    trackEvent(ORGANIZATION_PAGE_EVENTS.CLICK_CREATE_ORGANIZATION);
+    trackEvent(ORGANIZATION_PAGE_EVENTS.clickCreateOrganization(element));
   };
 
   const getEmptyPageState = () => {
@@ -125,6 +128,13 @@ const OrganizationsPageComponent = ({
       return <NoAssignedEmptyPage />;
     }
 
+    let tooltipMessage = '';
+    if (!organizationPlugin) {
+      tooltipMessage = messages.notUploadedPluginMessage;
+    } else if (!organizationPlugin.enabled) {
+      tooltipMessage = messages.pluginIsDisabledMessage;
+    }
+
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
         hasPermission={hasPermission}
@@ -137,7 +147,9 @@ const OrganizationsPageComponent = ({
           hasPermission ? messages.createNewOrganization : messages.description,
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
-        onClick={onCreateOrganization}
+        onClick={() => onCreateOrganization('empty_state')}
+        tooltipContent={tooltipMessage && formatMessage(tooltipMessage)}
+        isButtonDisabled={!organizationPlugin?.enabled}
       />
     ) : (
       <EmptyPageState
@@ -163,7 +175,7 @@ const OrganizationsPageComponent = ({
           isOpenTableView={isOpenTableView}
           appliedFiltersCount={appliedFiltersCount}
           setAppliedFiltersCount={setAppliedFiltersCount}
-          onCreateOrganization={onCreateOrganization}
+          onCreateOrganization={() => onCreateOrganization()}
         />
       )}
       {itemCount === 0 ? (

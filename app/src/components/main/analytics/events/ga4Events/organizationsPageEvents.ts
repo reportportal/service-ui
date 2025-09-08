@@ -117,11 +117,11 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: 'unassign',
   },
-  CLICK_CREATE_ORGANIZATION: {
+  clickCreateOrganization: (element = '') => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
-    element_name: 'create_organization',
-  },
+    element_name: element ? `create_organization_${element}` : 'create_organization',
+  }),
   CLICK_CREATE_BUTTON: {
     ...BASIC_EVENT_PARAMETERS,
     element_name: 'create',
