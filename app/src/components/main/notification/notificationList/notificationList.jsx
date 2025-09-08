@@ -212,6 +212,10 @@ const messages = defineMessages({
     id: 'TestPlansPage.testPlanCreationFailed',
     defaultMessage: 'Failed to create Test Plan.',
   },
+  testPlanLoadingFailed: {
+    id: 'TestPlansPage.testPlanLoadingFailed',
+    defaultMessage: 'Failed to load Test Plans.',
+  },
 });
 
 @injectIntl

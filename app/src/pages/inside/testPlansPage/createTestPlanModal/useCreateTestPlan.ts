@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { SubmissionError } from 'redux-form';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -24,8 +22,7 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-
-import { messages } from './messages';
+import { getTestPlansAction } from 'controllers/testPlan';
 
 export interface CreateTestPlanFormData {
   name: string;
@@ -36,7 +33,6 @@ export const useCreateTestPlan = () => {
   const { isLoading: isCreateTestPlanLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const { formatMessage } = useIntl();
 
   const createTestPlan = async (payload: CreateTestPlanFormData) => {
     try {
@@ -56,18 +52,13 @@ export const useCreateTestPlan = () => {
           messageId: 'testPlanCreatedSuccess',
         }),
       );
-    } catch (error: unknown) {
-      if (error instanceof Error && error?.message?.includes('tms_test_plan_name_unique')) {
-        throw new SubmissionError({
-          name: formatMessage(messages.duplicateTestPlanName),
-        });
-      } else {
-        dispatch(
-          showErrorNotification({
-            messageId: 'testPlanCreationFailed',
-          }),
-        );
-      }
+      dispatch(getTestPlansAction());
+    } catch {
+      dispatch(
+        showErrorNotification({
+          messageId: 'testPlanCreationFailed',
+        }),
+      );
     } finally {
       hideSpinner();
     }
