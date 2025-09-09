@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeSidebarOptions, canSeeBillingPage } from 'common/utils/permissions';
+import { canSeeSidebarOptions, canSeePluginsPages } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
@@ -96,14 +96,8 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       );
     }
 
-    sidebarExtensions
-      .filter((extension) => {
-        if (extension.pluginName === 'billing') {
-          return canSeeBillingPage(userRoles);
-        }
-        return !!extension;
-      })
-      .forEach((extension) => {
+    canSeePluginsPages(userRoles) &&
+      sidebarExtensions.forEach((extension) => {
         sidebarItems.push({
           name: extension.name,
           component: <ExtensionLoader extension={extension} />,
