@@ -41,7 +41,7 @@ const messages = defineMessages({
   },
   'analyzer.allMessagesShouldMatch': {
     id: 'UpdateAnalysisSettings.allMessagesShouldMatch',
-    defaultMessage: "switch 'All logs with 3 or more rows should match'",
+    defaultMessage: 'switch All logs with 3 or more rows should match',
   },
   'analyzer.numberOfLogLines': {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
@@ -62,6 +62,10 @@ const messages = defineMessages({
   'analyzer.autoAnalyzerMode': {
     id: 'UpdateAnalysisSettings.analyzeMode',
     defaultMessage: 'Base for Auto Analysis',
+  },
+  'analyzer.largestRetryPriority': {
+    id: 'UpdateAnalysisSettings.largestRetryPriority',
+    defaultMessage: 'switch Defect assignment based on the longest retry',
   },
   from: {
     id: 'AnalysisProperties.from',

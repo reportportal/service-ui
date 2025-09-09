@@ -29,6 +29,7 @@ export const SAUCE_LABS_TITLE = 'Sauce Labs';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const AD = 'ad';
+export const ORGANIZATION = 'organization';
 
 // TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {

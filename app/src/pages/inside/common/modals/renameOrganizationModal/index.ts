@@ -14,27 +14,6 @@
  * limitations under the License.
  */
 
-.server-settings-field {
-  align-items: flex-start;
-}
+import RenameOrganizationModal from './renameOrganizationModal';
 
-.label {
-  width: 245px;
-  padding-right: 11px;
-  margin-top: 8px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-    margin-top: 0;
-  }
-}
-
-.description {
-  max-width: 350px;
-  padding-left: 11px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-    margin-top: 0;
-  }
-}
+export { RenameOrganizationModal };

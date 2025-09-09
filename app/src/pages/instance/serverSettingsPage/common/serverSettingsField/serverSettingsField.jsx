@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormField } from 'components/fields/formField';
@@ -22,14 +21,19 @@ import styles from './serverSettingsField.scss';
 
 const cx = classNames.bind(styles);
 
-export const ServerSettingsField = ({ children, label, description = '' }) => {
+export const ServerSettingsField = ({
+  children,
+  label,
+  description = '',
+  descriptionClassName = '',
+}) => {
   return (
     <FormField
       containerClassName={cx('server-settings-field')}
       labelClassName={cx('label')}
       withoutProvider
       label={label}
-      customBlock={{ node: description, wrapperClassName: cx('description') }}
+      customBlock={{ node: description, wrapperClassName: cx('description', descriptionClassName) }}
     >
       {children}
     </FormField>
@@ -39,4 +43,5 @@ ServerSettingsField.propTypes = {
   children: PropTypes.node.isRequired,
   label: PropTypes.string.isRequired,
   description: PropTypes.string,
+  descriptionClassName: PropTypes.string,
 };
