@@ -18,14 +18,20 @@ import {
   GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
+  CREATE_FOLDER_SUCCESS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
+  DELETE_FOLDER,
+  DELETE_FOLDER_SUCCESS,
+  START_DELETING_FOLDER,
+  STOP_DELETING_FOLDER,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
 } from './constants';
+import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesParams {
@@ -44,6 +50,16 @@ export interface CreateFolderParams {
 
 export interface GetFoldersParams {
   projectKey?: string;
+}
+
+export interface DeleteFolderParams {
+  folderId: number;
+  activeFolderId: number;
+  setAllTestCases: () => void;
+}
+
+export interface DeleteFolderSuccessParams {
+  deletedFolderIds: number[];
 }
 
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
@@ -89,4 +105,27 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
   payload: folder,
+});
+
+export const createFoldersSuccessAction = (folder: Folder) => ({
+  type: CREATE_FOLDER_SUCCESS,
+  payload: folder,
+});
+
+export const deleteFolderAction = (folderInfo: DeleteFolderParams) => ({
+  type: DELETE_FOLDER,
+  payload: folderInfo,
+});
+
+export const deleteFolderSuccessAction = (deletedFolderIds: DeleteFolderSuccessParams) => ({
+  type: DELETE_FOLDER_SUCCESS,
+  payload: deletedFolderIds,
+});
+
+export const startDeletingFolderAction = () => ({
+  type: START_DELETING_FOLDER,
+});
+
+export const stopDeletingFolderAction = () => ({
+  type: STOP_DELETING_FOLDER,
 });

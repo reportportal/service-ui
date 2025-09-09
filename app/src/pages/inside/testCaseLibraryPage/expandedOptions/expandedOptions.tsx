@@ -70,7 +70,7 @@ export const ExpandedOptions = () => {
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);
-  }, [folderId, folderIdNumber, folders]);
+  }, [folderId, folderIdNumber]);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -100,7 +100,7 @@ export const ExpandedOptions = () => {
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
-        testCasePageRoute: ['folder', id],
+        testCasePageRoute: `folder/${id}`,
         organizationSlug,
         projectSlug,
       },
@@ -177,6 +177,7 @@ export const ExpandedOptions = () => {
                       key={folder.id || `${folder.name}-${idx}`}
                       activeFolder={activeFolder}
                       setActiveFolder={handleFolderClick}
+                      setAllTestCases={setAllTestCases}
                     />
                   ))}
                 </ul>

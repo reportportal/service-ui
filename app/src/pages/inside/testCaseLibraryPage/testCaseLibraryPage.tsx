@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { isEmpty } from 'lodash';
 import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
 import { ProjectDetails } from 'pages/organization/constants';
@@ -33,6 +34,7 @@ import { foldersSelector } from 'controllers/testCase';
 import { ExpandedOptions } from './expandedOptions';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { commonMessages } from './commonMessages';
+import { useCreateTestCaseModal } from './createTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
@@ -41,12 +43,14 @@ const cx = classNames.bind(styles) as typeof classNames;
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
+  const folders = useSelector(foldersSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-  const folders = useSelector(foldersSelector);
-  const hasFolders = folders && folders.length > 0;
+  const hasFolders = !isEmpty(folders);
 
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
@@ -62,25 +66,30 @@ export const TestCaseLibraryPage = () => {
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
             </div>
-            <div className={cx('test-case-library-page__actions')}>
-              <Button
-                variant="text"
-                icon={Parser(ImportIcon as unknown as string)}
-                data-automation-id="importTestCase"
-                adjustWidthOn="content"
-              >
-                {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
-              </Button>
-              <Button variant="ghost" data-automation-id="createTestCase">
-                {formatMessage(commonMessages.createTestCase)}
-              </Button>
-            </div>
+            {hasFolders && (
+              <div className={cx('test-case-library-page__actions')}>
+                <Button
+                  variant="text"
+                  icon={Parser(ImportIcon as unknown as string)}
+                  data-automation-id="importTestCase"
+                  adjustWidthOn="content"
+                >
+                  {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
+                </Button>
+                <Button
+                  variant="ghost"
+                  data-automation-id="createTestCase"
+                  onClick={openCreateTestCaseModal}
+                >
+                  {formatMessage(commonMessages.createTestCase)}
+                </Button>
+              </div>
+            )}
           </div>
           <div
-            className={cx(
-              'test-case-library-page__content',
-              'test-case-library-page__content--no-padding',
-            )}
+            className={cx('test-case-library-page__content', {
+              'test-case-library-page__content--no-padding': hasFolders,
+            })}
           >
             {hasFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
           </div>

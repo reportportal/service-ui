@@ -19,6 +19,8 @@ import { isString } from 'lodash';
 type LocationInfo = {
   payload: {
     testCasePageRoute: string | string[];
+    organizationSlug: string;
+    projectSlug: string;
   };
 };
 
@@ -54,3 +56,8 @@ export const urlFolderIdSelector = (state: State): string => {
 
   return '';
 };
+
+export const urlOrganizationSlugSelector = (state: State): string =>
+  payloadSelector(state).organizationSlug || '';
+
+export const urlProjectSlugSelector = (state: State) => payloadSelector(state).projectSlug || '';

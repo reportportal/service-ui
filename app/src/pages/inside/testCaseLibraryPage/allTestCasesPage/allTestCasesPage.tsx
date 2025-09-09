@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { isEmpty } from 'lodash';
@@ -27,11 +28,15 @@ import {
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { messages } from './messages';
-import styles from './allTestCasesPage.scss';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { urlFolderIdSelector } from 'controllers/pages';
+import { foldersSelector } from 'controllers/testCase';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+
+import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+
+import styles from './allTestCasesPage.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -52,7 +57,14 @@ export const AllTestCasesPage = ({
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
   const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const folderId = useSelector(urlFolderIdSelector);
+  const folders = useSelector(foldersSelector);
   const isAnyRowSelected = !isEmpty(selectedRowIds);
+
+  const folderTitle = useMemo(() => {
+    const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
+    return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
+  }, [folderId, folders, formatMessage]);
 
   // Calculate pagination values
   const totalItems = testCases.length;
@@ -87,8 +99,8 @@ export const AllTestCasesPage = ({
     setActivePage(DEFAULT_CURRENT_PAGE);
   };
 
-  if (isEmpty(testCases)) {
-    return <FolderEmptyState />;
+  if (isEmpty(testCases) && !loading) {
+    return <FolderEmptyState folderTitle={folderTitle} />;
   }
 
   return (
@@ -103,6 +115,7 @@ export const AllTestCasesPage = ({
           onSearchChange={handleSearchChange}
           selectedRowIds={selectedRowIds}
           handleSelectedRowIds={setSelectedRowIds}
+          folderTitle={folderTitle}
         />
       </div>
 

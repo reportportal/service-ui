@@ -16,27 +16,15 @@
 
 export const GET_FOLDERS = 'getFolders' as const;
 export const CREATE_FOLDER = 'createFolder' as const;
+export const CREATE_FOLDER_SUCCESS = 'createFolderSuccess' as const;
+export const DELETE_FOLDER = 'deleteFolder' as const;
+export const DELETE_FOLDER_SUCCESS = 'deleteFolderSuccess' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
+export const START_DELETING_FOLDER = 'startDeletingFolder' as const;
+export const STOP_DELETING_FOLDER = 'stopDeletingFolder' as const;
 export const GET_TEST_CASES = 'getTestCases' as const;
 export const NAMESPACE = 'testCase' as const;
-
-export type Folder = {
-  id: number;
-  name: string;
-  description?: string;
-  countOfTestCases: number;
-  parentFolderId: number | null;
-};
-
-export type TransformedFolder = {
-  id: number;
-  name: string;
-  description?: string;
-  testsCount: number;
-  parentFolderId: number | null;
-  folders: TransformedFolder[];
-};
 export const GET_TEST_CASES_BY_FOLDER_ID = 'getTestCasesByFolderId' as const;
 export const GET_ALL_TEST_CASES = 'getAllTestCases' as const;
 export const START_LOADING_TEST_CASES = 'startLoadingTestCases' as const;

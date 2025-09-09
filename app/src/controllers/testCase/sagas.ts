@@ -32,24 +32,31 @@ import { hideModalAction } from 'controllers/modal';
 import {
   GET_FOLDERS,
   CREATE_FOLDER,
+  DELETE_FOLDER,
   GET_TEST_CASES,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   NAMESPACE,
-  Folder,
 } from './constants';
+import { Folder } from './types';
 import {
-  getFoldersAction,
+  createFoldersSuccessAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
+  startDeletingFolderAction,
+  stopDeletingFolderAction,
   GetTestCasesParams,
   CreateFolderParams,
+  DeleteFolderParams,
   GetTestCasesByFolderIdParams,
   startLoadingTestCasesAction,
   stopLoadingTestCasesAction,
   setTestCasesAction,
+  deleteFolderSuccessAction,
 } from './actionCreators';
+import { getAllFolderIdsToDelete } from './utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { foldersSelector } from 'controllers/testCase/selectors';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
@@ -61,6 +68,10 @@ interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_F
 
 interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
   payload: CreateFolderParams;
+}
+
+interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
+  payload: DeleteFolderParams;
 }
 
 function* getTestCases(action: GetTestCasesAction) {
@@ -192,7 +203,7 @@ function* createFolder(action: CreateFolderAction) {
       startCreatingFolderAction(),
       SPINNER_DEBOUNCE,
     )) as Task;
-    yield call(fetch, URLS.testFolders(projectKey), {
+    const folder = (yield call(fetch, URLS.testFolders(projectKey), {
       method: 'POST',
       data: {
         name: action.payload.folderName,
@@ -200,9 +211,11 @@ function* createFolder(action: CreateFolderAction) {
           ? { parentTestFolderId: action.payload.parentFolderId }
           : {}),
       },
-    });
+    })) as Folder;
+
     yield cancel(spinnerTask);
-    yield put(getFoldersAction());
+
+    yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
     yield put(
       showSuccessNotification({
@@ -221,6 +234,45 @@ function* createFolder(action: CreateFolderAction) {
     );
   } finally {
     yield put(stopCreatingFolderAction());
+  }
+}
+
+function* deleteFolder(action: DeleteFolderAction) {
+  try {
+    yield put(startDeletingFolderAction());
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const folders = (yield select(foldersSelector)) as Folder[];
+    const { folderId, activeFolderId, setAllTestCases } = action.payload;
+    const deletedFolderIds = getAllFolderIdsToDelete(folderId, folders);
+    const isActiveFolder = folderId === activeFolderId;
+
+    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+      method: 'DELETE',
+    });
+
+    if (isActiveFolder || deletedFolderIds.includes(activeFolderId)) {
+      yield call(setAllTestCases);
+    }
+
+    yield put(deleteFolderSuccessAction({ deletedFolderIds }));
+    yield put(hideModalAction());
+    yield put(
+      showSuccessNotification({
+        message: null,
+        messageId: 'testCaseFolderDeletedSuccess',
+        values: {},
+      }),
+    );
+  } catch (error: unknown) {
+    yield put(
+      showErrorNotification({
+        message: (error as { error?: string })?.error,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopDeletingFolderAction());
   }
 }
 
@@ -251,5 +303,6 @@ export function* testCaseSagas() {
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
+    takeEvery(DELETE_FOLDER, deleteFolder),
   ]);
 }

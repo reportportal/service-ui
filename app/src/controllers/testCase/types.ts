@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getTestCasesAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+export type Folder = {
+  id: number;
+  name: string;
+  description?: string;
+  countOfTestCases: number;
+  parentFolderId: number | null;
+  subFolders?: Folder[];
+};
+
+export type TransformedFolder = {
+  id: number;
+  name: string;
+  description?: string;
+  testsCount: number;
+  parentFolderId: number | null;
+  folders: TransformedFolder[];
+};

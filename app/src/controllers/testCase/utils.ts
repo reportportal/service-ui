@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getTestCasesAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { Folder } from './types';
+
+export const getAllFolderIdsToDelete = (targetId: number, folderList: Folder[]): number[] => {
+  const idsToDelete: number[] = [];
+
+  const collectIds = (id: number) => {
+    idsToDelete.push(id);
+
+    folderList.forEach((folder) => {
+      if (folder.parentFolderId === id) {
+        collectIds(folder.id);
+      }
+    });
+  };
+
+  collectIds(targetId);
+
+  return idsToDelete;
+};

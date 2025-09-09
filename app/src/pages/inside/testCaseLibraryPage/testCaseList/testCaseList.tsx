@@ -19,11 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import {
-  TEST_CASE_LIBRARY_PAGE,
-  urlFolderIdSelector,
-  urlOrganizationAndProjectSelector,
-} from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'lodash';
 import { TestCase } from '../types';
@@ -35,7 +31,6 @@ import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
 import styles from './testCaseList.scss';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { foldersSelector } from 'controllers/testCase';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -44,6 +39,7 @@ interface TestCaseListProps {
   loading?: boolean;
   currentPage?: number;
   itemsPerPage: number;
+  folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
   handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
@@ -60,6 +56,7 @@ export const TestCaseList = memo(
     itemsPerPage,
     searchValue = '',
     onSearchChange,
+    folderTitle,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
@@ -68,9 +65,6 @@ export const TestCaseList = memo(
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
-    const folderId = useSelector(urlFolderIdSelector);
-    const folders = useSelector(foldersSelector);
-    const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -134,7 +128,7 @@ export const TestCaseList = memo(
               dispatch({
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
+                  testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
                   organizationSlug,
                   projectSlug,
                 },
@@ -162,12 +156,11 @@ export const TestCaseList = memo(
     ];
 
     const isEmptyList = (value: TestCase[]) => !value.length || value.length === 0;
-    const listTitle = selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
 
     return (
       <div className={cx('test-case-list')}>
         <div className={cx('controls')}>
-          <div className={cx('controls-title')}>{listTitle}</div>
+          <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
               {loading ? null : (

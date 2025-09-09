@@ -34,6 +34,8 @@ import { findAssignedProjectByOrganization } from 'common/utils';
 import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE } from './constants';
 import { stringToArray } from './utils';
 import {
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
   urlTestCaseSlugSelector,
   urlFolderIdSelector,
   locationSelector,
@@ -178,18 +180,6 @@ export const prevTestItemSelector = ({ location }) => {
 };
 
 /**
- * @param {{ project?: { projectSlug?: string } }} state
- * @returns {string}
- */
-export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
-
-/**
- * @param {{ project?: { organizationSlug?: string } }} state
- * @returns {string}
- */
-export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
-
-/**
  * @param {Object} state
  * @returns {{ organizationSlug: string, projectSlug: string } | string}
  */
@@ -319,7 +309,7 @@ export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageT
               payload: {
                 organizationSlug,
                 projectSlug,
-                testCasePageRoute: ['folder', folderId, 'test-cases', testCaseSlug],
+                testCasePageRoute: `folder/${folderId}/test-cases/${testCaseSlug}`,
               },
             },
           }),

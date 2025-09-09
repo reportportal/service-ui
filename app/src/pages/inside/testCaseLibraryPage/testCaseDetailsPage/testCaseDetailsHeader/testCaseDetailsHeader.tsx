@@ -77,7 +77,7 @@ export const TestCaseDetailsHeader = ({
       payload: {
         organizationSlug,
         projectSlug,
-        testCasePageRoute: ['folder', folderId, 'test-cases', testCase.id, 'historyOfActions'],
+        testCasePageRoute: `folder/${folderId}/test-cases/${testCase.id}/historyOfActions`,
       },
     });
   };
