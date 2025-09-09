@@ -34,7 +34,7 @@ import {
   canWorkWithOrganizationsSorting,
 } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
-import { ORGANIZATION } from 'common/constants/pluginNames';
+import { organizationPluginSelector } from 'controllers/plugins';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
@@ -42,7 +42,6 @@ import { messages } from '../messages';
 import { OrganizationsSorting } from './organizationsSorting';
 import { OrganizationsExport } from './organizationsExport';
 import styles from './organizationsPageHeader.scss';
-import { pluginByNameSelector } from 'controllers/plugins';
 
 const cx = classNames.bind(styles);
 
@@ -68,7 +67,7 @@ export const OrganizationsPageHeader = ({
   const { trackEvent } = useTracking();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
   const userRoles = useSelector(userRolesSelector);
-  const organizationPlugin = useSelector((state) => pluginByNameSelector(state, ORGANIZATION));
+  const organizationPlugin = useSelector(organizationPluginSelector);
 
   const onMouseEnter = () => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.HOVER_CREATE_BUTTON);

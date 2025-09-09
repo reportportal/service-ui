@@ -31,8 +31,7 @@ import {
 } from 'controllers/appInfo';
 import { showSuccessNotification } from 'controllers/notification';
 import { SectionLayout, ServerSettingsField } from 'pages/instance/serverSettingsPage/common';
-import { pluginByNameSelector } from 'controllers/plugins';
-import { ORGANIZATION } from 'common/constants/pluginNames';
+import { organizationPluginSelector } from 'controllers/plugins';
 import styles from './ssoUsersForm.scss';
 
 const cx = classNames.bind(styles);
@@ -86,7 +85,7 @@ export const SsoUsersForm = () => {
   const [enabled, setEnabled] = useState(enabledFromStore);
   const { trackEvent } = useTracking();
   const personalOrganizationsFromStore = useSelector(personalOrganizationsSelector);
-  const organizationPlugin = useSelector((state) => pluginByNameSelector(state, ORGANIZATION));
+  const organizationPlugin = useSelector(organizationPluginSelector);
   const [personalOrganizationsEnabled, setPersonalOrganizationsEnabled] = useState(
     personalOrganizationsFromStore,
   );

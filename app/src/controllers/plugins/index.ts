@@ -58,6 +58,7 @@ export {
   isImportPluginsAvailableSelector,
   globalIntegrationsSelector,
   pluginsLoadingSelector,
+  organizationPluginSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {
