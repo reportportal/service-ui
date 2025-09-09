@@ -39,6 +39,7 @@ import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
 import { TestPlansPage } from 'pages/inside/testPlansPage';
+import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -63,6 +64,7 @@ import {
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -227,6 +229,11 @@ export const pageRendering = {
   },
   [PRODUCT_VERSION_TAB_PAGE]: {
     component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    component: TestPlanDetailsPage,
     layout: ProjectLayout,
     rawContent: true,
   },

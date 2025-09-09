@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  pageHeader: {
+    id: 'EmptyTestPlan.header',
+    defaultMessage: 'No Test Cases added yet',
+  },
+  pageDescription: {
+    id: 'EmptyTestPlan.description',
+    defaultMessage:
+      'To set up Launches for your Test Plan, begin by selecting tests from the Test Case Library. This ensures you address all essential testing areas!',
+  },
+});

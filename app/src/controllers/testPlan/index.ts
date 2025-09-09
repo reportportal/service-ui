@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { getTestPlansAction } from './actionCreators';
+export { getTestPlansAction, getTestPlanAction } from './actionCreators';
 export { testPlanSagas } from './sagas';
 export * from './constants';
 export { testPlanReducer } from './reducer';

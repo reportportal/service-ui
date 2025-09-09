@@ -65,7 +65,7 @@ export const EmptyTestPlans = () => {
     <div className={cx('empty-test-plans')}>
       <EmptyStatePage
         title={formatMessage(messages.pageHeader)}
-        description={Parser(formatMessage(messages.pageDescription))}
+        description={formatMessage(messages.pageDescription)}
         imageType="flag"
         documentationLink={referenceDictionary.rpDoc}
         buttons={getAvailableActions()}

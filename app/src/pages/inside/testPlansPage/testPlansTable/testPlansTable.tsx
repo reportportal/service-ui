@@ -16,15 +16,19 @@
 
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { Table, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { ProgressBar } from './progressBar';
-import { Options } from './options';
+import { TestPlanActions } from '../testPlanActions';
 import { TestPlanDto } from 'controllers/testPlan';
 import { messages } from './messages';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 
 import styles from './testPlansTable.scss';
+import { ReactNode } from 'react';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -34,6 +38,30 @@ interface TestPlansTableProps {
 
 export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
   const { formatMessage, formatNumber } = useIntl();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useProjectDetails();
+
+  const handleRowClick = (testPlanId: number) => {
+    dispatch({
+      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+      payload: { organizationSlug, projectSlug, testPlanId: testPlanId.toString() },
+    });
+  };
+
+  const getOpenTestPlanDetailsButton = (
+    testPlanId: number,
+    testPlanName: string,
+    children: ReactNode,
+  ) => (
+    <button
+      type="button"
+      className={cx('test-plans__table-cell-clickable')}
+      aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
+      onClick={() => handleRowClick(testPlanId)}
+    >
+      {children}
+    </button>
+  );
 
   const currentTestPlans = testPlans.map(
     ({ id, name, totalTestCases = 0, coveredTestCases = 0 }) => {
@@ -41,7 +69,9 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
 
       return {
         id,
-        testPlanName: name,
+        testPlanName: {
+          component: getOpenTestPlanDetailsButton(id, name, name),
+        },
         coveredTotal: `${coveredTestCases} / ${totalTestCases}`,
         coverage: {
           component: (
@@ -58,14 +88,10 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
           component: <ProgressBar progress={coverage * 100} />,
         },
         options: {
-          component: <Options />,
+          component: <TestPlanActions testPlanId={id} variant="table" />,
         },
         icon: {
-          component: (
-            <div className={cx('test-plans__table-cell-icon')}>
-              <ChevronRightBreadcrumbsIcon />
-            </div>
-          ),
+          component: getOpenTestPlanDetailsButton(id, name, <ChevronRightBreadcrumbsIcon />),
         },
       };
     },

@@ -14,5 +14,15 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+import { NOTIFICATION_TYPES } from './constants';
+
+export type NotificationType = (typeof NOTIFICATION_TYPES)[keyof typeof NOTIFICATION_TYPES];
+
+export interface Notification {
+  type: NotificationType;
+  message?: string;
+  messageId?: string;
+  values?: Record<string, unknown>;
+}
+
+export type NotificationState = Notification[];

@@ -25,16 +25,8 @@ export const messages = defineMessages({
     id: 'TestPlansTable.coverage',
     defaultMessage: 'Coverage',
   },
-  editTestPlan: {
-    id: 'TestPlansTable.editTestPlan',
-    defaultMessage: 'Edit test plan',
-  },
-  duplicateTestPlan: {
-    id: 'TestPlansTable.duplicateTestPlan',
-    defaultMessage: 'Duplicate test plan',
-  },
-  deleteTestPlan: {
-    id: 'TestPlansTable.deleteTestPlan',
-    defaultMessage: 'Delete test plan',
+  viewTestPlanDetails: {
+    id: 'TestPlansTable.viewTestPlanDetails',
+    defaultMessage: 'View {testPlanName} details',
   },
 });
