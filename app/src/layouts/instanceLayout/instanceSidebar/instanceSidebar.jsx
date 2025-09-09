@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeSidebarOptions, canSeePluginsPages } from 'common/utils/permissions';
+import { canSeeSidebarOptions, canSeeInstanceLevelPluginsPages } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
@@ -96,7 +96,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       );
     }
 
-    canSeePluginsPages(userRoles) &&
+    canSeeInstanceLevelPluginsPages(userRoles) &&
       sidebarExtensions.forEach((extension) => {
         sidebarItems.push({
           name: extension.name,
