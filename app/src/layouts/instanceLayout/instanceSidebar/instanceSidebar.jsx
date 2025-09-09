@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeSidebarOptions } from 'common/utils/permissions';
+import { canSeeSidebarOptions, canSeeInstanceLevelPluginsPages } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
@@ -96,13 +96,14 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       );
     }
 
-    sidebarExtensions.forEach((extension) =>
-      sidebarItems.push({
-        name: extension.name,
-        component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-      }),
-    );
+    canSeeInstanceLevelPluginsPages(userRoles) &&
+      sidebarExtensions.forEach((extension) => {
+        sidebarItems.push({
+          name: extension.name,
+          component: <ExtensionLoader extension={extension} />,
+          onClick: onClickNavBtn,
+        });
+      });
 
     return noAssignedOrganizations ? [] : sidebarItems;
   };
