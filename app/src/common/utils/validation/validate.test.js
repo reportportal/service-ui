@@ -122,8 +122,8 @@ describe('validate.login', () => {
     expect(validate.login('email@example.com (Joe Smith)')).toBe(false);
     expect(validate.login('email@example')).toBe(false);
     expect(validate.login('あいうえお@example.com')).toBe(false);
-    expect(validate.email('firstname+lastname@example.com')).toBe(false);
-    expect(validate.email('.email@example.com')).toBe(false);
+    expect(validate.login('firstname+lastname@example.com')).toBe(false);
+    expect(validate.login('.email@example.com')).toBe(false);
   });
 });
 
