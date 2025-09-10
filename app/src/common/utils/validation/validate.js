@@ -34,7 +34,7 @@ export const rallyUrl = composeValidators([
   regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
 export const email = composeValidators([
-  regex(/^(?![.])[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
+  regex(/^(?![.])[a-z0-9._-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
 ]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, email]);
