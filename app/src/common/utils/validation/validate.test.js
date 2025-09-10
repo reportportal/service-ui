@@ -71,7 +71,6 @@ describe('validate.email', () => {
     expect(validate.email('email@example.com')).toBe(true);
     expect(validate.email('firstname.lastname@example.com')).toBe(true);
     expect(validate.email('email@subdomain.example.com')).toBe(true);
-    expect(validate.email('firstname+lastname@example.com')).toBe(true);
     expect(validate.email('email@123.123.123.123')).toBe(true);
     expect(validate.email('1234567890@example.com')).toBe(true);
     expect(validate.email('firstname-lastname@example.com')).toBe(true);
@@ -87,6 +86,8 @@ describe('validate.email', () => {
     expect(validate.email('email@example.com (Joe Smith)')).toBe(false);
     expect(validate.email('email@example')).toBe(false);
     expect(validate.email('あいうえお@example.com')).toBe(false);
+    expect(validate.email('firstname+lastname@example.com')).toBe(false);
+    expect(validate.email('.email@example.com')).toBe(false);
   });
 });
 
@@ -106,7 +107,6 @@ describe('validate.login', () => {
     expect(validate.login('email@example.com')).toBe(true);
     expect(validate.login('firstname.lastname@example.com')).toBe(true);
     expect(validate.login('email@subdomain.example.com')).toBe(true);
-    expect(validate.login('firstname+lastname@example.com')).toBe(true);
     expect(validate.login('email@123.123.123.123')).toBe(true);
     expect(validate.login('1234567890@example.com')).toBe(true);
     expect(validate.login('firstname-lastname@example.com')).toBe(true);
@@ -122,6 +122,8 @@ describe('validate.login', () => {
     expect(validate.login('email@example.com (Joe Smith)')).toBe(false);
     expect(validate.login('email@example')).toBe(false);
     expect(validate.login('あいうえお@example.com')).toBe(false);
+    expect(validate.email('firstname+lastname@example.com')).toBe(false);
+    expect(validate.email('.email@example.com')).toBe(false);
   });
 });
 
@@ -696,7 +698,6 @@ describe('validate.urlOrEmailValidator', () => {
     expect(validate.urlOrEmailValidator('email@example.com')).toBe(true);
     expect(validate.urlOrEmailValidator('firstname.lastname@example.com')).toBe(true);
     expect(validate.urlOrEmailValidator('email@subdomain.example.com')).toBe(true);
-    expect(validate.urlOrEmailValidator('firstname+lastname@example.com')).toBe(true);
     expect(validate.urlOrEmailValidator('email@123.123.123.123')).toBe(true);
     expect(validate.urlOrEmailValidator('1234567890@example.com')).toBe(true);
     expect(validate.urlOrEmailValidator('firstname-lastname@example.com')).toBe(true);
