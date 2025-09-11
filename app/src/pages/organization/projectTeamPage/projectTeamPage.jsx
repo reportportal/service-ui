@@ -25,13 +25,13 @@ import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { messages } from '../messages';
 import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
 import { ProjectTeamListTable } from './projectTeamListTable';
+import { ProjectTeamPageHeader } from './projectTeamPageHeader/projectTeamPageHeader';
 import styles from './projectTeamPage.scss';
 
 const cx = classNames.bind(styles);
@@ -83,7 +83,7 @@ export const ProjectTeamPage = () => {
 
   return (
     <div className={cx('project-team-page')}>
-      <LocationHeaderLayout
+      <ProjectTeamPageHeader
         hasPermission={canInviteInternalUser}
         onInvite={showInviteUserModal}
         isMembersLoading={isMembersLoading}
