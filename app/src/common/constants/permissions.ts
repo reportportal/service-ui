@@ -176,7 +176,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.ADD_TEST_CASE_TO_LAUNCH]: true,
       [ACTIONS.ADD_TEST_CASE_TO_TEST_PLAN]: true,
       [ACTIONS.CREATE_TEST_CASE]: true,
-      [ACTIONS.CREATE_TEST_CASE_FOLDER]: true,
       [ACTIONS.DELETE_TEST_CASE]: true,
       [ACTIONS.DUPLICATE_TEST_CASE]: true,
       [ACTIONS.EDIT_TEST_CASE]: true,
