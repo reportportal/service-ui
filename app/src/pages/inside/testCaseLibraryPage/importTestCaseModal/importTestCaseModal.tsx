@@ -45,7 +45,7 @@ export const ImportTestCaseModal = () => {
           <p className={cx('import-test-case-modal__info-text')}>
             {formatMessage(messages.downloadDescription)}
           </p>
-          <Link href="#" className={cx('import-test-case-modal__download-link')}>
+          <Link to="#" className={cx('import-test-case-modal__download-link')}>
             {formatMessage(messages.downloadTemplate)}
             <i className={cx('import-test-case-modal__external-icon')}>{iconMarkup}</i>
           </Link>
@@ -54,8 +54,8 @@ export const ImportTestCaseModal = () => {
         <div>
           <FileDropArea
             messages={{
-              incorrectFileFormat: 'File format is not supported',
-              incorrectFileSize: 'File size exceeds the limit',
+              incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
+              incorrectFileSize: formatMessage(messages.incorrectFileSize),
             }}
             onFilesAdded={() => {}}
             acceptFileMimeTypes={[]}
@@ -67,11 +67,14 @@ export const ImportTestCaseModal = () => {
                 icon={<AddCsvIcon />}
                 description={
                   <>
-                    Drop .CSV file or
-                    <FileDropArea.BrowseButton>Browse</FileDropArea.BrowseButton> to attach
+                    {formatMessage(messages.dropCsvOr)}{' '}
+                    <FileDropArea.BrowseButton>
+                      {formatMessage(messages.browse)}
+                    </FileDropArea.BrowseButton>{' '}
+                    {formatMessage(messages.toAttach)}
                   </>
                 }
-                fileSizeMessage="File size should be up to 50 MB"
+                fileSizeMessage={formatMessage(messages.fileSizeMessage, { size: 50 })}
               />
               <FileDropArea.Error />
             </div>
