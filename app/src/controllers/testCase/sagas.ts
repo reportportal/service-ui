@@ -37,6 +37,7 @@ import {
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   GET_TEST_CASE_DETAILS,
+  GET_TEST_CASE_DETAILS_FAILURE,
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
 } from './constants';
@@ -127,6 +128,11 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
       payload: testCaseDetails,
     });
   } catch {
+    yield put({
+      type: GET_TEST_CASE_DETAILS_FAILURE,
+      error: 'testCaseLoadingFailed',
+    });
+
     yield put(
       showErrorNotification({
         messageId: 'testCaseLoadingFailed',

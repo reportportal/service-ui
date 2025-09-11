@@ -26,12 +26,12 @@ export interface TestCaseBasicInfo {
   name: string;
   priority: TestCasePriority;
   createdAt: number;
+  description?: string;
 }
 
 export interface TestCase extends TestCaseBasicInfo {
   path: string[];
   tags: Tag[];
-  description?: string;
   updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];

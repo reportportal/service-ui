@@ -60,7 +60,7 @@ export const isLoadingTestCasesSelector = (state: RootState) =>
 
 export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
 
-export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details.data;
+export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
