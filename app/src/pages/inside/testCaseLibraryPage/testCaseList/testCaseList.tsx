@@ -29,8 +29,9 @@ import { TestCaseSidePanel } from './testCaseSidePanel';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
-import styles from './testCaseList.scss';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import styles from './testCaseList.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -62,6 +63,7 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const dispatch = useDispatch();
+    const { canDoTestCaseBulkActions } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -188,7 +190,7 @@ export const TestCaseList = memo(
           <>
             {!isEmptyList(currentData) ? (
               <Table
-                selectable
+                selectable={canDoTestCaseBulkActions}
                 onToggleRowSelection={handleRowSelect}
                 selectedRowIds={selectedRowIds}
                 data={tableData}

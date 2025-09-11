@@ -26,6 +26,7 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
@@ -50,13 +51,15 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   handleAddTags: () => void;
   handleAddDescription: () => void;
   handleEditDescription: () => void;
-}) =>
-  [
+}) => {
+  const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+
+  return [
     {
       titleKey: 'tags',
       defaultMessageKey: 'noTagsAdded',
-      childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: (
+      childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
+      headerControl: canEditTestCaseTag && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
           {headerControlKeys.ADD}
         </Button>
@@ -65,31 +68,24 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     {
       titleKey: 'description',
       defaultMessageKey: 'noDescriptionAdded',
-      childComponent: isEmpty(testCaseDescription) ? null : (
+      childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      headerControl: isEmpty(testCaseDescription) ? (
+      headerControl: canEditTestCaseDescription && (
         <Button
           variant="text"
           adjustWidthOn="content"
-          onClick={handleAddDescription}
+          iconPlace={isEmpty(testCaseDescription) ? 'start' : 'end'}
+          onClick={isEmpty(testCaseDescription) ? handleEditDescription : handleAddDescription}
           className={cx('fixed-button-height')}
-          icon={<PlusIcon />}
+          icon={isEmpty(testCaseDescription) ? <PlusIcon /> : <EditIcon />}
         >
-          {headerControlKeys.ADD}
+          {isEmpty(testCaseDescription) && headerControlKeys.ADD}
         </Button>
-      ) : (
-        <Button
-          variant="text"
-          adjustWidthOn="content"
-          iconPlace="end"
-          onClick={handleEditDescription}
-          className={cx('fixed-button-height')}
-          icon={<EditIcon />}
-        />
       ),
     },
   ] as const;
+};
 
 const testCase: TestCase = {
   id: 27752,

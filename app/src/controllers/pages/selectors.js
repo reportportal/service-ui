@@ -23,7 +23,6 @@ import {
   activeProjectSelector,
   assignedOrganizationsSelector,
   assignedProjectsSelector,
-  userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -41,6 +40,7 @@ import {
   locationSelector,
   payloadSelector,
 } from './typed-selectors';
+import { userRolesSelector } from './';
 
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
@@ -208,27 +208,6 @@ export const activeProjectRoleSelector = createSelector(
 
     return assignedProject?.projectRole;
   },
-);
-
-const activeOrganizationRoleSelector = createSelector(
-  urlOrganizationSlugSelector,
-  assignedOrganizationsSelector,
-  (organizationSlug, assignedOrganizations) => {
-    const assignedOrganization = assignedOrganizations[organizationSlug];
-
-    return assignedOrganization?.organizationRole;
-  },
-);
-
-export const userRolesSelector = createSelector(
-  userAccountRoleSelector,
-  activeOrganizationRoleSelector,
-  activeProjectRoleSelector,
-  (userRole, organizationRole, projectRole) => ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }),
 );
 
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {

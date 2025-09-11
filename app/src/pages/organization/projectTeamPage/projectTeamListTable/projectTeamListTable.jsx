@@ -21,11 +21,11 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { DEFAULT_SORT_COLUMN, NAMESPACE } from 'controllers/members/constants';
 import { fetchMembersAction, membersPaginationSelector } from 'controllers/members';
-import { canSeeEmailMembers, getRoleTitle, getRoleBadgesData } from 'common/utils/permissions';
+import { getRoleTitle, getRoleBadgesData } from 'common/utils/permissions';
 import { projectKeySelector } from 'controllers/project';
 import { ProjectTeamActionMenu } from './projectTeamActionMenu/projectTeamActionMenu';
 import {
@@ -34,6 +34,7 @@ import {
   PAGE_KEY,
   withPagination,
 } from 'controllers/pagination';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { messages } from '../../../common/users/membersListTable/messages';
 import styles from './projectTeamListTable.scss';
@@ -56,7 +57,7 @@ const ProjectTeamListTableWrapped = ({
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectKey = useSelector(projectKeySelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeEmailMembers } = useUserPermissions();
   const currentUserId = useSelector(userIdSelector);
 
   const data = useMemo(
@@ -112,7 +113,7 @@ const ProjectTeamListTableWrapped = ({
 
   const fixedColumns = [];
 
-  if (canSeeEmailMembers(userRoles)) {
+  if (canSeeEmailMembers) {
     fixedColumns.push({
       key: 'email',
       header: formatMessage(messages.email),

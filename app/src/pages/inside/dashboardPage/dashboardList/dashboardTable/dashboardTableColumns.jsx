@@ -15,19 +15,18 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { injectIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
-import IconDuplicate from 'common/img/duplicate-inline.svg';
-import { injectIntl } from 'react-intl';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { copyDashboardConfigAction } from 'controllers/dashboard';
-import { userRolesSelector } from 'controllers/pages';
-import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -97,7 +96,7 @@ export const DuplicateColumn = track()(
     const [opened, setOpened] = useState(false);
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
-    const userRoles = useSelector(userRolesSelector);
+    const { canWorkWithDashboard } = useUserPermissions();
 
     useEffect(() => {
       if (opened) {
@@ -145,7 +144,7 @@ export const DuplicateColumn = track()(
             <i className={cx('arrow', { opened })} />
             {opened && (
               <div className={cx('duplicate-menu', 'shown')}>
-                {canWorkWithDashboard(userRoles) && (
+                {canWorkWithDashboard && (
                   <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
                     {intl.formatMessage(messages.duplicate)}
                   </button>

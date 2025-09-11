@@ -21,9 +21,11 @@ import classNames from 'classnames/bind';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
 
@@ -35,6 +37,34 @@ interface FolderEmptyStateProps {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
+  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
+
+  const getAvailableButtons = () => {
+    const buttons: ActionButton[] = [];
+
+    if (canCreateTestCase) {
+      buttons.push({
+        name: formatMessage(commonMessages.createTestCase),
+        dataAutomationId: 'createTestCaseButton',
+        icon: PlusIconInline,
+        isCompact: true,
+        handleButton: () => {},
+      });
+    }
+
+    if (canImportTestCases) {
+      buttons.push({
+        name: formatMessage(messages.importTestCases),
+        dataAutomationId: 'importTestCaseButton',
+        variant: 'ghost',
+        icon: ImportIcon,
+        isCompact: true,
+        handleButton: () => {},
+      });
+    }
+
+    return buttons;
+  };
 
   return (
     <div className={cx('folder-empty-state')}>
@@ -43,21 +73,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         title={formatMessage(messages.emptyPageTitle)}
         description={Parser(formatMessage(messages.folderEmptyPageDescription))}
         imageType="docs"
-        buttons={[
-          {
-            name: formatMessage(commonMessages.createTestCase),
-            dataAutomationId: 'createTestCaseButton',
-            icon: PlusIconInline,
-            isCompact: true,
-          },
-          {
-            name: formatMessage(messages.importTestCases),
-            dataAutomationId: 'importTestCaseButton',
-            variant: 'ghost',
-            icon: ImportIcon,
-            isCompact: true,
-          },
-        ]}
+        buttons={getAvailableButtons()}
       />
     </div>
   );

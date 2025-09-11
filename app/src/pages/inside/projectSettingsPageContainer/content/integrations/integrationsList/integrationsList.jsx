@@ -17,14 +17,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { docsReferences } from 'common/utils';
-import { userRolesSelector } from 'controllers/pages';
-import { canUpdateSettings } from 'common/utils/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationsListItem } from './integrationsListItem';
 import { messages } from './messages';
 import styles from './integrationsList.scss';
@@ -35,8 +33,7 @@ export const IntegrationsList = (props) => {
   const { formatMessage } = useIntl();
   const { availableIntegrations, onItemClick } = props;
   const { trackEvent } = useTracking();
-  const userRoles = useSelector(userRolesSelector);
-  const isEditor = canUpdateSettings(userRoles);
+  const { canUpdateSettings } = useUserPermissions();
 
   const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations'));
@@ -66,10 +63,12 @@ export const IntegrationsList = (props) => {
       ) : (
         <EmptyStatePage
           title={formatMessage(
-            isEditor ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
+            canUpdateSettings ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
           )}
           description={formatMessage(
-            isEditor ? messages.noIntegrationsDescription : messages.noIntegrationsYetDescription,
+            canUpdateSettings
+              ? messages.noIntegrationsDescription
+              : messages.noIntegrationsYetDescription,
           )}
           documentationLink={docsReferences.emptyStateIntegrationsDocs}
           handleDocumentationClick={handleDocumentationClick}

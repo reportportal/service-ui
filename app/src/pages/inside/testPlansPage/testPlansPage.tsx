@@ -29,7 +29,7 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
-
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateTestPlanModal } from './hooks';
 import { TestPlansTable } from './testPlansTable';
 import { commonMessages } from './commonMessages';
@@ -43,6 +43,7 @@ export const TestPlansPage = () => {
   const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
+  const { canCreateTestPlan } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -91,9 +92,15 @@ export const TestPlansPage = () => {
               >
                 {formatMessage(commonMessages.refreshPage)}
               </Button>
-              <Button variant="ghost" data-automation-id="createTestPlanButton" onClick={openModal}>
-                {formatMessage(commonMessages.createTestPlan)}
-              </Button>
+              {canCreateTestPlan && (
+                <Button
+                  variant="ghost"
+                  data-automation-id="createTestPlanButton"
+                  onClick={openModal}
+                >
+                  {formatMessage(commonMessages.createTestPlan)}
+                </Button>
+              )}
             </div>
           )}
         </header>
