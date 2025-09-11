@@ -27,14 +27,17 @@ import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expand
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useCreateTestCaseModal } from '../../createTestCaseModal';
+import { useImportTestCaseModal } from '../../importTestCaseModal';
 import { ActionButton } from '../../types';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { canCreateTestCase, canCreateTestCaseFolder } = useUserPermissions();
+  const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases} = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
   const openCreateFolderModal = () => {
     dispatch(
@@ -71,6 +74,16 @@ export const MainPageEmptyState = () => {
         isCompact: true,
         variant: 'ghost',
         handleButton: openCreateTestCaseModal,
+      });
+    }
+
+    if (canImportTestCases) {
+      buttons.push({
+        name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+        dataAutomationId: 'importTestCaseButton',
+        isCompact: false,
+        variant: 'ghost',
+        handleButton: openImportFolderModal,
       });
     }
 

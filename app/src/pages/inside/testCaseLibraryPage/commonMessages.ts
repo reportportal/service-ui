@@ -29,6 +29,14 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.createFolder',
     defaultMessage: 'Create Folder',
   },
+  importTestCase: {
+    id: 'TestCaseLibraryPage.import',
+    defaultMessage: 'Import',
+  },
+  importTestCaseModal: {
+    id: 'TestCaseLibraryPage.importTestCases',
+    defaultMessage: 'Import Test Cases',
+  },
   allTestCases: {
     id: 'TestCaseLibraryPage.allTestCases',
     defaultMessage: 'All Test Cases',
