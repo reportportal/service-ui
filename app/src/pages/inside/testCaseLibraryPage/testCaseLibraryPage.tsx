@@ -36,6 +36,7 @@ import { ExpandedOptions } from './expandedOptions';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { commonMessages } from './commonMessages';
 import { useCreateTestCaseModal } from './createTestCaseModal';
+import { useImportTestCaseModal } from './importTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
@@ -50,6 +51,7 @@ export const TestCaseLibraryPage = () => {
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
