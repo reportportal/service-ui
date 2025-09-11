@@ -18,6 +18,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { isEmpty, noop } from 'lodash';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -27,10 +28,11 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { testCaseDetailsSelector } from 'controllers/testCase';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { TestCase } from '../types';
+import { TestCase, TestCaseBasicInfo } from '../types';
 import { mockedTestCaseDescription } from '../testCaseList/mockData';
 
 import styles from './testCaseDetailsPage.scss';
@@ -107,6 +109,10 @@ export const TestCaseDetailsPage = () => {
   const [isTagsAdded, setIsTagsAdded] = useState(false);
   const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
 
+  const testCaseDetails: TestCaseBasicInfo = useSelector(testCaseDetailsSelector);
+
+  if (!testCaseDetails) return null;
+
   const handleAddTags = () => {
     setIsTagsAdded((prevState) => !prevState);
   };
@@ -134,7 +140,7 @@ export const TestCaseDetailsPage = () => {
         <div className={cx('page')}>
           <TestCaseDetailsHeader
             className={cx('page__header')}
-            testCase={testCase}
+            testCase={testCaseDetails}
             onAddToLaunch={noop}
             onAddToTestPlan={noop}
             onMenuAction={noop}

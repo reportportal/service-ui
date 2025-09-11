@@ -30,7 +30,7 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE } from './constants';
+import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
 import { stringToArray } from './utils';
 import {
   urlOrganizationSlugSelector,
@@ -284,7 +284,7 @@ export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageT
           title: testTitle,
           ...(pageTitle && {
             link: {
-              type: TEST_CASE_LIBRARY_PAGE,
+              type: TEST_CASE_DETAILS_PAGE,
               payload: {
                 organizationSlug,
                 projectSlug,

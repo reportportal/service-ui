@@ -30,6 +30,9 @@ import {
   SET_TEST_CASES,
   DELETE_FOLDER_SUCCESS,
   CREATE_FOLDER_SUCCESS,
+  GET_TEST_CASE_DETAILS,
+  GET_TEST_CASE_DETAILS_SUCCESS,
+  GET_TEST_CASE_DETAILS_FAILURE,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -60,6 +63,12 @@ export const INITIAL_STATE: InitialStateType = {
     isLoading: false,
     list: [],
   },
+};
+
+const INITIAL_DETAILS_STATE = {
+  data: null,
+  loading: false,
+  error: null,
 };
 
 type FolderActions =
@@ -132,7 +141,24 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions
   }
 };
 
+const testCaseDetailsReducer = (
+  state = INITIAL_DETAILS_STATE,
+  { type, payload, error }: { type: string; payload?: unknown; error?: string },
+) => {
+  switch (type) {
+    case GET_TEST_CASE_DETAILS:
+      return { ...state, loading: true, error: null };
+    case GET_TEST_CASE_DETAILS_SUCCESS:
+      return { ...state, loading: false, data: payload };
+    case GET_TEST_CASE_DETAILS_FAILURE:
+      return { ...state, loading: false, error };
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
+  details: testCaseDetailsReducer,
   folders: combineReducers({
     data: queueReducers(
       fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),

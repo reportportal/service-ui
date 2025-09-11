@@ -17,6 +17,7 @@
 import { createSelector } from 'reselect';
 import { Folder, TransformedFolder } from './types';
 import { InitialStateType } from './reducer';
+import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
 
 interface TestCaseState {
   folders?: {
@@ -28,6 +29,9 @@ interface TestCaseState {
   testCases?: {
     isLoading?: boolean;
     list?: unknown[];
+  };
+  details?: {
+    data?: TestCaseBasicInfo;
   };
 }
 
@@ -55,6 +59,8 @@ export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
 
 export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
+
+export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details.data;
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,

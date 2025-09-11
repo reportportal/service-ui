@@ -375,6 +375,8 @@ export const URLS = {
 
   testCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testCaseDetails: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
   testCasesByFolderId: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/test-case?testFolderId=${folderId}`,
   allTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case`,

@@ -101,7 +101,11 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
-import { getFoldersAction, needsToLoadFoldersSelector } from 'controllers/testCase';
+import {
+  GET_TEST_CASE_DETAILS,
+  getFoldersAction,
+  needsToLoadFoldersSelector,
+} from 'controllers/testCase';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
@@ -393,6 +397,12 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
+      const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
+      const testCaseId = match ? match[1] : null;
+
+      if (testCaseId) {
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+      }
 
       // Only dispatch getFoldersAction if folders are not already loaded
       if (needsToLoadFoldersSelector(state)) {

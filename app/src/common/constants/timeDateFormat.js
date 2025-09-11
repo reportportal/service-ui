@@ -16,6 +16,7 @@
 
 export const TIME_INTERVAL = 15;
 export const DATE_FORMAT = 'MM-dd-yyyy';
+export const REVERSED_DATE_FORMAT = 'YYYY-MM-DD';
 export const TIME_FORMAT = 'HH:mm';
 export const TIME_DATE_FORMAT = 'HH:mm MM/dd/yyyy';
 export const DATE_FORMAT_TOOLTIP = 'yyyy-MM-dd';

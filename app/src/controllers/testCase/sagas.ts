@@ -36,6 +36,8 @@ import {
   GET_TEST_CASES,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
+  GET_TEST_CASE_DETAILS,
+  GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
 } from './constants';
 import { Folder } from './types';
@@ -74,6 +76,12 @@ interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
   payload: DeleteFolderParams;
 }
 
+interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
+  payload: {
+    testCaseId: string;
+  };
+}
+
 function* getTestCases(action: GetTestCasesAction) {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
@@ -103,6 +111,27 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     );
   } finally {
     yield put(stopLoadingTestCasesAction());
+  }
+}
+
+function* getTestCaseDetails(action: TestCaseDetailsAction) {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const testCaseDetails = (yield call(
+      fetch,
+      URLS.testCaseDetails(projectKey, action.payload.testCaseId),
+    )) as TestCase;
+
+    yield put({
+      type: GET_TEST_CASE_DETAILS_SUCCESS,
+      payload: testCaseDetails,
+    });
+  } catch {
+    yield put(
+      showErrorNotification({
+        messageId: 'testCaseLoadingFailed',
+      }),
+    );
   }
 }
 
@@ -296,9 +325,14 @@ function* watchGetAllTestCases() {
   yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
 }
 
+function* watchGetTestCaseDetails() {
+  yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
+}
+
 export function* testCaseSagas() {
   yield all([
     watchGetTestCases(),
+    watchGetTestCaseDetails(),
     watchGetFolders(),
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
