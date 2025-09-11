@@ -19,4 +19,19 @@ export const messages = defineMessages({
     defaultMessage:
       'Imported test cases will be stored in a folder. Choose another name if you’d like.',
   },
+  incorrectFileFormat: {
+    id: 'ImportTestCase.incorrectFileFormat',
+    defaultMessage: 'File format is not supported',
+  },
+  incorrectFileSize: {
+    id: 'ImportTestCase.incorrectFileSize',
+    defaultMessage: 'File size exceeds the limit',
+  },
+  dropCsvOr: { id: 'ImportTestCase.dropCsvOr', defaultMessage: 'Drop .CSV file or' },
+  browse: { id: 'ImportTestCase.browse', defaultMessage: 'Browse' },
+  toAttach: { id: 'ImportTestCase.toAttach', defaultMessage: 'to attach' },
+  fileSizeMessage: {
+    id: 'ImportTestCase.fileSizeMessage',
+    defaultMessage: 'File size should be up to {size} MB',
+  },
 });
