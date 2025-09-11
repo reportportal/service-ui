@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
-import { getFormValues, reduxForm, FieldArray } from 'redux-form';
+import { getFormValues, reduxForm, FieldArray, getFormSyncErrors } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -32,6 +32,7 @@ import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
@@ -106,10 +107,11 @@ const messages = defineMessages({
   },
 });
 
-export const CreateUserModal = ({ handleSubmit, invalid }) => {
+export const CreateUserModal = ({ handleSubmit }) => {
   const { trackEvent } = useTracking();
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
+  const syncErrors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state));
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -172,6 +174,8 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
           assignOrganization({ email, organization }),
         );
         await Promise.all(assignPromises);
+
+        dispatch(fetchAllUsersAction());
       }
     } catch {
       /* empty */
@@ -179,9 +183,27 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   };
 
   const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
-  const isTouched = Object.keys(fields).some(
-    (field) => field !== ADMIN_RIGHTS && fields[field].touched,
-  );
+  const hasTouchedErrors = () => {
+    const checkFieldErrors = (fieldName, field, errors) => {
+      if (field?.touched && errors?.[fieldName]) {
+        return true;
+      }
+
+      if (field && typeof field === 'object' && !field.touched && !field.visited) {
+        return Object.keys(field).some((nestedFieldName) => {
+          const nestedField = field[nestedFieldName];
+          return checkFieldErrors(nestedFieldName, nestedField, errors?.[fieldName]);
+        });
+      }
+
+      return false;
+    };
+
+    return Object.keys(fields).some((fieldName) => {
+      const field = fields[fieldName];
+      return checkFieldErrors(fieldName, field, syncErrors);
+    });
+  };
 
   return (
     <Modal
@@ -191,7 +213,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
         onClick: () => {
           handleSubmit(onCreateUser)();
         },
-        disabled: isTouched && invalid,
+        disabled: hasTouchedErrors(),
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -218,6 +240,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
               label={formatMessage(messages.fullName)}
               defaultWidth={false}
               placeholder={formatMessage(messages.fullNamePlaceholder)}
+              isRequired
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -229,6 +252,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   label={formatMessage(messages.email)}
                   defaultWidth={false}
                   placeholder={formatMessage(messages.emailPlaceholder)}
+                  isRequired
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -244,6 +268,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   type="password"
                   helpText={formatMessage(messages.passwordValidateMessage)}
                   classNameHelpText={cx('help-text')}
+                  isRequired
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -262,6 +287,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
           props={{
             formName: CREATE_USER_FORM,
             formNamespace: 'organization',
+            isOrganizationRequired: true,
           }}
         />
       </form>
@@ -271,13 +297,12 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
 
 CreateUserModal.propTypes = {
   handleSubmit: PropTypes.func,
-  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('createUserModal')(
   reduxForm({
     form: CREATE_USER_FORM,
-    validate: ({ fullName, email, password, organization }) => {
+    validate: ({ fullName, email, password, organization, organizations = [] }) => {
       const errors = {};
 
       errors[FULL_NAME_FIELD] = commonValidators.createPatternCreateUserNameValidator()(
@@ -288,8 +313,12 @@ export default withModal('createUserModal')(
         password?.trim(),
       );
 
-      if (!organization?.name) {
-        errors.organization = { name: commonValidators.requiredField() };
+      if (organizations.length === 0) {
+        errors.organizations = commonValidators.requiredField();
+
+        if (!organization?.name) {
+          errors.organization = { name: commonValidators.requiredField() };
+        }
       }
 
       return errors;

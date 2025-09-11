@@ -113,6 +113,7 @@ interface InstanceAssignmentItem {
 interface InstanceAssignmentProps extends MyFieldArrayProps<InstanceAssignmentItem> {
   formName: string;
   formNamespace?: string;
+  isOrganizationRequired: boolean;
 }
 
 interface MyFieldArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -147,6 +148,7 @@ export const InstanceAssignment = ({
   fields,
   formName,
   formNamespace,
+  isOrganizationRequired = false,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -198,6 +200,7 @@ export const InstanceAssignment = ({
       return filteredOrganizations.map(({ name }) => name);
     }
 
+    setNotAssignedOrganizations([]);
     return [];
   };
 
@@ -208,6 +211,7 @@ export const InstanceAssignment = ({
       return response.items.map(({ name }) => name);
     }
 
+    setOrganizationProjects([]);
     return [];
   };
 
@@ -257,10 +261,12 @@ export const InstanceAssignment = ({
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
-            <div className={cx('autocomplete-label')}>{formatMessage(messages.organization)}</div>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocomplete
+                  inputProps={{
+                    label: formatMessage(messages.organization),
+                  }}
                   placeholder={formatMessage(messages.organizationPlaceholder)}
                   getURI={URLS.organizationSearches}
                   getRequestParams={getRequestOrganizationsParams}
@@ -271,6 +277,7 @@ export const InstanceAssignment = ({
                       notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
                     );
                   }}
+                  isRequired={isOrganizationRequired}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -290,10 +297,12 @@ export const InstanceAssignment = ({
             </FieldProvider>
           </div>
           <div className={cx('autocomplete-wrapper')}>
-            <div className={cx('autocomplete-label')}>{formatMessage(messages.project)}</div>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocomplete
+                  inputProps={{
+                    label: formatMessage(messages.project),
+                  }}
                   placeholder={formatMessage(messages.projectPlaceholder)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
                   getRequestParams={getRequestOrganizationsParams}
