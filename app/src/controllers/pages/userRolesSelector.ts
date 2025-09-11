@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { assignedOrganizationsSelector, userAccountRoleSelector } from 'controllers/user';
-import { activeProjectRoleSelector, urlOrganizationSlugSelector } from './selectors';
+import { activeProjectRoleSelector } from './selectors';
+import { urlOrganizationSlugSelector } from './typed-selectors';
 import { OrganizationRoles, ProjectRoles, UserRoles } from 'types/roles';
 
 interface Organization {

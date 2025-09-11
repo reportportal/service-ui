@@ -45,7 +45,7 @@ export const HistoryOfActionsHeader = ({
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
     testTitle: testCaseName,
-    pageTitle: formatMessage(commonMessages.historyOfActions),
+    pageTitle: formatMessage(messages.historyOfActionsTitle),
   };
 
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
@@ -56,7 +56,7 @@ export const HistoryOfActionsHeader = ({
         <BreadcrumbsTreeIcon />
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
-      <div className={cx('header__title')}>{formatMessage(commonMessages.historyOfActions)}</div>
+      <div className={cx('header__title')}>{formatMessage(messages.historyOfActionsTitle)}</div>
       <div className={cx('header__actions')}>
         <FieldText
           value={searchValue}
