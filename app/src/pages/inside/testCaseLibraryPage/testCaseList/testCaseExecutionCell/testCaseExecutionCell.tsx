@@ -17,10 +17,13 @@
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
-import { formatRelativeTime } from '../utils';
+
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { formatRelativeTime, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { TestCaseMenuAction } from '../types';
 import styles from './testCaseExecutionCell.scss';
@@ -40,36 +43,47 @@ export const TestCaseExecutionCell = ({
 }: TestCaseExecutionCellProps) => {
   const { formatMessage, locale } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
+    useUserPermissions();
+
+  const permissionMap = [
+    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
+    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
+    { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
+    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+  ];
 
   const menuItems = createTestCaseMenuItems(
     formatMessage,
     {
       [TestCaseMenuAction.EDIT]: onEditTestCase,
     },
-    [TestCaseMenuAction.HISTORY],
+    getExcludedActionsFromPermissionMap(permissionMap),
   );
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div className={cx('execution-time')}>{formatRelativeTime(lastExecution, locale)}</div>
-      <div
-        role="menuitem"
-        tabIndex={0}
-        className={cx('menu-section')}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={handleEnterOrSpaceKey}
-      >
-        <PopoverControl
-          items={menuItems}
-          placement="bottom-end"
-          isOpened={isMenuOpen}
-          setIsOpened={setIsMenuOpen}
+      {!isEmpty(menuItems) && (
+        <div
+          role="menuitem"
+          tabIndex={0}
+          className={cx('menu-section')}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={handleEnterOrSpaceKey}
         >
-          <button type="button" className={cx('dots-menu-trigger')}>
-            <MeatballMenuIcon />
-          </button>
-        </PopoverControl>
-      </div>
+          <PopoverControl
+            items={menuItems}
+            placement="bottom-end"
+            isOpened={isMenuOpen}
+            setIsOpened={setIsMenuOpen}
+          >
+            <button type="button" className={cx('dots-menu-trigger')}>
+              <MeatballMenuIcon />
+            </button>
+          </PopoverControl>
+        </div>
+      )}
     </button>
   );
 };

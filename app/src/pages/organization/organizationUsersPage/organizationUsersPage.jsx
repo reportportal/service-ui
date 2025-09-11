@@ -36,12 +36,13 @@ import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import {
   activeOrganizationSelector,
   fetchOrganizationBySlugAction,
 } from 'controllers/organization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { messages } from '../messages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
@@ -93,7 +94,7 @@ const OrganizationUsersPageComponent = ({
       <EmptyUsersPageState
         isLoading={isUsersLoading}
         isNotEmpty={!isEmptyUsers}
-        hasPermission
+        hasPermission={canInviteUserToOrganization}
         showInviteUserModal={showInviteUserModal}
       />
     ) : (

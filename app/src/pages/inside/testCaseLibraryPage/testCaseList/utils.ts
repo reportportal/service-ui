@@ -16,6 +16,7 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
+import { TestCaseMenuAction } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
 
 const dateFnsLocales = {
   en: enUS,
@@ -23,6 +24,11 @@ const dateFnsLocales = {
   ru,
   es,
   de,
+};
+
+type PermissionMapEntry = {
+  isAllowed: boolean;
+  action: TestCaseMenuAction;
 };
 
 /**
@@ -63,3 +69,8 @@ export const formatRelativeTime = (timestamp: number, locale = 'enUS'): string =
     locale: dateFnsLocales[locale],
   });
 };
+
+export const getExcludedActionsFromPermissionMap = (
+  permissionMap: PermissionMapEntry[],
+): TestCaseMenuAction[] =>
+  permissionMap.filter(({ isAllowed }) => !isAllowed).map(({ action }) => action);

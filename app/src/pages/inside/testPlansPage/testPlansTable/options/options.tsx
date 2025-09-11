@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { messages } from '../messages';
@@ -30,12 +31,19 @@ const cx = classNames.bind(styles);
 export const Options = () => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const { canEditTestPlan, canDuplicateTestPlan, canDeleteTestPlan } = useUserPermissions();
 
-  const menuItems: PopoverItem[] = [
-    { label: formatMessage(messages.editTestPlan) },
-    { label: formatMessage(messages.duplicateTestPlan) },
-    { label: formatMessage(messages.deleteTestPlan), variant: 'danger' },
+  const menuConfig = [
+    { check: canEditTestPlan, label: messages.editTestPlan },
+    { check: canDuplicateTestPlan, label: messages.duplicateTestPlan },
+    { check: canDeleteTestPlan, label: messages.deleteTestPlan, variant: 'danger' },
   ];
+
+  const menuItems = menuConfig
+    .filter(({ check }) => check)
+    .map(({ label, variant }) => ({ label: formatMessage(label), variant }) as PopoverItem);
+
+  if (!menuItems.length) return null;
 
   return (
     <div className={cx('menu-section')}>
