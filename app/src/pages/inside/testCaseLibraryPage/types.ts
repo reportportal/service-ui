@@ -21,14 +21,17 @@ export interface IScenario {
   attachments: IAttachment[];
 }
 
-export interface TestCase {
+export interface TestCaseBasicInfo {
   id: number;
   name: string;
   priority: TestCasePriority;
-  path: string[];
-  tags: Tag[];
   createdAt: number;
   description?: string;
+}
+
+export interface TestCase extends TestCaseBasicInfo {
+  path: string[];
+  tags: Tag[];
   updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];
