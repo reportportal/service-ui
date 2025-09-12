@@ -25,6 +25,7 @@
 
   &__fields-container {
     width: 100%;
+    min-width: 0;
   }
 
   &__fields {
@@ -85,10 +86,14 @@
   &__files-list {
     padding: 16px;
     display: grid;
-    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
     gap: 12px;
     border-top: 1px solid var(--rp-ui-base-e-100);
     max-width: 100%;
+
+    div {
+      min-width: 0;
+    }
 
     &:has(> *:only-child) {
       grid-template-columns: 1fr;
