@@ -35,7 +35,7 @@ import { ActionButton } from '../../types';
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases} = useUserPermissions();
+  const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
