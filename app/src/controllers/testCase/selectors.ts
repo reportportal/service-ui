@@ -24,6 +24,7 @@ import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
+import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface TestCaseState {
   folders?: {
@@ -41,6 +42,9 @@ export interface TestCaseState {
   };
   details?: {
     data?: TestCase;
+  };
+  details?: {
+    data?: TestCaseBasicInfo;
   };
 }
 
@@ -75,6 +79,8 @@ export const testCasesSelector = (state: RootState): TestCase[] =>
 
 export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;
+
+export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
