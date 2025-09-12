@@ -30,6 +30,7 @@ import { commonValidators } from 'common/utils/validation';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useTouchedErrors } from 'common/hooks';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers';
@@ -109,11 +110,12 @@ const messages = defineMessages({
 
 export const CreateUserModal = ({ handleSubmit }) => {
   const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
   const syncErrors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state));
-  const dispatch = useDispatch();
-  const { formatMessage } = useIntl();
+  const hasTouchedErrors = useTouchedErrors(fields, syncErrors);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -183,27 +185,6 @@ export const CreateUserModal = ({ handleSubmit }) => {
   };
 
   const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
-  const hasTouchedErrors = () => {
-    const checkFieldErrors = (fieldName, field, errors) => {
-      if (field?.touched && errors?.[fieldName]) {
-        return true;
-      }
-
-      if (field && typeof field === 'object' && !field.touched && !field.visited) {
-        return Object.keys(field).some((nestedFieldName) => {
-          const nestedField = field[nestedFieldName];
-          return checkFieldErrors(nestedFieldName, nestedField, errors?.[fieldName]);
-        });
-      }
-
-      return false;
-    };
-
-    return Object.keys(fields).some((fieldName) => {
-      const field = fields[fieldName];
-      return checkFieldErrors(fieldName, field, syncErrors);
-    });
-  };
 
   return (
     <Modal
@@ -213,7 +194,7 @@ export const CreateUserModal = ({ handleSubmit }) => {
         onClick: () => {
           handleSubmit(onCreateUser)();
         },
-        disabled: hasTouchedErrors(),
+        disabled: hasTouchedErrors,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
