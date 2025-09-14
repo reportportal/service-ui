@@ -15,7 +15,6 @@
  */
 
 import { useSelector } from 'react-redux';
-import { isString } from 'lodash';
 import { HistoryOfActions } from 'pages/inside/testCaseLibraryPage/historyOfActions';
 import { TestCaseLibraryPage } from 'pages/inside/testCaseLibraryPage/testCaseLibraryPage';
 import { TestCaseDetailsPage } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage';
@@ -25,26 +24,16 @@ export const TestCaseLibraryPageWrapper = () => {
   const payload = useSelector(payloadSelector);
   const testCasePageRoute = payload?.testCasePageRoute;
   const folderRegExp = /^folder\/([^/]+)$/;
-  const testCaseRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)$/;
-  const historyOfActionsRegExp = /^folder\/([^/]+)\/test-cases\/([^/]+)\/historyOfActions/;
+  const testCaseRegExp = /^test-cases\/([^/]+)$/;
+  const historyOfActionsRegExp = /^test-cases\/([^/]+)\/historyOfActions/;
   let folderMatch = false;
   let testCaseMatch = false;
   let historyOfActionsMatch = false;
 
-  if (isString(testCasePageRoute)) {
+  if (testCasePageRoute) {
     folderMatch = folderRegExp.test(testCasePageRoute);
     testCaseMatch = testCaseRegExp.test(testCasePageRoute);
     historyOfActionsMatch = historyOfActionsRegExp.test(testCasePageRoute);
-  } else if (Array.isArray(testCasePageRoute)) {
-    const isFolderExists = testCasePageRoute[0] === 'folder';
-    const isTestCaseExists = testCasePageRoute[2] === 'test-cases';
-    const isHistoryOfActionsExists = testCasePageRoute[4] === 'historyOfActions';
-
-    folderMatch = Boolean(isFolderExists && testCasePageRoute[1] && !testCasePageRoute[2]);
-    testCaseMatch = Boolean(
-      isFolderExists && isTestCaseExists && testCasePageRoute[3] && !testCasePageRoute[4],
-    );
-    historyOfActionsMatch = Boolean(isFolderExists && isTestCaseExists && isHistoryOfActionsExists);
   }
 
   if (historyOfActionsMatch) {

@@ -125,7 +125,11 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
               setIsOpened={setAreToolsOpen}
               placement="bottom-end"
             >
-              <div className={cx('folders-tree__meatball')}>
+              <div
+                className={cx('folders-tree__meatball', {
+                  'folders-tree__meatball--active': areToolsOpen,
+                })}
+              >
                 <MeatballMenuIcon />
               </div>
             </PopoverControl>
