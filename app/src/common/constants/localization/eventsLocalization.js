@@ -24,7 +24,6 @@ import {
   PROJECT,
   DEFECT_TYPE,
   USER,
-  EMAIL_CONFIG,
   ITEM_ISSUE,
   INTEGRATION,
   PATTERN_RULE,
@@ -77,6 +76,11 @@ import {
   START_IMPORT,
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
+  NOTIFICATION_RULE,
+  CREATE_NOTIFICATION_RULE,
+  UPDATE_NOTIFICATION_SETTINGS,
+  UPDATE_NOTIFICATION_RULE,
+  DELETE_NOTIFICATION_RULE,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -249,6 +253,22 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createInvitationLink',
     defaultMessage: 'Create invitation link',
   },
+  [UPDATE_NOTIFICATION_SETTINGS]: {
+    id: 'EventActions.updateNotificationSettings',
+    defaultMessage: 'Update notification rule settings',
+  },
+  [CREATE_NOTIFICATION_RULE]: {
+    id: 'EventActions.createNotificationRule',
+    defaultMessage: 'Create notification rule',
+  },
+  [UPDATE_NOTIFICATION_RULE]: {
+    id: 'EventActions.updateNotificationRule',
+    defaultMessage: 'Update notification rule',
+  },
+  [DELETE_NOTIFICATION_RULE]: {
+    id: 'EventActions.deleteNotificationRule',
+    defaultMessage: 'Delete notification rule',
+  },
 });
 
 export const objectTypesMessages = defineMessages({
@@ -288,8 +308,8 @@ export const objectTypesMessages = defineMessages({
     id: 'EventObjectTypes.user',
     defaultMessage: 'User',
   },
-  [EMAIL_CONFIG]: {
-    id: 'EventObjectTypes.emailConfig',
+  [NOTIFICATION_RULE]: {
+    id: 'EventObjectTypes.notificationRule',
     defaultMessage: 'Notification rule',
   },
   [ITEM_ISSUE]: {
