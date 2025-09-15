@@ -35,6 +35,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -65,6 +66,10 @@ export const AllTestCasesPage = ({
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
     return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
   }, [folderId, folders, formatMessage]);
+
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal({
+    selectedTestCases: selectedRowIds,
+  });
 
   // Calculate pagination values
   const totalItems = testCases.length;
@@ -160,7 +165,9 @@ export const AllTestCasesPage = ({
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button>{formatMessage(messages.addToTestPlan)}</Button>
+              <Button onClick={openAddToTestPlanModal}>
+                {formatMessage(messages.addToTestPlan)}
+              </Button>
             </div>
           </div>
         )}
