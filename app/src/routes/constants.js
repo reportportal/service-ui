@@ -261,4 +261,9 @@ export const pageRendering = {
     rawContent: true,
     isTMS: true,
   },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    component: TestPlanDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
 };

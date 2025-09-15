@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Options } from './options';
+export { TestPlansHeader } from './testPlansHeader';

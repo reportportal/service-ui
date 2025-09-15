@@ -45,4 +45,20 @@ export const commonMessages = defineMessages({
     id: 'TestPlansPage.addTestsFromLibrary',
     defaultMessage: 'Add Tests from Library',
   },
+  editTestPlan: {
+    id: 'TestPlansPage.editTestPlan',
+    defaultMessage: 'Edit test plan',
+  },
+  duplicateTestPlan: {
+    id: 'TestPlansPage.duplicateTestPlan',
+    defaultMessage: 'Duplicate test plan',
+  },
+  deleteTestPlan: {
+    id: 'TestPlansPage.deleteTestPlan',
+    defaultMessage: 'Delete test plan',
+  },
+  addTestsFromLibrary: {
+    id: 'TestPlansPage.addTestsFromLibrary',
+    defaultMessage: 'Add Tests from Library',
+  },
 });
