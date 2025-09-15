@@ -14,5 +14,20 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  createLaunch: {
+    id: 'TestPlanDetailsPage.createLaunch',
+    defaultMessage: 'Create Launch',
+  },
+  testPlanNotFoundRedirect: {
+    id: 'TestPlanDetailsPage.testPlanNotFoundRedirect',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+  },
+  testPlanId: {
+    id: 'TestPlanDetailsPage.testPlanId',
+    defaultMessage: 'Test Plan ID: {testPlanId}',
+  },
+});

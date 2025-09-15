@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-import { defaultSortParam, GET_TEST_PLANS } from './constants';
+import { GET_TEST_PLANS, GET_TEST_PLAN, defaultQueryParams } from './constants';
 
 export interface GetTestPlansParams {
   sort?: string;
+  limit?: number;
 }
 
-export const getTestPlansAction = (params: GetTestPlansParams = { sort: defaultSortParam }) => ({
+export interface GetTestPlanParams {
+  testPlanId: string | number;
+}
+
+export const getTestPlansAction = (params: GetTestPlansParams = defaultQueryParams) => ({
   type: GET_TEST_PLANS,
+  payload: params,
+});
+
+export const getTestPlanAction = (params: GetTestPlanParams) => ({
+  type: GET_TEST_PLAN,
   payload: params,
 });

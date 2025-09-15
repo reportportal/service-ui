@@ -14,5 +14,15 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
+
+import styles from './pageLoader.scss';
+
+const cx = classNames.bind(styles) as typeof classNames;
+
+export const PageLoader = () => (
+  <div className={cx('page-loader')}>
+    <BubblesLoader variant="large" />
+  </div>
+);

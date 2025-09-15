@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+.empty-test-plan {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

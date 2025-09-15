@@ -14,5 +14,13 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+.test-plan-details-page {
+  &__header-id {
+    display: flex;
+    align-items: center;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 11px;
+    color: var(--rp-ui-base-e-400);
+    margin-right: 28px;
+  }
+}

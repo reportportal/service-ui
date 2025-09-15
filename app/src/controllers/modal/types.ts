@@ -14,5 +14,13 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+import { ReactElement } from 'react';
+
+export interface ActiveModal {
+  data?: Record<string, unknown>;
+  component?: ReactElement | null;
+}
+
+export interface ModalState {
+  activeModal: ActiveModal | null;
+}

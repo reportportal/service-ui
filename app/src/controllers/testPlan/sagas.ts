@@ -24,11 +24,22 @@ import { FETCH_START } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 
-import { defaultSortParam, GET_TEST_PLANS, NAMESPACE, TestPlanDto } from './constants';
-import { GetTestPlansParams } from './actionCreators';
+import {
+  GET_TEST_PLANS,
+  GET_TEST_PLAN,
+  TEST_PLANS_NAMESPACE,
+  TestPlanDto,
+  defaultQueryParams,
+  ACTIVE_TEST_PLAN_NAMESPACE,
+} from './constants';
+import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
+}
+
+interface GetTestPlanAction extends Action<typeof GET_TEST_PLAN> {
+  payload: GetTestPlanParams;
 }
 
 function* getTestPlans(action: GetTestPlansAction): Generator {
@@ -38,21 +49,21 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
     yield put({
       type: FETCH_START,
       payload: { projectKey },
-      meta: { namespace: NAMESPACE },
+      meta: { namespace: TEST_PLANS_NAMESPACE },
     });
 
-    const params = action.payload ?? { sort: defaultSortParam };
+    const params = action.payload ?? defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
     };
 
     yield put(
-      fetchSuccessAction(NAMESPACE, {
+      fetchSuccessAction(TEST_PLANS_NAMESPACE, {
         content: data.content,
       }),
     );
   } catch (error) {
-    yield put(fetchErrorAction(NAMESPACE, error));
+    yield put(fetchErrorAction(TEST_PLANS_NAMESPACE, error));
     yield put(
       showErrorNotification({
         messageId: 'testPlanLoadingFailed',
@@ -61,10 +72,33 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
   }
 }
 
+function* getTestPlan(action: GetTestPlanAction): Generator {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { testPlanId } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
+    });
+
+    const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+
+    yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
+  } catch {
+    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE));
+  }
+}
+
 function* watchGetTestPlans() {
   yield takeLatest(GET_TEST_PLANS, getTestPlans);
 }
 
+function* watchGetTestPlan() {
+  yield takeLatest(GET_TEST_PLAN, getTestPlan);
+}
+
 export function* testPlanSagas() {
-  yield all([watchGetTestPlans()]);
+  yield all([watchGetTestPlans(), watchGetTestPlan()]);
 }

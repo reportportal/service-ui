@@ -103,6 +103,7 @@ export {
   TEST_CASE_DETAILS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   PROJECT_TEST_PLANS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';

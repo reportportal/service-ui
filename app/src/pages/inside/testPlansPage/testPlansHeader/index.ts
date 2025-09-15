@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { PopoverControl } from './popoverControl';
-export type { PopoverItem } from './popoverControl';
+export { TestPlansHeader } from './testPlansHeader';
