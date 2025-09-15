@@ -16,6 +16,7 @@
 
 .expanded-options {
   display: flex;
+  position: relative;
   width: 100%;
   height: 100%;
 
@@ -135,5 +136,18 @@
       font-family: $FONT-ROBOTO-REGULAR;
       color: var(--rp-ui-base-e-400);
     }
+  }
+}
+
+.folders-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 16px;
+  color: var(--rp-ui-base-e-400);
+
+  &__text {
+    font-size: 14px;
+    font-style: italic;
   }
 }

@@ -30,16 +30,14 @@
   margin-top: auto;
   height: 64px;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .sticky-wrapper {
   position: sticky;
+  width: 100%;
   bottom: 0;
   z-index: $Z-INDEX-POPUP;
-
-  &--has-selected-items {
-    bottom: 64px;
-  }
 }
 
 .selection {

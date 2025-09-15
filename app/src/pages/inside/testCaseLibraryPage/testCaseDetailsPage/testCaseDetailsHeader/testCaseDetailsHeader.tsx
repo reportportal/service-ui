@@ -17,6 +17,8 @@
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -25,16 +27,19 @@ import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ProjectDetails } from 'pages/organization/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { useDispatch, useSelector } from 'react-redux';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
-import { TestCase } from '../../types';
+import { TestCaseBasicInfo } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 
@@ -44,7 +49,7 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
-  testCase: TestCase;
+  testCase: TestCaseBasicInfo;
   onAddToLaunch: () => void;
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
@@ -58,6 +63,13 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
+  const {
+    canDeleteTestCase,
+    canDuplicateTestCase,
+    canEditTestCase,
+    canAddTestCaseToLaunch,
+    canAddTestCaseToTestPlan,
+  } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -77,9 +89,37 @@ export const TestCaseDetailsHeader = ({
       payload: {
         organizationSlug,
         projectSlug,
-        testCasePageRoute: ['folder', folderId, 'test-cases', testCase.id, 'historyOfActions'],
+        testCasePageRoute: `folder/${folderId}/test-cases/${testCase.id}/historyOfActions`,
       },
     });
+  };
+
+  const getCreationDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+
+    return moment(date).format(REVERSED_DATE_FORMAT as string);
+  };
+
+  const getMenuItems = () => {
+    const items: PopoverItem[] = [
+      {
+        label: formatMessage(commonMessages.historyOfActions),
+        onClick: handleHistoryOfActions,
+      },
+    ];
+
+    if (canDuplicateTestCase) {
+      items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
+    }
+
+    if (canDeleteTestCase) {
+      items.push({
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        variant: 'destructive',
+      });
+    }
+
+    return items;
   };
 
   return (
@@ -89,17 +129,22 @@ export const TestCaseDetailsHeader = ({
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header__title')}>
-        <PriorityIcon priority={testCase.priority} className={cx('header__title-icon')} />
+        <PriorityIcon
+          priority={testCase.priority.toLocaleLowerCase() as TestCasePriority}
+          className={cx('header__title-icon')}
+        />
         {testCase.name}
-        <button type="button" className={cx('header__edit-button')}>
-          {Parser(PencilIcon as unknown as string)}
-        </button>
+        {canEditTestCase && (
+          <button type="button" className={cx('header__edit-button')}>
+            {Parser(PencilIcon as unknown as string)}
+          </button>
+        )}
       </div>
       <div className={cx('header__info-wrapper')}>
         <div className={cx('header__meta')}>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.created)}</span>
-            <span className={cx('header__meta-value')}>{testCase.createdAt}</span>
+            <span className={cx('header__meta-value')}>{getCreationDate(testCase.createdAt)}</span>
           </div>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
@@ -110,22 +155,7 @@ export const TestCaseDetailsHeader = ({
           </div>
         </div>
         <div className={cx('header__actions')}>
-          <PopoverControl
-            items={[
-              {
-                label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-              },
-              {
-                label: formatMessage(commonMessages.historyOfActions),
-                onClick: handleHistoryOfActions,
-              },
-              {
-                label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-                variant: 'destructive',
-              },
-            ]}
-            placement="bottom-end"
-          >
+          <PopoverControl items={getMenuItems()} placement="bottom-end">
             <Button
               variant="ghost"
               adjustWidthOn="content"
@@ -136,12 +166,16 @@ export const TestCaseDetailsHeader = ({
             </Button>
           </PopoverControl>
 
-          <Button onClick={onAddToLaunch} variant="ghost" disabled>
-            {formatMessage(messages.addToLaunch)}
-          </Button>
-          <Button onClick={onAddToTestPlan} variant="ghost">
-            {formatMessage(messages.addToTestPlan)}
-          </Button>
+          {canAddTestCaseToLaunch && (
+            <Button onClick={onAddToLaunch} variant="ghost" disabled>
+              {formatMessage(messages.addToLaunch)}
+            </Button>
+          )}
+          {canAddTestCaseToTestPlan && (
+            <Button onClick={onAddToTestPlan} variant="ghost">
+              {formatMessage(messages.addToTestPlan)}
+            </Button>
+          )}
         </div>
       </div>
     </div>

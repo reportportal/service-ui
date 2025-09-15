@@ -14,55 +14,75 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { isEmpty } from 'lodash';
-import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { TransformedFolder } from 'controllers/testCase';
 import styles from './folder.scss';
+import { PopoverControl } from 'pages/common/popoverControl';
+import { useIntl } from 'react-intl';
+import { commonMessages } from '../../commonMessages';
+import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
+import { showModalAction } from 'controllers/modal';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-type Folder = {
-  name: string;
-  countOfTestCases?: number;
-  subFolders?: Folder[];
-  id: number;
-};
-
 interface FolderProps {
-  folder: Folder;
+  folder: TransformedFolder;
   activeFolder: number | null;
-  setActiveFolder: (name: number) => void;
-  setIsEmptyFolder: (count: boolean) => void;
+  setActiveFolder: (id: number) => void;
+  setAllTestCases: () => void;
 }
 
-export const Folder = ({
-  folder,
-  setActiveFolder,
-  activeFolder,
-  setIsEmptyFolder,
-}: FolderProps) => {
+export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder }: FolderProps) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(false);
+  const [areToolsShown, setAreToolsShown] = useState(false);
+  const [areToolsOpen, setAreToolsOpen] = useState(false);
+  const [isBlockHovered, setIsBlockHovered] = useState(false);
 
-  const handleOpen = useCallback(
-    ({
-      event,
-      id,
-      count,
-    }: {
-      event: ReactMouseEvent<HTMLDivElement, MouseEvent>;
-      id: number;
-      count?: number;
-    }) => {
+  useEffect(() => {
+    setAreToolsShown(areToolsOpen || isBlockHovered);
+  }, [areToolsOpen, isBlockHovered]);
+
+  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+    event.stopPropagation();
+    setIsOpen((prevState) => !prevState);
+  }, []);
+
+  const handleFolderTitleClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
-
-      setIsOpen((prevState) => !prevState);
-      setActiveFolder(id);
-      setIsEmptyFolder(!count);
+      setActiveFolder(folder.id);
     },
-    [setActiveFolder, setIsEmptyFolder],
+    [setActiveFolder, folder.id],
   );
+
+  const openDeleteModal = () => {
+    dispatch(
+      showModalAction({
+        id: DELETE_FOLDER_MODAL_KEY,
+        data: {
+          folderId: folder.id,
+          folderName: folder.name,
+          activeFolderId: activeFolder,
+          setAllTestCases,
+        },
+      }),
+    );
+  };
+
+  const toolItems = [
+    {
+      label: formatMessage(commonMessages.deleteFolder),
+      variant: 'destructive' as const,
+      onClick: openDeleteModal,
+    },
+  ];
 
   return (
     <li
@@ -73,33 +93,56 @@ export const Folder = ({
       aria-expanded={isOpen}
       aria-selected={activeFolder === folder.id}
     >
-      <div
-        onClick={(event) => handleOpen({ event, id: folder.id, count: folder.countOfTestCases })}
-      >
-        {!isEmpty(folder.subFolders) && <ChevronDownDropdownIcon />}
+      <div className={cx('folders-tree__item-content')}>
+        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
           })}
+          onClick={handleFolderTitleClick}
+          onFocus={() => setIsBlockHovered(true)}
+          onBlur={() => setIsBlockHovered(false)}
+          onMouseEnter={() => setIsBlockHovered(true)}
+          onMouseLeave={() => setIsBlockHovered(false)}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          <span className={cx('folders-tree__item-title--counter')}>
-            {folder.countOfTestCases || 0}
-          </span>
+          <button
+            className={cx('folders-tree__tools', {
+              'folders-tree__tools--shown': areToolsShown,
+            })}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              setAreToolsOpen(true);
+            }}
+          >
+            <PopoverControl
+              items={toolItems}
+              isOpened={areToolsOpen}
+              setIsOpened={setAreToolsOpen}
+              placement="bottom-end"
+            >
+              <div className={cx('folders-tree__meatball')}>
+                <MeatballMenuIcon />
+              </div>
+            </PopoverControl>
+          </button>
+          <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
         </div>
       </div>
 
-      {isOpen && !isEmpty(folder.subFolders) && (
+      {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.subFolders?.map((subfolder) => (
+          {folder.folders?.map((subfolder) => (
             <Folder
               folder={subfolder}
-              key={subfolder.name}
+              key={subfolder.id}
               activeFolder={activeFolder}
               setActiveFolder={setActiveFolder}
-              setIsEmptyFolder={setIsEmptyFolder}
+              setAllTestCases={setAllTestCases}
             />
           ))}
         </ul>

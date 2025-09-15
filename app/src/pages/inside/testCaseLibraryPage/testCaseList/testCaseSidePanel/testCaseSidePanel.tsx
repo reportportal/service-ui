@@ -27,6 +27,7 @@ import {
   RerunIcon,
   DurationIcon,
 } from '@reportportal/ui-kit';
+import { isEmpty } from 'lodash';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -35,18 +36,19 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { isEmpty } from 'lodash';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { TestCase, IScenario } from '../../types';
-import { formatTimestamp, formatDuration } from '../utils';
+import { TestCaseMenuAction } from '../types';
+import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
 import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
-import styles from './testCaseSidePanel.scss';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
+import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -93,6 +95,14 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
+    const {
+      canEditTestCase,
+      canDeleteTestCase,
+      canDuplicateTestCase,
+      canMoveTestCase,
+      canAddTestCaseToLaunch,
+      canAddTestCaseToTestPlan,
+    } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -106,7 +116,18 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
-    const menuItems = createTestCaseMenuItems(formatMessage);
+    const permissionMap = [
+      { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
+      { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+      { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
+      { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
+    ];
+
+    const menuItems = createTestCaseMenuItems(
+      formatMessage,
+      {},
+      getExcludedActionsFromPermissionMap(permissionMap),
+    );
 
     const handleThreeDotsClick = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -118,12 +139,7 @@ export const TestCaseSidePanel = memo(
         payload: {
           organizationSlug,
           projectSlug,
-          testCasePageRoute: [
-            'folder',
-            String(testCase.testFolder.id),
-            'test-cases',
-            String(testCase.id),
-          ],
+          testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
         },
       });
     };
@@ -237,22 +253,26 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          <Button
-            variant="ghost"
-            className={cx('action-button')}
-            onClick={handleAddToLaunchClick}
-            data-automation-id="test-case-add-to-launch"
-          >
-            {formatMessage(messages.addToLaunch)}
-          </Button>
-          <Button
-            variant="primary"
-            className={cx('action-button', 'last-button')}
-            onClick={handleAddToTestPlanClick}
-            data-automation-id="test-case-add-to-test-plan"
-          >
-            {formatMessage(messages.addToTestPlan)}
-          </Button>
+          {canAddTestCaseToLaunch && (
+            <Button
+              variant="ghost"
+              className={cx('action-button')}
+              onClick={handleAddToLaunchClick}
+              data-automation-id="test-case-add-to-launch"
+            >
+              {formatMessage(messages.addToLaunch)}
+            </Button>
+          )}
+          {canAddTestCaseToTestPlan && (
+            <Button
+              variant="primary"
+              className={cx('action-button', 'last-button')}
+              onClick={handleAddToTestPlanClick}
+              data-automation-id="test-case-add-to-test-plan"
+            >
+              {formatMessage(messages.addToTestPlan)}
+            </Button>
+          )}
         </div>
       </div>
     );

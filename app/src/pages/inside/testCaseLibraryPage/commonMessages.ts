@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, MessageDescriptor } from 'react-intl';
 
-export const commonMessages = defineMessages({
+export const commonMessages: Record<string, MessageDescriptor> = defineMessages({
   testCaseLibraryHeader: {
     id: 'TestCaseLibraryPage.testCaseLibraryHeader',
     defaultMessage: 'Test Case Library',
@@ -43,6 +43,14 @@ export const commonMessages = defineMessages({
   },
   historyOfActions: {
     id: 'TestCaseLibraryPage.historyOfActions',
-    defaultMessage: 'History of Actions',
+    defaultMessage: 'History of actions',
+  },
+  loadingFolders: {
+    id: 'TestCaseLibraryPage.loadingFolders',
+    defaultMessage: 'Loading folders...',
+  },
+  deleteFolder: {
+    id: 'TestCaseLibraryPage.deleteFolder',
+    defaultMessage: 'Delete folder',
   },
 });

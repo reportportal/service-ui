@@ -38,13 +38,11 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
-  urlProjectSlugSelector,
-  urlOrganizationSlugSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
   activeProjectRoleSelector,
   userAssignedSelector,
 } from './selectors';
+export { userRolesSelector } from './userRolesSelector';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
 export {
@@ -102,8 +100,16 @@ export {
   PRODUCT_VERSIONS_TAB_PAGE,
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
+  TEST_CASE_DETAILS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';
-export { urlFolderIdSelector, locationSelector, payloadSelector } from './typed-selectors';
+export {
+  urlFolderIdSelector,
+  locationSelector,
+  payloadSelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+} from './typed-selectors';

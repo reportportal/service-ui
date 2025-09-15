@@ -18,11 +18,24 @@ import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { messages } from '../messages';
 
 export const DetailsEmptyState = () => {
   const { formatMessage } = useIntl();
+  const { canEditTestCaseScenario } = useUserPermissions();
+
+  const getActionButtons = () =>
+    canEditTestCaseScenario
+      ? [
+          {
+            isCompact: true,
+            name: formatMessage(messages.editScenario),
+            variant: 'primary',
+          },
+        ]
+      : [];
 
   return (
     <EmptyStatePage
@@ -30,13 +43,7 @@ export const DetailsEmptyState = () => {
       description={Parser(formatMessage(messages.scenarioDescription))}
       imageType="plus"
       documentationLink={referenceDictionary.rpDoc}
-      buttons={[
-        {
-          isCompact: true,
-          name: formatMessage(messages.editScenario),
-          variant: 'primary',
-        },
-      ]}
+      buttons={getActionButtons()}
     />
   );
 };

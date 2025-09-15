@@ -18,6 +18,7 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { referenceDictionary } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { useCreateTestPlanModal } from '../hooks';
@@ -26,6 +27,13 @@ import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
+
+interface ActionButton {
+  name: string;
+  dataAutomationId: string;
+  isCompact: boolean;
+  handleButton: () => void;
+}
 
 const benefitMessages = [
   messages.progressTracking,
@@ -36,9 +44,22 @@ const benefitMessages = [
 export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
+  const { canCreateTestPlan } = useUserPermissions();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
+
+  const getAvailableActions = (): ActionButton[] =>
+    canCreateTestPlan
+      ? [
+          {
+            name: formatMessage(commonMessages.createTestPlan),
+            dataAutomationId: 'createTestPlansButton',
+            isCompact: true,
+            handleButton: openModal,
+          },
+        ]
+      : [];
 
   return (
     <div className={cx('empty-test-plans')}>
@@ -47,14 +68,7 @@ export const EmptyTestPlans = () => {
         description={Parser(formatMessage(messages.pageDescription))}
         imageType="flag"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={[
-          {
-            name: formatMessage(commonMessages.createTestPlan),
-            dataAutomationId: 'createTestPlansButton',
-            isCompact: true,
-            handleButton: openModal,
-          },
-        ]}
+        buttons={getAvailableActions()}
       />
       <NumerableBlock
         items={benefits}

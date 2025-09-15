@@ -16,20 +16,20 @@
 
 export const GET_FOLDERS = 'getFolders' as const;
 export const CREATE_FOLDER = 'createFolder' as const;
-export const UPDATE_FOLDERS = 'updateFolders' as const;
-export const SET_FOLDERS = 'setFolders' as const;
+export const CREATE_FOLDER_SUCCESS = 'createFolderSuccess' as const;
+export const DELETE_FOLDER = 'deleteFolder' as const;
+export const DELETE_FOLDER_SUCCESS = 'deleteFolderSuccess' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
+export const START_DELETING_FOLDER = 'startDeletingFolder' as const;
+export const STOP_DELETING_FOLDER = 'stopDeletingFolder' as const;
 export const GET_TEST_CASES = 'getTestCases' as const;
-
-export type Folder = {
-  name: string;
-  countOfTestCases: number;
-  id: number;
-  parentFolderId?: number;
-};
+export const NAMESPACE = 'testCase' as const;
 export const GET_TEST_CASES_BY_FOLDER_ID = 'getTestCasesByFolderId' as const;
 export const GET_ALL_TEST_CASES = 'getAllTestCases' as const;
 export const START_LOADING_TEST_CASES = 'startLoadingTestCases' as const;
 export const STOP_LOADING_TEST_CASES = 'stopLoadingTestCases' as const;
 export const SET_TEST_CASES = 'setTestCases' as const;
+export const GET_TEST_CASE_DETAILS = 'getTestCaseDetails' as const;
+export const GET_TEST_CASE_DETAILS_SUCCESS = 'getTestCaseDetailsSuccess' as const;
+export const GET_TEST_CASE_DETAILS_FAILURE = 'getTestCaseDetailsFailure' as const;

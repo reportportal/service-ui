@@ -16,34 +16,50 @@
 
 import { Action } from 'redux';
 import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
+import { Task } from 'redux-saga';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
+import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
+import { FETCH_START } from 'controllers/fetch/constants';
+import {
+  showDefaultErrorNotification,
+  showErrorNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import {
   GET_FOLDERS,
   CREATE_FOLDER,
+  DELETE_FOLDER,
   GET_TEST_CASES,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
-  Folder,
+  GET_TEST_CASE_DETAILS,
+  GET_TEST_CASE_DETAILS_FAILURE,
+  GET_TEST_CASE_DETAILS_SUCCESS,
+  NAMESPACE,
 } from './constants';
+import { Folder } from './types';
 import {
-  updateFoldersAction,
+  createFoldersSuccessAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
-  setFoldersAction,
+  startDeletingFolderAction,
+  stopDeletingFolderAction,
   GetTestCasesParams,
   CreateFolderParams,
+  DeleteFolderParams,
   GetTestCasesByFolderIdParams,
   startLoadingTestCasesAction,
   stopLoadingTestCasesAction,
   setTestCasesAction,
+  deleteFolderSuccessAction,
 } from './actionCreators';
+import { getAllFolderIdsToDelete } from './utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { Task } from 'redux-saga';
+import { foldersSelector } from 'controllers/testCase/selectors';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
@@ -57,13 +73,14 @@ interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
   payload: CreateFolderParams;
 }
 
-function isErrorWithMessage(error: unknown): error is { message: string } {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'message' in error &&
-    typeof (error as { message?: unknown }).message === 'string'
-  );
+interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
+  payload: DeleteFolderParams;
+}
+
+interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
+  payload: {
+    testCaseId: string;
+  };
 }
 
 function* getTestCases(action: GetTestCasesAction) {
@@ -86,19 +103,41 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     };
 
     yield put(setTestCasesAction(result.content));
-  } catch (error: unknown) {
-    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
-
+  } catch {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        message: errorMessage,
-        messageId: null,
-        values: {},
+        messageId: 'testCaseLoadingFailed',
       }),
     );
   } finally {
     yield put(stopLoadingTestCasesAction());
+  }
+}
+
+function* getTestCaseDetails(action: TestCaseDetailsAction) {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const testCaseDetails = (yield call(
+      fetch,
+      URLS.testCaseDetails(projectKey, action.payload.testCaseId),
+    )) as TestCase;
+
+    yield put({
+      type: GET_TEST_CASE_DETAILS_SUCCESS,
+      payload: testCaseDetails,
+    });
+  } catch {
+    yield put({
+      type: GET_TEST_CASE_DETAILS_FAILURE,
+      error: 'testCaseLoadingFailed',
+    });
+
+    yield put(
+      showErrorNotification({
+        messageId: 'testCaseLoadingFailed',
+      }),
+    );
   }
 }
 
@@ -112,15 +151,11 @@ function* getAllTestCases(): Generator {
     };
 
     yield put(setTestCasesAction(result.content));
-  } catch (error: unknown) {
-    const errorMessage = isErrorWithMessage(error) ? error.message : undefined;
-
+  } catch {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        message: errorMessage,
-        messageId: null,
-        values: {},
+        messageId: 'testCaseLoadingFailed',
       }),
     );
   } finally {
@@ -128,13 +163,70 @@ function* getAllTestCases(): Generator {
   }
 }
 
+type FoldersPage = { content: Folder[]; page?: { totalPages?: number } };
+const isFoldersPage = (value: unknown): value is FoldersPage => {
+  if (!value || typeof value !== 'object') return false;
+  return Array.isArray((value as Partial<FoldersPage>).content);
+};
+
 function* getFolders() {
+  const projectKey = (yield select(projectKeySelector)) as string;
+
+  if (!projectKey) {
+    return;
+  }
+
   try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-    const folders = (yield call(fetch, URLS.folder(projectKey))) as { content: Folder };
-    yield put(setFoldersAction(folders.content));
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: NAMESPACE },
+    });
+
+    const pageSize = 20;
+    let pageNumber = 1;
+    let totalPages = 1;
+    const aggregated: Folder[] = [];
+
+    while (pageNumber <= totalPages) {
+      const responseUnknown: unknown = yield call(
+        fetch,
+        URLS.testFolders(projectKey, {
+          'page.page': pageNumber,
+          'page.size': pageSize,
+          'page.sort': 'id,ASC',
+        }),
+      );
+
+      if (!isFoldersPage(responseUnknown)) {
+        throw new Error('Invalid folders response');
+      }
+
+      const content: Folder[] = responseUnknown.content;
+      aggregated.push(...content);
+      const respTotalPages = responseUnknown.page?.totalPages ?? 1;
+      totalPages = respTotalPages;
+      pageNumber += 1;
+    }
+
+    yield put(
+      fetchSuccessAction(NAMESPACE, {
+        content: aggregated,
+        page: {
+          number: 0,
+          size: aggregated.length,
+          totalElements: aggregated.length,
+          totalPages: 1,
+        },
+      }),
+    );
   } catch (error) {
-    console.error(error);
+    yield put(fetchErrorAction(NAMESPACE, error));
+    yield put(
+      showDefaultErrorNotification({
+        message: error instanceof Error ? error.message : undefined,
+      }),
+    );
   }
 }
 
@@ -146,14 +238,19 @@ function* createFolder(action: CreateFolderAction) {
       startCreatingFolderAction(),
       SPINNER_DEBOUNCE,
     )) as Task;
-    const folder = (yield call(fetch, URLS.folder(projectKey), {
+    const folder = (yield call(fetch, URLS.testFolders(projectKey), {
       method: 'POST',
       data: {
         name: action.payload.folderName,
+        ...(action.payload.parentFolderId
+          ? { parentTestFolderId: action.payload.parentFolderId }
+          : {}),
       },
     })) as Folder;
+
     yield cancel(spinnerTask);
-    yield put(updateFoldersAction(folder));
+
+    yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
     yield put(
       showSuccessNotification({
@@ -172,6 +269,45 @@ function* createFolder(action: CreateFolderAction) {
     );
   } finally {
     yield put(stopCreatingFolderAction());
+  }
+}
+
+function* deleteFolder(action: DeleteFolderAction) {
+  try {
+    yield put(startDeletingFolderAction());
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const folders = (yield select(foldersSelector)) as Folder[];
+    const { folderId, activeFolderId, setAllTestCases } = action.payload;
+    const deletedFolderIds = getAllFolderIdsToDelete(folderId, folders);
+    const isActiveFolder = folderId === activeFolderId;
+
+    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+      method: 'DELETE',
+    });
+
+    if (isActiveFolder || deletedFolderIds.includes(activeFolderId)) {
+      yield call(setAllTestCases);
+    }
+
+    yield put(deleteFolderSuccessAction({ deletedFolderIds }));
+    yield put(hideModalAction());
+    yield put(
+      showSuccessNotification({
+        message: null,
+        messageId: 'testCaseFolderDeletedSuccess',
+        values: {},
+      }),
+    );
+  } catch (error: unknown) {
+    yield put(
+      showErrorNotification({
+        message: (error as { error?: string })?.error,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopDeletingFolderAction());
   }
 }
 
@@ -195,12 +331,18 @@ function* watchGetAllTestCases() {
   yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
 }
 
+function* watchGetTestCaseDetails() {
+  yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
+}
+
 export function* testCaseSagas() {
   yield all([
     watchGetTestCases(),
+    watchGetTestCaseDetails(),
     watchGetFolders(),
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
+    takeEvery(DELETE_FOLDER, deleteFolder),
   ]);
 }

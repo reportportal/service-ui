@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  allTestCasesTitle: {
-    id: 'TestCaseList.allTestCasesTitle',
-    defaultMessage: 'All test cases',
-  },
   searchPlaceholder: {
     id: 'TestCaseList.searchPlaceholder',
     defaultMessage: 'Search test cases...',
@@ -52,10 +48,6 @@ export const messages = defineMessages({
   moveTestCaseTo: {
     id: 'TestCaseList.moveTestCaseTo',
     defaultMessage: 'Move test case to',
-  },
-  historyOfActions: {
-    id: 'TestCaseList.historyOfActions',
-    defaultMessage: 'History of actions',
   },
   deleteTestCase: {
     id: 'TestCaseList.deleteTestCase',

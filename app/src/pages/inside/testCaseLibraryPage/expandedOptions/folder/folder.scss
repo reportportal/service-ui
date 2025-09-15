@@ -82,7 +82,7 @@
       }
     }
 
-    svg {
+    &-content > svg {
       position: absolute;
       top: 8px;
       left: -16px;
@@ -93,6 +93,36 @@
       > svg {
         transform: none;
       }
+    }
+  }
+
+  &__tools {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 8px;
+    height: 20px;
+    visibility: hidden;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+
+    button svg {
+      width: 16px;
+      height: 100%;
+    }
+
+    &--shown {
+      visibility: visible;
+    }
+  }
+
+  &__meatball {
+    display: flex;
+    align-items: center;
+
+    svg path {
+      fill: var(--rp-ui-base-topaz);
     }
   }
 }

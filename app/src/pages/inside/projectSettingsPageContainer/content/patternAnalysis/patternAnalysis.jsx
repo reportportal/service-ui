@@ -24,11 +24,10 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { addPatternAction, patternsSelector } from 'controllers/project';
 import { getSaveNewPatternEvent, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { hideModalAction, showModalAction } from 'controllers/modal';
-import { userRolesSelector } from 'controllers/pages';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { docsReferences } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { SettingsPageContent } from '../settingsPageContent';
 import { PatternAnalysisContent } from './patternAnalysisContent';
@@ -36,7 +35,7 @@ import { messages } from './messages';
 
 export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const patterns = useSelector(patternsSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canUpdateSettings } = useUserPermissions();
 
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -72,8 +71,6 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const isAbleToCreate = canUpdateSettings(userRoles);
-
   const handleDocumentationClick = () => {
     trackEvent(
       PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.clickDocumentationLink('no_pattern_analysis'),
@@ -88,16 +85,16 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
             setHeaderTitleNode={setHeaderTitleNode}
             onAddPattern={onAddPattern}
             patterns={patterns}
-            disabled={!isAbleToCreate}
+            disabled={!canUpdateSettings}
           />
         </SettingsPageContent>
       ) : (
         <EmptyStatePage
           title={formatMessage(
-            isAbleToCreate ? messages.noPatternAnalysisTitle : messages.noPatternsYetTitle,
+            canUpdateSettings ? messages.noPatternAnalysisTitle : messages.noPatternsYetTitle,
           )}
           description={formatMessage(
-            isAbleToCreate
+            canUpdateSettings
               ? messages.noPatternAnalysisDescription
               : messages.noPatternsAppearDescription,
           )}
@@ -105,7 +102,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           handleDocumentationClick={handleDocumentationClick}
           buttons={[
             {
-              name: isAbleToCreate && formatMessage(messages.create),
+              name: canUpdateSettings && formatMessage(messages.create),
               dataAutomationId: 'createPatternButton',
               handleButton: onAddPattern,
             },

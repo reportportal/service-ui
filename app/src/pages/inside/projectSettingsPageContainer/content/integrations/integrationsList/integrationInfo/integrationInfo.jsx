@@ -22,13 +22,11 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  userRolesSelector,
   urlOrganizationAndProjectSelector,
   PROJECT_SETTINGS_TAB_PAGE,
   updatePagePropertiesAction,
 } from 'controllers/pages';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
@@ -44,6 +42,7 @@ import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPag
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { EMAIL } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
 import { messages } from './messages';
@@ -57,11 +56,10 @@ export const IntegrationInfo = (props) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
-  const isAbleToClick = canUpdateSettings(userRoles);
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
@@ -270,18 +268,22 @@ export const IntegrationInfo = (props) => {
       ) : (
         <EmptyStatePage
           title={formatMessage(
-            isAbleToClick ? messages.noGlobalIntegrationsMessage : messages.noGlobalIntegrationsYet,
+            canUpdateSettings
+              ? messages.noGlobalIntegrationsMessage
+              : messages.noGlobalIntegrationsYet,
           )}
           description={formatMessage(
-            isAbleToClick
+            canUpdateSettings
               ? messages.noGlobalIntegrationsDescription
               : messages.noGlobalIntegrationsYetDescription,
           )}
           handleDocumentationClick={handleDocumentationClick}
           buttons={[
             {
-              name: isAbleToClick ? formatMessage(messages.noGlobalIntegrationsButtonAdd) : null,
-              isDisabled: !isAbleToClick,
+              name: canUpdateSettings
+                ? formatMessage(messages.noGlobalIntegrationsButtonAdd)
+                : null,
+              isDisabled: !canUpdateSettings,
               dataAutomationId: 'addProjectIntegrationButton',
               handleButton: onAddProjectIntegration,
             },
@@ -298,9 +300,9 @@ export const IntegrationInfo = (props) => {
             data={plugin}
             onAddProjectIntegration={onAddProjectIntegration}
             onResetProjectIntegration={onResetProjectIntegration}
-            isAbleToClick={isAbleToClick}
+            isAbleToClick={canUpdateSettings}
             availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable && isAbleToClick}
+            withButton={isAtLeastOneIntegrationAvailable && canUpdateSettings}
             breadcrumbs={integrationListBreadcrumbs}
           />
           {renderIntegrationList()}

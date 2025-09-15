@@ -42,9 +42,9 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { prevTestItemSelector, userRolesSelector } from 'controllers/pages';
+import { prevTestItemSelector } from 'controllers/pages';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
-import { canWorkWithTests } from 'common/utils/permissions/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 // TODO: Refactor to avoid duplication
 export const SuitesPageWrapped = ({
@@ -78,8 +78,7 @@ export const SuitesPageWrapped = ({
   const loading = useSelector(loadingSelector);
   const validationErrors = useSelector(validationErrorsSelector);
   const highlightItemId = useSelector(prevTestItemSelector);
-  const userRoles = useSelector(userRolesSelector);
-  const canManageTests = canWorkWithTests(userRoles);
+  const { canWorkWithTests } = useUserPermissions();
   const dispatch = useDispatch();
 
   // TODO - extract highlighting into custom hook
@@ -178,7 +177,7 @@ export const SuitesPageWrapped = ({
           onFilterClick={onFilterAdd}
           onEditItem={onEditItem}
           rowHighlightingConfig={rowHighlightingConfig}
-          selectable={canManageTests}
+          selectable={canWorkWithTests}
         />
         {!!pageCount && !loading && (
           <PaginationToolbar

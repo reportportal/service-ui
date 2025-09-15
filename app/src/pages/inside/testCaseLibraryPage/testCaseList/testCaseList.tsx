@@ -29,8 +29,9 @@ import { TestCaseSidePanel } from './testCaseSidePanel';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 import { ProjectDetails } from 'pages/organization/constants';
-import styles from './testCaseList.scss';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import styles from './testCaseList.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -39,6 +40,7 @@ interface TestCaseListProps {
   loading?: boolean;
   currentPage?: number;
   itemsPerPage: number;
+  folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
   handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
@@ -55,11 +57,13 @@ export const TestCaseList = memo(
     itemsPerPage,
     searchValue = '',
     onSearchChange,
+    folderTitle,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const dispatch = useDispatch();
+    const { canDoTestCaseBulkActions } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -98,14 +102,6 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    if (loading) {
-      return (
-        <div className={cx('test-case-list', 'loading')}>
-          <BubblesLoader />
-        </div>
-      );
-    }
-
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
       name: {
@@ -134,7 +130,7 @@ export const TestCaseList = memo(
               dispatch({
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCasePageRoute: ['folder', testCase.testFolder.id, 'test-cases', testCase.id],
+                  testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
                   organizationSlug,
                   projectSlug,
                 },
@@ -166,49 +162,61 @@ export const TestCaseList = memo(
     return (
       <div className={cx('test-case-list')}>
         <div className={cx('controls')}>
-          <div className={cx('controls-title')}>{formatMessage(messages.allTestCasesTitle)}</div>
+          <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              <SearchField
-                isLoading={loading}
-                searchValue={searchValue}
-                setSearchValue={onSearchChange}
-                onFilterChange={onSearchChange}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-              />
-              <div className={cx('filter-icon')}>
-                <FilterOutlineIcon />
-              </div>
+              {loading ? null : (
+                <>
+                  <SearchField
+                    isLoading={loading}
+                    searchValue={searchValue}
+                    setSearchValue={onSearchChange}
+                    onFilterChange={onSearchChange}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
+                  />
+                  <div className={cx('filter-icon')}>
+                    <FilterOutlineIcon />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-        {!isEmptyList(currentData) ? (
-          <Table
-            selectable
-            onToggleRowSelection={handleRowSelect}
-            selectedRowIds={selectedRowIds}
-            data={tableData}
-            fixedColumns={fixedColumns}
-            primaryColumn={primaryColumn}
-            sortableColumns={[]}
-            onToggleAllRowsSelection={handleAllSelect}
-            className={cx('test-case-table')}
-            rowClassName={cx('test-case-table-row')}
-          />
-        ) : (
-          <div className={cx('no-results')}>
-            <div className={cx('no-results-message')}>
-              {searchValue
-                ? formatMessage(messages.noResultsFilteredMessage)
-                : formatMessage(messages.noResultsEmptyMessage)}
-            </div>
+        {loading ? (
+          <div className={cx('test-case-list', 'loading')}>
+            <BubblesLoader />
           </div>
+        ) : (
+          <>
+            {!isEmptyList(currentData) ? (
+              <Table
+                selectable={canDoTestCaseBulkActions}
+                onToggleRowSelection={handleRowSelect}
+                selectedRowIds={selectedRowIds}
+                data={tableData}
+                fixedColumns={fixedColumns}
+                primaryColumn={primaryColumn}
+                sortableColumns={[]}
+                onToggleAllRowsSelection={handleAllSelect}
+                className={cx('test-case-table')}
+                rowClassName={cx('test-case-table-row')}
+              />
+            ) : (
+              <div className={cx('no-results')}>
+                <div className={cx('no-results-message')}>
+                  {searchValue
+                    ? formatMessage(messages.noResultsFilteredMessage)
+                    : formatMessage(messages.noResultsEmptyMessage)}
+                </div>
+              </div>
+            )}
+            <TestCaseSidePanel
+              testCase={selectedTestCase}
+              isVisible={!!selectedTestCaseId}
+              onClose={handleCloseSidePanel}
+            />
+          </>
         )}
-        <TestCaseSidePanel
-          testCase={selectedTestCase}
-          isVisible={!!selectedTestCaseId}
-          onClose={handleCloseSidePanel}
-        />
       </div>
     );
   },

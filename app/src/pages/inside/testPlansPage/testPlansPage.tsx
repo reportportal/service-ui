@@ -17,16 +17,19 @@
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { isEmpty } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { BreadcrumbsTreeIcon, BubblesLoader, Button, RefreshIcon } from '@reportportal/ui-kit';
+
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ProjectDetails } from 'pages/organization/constants';
 import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
-import { BreadcrumbsTreeIcon, Button, RefreshIcon } from '@reportportal/ui-kit';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { useTestPlans } from 'pages/inside/testPlansPage/testPlansTable/useTestPlans';
+import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateTestPlanModal } from './hooks';
 import { TestPlansTable } from './testPlansTable';
 import { commonMessages } from './commonMessages';
@@ -37,14 +40,37 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
+  const { canCreateTestPlan } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const { testPlans } = useTestPlans();
+  const testPlans = useSelector(testPlansSelector);
+  const isLoading = useSelector(isLoadingSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+
+  useEffect(() => {
+    dispatch(getTestPlansAction());
+  }, [dispatch]);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className={cx('test-plans-page__loading')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    if (!isEmpty(testPlans)) {
+      return <TestPlansTable testPlans={testPlans} />;
+    }
+
+    return <EmptyTestPlans />;
+  };
 
   return (
     <SettingsLayout>
@@ -57,16 +83,28 @@ export const TestPlansPage = () => {
           <h1>{formatMessage(commonMessages.pageTitle)}</h1>
           {!isEmpty(testPlans) && (
             <div className={cx('test-plans-page__actions')}>
-              <Button variant="text" data-automation-id="refreshPageButton" icon={<RefreshIcon />}>
+              <Button
+                variant="text"
+                data-automation-id="refreshPageButton"
+                icon={<RefreshIcon />}
+                disabled={isLoading}
+                onClick={() => dispatch(getTestPlansAction())}
+              >
                 {formatMessage(commonMessages.refreshPage)}
               </Button>
-              <Button variant="ghost" data-automation-id="createTestPlanButton" onClick={openModal}>
-                {formatMessage(commonMessages.createTestPlan)}
-              </Button>
+              {canCreateTestPlan && (
+                <Button
+                  variant="ghost"
+                  data-automation-id="createTestPlanButton"
+                  onClick={openModal}
+                >
+                  {formatMessage(commonMessages.createTestPlan)}
+                </Button>
+              )}
             </div>
           )}
         </header>
-        {isEmpty(testPlans) ? <EmptyTestPlans /> : <TestPlansTable testPlans={testPlans} />}
+        {renderContent()}
       </ScrollWrapper>
     </SettingsLayout>
   );

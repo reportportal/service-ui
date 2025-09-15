@@ -30,14 +30,13 @@ import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import {
   activeOrganizationSelector,
   fetchOrganizationBySlugAction,
 } from 'controllers/organization';
-import { userRolesSelector } from 'controllers/pages';
-import { canInviteUserToOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { messages } from '../messages';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
@@ -54,8 +53,7 @@ export const OrganizationUsersPage = () => {
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
-  const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canInviteUserToOrganization(userRoles);
+  const { canInviteUserToOrganization } = useUserPermissions();
 
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
@@ -80,7 +78,7 @@ export const OrganizationUsersPage = () => {
       <EmptyUsersPageState
         isLoading={isUsersLoading}
         isNotEmpty={!isEmptyUsers}
-        hasPermission
+        hasPermission={canInviteUserToOrganization}
         showInviteUserModal={showInviteUserModal}
       />
     ) : (
@@ -97,7 +95,7 @@ export const OrganizationUsersPage = () => {
     <ScrollWrapper>
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
-          hasPermission={hasPermission}
+          hasPermission={canInviteUserToOrganization}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

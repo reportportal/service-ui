@@ -27,9 +27,9 @@ import {
   DeleteIcon,
   ArrowDownIcon,
   ArrowUpIcon,
+  AttachedFile,
 } from '@reportportal/ui-kit';
 
-import { AttachmentItem } from 'componentLibrary/attachmentItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { uniqueId } from 'common/utils';
 import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
@@ -295,7 +295,7 @@ export const AttachmentArea = ({
         {!isEmpty(attachedFiles) && (
           <div className={cx('attachment-area__files-list')}>
             {attachedFiles.map((file) => (
-              <AttachmentItem
+              <AttachedFile
                 key={file.id}
                 fileName={file.fileName}
                 size={file.size}

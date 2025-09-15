@@ -22,7 +22,6 @@ import {
   payloadSelector,
   PROJECT_SETTINGS_TAB_PAGE,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
 import {
   projectKeySelector,
@@ -40,8 +39,8 @@ import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';
 import {
@@ -68,12 +67,11 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const isAnalyzerServiceAvailable = !!analyzerExtensions.length;
   const analyzerUnavailableTitle = !isAnalyzerServiceAvailable
     ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
     : null;
-  const hasPermission = canUpdateSettings(userRoles);
 
   useEffect(() => {
     dispatch(fetchConfigurationAttributesAction(projectKey));
@@ -152,7 +150,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
 
   const tabsConfig = useMemo(
     () => ({
-      ...(hasPermission
+      ...(canUpdateSettings
         ? {
             [INDEX_SETTINGS]: {
               name: formatMessage(messages.indexSettings),
@@ -164,7 +162,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
                   isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
                   analyzerUnavailableTitle={analyzerUnavailableTitle}
                   onFormSubmit={updateProjectConfig}
-                  hasPermission={hasPermission}
+                  hasPermission={canUpdateSettings}
                 />
               ),
             },
@@ -177,7 +175,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <AutoAnalysis
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
             analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
@@ -190,7 +188,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <SimilarItems
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
           />
         ),
       },
@@ -201,7 +199,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
           <UniqueErrors
             analyzerConfig={analyzerConfig}
             onFormSubmit={updateProjectConfig}
-            hasPermission={hasPermission}
+            hasPermission={canUpdateSettings}
             isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
             analyzerUnavailableTitle={analyzerUnavailableTitle}
           />
@@ -211,7 +209,7 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
     [
       analyzerConfig,
       createTabLink,
-      hasPermission,
+      canUpdateSettings,
       analyzerUnavailableTitle,
       isAnalyzerServiceAvailable,
       indexingRunning,

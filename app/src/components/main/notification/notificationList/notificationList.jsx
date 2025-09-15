@@ -192,6 +192,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
     defaultMessage: 'Folder has been created successfully.',
   },
+  testCaseFolderDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
+    defaultMessage: 'Folder has been deleted successfully.',
+  },
   testCaseCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
@@ -200,6 +204,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
   },
+  testCaseLoadingFailed: {
+    id: 'TestCaseLibraryPage.testCaseLoadingFailed',
+    defaultMessage: 'An error occurred. Please try again later.',
+  },
   testPlanCreatedSuccess: {
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
@@ -207,6 +215,10 @@ const messages = defineMessages({
   testPlanCreationFailed: {
     id: 'TestPlansPage.testPlanCreationFailed',
     defaultMessage: 'Failed to create Test Plan.',
+  },
+  testPlanLoadingFailed: {
+    id: 'TestPlansPage.testPlanLoadingFailed',
+    defaultMessage: 'Failed to load Test Plans.',
   },
 });
 

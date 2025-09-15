@@ -15,22 +15,36 @@
  */
 
 import { combineReducers } from 'redux';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { fetchReducer } from 'controllers/fetch';
+import { loadingReducer } from 'controllers/loading';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import {
-  UPDATE_FOLDERS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
-  SET_FOLDERS,
-  Folder,
+  START_DELETING_FOLDER,
+  STOP_DELETING_FOLDER,
+  NAMESPACE,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
+  DELETE_FOLDER_SUCCESS,
+  CREATE_FOLDER_SUCCESS,
+  GET_TEST_CASE_DETAILS,
+  GET_TEST_CASE_DETAILS_SUCCESS,
+  GET_TEST_CASE_DETAILS_FAILURE,
 } from 'controllers/testCase/constants';
+import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { queueReducers } from 'common/utils';
+import { DeleteFolderSuccessParams } from './actionCreators';
 
 export type InitialStateType = {
   folders: {
+    data: Folder[];
     isCreatingFolder: boolean;
-    list: Folder[];
+    isDeletingFolder: boolean;
+    loading: boolean;
   };
   testCases: {
     isLoading: boolean;
@@ -40,8 +54,10 @@ export type InitialStateType = {
 
 export const INITIAL_STATE: InitialStateType = {
   folders: {
-    list: [],
+    data: [],
     isCreatingFolder: false,
+    isDeletingFolder: false,
+    loading: false,
   },
   testCases: {
     isLoading: false,
@@ -49,28 +65,39 @@ export const INITIAL_STATE: InitialStateType = {
   },
 };
 
-const foldersReducer = (state = INITIAL_STATE.folders, { type, payload = {} }) => {
-  switch (type) {
-    case SET_FOLDERS:
-      return {
-        ...state,
-        list: payload,
-      };
-    case UPDATE_FOLDERS:
-      return {
-        ...state,
-        list: [...state.list, payload],
-      };
+const INITIAL_DETAILS_STATE = {
+  data: null,
+  loading: false,
+  error: null,
+};
+
+type FolderActions =
+  | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
+  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder };
+
+const isCreatingFolderReducer = (
+  state = INITIAL_STATE.folders.isCreatingFolder,
+  action: { type: string },
+) => {
+  switch (action.type) {
     case START_CREATING_FOLDER:
-      return {
-        ...state,
-        isCreatingFolder: true,
-      };
+      return true;
     case STOP_CREATING_FOLDER:
-      return {
-        ...state,
-        isCreatingFolder: false,
-      };
+      return false;
+    default:
+      return state;
+  }
+};
+
+const isDeletingFolderReducer = (
+  state = INITIAL_STATE.folders.isDeletingFolder,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case START_DELETING_FOLDER:
+      return true;
+    case STOP_DELETING_FOLDER:
+      return false;
     default:
       return state;
   }
@@ -101,7 +128,47 @@ const testCasesReducer = (
   }
 };
 
-export const testCaseReducer = combineReducers({
-  folders: foldersReducer,
+const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions) => {
+  switch (action.type) {
+    case DELETE_FOLDER_SUCCESS: {
+      return state.filter(({ id }) => !action.payload.deletedFolderIds.includes(id));
+    }
+    case CREATE_FOLDER_SUCCESS: {
+      return [...state, action.payload];
+    }
+    default:
+      return state;
+  }
+};
+
+const testCaseDetailsReducer = (
+  state = INITIAL_DETAILS_STATE,
+  { type, payload, error }: { type: string; payload?: unknown; error?: string },
+) => {
+  switch (type) {
+    case GET_TEST_CASE_DETAILS:
+      return { ...state, loading: true, error: null };
+    case GET_TEST_CASE_DETAILS_SUCCESS:
+      return { ...state, loading: false, data: payload };
+    case GET_TEST_CASE_DETAILS_FAILURE:
+      return { ...state, loading: false, error };
+    default:
+      return state;
+  }
+};
+
+const reducer = combineReducers({
+  details: testCaseDetailsReducer,
+  folders: combineReducers({
+    data: queueReducers(
+      fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
+      folderReducer,
+    ),
+    isCreatingFolder: isCreatingFolderReducer,
+    isDeletingFolder: isDeletingFolderReducer,
+    loading: loadingReducer(NAMESPACE),
+  }),
   testCases: testCasesReducer,
 });
+
+export const testCaseReducer = createPageScopedReducer(reducer, [TEST_CASE_LIBRARY_PAGE]);

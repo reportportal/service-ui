@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { isEmpty } from 'lodash';
 import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
 
 import { ProjectDetails } from 'pages/organization/constants';
@@ -29,36 +29,32 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { foldersSelector, getFoldersAction } from 'controllers/testCase';
+import { foldersSelector } from 'controllers/testCase';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
-import { MainPageEmptyState } from './emptyState/mainPage';
 import { ExpandedOptions } from './expandedOptions';
+import { MainPageEmptyState } from './emptyState/mainPage';
 import { commonMessages } from './commonMessages';
 import { useCreateTestCaseModal } from './createTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
-import { isEmpty } from 'lodash';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const folders = useSelector(foldersSelector);
   const projectName = useSelector(projectNameSelector);
+  const folders = useSelector(foldersSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
-  const hasFolders = !isEmpty(folders);
-
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
-  useEffect(() => {
-    dispatch(getFoldersAction());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
+  const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
+  const hasFolders = !isEmpty(folders);
+
+  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
   return (
     <SettingsLayout>
@@ -72,23 +68,27 @@ export const TestCaseLibraryPage = () => {
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
             </div>
-            {!hasFolders || (
+            {hasFolders && (
               <div className={cx('test-case-library-page__actions')}>
-                <Button
-                  variant="text"
-                  icon={Parser(ImportIcon as unknown as string)}
-                  data-automation-id="importTestCase"
-                  adjustWidthOn="content"
-                >
-                  {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
-                </Button>
-                <Button
-                  variant="ghost"
-                  data-automation-id="createTestCase"
-                  onClick={openCreateTestCaseModal}
-                >
-                  {formatMessage(commonMessages.createTestCase)}
-                </Button>
+                {canImportTestCases && (
+                  <Button
+                    variant="text"
+                    icon={Parser(ImportIcon as unknown as string)}
+                    data-automation-id="importTestCase"
+                    adjustWidthOn="content"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
+                  </Button>
+                )}
+                {canCreateTestCase && (
+                  <Button
+                    variant="ghost"
+                    data-automation-id="createTestCase"
+                    onClick={openCreateTestCaseModal}
+                  >
+                    {formatMessage(commonMessages.createTestCase)}
+                  </Button>
+                )}
               </div>
             )}
           </div>

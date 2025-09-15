@@ -21,23 +21,23 @@ import { useCallback, useMemo } from 'react';
 import { ActionMenu } from 'components/actionMenu';
 import { showModalAction } from 'controllers/modal';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { canSeeActivityOption } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { ORGANIZATIONS_ACTIVITY_PAGE, userRolesSelector } from 'controllers/pages';
+import { ORGANIZATIONS_ACTIVITY_PAGE } from 'controllers/pages';
 import {
   AssignedOrganizations,
   assignedOrganizationsSelector,
   UserInfo,
   userInfoSelector,
 } from 'controllers/user';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { Organization } from 'controllers/organization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import {
   useCanUnassignOrganization,
   UnassignOrganizationModal,
 } from 'pages/inside/common/assignments';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { messages } from '../../messages';
-import { Organization } from 'controllers/organization';
 
 interface MeatballMenuProps {
   organization: Organization;
@@ -47,7 +47,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeActivityOption } = useUserPermissions();
   const currentUser = useSelector(userInfoSelector) as UserInfo;
   const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
   const canUnassign = useCanUnassignOrganization();
@@ -86,11 +86,11 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
           type: ORGANIZATIONS_ACTIVITY_PAGE,
           payload: { organizationSlug: organization?.slug },
         },
-        hasPermission: canSeeActivityOption(userRoles),
+        hasPermission: canSeeActivityOption,
         onClick: handleActivityClick,
       },
     ],
-    [formatMessage, organization?.slug, userRoles, handleActivityClick],
+    [formatMessage, organization?.slug, canSeeActivityOption, handleActivityClick],
   );
 
   const actions = useMemo(

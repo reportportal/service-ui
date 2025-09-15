@@ -1,3 +1,4 @@
+import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
 type Tag = {
@@ -20,18 +21,30 @@ export interface IScenario {
   attachments: IAttachment[];
 }
 
-export interface TestCase {
+export interface TestCaseBasicInfo {
   id: number;
   name: string;
   priority: TestCasePriority;
-  path: string[];
-  tags: Tag[];
   createdAt: number;
   description?: string;
+}
+
+export interface TestCase extends TestCaseBasicInfo {
+  path: string[];
+  tags: Tag[];
   updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];
   testFolder: {
     id: number;
   };
+}
+
+export interface ActionButton {
+  name: string;
+  dataAutomationId: string;
+  icon?: FC<SVGProps<SVGSVGElement>>;
+  isCompact: boolean;
+  variant?: string;
+  handleButton: () => void;
 }

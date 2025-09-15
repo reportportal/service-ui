@@ -23,7 +23,6 @@ import {
   activeProjectSelector,
   assignedOrganizationsSelector,
   assignedProjectsSelector,
-  userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -31,14 +30,17 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE } from './constants';
+import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
 import { stringToArray } from './utils';
 import {
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
   urlTestCaseSlugSelector,
   urlFolderIdSelector,
   locationSelector,
   payloadSelector,
 } from './typed-selectors';
+import { userRolesSelector } from './';
 
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
@@ -178,18 +180,6 @@ export const prevTestItemSelector = ({ location }) => {
 };
 
 /**
- * @param {{ project?: { projectSlug?: string } }} state
- * @returns {string}
- */
-export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
-
-/**
- * @param {{ project?: { organizationSlug?: string } }} state
- * @returns {string}
- */
-export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
-
-/**
  * @param {Object} state
  * @returns {{ organizationSlug: string, projectSlug: string } | string}
  */
@@ -218,27 +208,6 @@ export const activeProjectRoleSelector = createSelector(
 
     return assignedProject?.projectRole;
   },
-);
-
-const activeOrganizationRoleSelector = createSelector(
-  urlOrganizationSlugSelector,
-  assignedOrganizationsSelector,
-  (organizationSlug, assignedOrganizations) => {
-    const assignedOrganization = assignedOrganizations[organizationSlug];
-
-    return assignedOrganization?.organizationRole;
-  },
-);
-
-export const userRolesSelector = createSelector(
-  userAccountRoleSelector,
-  activeOrganizationRoleSelector,
-  activeProjectRoleSelector,
-  (userRole, organizationRole, projectRole) => ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }),
 );
 
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
@@ -315,11 +284,11 @@ export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageT
           title: testTitle,
           ...(pageTitle && {
             link: {
-              type: TEST_CASE_LIBRARY_PAGE,
+              type: TEST_CASE_DETAILS_PAGE,
               payload: {
                 organizationSlug,
                 projectSlug,
-                testCasePageRoute: ['folder', folderId, 'test-cases', testCaseSlug],
+                testCasePageRoute: `folder/${folderId}/test-cases/${testCaseSlug}`,
               },
             },
           }),

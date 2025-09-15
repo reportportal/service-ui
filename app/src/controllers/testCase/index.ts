@@ -22,5 +22,6 @@ export {
 } from './actionCreators';
 export { testCaseSagas } from './sagas';
 export * from './constants';
+export * from './types';
 export { testCaseReducer } from './reducer';
 export * from './selectors';

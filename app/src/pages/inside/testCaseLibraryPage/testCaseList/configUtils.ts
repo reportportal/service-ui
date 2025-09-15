@@ -15,16 +15,18 @@
  */
 
 import { isEmpty } from 'lodash';
+import { MessageDescriptor } from 'react-intl';
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { messages } from './messages';
 import { TestCaseMenuAction } from './types';
+import { commonMessages } from '../commonMessages';
 
 export const DEFAULT_CURRENT_PAGE = 1;
 export const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export const createTestCaseMenuItems = (
-  formatMessage: (message: { id: string; defaultMessage: string }) => string,
+  formatMessage: (message: MessageDescriptor) => string,
   actions?: { [key in TestCaseMenuAction]?: () => void },
   excludedActions?: TestCaseMenuAction[],
 ): PopoverItem[] => {
@@ -32,7 +34,7 @@ export const createTestCaseMenuItems = (
     { label: formatMessage(messages.duplicate), action: TestCaseMenuAction.DUPLICATE },
     { label: formatMessage(messages.editTestCase), action: TestCaseMenuAction.EDIT },
     { label: formatMessage(messages.moveTestCaseTo), action: TestCaseMenuAction.MOVE },
-    { label: formatMessage(messages.historyOfActions), action: TestCaseMenuAction.HISTORY },
+    { label: formatMessage(commonMessages.historyOfActions), action: TestCaseMenuAction.HISTORY },
     {
       label: formatMessage(messages.deleteTestCase),
       variant: 'danger',

@@ -102,6 +102,11 @@ import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
+  GET_TEST_CASE_DETAILS,
+  getFoldersAction,
+  needsToLoadFoldersSelector,
+} from 'controllers/testCase';
+import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   ASSIGNMENTS_ROUTE,
@@ -388,8 +393,23 @@ const routesMap = {
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
-  [TEST_CASE_LIBRARY_PAGE]:
-    '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
+  [TEST_CASE_LIBRARY_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
+      const testCaseId = match ? match[1] : null;
+
+      if (testCaseId) {
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+      }
+
+      // Only dispatch getFoldersAction if folders are not already loaded
+      if (needsToLoadFoldersSelector(state)) {
+        dispatch(getFoldersAction());
+      }
+    },
+  },
   [PRODUCT_VERSIONS_PAGE]: redirectRoute(
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
     (payload) => ({

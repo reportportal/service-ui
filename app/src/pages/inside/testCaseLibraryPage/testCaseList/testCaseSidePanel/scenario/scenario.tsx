@@ -16,12 +16,14 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { AttachedFile } from '@reportportal/ui-kit';
 import { isEmpty } from 'lodash';
-import { AttachmentItem } from 'componentLibrary/attachmentItem';
+
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { IScenario } from '../../../types';
 import { FieldSection } from './fieldSection';
 import { messages } from './messages';
+
 import styles from './scenario.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -64,7 +66,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
         >
           <div className={cx('attachments-list')}>
             {scenario.attachments.map((attachment) => (
-              <AttachmentItem
+              <AttachedFile
                 key={attachment.fileName}
                 fileName={attachment.fileName}
                 size={attachment.size}

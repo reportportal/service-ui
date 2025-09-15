@@ -32,14 +32,13 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
-import { canBulkEditItems } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { pageEventsMap } from 'components/main/analytics';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { canWorkWithTests } from 'common/utils/permissions/permissions';
 import styles from './testItemActionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -67,13 +66,13 @@ export const TestItemActionPanel = ({
   const level = useSelector(levelSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const userRoles = useSelector(userRolesSelector);
+  const { canBulkEditItems, canWorkWithTests } = useUserPermissions();
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const hasAccessToActions = canWorkWithTests(userRoles);
   const onClickRefresh = () => {
     trackEvent(pageEventsMap[level].CLICK_REFRESH_BTN);
     onRefresh();
@@ -131,7 +130,7 @@ export const TestItemActionPanel = ({
     {
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
       value: 'action-edit',
-      hidden: !canBulkEditItems(userRoles),
+      hidden: !canBulkEditItems,
       onClick: onEditItems,
     },
     {
@@ -171,7 +170,7 @@ export const TestItemActionPanel = ({
       )}
       <div className={cx('action-buttons')}>
         {parentItem && <ParentInfo parentItem={parentItem} />}
-        {hasAccessToActions && (
+        {canWorkWithTests && (
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
               title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
