@@ -122,7 +122,13 @@
     align-items: center;
 
     svg path {
-      fill: var(--rp-ui-base-topaz);
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &--active {
+      svg path {
+        fill: var(--rp-ui-base-topaz-pressed);
+      }
     }
   }
 }

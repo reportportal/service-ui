@@ -80,6 +80,7 @@ const DeleteFolderModalComponent = ({
     ),
     onClick: onSubmit as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isDeletingFolder,
+    variant: 'danger' as const,
     'data-automation-id': 'submitButton',
   };
 
