@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -43,12 +43,14 @@ const LaunchStartTimeFilterComponent = ({ filter, onFilterChange }) => {
   const activeProject = useSelector(activeProjectSelector);
   const userId = useSelector(idSelector);
   const timeRange = getTimeRange(formatMessage);
+  const [filterValue, setFilterValue] = useState(filter || DEFAULT_VALUE);
 
   useEffect(() => {
     if (userId && activeProject) {
       const stored = getStoredFilter(userId, activeProject, FILTER_KEYS.START_TIME);
       if (stored && !filter) {
         onFilterChange(stored);
+        setFilterValue(stored);
       }
     }
   }, [filter, onFilterChange, userId, activeProject]);
@@ -58,6 +60,7 @@ const LaunchStartTimeFilterComponent = ({ filter, onFilterChange }) => {
       setStoredFilter(userId, activeProject, FILTER_KEYS.START_TIME, value);
     }
     onFilterChange(value);
+    setFilterValue(value);
   };
 
   const handleCustomDateChange = (closeDropdown) => (dateRange) => {
@@ -74,7 +77,7 @@ const LaunchStartTimeFilterComponent = ({ filter, onFilterChange }) => {
         toggleButtonClassName={cx('toggle-button')}
         selectListClassName={cx('select-list')}
         label={formatMessage(messages.label)}
-        value={filter || DEFAULT_VALUE}
+        value={filterValue}
         onChange={handleFilterChange}
         options={timeRange}
         notScrollable
@@ -84,7 +87,7 @@ const LaunchStartTimeFilterComponent = ({ filter, onFilterChange }) => {
         footer={(closeDropdown) => (
           <DateRangeFormField
             input={{
-              value: parseFormattedDate(filter || DEFAULT_VALUE),
+              value: parseFormattedDate(filterValue),
               onChange: handleCustomDateChange(closeDropdown),
             }}
           />

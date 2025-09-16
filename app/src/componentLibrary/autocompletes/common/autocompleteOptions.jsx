@@ -39,7 +39,7 @@ export class AutocompleteOptions extends Component {
     optionVariant: singleAutocompleteOptionVariantType,
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
-    newOptionCreatable: PropTypes.bool,
+    creatable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -54,7 +54,7 @@ export class AutocompleteOptions extends Component {
     optionVariant: '',
     createWithoutConfirmation: false,
     variant: 'light',
-    newOptionCreatable: true,
+    creatable: true,
   };
 
   filterStaticOptions = () => {
@@ -68,14 +68,14 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading, createWithoutConfirmation, variant, newOptionCreatable } = this.props;
+    const { loading, createWithoutConfirmation, variant, creatable } = this.props;
     if (loading) {
       return (
         <>
           <AutocompletePrompt variant={variant}>
             <BubblesLoader />
           </AutocompletePrompt>
-          {!createWithoutConfirmation && newOptionCreatable && this.renderNewItem(options)}
+          {!createWithoutConfirmation && creatable && this.renderNewItem(options)}
         </>
       );
     }
@@ -123,7 +123,7 @@ export class AutocompleteOptions extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation, newOptionCreatable } = this.props;
+    const { async, options, createWithoutConfirmation, creatable } = this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
@@ -132,7 +132,7 @@ export class AutocompleteOptions extends Component {
         <ScrollWrapper autoHeight autoHeightMax={140}>
           {this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {!createWithoutConfirmation && newOptionCreatable && this.renderNewItem(availableOptions)}
+        {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
       </div>
     );
   }

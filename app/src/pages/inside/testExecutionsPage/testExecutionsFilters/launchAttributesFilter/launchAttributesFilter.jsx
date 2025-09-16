@@ -57,25 +57,17 @@ const LaunchAttributesFilterComponent = ({ filter, onFilterChange }) => {
   const activeProject = useSelector(activeProjectSelector);
   const userId = useSelector(idSelector);
   const [isOpened, setIsOpened] = useState(false);
-  const [attributes, setAttributes] = useState([]);
+  const [attributes, setAttributes] = useState(parseQueryAttributes({ value: filter }));
 
   const getURIKey = URLS.launchAttributeKeysSearch(activeProject);
   const getURIValue = (key) => URLS.launchAttributeValuesSearch(activeProject, key);
-
-  useEffect(() => {
-    if (filter) {
-      const parsedAttributes = parseQueryAttributes({ value: filter });
-      setAttributes(parsedAttributes);
-    } else {
-      setAttributes([]);
-    }
-  }, [filter]);
 
   useEffect(() => {
     if (userId && activeProject) {
       const stored = getStoredFilter(userId, activeProject, FILTER_KEYS.ATTRIBUTES);
       if (stored && !filter) {
         onFilterChange(stored);
+        setAttributes(parseQueryAttributes({ value: stored }));
       }
     }
   }, [filter, onFilterChange, userId, activeProject]);
@@ -113,14 +105,13 @@ const LaunchAttributesFilterComponent = ({ filter, onFilterChange }) => {
     <div>
       <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
       <div className={cx('attributes-list')}>
-        {attributes.length > 0 &&
-          attributes.map((attribute, index) => (
-            <EditableAttribute
-              key={`${attribute.key}_${attribute.value}`}
-              attribute={attribute}
-              onRemove={handleRemove(attributes, index, handleChange)}
-            />
-          ))}
+        {attributes.map((attribute, index) => (
+          <EditableAttribute
+            key={`${attribute.key}_${attribute.value}`}
+            attribute={attribute}
+            onRemove={handleRemove(attributes, index, handleChange)}
+          />
+        ))}
         <Popover
           isOpened={isOpened}
           setIsOpened={setIsOpened}
@@ -137,7 +128,7 @@ const LaunchAttributesFilterComponent = ({ filter, onFilterChange }) => {
               keyPlaceholder={formatMessage(messages.keyPlaceholder)}
               valuePlaceholder={formatMessage(messages.valuePlaceholder)}
               autocompleteProps={{
-                newOptionCreatable: false,
+                creatable: false,
               }}
             />
           }
