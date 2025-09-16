@@ -81,7 +81,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const toolItems = canDeleteTestCaseFolder
     ? [
         {
-          label: formatMessage(commonMessages.deleteFolder) + '999',
+          label: formatMessage(commonMessages.deleteFolder),
           variant: 'destructive' as const,
           onClick: openDeleteModal,
         },
@@ -112,7 +112,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          {!!toolItems.length && (
+          {!isEmpty(toolItems) && (
             <button
               className={cx('folders-tree__tools', {
                 'folders-tree__tools--shown': areToolsShown,
