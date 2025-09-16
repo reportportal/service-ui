@@ -56,7 +56,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
 
     if (canImportTestCases) {
       buttons.push({
-        name: formatMessage(messages.importTestCases),
+        name: formatMessage(commonMessages.importTestCases),
         dataAutomationId: 'importTestCaseButton',
         variant: 'ghost',
         icon: ImportIcon,
