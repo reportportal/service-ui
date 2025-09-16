@@ -43,10 +43,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addTestCase',
     defaultMessage: 'Add Test Case',
   },
-  importTestCases: {
-    id: 'TestCaseLibraryPage.importTestCases',
-    defaultMessage: 'Import Test Cases',
-  },
   createFolder: {
     id: 'TestCaseLibraryPage.createFolder',
     defaultMessage:

@@ -38,7 +38,7 @@ export const ImportTestCaseModal = () => {
 
   return (
     <Modal
-      title={formatMessage(commonMessages.importTestCaseModal)}
+      title={formatMessage(commonMessages.importTestCases)}
       okButton={okButton}
       cancelButton={cancelButton}
       className={cx('import-test-case-modal')}
