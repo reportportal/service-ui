@@ -15,7 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
@@ -50,7 +50,7 @@ export const TestPlansPage = () => {
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
   useEffect(() => {
-    if (isEmpty(testPlans) && !isLoading) {
+    if (isNull(testPlans) && !isLoading) {
       dispatch(getTestPlansAction());
     }
   }, [dispatch, testPlans, isLoading]);
@@ -60,7 +60,7 @@ export const TestPlansPage = () => {
       return <PageLoader />;
     }
 
-    if (!isEmpty(testPlans)) {
+    if (testPlans && !isEmpty(testPlans)) {
       return <TestPlansTable testPlans={testPlans} />;
     }
 
