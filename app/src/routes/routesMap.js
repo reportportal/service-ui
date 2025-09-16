@@ -42,6 +42,7 @@ import {
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
   LAUNCHES_PAGE,
+  TEST_EXECUTIONS_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -213,6 +214,7 @@ const routesMap = {
       dispatch(parseQueryToFilterEntityAction());
     },
   },
+  [TEST_EXECUTIONS_PAGE]: '/:projectId/testExecutions',
   [HISTORY_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {

@@ -48,6 +48,8 @@ export const AttributeEditor = ({
   attribute,
   keyPlaceholder,
   valuePlaceholder,
+  keyLabel,
+  valueLabel,
   editorDefaultOpen,
   autocompleteProps,
 }) => {
@@ -160,6 +162,14 @@ export const AttributeEditor = ({
     keyEditorRef.current = node;
   };
 
+  const getAutocompleteProps = (allAutocompleteProps, label) => ({
+    ...allAutocompleteProps,
+    inputProps: {
+      ...allAutocompleteProps?.inputProps,
+      label,
+    },
+  });
+
   return (
     <div className={cx('attribute-editor')}>
       <FieldErrorHint
@@ -184,7 +194,7 @@ export const AttributeEditor = ({
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
           menuClassName={cx('menu')}
-          {...autocompleteProps}
+          {...getAutocompleteProps(autocompleteProps, keyLabel)}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -209,7 +219,7 @@ export const AttributeEditor = ({
           isRequired
           optionVariant="value-variant"
           menuClassName={cx('menu')}
-          {...autocompleteProps}
+          {...getAutocompleteProps(autocompleteProps, valueLabel)}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>
@@ -248,6 +258,8 @@ AttributeEditor.propTypes = {
   attribute: PropTypes.object,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
+  keyLabel: PropTypes.string,
+  valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
 };
@@ -263,6 +275,8 @@ AttributeEditor.defaultProps = {
   attribute: {},
   keyPlaceholder: 'Key',
   valuePlaceholder: 'Value',
+  keyLabel: '',
+  valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
 };

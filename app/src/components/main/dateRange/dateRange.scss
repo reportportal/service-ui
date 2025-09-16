@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,39 @@
  * limitations under the License.
  */
 
-export const TIME_INTERVAL = 15;
-export const DATE_FORMAT = 'MM-dd-yyyy';
-export const TIME_FORMAT = 'HH:mm';
-export const TIME_DATE_FORMAT = 'HH:mm MM/dd/yyyy';
-export const DATE_FORMAT_TOOLTIP = 'yyyy-MM-dd';
-export const DATETIME_FORMAT_TOOLTIP = 'yyyy-MM-dd hh:mm:ss';
-export const DATE_FORMAT_DROPDOWN = 'MM-DD-YYYY';
+.time-range-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 12px;
+  height: 100px;
+}
+
+.time-range {
+  display: flex;
+  gap: 16px;
+}
+
+.title {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.date-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-picker-container {
+  width: 200px;
+  box-sizing: border-box;
+}
+
+.date-picker-label {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}

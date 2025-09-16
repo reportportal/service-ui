@@ -55,6 +55,7 @@ export class SingleAutocomplete extends Component {
     stateReducer: PropTypes.func,
     variant: autocompleteVariantType,
     useFixedPositioning: PropTypes.bool,
+    newOptionCreatable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -85,6 +86,7 @@ export class SingleAutocomplete extends Component {
     stateReducer: (state, changes) => changes,
     variant: 'light',
     useFixedPositioning: false,
+    newOptionCreatable: true,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -129,6 +131,7 @@ export class SingleAutocomplete extends Component {
       stateReducer,
       variant,
       useFixedPositioning,
+      newOptionCreatable,
       ...props
     } = this.props;
     return (
@@ -178,7 +181,7 @@ export class SingleAutocomplete extends Component {
                             selectItem(newValue);
                           }
 
-                          if (createWithoutConfirmation) {
+                          if (createWithoutConfirmation && newOptionCreatable) {
                             selectItem(newValue);
                           }
 
@@ -223,6 +226,7 @@ export class SingleAutocomplete extends Component {
                     className={menuClassName}
                     options={options}
                     variant={variant}
+                    newOptionCreatable={newOptionCreatable}
                     {...props}
                   />
                 )}
