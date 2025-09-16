@@ -24,7 +24,7 @@ import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'control
 import { ACTIVE_TEST_PLAN_NAMESPACE, TEST_PLANS_NAMESPACE } from './constants';
 
 const reducer = combineReducers({
-  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: [], contentPath: 'content' }),
+  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: null, contentPath: 'content' }),
   isLoading: loadingReducer(TEST_PLANS_NAMESPACE),
   activeTestPlan: fetchReducer(ACTIVE_TEST_PLAN_NAMESPACE, { initialState: null }),
   isLoadingActive: loadingReducer(ACTIVE_TEST_PLAN_NAMESPACE),
