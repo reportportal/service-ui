@@ -2,7 +2,6 @@ import { reduxForm } from 'redux-form';
 import { messages } from './messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
-import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { URLS } from 'common/urls';
 import { useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
@@ -12,6 +11,7 @@ import { Modal } from '@reportportal/ui-kit';
 import styles from './addTestCasesToTestPlanModal.module.scss';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
+import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 
 const cx = classNames.bind(styles) as typeof classNames;
 

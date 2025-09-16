@@ -55,6 +55,7 @@ export class SingleAutocomplete extends Component {
     stateReducer: PropTypes.func,
     variant: autocompleteVariantType,
     useFixedPositioning: PropTypes.bool,
+    getUniqKey: PropTypes.func,
   };
 
   static defaultProps = {
