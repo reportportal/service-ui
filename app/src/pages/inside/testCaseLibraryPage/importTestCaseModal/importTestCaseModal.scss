@@ -23,10 +23,10 @@
 
       background: repeating-linear-gradient(
         45deg,
-        $COLOR--system-message-information-line-100 0px,
-        $COLOR--system-message-information-line-100 24px,
-        $COLOR--e-200 24px,
-        $COLOR--e-200 48px
+          var(--rp-ui-base-sm-info-line-100) 0px,
+          var(--rp-ui-base-sm-info-line-100) 24px,
+          var(--rp-ui-base-e-200) 24px,
+          var(--rp-ui-base-e-200) 48px
       );
     }
   }
@@ -52,7 +52,7 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: $COLOR--topaz-2;
+    color: var(--rp-ui-base-topaz);
     font-weight: 500;
     line-height: 20px;
     text-decoration: none;
