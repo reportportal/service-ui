@@ -58,5 +58,6 @@ export {
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
+  idSelector,
 } from './selectors';
 export { userSagas } from './sagas';

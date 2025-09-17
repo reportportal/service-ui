@@ -33,6 +33,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_USERDEBUG_PAGE,
   LAUNCHES_PAGE,
+  TEST_EXECUTIONS_PAGE,
   PROJECT_FILTERS_PAGE,
   ADMINISTRATE_PAGE,
   PROJECT_MEMBERS_PAGE,
@@ -53,6 +54,7 @@ import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
 import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
+import TestExecutionsIcon from './img/test-executions-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
 import { ProjectSelector } from '../../common/projectSelector';
@@ -117,6 +119,17 @@ export class AppSidebar extends Component {
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
+      },
+      {
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_TEST_EXECUTIONS_ICON),
+        link: {
+          type: TEST_EXECUTIONS_PAGE,
+          payload: { projectId: activeProject },
+        },
+        icon: TestExecutionsIcon,
+        message: (
+          <FormattedMessage id={'Sidebar.testExecutionsBtn'} defaultMessage={'Test executions'} />
+        ),
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),

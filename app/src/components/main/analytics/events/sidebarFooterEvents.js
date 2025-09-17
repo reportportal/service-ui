@@ -29,6 +29,10 @@ export const SIDEBAR_EVENTS = {
     ...basicEventParameters,
     icon_name: 'launches',
   },
+  CLICK_TEST_EXECUTIONS_ICON: {
+    ...basicEventParameters,
+    icon_name: 'test_executions',
+  },
   // GA3 events
   CLICK_MEMBERS_BTN: {
     category: SIDEBAR,

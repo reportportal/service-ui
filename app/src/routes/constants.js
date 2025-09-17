@@ -30,6 +30,7 @@ import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
+import { TestExecutionsPage } from 'pages/inside/testExecutionsPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
@@ -46,6 +47,7 @@ import {
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   LAUNCHES_PAGE,
+  TEST_EXECUTIONS_PAGE,
   HISTORY_PAGE,
   PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
@@ -82,6 +84,7 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
+  [TEST_EXECUTIONS_PAGE]: { component: TestExecutionsPage, layout: AppLayout, rawContent: true },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
