@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import {
+  getUserProjectSettingsFromStorage,
+  updateUserProjectSettingsInStorage,
+} from 'controllers/user';
 import { STORAGE_KEY } from './constants';
 
-const getStorageKey = (userId, projectId) => `${userId}_${projectId}_${STORAGE_KEY}`;
-
 export const getStoredFilters = (userId, projectId) => {
-  return getStorageItem(getStorageKey(userId, projectId)) || {};
+  const projectSettings = getUserProjectSettingsFromStorage(userId, projectId);
+  return projectSettings[STORAGE_KEY] || {};
 };
 
 export const setStoredFilter = (userId, projectId, filterKey, value) => {
@@ -29,7 +31,9 @@ export const setStoredFilter = (userId, projectId, filterKey, value) => {
     ...filters,
     [filterKey]: value,
   };
-  setStorageItem(getStorageKey(userId, projectId), updatedFilters);
+  updateUserProjectSettingsInStorage(userId, projectId, {
+    [STORAGE_KEY]: updatedFilters,
+  });
 };
 
 export const getStoredFilter = (userId, projectId, filterKey) => {

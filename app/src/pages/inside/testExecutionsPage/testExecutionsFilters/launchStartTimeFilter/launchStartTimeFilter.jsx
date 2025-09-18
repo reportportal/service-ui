@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { Dropdown } from '@reportportal/ui-kit';
 import { withFilter } from 'controllers/filter';
-import { activeProjectSelector, idSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   DateRangeFormField,
   formatDisplayedValue,
@@ -41,7 +41,7 @@ const DEFAULT_VALUE = timeRangeValues[3];
 const LaunchStartTimeFilterComponent = ({ filter, onFilterChange }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(activeProjectSelector);
-  const userId = useSelector(idSelector);
+  const userId = useSelector(userIdSelector);
   const timeRange = getTimeRange(formatMessage);
   const [filterValue, setFilterValue] = useState(filter || DEFAULT_VALUE);
 

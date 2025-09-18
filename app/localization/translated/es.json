@@ -1341,6 +1341,8 @@
   "LogsGridToolbar.markdownMode": "Modo markdown",
   "LogsGridToolbar.showErrorLog": "Mostrar",
   "LogsGridToolbar.withAttachments": "Logs con archivos adjuntos",
+  "LogsSettings.logAppearance": "Log appearance",
+  "LogsSettings.noLogsCollapsing": "No logs collapsing",
   "MakeDecisionModal.addForAll": "se agregarán para todos los elementos seleccionados",
   "MakeDecisionModal.allLoadedTIFromHistoryLine": "elementos ”Para Investigar” de la línea de historial y elemento actual",
   "MakeDecisionModal.analyzerSuggestion": "Sugerencia del analizador",

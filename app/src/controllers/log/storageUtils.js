@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { MARKDOWN } from 'common/constants/logViewModes';
 import { LOG_TIME_FORMAT_ABSOLUTE } from 'controllers/user/constants';
+import { getUserSettingsFromStorage, updateUserSettingsInStorage } from 'controllers/user';
 import {
   LOG_LEVEL_STORAGE_KEY,
   LOG_LEVELS,
@@ -24,10 +24,6 @@ import {
   LOG_VIEW_MODE_STORAGE_KEY,
   LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
-
-const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
-
-const updateUserSettingsInStorage = (userId, data) => updateStorageItem(`${userId}_settings`, data);
 
 const getLogLevelFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];

@@ -1341,6 +1341,8 @@
   "LogsGridToolbar.markdownMode": "Режим розмітки",
   "LogsGridToolbar.showErrorLog": "Показати",
   "LogsGridToolbar.withAttachments": "Логи з вкладеннями",
+  "LogsSettings.logAppearance": "Вигляд логів",
+  "LogsSettings.noLogsCollapsing": "Без згортання логів",
   "MakeDecisionModal.addForAll": "будуть додані для всіх вибраних елементів",
   "MakeDecisionModal.allLoadedTIFromHistoryLine": "”To Investigate” елементи з рядка історії та поточний елемент",
   "MakeDecisionModal.analyzerSuggestion": "Пропозиція аналізатора",

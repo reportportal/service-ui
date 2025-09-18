@@ -34,6 +34,9 @@ import {
   ADD_API_KEY_SUCCESS,
   DELETE_USER_ACCOUNT,
   SET_LOG_TIME_FORMAT,
+  SET_ACTIVE_PROJECT_SETTINGS,
+  UPDATE_ACTIVE_PROJECT_SETTINGS,
+  SET_NO_LOGS_COLLAPSING,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -122,4 +125,19 @@ export const unassignFromProjectAction = (project) => ({
 export const unassignFromProjectSuccessAction = (project) => ({
   type: UNASSIGN_FROM_PROJECT_SUCCESS,
   payload: project,
+});
+
+export const setActiveProjectSettingsAction = (settings) => ({
+  type: SET_ACTIVE_PROJECT_SETTINGS,
+  payload: settings,
+});
+
+export const updateActiveProjectSettingsAction = (settings) => ({
+  type: UPDATE_ACTIVE_PROJECT_SETTINGS,
+  payload: settings,
+});
+
+export const setNoLogsCollapsingAction = (value) => ({
+  type: SET_NO_LOGS_COLLAPSING,
+  payload: { value },
 });

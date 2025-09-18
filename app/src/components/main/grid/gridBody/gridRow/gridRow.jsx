@@ -62,6 +62,7 @@ export class GridRow extends Component {
       colSpan: PropTypes.number,
       className: PropTypes.string,
     }),
+    expanded: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -87,21 +88,29 @@ export class GridRow extends Component {
     descriptionConfig: null,
     itemIntoViewRef: null,
     itemIntoViewId: null,
+    expanded: false,
   };
 
   state = {
     withAccordion: false,
-    expanded: false,
+    expanded: this.props.expanded,
     updateHighlight: true,
     highlightBlockStyle: {},
   };
 
   componentDidMount() {
     this.handleAccordion();
+    this.updateOverflowCellHeight();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.handleAccordion();
+
+    if (prevProps.expanded !== this.props.expanded) {
+      this.setState({ expanded: this.props.expanded }, () => {
+        this.updateOverflowCellHeight();
+      });
+    }
 
     if (
       this.checkIfTheHighlightNeeded() &&
@@ -115,9 +124,20 @@ export class GridRow extends Component {
     this.overflowCell = overflowCell;
   };
 
+  updateOverflowCellHeight = () => {
+    if (!this.overflowCell || !this.state.withAccordion) {
+      return;
+    }
+
+    this.overflowCell.style.maxHeight = this.state.expanded
+      ? null
+      : `${this.overflowCellMaxHeight}px`;
+  };
+
   setupAccordion = () => {
-    this.setState({ withAccordion: true });
-    this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
+    this.setState({ withAccordion: true }, () => {
+      this.updateOverflowCellHeight();
+    });
   };
 
   getHighlightBlockClasses = () => {
@@ -182,9 +202,7 @@ export class GridRow extends Component {
     }
 
     this.setState({ expanded: !this.state.expanded }, () => {
-      this.overflowCell.style.maxHeight = !this.state.expanded
-        ? `${this.overflowCellMaxHeight}px`
-        : null;
+      this.updateOverflowCellHeight();
     });
   };
 

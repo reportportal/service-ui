@@ -37,6 +37,7 @@ import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { ErrorLogsControl } from './errorLogsControl';
 import { Pagination } from './pagination';
+import { LogsSettings } from './logsSettings';
 import styles from './logsGridToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -277,6 +278,9 @@ export class LogsGridToolbar extends Component {
                   {Parser(ConsoleIcon)}
                 </button>
               )}
+              <div className={cx('logs-settings')}>
+                <LogsSettings isConsoleViewMode={this.isConsoleViewMode()} />
+              </div>
             </div>
             {pageCount !== 0 && (
               <div className={cx('pagination')}>
