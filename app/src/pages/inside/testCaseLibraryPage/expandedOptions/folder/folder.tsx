@@ -28,6 +28,7 @@ import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
+import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -78,8 +79,28 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     );
   };
 
+  const openDuplicateModal = () => {
+    dispatch(
+      showModalAction({
+        id: DUPLICATE_FOLDER_MODAL_KEY,
+        data: {
+          folderId: folder.id,
+          folderName: folder.name,
+          activeFolderId: activeFolder,
+          parentFolderId: folder.parentFolderId,
+          setAllTestCases,
+        },
+      }),
+    );
+  };
+
   const toolItems = canDeleteTestCaseFolder
     ? [
+        {
+          label: formatMessage(commonMessages.duplicateFolder),
+          variant: 'text' as const,
+          onClick: openDuplicateModal,
+        },
         {
           label: formatMessage(commonMessages.deleteFolder),
           variant: 'destructive' as const,

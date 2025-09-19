@@ -57,4 +57,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.deleteFolder',
     defaultMessage: 'Delete folder',
   },
+  duplicateFolder: {
+    id: 'TestCaseLibraryPage.duplicateFolder',
+    defaultMessage: 'Duplicate folder',
+  },
 });

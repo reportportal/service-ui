@@ -33,6 +33,7 @@ import { isCreatingFolderSelector } from 'controllers/testCase';
 import { commonMessages } from '../../commonMessages';
 
 import styles from './createFolderModal.scss';
+import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 
 const messages = defineMessages({
   enterFolderName: {
@@ -81,14 +82,6 @@ const CreateFolderModalComponent = ({
   const { formatMessage } = useIntl();
 
   const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
-
-  // Going to be resolved to id by folder name with UI search control
-  // Currently directly accepts id from name input
-  const coerceToNumericId = (value: unknown): number | undefined => {
-    if (value == null || value === '') return undefined;
-    const id = Number(value);
-    return Number.isFinite(id) ? id : undefined;
-  };
 
   const hideModal = () => dispatch(hideModalAction());
 
