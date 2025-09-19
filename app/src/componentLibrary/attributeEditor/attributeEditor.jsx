@@ -123,7 +123,6 @@ export const AttributeEditor = ({
   const isAttributeEmpty = () => isEmpty(state.key) && isEmpty(state.value);
 
   const isFormValid = () =>
-    (isAttributeValueRequired ? state.value : true) &&
     !state.errors.key &&
     !state.errors.value &&
     isAttributeUnique() &&
