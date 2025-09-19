@@ -244,14 +244,16 @@ export const LOG_PAGE_EVENTS = {
     element_name: 'play_video_sauce_labs',
   },
   getChangeItemStatusEvent: getChangeItemStatusEventCreator(LOG_PAGE),
-  CLICK_SETTINGS_ICON: {
+  clickSettingsIcon: (isEnabled) => ({
     ...basicLogPageClickEventParameters,
     element_name: 'settings_icon',
-  },
+    status: isEnabled ? 'on' : 'off',
+  }),
   getToggleNoLogsCollapsingEvent: (isEnabled) => ({
     ...basicLogPageClickEventParameters,
     element_name: 'no_logs_collapsing',
-    status: isEnabled ? 'enable' : 'disable',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
   }),
   // GA3 events
   DEFECT_TYPE_TAG: {

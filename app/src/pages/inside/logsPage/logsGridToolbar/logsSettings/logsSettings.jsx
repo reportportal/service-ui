@@ -48,10 +48,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   useOnClickOutside(containerRef, handleClickOutside);
 
   const toggleDropdown = () => {
-    if (!isOpened) {
-      trackEvent(LOG_PAGE_EVENTS.CLICK_SETTINGS_ICON);
-    }
-
+    trackEvent(LOG_PAGE_EVENTS.clickSettingsIcon(!isOpened));
     setOpened((prevState) => !prevState);
   };
 
