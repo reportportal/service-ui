@@ -65,13 +65,14 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
       <div ref={containerRef} className={cx('logs-settings-container')}>
         <Reference>
           {({ ref }) => (
-            <i
+            <button
               ref={ref}
               className={cx('settings-icon', { opened: isOpened })}
               onClick={toggleDropdown}
+              type="button"
             >
               {Parser(SettingsIcon)}
-            </i>
+            </button>
           )}
         </Reference>
         {isOpened && (

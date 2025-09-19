@@ -25,6 +25,16 @@
   width: 16px;
   height: 16px;
   vertical-align: middle;
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
 
   &:hover {
     svg path {
@@ -33,6 +43,12 @@
   }
 
   &.opened {
+    svg path {
+      fill: $COLOR--topaz;
+    }
+  }
+
+  &:focus {
     svg path {
       fill: $COLOR--topaz;
     }
