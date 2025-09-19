@@ -127,6 +127,7 @@ const LaunchAttributesFilterComponent = ({ filter, onFilterChange }) => {
               valueLabel={formatMessage(COMMON_LOCALE_KEYS.VALUE)}
               keyPlaceholder={formatMessage(messages.keyPlaceholder)}
               valuePlaceholder={formatMessage(messages.valuePlaceholder)}
+              isAttributeValueRequired={false}
               autocompleteProps={{
                 creatable: false,
               }}

@@ -44,11 +44,21 @@
 
 .attribute-editor {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
+
+  &.with-labels {
+    .separator {
+      margin-top: 34px;
+    }
+
+    .buttons {
+      margin-top: 24px;
+    }
+  }
 }
 
 .separator {
-  margin: 0 7px 10px;
+  margin: 8px 7px 0;
   color: $COLOR--almost-black;
   font-size: 16px;
 }
