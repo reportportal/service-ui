@@ -23,4 +23,4 @@ export {
   showErrorNotification,
   showSuccessNotification,
 } from './actionCreators';
-export { NOTIFICATION_TYPES } from './constants';
+export { NOTIFICATION_TYPES, NOTIFICATION_TYPOGRAPHY_COLOR_TYPES } from './constants';

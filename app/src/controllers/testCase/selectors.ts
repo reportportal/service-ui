@@ -19,7 +19,7 @@ import { Folder, TransformedFolder } from './types';
 import { InitialStateType } from './reducer';
 import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
 
-interface TestCaseState {
+export interface TestCaseState {
   folders?: {
     data?: Folder[];
     isCreatingFolder?: boolean;

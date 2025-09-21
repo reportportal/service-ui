@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { isEmpty } from 'lodash';
-import { BreadcrumbsTreeIcon, Button } from '@reportportal/ui-kit';
+import { BreadcrumbsTreeIcon, BubblesLoader, Button } from '@reportportal/ui-kit';
 
 import { ProjectDetails } from 'pages/organization/constants';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -29,13 +29,14 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { foldersSelector } from 'controllers/testCase';
+import { areFoldersLoadingSelector, foldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { ExpandedOptions } from './expandedOptions';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { commonMessages } from './commonMessages';
 import { useCreateTestCaseModal } from './createTestCaseModal';
+import { useImportTestCaseModal } from './importTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
@@ -45,16 +46,30 @@ export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
   const folders = useSelector(foldersSelector);
+  const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
 
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+
+  const renderContent = () => {
+    if (areFoldersLoading) {
+      return <BubblesLoader />;
+    }
+
+    if (hasFolders) {
+      return <ExpandedOptions />;
+    }
+
+    return <MainPageEmptyState />;
+  };
 
   return (
     <SettingsLayout>
@@ -76,6 +91,7 @@ export const TestCaseLibraryPage = () => {
                     icon={Parser(ImportIcon as unknown as string)}
                     data-automation-id="importTestCase"
                     adjustWidthOn="content"
+                    onClick={openImportFolderModal}
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                   </Button>
@@ -97,7 +113,7 @@ export const TestCaseLibraryPage = () => {
               'test-case-library-page__content--no-padding': hasFolders,
             })}
           >
-            {hasFolders ? <ExpandedOptions /> : <MainPageEmptyState />}
+            {renderContent()}
           </div>
         </div>
       </ScrollWrapper>

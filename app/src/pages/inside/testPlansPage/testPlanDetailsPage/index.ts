@@ -14,35 +14,4 @@
  * limitations under the License.
  */
 
-.menu-section {
-  display: flex;
-}
-
-.dots-menu-trigger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 16px;
-  color: var(--rp-ui-base-e-300);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 16px;
-
-  &:hover {
-    background-color: var(--rp-ui-base-e-100);
-  }
-
-  &:active,
-  &:focus {
-    svg {
-      color: var(--rp-ui-base-topaz-pressed);
-
-      path {
-        fill: var(--rp-ui-base-topaz-pressed);
-      }
-    }
-  }
-}
+export { TestPlanDetailsPage } from './testPlanDetailsPage';

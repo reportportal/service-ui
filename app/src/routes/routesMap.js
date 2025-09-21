@@ -124,11 +124,13 @@ import {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
   PROJECT_TEST_PLANS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
+import { getTestPlansAction, getTestPlanAction } from 'controllers/testPlan';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -428,8 +430,21 @@ const routesMap = {
   ),
   [PRODUCT_VERSION_TAB_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+
   [PROJECT_TEST_PLANS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
+    thunk: (dispatch) => {
+      dispatch(getTestPlansAction());
+    },
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans/:testPlanId',
+    thunk: (dispatch, getState) => {
+      const { location } = getState();
+      const { testPlanId } = location.payload;
+
+      dispatch(getTestPlanAction({ testPlanId }));
+    },
   },
 };
 

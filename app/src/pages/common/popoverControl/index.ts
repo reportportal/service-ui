@@ -15,3 +15,4 @@
  */
 
 export { PopoverControl } from './popoverControl';
+export type { PopoverItem } from './popoverControl';

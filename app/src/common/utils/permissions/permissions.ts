@@ -124,3 +124,4 @@ export const canDuplicateTestPlan = checkPermission(ACTIONS.DUPLICATE_TEST_PLAN)
 export const canEditTestPlan = checkPermission(ACTIONS.EDIT_TEST_PLAN);
 // TEST CASE FOLDER
 export const canCreateTestCaseFolder = checkPermission(ACTIONS.CREATE_TEST_CASE_FOLDER);
+export const canDeleteTestCaseFolder = checkPermission(ACTIONS.DELETE_TEST_CASE_FOLDER);

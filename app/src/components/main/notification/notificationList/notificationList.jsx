@@ -243,24 +243,27 @@ export class NotificationList extends PureComponent {
     return (
       <div className={cx('notification-list')} data-automation-id="notificationsContainer">
         <TransitionGroup>
-          {this.props.notifications.map(({ uid, type, messageId, values, message }) => (
-            <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
-              <div className={cx('notification-item-wrapper')}>
-                <SystemAlert
-                  type={type}
-                  title={Parser(
-                    DOMPurify.sanitize(
-                      messageId ? formatMessage(messages[messageId], values) : message,
-                      { ADD_ATTR: ['target'] },
-                    ),
-                  )}
-                  onClose={() => this.props.hideNotification(uid)}
-                  className={cx('notification-item')}
-                  dataAutomationId="notificationItem"
-                />
-              </div>
-            </CSSTransition>
-          ))}
+          {this.props.notifications.map(
+            ({ uid, type, typographyColor, messageId, values, message }) => (
+              <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
+                <div className={cx('notification-item-wrapper')}>
+                  <SystemAlert
+                    type={type}
+                    typographyColor={typographyColor}
+                    title={Parser(
+                      DOMPurify.sanitize(
+                        messageId ? formatMessage(messages[messageId], values) : message,
+                        { ADD_ATTR: ['target'] },
+                      ),
+                    )}
+                    onClose={() => this.props.hideNotification(uid)}
+                    className={cx('notification-item')}
+                    dataAutomationId="notificationItem"
+                  />
+                </div>
+              </CSSTransition>
+            ),
+          )}
         </TransitionGroup>
       </div>
     );

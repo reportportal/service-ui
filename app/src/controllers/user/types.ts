@@ -48,4 +48,20 @@ export interface UserInfo {
   metadata: UserMetadata;
   assignedProjects: Record<string, AssignedProject>;
   assignedOrganizations: Record<string, AssignedOrganization>;
+  defaultProject?: string;
+  photoId?: string;
+}
+
+export interface UserSettings {
+  startTimeFormat: string;
+  logTimeFormat: string;
+  photoTimeStamp: number;
+}
+
+export interface UserState {
+  info?: UserInfo;
+  settings?: UserSettings;
+  activeProject?: string;
+  activeProjectKey?: string;
+  apiKeys?: string[];
 }

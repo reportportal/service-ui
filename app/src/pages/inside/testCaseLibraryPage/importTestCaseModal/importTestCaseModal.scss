@@ -1,0 +1,65 @@
+.import-test-case-modal {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__info-block {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--rp-ui-base-bg-000);
+    border-radius: 8px;
+    padding: 24px 16px 16px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      border-radius: 8px 8px 0 0;
+
+      background: repeating-linear-gradient(
+        45deg,
+        var(--rp-ui-base-sm-info-line-100) 0px,
+        var(--rp-ui-base-sm-info-line-100) 24px,
+        var(--rp-ui-base-e-200) 24px,
+        var(--rp-ui-base-e-200) 48px
+      );
+    }
+  }
+
+  &__info-text {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 20px;
+    margin-bottom: 4px;
+    text-indent: 1px;
+  }
+
+  &__drop-zone {
+    box-sizing: border-box;
+  }
+
+  &__drop-wrap {
+    height: 164px;
+  }
+
+  &__download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--rp-ui-base-topaz);
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+  }
+
+  &__external-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

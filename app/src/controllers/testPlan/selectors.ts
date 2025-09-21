@@ -16,19 +16,34 @@
 
 import { TestPlanDto } from './constants';
 
-interface TestPlanState {
-  data?: TestPlanDto[];
+export interface TestPlanState {
+  data: TestPlanDto[] | null;
   isLoading?: boolean;
+  activeTestPlan?: TestPlanDto | null;
+  isLoadingActive?: boolean;
 }
 
 interface RootState {
   testPlan?: TestPlanState;
 }
 
-export const testPlanSelector = (state: RootState): TestPlanState => state.testPlan || {};
+export const testPlanSelector = (state: RootState): TestPlanState =>
+  state.testPlan || { data: null };
 
-export const isLoadingSelector = (state: RootState): boolean =>
-  Boolean(testPlanSelector(state).isLoading);
+export const isLoadingSelector = (state: RootState) => Boolean(testPlanSelector(state).isLoading);
 
-export const testPlansSelector = (state: RootState): TestPlanDto[] =>
-  testPlanSelector(state).data || [];
+export const testPlansSelector = (state: RootState) => testPlanSelector(state).data;
+
+export const activeTestPlanSelector = (state: RootState) =>
+  testPlanSelector(state).activeTestPlan || null;
+
+export const isLoadingActiveSelector = (state: RootState) =>
+  Boolean(testPlanSelector(state).isLoadingActive);
+
+export const testPlanByIdSelector = (testPlanId: string | number) => (state: RootState) => {
+  const activeTestPlan = activeTestPlanSelector(state);
+
+  if (activeTestPlan && activeTestPlan.id === Number(testPlanId)) {
+    return activeTestPlan;
+  }
+};
