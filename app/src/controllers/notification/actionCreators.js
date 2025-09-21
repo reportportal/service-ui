@@ -26,13 +26,15 @@ import {
  * @param message? {string}
  * @param type {('error' | 'info' | 'success' | 'warning')}
  * @param typographyColor? {('black' | 'white')}
+ * @param duration? {number}
  * @param messageId? {string}
  * @param values? {object}
- * @returns {{type: string, payload: {message: string, type: (string), typographyColor: string, uid: number}}}
+ * @returns {{type: string, payload: {message: string, type: (string), typographyColor: string, duration: number, uid: number}}}
  */
 export const showNotification = ({
   type,
   typographyColor,
+  duration,
   message = '',
   messageId = '',
   values = {},
@@ -43,6 +45,7 @@ export const showNotification = ({
     messageId,
     type,
     typographyColor,
+    duration,
     values,
     uid: new Date().valueOf(),
   },

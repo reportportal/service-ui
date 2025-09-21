@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-export const SHOW_NOTIFICATION = 'showNotification';
-export const HIDE_NOTIFICATION = 'hideNotification';
-export const SHOW_DEFAULT_ERROR_NOTIFICATION = 'showDefaultErrorNotification';
-
-export const NOTIFICATION_TYPES = {
-  ERROR: 'error',
-  INFO: 'info',
-  WARNING: 'warning',
-  SUCCESS: 'success',
-};
-
-export const NOTIFICATION_TYPOGRAPHY_COLOR_TYPES = {
-  WHITE: 'white',
-  BLACK: 'black',
-};
-
-export const WARNING_NOTIFICATION_DURATION = 8000;
+.rename-folder-modal {
+  &__form {
+    position: relative;
+  }
+}
