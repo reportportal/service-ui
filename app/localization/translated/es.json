@@ -359,6 +359,7 @@
   "Common.uninstall": "Desinstalar",
   "Common.update": "Actualizar",
   "Common.validation.email": "Correo electrónico incorrecto. Ingresa una dirección de correo electrónico válida",
+  "Common.validationTooltip": "Please ensure all required fields are filled and validation errors are resolved before proceeding",
   "Common.value": "Valor",
   "Common.warning": "Advertencia",
   "Common.wednesday": "Miércoles",

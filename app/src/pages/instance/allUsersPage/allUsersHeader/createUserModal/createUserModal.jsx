@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
-import { getFormValues, reduxForm, FieldArray, getFormSyncErrors } from 'redux-form';
+import { getFormValues, reduxForm, FieldArray } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -30,7 +30,6 @@ import { commonValidators } from 'common/utils/validation';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useTouchedErrors } from 'common/hooks';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers';
@@ -108,14 +107,11 @@ const messages = defineMessages({
   },
 });
 
-export const CreateUserModal = ({ handleSubmit }) => {
+export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
-  const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
-  const syncErrors = useSelector((state) => getFormSyncErrors(CREATE_USER_FORM)(state));
-  const hasTouchedErrors = useTouchedErrors(fields, syncErrors);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -194,7 +190,8 @@ export const CreateUserModal = ({ handleSubmit }) => {
         onClick: () => {
           handleSubmit(onCreateUser)();
         },
-        disabled: hasTouchedErrors,
+        disabled: invalid,
+        tooltipNode: invalid && formatMessage(COMMON_LOCALE_KEYS.VALIDATION_TOOLTIP),
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -278,6 +275,7 @@ export const CreateUserModal = ({ handleSubmit }) => {
 
 CreateUserModal.propTypes = {
   handleSubmit: PropTypes.func,
+  invalid: PropTypes.bool,
 };
 
 export default withModal('createUserModal')(

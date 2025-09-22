@@ -359,6 +359,7 @@
   "Common.uninstall": "卸载",
   "Common.update": "更新",
   "Common.validation.email": "邮箱输入错误，请输入正确的邮箱。",
+  "Common.validationTooltip": "Please ensure all required fields are filled and validation errors are resolved before proceeding",
   "Common.value": "Value",
   "Common.warning": "警告",
   "Common.wednesday": "星期三",

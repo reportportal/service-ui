@@ -16,4 +16,3 @@
 
 export { useWindowResize } from './useWindowResize';
 export { useOnClickOutside } from './useOnClickOutside';
-export { useTouchedErrors } from './useTouchedErrors';
