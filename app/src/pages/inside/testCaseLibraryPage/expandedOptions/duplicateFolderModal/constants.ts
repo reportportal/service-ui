@@ -14,32 +14,6 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
 export const DUPLICATE_FORM_NAME = 'duplicate-folder-modal-form';
 
 export const DESTINATION_FOLDER_NAME = 'destinationFolderName';
-
-export const messages = defineMessages({
-  enterFolderName: {
-    id: 'TestCaseLibraryPage.enterFolderName',
-    defaultMessage: 'Enter folder name',
-  },
-  moveToRootDirectory: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Move to root directory',
-  },
-  folderDestination: {
-    id: 'TestCaseLibraryPage.folderDestination',
-    defaultMessage: 'Folder destination',
-  },
-  searchFolderToSelect: {
-    id: 'TestCaseLibraryPage.searchFolderToSelect',
-    defaultMessage: 'Search folder to select',
-  },
-  duplicateFolderText: {
-    id: 'TestCaseLibraryPage.duplicateFolderText',
-    defaultMessage:
-      "You're about to move the folder <b>Performance Testing</b> along with its test cases and subfolders to a new location.",
-  },
-});

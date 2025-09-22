@@ -29,6 +29,7 @@ import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
 import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
+import { PopoverItemVariant } from 'pages/common/popoverControl/popoverControl';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -94,20 +95,21 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     );
   };
 
-  const toolItems = canDeleteTestCaseFolder
-    ? [
-        {
-          label: formatMessage(commonMessages.duplicateFolder),
-          variant: 'text' as const,
-          onClick: openDuplicateModal,
-        },
-        {
-          label: formatMessage(commonMessages.deleteFolder),
-          variant: 'destructive' as const,
-          onClick: openDeleteModal,
-        },
-      ]
-    : [];
+  const toolItems = [
+    {
+      label: formatMessage(commonMessages.duplicateFolder),
+      variant: PopoverItemVariant.TEXT,
+      onClick: openDuplicateModal,
+    },
+  ];
+
+  if (canDeleteTestCaseFolder) {
+    toolItems.push({
+      label: formatMessage(commonMessages.deleteFolder),
+      variant: PopoverItemVariant.DESTRUCTIVE,
+      onClick: openDeleteModal,
+    });
+  }
 
   return (
     <li

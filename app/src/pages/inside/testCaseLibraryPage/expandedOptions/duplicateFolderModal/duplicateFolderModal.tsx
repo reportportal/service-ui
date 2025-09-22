@@ -32,9 +32,10 @@ import { isCreatingFolderSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import styles from './duplicateFolderModal.scss';
-import { DESTINATION_FOLDER_NAME, DUPLICATE_FORM_NAME, messages } from './constants';
+import { DESTINATION_FOLDER_NAME, DUPLICATE_FORM_NAME } from './constants';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -52,9 +53,7 @@ interface DuplicateFolderModalProps {
   data: {
     folderId: number;
     folderName: string;
-    activeFolderId: number | null;
     parentFolderId?: number | null;
-    setAllTestCases: () => void;
   };
 }
 
@@ -146,9 +145,13 @@ const CreateFolderModalComponent = ({
         <div className={cx('duplicate-folder-modal__text')}>
           {formatMessage(messages.duplicateFolderText, {
             b: (data) => <span className={cx('duplicate-folder-modal__text--bold')}>{data}</span>,
+            name: folderName,
           })}
         </div>
-        <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
+        <FieldProvider
+          name="folderName"
+          placeholder={formatMessage(commonMessages.enterFolderName)}
+        >
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(COMMON_LOCALE_KEYS.NAME)}

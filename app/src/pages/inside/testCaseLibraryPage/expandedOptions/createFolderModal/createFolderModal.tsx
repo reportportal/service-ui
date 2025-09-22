@@ -36,10 +36,6 @@ import styles from './createFolderModal.scss';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 
 const messages = defineMessages({
-  enterFolderName: {
-    id: 'TestCaseLibraryPage.enterFolderName',
-    defaultMessage: 'Enter folder name',
-  },
   createAsSubfolder: {
     id: 'TestCaseLibraryPage.createAsSubfolder',
     defaultMessage: 'Create as subfolder',
@@ -136,7 +132,10 @@ const CreateFolderModalComponent = ({
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
-        <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
+        <FieldProvider
+          name="folderName"
+          placeholder={formatMessage(commonMessages.enterFolderName)}
+        >
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
