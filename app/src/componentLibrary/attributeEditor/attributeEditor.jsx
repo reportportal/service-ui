@@ -36,8 +36,13 @@ const cx = classNames.bind(styles);
 
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
+  commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
+const attributeFilterValueValidator = bindMessageToValidator(
+  validate.nonRequiredAttributeValueValidator,
+  'attributeValueLengthHint',
+);
 
 export const AttributeEditor = ({
   attributes,
@@ -52,12 +57,19 @@ export const AttributeEditor = ({
   valueLabel,
   editorDefaultOpen,
   autocompleteProps,
+  isAttributeValueRequired,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
+
+  const getAttributeValueValidator = (value) =>
+    isAttributeValueRequired
+      ? attributeValueValidator(value)
+      : attributeFilterValueValidator(value);
+
   const getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attribute.edited && valueTouched && attributeValueValidator(value),
+    value: attribute.edited && valueTouched && getAttributeValueValidator(value),
   });
 
   const keyEditorRef = useRef(null);
@@ -111,7 +123,6 @@ export const AttributeEditor = ({
   const isAttributeEmpty = () => isEmpty(state.key) && isEmpty(state.value);
 
   const isFormValid = () =>
-    state.value &&
     !state.errors.key &&
     !state.errors.value &&
     isAttributeUnique() &&
@@ -171,7 +182,7 @@ export const AttributeEditor = ({
   });
 
   return (
-    <div className={cx('attribute-editor')}>
+    <div className={cx('attribute-editor', { 'with-labels': !!(keyLabel || valueLabel) })}>
       <FieldErrorHint
         provideHint={false}
         error={state.errors.key}
@@ -216,7 +227,7 @@ export const AttributeEditor = ({
           placeholder={valuePlaceholder}
           attributeKey={state.key}
           attributeValue={state.value}
-          isRequired
+          isRequired={isAttributeValueRequired}
           optionVariant="value-variant"
           menuClassName={cx('menu')}
           {...getAutocompleteProps(autocompleteProps, valueLabel)}
@@ -262,6 +273,7 @@ AttributeEditor.propTypes = {
   valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  isAttributeValueRequired: PropTypes.bool,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -279,4 +291,5 @@ AttributeEditor.defaultProps = {
   valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  isAttributeValueRequired: true,
 };
