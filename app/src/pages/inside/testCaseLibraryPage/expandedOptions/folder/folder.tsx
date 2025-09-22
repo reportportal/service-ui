@@ -23,13 +23,12 @@ import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit'
 import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './folder.scss';
-import { PopoverControl } from 'pages/common/popoverControl';
+import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
 import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
 import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
-import { PopoverItemVariant } from 'pages/common/popoverControl/popoverControl';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -47,7 +46,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { canDeleteTestCaseFolder } = useUserPermissions();
+  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder } = useUserPermissions();
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -87,27 +86,27 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
         data: {
           folderId: folder.id,
           folderName: folder.name,
-          activeFolderId: activeFolder,
           parentFolderId: folder.parentFolderId,
-          setAllTestCases,
         },
       }),
     );
   };
 
-  const toolItems = [
-    {
-      label: formatMessage(commonMessages.duplicateFolder),
-      variant: PopoverItemVariant.TEXT,
-      onClick: openDuplicateModal,
-    },
-  ];
+  const toolItems: PopoverItem[] = [];
 
   if (canDeleteTestCaseFolder) {
     toolItems.push({
       label: formatMessage(commonMessages.deleteFolder),
-      variant: PopoverItemVariant.DESTRUCTIVE,
+      variant: 'destructive' as const,
       onClick: openDeleteModal,
+    });
+  }
+
+  if (canDuplicateTestCaseFolder) {
+    toolItems.push({
+      label: formatMessage(commonMessages.duplicateFolder),
+      variant: 'text' as const,
+      onClick: openDuplicateModal,
     });
   }
 
