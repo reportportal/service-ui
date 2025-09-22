@@ -10,7 +10,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { getTestCasesAction } from 'controllers/testCase';
 
-import { CreateTestCaseFormData } from './createTestCaseModal';
+import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
 
 export interface TestStep {
@@ -19,7 +19,27 @@ export interface TestStep {
   attachments?: string[];
 }
 
-const testFolderId = 1;
+const testFolderId = 85;
+
+interface ManualScenarioCommon {
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  manualScenarioType: ManualScenarioType;
+  preconditions?: {
+    value: string;
+  };
+}
+
+interface ManualScenarioSteps extends ManualScenarioCommon {
+  steps: TestStep[];
+}
+
+interface ManualScenarioText extends ManualScenarioCommon {
+  instructions?: string;
+  expectedResult?: string;
+}
+
+type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
 
 export const useCreateTestCase = () => {
   const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -31,26 +51,35 @@ export const useCreateTestCase = () => {
     try {
       showSpinner();
 
+      const commonData = {
+        executionEstimationTime: payload.executionEstimationTime,
+        linkToRequirements: payload.linkToRequirements,
+        manualScenarioType: payload.manualScenarioType,
+        preconditions: {
+          value: payload.precondition,
+        },
+      };
+
+      const manualScenario: ManualScenarioDto =
+        payload.manualScenarioType === 'TEXT'
+          ? {
+              ...commonData,
+              instructions: payload.instructions,
+              expectedResult: payload.expectedResult,
+            }
+          : {
+              ...commonData,
+              steps: Object.values(payload?.steps ?? {}),
+            };
+
       await fetch(URLS.testCase(projectKey), {
         method: 'post',
         description: payload.description,
         data: {
           name: payload.name,
-          testFolder: {
-            id: testFolderId,
-          },
+          testFolderId,
           priority: payload.priority.toUpperCase(),
-          defaultVersion: {
-            manualScenario: {
-              executionEstimationTime: payload.executionEstimationTime,
-              linkToRequirements: payload.linkToRequirements,
-              manualScenarioType: payload.manualScenarioType,
-              preconditions: {
-                value: payload.precondition,
-              },
-              steps: Object.values(payload?.steps ?? {}),
-            },
-          },
+          manualScenario,
         },
       });
 
