@@ -31,16 +31,12 @@ import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { showModalAction } from 'controllers/modal';
-import {
-  TEST_CASE_LIBRARY_PAGE,
-  urlFolderIdSelector,
-  urlOrganizationAndProjectSelector,
-} from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
-import { TestCaseBasicInfo } from '../../types';
+import { TestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
@@ -51,7 +47,7 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
-  testCase: TestCaseBasicInfo;
+  testCase: TestCase;
   onAddToLaunch: () => void;
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
@@ -75,7 +71,6 @@ export const TestCaseDetailsHeader = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const folderId = useSelector(urlFolderIdSelector);
   const dispatch = useDispatch();
 
   const breadcrumbsTitles = {
@@ -132,7 +127,7 @@ export const TestCaseDetailsHeader = ({
           initialValues: {
             name: testCase.name,
             priority: testCase.priority.toLowerCase(),
-            testFolderId: folderId,
+            testFolderId: testCase.testFolder.id,
           },
           testCaseId: testCase.id,
         },
