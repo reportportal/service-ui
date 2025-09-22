@@ -18,7 +18,7 @@ import { commonValidators } from 'common/utils/validation/index';
 import * as validate from './validate';
 import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
-export const requiredField = bindMessageToValidator(validate.required, 'requiredFieldHint');
+export const requiredField = bindMessageToValidator(validate.required, 'The field is required');
 
 export const attributeKey = bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint');
 

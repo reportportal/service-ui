@@ -1,0 +1,22 @@
+.priority-select {
+  max-width: 344px;
+  width: 100%;
+  padding-right: 24px;
+  box-sizing: border-box;
+  border-right: 1px solid var(--rp-ui-base-e-100);
+
+  &__field {
+    height: auto;
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: var(--gray-60);
+    margin-bottom: 4px;
+  }
+
+  &__priority-icon {
+    height: 16px;
+  }
+}
