@@ -14,14 +14,5 @@
  * limitations under the License.
  */
 
-.create-test-plan-modal {
-  &__content-wrapper {
-    position: relative;
-  }
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-    row-gap: 16px;
-  }
-}
+export { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
+export { useCreateTestPlanModal } from './useCreateTestPlanModal';

@@ -16,10 +16,15 @@
 
 import { useModal } from 'common/hooks';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
+import RenameFolderModal, { RENAME_FOLDER_MODAL_KEY } from './renameFolderModal';
 
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+interface RenameFolderModalData {
+  folderId: number;
+  folderName: string;
+}
+
+export const useRenameFolderModal = () =>
+  useModal<RenameFolderModalData>({
+    modalKey: RENAME_FOLDER_MODAL_KEY,
+    renderModal: (data) => <RenameFolderModal data={data} />,
   });

@@ -15,3 +15,4 @@
  */
 
 export { DUPLICATE_FOLDER_MODAL_KEY } from './duplicateFolderModal';
+export { useDuplicateFolderModal } from './useDuplicateFolderModal';

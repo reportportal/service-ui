@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+import { TestPlanDto } from 'controllers/testPlan';
 import { useModal } from 'common/hooks';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
+import { EDIT_TEST_PLAN_MODAL_KEY, EditTestPlanModal } from './editTestPlanModal';
 
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+export const useEditTestPlanModal = () =>
+  useModal<TestPlanDto>({
+    modalKey: EDIT_TEST_PLAN_MODAL_KEY,
+    renderModal: (data) => <EditTestPlanModal data={data} />,
   });

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { FormEvent, MouseEvent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -29,17 +30,12 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
-import { commonMessages } from '../commonMessages';
-import { useCreateTestPlan } from './useCreateTestPlan';
 
-import styles from './createTestPlanModal.scss';
-import { FormEvent, MouseEvent } from 'react';
+import styles from './testPlanModal.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
-
-interface Attribute {
+export interface Attribute {
   value: string;
   system?: boolean;
   key?: string;
@@ -47,54 +43,61 @@ interface Attribute {
   new?: boolean;
 }
 
-interface CreateTestPlanFormValues {
+export interface TestPlanFormValues {
   name: string;
   description: string;
   attributes: Attribute[];
 }
 
-export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
-  form: 'create-test-plan-modal-form',
-  initialValues: {
-    name: '',
-    description: '',
-    attributes: [],
-  },
-  validate: ({ name }: { name: string }) => ({
-    name: commonValidators.requiredField(name),
-  }),
-})(({ dirty, handleSubmit }: InjectedFormProps<CreateTestPlanFormValues>) => {
+interface TestPlanModalProps {
+  title: string;
+  submitButtonText: string;
+  isLoading: boolean;
+  onSubmit: (values: TestPlanFormValues) => Promise<void>;
+  formName: string; // eslint-disable-line react/no-unused-prop-types
+  initialValues?: Partial<TestPlanFormValues>; // eslint-disable-line react/no-unused-prop-types
+}
+
+export const initialValues: Partial<TestPlanFormValues> = {
+  name: '',
+  description: '',
+  attributes: [],
+};
+
+const TestPlanModalComponent = ({
+  title,
+  submitButtonText,
+  isLoading,
+  onSubmit,
+  dirty,
+  handleSubmit,
+}: TestPlanModalProps & InjectedFormProps<TestPlanFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const { isCreateTestPlanLoading, createTestPlan } = useCreateTestPlan();
 
   const okButton = {
-    children: (
-      <LoadingSubmitButton isLoading={isCreateTestPlanLoading}>
-        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
-      </LoadingSubmitButton>
-    ),
-    onClick: handleSubmit(createTestPlan) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isCreateTestPlanLoading,
+    children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
+    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
+    disabled: isLoading,
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isCreateTestPlanLoading,
+    disabled: isLoading,
   };
 
   return (
     <Modal
-      title={formatMessage(commonMessages.createTestPlan)}
+      title={title}
       okButton={okButton}
-      className={cx('create-test-plan-modal')}
+      className={cx('test-plan-modal')}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div className={cx('create-test-plan-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(createTestPlan) as (event: FormEvent) => void}>
-          <div className={cx('create-test-plan-modal__container')}>
+      <div className={cx('test-plan-modal__content-wrapper')}>
+        <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
+          <div className={cx('test-plan-modal__container')}>
             <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
               <FieldErrorHint provideHint={false}>
                 <FieldText
@@ -115,8 +118,24 @@ export const CreateTestPlanModal = reduxForm<CreateTestPlanFormValues>({
             <TestPlanAttributes />
           </div>
         </form>
-        <ModalLoadingOverlay isVisible={isCreateTestPlanLoading} />
+        <ModalLoadingOverlay isVisible={isLoading} />
       </div>
     </Modal>
   );
-});
+};
+
+export const TestPlanModal = (props: TestPlanModalProps) => {
+  const FormWrapper = useMemo(
+    () =>
+      reduxForm<TestPlanFormValues, TestPlanModalProps>({
+        form: props.formName,
+        enableReinitialize: true,
+        validate: ({ name }: { name: string }) => ({
+          name: commonValidators.requiredField(name),
+        }),
+      })(TestPlanModalComponent),
+    [props.formName],
+  );
+
+  return <FormWrapper {...props} initialValues={props.initialValues || initialValues} />;
+};

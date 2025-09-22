@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
-
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
-  });
+export * from './testPlanModal';
+export * from './createTestPlanModal';
+export * from './editTestPlanModal';
+export * from './duplicateTestPlanModal';
+export * from './deleteTestPlanModal';

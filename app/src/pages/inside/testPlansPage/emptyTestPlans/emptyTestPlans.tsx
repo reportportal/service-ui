@@ -21,7 +21,7 @@ import { referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
-import { useCreateTestPlanModal } from '../hooks';
+import { useCreateTestPlanModal } from '../testPlanModals';
 import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
 import styles from './emptyTestPlans.scss';

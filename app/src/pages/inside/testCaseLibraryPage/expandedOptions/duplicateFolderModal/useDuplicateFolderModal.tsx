@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useModal } from 'common/hooks';
 
-import { showModalAction } from 'controllers/modal';
+import DuplicateFolderModal, { DUPLICATE_FOLDER_MODAL_KEY } from './duplicateFolderModal';
 
-import { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from '../createTestPlanModal';
+interface DuplicateFolderModalData {
+  folderId: number;
+  folderName: string;
+  parentFolderId?: number | null;
+}
 
-export const useCreateTestPlanModal = () => {
-  const dispatch = useDispatch();
-
-  const openModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_TEST_PLAN_MODAL_KEY,
-        data: null,
-        component: <CreateTestPlanModal />,
-      }),
-    );
-  };
-
-  return {
-    openModal,
-  };
-};
+export const useDuplicateFolderModal = () =>
+  useModal<DuplicateFolderModalData>({
+    modalKey: DUPLICATE_FOLDER_MODAL_KEY,
+    renderModal: (data) => <DuplicateFolderModal data={data} />,
+  });

@@ -15,3 +15,4 @@
  */
 
 export { RENAME_FOLDER_MODAL_KEY } from './renameFolderModal';
+export { useRenameFolderModal } from './useRenameFolderModal';

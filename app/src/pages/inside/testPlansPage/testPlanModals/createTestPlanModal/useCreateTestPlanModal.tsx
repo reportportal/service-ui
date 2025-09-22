@@ -16,10 +16,10 @@
 
 import { useModal } from 'common/hooks';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
+import { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
 
-export const useCreateTestCaseModal = () =>
+export const useCreateTestPlanModal = () =>
   useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+    modalKey: CREATE_TEST_PLAN_MODAL_KEY,
+    renderModal: () => <CreateTestPlanModal />,
   });

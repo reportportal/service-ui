@@ -15,3 +15,4 @@
  */
 
 export { DELETE_FOLDER_MODAL_KEY } from './deleteFolderModal';
+export { useDeleteFolderModal } from './useDeleteFolderModal';

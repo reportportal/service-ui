@@ -17,3 +17,4 @@
 export { useWindowResize } from './useWindowResize';
 export { useOnClickOutside } from './useOnClickOutside';
 export { useDebouncedSpinner } from './useDebouncedSpinner';
+export { useModal } from './useModal';
