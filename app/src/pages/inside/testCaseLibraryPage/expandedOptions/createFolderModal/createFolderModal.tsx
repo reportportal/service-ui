@@ -35,10 +35,6 @@ import { commonMessages } from '../../commonMessages';
 import styles from './createFolderModal.scss';
 
 const messages = defineMessages({
-  enterFolderName: {
-    id: 'TestCaseLibraryPage.enterFolderName',
-    defaultMessage: 'Enter folder name',
-  },
   createAsSubfolder: {
     id: 'TestCaseLibraryPage.createAsSubfolder',
     defaultMessage: 'Create as subfolder',
@@ -128,7 +124,10 @@ const CreateFolderModalComponent = ({
       onClose={hideModal}
     >
       <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
-        <FieldProvider name="folderName" placeholder={formatMessage(messages.enterFolderName)}>
+        <FieldProvider
+          name="folderName"
+          placeholder={formatMessage(commonMessages.enterFolderName)}
+        >
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(COMMON_LOCALE_KEYS.NAME)}

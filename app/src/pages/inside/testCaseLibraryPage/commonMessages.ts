@@ -118,4 +118,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.deleteFolder',
     defaultMessage: 'Delete folder',
   },
+  enterFolderName: {
+    id: 'TestCaseLibraryPage.enterFolderName',
+    defaultMessage: 'Enter folder name',
+  },
 });
