@@ -24,7 +24,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { deleteFolderAction } from 'controllers/testCase/actionCreators';
-import { isDeletingFolderSelector } from 'controllers/testCase';
+import { isLoadingFolderSelector } from 'controllers/testCase';
 
 import styles from './deleteFolderModal.scss';
 
@@ -57,7 +57,7 @@ const DeleteFolderModalComponent = ({
   data: { folderId, folderName, activeFolderId, setAllTestCases },
 }: DeleteFolderModalProps) => {
   const dispatch = useDispatch();
-  const isDeletingFolder = useSelector(isDeletingFolderSelector);
+  const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
 
   const hideModal = () => dispatch(hideModalAction());
@@ -74,19 +74,19 @@ const DeleteFolderModalComponent = ({
 
   const okButton = {
     children: (
-      <LoadingSubmitButton isLoading={isDeletingFolder}>
+      <LoadingSubmitButton isLoading={isLoadingFolder}>
         {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
       </LoadingSubmitButton>
     ),
     onClick: onSubmit as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isDeletingFolder,
+    disabled: isLoadingFolder,
     variant: 'danger' as const,
     'data-automation-id': 'submitButton',
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isDeletingFolder,
+    disabled: isLoadingFolder,
     'data-automation-id': 'cancelButton',
   };
 

@@ -23,11 +23,14 @@ import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit'
 import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './folder.scss';
-import { PopoverControl } from 'pages/common/popoverControl';
+import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
+import { RENAME_FOLDER_MODAL_KEY } from '../renameFolderModal';
+import { compact } from 'es-toolkit';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -45,7 +48,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { canDeleteTestCaseFolder } = useUserPermissions();
+  const { canDeleteTestCaseFolder, canRenameTestCaseFolder } = useUserPermissions();
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -78,15 +81,29 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     );
   };
 
-  const toolItems = canDeleteTestCaseFolder
-    ? [
-        {
-          label: formatMessage(commonMessages.deleteFolder),
-          variant: 'destructive' as const,
-          onClick: openDeleteModal,
+  const openRenameModal = () => {
+    dispatch(
+      showModalAction({
+        id: RENAME_FOLDER_MODAL_KEY,
+        data: {
+          folderId: folder.id,
+          folderName: folder.name,
         },
-      ]
-    : [];
+      }),
+    );
+  };
+
+  const toolItems: PopoverItem[] = compact([
+    canRenameTestCaseFolder && {
+      label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+      onClick: openRenameModal,
+    },
+    canDeleteTestCaseFolder && {
+      label: formatMessage(commonMessages.deleteFolder),
+      variant: 'destructive' as const,
+      onClick: openDeleteModal,
+    },
+  ]);
 
   return (
     <li

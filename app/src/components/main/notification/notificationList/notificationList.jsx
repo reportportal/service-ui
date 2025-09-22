@@ -196,6 +196,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
   },
+  testCaseFolderRenamedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
+    defaultMessage: 'Folder has been renamed successfully.',
+  },
   testCaseCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
@@ -207,6 +211,11 @@ const messages = defineMessages({
   testCaseLoadingFailed: {
     id: 'TestCaseLibraryPage.testCaseLoadingFailed',
     defaultMessage: 'An error occurred. Please try again later.',
+  },
+  redirectWarningMessage: {
+    id: 'TestCaseLibraryPage.redirectWarningMessage',
+    defaultMessage:
+      'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
   },
   testPlanCreatedSuccess: {
     id: 'TestPlansPage.testPlanCreatedSuccess',
@@ -244,12 +253,13 @@ export class NotificationList extends PureComponent {
       <div className={cx('notification-list')} data-automation-id="notificationsContainer">
         <TransitionGroup>
           {this.props.notifications.map(
-            ({ uid, type, typographyColor, messageId, values, message }) => (
+            ({ uid, type, duration, typographyColor, messageId, values, message }) => (
               <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
                 <div className={cx('notification-item-wrapper')}>
                   <SystemAlert
                     type={type}
                     typographyColor={typographyColor}
+                    duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
                         messageId ? formatMessage(messages[messageId], values) : message,

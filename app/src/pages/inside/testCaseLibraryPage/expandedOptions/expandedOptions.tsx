@@ -16,7 +16,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -49,18 +49,11 @@ import styles from './expandedOptions.scss';
 import {
   NOTIFICATION_TYPES,
   NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
   showNotification,
 } from 'controllers/notification';
 
 const cx = classNames.bind(styles) as typeof classNames;
-
-const messages = defineMessages({
-  redirectWarningMessage: {
-    id: 'ExpandedOptions.redirectWarningMessage',
-    defaultMessage:
-      'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
-  },
-});
 
 export const ExpandedOptions = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
@@ -87,9 +80,10 @@ export const ExpandedOptions = () => {
 
       dispatch(
         showNotification({
-          message: formatMessage(messages.redirectWarningMessage),
+          messageId: 'redirectWarningMessage',
           type: NOTIFICATION_TYPES.WARNING,
           typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
         }),
       );
     }
