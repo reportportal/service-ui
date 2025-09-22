@@ -110,13 +110,13 @@ interface InstanceAssignmentItem {
   projects: Project[];
 }
 
-interface InstanceAssignmentProps extends MyFieldArrayProps<InstanceAssignmentItem> {
+interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<InstanceAssignmentItem> {
   formName: string;
   formNamespace?: string;
   isOrganizationRequired: boolean;
 }
 
-interface MyFieldArrayProps<T> extends WrappedFieldArrayProps<T> {
+interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
   fields: WrappedFieldArrayProps<T>['fields'] & {
     getAll?: () => T[] | undefined;
   };
