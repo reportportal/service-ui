@@ -19,18 +19,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, FieldText } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector } from 'controllers/testCase';
 
-import { commonMessages } from '../../commonMessages';
+import { FolderNameField } from '../folderNameField';
 
 import styles from './renameFolderModal.scss';
 
@@ -44,7 +43,6 @@ const messages = defineMessages({
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
-const MAX_FIELD_LENGTH = 48;
 
 export interface RenameFolderFormValues {
   folderName: string;
@@ -108,19 +106,7 @@ const RenameFolderModalComponent = ({
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <form onSubmit={handleSubmit(onSubmit)} className={cx('rename-folder-modal__form')}>
-        <FieldProvider
-          name="folderName"
-          placeholder={formatMessage(commonMessages.enterFolderName)}
-        >
-          <FieldErrorHint provideHint={false}>
-            <FieldText
-              label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
-              defaultWidth={false}
-              maxLength={MAX_FIELD_LENGTH}
-              maxLengthDisplay={MAX_FIELD_LENGTH}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
+        <FolderNameField />
         <ModalLoadingOverlay isVisible={isLoadingFolder} />
       </form>
     </Modal>
