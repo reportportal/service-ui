@@ -30,6 +30,7 @@ import { commonValidators } from 'common/utils/validation';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase';
 
+import { FolderNameField } from '../folderNameField';
 import { commonMessages } from '../../commonMessages';
 
 import styles from './createFolderModal.scss';
@@ -124,19 +125,7 @@ const CreateFolderModalComponent = ({
       onClose={hideModal}
     >
       <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
-        <FieldProvider
-          name="folderName"
-          placeholder={formatMessage(commonMessages.enterFolderName)}
-        >
-          <FieldErrorHint provideHint={false}>
-            <FieldText
-              label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
-              defaultWidth={false}
-              maxLength={MAX_FIELD_LENGTH}
-              maxLengthDisplay={MAX_FIELD_LENGTH}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
+        <FolderNameField />
         {shouldRenderToggle && (
           <Toggle
             value={isSubfolderToggled}
