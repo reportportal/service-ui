@@ -24,6 +24,7 @@ export {
   SET_ACTIVE_PROJECT,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
+  NO_LOGS_COLLAPSING_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -41,6 +42,9 @@ export {
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
   unassignFromProjectAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
+  setNoLogsCollapsingAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -59,5 +63,14 @@ export {
   photoIdSelector,
   availableProjectsSelector,
   idSelector,
+  activeProjectSettingsSelector,
+  noLogsCollapsingSelector,
 } from './selectors';
 export { userSagas } from './sagas';
+export {
+  getUserSettingsFromStorage,
+  updateUserSettingsInStorage,
+  getUserProjectSettingsFromStorage,
+  updateUserProjectSettingsInStorage,
+  setNoLogsCollapsingInStorage,
+} from './storageUtils';

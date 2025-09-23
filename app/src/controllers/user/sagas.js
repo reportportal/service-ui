@@ -21,7 +21,8 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { userIdSelector, userInfoSelector } from './selectors';
+import { userIdSelector, userInfoSelector, activeProjectSelector } from './selectors';
+import { getUserProjectSettingsFromStorage, setNoLogsCollapsingInStorage } from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
@@ -31,6 +32,8 @@ import {
   DELETE_API_KEY,
   FETCH_USER,
   DELETE_USER_ACCOUNT,
+  SET_NO_LOGS_COLLAPSING,
+  NO_LOGS_COLLAPSING_KEY,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -43,6 +46,8 @@ import {
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
   setLogTimeFormatAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -143,6 +148,18 @@ function* saveActiveProject({ payload: project }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
   setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
+
+  const projectSettings = getUserProjectSettingsFromStorage(user.userId, project);
+  yield put(setActiveProjectSettingsAction(projectSettings));
+}
+
+function* setNoLogsCollapsing({ payload }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectId = yield select(activeProjectSelector);
+
+  yield call(setNoLogsCollapsingInStorage, userId, projectId, value);
+  yield put(updateActiveProjectSettingsAction({ [NO_LOGS_COLLAPSING_KEY]: value }));
 }
 
 function* addApiKey({ payload = {} }) {
@@ -267,6 +284,10 @@ function* watchSetActiveProject() {
   yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
 }
 
+function* watchSetNoLogsCollapsing() {
+  yield takeEvery(SET_NO_LOGS_COLLAPSING, setNoLogsCollapsing);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -285,6 +306,7 @@ export function* userSagas() {
     watchUnassignFromProject(),
     watchFetchUser(),
     watchSetActiveProject(),
+    watchSetNoLogsCollapsing(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

@@ -46,3 +46,13 @@ export const ADD_API_KEY_SUCCESS = 'addApiKeySuccess';
 export const DELETE_API_KEY = 'deleteApiKey';
 export const DELETE_API_KEY_SUCCESS = 'deleteApiKeySuccess';
 export const DELETE_USER_ACCOUNT = 'deleteUserAccount';
+
+export const SET_ACTIVE_PROJECT_SETTINGS = 'setActiveProjectSettings';
+export const UPDATE_ACTIVE_PROJECT_SETTINGS = 'updateActiveProjectSettings';
+export const SET_NO_LOGS_COLLAPSING = 'setNoLogsCollapsing';
+
+export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
+
+export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
+  [NO_LOGS_COLLAPSING_KEY]: false,
+};

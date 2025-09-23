@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { Button, FieldLabel, PlusIcon, Popover } from '@reportportal/ui-kit';
 import { withFilter } from 'controllers/filter';
-import { activeProjectSelector, idSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
@@ -55,7 +55,7 @@ const messages = defineMessages({
 const LaunchAttributesFilterComponent = ({ filter, onFilterChange }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(activeProjectSelector);
-  const userId = useSelector(idSelector);
+  const userId = useSelector(userIdSelector);
   const [isOpened, setIsOpened] = useState(false);
   const [attributes, setAttributes] = useState(parseQueryAttributes({ value: filter }));
 

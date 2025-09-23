@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -23,6 +24,7 @@ import { Grid } from 'components/main/grid';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
+import { noLogsCollapsingSelector } from 'controllers/user';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { FlexibleLogTime } from './flexibleLogTime';
@@ -145,6 +147,9 @@ LogStatusCell.defaultProps = {
   rawStylesConfig: {},
 };
 
+@connect((state) => ({
+  noLogsCollapsing: noLogsCollapsingSelector(state),
+}))
 @injectIntl
 export class LogsGrid extends Component {
   static propTypes = {
@@ -167,6 +172,7 @@ export class LogsGrid extends Component {
       highlightErrorRow: PropTypes.bool,
     }),
     rawHeaderCellStylesConfig: PropTypes.object,
+    noLogsCollapsing: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -184,6 +190,7 @@ export class LogsGrid extends Component {
     isNestedStepView: false,
     rowHighlightingConfig: {},
     rawHeaderCellStylesConfig: {},
+    noLogsCollapsing: false,
   };
 
   getConsoleViewColumns = () => [
@@ -350,6 +357,7 @@ export class LogsGrid extends Component {
   render() {
     const {
       intl,
+      noLogsCollapsing,
       logItems,
       loading,
       sortingColumn,
@@ -373,6 +381,7 @@ export class LogsGrid extends Component {
           rowHighlightingConfig={rowHighlightingConfig}
           nestedView
           eventsInfo={LOGS_GRID_EVENTS_INFO}
+          expanded={noLogsCollapsing}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

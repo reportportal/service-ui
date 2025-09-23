@@ -18,7 +18,11 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
 import { INTERNAL } from 'common/constants/accountType';
 import { projectInfoSelector } from 'controllers/project/selectors';
-import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
+import {
+  NO_LOGS_COLLAPSING_KEY,
+  START_TIME_FORMAT_ABSOLUTE,
+  START_TIME_FORMAT_RELATIVE,
+} from './constants';
 
 const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
@@ -60,3 +64,9 @@ export const availableProjectsSelector = createSelector(
 );
 
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
+
+export const activeProjectSettingsSelector = (state) =>
+  userSelector(state).activeProjectSettings || {};
+
+export const noLogsCollapsingSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[NO_LOGS_COLLAPSING_KEY] || false;
