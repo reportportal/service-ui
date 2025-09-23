@@ -40,19 +40,19 @@
   border-radius: 4px;
   box-sizing: content-box;
 
-  :global([class*="table-row-content"]) {
+  :global([class*='table-row-content']) {
     align-items: flex-start;
     min-height: 80px;
     border: 1px solid transparent;
     padding: 1px;
   }
 
-  &:hover > :global([class*="table-row-content"]) {
+  &:hover > :global([class*='table-row-content']) {
     border: 1px solid var(--rp-ui-base-topaz-focused);
     padding: 1px;
   }
 
-  &:has(.selected) > :global([class*="table-row-content"]) {
+  &:has(.selected) > :global([class*='table-row-content']) {
     border: 2px solid var(--rp-ui-base-topaz-focused);
     padding: 0;
   }
