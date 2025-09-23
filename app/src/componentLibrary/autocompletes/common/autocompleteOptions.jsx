@@ -39,6 +39,7 @@ export class AutocompleteOptions extends Component {
     optionVariant: singleAutocompleteOptionVariantType,
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
+    customEmptyListMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -120,15 +121,25 @@ export class AutocompleteOptions extends Component {
     );
   };
 
+  renderEmptyList = () => {
+    return (
+      <div className={cx('empty-list-message')}>
+        {this.props.customEmptyListMessage || 'No options available'}
+      </div>
+    );
+  };
+
   render() {
     const { async, options, createWithoutConfirmation } = this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return (
-      <div className={cx({ container: options.length })}>
+      <div className={cx('container')}>
         <ScrollWrapper autoHeight autoHeightMax={140}>
-          {this.renderItems(availableOptions)}
+          {availableOptions?.length > 0
+            ? this.renderItems(availableOptions)
+            : this.renderEmptyList()}
         </ScrollWrapper>
         {!createWithoutConfirmation && this.renderNewItem(availableOptions)}
       </div>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState, MouseEvent } from 'react';
+import { ChangeEvent, useState, MouseEvent, useMemo, HtmlHTMLAttributes } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
@@ -28,11 +28,15 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
-import { isCreatingFolderSelector } from 'controllers/testCase';
+import { foldersSelector, isCreatingFolderSelector } from 'controllers/testCase';
 
 import { commonMessages } from '../../commonMessages';
 
 import styles from './createFolderModal.scss';
+import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
+import { traverseFolders } from './utils';
+import { FolderWithFullPath } from './types';
+import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
 const messages = defineMessages({
   enterFolderName: {
@@ -78,9 +82,11 @@ const CreateFolderModalComponent = ({
 }: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
   const dispatch = useDispatch();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
+  const folders = useSelector(foldersSelector);
   const { formatMessage } = useIntl();
 
   const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<FolderWithFullPath | null>(null);
 
   // Going to be resolved to id by folder name with UI search control
   // Currently directly accepts id from name input
@@ -91,6 +97,59 @@ const CreateFolderModalComponent = ({
   };
 
   const hideModal = () => dispatch(hideModalAction());
+
+  const handleSelectedFolder = (item: { selectedItem: FolderWithFullPath }) => {
+    setSelectedFolder(item.selectedItem);
+  };
+
+  const mappedFolders = useMemo(() => traverseFolders(folders), [folders]);
+
+  const renderOption = (
+    option: FolderWithFullPath,
+    index: number,
+    _isNew: boolean,
+    getItemProps: ({
+      item,
+      index,
+    }: {
+      item: FolderWithFullPath;
+      index: number;
+    }) => HtmlHTMLAttributes<HTMLDivElement>,
+  ) =>
+    String(option?.id) !== 'EMPTY' ? (
+      <AutocompleteOption
+        isActive={true}
+        isSelected={true}
+        disabled={false}
+        optionVariant={'key-variant'}
+        variant="light"
+        {...getItemProps({ item: option, index })}
+        key={option.id}
+        isNew={false}
+        parseValueToString={(item: FolderWithFullPath) => item.description || ''}
+      >
+        <>
+          <p className={cx('create-folder-modal__folder__name')}>
+            {option.description || option.name}
+          </p>
+          <p className={cx('create-folder-modal__folder__path')}>{option.fullPath}</p>
+        </>
+      </AutocompleteOption>
+    ) : (
+      <div>
+        <p className={cx('create-folder-modal__folder__path')}>
+          {formatMessage(commonMessages.noTestPlanCreated)}
+        </p>
+      </div>
+    );
+
+  const renderEmptyOption = () => (
+    <div>
+      <p className={cx('create-folder-modal__folder__path')}>
+        {formatMessage(commonMessages.noTestPlanCreated)}
+      </p>
+    </div>
+  );
 
   const onSubmit = (values: CreateFolderFormValues) => {
     const idFromNameInput = coerceToNumericId(values.parentFolderName);
@@ -163,21 +222,33 @@ const CreateFolderModalComponent = ({
           </Toggle>
         )}
         {isSubfolderToggled && (
-          <FieldProvider
-            name="parentFolderName"
-            className={cx('create-folder-modal__parent-folder')}
-            placeholder={formatMessage(messages.searchFolderToSelect)}
-          >
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.parentFolder)}
-                defaultWidth={false}
-                maxLength={MAX_FIELD_LENGTH}
-                onClear={handleParentFolderNameClear}
-                clearable
-              />
-            </FieldErrorHint>
-          </FieldProvider>
+          <>
+            <SingleAutocomplete
+              optionVariant="key-variant"
+              createWithoutConfirmation={true}
+              onStateChange={handleSelectedFolder}
+              options={mappedFolders}
+              renderOption={mappedFolders?.length > 0 ? renderOption : renderEmptyOption}
+              parseValueToString={(option: FolderWithFullPath) =>
+                (option?.description || option?.name)?.toString() || ''
+              }
+            />
+            <FieldProvider
+              name="parentFolderName"
+              className={cx('create-folder-modal__parent-folder')}
+              placeholder={formatMessage(messages.searchFolderToSelect)}
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.parentFolder)}
+                  defaultWidth={false}
+                  maxLength={MAX_FIELD_LENGTH}
+                  onClear={handleParentFolderNameClear}
+                  clearable
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+          </>
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>

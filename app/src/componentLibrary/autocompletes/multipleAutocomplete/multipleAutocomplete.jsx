@@ -280,6 +280,7 @@ MultipleAutocomplete.propTypes = {
   }),
   variant: autocompleteVariantType,
   customizeNewSelectedValue: PropTypes.func,
+  customEmptyListMessage: PropTypes.string,
 };
 
 MultipleAutocomplete.defaultProps = {

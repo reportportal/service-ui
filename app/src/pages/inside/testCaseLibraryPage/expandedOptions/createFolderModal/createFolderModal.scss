@@ -27,4 +27,16 @@
   &__parent-folder {
     margin-top: 14px;
   }
+
+  &__folder {
+    &__name {
+      font-family: $FONT-REGULAR;
+      color: $COLOR--almost-black;
+    }
+
+    &__path {
+      font-family: $FONT-REGULAR;
+      color: $COLOR--e-400;
+    }
+  }
 }
