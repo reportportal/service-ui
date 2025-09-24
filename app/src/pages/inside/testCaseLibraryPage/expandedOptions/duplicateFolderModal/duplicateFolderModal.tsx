@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState, MouseEvent, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { ChangeEvent, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
-import { isCreatingFolderSelector } from 'controllers/testCase';
-
-import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
-
-import styles from './duplicateFolderModal.scss';
-import { DESTINATION_FOLDER_NAME, DUPLICATE_FORM_NAME } from './constants';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
+
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { useFolderModalLogic } from '../shared/useFolderModalLogic';
+import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
+import { sharedFolderMessages } from '../shared/sharedMessages';
+
+import styles from '../shared/folderFormFields.scss';
+import { DESTINATION_FOLDER_NAME, DUPLICATE_FORM_NAME } from './constants';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const DUPLICATE_FOLDER_MODAL_KEY = 'duplicateFolderModalKey';
-const MAX_FIELD_LENGTH = 48;
 
 export interface DuplicateFolderFormValues {
   folderName: string;
   destinationFolderName?: string;
   initialParentFolderId?: number | null;
   isParentFolderToggled?: boolean;
+  [key: string]: string | boolean | number | null | undefined;
 }
 
 interface DuplicateFolderModalProps {
@@ -66,16 +66,21 @@ const CreateFolderModalComponent = ({
   data: { folderId, folderName, parentFolderId },
 }: DuplicateFolderModalProps &
   InjectedFormProps<DuplicateFolderFormValues, DuplicateFolderModalProps>) => {
-  const dispatch = useDispatch();
-  const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const { formatMessage } = useIntl();
 
   const [isParentFolderToggled, setIsParentFolderToggled] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  const { isCreatingFolder, createOkButton, createCancelButton } = useFolderModalLogic({
+    formName: DUPLICATE_FORM_NAME,
+    parentFieldName: DESTINATION_FOLDER_NAME,
+  });
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (folderId && !isInitialized) {
-      const hasParentFolder = parentFolderId != null;
+      const hasParentFolder = !parentFolderId;
 
       initialize({
         folderName,
@@ -83,7 +88,7 @@ const CreateFolderModalComponent = ({
         isParentFolderToggled,
         initialParentFolderId: parentFolderId,
       });
-      setIsParentFolderToggled(!hasParentFolder);
+      setIsParentFolderToggled(hasParentFolder);
       setIsInitialized(true);
     }
   }, [folderId, folderName, parentFolderId, initialize, isInitialized, isParentFolderToggled]);
@@ -116,21 +121,15 @@ const CreateFolderModalComponent = ({
   };
 
   const okButton = {
+    ...createOkButton(handleSubmit),
     children: (
       <LoadingSubmitButton isLoading={isCreatingFolder}>
-        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+        {createOkButton(handleSubmit).children}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isCreatingFolder,
-    'data-automation-id': 'submitButton',
   };
 
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isCreatingFolder,
-    'data-automation-id': 'cancelButton',
-  };
+  const cancelButton = createCancelButton();
 
   return (
     <Modal
@@ -141,50 +140,28 @@ const CreateFolderModalComponent = ({
       onClose={hideModal}
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <form onSubmit={handleSubmit(onSubmit)} className={cx('duplicate-folder-modal__form')}>
-        <div className={cx('duplicate-folder-modal__text')}>
+      <form onSubmit={handleSubmit(onSubmit)} className={cx('folder-modal__form')}>
+        <div className={cx('folder-modal__text')}>
           {formatMessage(messages.duplicateFolderText, {
-            b: (data) => <span className={cx('duplicate-folder-modal__text--bold')}>{data}</span>,
+            b: (data) => <span className={cx('folder-modal__text--bold')}>{data}</span>,
             name: folderName,
           })}
         </div>
-        <FieldProvider
-          name="folderName"
-          placeholder={formatMessage(commonMessages.enterFolderName)}
-        >
-          <FieldErrorHint provideHint={false}>
-            <FieldText
-              label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
-              defaultWidth={false}
-              maxLength={MAX_FIELD_LENGTH}
-              maxLengthDisplay={MAX_FIELD_LENGTH}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
-        <Toggle
-          value={isParentFolderToggled}
-          onChange={handleToggle}
+        <FolderNameField />
+        <ParentFolderToggle
+          isToggled={isParentFolderToggled}
+          onToggle={handleToggle}
           disabled={!parentFolderId}
-          className={cx('duplicate-folder-modal__toggle')}
-        >
-          {formatMessage(messages.moveToRootDirectory)}
-        </Toggle>
+          label={formatMessage(messages.moveToRootDirectory)}
+          className={cx('folder-modal__toggle')}
+        />
         {!isParentFolderToggled && (
-          <FieldProvider
+          <ParentFolderField
             name={DESTINATION_FOLDER_NAME}
-            className={cx('duplicate-folder-modal__destination-folder')}
-            placeholder={formatMessage(messages.searchFolderToSelect)}
-          >
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.folderDestination)}
-                defaultWidth={false}
-                maxLength={MAX_FIELD_LENGTH}
-                onClear={handleFolderDestinationNameClear}
-                clearable
-              />
-            </FieldErrorHint>
-          </FieldProvider>
+            label={formatMessage(sharedFolderMessages.folderDestination)}
+            onClear={handleFolderDestinationNameClear}
+            className={cx('folder-modal__parent-folder')}
+          />
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>

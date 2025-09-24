@@ -16,14 +16,25 @@
 
 import { defineMessages } from 'react-intl';
 
-export const messages = defineMessages({
+export const sharedFolderMessages = defineMessages({
+  createAsSubfolder: {
+    id: 'TestCaseLibraryPage.createAsSubfolder',
+    defaultMessage: 'Create as subfolder',
+  },
   moveToRootDirectory: {
     id: 'TestCaseLibraryPage.moveToRootDirectory',
     defaultMessage: 'Move to root directory',
   },
-  duplicateFolderText: {
-    id: 'TestCaseLibraryPage.duplicateFolderText',
-    defaultMessage:
-      "You're about to move the folder <b>{name}</b> along with its test cases and subfolders to a new location.",
+  parentFolder: {
+    id: 'TestCaseLibraryPage.parentFolder',
+    defaultMessage: 'Parent folder',
+  },
+  folderDestination: {
+    id: 'TestCaseLibraryPage.folderDestination',
+    defaultMessage: 'Folder destination',
+  },
+  searchFolderToSelect: {
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
+    defaultMessage: 'Search folder to select',
   },
 });

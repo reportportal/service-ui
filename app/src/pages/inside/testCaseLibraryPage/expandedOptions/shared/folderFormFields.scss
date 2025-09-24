@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.duplicate-folder-modal {
+.folder-modal {
   &__form {
     position: relative;
   }
@@ -24,7 +24,7 @@
     margin-top: 16px;
   }
 
-  &__destination-folder {
+  &__parent-folder {
     margin-top: 14px;
   }
 
