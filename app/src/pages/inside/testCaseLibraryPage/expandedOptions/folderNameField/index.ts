@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-.empty-test-plan {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-top: 83px;
-}
+export { FolderNameField } from './folderNameField';

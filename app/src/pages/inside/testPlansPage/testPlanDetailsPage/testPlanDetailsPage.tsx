@@ -28,6 +28,7 @@ import {
   showNotification,
   NOTIFICATION_TYPES,
   NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
 } from 'controllers/notification';
 import {
   useProjectDetails,
@@ -64,6 +65,7 @@ export const TestPlanDetailsPage = () => {
           type: NOTIFICATION_TYPES.WARNING,
           message: formatMessage(messages.testPlanNotFoundRedirect),
           typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
         }),
       );
 

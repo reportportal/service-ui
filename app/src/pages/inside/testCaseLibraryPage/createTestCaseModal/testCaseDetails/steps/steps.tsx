@@ -16,11 +16,12 @@
 
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { Button, PlusIcon, MIME_TYPES } from '@reportportal/ui-kit';
 
 import { AttachmentArea } from '../../attachmentArea';
 import { StepData } from '../testCaseDetails';
 import { Step } from './step';
+import { messages as commonMessages } from '../../messages';
 
 import styles from './steps.scss';
 
@@ -76,6 +77,11 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
             isDraggable
             index={index}
             totalCount={steps.length}
+            acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
+            dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
+              browseButton: formatMessage(commonMessages.browseText),
+            })}
+            fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
             onRemove={() => onRemoveStep(step.id)}
             onMove={(direction) => onMoveStep({ stepId: step.id, direction })}
           >

@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-.empty-test-plan {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-top: 83px;
-}
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  instructions: {
+    id: 'createTestCaseModal.instructions',
+    defaultMessage: 'Instructions',
+  },
+  enterInstructions: {
+    id: 'createTestCaseModal.enterInstructions',
+    defaultMessage: 'Enter instructions to execute this scenario',
+  },
+  expectedResult: {
+    id: 'createTestCaseModal.expectedResult',
+    defaultMessage: 'Expected result',
+  },
+  enterExpectedResult: {
+    id: 'createTestCaseModal.enterExpectedResult',
+    defaultMessage: 'Enter the expected result here',
+  },
+});

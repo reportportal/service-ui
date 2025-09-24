@@ -14,60 +14,67 @@
  * limitations under the License.
  */
 
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { deleteFolderAction } from 'controllers/testCase/actionCreators';
+import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { commonValidators } from 'common/utils/validation';
+import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector } from 'controllers/testCase';
 
-import styles from './deleteFolderModal.scss';
+import { FolderNameField } from '../folderNameField';
+
+import styles from './renameFolderModal.scss';
 
 const messages = defineMessages({
-  deleteFolderTitle: {
-    id: 'TestCaseLibraryPage.deleteFolderTitle',
-    defaultMessage: 'Delete Folder',
-  },
-  deleteFolderText: {
-    id: 'TestCaseLibraryPage.deleteFolderText',
-    defaultMessage:
-      'Are you sure you want to delete folder <b>{name}</b>? This action is irreversible and will also permanently remove all test cases and subfolders, if any.',
+  title: {
+    id: 'RenameFolderModal.title',
+    defaultMessage: 'Rename Folder',
   },
 });
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-export const DELETE_FOLDER_MODAL_KEY = 'deleteFolderModalKey';
+export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
 
-interface DeleteFolderModalProps {
+export interface RenameFolderFormValues {
+  folderName: string;
+}
+interface RenameFolderModalProps {
   data: {
     folderId: number;
     folderName: string;
-    activeFolderId: number;
-    setAllTestCases: () => void;
   };
 }
 
-const DeleteFolderModalComponent = ({
-  data: { folderId, folderName, activeFolderId, setAllTestCases },
-}: DeleteFolderModalProps) => {
+const RenameFolderModalComponent = ({
+  data: { folderId, folderName },
+  dirty,
+  initialize,
+  handleSubmit,
+}: RenameFolderModalProps & InjectedFormProps<RenameFolderFormValues, RenameFolderModalProps>) => {
   const dispatch = useDispatch();
   const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
 
+  useEffect(() => {
+    initialize({ folderName });
+  }, [folderName, initialize]);
+
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSubmit = () => {
+  const onSubmit = (values: RenameFolderFormValues) => {
     dispatch(
-      deleteFolderAction({
+      renameFolderAction({
+        folderName: values.folderName,
         folderId,
-        activeFolderId,
-        setAllTestCases,
       }),
     );
   };
@@ -75,12 +82,11 @@ const DeleteFolderModalComponent = ({
   const okButton = {
     children: (
       <LoadingSubmitButton isLoading={isLoadingFolder}>
-        {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+        {formatMessage(COMMON_LOCALE_KEYS.RENAME)}
       </LoadingSubmitButton>
     ),
-    onClick: onSubmit as (event: MouseEvent<HTMLButtonElement>) => void,
+    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isLoadingFolder,
-    variant: 'danger' as const,
     'data-automation-id': 'submitButton',
   };
 
@@ -92,17 +98,26 @@ const DeleteFolderModalComponent = ({
 
   return (
     <Modal
-      title={formatMessage(messages.deleteFolderTitle)}
+      title={formatMessage(messages.title)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      {formatMessage(messages.deleteFolderText, {
-        b: (data) => <span className={cx('delete-folder-modal__text--bold')}>{data}</span>,
-        name: folderName,
-      })}
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+      <form onSubmit={handleSubmit(onSubmit)} className={cx('rename-folder-modal__form')}>
+        <FolderNameField />
+        <ModalLoadingOverlay isVisible={isLoadingFolder} />
+      </form>
     </Modal>
   );
 };
 
-export default withModal(DELETE_FOLDER_MODAL_KEY)(DeleteFolderModalComponent);
+export default withModal(RENAME_FOLDER_MODAL_KEY)(
+  reduxForm<RenameFolderFormValues, RenameFolderModalProps>({
+    form: 'rename-folder-modal-form',
+    validate: ({ folderName }) => ({
+      folderName: commonValidators.requiredField(folderName),
+    }),
+  })(RenameFolderModalComponent),
+);

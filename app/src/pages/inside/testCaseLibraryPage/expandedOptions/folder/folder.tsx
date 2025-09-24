@@ -24,11 +24,14 @@ import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './folder.scss';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
 import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
+import { RENAME_FOLDER_MODAL_KEY } from '../renameFolderModal';
+import { compact } from 'es-toolkit';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -46,7 +49,8 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder } = useUserPermissions();
+  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
+    useUserPermissions();
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -92,23 +96,34 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     );
   };
 
-  const toolItems: PopoverItem[] = [];
+  const openRenameModal = () => {
+    dispatch(
+      showModalAction({
+        id: RENAME_FOLDER_MODAL_KEY,
+        data: {
+          folderId: folder.id,
+          folderName: folder.name,
+        },
+      }),
+    );
+  };
 
-  if (canDeleteTestCaseFolder) {
-    toolItems.push({
-      label: formatMessage(commonMessages.deleteFolder),
-      variant: 'destructive' as const,
-      onClick: openDeleteModal,
-    });
-  }
-
-  if (canDuplicateTestCaseFolder) {
-    toolItems.push({
+  const toolItems: PopoverItem[] = compact([
+    canRenameTestCaseFolder && {
+      label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+      onClick: openRenameModal,
+    },
+    canDuplicateTestCaseFolder && {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: openDuplicateModal,
-    });
-  }
+    },
+    canDeleteTestCaseFolder && {
+      label: formatMessage(commonMessages.deleteFolder),
+      variant: 'destructive' as const,
+      onClick: openDeleteModal,
+    },
+  ]);
 
   return (
     <li
