@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { registerField, unregisterField } from 'redux-form';
@@ -24,31 +24,24 @@ import { hideModalAction } from 'controllers/modal';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
+import {
+  FolderFormValues,
+  BoundChangeFunction,
+  BoundUntouchFunction,
+  HandleSubmitFunction,
+} from './types';
 
-interface FormValues {
-  folderName: string;
-  [key: string]: string | boolean | number | null | undefined;
-}
-
-interface ReduxFormFunction {
-  (fieldName: string, value: string | boolean): void;
-}
-
-interface HandleSubmitFunction {
-  (onSubmit: (values: FormValues) => void): (event: MouseEvent<HTMLButtonElement>) => void;
-}
-
-export interface UseFolderModalLogicParams {
+export interface UseFolderModalProps {
   formName: string;
   parentFieldName: string;
-  onSubmit?: (values: FormValues) => void;
+  onSubmit?: (values: FolderFormValues) => void;
 }
 
-export const useFolderModalLogic = ({
+export const useFolderModal = ({
   formName,
   parentFieldName,
   onSubmit: customOnSubmit,
-}: UseFolderModalLogicParams) => {
+}: UseFolderModalProps) => {
   const dispatch = useDispatch();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const { formatMessage } = useIntl();
@@ -57,7 +50,7 @@ export const useFolderModalLogic = ({
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const defaultOnSubmit = (values: FormValues) => {
+  const defaultOnSubmit = (values: FolderFormValues) => {
     const parentFieldValue = values[parentFieldName];
     const idFromNameInput = coerceToNumericId(parentFieldValue as string);
     dispatch(
@@ -71,20 +64,20 @@ export const useFolderModalLogic = ({
   const onSubmit = customOnSubmit || defaultOnSubmit;
 
   const handleToggle =
-    (change: ReduxFormFunction, untouch: ReduxFormFunction) =>
+    (changeFunc: BoundChangeFunction, untouchFunc: BoundUntouchFunction) =>
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       if (target.checked) {
         dispatch(registerField(formName, parentFieldName, 'Field'));
-        untouch(parentFieldName, true);
+        untouchFunc(parentFieldName);
       } else {
         dispatch(unregisterField(formName, parentFieldName));
       }
       setIsToggled(target.checked);
-      change('isToggled', target.checked);
+      changeFunc('isToggled', target.checked);
     };
 
-  const handleParentFieldClear = (change: ReduxFormFunction, initialValue?: string) => () => {
-    change(parentFieldName, initialValue || '');
+  const handleParentFieldClear = (changeFunc: BoundChangeFunction, initialValue?: string) => () => {
+    changeFunc(parentFieldName, initialValue || '');
   };
 
   const createOkButton = (handleSubmit: HandleSubmitFunction) => ({

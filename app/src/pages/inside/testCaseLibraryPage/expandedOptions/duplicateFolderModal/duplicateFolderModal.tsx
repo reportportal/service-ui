@@ -29,26 +29,18 @@ import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
-import { useFolderModalLogic } from '../shared/useFolderModalLogic';
+import { useFolderModal } from '../shared/useFolderModal';
 import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
 import { sharedFolderMessages } from '../shared/sharedMessages';
-
-import styles from '../shared/folderFormFields.scss';
 import { PARENT_FIELD_NAME, DUPLICATE_FORM_NAME } from '../shared/commonConstants';
 import { messages } from './messages';
+import { DuplicateFolderFormValues } from '../shared/types';
+
+import styles from '../shared/folderFormFields.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const DUPLICATE_FOLDER_MODAL_KEY = 'duplicateFolderModalKey';
-
-export interface DuplicateFolderFormValues {
-  folderName: string;
-  destinationFolderName?: string;
-  initialParentFolderId?: number | null;
-  isParentFolderToggled?: boolean;
-  [key: string]: string | boolean | number | null | undefined;
-}
-
 interface DuplicateFolderModalProps {
   data: {
     folderId: number;
@@ -71,7 +63,7 @@ const CreateFolderModalComponent = ({
   const [isParentFolderToggled, setIsParentFolderToggled] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const { isCreatingFolder, createOkButton, createCancelButton } = useFolderModalLogic({
+  const { isCreatingFolder, createOkButton, createCancelButton } = useFolderModal({
     formName: DUPLICATE_FORM_NAME,
     parentFieldName: PARENT_FIELD_NAME,
   });

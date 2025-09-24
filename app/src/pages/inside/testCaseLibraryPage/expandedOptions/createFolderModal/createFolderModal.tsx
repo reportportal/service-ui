@@ -25,22 +25,17 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 
 import { commonMessages } from '../../commonMessages';
-import { useFolderModalLogic } from '../shared/useFolderModalLogic';
+import { useFolderModal } from '../shared/useFolderModal';
 import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
 import { sharedFolderMessages } from '../shared/sharedMessages';
+import { CREATE_FORM_NAME, PARENT_FIELD_NAME } from '../shared/commonConstants';
+import { FolderFormValues } from '../shared/types';
 
 import styles from '../shared/folderFormFields.scss';
-import { CREATE_FORM_NAME, PARENT_FIELD_NAME } from '../shared/commonConstants';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
-
-export interface CreateFolderFormValues {
-  folderName: string;
-  parentFolderName?: string;
-  [key: string]: string | boolean | number | null | undefined;
-}
 
 interface CreateFolderModalProps {
   data: {
@@ -55,7 +50,7 @@ const CreateFolderModalComponent = ({
   change,
   untouch,
   initialValues,
-}: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
+}: CreateFolderModalProps & InjectedFormProps<FolderFormValues, CreateFolderModalProps>) => {
   const { formatMessage } = useIntl();
 
   const {
@@ -67,7 +62,7 @@ const CreateFolderModalComponent = ({
     handleParentFieldClear,
     createOkButton,
     createCancelButton,
-  } = useFolderModalLogic({
+  } = useFolderModal({
     formName: CREATE_FORM_NAME,
     parentFieldName: PARENT_FIELD_NAME,
   });
@@ -123,7 +118,7 @@ const CreateFolderModalComponent = ({
 };
 
 export default withModal(CREATE_FOLDER_MODAL_KEY)(
-  reduxForm<CreateFolderFormValues, CreateFolderModalProps>({
+  reduxForm<FolderFormValues, CreateFolderModalProps>({
     form: CREATE_FORM_NAME,
     initialValues: {
       folderName: '',
