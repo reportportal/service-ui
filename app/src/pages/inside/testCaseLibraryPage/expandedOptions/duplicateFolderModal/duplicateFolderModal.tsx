@@ -34,7 +34,7 @@ import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../share
 import { sharedFolderMessages } from '../shared/sharedMessages';
 
 import styles from '../shared/folderFormFields.scss';
-import { DESTINATION_FOLDER_NAME, DUPLICATE_FORM_NAME } from './constants';
+import { PARENT_FIELD_NAME, DUPLICATE_FORM_NAME } from '../shared/commonConstants';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -73,7 +73,7 @@ const CreateFolderModalComponent = ({
 
   const { isCreatingFolder, createOkButton, createCancelButton } = useFolderModalLogic({
     formName: DUPLICATE_FORM_NAME,
-    parentFieldName: DESTINATION_FOLDER_NAME,
+    parentFieldName: PARENT_FIELD_NAME,
   });
 
   const dispatch = useDispatch();
@@ -107,17 +107,17 @@ const CreateFolderModalComponent = ({
 
   const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.checked) {
-      dispatch(registerField(DUPLICATE_FORM_NAME, DESTINATION_FOLDER_NAME, 'Field'));
-      untouch(DESTINATION_FOLDER_NAME);
+      dispatch(registerField(DUPLICATE_FORM_NAME, PARENT_FIELD_NAME, 'Field'));
+      untouch(PARENT_FIELD_NAME);
     } else {
-      dispatch(unregisterField(DUPLICATE_FORM_NAME, DESTINATION_FOLDER_NAME));
+      dispatch(unregisterField(DUPLICATE_FORM_NAME, PARENT_FIELD_NAME));
     }
     setIsParentFolderToggled(target.checked);
     change('isParentFolderToggled', target.checked);
   };
 
   const handleFolderDestinationNameClear = () => {
-    change(DESTINATION_FOLDER_NAME, '');
+    change(PARENT_FIELD_NAME, '');
   };
 
   const okButton = {
@@ -157,7 +157,7 @@ const CreateFolderModalComponent = ({
         />
         {!isParentFolderToggled && (
           <ParentFolderField
-            name={DESTINATION_FOLDER_NAME}
+            name={PARENT_FIELD_NAME}
             label={formatMessage(sharedFolderMessages.folderDestination)}
             onClear={handleFolderDestinationNameClear}
             className={cx('folder-modal__parent-folder')}

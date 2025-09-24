@@ -30,12 +30,11 @@ import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../share
 import { sharedFolderMessages } from '../shared/sharedMessages';
 
 import styles from '../shared/folderFormFields.scss';
+import { CREATE_FORM_NAME, PARENT_FIELD_NAME } from '../shared/commonConstants';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
-const FORM_NAME = 'create-folder-modal-form';
-const PARENT_FIELD_NAME = 'parentFolderName';
 
 export interface CreateFolderFormValues {
   folderName: string;
@@ -69,7 +68,7 @@ const CreateFolderModalComponent = ({
     createOkButton,
     createCancelButton,
   } = useFolderModalLogic({
-    formName: FORM_NAME,
+    formName: CREATE_FORM_NAME,
     parentFieldName: PARENT_FIELD_NAME,
   });
 
@@ -125,7 +124,7 @@ const CreateFolderModalComponent = ({
 
 export default withModal(CREATE_FOLDER_MODAL_KEY)(
   reduxForm<CreateFolderFormValues, CreateFolderModalProps>({
-    form: FORM_NAME,
+    form: CREATE_FORM_NAME,
     initialValues: {
       folderName: '',
       parentFolderName: '',

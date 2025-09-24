@@ -16,4 +16,6 @@
 
 export const DUPLICATE_FORM_NAME = 'duplicate-folder-modal-form';
 
-export const DESTINATION_FOLDER_NAME = 'destinationFolderName';
+export const CREATE_FORM_NAME = 'create-folder-modal-form';
+
+export const PARENT_FIELD_NAME = 'parentFolderName';
