@@ -171,16 +171,11 @@ export default withModal(DUPLICATE_FOLDER_MODAL_KEY)(
       destinationFolderName,
       isParentFolderToggled,
       initialParentFolderId,
-    }) => {
-      const errors: { [key: string]: string } = {};
-
-      errors.folderName = commonValidators.requiredField(folderName);
-
-      errors.destinationFolderName = commonValidators.requiredField(
+    }) => ({
+      folderName: commonValidators.requiredField(folderName),
+      destinationFolderName: commonValidators.requiredField(
         isParentFolderToggled ? initialParentFolderId : destinationFolderName,
-      );
-
-      return errors;
-    },
+      ),
+    }),
   })(CreateFolderModalComponent),
 );
