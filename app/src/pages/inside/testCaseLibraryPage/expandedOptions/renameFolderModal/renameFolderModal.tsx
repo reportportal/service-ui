@@ -28,7 +28,6 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector } from 'controllers/testCase';
-
 import { FolderNameField } from '../folderNameField';
 
 import styles from './renameFolderModal.scss';
@@ -44,9 +43,8 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
 
-export interface RenameFolderFormValues {
-  folderName: string;
-}
+import { FolderFormValues } from '../shared/types';
+
 interface RenameFolderModalProps {
   data: {
     folderId: number;
@@ -59,7 +57,7 @@ const RenameFolderModalComponent = ({
   dirty,
   initialize,
   handleSubmit,
-}: RenameFolderModalProps & InjectedFormProps<RenameFolderFormValues, RenameFolderModalProps>) => {
+}: RenameFolderModalProps & InjectedFormProps<FolderFormValues, RenameFolderModalProps>) => {
   const dispatch = useDispatch();
   const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
@@ -70,7 +68,7 @@ const RenameFolderModalComponent = ({
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSubmit = (values: RenameFolderFormValues) => {
+  const onSubmit = (values: FolderFormValues) => {
     dispatch(
       renameFolderAction({
         folderName: values.folderName,
@@ -114,7 +112,7 @@ const RenameFolderModalComponent = ({
 };
 
 export default withModal(RENAME_FOLDER_MODAL_KEY)(
-  reduxForm<RenameFolderFormValues, RenameFolderModalProps>({
+  reduxForm<FolderFormValues, RenameFolderModalProps>({
     form: 'rename-folder-modal-form',
     validate: ({ folderName }) => ({
       folderName: commonValidators.requiredField(folderName),

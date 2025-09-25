@@ -68,6 +68,7 @@ export {
   canMoveTestCase,
   canCreateTestCaseFolder,
   canDeleteTestCaseFolder,
+  canDuplicateTestCaseFolder,
   canRenameTestCaseFolder,
   // TEST CASES
   canImportTestCases,

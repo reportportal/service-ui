@@ -14,51 +14,29 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState, MouseEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { defineMessages, useIntl } from 'react-intl';
-import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
+import { useIntl } from 'react-intl';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction, withModal } from 'controllers/modal';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
-import { createFoldersAction } from 'controllers/testCase/actionCreators';
-import { isCreatingFolderSelector } from 'controllers/testCase';
 
-import { FolderNameField } from '../folderNameField';
 import { commonMessages } from '../../commonMessages';
+import { useFolderModal } from '../shared/useFolderModal';
+import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
+import { sharedFolderMessages } from '../shared/sharedMessages';
+import { CREATE_FORM_NAME, PARENT_FIELD_NAME } from '../shared/commonConstants';
+import { FolderFormValues } from '../shared/types';
 
-import styles from './createFolderModal.scss';
-
-const messages = defineMessages({
-  createAsSubfolder: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Create as subfolder',
-  },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
-  },
-  searchFolderToSelect: {
-    id: 'TestCaseLibraryPage.searchFolderToSelect',
-    defaultMessage: 'Search folder to select',
-  },
-});
+import styles from '../shared/folderFormFields.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
-const MAX_FIELD_LENGTH = 48;
 
-export interface CreateFolderFormValues {
-  folderName: string;
-  parentFolderName?: string;
-}
 interface CreateFolderModalProps {
   data: {
     shouldRenderToggle: boolean;
@@ -72,63 +50,39 @@ const CreateFolderModalComponent = ({
   change,
   untouch,
   initialValues,
-}: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
-  const dispatch = useDispatch();
-  const isCreatingFolder = useSelector(isCreatingFolderSelector);
+}: CreateFolderModalProps & InjectedFormProps<FolderFormValues, CreateFolderModalProps>) => {
   const { formatMessage } = useIntl();
 
-  const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
+  const {
+    isCreatingFolder,
+    isToggled: isSubfolderToggled,
+    hideModal,
+    onSubmit,
+    handleToggle,
+    handleParentFieldClear,
+    createOkButton,
+    createCancelButton,
+  } = useFolderModal({
+    formName: CREATE_FORM_NAME,
+    parentFieldName: PARENT_FIELD_NAME,
+  });
 
-  // Going to be resolved to id by folder name with UI search control
-  // Currently directly accepts id from name input
-  const coerceToNumericId = (value: unknown): number | undefined => {
-    if (value == null || value === '') return undefined;
-    const id = Number(value);
-    return Number.isFinite(id) ? id : undefined;
-  };
-
-  const hideModal = () => dispatch(hideModalAction());
-
-  const onSubmit = (values: CreateFolderFormValues) => {
-    const idFromNameInput = coerceToNumericId(values.parentFolderName);
-    dispatch(
-      createFoldersAction({
-        folderName: values.folderName,
-        ...(idFromNameInput !== undefined ? { parentFolderId: idFromNameInput } : {}),
-      }),
-    );
-  };
-
-  const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    if (target.checked) {
-      dispatch(registerField('create-folder-modal-form', 'parentFolderName', 'Field'));
-      untouch('parentFolderName');
-    } else {
-      dispatch(unregisterField('create-folder-modal-form', 'parentFolderName'));
-    }
-    setIsSubfolderToggled(target.checked);
-  };
-
-  const handleParentFolderNameClear = () => {
-    change('parentFolderName', initialValues.parentFolderName);
-  };
+  const handleToggleChange = handleToggle(change, untouch);
+  const handleParentFolderNameClear = handleParentFieldClear(
+    change,
+    initialValues.parentFolderName,
+  );
 
   const okButton = {
+    ...createOkButton(handleSubmit),
     children: (
       <LoadingSubmitButton isLoading={isCreatingFolder}>
-        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+        {createOkButton(handleSubmit).children}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isCreatingFolder,
-    'data-automation-id': 'submitButton',
   };
 
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isCreatingFolder,
-    'data-automation-id': 'cancelButton',
-  };
+  const cancelButton = createCancelButton();
 
   return (
     <Modal
@@ -139,33 +93,23 @@ const CreateFolderModalComponent = ({
       onClose={hideModal}
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <form onSubmit={handleSubmit(onSubmit)} className={cx('create-folder-modal__form')}>
+      <form onSubmit={handleSubmit(onSubmit)} className={cx('folder-modal__form')}>
         <FolderNameField />
         {shouldRenderToggle && (
-          <Toggle
-            value={isSubfolderToggled}
-            onChange={handleToggle}
-            className={cx('create-folder-modal__toggle')}
-          >
-            {formatMessage(messages.createAsSubfolder)}
-          </Toggle>
+          <ParentFolderToggle
+            isToggled={isSubfolderToggled}
+            onToggle={handleToggleChange}
+            label={formatMessage(sharedFolderMessages.createAsSubfolder)}
+            className={cx('folder-modal__toggle')}
+          />
         )}
         {isSubfolderToggled && (
-          <FieldProvider
-            name="parentFolderName"
-            className={cx('create-folder-modal__parent-folder')}
-            placeholder={formatMessage(messages.searchFolderToSelect)}
-          >
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.parentFolder)}
-                defaultWidth={false}
-                maxLength={MAX_FIELD_LENGTH}
-                onClear={handleParentFolderNameClear}
-                clearable
-              />
-            </FieldErrorHint>
-          </FieldProvider>
+          <ParentFolderField
+            name={PARENT_FIELD_NAME}
+            label={formatMessage(sharedFolderMessages.parentFolder)}
+            onClear={handleParentFolderNameClear}
+            className={cx('folder-modal__parent-folder')}
+          />
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>
@@ -174,8 +118,8 @@ const CreateFolderModalComponent = ({
 };
 
 export default withModal(CREATE_FOLDER_MODAL_KEY)(
-  reduxForm<CreateFolderFormValues, CreateFolderModalProps>({
-    form: 'create-folder-modal-form',
+  reduxForm<FolderFormValues, CreateFolderModalProps>({
+    form: CREATE_FORM_NAME,
     initialValues: {
       folderName: '',
       parentFolderName: '',

@@ -29,6 +29,7 @@ import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
 import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
 import { showModalAction } from 'controllers/modal';
+import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
 import { RENAME_FOLDER_MODAL_KEY } from '../renameFolderModal';
 import { compact } from 'es-toolkit';
 
@@ -48,7 +49,8 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { canDeleteTestCaseFolder, canRenameTestCaseFolder } = useUserPermissions();
+  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
+    useUserPermissions();
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -81,6 +83,19 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     );
   };
 
+  const openDuplicateModal = () => {
+    dispatch(
+      showModalAction({
+        id: DUPLICATE_FOLDER_MODAL_KEY,
+        data: {
+          folderId: folder.id,
+          folderName: folder.name,
+          parentFolderId: folder.parentFolderId,
+        },
+      }),
+    );
+  };
+
   const openRenameModal = () => {
     dispatch(
       showModalAction({
@@ -97,6 +112,11 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     canRenameTestCaseFolder && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: openRenameModal,
+    },
+    canDuplicateTestCaseFolder && {
+      label: formatMessage(commonMessages.duplicateFolder),
+      variant: 'text' as const,
+      onClick: openDuplicateModal,
     },
     canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),

@@ -29,7 +29,7 @@ export interface PopoverItem {
   /** @deprecated Consider defining a variant instead */
   className?: string;
   onClick?: () => void;
-  variant?: 'destructive' | 'danger';
+  variant?: 'destructive' | 'danger' | 'text';
 }
 
 interface PopoverControlProps {
