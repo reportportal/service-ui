@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-.create-folder-modal {
-  &__form {
-    position: relative;
-  }
-
-  &__toggle {
-    width: fit-content;
-    margin-top: 16px;
-  }
-
-  &__parent-folder {
-    margin-top: 14px;
-  }
-}
+export { DUPLICATE_FOLDER_MODAL_KEY } from './duplicateFolderModal';
