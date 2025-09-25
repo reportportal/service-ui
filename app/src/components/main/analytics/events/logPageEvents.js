@@ -246,7 +246,7 @@ export const LOG_PAGE_EVENTS = {
   getChangeItemStatusEvent: getChangeItemStatusEventCreator(LOG_PAGE),
   clickSettingsIcon: (isEnabled) => ({
     ...basicLogPageClickEventParameters,
-    element_name: 'settings_icon',
+    icon_name: 'settings',
     status: isEnabled ? 'on' : 'off',
   }),
   getToggleNoLogsCollapsingEvent: (isEnabled) => ({
