@@ -37,6 +37,7 @@ import {
   SET_ACTIVE_PROJECT_SETTINGS,
   UPDATE_ACTIVE_PROJECT_SETTINGS,
   SET_NO_LOGS_COLLAPSING,
+  SET_LOGS_PAGINATION,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -139,5 +140,10 @@ export const updateActiveProjectSettingsAction = (settings) => ({
 
 export const setNoLogsCollapsingAction = (value) => ({
   type: SET_NO_LOGS_COLLAPSING,
+  payload: { value },
+});
+
+export const setLogsPaginationAction = (value) => ({
+  type: SET_LOGS_PAGINATION,
   payload: { value },
 });

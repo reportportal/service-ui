@@ -42,7 +42,7 @@ import {
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
-import { userIdSelector } from 'controllers/user';
+import { logsPaginationSelector, userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { LogsGrid } from '../logsGrid';
@@ -58,6 +58,7 @@ import { calculateNextIndex } from './utils';
     logViewMode: logViewModeSelector(state),
     isNestedStepView: isLogPageWithNestedSteps(state),
     errorLogs: errorLogsItemsSelector(state),
+    logsPagination: logsPaginationSelector(state),
   }),
   { fetchErrorLog },
 )
@@ -140,6 +141,7 @@ export class LogsGridWrapper extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     errorLogs: PropTypes.array,
     fetchErrorLog: PropTypes.func,
+    logsPagination: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -171,6 +173,7 @@ export class LogsGridWrapper extends Component {
     retryId: undefined,
     errorLogs: [],
     fetchErrorLog: () => {},
+    logsPagination: true,
   };
 
   state = {
@@ -255,6 +258,7 @@ export class LogsGridWrapper extends Component {
       hidePassedLogs,
       isSauceLabsIntegrationView,
       errorLogs,
+      logsPagination,
     } = this.props;
     const rowHighlightingConfig = {
       highlightedRowId: this.props.errorLogs[this.state.errorLogIndex]?.id,
@@ -306,7 +310,7 @@ export class LogsGridWrapper extends Component {
                 />
               )}
             </LogsGridToolbar>
-            {!!pageCount && logItems && !!logItems.length && !loading && (
+            {!!pageCount && logItems && !!logItems.length && !loading && logsPagination && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

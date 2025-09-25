@@ -25,6 +25,7 @@ export {
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
   NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -45,6 +46,7 @@ export {
   setActiveProjectSettingsAction,
   updateActiveProjectSettingsAction,
   setNoLogsCollapsingAction,
+  setLogsPaginationAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -65,6 +67,7 @@ export {
   idSelector,
   activeProjectSettingsSelector,
   noLogsCollapsingSelector,
+  logsPaginationSelector,
 } from './selectors';
 export { userSagas } from './sagas';
 export {
@@ -73,4 +76,5 @@ export {
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
   setNoLogsCollapsingInStorage,
+  setLogsPaginationInStorage,
 } from './storageUtils';

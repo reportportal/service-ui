@@ -255,6 +255,17 @@ export const LOG_PAGE_EVENTS = {
     place: 'settings',
     status: isEnabled ? 'enabled' : 'disabled',
   }),
+  getClickPaginationOptionEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    place: 'settings',
+    element_name: isEnabled ? 'turn_on_pagination' : 'turn_off_pagination',
+  }),
+  getTogglePaginationEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    place: 'settings',
+    modal: isEnabled ? 'turn_on_pagination' : 'turn_off_pagination',
+    element_name: isEnabled ? 'turn_on_reload' : 'turn_off_reload',
+  }),
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,

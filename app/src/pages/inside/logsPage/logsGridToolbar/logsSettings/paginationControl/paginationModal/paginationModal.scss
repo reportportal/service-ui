@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  logAppearance: {
-    id: 'LogsSettings.logAppearance',
-    defaultMessage: 'Log appearance',
-  },
-  noLogsCollapsing: {
-    id: 'LogsSettings.noLogsCollapsing',
-    defaultMessage: 'No logs collapsing',
-  },
-  pagination: {
-    id: 'LogsSettings.pagination',
-    defaultMessage: 'Pagination',
-  },
-});
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

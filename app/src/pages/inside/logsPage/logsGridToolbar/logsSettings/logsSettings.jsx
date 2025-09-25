@@ -27,10 +27,18 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { noLogsCollapsingSelector, setNoLogsCollapsingAction } from 'controllers/user';
 import SettingsIcon from 'common/img/settings-icon-inline.svg';
+import { PaginationControl } from './paginationControl';
 import { messages } from './messages';
 import styles from './logsSettings.scss';
 
 const cx = classNames.bind(styles);
+
+const SettingsBlock = ({ header, children }) => (
+  <div className={cx('settings-block')}>
+    <div className={cx('header')}>{header}</div>
+    {children}
+  </div>
+);
 
 export const LogsSettings = ({ isConsoleViewMode }) => {
   const { formatMessage } = useIntl();
@@ -40,9 +48,13 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
 
+  const closeDropdown = () => {
+    setOpened(false);
+  };
+
   const handleClickOutside = () => {
     if (isOpened) {
-      setOpened(false);
+      closeDropdown();
     }
   };
   useOnClickOutside(containerRef, handleClickOutside);
@@ -57,7 +69,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
     trackEvent(LOG_PAGE_EVENTS.getToggleNoLogsCollapsingEvent(newValue));
 
     dispatch(setNoLogsCollapsingAction(newValue));
-    setOpened(false);
+    closeDropdown();
   };
 
   return (
@@ -95,8 +107,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                 style={style}
                 className={cx('settings-content', { opened: isOpened })}
               >
-                <div className={cx('settings-block')}>
-                  <div className={cx('header')}>{formatMessage(messages.logAppearance)}</div>
+                <SettingsBlock header={formatMessage(messages.logAppearance)}>
                   {!isConsoleViewMode && (
                     <div className={cx('item')}>
                       <InputCheckbox value={noLogsCollapsing} onChange={toggleNoLogsCollapsing}>
@@ -104,7 +115,13 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                       </InputCheckbox>
                     </div>
                   )}
-                </div>
+                </SettingsBlock>
+                <div className={cx('separator')} />
+                <SettingsBlock header={formatMessage(messages.pagination)}>
+                  <div className={cx('item')}>
+                    <PaginationControl closeDropdown={closeDropdown} />
+                  </div>
+                </SettingsBlock>
               </div>
             )}
           </Popper>
@@ -112,6 +129,11 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
       </div>
     </Manager>
   );
+};
+
+SettingsBlock.propTypes = {
+  header: PropTypes.string.isRequired,
+  children: PropTypes.node,
 };
 
 LogsSettings.propTypes = {

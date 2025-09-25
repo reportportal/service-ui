@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
-import { userIdSelector } from 'controllers/user';
+import { logsPaginationSelector, userIdSelector } from 'controllers/user';
 import {
   LOG_LEVELS,
   getLogViewMode,
@@ -79,6 +79,7 @@ const messages = defineMessages({
 @connect((state) => ({
   userId: userIdSelector(state),
   isNestedStepsView: isLogPageWithNestedSteps(state),
+  logsPagination: logsPaginationSelector(state),
 }))
 export class LogsGridToolbar extends Component {
   static propTypes = {
@@ -108,6 +109,7 @@ export class LogsGridToolbar extends Component {
     errorLogs: PropTypes.array,
     highlightErrorLog: PropTypes.func,
     errorLogIndex: PropTypes.number,
+    logsPagination: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -124,6 +126,7 @@ export class LogsGridToolbar extends Component {
     errorLogs: [],
     highlightErrorLog: () => {},
     errorLogIndex: null,
+    logsPagination: true,
   };
 
   state = {
@@ -208,6 +211,7 @@ export class LogsGridToolbar extends Component {
       errorLogs,
       highlightErrorLog,
       errorLogIndex,
+      logsPagination,
     } = this.props;
     const { logViewMode } = this.state;
     const stickyOffsetTop = this.panelRef.current ? this.panelRef.current.clientHeight : 0;
@@ -282,7 +286,7 @@ export class LogsGridToolbar extends Component {
                 <LogsSettings isConsoleViewMode={this.isConsoleViewMode()} />
               </div>
             </div>
-            {pageCount !== 0 && (
+            {pageCount !== 0 && logsPagination && (
               <div className={cx('pagination')}>
                 <Pagination
                   activePage={activePage}

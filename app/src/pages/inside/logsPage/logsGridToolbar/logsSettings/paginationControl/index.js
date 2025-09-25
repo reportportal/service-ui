@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  logAppearance: {
-    id: 'LogsSettings.logAppearance',
-    defaultMessage: 'Log appearance',
-  },
-  noLogsCollapsing: {
-    id: 'LogsSettings.noLogsCollapsing',
-    defaultMessage: 'No logs collapsing',
-  },
-  pagination: {
-    id: 'LogsSettings.pagination',
-    defaultMessage: 'Pagination',
-  },
-});
+export { PaginationControl } from './paginationControl';
