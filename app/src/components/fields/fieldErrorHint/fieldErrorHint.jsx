@@ -33,11 +33,6 @@ const messages = defineMessages({
     defaultMessage:
       'Full name may contain only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot. Space is permitted (from 3 to 256 symbols)',
   },
-  passwordHint: {
-    id: 'RegistrationForm.passwordHint',
-    defaultMessage:
-      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
-  },
   oldPasswordHint: {
     id: 'RegistrationForm.oldPasswordHint',
     defaultMessage:

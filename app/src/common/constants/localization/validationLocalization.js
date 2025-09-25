@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export { GithubAuthForm } from './githubAuthForm';
-export { SsoUsersForm } from './ssoUsersForm';
-export { InactivityTimeoutForm } from './inactivityTimeoutForm';
-export { PasswordForm } from './passwordForm';
+import { defineMessages } from 'react-intl';
+
+export const validationLocalization = defineMessages({
+  passwordHint: {
+    id: 'RegistrationForm.passwordHint',
+    defaultMessage:
+      'Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+  },
+});

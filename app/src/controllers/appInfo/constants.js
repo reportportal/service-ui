@@ -22,6 +22,7 @@ export const SSO_USERS_ONLY_KEY = 'server.users.sso';
 export const SERVER_SESSION_EXPIRATION_KEY = 'server.session.expiration';
 export const SERVER_FOOTER_LINKS_KEY = 'server.footer.links';
 export const IMPORTANT_LAUNCHES_FEATURE_KEY = 'server.features.important.enabled';
+export const PASSWORD_MIN_LENGTH_KEY = 'server.password.min.length';
 
 export const UPDATE_SERVER_SETTINGS = 'UPDATE_SERVER_SETTINGS';
 export const UPDATE_API_EXTENSIONS_RESULT = 'UPDATE_API_EXTENSIONS_RESULT';
