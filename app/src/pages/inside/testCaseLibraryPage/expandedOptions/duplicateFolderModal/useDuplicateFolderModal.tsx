@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
+import { useModal } from 'common/hooks';
+
+import DuplicateFolderModal, { DUPLICATE_FOLDER_MODAL_KEY } from './duplicateFolderModal';
+
+interface DuplicateFolderModalData {
+  folderId: number;
+  folderName: string;
+  parentFolderId?: number | null;
+}
+
+export const useDuplicateFolderModal = () =>
+  useModal<DuplicateFolderModalData>({
+    modalKey: DUPLICATE_FOLDER_MODAL_KEY,
+    renderModal: (data) => <DuplicateFolderModal data={data} />,
+  });

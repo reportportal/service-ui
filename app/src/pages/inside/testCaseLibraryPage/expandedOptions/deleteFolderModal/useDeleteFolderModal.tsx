@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-export { useCreateTestPlanModal } from './useCreateTestPlanModal';
+import { useModal } from 'common/hooks';
+
+import DeleteFolderModal, { DELETE_FOLDER_MODAL_KEY } from './deleteFolderModal';
+
+interface DeleteFolderModalData {
+  folderId: number;
+  folderName: string;
+  activeFolderId: number | null;
+  setAllTestCases: () => void;
+}
+
+export const useDeleteFolderModal = () =>
+  useModal<DeleteFolderModalData>({
+    modalKey: DELETE_FOLDER_MODAL_KEY,
+    renderModal: (data) => <DeleteFolderModal data={data} />,
+  });

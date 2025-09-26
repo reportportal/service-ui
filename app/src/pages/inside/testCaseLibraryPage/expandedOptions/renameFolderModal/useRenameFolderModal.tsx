@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-export { TestPlanAttributes } from './testPlanAttributes';
+import { useModal } from 'common/hooks';
+
+import RenameFolderModal, { RENAME_FOLDER_MODAL_KEY } from './renameFolderModal';
+
+interface RenameFolderModalData {
+  folderId: number;
+  folderName: string;
+}
+
+export const useRenameFolderModal = () =>
+  useModal<RenameFolderModalData>({
+    modalKey: RENAME_FOLDER_MODAL_KEY,
+    renderModal: (data) => <RenameFolderModal data={data} />,
+  });
