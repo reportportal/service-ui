@@ -17,7 +17,8 @@
 import { PropsWithChildren } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isNumber, noop } from 'lodash';
+import { isNumber } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit';
 import {
   Button,
   PlusIcon,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { useModal } from 'common/hooks';

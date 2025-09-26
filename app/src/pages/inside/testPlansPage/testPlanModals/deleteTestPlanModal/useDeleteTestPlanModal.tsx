@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import { VoidFn } from '@reportportal/ui-kit/dist/common/types';
 
 import { TestPlanDto } from 'controllers/testPlan';

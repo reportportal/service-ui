@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

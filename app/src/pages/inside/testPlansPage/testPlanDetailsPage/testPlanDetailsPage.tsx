@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
 import { SettingsLayout } from 'layouts/settingsLayout';

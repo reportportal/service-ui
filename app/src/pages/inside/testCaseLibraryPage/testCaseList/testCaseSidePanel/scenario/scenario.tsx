@@ -17,7 +17,7 @@
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { AttachedFile } from '@reportportal/ui-kit';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { IScenario } from '../../../types';

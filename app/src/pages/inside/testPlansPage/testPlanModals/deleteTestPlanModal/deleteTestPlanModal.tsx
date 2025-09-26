@@ -17,7 +17,7 @@
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

@@ -16,7 +16,8 @@
 
 import { useState } from 'react';
 import classNames from 'classnames/bind';
-import { isEmpty, noop } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
