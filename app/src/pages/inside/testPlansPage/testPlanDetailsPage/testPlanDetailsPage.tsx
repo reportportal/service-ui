@@ -23,7 +23,7 @@ import { Button } from '@reportportal/ui-kit';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -44,6 +44,11 @@ import { EmptyTestPlan } from './emptyTestPlan';
 import { TestPlanActions } from '../testPlanActions';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
+import {
+  useEditTestPlanModal,
+  useDuplicateTestPlanModal,
+  useDeleteTestPlanModal,
+} from '../testPlanModals';
 
 import styles from './testPlanDetailsPage.scss';
 
@@ -57,6 +62,33 @@ export const TestPlanDetailsPage = () => {
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
+  const { openModal: openEditModal } = useEditTestPlanModal();
+  const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
+    onSuccess: (newTestPlanId) =>
+      dispatch({
+        type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, testPlanId: newTestPlanId },
+      }),
+  });
+  const { openModal: openDeleteModal } = useDeleteTestPlanModal({
+    onSuccess: () =>
+      dispatch({
+        type: PROJECT_TEST_PLANS_PAGE,
+        payload: { organizationSlug, projectSlug },
+      }),
+  });
+
+  const actionsMap = {
+    edit: openEditModal,
+    duplicate: openDuplicateModal,
+    delete: openDeleteModal,
+  };
+
+  const openActionModal = (action: keyof typeof actionsMap) => () => {
+    if (testPlan) {
+      actionsMap[action](testPlan);
+    }
+  };
 
   useEffect(() => {
     if (!isLoading && isEmpty(testPlan)) {
@@ -93,7 +125,13 @@ export const TestPlanDetailsPage = () => {
       <div className={cx('test-plan-details-page__header-id')}>
         {formatMessage(messages.testPlanId, { testPlanId })}
       </div>
-      <TestPlanActions testPlanId={testPlanId} variant="header" />
+      <TestPlanActions
+        testPlanId={testPlanId}
+        variant="header"
+        onEdit={openActionModal('edit')}
+        onDuplicate={openActionModal('duplicate')}
+        onDelete={openActionModal('delete')}
+      />
       {!isEmpty(testPlan?.totalTestCases) && (
         <>
           {canAddTestCaseToTestPlan && (

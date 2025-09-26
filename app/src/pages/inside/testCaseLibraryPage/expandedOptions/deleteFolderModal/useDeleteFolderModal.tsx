@@ -16,10 +16,17 @@
 
 import { useModal } from 'common/hooks';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
+import DeleteFolderModal, { DELETE_FOLDER_MODAL_KEY } from './deleteFolderModal';
 
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+interface DeleteFolderModalData {
+  folderId: number;
+  folderName: string;
+  activeFolderId: number | null;
+  setAllTestCases: () => void;
+}
+
+export const useDeleteFolderModal = () =>
+  useModal<DeleteFolderModalData>({
+    modalKey: DELETE_FOLDER_MODAL_KEY,
+    renderModal: (data) => <DeleteFolderModal data={data} />,
   });

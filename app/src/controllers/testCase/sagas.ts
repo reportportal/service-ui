@@ -123,7 +123,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        messageId: 'testCaseLoadingFailed',
+        messageId: 'errorOccurredTryAgain',
       }),
     );
   } finally {
@@ -157,7 +157,7 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
 
     yield put({
       type: GET_TEST_CASE_DETAILS_FAILURE,
-      error: 'testCaseLoadingFailed',
+      error: 'errorOccurredTryAgain',
     });
 
     yield put(
@@ -185,7 +185,7 @@ function* getAllTestCases(): Generator {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        messageId: 'testCaseLoadingFailed',
+        messageId: 'errorOccurredTryAgain',
       }),
     );
   } finally {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
@@ -21,14 +22,18 @@ import { Table, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 import { ProgressBar } from './progressBar';
 import { TestPlanActions } from '../testPlanActions';
 import { TestPlanDto } from 'controllers/testPlan';
 import { messages } from './messages';
-import { useProjectDetails } from 'hooks/useTypedSelector';
+import {
+  useDeleteTestPlanModal,
+  useEditTestPlanModal,
+  useDuplicateTestPlanModal,
+} from '../testPlanModals';
 
 import styles from './testPlansTable.scss';
-import { ReactNode } from 'react';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -40,12 +45,23 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
   const { formatMessage, formatNumber } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const { openModal: openEditModal } = useEditTestPlanModal();
+  const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
+  const { openModal: openDeleteModal } = useDeleteTestPlanModal();
 
   const handleRowClick = (testPlanId: number) => {
     dispatch({
       type: PROJECT_TEST_PLAN_DETAILS_PAGE,
       payload: { organizationSlug, projectSlug, testPlanId: testPlanId.toString() },
     });
+  };
+
+  const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
+    const actionTestPlan = testPlans.find((testPlan) => testPlan.id === testPlanId);
+
+    if (actionTestPlan) {
+      action(actionTestPlan);
+    }
   };
 
   const getOpenTestPlanDetailsButton = (
@@ -88,7 +104,15 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
           component: <ProgressBar progress={coverage * 100} />,
         },
         options: {
-          component: <TestPlanActions testPlanId={id} variant="table" />,
+          component: (
+            <TestPlanActions
+              testPlanId={id}
+              variant="table"
+              onEdit={getActionHandler(openEditModal)}
+              onDuplicate={getActionHandler(openDuplicateModal)}
+              onDelete={getActionHandler(openDeleteModal)}
+            />
+          ),
         },
         icon: {
           component: getOpenTestPlanDetailsButton(id, name, <ChevronRightBreadcrumbsIcon />),

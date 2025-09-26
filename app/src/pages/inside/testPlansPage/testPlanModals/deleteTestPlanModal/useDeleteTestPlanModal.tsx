@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
+import { noop } from 'lodash';
+import { VoidFn } from '@reportportal/ui-kit/dist/common/types';
+
+import { TestPlanDto } from 'controllers/testPlan';
 import { useModal } from 'common/hooks';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
+import { DELETE_TEST_PLAN_MODAL_KEY, DeleteTestPlanModal } from './deleteTestPlanModal';
 
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+interface UseDeleteTestPlanModalOptions {
+  onSuccess?: VoidFn;
+}
+
+export const useDeleteTestPlanModal = ({ onSuccess = noop }: UseDeleteTestPlanModalOptions = {}) =>
+  useModal<TestPlanDto>({
+    modalKey: DELETE_TEST_PLAN_MODAL_KEY,
+    renderModal: (data) => <DeleteTestPlanModal data={data} onSuccess={onSuccess} />,
   });

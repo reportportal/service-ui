@@ -15,8 +15,8 @@
  */
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
+import { compact } from 'es-toolkit';
 import { isEmpty } from 'lodash';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
@@ -27,11 +27,9 @@ import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
-import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
-import { showModalAction } from 'controllers/modal';
-import { DUPLICATE_FOLDER_MODAL_KEY } from '../duplicateFolderModal';
-import { RENAME_FOLDER_MODAL_KEY } from '../renameFolderModal';
-import { compact } from 'es-toolkit';
+import { useDeleteFolderModal } from '../deleteFolderModal';
+import { useRenameFolderModal } from '../renameFolderModal';
+import { useDuplicateFolderModal } from '../duplicateFolderModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -43,8 +41,10 @@ interface FolderProps {
 }
 
 export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder }: FolderProps) => {
-  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { openModal: openDeleteModal } = useDeleteFolderModal();
+  const { openModal: openRenameModal } = useRenameFolderModal();
+  const { openModal: openDuplicateModal } = useDuplicateFolderModal();
   const [isOpen, setIsOpen] = useState(false);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
@@ -69,59 +69,44 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     [setActiveFolder, folder.id],
   );
 
-  const openDeleteModal = () => {
-    dispatch(
-      showModalAction({
-        id: DELETE_FOLDER_MODAL_KEY,
-        data: {
-          folderId: folder.id,
-          folderName: folder.name,
-          activeFolderId: activeFolder,
-          setAllTestCases,
-        },
-      }),
-    );
+  const handleDeleteFolder = () => {
+    openDeleteModal({
+      folderId: folder.id,
+      folderName: folder.name,
+      activeFolderId: activeFolder,
+      setAllTestCases,
+    });
   };
 
-  const openDuplicateModal = () => {
-    dispatch(
-      showModalAction({
-        id: DUPLICATE_FOLDER_MODAL_KEY,
-        data: {
-          folderId: folder.id,
-          folderName: folder.name,
-          parentFolderId: folder.parentFolderId,
-        },
-      }),
-    );
+  const handleRenameFolder = () => {
+    openRenameModal({
+      folderId: folder.id,
+      folderName: folder.name,
+    });
   };
 
-  const openRenameModal = () => {
-    dispatch(
-      showModalAction({
-        id: RENAME_FOLDER_MODAL_KEY,
-        data: {
-          folderId: folder.id,
-          folderName: folder.name,
-        },
-      }),
-    );
+  const handleDuplicateFolder = () => {
+    openDuplicateModal({
+      folderId: folder.id,
+      folderName: folder.name,
+      parentFolderId: folder.parentFolderId,
+    });
   };
 
   const toolItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-      onClick: openRenameModal,
+      onClick: handleRenameFolder,
     },
     canDuplicateTestCaseFolder && {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
-      onClick: openDuplicateModal,
+      onClick: handleDuplicateFolder,
     },
     canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
-      onClick: openDeleteModal,
+      onClick: handleDeleteFolder,
     },
   ]);
 

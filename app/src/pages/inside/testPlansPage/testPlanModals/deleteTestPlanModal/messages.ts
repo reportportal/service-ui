@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
+import { defineMessages } from 'react-intl';
 
-import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-
-export const useCreateTestCaseModal = () =>
-  useModal({
-    modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
-  });
+export const messages = defineMessages({
+  deleteTestPlan: {
+    id: 'DeleteTestPlanModal.deleteTestPlan',
+    defaultMessage: 'Delete Test Plan',
+  },
+  deleteConfirmation: {
+    id: 'DeleteTestPlanModal.deleteConfirmation',
+    defaultMessage:
+      'Are you sure you want to delete the Test Plan <b>{testPlanName}</b>? This irreversible action will remove all associated data and impact any linked test cases.',
+  },
+});

@@ -14,4 +14,30 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
+import { ReactElement } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { showModalAction } from 'controllers/modal';
+
+interface UseModalOptions<T = void> {
+  modalKey: string;
+  renderModal: (data?: T) => ReactElement;
+}
+
+export const useModal = <T,>({ modalKey, renderModal }: UseModalOptions<T>) => {
+  const dispatch = useDispatch();
+
+  const openModal = (data?: T) => {
+    dispatch(
+      showModalAction({
+        id: modalKey,
+        data: data ?? null,
+        component: renderModal(data),
+      }),
+    );
+  };
+
+  return {
+    openModal,
+  };
+};

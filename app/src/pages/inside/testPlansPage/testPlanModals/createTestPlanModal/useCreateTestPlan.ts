@@ -15,6 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { noop } from 'lodash';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -22,23 +23,30 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getTestPlansAction } from 'controllers/testPlan';
+import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
-export interface CreateTestPlanFormData {
-  name: string;
-  description: string;
+import { TestPlanFormValues } from '../testPlanModal';
+
+interface UseCreateTestPlanOptions {
+  successMessageId: string;
+  errorMessageId: string;
+  onSuccess?: (testPlanId: number) => void;
 }
 
-export const useCreateTestPlan = () => {
-  const { isLoading: isCreateTestPlanLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+export const useCreateTestPlan = ({
+  successMessageId,
+  errorMessageId,
+  onSuccess = noop,
+}: UseCreateTestPlanOptions) => {
+  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const createTestPlan = async (payload: CreateTestPlanFormData) => {
+  const submitTestPlan = async (payload: TestPlanFormValues) => {
     try {
       showSpinner();
 
-      await fetch(URLS.testPlan(projectKey), {
+      const response = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
         method: 'post',
         data: {
           name: payload.name,
@@ -49,14 +57,15 @@ export const useCreateTestPlan = () => {
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: 'testPlanCreatedSuccess',
+          messageId: successMessageId,
         }),
       );
       dispatch(getTestPlansAction());
+      onSuccess(response.id);
     } catch {
       dispatch(
         showErrorNotification({
-          messageId: 'testPlanCreationFailed',
+          messageId: errorMessageId,
         }),
       );
     } finally {
@@ -65,7 +74,7 @@ export const useCreateTestPlan = () => {
   };
 
   return {
-    isCreateTestPlanLoading,
-    createTestPlan,
+    isLoading,
+    submitTestPlan,
   };
 };

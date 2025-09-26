@@ -208,8 +208,8 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
   },
-  testCaseLoadingFailed: {
-    id: 'TestCaseLibraryPage.testCaseLoadingFailed',
+  errorOccurredTryAgain: {
+    id: 'Common.errorOccurredTryAgain',
     defaultMessage: 'An error occurred. Please try again later.',
   },
   redirectWarningMessage: {
@@ -221,13 +221,21 @@ const messages = defineMessages({
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
-  testPlanCreationFailed: {
-    id: 'TestPlansPage.testPlanCreationFailed',
-    defaultMessage: 'Failed to create Test Plan.',
-  },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
+  },
+  testPlanUpdatedSuccess: {
+    id: 'TestPlansPage.testPlanUpdatedSuccess',
+    defaultMessage: 'Test Plan has been updated successfully.',
+  },
+  testPlanDuplicatedSuccess: {
+    id: 'TestPlansPage.testPlanDuplicatedSuccess',
+    defaultMessage: 'Test Plan has been duplicated successfully.',
+  },
+  testPlanDeletedSuccess: {
+    id: 'TestPlansPage.testPlanDeletedSuccess',
+    defaultMessage: 'Test Plan has been deleted successfully.',
   },
 });
 

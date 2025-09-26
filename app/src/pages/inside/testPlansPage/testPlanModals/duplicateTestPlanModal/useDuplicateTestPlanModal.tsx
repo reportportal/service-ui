@@ -14,4 +14,21 @@
  * limitations under the License.
  */
 
-export { useCreateTestPlanModal } from './useCreateTestPlanModal';
+import { noop } from 'lodash';
+
+import { TestPlanDto } from 'controllers/testPlan';
+import { useModal } from 'common/hooks';
+
+import { DUPLICATE_TEST_PLAN_MODAL_KEY, DuplicateTestPlanModal } from './duplicateTestPlanModal';
+
+interface UseDuplicateTestPlanModalOptions {
+  onSuccess?: (testPlanId: number) => void;
+}
+
+export const useDuplicateTestPlanModal = ({
+  onSuccess = noop,
+}: UseDuplicateTestPlanModalOptions = {}) =>
+  useModal<TestPlanDto>({
+    modalKey: DUPLICATE_TEST_PLAN_MODAL_KEY,
+    renderModal: (data) => <DuplicateTestPlanModal data={data} onSuccess={onSuccess} />,
+  });
