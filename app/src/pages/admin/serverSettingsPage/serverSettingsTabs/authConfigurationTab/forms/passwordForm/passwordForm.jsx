@@ -102,7 +102,7 @@ export const PasswordForm = () => {
           min={PASSWORD_MIN_ALLOWED_LENGTH}
           max={PASSWORD_MAX_ALLOWED_LENGTH}
           value={passwordLength}
-          onChange={(value) => setPasswordLength(value)}
+          onChange={setPasswordLength}
         />
       </ServerSettingsField>
       {isChanged && (
