@@ -26,7 +26,12 @@ const InnerComponent = ({
   ...rest
 }) =>
   cloneElement(children, {
-    onChange,
+    onChange: (...args) => {
+      onChange(...args);
+      if (typeof children.props.onChange === 'function') {
+        children.props.onChange(...args);
+      }
+    },
     onBlur: dumbOnBlur ? () => {} : onBlur,
     onFocus,
     value,

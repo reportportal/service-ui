@@ -52,7 +52,6 @@ export const Datasets = ({ datasets, variables, onDatasetAdd }) => {
   const dispatch = useDispatch();
 
   const handleModalSubmit = (data) => {
-    // eslint-disable-next-line no-console
     onDatasetAdd(data);
 
     dispatch(hideModalAction());

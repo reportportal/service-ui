@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
+import {
+  WrappedFieldArrayProps,
+  formValueSelector,
+  change,
+  getFormSyncErrors,
+  getFormMeta,
+} from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   Button,
   Checkbox,
@@ -45,6 +55,10 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
+import {
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 import styles from './instanceAssignment.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -89,43 +103,84 @@ const messages = defineMessages({
   },
 });
 
-interface InstanceAssignmentProps {
-  onChange?: (value: Organization[]) => void;
-  value?: Organization[];
+interface InstanceAssignmentItem {
+  id?: number;
+  name: string;
+  role: string;
+  projects: Project[];
 }
 
-export const InstanceAssignment = ({ onChange, value: organizations }: InstanceAssignmentProps) => {
+interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<InstanceAssignmentItem> {
+  formName: string;
+  formNamespace?: string;
+  isOrganizationRequired: boolean;
+}
+
+interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
+  fields: WrappedFieldArrayProps<T>['fields'] & {
+    getAll?: () => T[] | undefined;
+  };
+}
+
+interface ReduxFormState {
+  form: {
+    createUserForm?: {
+      values?: {
+        organization?: Organization;
+      };
+    };
+  };
+}
+
+const ORGANIZATION = 'organization';
+const FORM_FIELDS = {
+  ORGANIZATION: {
+    NAME: `${ORGANIZATION}.name`,
+    ROLE: `${ORGANIZATION}.role`,
+    PROJECTS: {
+      NAME: `${ORGANIZATION}.projects[0].name`,
+      ROLE: `${ORGANIZATION}.projects[0].role`,
+    },
+  },
+};
+
+export const InstanceAssignment = ({
+  fields,
+  formName,
+  formNamespace,
+  isOrganizationRequired = false,
+}: InstanceAssignmentProps) => {
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const selector = formValueSelector(formName);
+  const errors = useSelector((state) => getFormSyncErrors(formName)(state)) as {
+    organization: { name: string };
+  };
+  const meta = useSelector((state) => getFormMeta(formName)(state)) as {
+    organization?: { name?: { touched?: boolean } };
+  };
+  const hasOrgNameError = !!errors?.organization?.name && !!meta?.organization?.name?.touched;
+  const organization = useSelector(
+    (state: ReduxFormState): Organization => selector(state, formNamespace) as Organization,
+  );
   const [notAssignedOrganizations, setNotAssignedOrganizations] = useState<
     OrganizationSearchesItem[]
   >([]);
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization>(null);
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
-  const [selectedProject, setSelectedProject] = useState<Project>(null);
-  const [organizationManager, setOrganizationManager] = useState<boolean>(false);
-  const [canEditProject, setCanEditProject] = useState<boolean>(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const allOrganizations = fields.getAll();
 
-  useEffect(() => {
-    if (selectedOrganization) {
-      setSelectedOrganization({
-        ...selectedOrganization,
-        role: organizationManager ? MANAGER : MEMBER,
-        projects: selectedProject
-          ? [{ ...selectedProject, role: organizationManager || canEditProject ? EDITOR : VIEWER }]
-          : [],
-      });
-    }
-  }, [organizationManager]);
-
-  useEffect(() => {
-    if (selectedProject) {
-      setSelectedProject({
-        ...selectedProject,
-        role: canEditProject ? EDITOR : VIEWER,
-      });
-    }
-  }, [canEditProject]);
+  const resetOrganization = () => {
+    dispatch(
+      change(formName, formNamespace, {
+        name: null,
+        role: false,
+        projects: [],
+      }),
+    );
+  };
 
   const getRequestOrganizationsParams = (inputValue: string) => {
     return {
@@ -137,7 +192,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
       const filteredOrganizations = response.items.filter(
-        (organization) => !(organizations || []).some(({ id }) => id === organization.id),
+        (organization) => !(allOrganizations || []).some(({ id }) => id === organization.id),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
@@ -145,6 +200,7 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
       return filteredOrganizations.map(({ name }) => name);
     }
 
+    setNotAssignedOrganizations([]);
     return [];
   };
 
@@ -155,111 +211,115 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
       return response.items.map(({ name }) => name);
     }
 
+    setOrganizationProjects([]);
     return [];
-  };
-
-  const handleChangeOrganization = (organizationName: string) => {
-    const organization = notAssignedOrganizations.find(({ name }) => name === organizationName);
-
-    if (organization) {
-      setSelectedOrganization({
-        id: organization.id,
-        name: organization.name,
-        role: organizationManager ? MANAGER : MEMBER,
-        projects: [],
-      });
-      setSelectedProject(null);
-    } else {
-      setSelectedOrganization(null);
-    }
-  };
-
-  const handleChangeProject = (projectName: string) => {
-    const project = organizationProjects.find(({ name }) => name === projectName);
-
-    if (project) {
-      setSelectedProject({
-        id: project.id,
-        name: project.name,
-        role: organizationManager || canEditProject ? EDITOR : VIEWER,
-      });
-    } else {
-      setSelectedProject(null);
-    }
-  };
-
-  const handleChangeOrganizationManager = (event: ChangeEvent<HTMLInputElement>) => {
-    setOrganizationManager(event.target.checked);
-  };
-
-  const handleChangeCanEditProject = (event: ChangeEvent<HTMLInputElement>) => {
-    setCanEditProject(event.target.checked);
   };
 
   const onCancel = () => {
     setIsOpen(false);
+    resetOrganization();
   };
 
   const handleSubmit = () => {
-    const organization = {
-      ...selectedOrganization,
-      projects: selectedProject ? [selectedProject] : [],
-    };
-    onChange([...organizations, organization]);
+    const { name, role, projects } = organization as InstanceAssignmentItem;
+
     setIsOpen(false);
-    setCanEditProject(false);
-    setOrganizationManager(false);
     setOrganizationProjects([]);
-    setSelectedOrganization(null);
-    setSelectedProject(null);
+    setSelectedOrganizationId(null);
+    setSelectedProjectId(null);
+
+    fields.push({
+      id: selectedOrganizationId,
+      name,
+      role: role ? MANAGER : MEMBER,
+      projects:
+        projects?.length > 0 && selectedProjectId
+          ? [
+              {
+                id: selectedProjectId,
+                name: projects[0].name,
+                role: projects[0].role ? EDITOR : VIEWER,
+              },
+            ]
+          : [],
+    });
+
+    resetOrganization();
+  };
+
+  const handleProjectChange = (projectName: string) => {
+    const project = organizationProjects.find(({ name }) => name === projectName);
+
+    setSelectedProjectId(project ? project.id : null);
   };
 
   return (
     <div>
-      <FieldElement name="organizations" className={cx('organizations')}>
+      <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
         <OrganizationAssignment isMultiple />
       </FieldElement>
-      {isOpen || organizations.length === 0 ? (
+      {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
-            <div className={cx('autocomplete-label')}>{formatMessage(messages.organization)}</div>
-            <AsyncAutocomplete
-              placeholder={formatMessage(messages.organizationPlaceholder)}
-              getURI={URLS.organizationSearches}
-              getRequestParams={getRequestOrganizationsParams}
-              makeOptions={makeOrganizationsOptions}
-              onChange={handleChangeOrganization}
-              onBlur={handleChangeOrganization}
-              createWithoutConfirmation={true}
-            />
-            <Checkbox
-              value={organizationManager}
-              onChange={handleChangeOrganizationManager}
-              className={cx('autocomplete-checkbox')}
-            >
-              {formatMessage(messages.setOrganizationManager)}
-            </Checkbox>
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
+              <FieldErrorHint provideHint={false}>
+                <AsyncAutocomplete
+                  inputProps={{
+                    label: formatMessage(messages.organization),
+                  }}
+                  placeholder={formatMessage(messages.organizationPlaceholder)}
+                  getURI={URLS.organizationSearches}
+                  getRequestParams={getRequestOrganizationsParams}
+                  makeOptions={makeOrganizationsOptions}
+                  createWithoutConfirmation={true}
+                  onChange={(organizationName: string) => {
+                    setSelectedOrganizationId(
+                      notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
+                    );
+                  }}
+                  isRequired={isOrganizationRequired}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
+              <Checkbox
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                  dispatch(
+                    change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
+                  );
+                }}
+                className={cx('autocomplete-checkbox')}
+              >
+                {formatMessage(messages.setOrganizationManager)}
+              </Checkbox>
+            </FieldProvider>
           </div>
           <div className={cx('autocomplete-wrapper')}>
-            <div className={cx('autocomplete-label')}>{formatMessage(messages.project)}</div>
-            <AsyncAutocomplete
-              placeholder={formatMessage(messages.projectPlaceholder)}
-              getURI={() => URLS.organizationProjectsSearches(selectedOrganization.id)}
-              getRequestParams={getRequestOrganizationsParams}
-              makeOptions={makeProjectsOptions}
-              onChange={handleChangeProject}
-              createWithoutConfirmation={true}
-              className={cx('autocomplete')}
-              disabled={!selectedOrganization}
-            />
-            <div className={cx('checkbox-wrapper')}>
-              <Checkbox
-                value={canEditProject || organizationManager}
-                onChange={handleChangeCanEditProject}
-                disabled={!selectedOrganization || organizationManager}
-              >
-                {formatMessage(messages.canEditProject)}
-              </Checkbox>
+            <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
+              <FieldErrorHint provideHint={false}>
+                <AsyncAutocomplete
+                  inputProps={{
+                    label: formatMessage(messages.project),
+                  }}
+                  placeholder={formatMessage(messages.projectPlaceholder)}
+                  getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
+                  getRequestParams={getRequestOrganizationsParams}
+                  makeOptions={makeProjectsOptions}
+                  onChange={handleProjectChange}
+                  createWithoutConfirmation={true}
+                  className={cx('autocomplete')}
+                  disabled={!selectedOrganizationId}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
+              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                <Checkbox disabled={!selectedOrganizationId || !!organization.role}>
+                  {formatMessage(messages.canEditProject)}
+                </Checkbox>
+              </FieldProvider>
               <Tooltip
                 content={formatMessage(messages.hintMessage)}
                 placement="top"
@@ -270,16 +330,16 @@ export const InstanceAssignment = ({ onChange, value: organizations }: InstanceA
               </Tooltip>
             </div>
           </div>
-          <div className={cx('controls')}>
+          <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
             <Button
               className={cx('button')}
               adjustWidthOn="content"
               onClick={handleSubmit}
-              disabled={!selectedOrganization}
+              disabled={!selectedOrganizationId}
             >
               <CheckmarkIcon />
             </Button>
-            {organizations.length > 0 && (
+            {allOrganizations?.length > 0 && (
               <Button
                 className={cx('cancel-button')}
                 adjustWidthOn="content"

@@ -58,7 +58,6 @@ export const TagList = ({ tags }) => {
       getOffset();
     }, 500);
 
-    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
   }, [listRef]);
 

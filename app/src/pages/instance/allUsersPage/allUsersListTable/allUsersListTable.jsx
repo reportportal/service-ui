@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,38 +20,24 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 import { userInfoSelector } from 'controllers/user';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
-import { NAMESPACE, SORTING_KEY } from 'controllers/instance/allUsers/constants';
 import { UserNameCell } from 'pages/common/membersPage/userNameCell/userNameCell';
 import { ACCOUNT_TYPE_DISPLAY_MAP } from 'common/constants/accountType';
-import {
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_PAGINATION,
-  PAGE_KEY,
-  withPagination,
-} from 'controllers/pagination';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import {
-  DEFAULT_SORT_COLUMN,
-  allUsersPaginationSelector,
-  fetchAllUsersAction,
-} from 'controllers/instance/allUsers';
+import { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { useTracking } from 'react-tracking';
 import { MembersListTable } from 'pages/common/users/membersListTable';
 import { messages } from 'pages/common/users/membersListTable/messages';
-import { canUpdateUserInstanceRole } from 'common/utils/permissions';
+import { AllUsersActionMenu } from './allUsersActionMenu';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
-import { UpdateUserInstanceRole } from './updateUserInstanceRole';
-import { DeleteUser } from './deleteUser';
 import styles from './allUsersListTable.scss';
 
 const cx = classNames.bind(styles);
 
 const getDisplayAccountType = (accountType) => ACCOUNT_TYPE_DISPLAY_MAP[accountType] || accountType;
 
-const AllUsersListTableComponent = ({
+export const AllUsersListTable = ({
   users,
   onChangeSorting,
   sortingDirection,
@@ -66,45 +52,6 @@ const AllUsersListTableComponent = ({
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
   const { trackEvent } = useTracking();
-
-  const renderRowActions = ({ userId, email, fullName, instanceRole, isCurrentUser }) => {
-    const actions = [];
-
-    if (canUpdateUserInstanceRole && !isCurrentUser) {
-      actions.push(
-        <UpdateUserInstanceRole
-          key="update-role"
-          email={email}
-          fullName={fullName}
-          instanceRole={instanceRole}
-          className={cx('menu-item')}
-        />,
-      );
-    }
-
-    if (!isCurrentUser) {
-      actions.push(
-        <DeleteUser
-          key="delete-user"
-          fullName={fullName}
-          userId={userId}
-          className={cx('delete-user-item')}
-        />,
-      );
-    }
-
-    return (
-      <Popover
-        className={cx('popover')}
-        placement={'bottom-end'}
-        content={<div className={cx('row-action-menu')}>{actions.map((action) => action)}</div>}
-      >
-        <i className={cx('menu-icon')}>
-          <MeatballMenuIcon />
-        </i>
-      </Popover>
-    );
-  };
 
   const data = useMemo(
     () =>
@@ -136,8 +83,7 @@ const AllUsersListTableComponent = ({
             email: user.email,
             fullName: user.full_name,
             instanceRole: user.instance_role,
-            isCurrentUser,
-            userId: user.id,
+            id: user.id,
           },
         };
       }),
@@ -188,7 +134,7 @@ const AllUsersListTableComponent = ({
       primaryColumn={primaryColumn}
       fixedColumns={fixedColumns}
       onTableSorting={onTableSorting}
-      showPagination={users.length > 0}
+      showPagination={itemCount > 0}
       sortingDirection={sortingDirection}
       pageSize={pageSize}
       activePage={activePage}
@@ -196,12 +142,13 @@ const AllUsersListTableComponent = ({
       pageCount={pageCount}
       onChangePage={onChangePage}
       onChangePageSize={onChangePageSize}
-      renderRowActions={renderRowActions}
+      changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
+      renderRowActions={(user) => <AllUsersActionMenu user={user} />}
     />
   );
 };
 
-AllUsersListTableComponent.propTypes = {
+AllUsersListTable.propTypes = {
   users: PropTypes.array,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
@@ -213,20 +160,8 @@ AllUsersListTableComponent.propTypes = {
   onChangePageSize: PropTypes.func.isRequired,
 };
 
-AllUsersListTableComponent.defaultProps = {
+AllUsersListTable.defaultProps = {
   users: [],
   pageSize: DEFAULT_PAGE_SIZE,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
-
-export const AllUsersListTable = withSortingURL({
-  defaultFields: [DEFAULT_SORT_COLUMN],
-  defaultDirection: SORTING_ASC,
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-})(
-  withPagination({
-    paginationSelector: allUsersPaginationSelector,
-    namespace: NAMESPACE,
-  })(AllUsersListTableComponent),
-);

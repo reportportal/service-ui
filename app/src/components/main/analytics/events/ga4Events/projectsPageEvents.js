@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
 
 const PROJECTS_PAGE = 'project_page';
 
@@ -32,5 +32,11 @@ export const PROJECTS_PAGE_EVENTS = {
     element_name: 'apply',
     condition,
     type,
+  }),
+  changePageSize: (pageSize) => ({
+    ...getBasicChooseEventParameters(PROJECTS_PAGE),
+    element_name: 'page_size_control',
+    number: pageSize,
+    place: 'project_page',
   }),
 };

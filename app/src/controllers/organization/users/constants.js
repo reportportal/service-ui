@@ -19,3 +19,4 @@ export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers
 export const UNASSIGN_FROM_ORGANIZATION = 'unassignFromOrganization';
 export const NAMESPACE = 'organizationUsers';
 export const SEARCH_KEY = 'full_name';
+export const SORTING_KEY = 'order';

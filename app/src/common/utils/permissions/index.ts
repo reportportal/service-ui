@@ -47,11 +47,15 @@ export {
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
+  canSeeOrganizationMembers,
   canWorkWithOrganizationsSorting,
   canUpdateUserInstanceRole,
   canExportOrganizations,
   canInviteUserToOrganization,
   canSeeActivityOption,
+  canDeleteOrganization,
+  canSeeInstanceLevelPluginsPages,
+  canRenameOrganization,
   // MANUAL LAUNCH
   canCreateManualLaunch,
   // TEST CASE

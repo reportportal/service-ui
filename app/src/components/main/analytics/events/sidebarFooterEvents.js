@@ -166,9 +166,4 @@ export const FOOTER_EVENTS = {
     action: 'Click on Documentation link',
     label: 'Transition to Documentation',
   },
-  editNumberPerPage: (pageNumber, page) => ({
-    category: FOOTER,
-    action: 'Edit number per page',
-    label: `${pageNumber}#${page}`,
-  }),
 };

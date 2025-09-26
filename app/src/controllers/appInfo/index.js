@@ -37,6 +37,7 @@ export {
   sessionExpirationTimeSelector,
   serverSidebarLinksSelector,
   importantLaunchesEnabledSelector,
+  personalOrganizationsSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
 export {
@@ -46,4 +47,5 @@ export {
   UPDATE_API_EXTENSIONS_RESULT,
   SSO_USERS_ONLY_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
+  PERSONAL_ORGANIZATIONS_KEY,
 } from './constants';

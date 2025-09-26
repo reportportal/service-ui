@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,24 +74,7 @@
   gap: 8px;
 }
 
-.menu-icon {
-  svg {
-    margin-bottom: 3px;
-  }
-}
-
 .meatball-button {
   min-width: 36px;
   padding: 0 8px;
-}
-
-.popover-content {
-  font-family: $FONT-ROBOTO-REGULAR;
-  color: $COLOR--almost-black;
-  font-size: 13px;
-  line-height: 20px;
-  cursor: pointer;
-  outline: none;
-  background: none;
-  border: none;
 }

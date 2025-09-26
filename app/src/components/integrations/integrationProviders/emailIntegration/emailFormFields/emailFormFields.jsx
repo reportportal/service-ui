@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -28,10 +28,9 @@ import {
 } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Checkbox, Dropdown } from '@reportportal/ui-kit';
+import { Checkbox, Dropdown, FieldText } from '@reportportal/ui-kit';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { FieldText } from 'componentLibrary/fieldText';
 import { separateFromIntoNameAndEmail } from 'common/utils';
 import {
   DEFAULT_FORM_CONFIG,
