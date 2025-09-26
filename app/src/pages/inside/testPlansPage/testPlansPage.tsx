@@ -15,7 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
-import { isEmpty, isNull } from 'lodash';
+import { isEmpty, isNull } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
