@@ -71,10 +71,6 @@ export const PasswordForm = () => {
 
   const isChanged = passwordLength !== valueFromStore;
 
-  const handlePasswordLengthChange = (value) => {
-    setPasswordLength(value || valueFromStore);
-  };
-
   const handleSubmit = () => {
     trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_PASSWORD_LENGTH);
 
@@ -106,7 +102,7 @@ export const PasswordForm = () => {
           min={PASSWORD_MIN_ALLOWED_LENGTH}
           max={PASSWORD_MAX_ALLOWED_LENGTH}
           value={passwordLength}
-          onChange={handlePasswordLengthChange}
+          onChange={(value) => setPasswordLength(value)}
         />
       </ServerSettingsField>
       {isChanged && (
