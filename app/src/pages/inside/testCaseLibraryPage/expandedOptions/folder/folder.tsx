@@ -16,8 +16,7 @@
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import { compact } from 'es-toolkit';
-import { isEmpty } from 'lodash';
+import { compact, isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { TransformedFolder } from 'controllers/testCase';

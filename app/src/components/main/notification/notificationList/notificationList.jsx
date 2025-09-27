@@ -63,6 +63,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
   },
+  deleteOrganizationError: {
+    id: 'OrganizationsPage.deleteOrganizationError',
+    defaultMessage: 'An error occurred during deleting the organization',
+  },
+  deleteOrganizationSuccess: {
+    id: 'OrganizationsPage.deleteOrganizationSuccess',
+    defaultMessage: 'The organization has been deleted successfully',
+  },
   updateProjectSuccess: {
     id: 'ProjectsPage.updateProjectSuccess',
     defaultMessage: 'The project has been updated successfully',
@@ -90,6 +98,14 @@ const messages = defineMessages({
   projectExists: {
     id: 'ProjectsPage.projectExists',
     defaultMessage: "Project with the same name ''{name}'' already exists in this organization",
+  },
+  createOrganizationSuccess: {
+    id: 'OrganizationsPage.createOrganizationSuccess',
+    defaultMessage: 'The organization has been created successfully',
+  },
+  organizationExists: {
+    id: 'OrganizationsPage.organizationExists',
+    defaultMessage: "Organization with the same name ''{name}'' already exists on the instance",
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
@@ -187,6 +203,10 @@ const messages = defineMessages({
   updateOrganizationSettingsSuccess: {
     id: 'OrganizationSettingsPage.updateSettingsSuccess',
     defaultMessage: 'Organization settings have been updated successfully',
+  },
+  updateOrganizationNameSuccess: {
+    id: 'OrganizationsPage.updateOrganizationNameSuccess',
+    defaultMessage: 'Organization name has been updated successfully',
   },
   testCaseFolderCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',

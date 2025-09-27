@@ -37,6 +37,7 @@ export const MembersListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
+  changePageSizeEvent,
 }) => {
   return (
     <PaginationWrapper
@@ -49,6 +50,7 @@ export const MembersListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('members-pagination-wrapper')}
+      changePageSizeEvent={changePageSizeEvent}
     >
       <Table
         data={data}
@@ -79,4 +81,5 @@ MembersListTable.propTypes = {
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
+  changePageSizeEvent: PropTypes.func.isRequired,
 };

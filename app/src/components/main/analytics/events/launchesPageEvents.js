@@ -21,7 +21,6 @@ import {
 } from './common/testItemPages/modalEventsCreators';
 import {
   getClickOnAttributesEvent,
-  getRefineFiltersPanelEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickSelectAllItemsEvent,
@@ -64,10 +63,6 @@ export const LAUNCHES_PAGE_VIEWS = {
 
 const formatAnalyzeItemsMode = (modes) =>
   modes.map((mode) => LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[mode]).join('#');
-
-const getActionTableFilter = (titleName) =>
-  `Click on Filter Icon before Table title "${titleName}"`;
-const getDescriptionTableFilter = () => 'Arise new field in filter';
 
 const basicClickEventParametersLaunchPage = getBasicClickEventParameters(LAUNCHES_PAGE);
 const basicLaunchMenuClickEventParameters = {
@@ -183,75 +178,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     element_name: 'add_filters',
   },
   getClickOnAnalyzeUniqueErrorsEvent: getClickOnAnalyzeUniqueErrorsEventCreator(LAUNCHES_PAGE),
-  // GA3 events
-  NAME_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('NAME'),
-    label: getDescriptionTableFilter(),
-  },
-  START_TIME_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('START'),
-    label: getDescriptionTableFilter(),
-  },
-  TOTAL_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('TOTAL'),
-    label: getDescriptionTableFilter(),
-  },
-  PASSED_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('PASSED'),
-    label: getDescriptionTableFilter(),
-  },
-  FAILED_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('FAILED'),
-    label: getDescriptionTableFilter(),
-  },
-  SKIPPED_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('SKIPPED'),
-    label: getDescriptionTableFilter(),
-  },
-  PB_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('PRODUCT BUG'),
-    label: getDescriptionTableFilter(),
-  },
-  AB_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('AUTO BUG'),
-    label: getDescriptionTableFilter(),
-  },
-  SI_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('SYSTEM ISSUE'),
-    label: getDescriptionTableFilter(),
-  },
-  TI_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: getActionTableFilter('TO INVESTIGATE'),
-    label: getDescriptionTableFilter(),
-  },
-  CLICK_CLOSE_ICON_FROM_SELECTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Close Icon on Tag of Launch',
-    label: 'Remove launch from  selection',
-  },
-  CLICK_CLOSE_ICON_ALL_SELECTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Close Icon of all selection',
-    label: 'Unselect all launches',
-  },
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
-  },
-  countFilters: (filterStatistic) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Count Filters',
-    label: filterStatistic,
-  }),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {

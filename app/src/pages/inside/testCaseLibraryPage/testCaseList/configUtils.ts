@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { MessageDescriptor } from 'react-intl';
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';

@@ -26,6 +26,9 @@ import {
   FIRST_NAME_ATTRIBUTE_KEY,
   LAST_NAME_ATTRIBUTE_KEY,
   FULL_NAME_ATTRIBUTE_KEY,
+  CALLBACK_URL_ATTRIBUTE_KEY,
+  PROVIDER_NAME_PLACEHOLDER,
+  CALLBACK_URL_PATH,
 } from '../constants';
 
 const messages = defineMessages({
@@ -73,7 +76,6 @@ export class SamlFormFields extends Component {
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     pluginDetails: PropTypes.object,
-    isConfiguration: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -81,7 +83,6 @@ export class SamlFormFields extends Component {
     lineAlign: false,
     initialData: {},
     pluginDetails: {},
-    isConfiguration: false,
   };
 
   constructor(props) {
@@ -96,12 +97,27 @@ export class SamlFormFields extends Component {
   }
 
   componentDidMount() {
-    this.props.initialize({ ...this.props.initialData, ...this.props.pluginDetails });
+    const identityProviderName = this.props.initialData.identityProviderName;
+
+    this.props.initialize({
+      ...this.props.initialData,
+      ...this.props.pluginDetails,
+      [CALLBACK_URL_ATTRIBUTE_KEY]: this.configureCallbackUrl(identityProviderName),
+    });
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.initialData.fullNameAttribute !== this.props.initialData.fullNameAttribute) {
-      this.props.initialize(this.props.initialData);
+    const { initialData } = this.props;
+
+    if (prevProps.initialData.fullNameAttribute !== initialData.fullNameAttribute) {
+      this.props.initialize(initialData);
+    }
+
+    if (prevProps.initialData.identityProviderName !== initialData.identityProviderName) {
+      this.props.change(
+        CALLBACK_URL_ATTRIBUTE_KEY,
+        this.configureCallbackUrl(initialData.identityProviderName),
+      );
     }
   }
 
@@ -122,12 +138,32 @@ export class SamlFormFields extends Component {
     }
   };
 
+  onChangeProviderName = (event) => {
+    this.props.change(CALLBACK_URL_ATTRIBUTE_KEY, this.configureCallbackUrl(event.target.value));
+  };
+
+  configureCallbackUrl = (providerName = '') => {
+    const { origin, pathname } = location;
+
+    const uiPath = 'ui';
+    const pathParts = pathname.split('/');
+    const index = pathParts.indexOf(uiPath);
+    const basePath = pathParts
+      .slice(0, index !== -1 ? index : pathParts.length)
+      .filter(Boolean)
+      .join('/');
+
+    const encodedProviderName = encodeURIComponent(providerName || PROVIDER_NAME_PLACEHOLDER);
+    const path = `/${basePath}/${CALLBACK_URL_PATH}/${encodedProviderName}`.replace(/\/{2,}/g, '/');
+
+    return `${origin}${path}`;
+  };
+
   render() {
     const {
       intl: { formatMessage },
       disabled,
       lineAlign,
-      isConfiguration,
     } = this.props;
 
     return (
@@ -146,6 +182,7 @@ export class SamlFormFields extends Component {
           label={formatMessage(messages.providerName)}
           validate={commonValidators.requiredField}
           lineAlign={lineAlign}
+          onChange={this.onChangeProviderName}
           required
         >
           <FieldErrorHint>
@@ -176,16 +213,15 @@ export class SamlFormFields extends Component {
             <Input mobileDisabled />
           </FieldErrorHint>
         </IntegrationFormField>
-        {isConfiguration && (
-          <IntegrationFormField
-            name="callbackUrl"
-            label="RP callback URL"
-            lineAlign={lineAlign}
-            disabled
-          >
-            <Input mobileDisabled />
-          </IntegrationFormField>
-        )}
+        <IntegrationFormField
+          name={CALLBACK_URL_ATTRIBUTE_KEY}
+          label="Assertion Consumer Service (ACS) URL"
+          lineAlign={lineAlign}
+          placeholder={this.configureCallbackUrl()}
+          disabled
+        >
+          <Input mobileDisabled />
+        </IntegrationFormField>
         <IntegrationFormField
           label={formatMessage(messages.nameAttributesMode)}
           lineAlign={lineAlign}

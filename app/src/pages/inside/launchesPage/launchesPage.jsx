@@ -639,12 +639,10 @@ export class LaunchesPage extends Component {
   };
 
   unselectAllItems = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_CLOSE_ICON_ALL_SELECTION);
     this.props.unselectAllLaunchesAction();
   };
 
   unselectItem = (item) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_CLOSE_ICON_FROM_SELECTION);
     this.props.toggleLaunchSelectionAction(item);
   };
 

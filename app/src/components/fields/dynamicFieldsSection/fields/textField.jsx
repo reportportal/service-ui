@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FieldText } from 'componentLibrary/fieldText';
+import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
 import { DynamicField } from '../dynamicField';
 
 export class TextField extends Component {
@@ -36,15 +36,17 @@ export class TextField extends Component {
   render() {
     const { field, darkView, ...rest } = this.props;
     return (
-      <DynamicField
-        field={field}
-        format={this.formatInputValue}
-        parse={this.parseInputValue}
-        darkView={darkView}
-        {...rest}
-      >
-        <FieldText defaultWidth={false} variant={darkView ? 'dark' : 'light'} mobileDisabled />
-      </DynamicField>
+      <ThemeProvider theme={darkView ? 'dark' : 'light'}>
+        <DynamicField
+          field={field}
+          format={this.formatInputValue}
+          parse={this.parseInputValue}
+          darkView={darkView}
+          {...rest}
+        >
+          <FieldText defaultWidth={false} mobileDisabled />
+        </DynamicField>
+      </ThemeProvider>
     );
   }
 }

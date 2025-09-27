@@ -17,7 +17,7 @@
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';

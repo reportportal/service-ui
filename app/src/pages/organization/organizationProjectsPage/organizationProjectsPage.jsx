@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { loadingSelector, projectsSelector } from 'controllers/organization/projects/selectors';
+import {
+  loadingSelector,
+  projectsSelector,
+  projectsPaginationSelector,
+} from 'controllers/organization/projects/selectors';
 import { activeOrganizationLoadingSelector } from 'controllers/organization/selectors';
 import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organization/projects/actionCreators';
@@ -32,12 +37,28 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
-import { ProjectsListTableWrapper } from './projectsListTable';
+import { ProjectsListTable } from './projectsListTable';
+import { withPagination } from 'controllers/pagination';
+import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
+import {
+  NAMESPACE,
+  DEFAULT_SORT_COLUMN,
+  SORTING_KEY,
+} from 'controllers/organization/projects/constants';
 import styles from './organizationProjectsPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const OrganizationProjectsPage = () => {
+const OrganizationProjectsPageComponent = ({
+  sortingDirection,
+  onChangeSorting,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+}) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { canCreateProject } = useUserPermissions();
@@ -62,7 +83,6 @@ export const OrganizationProjectsPage = () => {
     };
   });
 
-  const isProjectsEmpty = !projectsLoading && projects.length === 0;
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
 
@@ -118,11 +138,23 @@ export const OrganizationProjectsPage = () => {
       );
     }
 
-    if (isProjectsEmpty) {
+    if (itemCount === 0) {
       return getEmptyPageState();
     }
 
-    return <ProjectsListTableWrapper projects={projectsWithAssignedRoles} />;
+    return (
+      <ProjectsListTable
+        projects={projectsWithAssignedRoles}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+        pageSize={pageSize}
+        activePage={activePage}
+        itemCount={itemCount}
+        pageCount={pageCount}
+        onChangePage={onChangePage}
+        onChangePageSize={onChangePageSize}
+      />
+    );
   };
 
   return (
@@ -139,3 +171,26 @@ export const OrganizationProjectsPage = () => {
     </div>
   );
 };
+
+OrganizationProjectsPageComponent.propTypes = {
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
+  pageSize: PropTypes.number,
+  activePage: PropTypes.number,
+  itemCount: PropTypes.number,
+  pageCount: PropTypes.number,
+  onChangePage: PropTypes.func,
+  onChangePageSize: PropTypes.func,
+};
+
+export const OrganizationProjectsPage = withSortingURL({
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultDirection: SORTING_ASC,
+  sortingKey: SORTING_KEY,
+  namespace: NAMESPACE,
+})(
+  withPagination({
+    paginationSelector: projectsPaginationSelector,
+    namespace: NAMESPACE,
+  })(OrganizationProjectsPageComponent),
+);

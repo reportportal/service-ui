@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
@@ -117,4 +117,39 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: 'unassign',
   },
+  clickCreateOrganization: (element = '') => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: element ? `create_organization_${element}` : 'create_organization',
+  }),
+  CLICK_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'create',
+    modal: 'create_organization',
+    place: 'all_organizations',
+  },
+  HOVER_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    action: 'tooltip_view',
+    element_name: 'tooltip_create_organization',
+    place: 'all_organizations',
+  },
+  DELETE_ORGANIZATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'delete',
+    modal: 'delete_organization',
+  },
+  getChangePageSizeEvent: (place: string) => (pageSize: number) => ({
+    ...getBasicChooseEventParameters(ORGANIZATION_PAGE),
+    element_name: 'page_size_control',
+    number: pageSize,
+    place,
+  }),
+  renameOrganization: (place: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'rename',
+    modal: 'rename_organization',
+    place,
+  }),
 };

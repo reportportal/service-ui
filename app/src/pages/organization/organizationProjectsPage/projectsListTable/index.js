@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ProjectsListTableWrapper } from './projectsListTable';
+export { ProjectsListTable } from './projectsListTable';

@@ -37,6 +37,9 @@ import {
   Toggle,
   Modal as ModalLayoutComponent,
   Dropdown,
+  FieldText,
+  FieldTextFlex,
+  FieldNumber,
 } from '@reportportal/ui-kit';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -151,7 +154,6 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
-import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
@@ -179,15 +181,12 @@ import {
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
-import { FieldText } from 'componentLibrary/fieldText';
 import {
   FieldElement,
   RuleList as RuleListComponent,
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -196,6 +195,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
 import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
+import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
 
 const BUTTONS = {
   GhostButton,

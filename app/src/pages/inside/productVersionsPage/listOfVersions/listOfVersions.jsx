@@ -17,7 +17,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 
 import styles from './listOfVersions.scss';
 import { EmptyState } from './emptyState';

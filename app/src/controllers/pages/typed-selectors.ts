@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isString } from 'lodash';
+import { isString } from 'es-toolkit';
 
 type LocationInfo = {
   payload: {

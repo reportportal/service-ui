@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import {
+  EMAIL_CONFIG_FILTERING_OPTION,
+  NOTIFICATION_RULE_FILTERING_OPTION,
+} from './eventsObjectTypes';
+
 export const START_LAUNCH = 'startLaunch';
 export const FINISH_LAUNCH = 'finishLaunch';
 export const DELETE_LAUNCH = 'deleteLaunch';
@@ -39,6 +44,11 @@ export const UPDATE_INTEGRATION = 'updateIntegration';
 export const DELETE_INTEGRATION = 'deleteIntegration';
 export const UPDATE_PROJECT = 'updateProject';
 export const UPDATE_NOTIFICATIONS = 'emailConfig';
+export const NOTIFICATION_RULE = 'notificationRule';
+export const UPDATE_NOTIFICATION_SETTINGS = 'updateNotificationSettings';
+export const CREATE_NOTIFICATION_RULE = 'createNotificationRule';
+export const UPDATE_NOTIFICATION_RULE = 'updateNotificationRule';
+export const DELETE_NOTIFICATION_RULE = 'deleteNotificationRule';
 export const UPDATE_ANALYZER = 'updateAnalyzer';
 export const GENERATE_INDEX = 'generateIndex';
 export const DELETE_INDEX = 'deleteIndex';
@@ -70,6 +80,7 @@ export const ACTIONS_WITH_DEFECTS = 'defectsActions';
 export const ACTIONS_WITH_IMPORT = 'importActions';
 export const ACTIONS_WITH_LAUNCH = 'launchActions';
 export const ACTIONS_UPDATE_TEST_ITEM = 'updateTestItemActions';
+export const ACTIONS_WITH_NOTIFICATIONS = 'notificationsActions';
 
 export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_BTS_ISSUES]: [POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE],
@@ -81,6 +92,7 @@ export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_DEFECTS]: [CREATE_DEFECT, UPDATE_DEFECT, DELETE_DEFECT],
   [ACTIONS_WITH_IMPORT]: [START_IMPORT, FINISH_IMPORT],
   [ACTIONS_UPDATE_TEST_ITEM]: [UPDATE_ITEM, ANALYZE_ITEM],
+  [ACTIONS_WITH_NOTIFICATIONS]: [NOTIFICATION_RULE_FILTERING_OPTION, EMAIL_CONFIG_FILTERING_OPTION],
 };
 
 export const ACTION_TO_GROUP_MAP = {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Checkbox, Modal } from '@reportportal/ui-kit';
+import { Checkbox, FieldText, Modal } from '@reportportal/ui-kit';
 import { commonValidators } from 'common/utils/validation';
 import { userEmailSelector } from 'controllers/user';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -28,7 +28,6 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { HELP_AND_SUPPORT_EVENTS } from 'analyticsEvents/helpAndSupportEvents';
-import { FieldText } from 'componentLibrary/fieldText';
 import { hideModalAction, withModal } from 'controllers/modal';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils';

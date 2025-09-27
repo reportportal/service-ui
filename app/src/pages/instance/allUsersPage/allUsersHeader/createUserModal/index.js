@@ -15,3 +15,11 @@
  */
 
 export { CreateUserModal } from './createUserModal';
+export {
+  FULL_NAME_FIELD,
+  EMAIL_FIELD,
+  PASSWORD_FIELD,
+  ADMIN_RIGHTS,
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+} from './constants';

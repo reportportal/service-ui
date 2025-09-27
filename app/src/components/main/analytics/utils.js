@@ -16,6 +16,7 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
+import { parseFormattedDate } from '../dateRange';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -71,7 +72,7 @@ export const baseEventParametersShape = PropTypes.shape({
 export const getApplyFilterEventParams = (
   fields,
   initialState,
-  initialDateState,
+  initialDateState = '',
   conditionProp,
 ) => {
   const { [conditionProp]: dateField, ...fieldsWithoutDate } = fields;
@@ -81,11 +82,20 @@ export const getApplyFilterEventParams = (
     .join('#');
 
   let condition;
+  let countDays;
 
   if (dateField.value !== initialDateState) {
     condition = dateField?.value;
-    type = `${type}#${conditionProp}`;
+    type = type ? `${type}#${conditionProp}` : conditionProp;
   }
 
-  return { type, condition: condition || 'not_set' };
+  if (condition) {
+    const { startDate, endDate } = parseFormattedDate(condition);
+    const timestampStartDate = new Date(startDate);
+    const timestampEndDate = new Date(endDate);
+    const msInDay = 1000 * 60 * 60 * 24;
+    countDays = Math.round((timestampEndDate - timestampStartDate) / msInDay);
+  }
+
+  return { type, condition: countDays || 'not_set' };
 };

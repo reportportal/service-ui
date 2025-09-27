@@ -71,9 +71,6 @@ export const formatDateRangeToMinutesString = (formValue) => {
   }
 
   const { startDate, endDate } = formValue || {};
-  if (!startDate || !endDate) {
-    return '';
-  }
 
   const utcString = moment().format('ZZ');
 

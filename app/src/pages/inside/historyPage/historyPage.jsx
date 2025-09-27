@@ -115,12 +115,10 @@ export class HistoryPage extends Component {
   };
 
   unselectItem = (item) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_FROM_SELECTION);
     this.props.toggleItemSelection(item);
   };
 
   unselectAllItems = () => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_ALL_SELECTION);
     this.props.onUnselectAll();
   };
 

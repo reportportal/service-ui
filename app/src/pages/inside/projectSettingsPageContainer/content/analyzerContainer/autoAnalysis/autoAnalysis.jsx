@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button, Checkbox, Dropdown } from '@reportportal/ui-kit';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
+import { Button, Checkbox, Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { useTracking } from 'react-tracking';
@@ -37,6 +36,7 @@ import {
   ALL_MESSAGES_SHOULD_MATCH,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
+  LARGEST_RETRY_PRIORITY,
   MIN_SHOULD_MATCH,
   NUMBER_OF_LOG_LINES,
 } from '../constants';
@@ -90,10 +90,11 @@ const AutoAnalysis = ({
   useEffect(() => {
     initialize({
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfig[ANALYZER_ENABLED] || 'false'),
-      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH],
+      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH] || '',
       [ANALYZER_MODE]: analyzerConfig[ANALYZER_MODE],
       [NUMBER_OF_LOG_LINES]: analyzerConfig[NUMBER_OF_LOG_LINES],
       [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(analyzerConfig[ALL_MESSAGES_SHOULD_MATCH] || 'false'),
+      [LARGEST_RETRY_PRIORITY]: JSON.parse(analyzerConfig[LARGEST_RETRY_PRIORITY] || 'false'),
     });
   }, []);
 
@@ -110,6 +111,7 @@ const AutoAnalysis = ({
         data[ANALYZER_ENABLED],
         data[ANALYZER_MODE],
         data[ALL_MESSAGES_SHOULD_MATCH],
+        data[LARGEST_RETRY_PRIORITY],
         numberOfLogLines,
       ),
     );
@@ -206,6 +208,15 @@ const AutoAnalysis = ({
           dataAutomationId={ALL_MESSAGES_SHOULD_MATCH + FIELD}
         >
           <Checkbox>{formatMessage(messages.allMessagesShouldMatch)}</Checkbox>
+        </FieldElement>
+        <FieldElement
+          name={LARGEST_RETRY_PRIORITY}
+          description={formatMessage(messages.largestRetryPriorityDescription)}
+          format={Boolean}
+          disabled={isFieldDisabled}
+          dataAutomationId={LARGEST_RETRY_PRIORITY + FIELD}
+        >
+          <Checkbox>{formatMessage(messages.largestRetryPriority)}</Checkbox>
         </FieldElement>
         {hasPermission && (
           <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">

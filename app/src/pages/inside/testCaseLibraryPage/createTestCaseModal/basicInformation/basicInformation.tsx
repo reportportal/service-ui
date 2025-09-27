@@ -15,7 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import classNames from 'classnames/bind';
 import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 

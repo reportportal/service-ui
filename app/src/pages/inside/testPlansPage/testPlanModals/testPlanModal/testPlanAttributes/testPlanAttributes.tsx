@@ -16,7 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';

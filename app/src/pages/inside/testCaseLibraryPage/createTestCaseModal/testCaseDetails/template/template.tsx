@@ -16,7 +16,7 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { noop } from 'lodash';
+import { noop } from 'es-toolkit';
 import { FieldNumber } from '@reportportal/ui-kit';
 
 import { FieldProvider } from 'components/fields';

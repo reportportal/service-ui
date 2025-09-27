@@ -32,7 +32,6 @@ import {
   UPDATE_DASHBOARD_WIDGETS,
   DUPLICATE_DASHBOARD,
   DUPLICATE_DASHBOARD_SUCCESS,
-  COPY_DASHBOARD_CONFIG,
 } from './constants';
 
 export const fetchDashboardsAction = (params) => ({
@@ -62,11 +61,6 @@ export const duplicateDashboardAction = (item) => ({
 export const duplicateDashboardSuccessAction = (item) => ({
   type: DUPLICATE_DASHBOARD_SUCCESS,
   payload: item,
-});
-
-export const copyDashboardConfigAction = (dashboard) => ({
-  type: COPY_DASHBOARD_CONFIG,
-  payload: dashboard,
 });
 
 export const updateDashboardAction = (item) => ({

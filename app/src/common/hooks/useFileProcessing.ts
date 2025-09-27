@@ -15,7 +15,8 @@
  */
 
 import { useCallback, useState, useRef, useEffect } from 'react';
-import { noop, isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit';
 
 import { uniqueId } from 'common/utils';
 import { downloadFileFromBlob } from 'common/utils/fileUtils';

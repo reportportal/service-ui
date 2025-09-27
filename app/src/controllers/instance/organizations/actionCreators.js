@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { FETCH_ORGANIZATIONS, FETCH_FILTERED_ORGANIZATIONS } from './constants';
+import {
+  FETCH_ORGANIZATIONS,
+  FETCH_FILTERED_ORGANIZATIONS,
+  DELETE_ORGANIZATION,
+} from './constants';
 
 export const fetchOrganizationsAction = () => ({
   type: FETCH_ORGANIZATIONS,
@@ -22,4 +26,9 @@ export const fetchOrganizationsAction = () => ({
 
 export const fetchFilteredOrganizationsAction = () => ({
   type: FETCH_FILTERED_ORGANIZATIONS,
+});
+
+export const deleteOrganizationAction = (organizationId, onSuccess) => ({
+  type: DELETE_ORGANIZATION,
+  payload: { organizationId, onSuccess },
 });
