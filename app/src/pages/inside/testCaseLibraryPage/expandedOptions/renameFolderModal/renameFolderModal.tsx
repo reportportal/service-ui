@@ -55,6 +55,8 @@ interface RenameFolderModalProps {
 const RenameFolderModalComponent = ({
   data: { folderId, folderName },
   dirty,
+  invalid,
+  anyTouched,
   initialize,
   handleSubmit,
 }: RenameFolderModalProps & InjectedFormProps<FolderFormValues, RenameFolderModalProps>) => {
@@ -84,7 +86,7 @@ const RenameFolderModalComponent = ({
       </LoadingSubmitButton>
     ),
     onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoadingFolder,
+    disabled: (invalid && anyTouched) || isLoadingFolder,
     'data-automation-id': 'submitButton',
   };
 
