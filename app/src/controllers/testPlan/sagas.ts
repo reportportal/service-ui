@@ -31,10 +31,13 @@ import {
   GET_TEST_PLAN,
   TEST_PLANS_NAMESPACE,
   TestPlanDto,
+  TestPlanFoldersDto,
   defaultQueryParams,
   ACTIVE_TEST_PLAN_NAMESPACE,
+  TEST_PLAN_FOLDERS_NAMESPACE,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { mockTestPlanFolders } from './mockData';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
@@ -86,8 +89,18 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     });
 
     const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+    const planFolders = (yield call(
+      fetch,
+      URLS.testFolders(projectKey, { testPlanId }),
+    )) as TestPlanFoldersDto;
 
     yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
+    yield put(
+      fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, {
+        ...planFolders,
+        content: mockTestPlanFolders,
+      }),
+    );
   } catch (error) {
     const locationPayload = (yield select(
       (state: BaseAppState) => state.location?.payload,

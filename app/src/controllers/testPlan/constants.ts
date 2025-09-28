@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+import { Folder } from 'controllers/testCase';
+
 export const GET_TEST_PLANS = 'getTestPlans' as const;
 export const GET_TEST_PLAN = 'getTestPlan' as const;
 export const TEST_PLANS_NAMESPACE = 'testPlans' as const;
 export const ACTIVE_TEST_PLAN_NAMESPACE = 'activeTestPlan' as const;
+export const TEST_PLAN_FOLDERS_NAMESPACE = 'testPlanFolders' as const;
 export const defaultQueryParams = {
   limit: 1000,
   sortBy: 'createdDate,desc',
@@ -30,4 +33,14 @@ export type TestPlanDto = {
   totalTestCases: number;
   coveredTestCases: number;
   description?: string;
+};
+
+export type TestPlanFoldersDto = {
+  content: Folder[];
+  page: {
+    number: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
 };

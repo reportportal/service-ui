@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { TestPlanDto } from './constants';
+import { transformFoldersToDisplay } from '../testCase/utils';
+import { TestPlanDto, TestPlanFoldersDto } from './constants';
 
 export interface TestPlanState {
   data: TestPlanDto[] | null;
   isLoading?: boolean;
   activeTestPlan?: TestPlanDto | null;
+  testPlanFolders?: TestPlanFoldersDto | null;
   isLoadingActive?: boolean;
 }
 
@@ -39,6 +40,12 @@ export const activeTestPlanSelector = (state: RootState) =>
 
 export const isLoadingActiveSelector = (state: RootState) =>
   Boolean(testPlanSelector(state).isLoadingActive);
+
+export const testPlanFoldersSelector = (state: RootState) =>
+  testPlanSelector(state).testPlanFolders?.content || [];
+
+export const testPlanTransformedFoldersSelector = (state: RootState) =>
+  transformFoldersToDisplay(testPlanFoldersSelector(state));
 
 export const testPlanByIdSelector = (testPlanId: string | number) => (state: RootState) => {
   const activeTestPlan = activeTestPlanSelector(state);

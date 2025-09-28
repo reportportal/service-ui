@@ -23,7 +23,7 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
+import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/testCaseFolders/createFolderModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
