@@ -21,14 +21,14 @@ export enum INSTANCE_KEYS {
   TEST_CASE_FOLDER = 'testCaseFolder',
 }
 
-interface useFolderTooltipProps {
+interface UseFolderTooltipProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setAllTestCases: () => void;
   instanceKey?: INSTANCE_KEYS;
 }
 
-export const useFolderTooltip = (props: useFolderTooltipProps) => {
+export const useFolderTooltip = (props: UseFolderTooltipProps) => {
   const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
 
   const tooltipItems = {

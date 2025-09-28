@@ -27,7 +27,7 @@ import { useRenameFolderModal } from '../../testCaseFolders/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/duplicateFolderModal';
 import { commonMessages } from '../../commonMessages';
 
-interface useFolderTooltipProps {
+interface UseTestCaseFolderMenuProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setAllTestCases: () => void;
@@ -37,7 +37,7 @@ export const useTestCaseFolderMenu = ({
   folder,
   activeFolder,
   setAllTestCases,
-}: useFolderTooltipProps) => {
+}: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
