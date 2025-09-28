@@ -31,11 +31,11 @@ interface UseFolderTooltipProps {
 export const useFolderTooltip = (props: UseFolderTooltipProps) => {
   const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
 
-  const tooltipItems = {
-    testCaseFolder: testCaseFolderTooltipItems,
+  const tooltipItemsByInstance: Record<INSTANCE_KEYS, typeof testCaseFolderTooltipItems> = {
+    [INSTANCE_KEYS.TEST_CASE_FOLDER]: testCaseFolderTooltipItems,
   };
 
   return {
-    tooltipItems: tooltipItems[props.instanceKey],
+    tooltipItems: tooltipItemsByInstance[props.instanceKey],
   };
 };

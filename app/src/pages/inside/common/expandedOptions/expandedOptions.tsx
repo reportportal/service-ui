@@ -40,7 +40,7 @@ const messages = defineMessages({
 
 interface ExpandedOptionsProps {
   folders: TransformedFolder[];
-  activeFolder: number;
+  activeFolder: number | null;
   setAllTestCases: () => void;
   handleFolderClick: (id: number) => void;
   children: ReactNode;

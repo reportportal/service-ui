@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EMPTY_FOLDERS } from '../testCase';
 import { transformFoldersToDisplay } from '../testCase/utils';
 import { TestPlanDto, TestPlanFoldersDto } from './constants';
 
@@ -42,7 +43,7 @@ export const isLoadingActiveSelector = (state: RootState) =>
   Boolean(testPlanSelector(state).isLoadingActive);
 
 export const testPlanFoldersSelector = (state: RootState) =>
-  testPlanSelector(state).testPlanFolders?.content || [];
+  testPlanSelector(state).testPlanFolders?.content || EMPTY_FOLDERS;
 
 export const testPlanTransformedFoldersSelector = (state: RootState) =>
   transformFoldersToDisplay(testPlanFoldersSelector(state));

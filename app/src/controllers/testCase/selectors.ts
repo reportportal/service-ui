@@ -45,7 +45,7 @@ export const testCaseSelector = (state: RootState): TestCaseState => state.testC
 export const areFoldersLoadingSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.loading || false;
 
-const EMPTY_FOLDERS: Folder[] = [];
+export const EMPTY_FOLDERS: Folder[] = [];
 
 export const foldersSelector = (state: RootState): Folder[] =>
   testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
