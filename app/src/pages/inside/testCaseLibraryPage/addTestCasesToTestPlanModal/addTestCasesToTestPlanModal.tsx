@@ -27,7 +27,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<
   { selectedTestCases: (number | string)[] }
 >({
   form: 'add-to-test-plan-modal-form',
-})(({ handleSubmit, selectedTestCases }) => {
+})(({ selectedTestCases }) => {
   const { formatMessage } = useIntl();
 
   const projectKey = useSelector(projectKeySelector);
@@ -40,6 +40,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<
   } = useAddTestCasesToTestPlan({
     selectedTestCases,
   });
+
   const makeTestPlansOptions = (response: { content: TestPlan[] }) => response.content;
 
   const description = useMemo(() => {
@@ -68,9 +69,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<
             {formatMessage(COMMON_LOCALE_KEYS.ADD)}
           </LoadingSubmitButton>
         ),
-        onClick: () => {
-          handleSubmit(addTestCasesToTestPlan);
-        },
+        onClick: () => addTestCasesToTestPlan(),
         disabled: !selectedTestPlan,
       }}
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL), onClick: () => {} }}
@@ -81,13 +80,14 @@ export const AddTestCasesToTestPlanModal = reduxForm<
           <AsyncAutocomplete
             placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
             getURI={() => URLS.testPlan(projectKey)}
+            value={selectedTestPlan}
             getRequestParams={() => {}}
+            optionVariant="key-variant"
             makeOptions={makeTestPlansOptions}
             onChange={setSelectedTestPlan}
             parseValueToString={(value: TestPlan) => value?.name}
-            onBlur={setSelectedTestPlan}
             getUniqKey={(value: TestPlan) => value?.id}
-            createWithoutConfirmation={true}
+            createWithoutConfirmation={false}
           />
         </div>
       </div>

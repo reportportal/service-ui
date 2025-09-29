@@ -29,41 +29,44 @@ export const useAddTestCasesToTestPlan = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const [selectedTestPlan, setSelectedTestPlan] = useState<number | null>(null);
+  const [selectedTestPlan, setSelectedTestPlan] = useState<{ id: number; name: string } | null>(
+    null,
+  );
 
-  const addTestCasesToTestPlan = async () => {
-    try {
-      showSpinner();
+  const addTestCasesToTestPlan = () => {
+    showSpinner();
 
-      const fetchPath: string = URLS.testPlanTestCasesBatch(
-        projectKey,
-        selectedTestPlan,
-      ) as unknown as string;
+    const fetchPath: string = URLS.testPlanTestCasesBatch(
+      projectKey,
+      selectedTestPlan.id,
+    ) as unknown as string;
 
-      await fetch(fetchPath, {
-        method: 'post',
-        data: {
-          testCaseIds: selectedTestCases,
-        },
+    fetch(fetchPath, {
+      method: 'post',
+      data: {
+        testCaseIds: selectedTestCases,
+      },
+    })
+      .then(() => {
+        dispatch(hideModalAction());
+        dispatch(
+          showSuccessNotification({
+            messageId: 'testCasesAddingToTestPlanSuccess',
+          }),
+        );
+        dispatch(getTestCasesAction({ testFolderId }));
+      })
+      .catch((error) => {
+        dispatch(
+          showErrorNotification({
+            messageId: 'testCasesAddingToTestPlanFailed',
+          }),
+        );
+        console.error(error);
+      })
+      .finally(() => {
+        hideSpinner();
       });
-
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testCasesAddingToTestPlanSuccess',
-        }),
-      );
-      dispatch(getTestCasesAction({ testFolderId }));
-    } catch (error: unknown) {
-      dispatch(
-        showErrorNotification({
-          messageId: 'testCasesAddingToTestPlanFailed',
-        }),
-      );
-      console.error(error);
-    } finally {
-      hideSpinner();
-    }
   };
 
   return {
