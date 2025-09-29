@@ -24,12 +24,6 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { useState } from 'react';
 import { TestPlanDto } from 'controllers/testPlan';
 
-export interface TestStep {
-  instructions: string;
-  expectedResult: string;
-  attachments?: string[];
-}
-
 export const useAddTestCasesToTestPlan = ({
   selectedTestCaseIds,
 }: {

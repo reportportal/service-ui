@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
+import classNames from 'classnames/bind';
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { useIntl } from 'react-intl';
+
+import { Modal } from '@reportportal/ui-kit';
+
 import { messages } from './messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
-import { useMemo } from 'react';
-import classNames from 'classnames/bind';
-import { Modal } from '@reportportal/ui-kit';
-import styles from './addTestCasesToTestPlanModal.module.scss';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { TestPlanDto } from 'controllers/testPlan';
 import { hideModalAction } from 'controllers/modal';
-import { useDispatch } from 'react-redux';
+
+import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
+
+import styles from './addTestCasesToTestPlanModal.module.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -60,15 +63,9 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
   const description = useMemo(() => {
     return (
       <p className={cx('description')}>
-        <span>{formatMessage(messages.descriptionStart)}</span>
-        <b className={cx('selected-test-cases')}>{selectedTestCasesLength}</b>
-        <span>
-          {formatMessage(
-            selectedTestCasesLength > 1
-              ? messages.addSelectedTestCases
-              : messages.addSelectedTestCase,
-          )}
-        </span>
+        {formatMessage(messages.description, {
+          testPlansQuantity: <b className={cx('selected-test-cases')}>{selectedTestCasesLength}</b>,
+        })}
       </p>
     );
   }, [formatMessage, selectedTestCasesLength]);
@@ -100,7 +97,6 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
             placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
             getURI={retrieveTestPlans}
             value={selectedTestPlan}
-            getRequestParams={() => {}}
             makeOptions={makeTestPlansOptions}
             onChange={setSelectedTestPlan}
             parseValueToString={(value: TestPlanDto) => value?.name}

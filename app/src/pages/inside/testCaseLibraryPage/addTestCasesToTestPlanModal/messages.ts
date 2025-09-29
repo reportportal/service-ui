@@ -21,16 +21,9 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addToTestPlanModal.selectedTestPlanPlaceholder',
     defaultMessage: 'Select the Test Plan',
   },
-  descriptionStart: {
+  description: {
     id: 'TestCaseLibraryPage.addToTestPlanModal.description',
-    defaultMessage: 'You are about to add ',
-  },
-  addSelectedTestCase: {
-    id: 'TestCaseLibraryPage.addToTestPlanModal.addSelectedTestCase',
-    defaultMessage: ' selected test case to the Test Plan.',
-  },
-  addSelectedTestCases: {
-    id: 'TestCaseLibraryPage.addToTestPlanModal.addSelectedTestCases',
-    defaultMessage: ' selected test cases to the Test Plan.',
+    defaultMessage:
+      'You are about to add {testPlansQuantity} selected test cases to the Test Plan.',
   },
 });

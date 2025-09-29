@@ -16,6 +16,7 @@
 
 import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
@@ -49,7 +50,6 @@ import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 import styles from './testCaseSidePanel.scss';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
