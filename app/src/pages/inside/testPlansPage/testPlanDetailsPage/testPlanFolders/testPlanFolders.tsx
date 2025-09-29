@@ -41,7 +41,7 @@ export const TestPlanFolders = () => {
     <ExpandedOptions
       activeFolder={activeFolder}
       folders={folders}
-      handleFolderClick={handleFolderClick}
+      onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
     >
       Test cases

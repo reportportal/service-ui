@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+
 import { Folder } from './folder';
+
 import styles from './expandedOptions.scss';
-import { ReactNode } from 'react';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltip';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -42,17 +44,17 @@ interface ExpandedOptionsProps {
   folders: TransformedFolder[];
   activeFolder: number | null;
   setAllTestCases: () => void;
-  handleFolderClick: (id: number) => void;
+  onFolderClick: (id: number) => void;
   children: ReactNode;
   instanceKey?: INSTANCE_KEYS;
-  renderCreateFolderButton?: () => ReactNode | null;
+  renderCreateFolderButton?: () => ReactNode;
 }
 
 export const ExpandedOptions = ({
   folders,
   activeFolder,
   setAllTestCases,
-  handleFolderClick,
+  onFolderClick,
   renderCreateFolderButton,
   instanceKey,
   children,
@@ -112,7 +114,7 @@ export const ExpandedOptions = ({
                     folder={folder}
                     key={folder.id || `${folder.name}-${idx}`}
                     activeFolder={activeFolder}
-                    setActiveFolder={handleFolderClick}
+                    setActiveFolder={onFolderClick}
                     setAllTestCases={setAllTestCases}
                     instanceKey={instanceKey}
                   />

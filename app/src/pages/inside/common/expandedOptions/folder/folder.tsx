@@ -19,11 +19,12 @@ import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
-import { TransformedFolder } from 'controllers/testCase';
-import styles from './folder.scss';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { TransformedFolder } from 'controllers/testCase';
 
-import { INSTANCE_KEYS, useFolderTooltip } from './useFolderTooltip';
+import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
+
+import styles from './folder.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -46,7 +47,12 @@ export const Folder = ({
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { tooltipItems } = useFolderTooltip({ folder, activeFolder, setAllTestCases, instanceKey });
+  const tooltipItems = useFolderTooltipItems({
+    folder,
+    activeFolder,
+    setAllTestCases,
+    instanceKey,
+  });
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);

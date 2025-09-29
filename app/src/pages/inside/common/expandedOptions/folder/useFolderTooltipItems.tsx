@@ -28,14 +28,12 @@ interface UseFolderTooltipProps {
   instanceKey?: INSTANCE_KEYS;
 }
 
-export const useFolderTooltip = (props: UseFolderTooltipProps) => {
+export const useFolderTooltipItems = (props: UseFolderTooltipProps) => {
   const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
 
   const tooltipItemsByInstance: Record<INSTANCE_KEYS, typeof testCaseFolderTooltipItems> = {
     [INSTANCE_KEYS.TEST_CASE_FOLDER]: testCaseFolderTooltipItems,
   };
 
-  return {
-    tooltipItems: tooltipItemsByInstance[props.instanceKey],
-  };
+  return tooltipItemsByInstance[props.instanceKey];
 };

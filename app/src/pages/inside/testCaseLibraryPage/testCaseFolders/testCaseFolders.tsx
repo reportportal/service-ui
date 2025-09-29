@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop } from 'es-toolkit/compat';
 
 import {
   transformedFoldersSelector,
@@ -30,27 +30,28 @@ import {
   testCasesSelector,
   foldersSelector,
 } from 'controllers/testCase';
-
-import { showModalAction } from 'controllers/modal';
-import { ExpandedOptions } from '../../common/expandedOptions';
-import { commonMessages } from '../commonMessages';
-import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
-import { AllTestCasesPage } from '../allTestCasesPage';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
-import { useUserPermissions } from 'hooks/useUserPermissions';
-import styles from './testCaseFolders.scss';
 import {
   NOTIFICATION_TYPES,
   NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
   WARNING_NOTIFICATION_DURATION,
   showNotification,
 } from 'controllers/notification';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltip';
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { showModalAction } from 'controllers/modal';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+
+import { ExpandedOptions } from '../../common/expandedOptions';
+import { commonMessages } from '../commonMessages';
+import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
+import { AllTestCasesPage } from '../allTestCasesPage';
+
+import styles from './testCaseFolders.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -155,14 +156,14 @@ export const TestCaseFolders = () => {
       activeFolder={activeFolder}
       setAllTestCases={setAllTestCases}
       folders={folders}
-      handleFolderClick={handleFolderClick}
+      onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
       instanceKey={INSTANCE_KEYS.TEST_CASE_FOLDER}
     >
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
-        setSearchValue={() => {}}
+        setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}
       />
     </ExpandedOptions>

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { isEmpty } from 'es-toolkit/compat';
+
 import { Folder, TransformedFolder } from './types';
 
 export const getAllFolderIdsToDelete = (targetId: number, folderList: Folder[]): number[] => {
@@ -35,7 +37,7 @@ export const getAllFolderIdsToDelete = (targetId: number, folderList: Folder[]):
 };
 
 export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[] => {
-  if (folders.length === 0) {
+  if (isEmpty(folders)) {
     return [];
   }
 
@@ -58,11 +60,7 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
     const transformedFolder = folderMap.get(folder.id);
     if (!transformedFolder) return;
 
-    let parentFolder = folderMap.get(folder.parentFolderId);
-
-    if (!parentFolder) {
-      parentFolder = folderMap.get(null);
-    }
+    const parentFolder = folderMap.get(folder.parentFolderId) || folderMap.get(null);
 
     parentFolder.folders.push(transformedFolder);
   });
